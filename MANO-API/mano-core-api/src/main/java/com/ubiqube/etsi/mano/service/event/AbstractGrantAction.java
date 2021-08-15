@@ -263,7 +263,7 @@ public abstract class AbstractGrantAction {
 		return vsie;
 	}
 
-	class QuotaNeeded {
+	public class QuotaNeeded {
 		private int disk = 0;
 		private int vcpu = 0;
 		private int ram = 0;

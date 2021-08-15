@@ -1,0 +1,222 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+package com.ubiqube.etsi.mano.nfvo.service.event;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
+
+import org.jgrapht.ListenableGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.github.dexecutor.core.task.ExecutionResults;
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
+import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
+import com.ubiqube.etsi.mano.nfvo.service.graph.NsPlanExecutor;
+import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
+import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.UowNsTaskCreateProvider;
+import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.UowNsTaskDeleteProvider;
+import com.ubiqube.etsi.mano.nfvo.service.plan.NsPlanner;
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
+import com.ubiqube.etsi.mano.repository.NsdRepository;
+import com.ubiqube.etsi.mano.service.NsBlueprintService;
+import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.graph.GraphTools;
+import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
+
+@Service
+public class NfvoActions {
+
+	private static final Logger LOG = LoggerFactory.getLogger(NfvoActions.class);
+
+	private final NsInstanceService nsInstanceRepository;
+	private final NsdRepository nsdRepository;
+	private final VimManager vimManager;
+	private final EventManager eventManager;
+
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
+	private final NsPlanExecutor executor;
+
+	private final NsPlanner nsPlanner;
+	private final NsBlueprintService nsBlueprintService;
+
+	public NfvoActions(final NsInstanceService _nsInstanceRepository, final NsdRepository _nsdRepository, final VimManager _vimManager, final EventManager _eventManager, final NsPlanner _nsPlanner, final NsPlanExecutor _executor, final NsLiveInstanceJpa _nsLiveInstanceJpa, final NsBlueprintService _nsBlueprintService) {
+		super();
+		nsInstanceRepository = _nsInstanceRepository;
+		nsdRepository = _nsdRepository;
+		vimManager = _vimManager;
+		eventManager = _eventManager;
+		nsPlanner = _nsPlanner;
+		executor = _executor;
+		nsLiveInstanceJpa = _nsLiveInstanceJpa;
+		nsBlueprintService = _nsBlueprintService;
+	}
+
+	public void nsTerminate(@Nonnull final UUID lcmOpOccsId) {
+		Thread.currentThread().setName(lcmOpOccsId + "-NT");
+		final NsBlueprint lcmOpOccs = nsBlueprintService.findById(lcmOpOccsId);
+		final NsdInstance nsInstance = nsInstanceRepository.findById(lcmOpOccs.getNsInstance().getId());
+		try {
+			nsTerminateInner(lcmOpOccs, nsInstance);
+		} catch (final RuntimeException e) {
+			LOG.error("NS Instantiate fail.", e);
+			lcmOpOccs.setOperationStatus(OperationStatusType.FAILED);
+			nsInstanceRepository.save(nsInstance);
+			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
+			lcmOpOccs.setStateEnteredTime(new Date());
+			nsBlueprintService.save(lcmOpOccs);
+			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
+		}
+	}
+
+	private void nsTerminateInner(final NsBlueprint blueprint, final NsdInstance nsInstance) {
+		// XXX This is not the correct way/
+		final VimConnectionInformation vimInfo = electVim(null, null);
+
+		final NsdPackage nsdInfo = nsdRepository.get(nsInstance.getNsdInfo().getId());
+		final NsConnections nsConn = new NsConnections();
+		nsPlanner.doPlan(nsdInfo, blueprint, null, nsConn.getConnections());
+		final NsBlueprint localPlan = nsBlueprintService.save(blueprint);
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
+		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localPlan, ChangeType.REMOVED);
+		GraphTools.exportGraph(executionPlane, nsdInfo.getId(), nsInstance, "delete", nsdRepository);
+
+		final NsParameters params = new NsParameters(vim, vimInfo, new HashMap<>(), null);
+		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execDelete(executionPlane, () -> new UowNsTaskDeleteProvider(params));
+		setResultLcmInstance(localPlan, results);
+		setLiveStatus(localPlan, results);
+		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), blueprint.getId());
+	}
+
+	public void nsInstantiate(@Nonnull final UUID blueprintId) {
+		Thread.currentThread().setName(blueprintId + "-NI");
+		final NsBlueprint nsBlueprint = nsBlueprintService.findById(blueprintId);
+		final NsdInstance nsInstance = nsInstanceRepository.findById(nsBlueprint.getNsInstance().getId());
+
+		try {
+			nsInstantiateInner(nsBlueprint, nsInstance);
+		} catch (final RuntimeException e) {
+			LOG.error("NS Instantiate fail.", e);
+			// We can't save here, we must do an atomic update.
+			nsBlueprint.setOperationStatus(OperationStatusType.FAILED);
+			nsBlueprint.setError(new FailureDetails(500L, e.getMessage()));
+			nsBlueprint.setStateEnteredTime(new Date());
+			nsBlueprintService.save(nsBlueprint);
+			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
+		}
+	}
+
+	public void nsInstantiateInner(@Nonnull final NsBlueprint blueprint, final NsdInstance nsInstance) {
+		final UUID nsdId = nsInstance.getNsdInfo().getId();
+		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
+		// Make plan in lcmOpOccs
+		final NsConnections nsConn = new NsConnections();
+		nsPlanner.doPlan(nsdInfo, blueprint, null, nsConn.getConnections());
+		NsBlueprint localBlueprint = nsBlueprintService.save(blueprint);
+		//
+		final VimConnectionInformation vimInfo = electVim(null, null);
+		final Vim vim = vimManager.getVimById(vimInfo.getId());
+		// Create Ns.
+		final Map<String, String> userData = nsdInfo.getUserDefinedData();
+		// XXX elect vim?
+		final Map<String, String> pubNet = vim.network(vimInfo).getPublicNetworks();
+		final NsParameters params = new NsParameters(vim, vimInfo, pubNet, null);
+		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localBlueprint, ChangeType.ADDED);
+		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execCreate(executionPlane, () -> new UowNsTaskCreateProvider(params));
+		setLiveStatus(localBlueprint, results);
+		setResultLcmInstance(localBlueprint, results);
+		LOG.debug("Done, Saving ...");
+		localBlueprint = nsBlueprintService.save(localBlueprint);
+		// XXX Send COMPLETED event.
+		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, localBlueprint.getId());
+		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
+	}
+
+	private static void setResultLcmInstance(@NotNull final NsBlueprint blueprint, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {
+		if (results.getErrored().isEmpty()) {
+			blueprint.setOperationStatus(OperationStatusType.COMPLETED);
+		} else {
+			blueprint.setOperationStatus(OperationStatusType.FAILED);
+		}
+		blueprint.setStateEnteredTime(new Date());
+	}
+
+	private void setLiveStatus(final NsBlueprint blueprint, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {
+		results.getSuccess().forEach(x -> {
+			final Task rhe = x.getId().getTaskEntity();
+			final ChangeType ct = rhe.getChangeType();
+			if (ct == ChangeType.ADDED) {
+				if (null != rhe.getId()) {
+					final NsLiveInstance vli = new NsLiveInstance(rhe.getVimResourceId(), (NsTask) rhe, blueprint, blueprint.getNsInstance());
+					nsLiveInstanceJpa.save(vli);
+				} else {
+					LOG.warn("Could not store: {}", x.getId().getName());
+				}
+			} else if (ct == ChangeType.REMOVED) {
+				LOG.info("Removing {}", rhe.getId());
+				final Optional<NsLiveInstance> vli = nsLiveInstanceJpa.findById(rhe.getRemovedLiveInstance());
+				if (!vli.isPresent()) {
+					LOG.warn("Could not find a VLI for task {}", rhe.getRemovedLiveInstance());
+					return;
+				}
+				nsLiveInstanceJpa.deleteById(vli.get().getId());
+			}
+		});
+		LOG.info("Saving NS LCM.");
+		nsBlueprintService.save(blueprint);
+	}
+
+	private VimConnectionInformation electVim(final String vimId, final Set<GrantInformationExt> set) {
+		// XXX: Do some real elections.
+		final Set<VimConnectionInformation> vims;
+		if (null != vimId) {
+			LOG.debug("Getting MSA 2.x VIM");
+			vims = vimManager.getVimByType("MSA_20");
+		} else {
+			LOG.debug("Getting OS v3 VIM");
+			vims = vimManager.getVimByType("OPENSTACK_V3");
+		}
+		if (vims.isEmpty()) {
+			throw new GenericException("Couldn't find a VIM.");
+		}
+		return vims.iterator().next();
+	}
+
+}
