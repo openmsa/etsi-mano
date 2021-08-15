@@ -16,9 +16,9 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.vnfi;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -59,7 +59,7 @@ public class ChangeExtVnfConnRequest implements Auditable {
 	private UUID id;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<ExtVirtualLinkDataEntity> extVirtualLinks = new ArrayList<>();
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = new LinkedHashSet<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, VimConnectionInformation> vimConnectionInfo;

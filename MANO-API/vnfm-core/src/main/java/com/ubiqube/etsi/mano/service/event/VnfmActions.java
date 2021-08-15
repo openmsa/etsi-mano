@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.event;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -126,7 +127,7 @@ public class VnfmActions extends AbstractGenericAction {
 	public void vnfChangeVnfConn(@NotNull final UUID blueprintId) {
 		final VnfBlueprint blueprint = blueprintService.findById(blueprintId);
 		final VnfInstance vnfInstance = vnfInstancesService.findById(blueprint.getVnfInstance().getId());
-		final List<ExtVirtualLinkDataEntity> evl = blueprint.getChangeExtVnfConnRequest().getExtVirtualLinks();
+		final Set<ExtVirtualLinkDataEntity> evl = blueprint.getChangeExtVnfConnRequest().getExtVirtualLinks();
 		evl.forEach(x -> {
 			x.getExtCps().forEach(y -> {
 				final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId());
