@@ -200,7 +200,7 @@ public interface NsDescriptors281Sol005Api {
 	ResponseEntity<NsdInfoModifications> nsDescriptorsNsdInfoIdPatch(
 			@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") String nsdInfoId,
 			@ApiParam(value = "", required = true) @Valid @RequestBody /* NsdInfoModifications */ String nsdInfoModifications,
-			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
+			@RequestHeader(name = HttpHeaders.IF_MATCH, required = false) String ifMatch);
 
 	@ApiOperation(value = "", nickname = "nsDescriptorsPost", notes = "The POST method is used to create a new NS descriptor resource. ", response = NsdInfo.class, tags = {})
 	@ApiResponses(value = {

@@ -27,7 +27,7 @@ public interface VnfPackageController {
 
 	void vnfPackagesVnfPkgIdDelete(UUID id);
 
-	VnfPackage vnfPackagesVnfPkgIdPatch(UUID id, String body);
+	VnfPackage vnfPackagesVnfPkgIdPatch(UUID id, String body, String ifMatch);
 
 	void vnfPackagesVnfPkgIdPackageContentPut(UUID id, byte[] data, String accept);
 

@@ -169,7 +169,7 @@ public interface NsDescriptor261Sol005Api {
 	@PatchMapping(value = "/{nsdInfoId}", produces = { "application/json" }, consumes = { "application/json" })
 	ResponseEntity<NsdInfo> nsDescriptorsNsdInfoIdPatch(@ApiParam(value = "Identifier of the individual NS descriptor resource. ", required = true) @PathVariable("nsdInfoId") @Nonnull String nsdInfoId,
 			@Nonnull @ApiParam(value = "The body", required = true) @Valid @RequestBody String body,
-			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
+			@RequestHeader(name = HttpHeaders.IF_MATCH, required = false) String ifMatch);
 
 	@ApiOperation(value = "Create a new NS descriptor resource.", nickname = "nsDescriptorsPost", notes = "The POST method is used to create a new NS descriptor resource or a new version of an on-boarded NS descriptor. ", response = NsdInfo.class, tags = {})
 	@ApiResponses(value = {

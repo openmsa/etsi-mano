@@ -27,6 +27,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.nfvo.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -61,8 +62,11 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	}
 
 	@Override
-	public VnfPackage vnfPackagesVnfPkgIdPatch(final UUID id, final String body) {
+	public VnfPackage vnfPackagesVnfPkgIdPatch(final UUID id, final String body, final String ifMatch) {
 		final VnfPackage vnfPackage = vnfPackageService.findById(id);
+		if ((ifMatch != null) && !ifMatch.equals(vnfPackage.getVersion() + "")) {
+			throw new PreConditionException(ifMatch + " does not match " + vnfPackage.getVersion());
+		}
 		patcher.patch(body, vnfPackage);
 		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, id);
 		return vnfPackageService.save(vnfPackage);

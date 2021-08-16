@@ -96,21 +96,22 @@ public class VnfPackageOnboardingImpl {
 		vnfPackageService = _vnfPackageService;
 	}
 
-	public void vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId, final byte[] data) {
-		final VnfPackage vnfPpackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
-		startOnboarding(vnfPpackage);
-		uploadAndFinishOnboarding(vnfPpackage, data);
+	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId, final byte[] data) {
+		VnfPackage vnfPpackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
+		vnfPpackage = startOnboarding(vnfPpackage);
+		return uploadAndFinishOnboarding(vnfPpackage, data);
 	}
 
-	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@Nonnull final String vnfPkgId, final String url) {
+	public VnfPackage vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@Nonnull final String vnfPkgId, final String url) {
 		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		startOnboarding(vnfPackage);
 		LOG.info("Async. Download of {}", url);
 		final byte[] data = getUrlContent(url);
-		uploadAndFinishOnboarding(vnfPackage, data);
+		return uploadAndFinishOnboarding(vnfPackage, data);
 	}
 
-	private void uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
+	private VnfPackage uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
+		VnfPackage ret = vnfPackage;
 		try {
 			vnfPackage.setChecksum(getChecksum(data));
 			vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
@@ -119,7 +120,7 @@ public class VnfPackageOnboardingImpl {
 				mapVnfPackage(packageProvider.getNewReaderInstance(data), vnfPackage);
 
 			}
-			finishOnboarding(vnfPackage);
+			ret = finishOnboarding(vnfPackage);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 		} catch (final RuntimeException e) {
 			LOG.error("", e);
@@ -127,8 +128,9 @@ public class VnfPackageOnboardingImpl {
 			final VnfPackage v2 = vnfPackageService.findById(vnfPackage.getId());
 			v2.setOnboardingState(OnboardingStateType.CREATED);
 			v2.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));
-			vnfPackageService.save(v2);
+			ret = vnfPackageService.save(v2);
 		}
+		return ret;
 	}
 
 	private void mapVnfPackage(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
@@ -269,15 +271,15 @@ public class VnfPackageOnboardingImpl {
 		return hexString.toString();
 	}
 
-	private void finishOnboarding(final VnfPackage vnfPackage) {
+	private VnfPackage finishOnboarding(final VnfPackage vnfPackage) {
 		vnfPackage.setOnboardingState(OnboardingStateType.ONBOARDED);
 		vnfPackage.setOperationalState(PackageOperationalState.ENABLED);
-		vnfPackageService.save(vnfPackage);
+		return vnfPackageService.save(vnfPackage);
 	}
 
-	private void startOnboarding(final VnfPackage vnfPackage) {
+	private VnfPackage startOnboarding(final VnfPackage vnfPackage) {
 		vnfPackage.setOnboardingState(OnboardingStateType.PROCESSING);
-		vnfPackageService.save(vnfPackage);
+		return vnfPackageService.save(vnfPackage);
 	}
 
 	private Optional<VnfPackage> getVnfPackage(final ProviderData pd) {

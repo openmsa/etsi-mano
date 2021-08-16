@@ -30,6 +30,7 @@ import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -296,7 +297,8 @@ public interface VnfPackages331Sol005Api {
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.PATCH)
 	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(
 			@ApiParam(value = "Parameters for VNF package information modifications.", required = true) @RequestBody final String body,
-			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId);
+			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@RequestHeader(name = HttpHeaders.IF_MATCH, required = false) String ifMatch);
 
 	@ApiOperation(value = "Read VNFD of an on-boarded VNF package.", nickname = "vnfPackagesVnfPkgIdVnfdGet", notes = "The GET method reads the content of the VNFD within a VNF package. The default format of the ZIP archive shall be the one specified in ETSI GS NFV-SOL 004 where only the files representing the VNFD and information necessary to navigate the ZIP file and to identify the file that is the entry point for parsing the VNFD and (if requested) further security information are included. This means that the structure of the ZIP archive shall correspond to the directory structure used in the VNF package and that the archive shall contain the following files from the package: • TOSCA.meta (if available in the package). The main TOSCA definitions YAML file (either as referenced from TOSCA.meta or available as a file with the extension \".yml\" or \".yaml\" from the root of the archive). Every component of the VNFD referenced (recursively) from the main TOSCA definitions YAML file. • The related security information, if the \"include_signatures\" URI parameter is provided, as follows: - the manifest file; - the singleton certificate file in the root of the VNF package (if available in the package); - the signing certificates of the individual files included in the ZIP archive (if available in the package); - the signatures of the individual files (if available in the package). ", tags = {})
 	@ApiResponses(value = {

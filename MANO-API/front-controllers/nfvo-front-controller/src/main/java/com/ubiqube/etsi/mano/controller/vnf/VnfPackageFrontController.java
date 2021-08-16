@@ -73,7 +73,7 @@ public interface VnfPackageFrontController {
 
 	<U> ResponseEntity<Void> uploadFromUri(U body, UUID id, String contentType);
 
-	<U> ResponseEntity<U> modify(String body, UUID vnfPkgId, Class<U> clazz, Consumer<U> makeLinks);
+	<U> ResponseEntity<U> modify(String body, UUID vnfPkgId, final String ifMatch, Class<U> clazz, Consumer<U> makeLinks);
 
 	ResponseEntity<List<ResourceRegion>> searchArtifact(UUID safeUUID, String range, String includeSignatures, String excludeAllManoArtifacts, String excludeAllNonManoArtifacts, String selectNonManoArtifactSets);
 

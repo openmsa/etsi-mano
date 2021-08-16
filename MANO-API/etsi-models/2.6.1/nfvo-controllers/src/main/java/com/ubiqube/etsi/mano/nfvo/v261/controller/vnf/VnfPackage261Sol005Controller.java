@@ -111,8 +111,8 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	 *
 	 */
 	@Override
-	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String contentType) {
-		return vnfPackageFrontController.modify(body, getSafeUUID(vnfPkgId), VnfPkgInfo.class, links::makeLinks);
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, final String body, final String ifMatch, final String contentType) {
+		return vnfPackageFrontController.modify(body, getSafeUUID(vnfPkgId), ifMatch, VnfPkgInfo.class, links::makeLinks);
 	}
 
 	/**

@@ -37,6 +37,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -183,6 +184,9 @@ public class VnfPackage implements PackageBase, Auditable {
 	private List<String> compatibleSpecificationVersions;
 	// 2.7.1
 	private FailureDetails onboardingFailureDetails = null;
+
+	@Version
+	private long version;
 
 	public void addInstantiationLevel(final VnfInstantiationLevels il) {
 		if (null == vnfInstantiationLevels) {

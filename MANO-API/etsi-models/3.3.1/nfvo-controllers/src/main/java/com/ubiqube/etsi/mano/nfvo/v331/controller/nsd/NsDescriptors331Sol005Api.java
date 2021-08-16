@@ -219,7 +219,7 @@ public interface NsDescriptors331Sol005Api {
 	ResponseEntity<NsdInfoModifications> nsDescriptorsNsdInfoIdPatch(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the individual NS descriptor resource. ", required = true, schema = @Schema()) @PathVariable("nsdInfoId") final String nsdInfoId,
 			@Parameter(in = ParameterIn.DEFAULT, description = "Parameters for the modification of an individual NS descriptor resource, as defined in clause 5.5.2.1. The Content-Type header shall be set to 'application/merge-patch+json' according to IETF RFC 7396.", required = true, schema = @Schema()) @Valid @RequestBody final String body,
-			@RequestHeader(name = HttpHeaders.IF_MATCH) String ifMatch);
+			@RequestHeader(name = HttpHeaders.IF_MATCH, required = false) String ifMatch);
 
 	@Operation(summary = "Create a new NS descriptor resource.", description = "The POST method is used to create a new NS descriptor resource. ", tags = {})
 	@ApiResponses(value = {
