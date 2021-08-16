@@ -55,9 +55,6 @@ public interface VnfInstanceService {
 	// @Nonnull
 	VnfInstance findBVnfInstanceyVnfPackageId(final NsdInstance nsdInstance, final UUID vnfPackageId);
 
-	// @Nonnull
-	VnfInstance findById(final UUID id);
-
 	VnfInstance save(final VnfInstance vnfInstance);
 
 	void delete(final UUID vnfInstanceId);

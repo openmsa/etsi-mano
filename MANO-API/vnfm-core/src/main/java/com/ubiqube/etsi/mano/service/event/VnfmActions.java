@@ -44,6 +44,7 @@ import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.ManoGrantService;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceServiceVnfm;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.VnfWorkflow;
 import com.ubiqube.etsi.mano.service.graph.vnfm.VnfParameters;
@@ -66,18 +67,22 @@ public class VnfmActions extends AbstractGenericAction {
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
+	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
+
 	public VnfmActions(final VimManager _vimManager, final VnfOrchestrationAdapter orchestrationAdapter, final VnfInstanceService _vnfInstancesService,
-			final VnfWorkflow _planner, final VnfBlueprintService _blueprintService, final ManoGrantService _vimResourceService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+			final VnfWorkflow _planner, final VnfBlueprintService _blueprintService, final ManoGrantService _vimResourceService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa,
+			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super(_vimManager, _planner, _vimResourceService, orchestrationAdapter);
 		vimManager = _vimManager;
 		vnfInstancesService = _vnfInstancesService;
 		blueprintService = _blueprintService;
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 
 	public void vnfOperate(@NotNull final UUID blueprintId) {
 		final VnfBlueprint blueprint = blueprintService.findById(blueprintId);
-		final VnfInstance vnfInstance = vnfInstancesService.findById(blueprint.getVnfInstance().getId());
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(blueprint.getVnfInstance().getId());
 		// XXX Move this to controller.
 		final List<VnfLiveInstance> instantiatedCompute = vnfInstancesService.getLiveComputeInstanceOf(vnfInstance);
 		instantiatedCompute.forEach(x -> {
@@ -126,7 +131,7 @@ public class VnfmActions extends AbstractGenericAction {
 
 	public void vnfChangeVnfConn(@NotNull final UUID blueprintId) {
 		final VnfBlueprint blueprint = blueprintService.findById(blueprintId);
-		final VnfInstance vnfInstance = vnfInstancesService.findById(blueprint.getVnfInstance().getId());
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(blueprint.getVnfInstance().getId());
 		final Set<ExtVirtualLinkDataEntity> evl = blueprint.getChangeExtVnfConnRequest().getExtVirtualLinks();
 		evl.forEach(x -> {
 			x.getExtCps().forEach(y -> {

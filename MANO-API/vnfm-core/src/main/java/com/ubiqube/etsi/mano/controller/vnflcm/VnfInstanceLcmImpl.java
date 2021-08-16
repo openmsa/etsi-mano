@@ -52,6 +52,7 @@ import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceServiceVnfm;
 import com.ubiqube.etsi.mano.service.VnfLcmService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
@@ -82,7 +83,11 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	private final VnfBlueprintService planService;
 
-	public VnfInstanceLcmImpl(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService, final VnfInstanceService _vnfInstanceService, final VimManager _vimManager, final VnfBlueprintService _planService, final VnfPackageService _vnfPackageService) {
+	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
+
+	public VnfInstanceLcmImpl(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService,
+			final VnfInstanceService _vnfInstanceService, final VimManager _vimManager, final VnfBlueprintService _planService, final VnfPackageService _vnfPackageService,
+			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		eventManager = _eventManager;
@@ -92,6 +97,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		vimManager = _vimManager;
 		planService = _planService;
 		vnfPackageService = _vnfPackageService;
+		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 
 	@Override
@@ -117,7 +123,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	@Transactional
 	@Override
 	public void delete(@Nonnull final UUID vnfInstanceId) {
-		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
 		if (!vnfInstanceService.isInstantiate(vnfInstance.getVnfPkg().getId())) {
@@ -132,7 +138,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public VnfBlueprint instantiate(@Nonnull final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
 
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
@@ -166,7 +172,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public VnfBlueprint terminate(@Nonnull final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
-		final VnfInstance vnfInstance = vnfInstanceService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		final VnfBlueprint blueprint = vnfLcmService.createTerminateOpOcc(vnfInstance);
 		eventManager.sendActionVnfm(ActionType.VNF_TERMINATE, blueprint.getId(), new HashMap<>());
@@ -176,7 +182,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public VnfBlueprint scaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
-		final VnfInstance vnfInstance = vnfInstanceService.findById(uuid);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(uuid);
 		ensureInstantiated(vnfInstance);
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createScaleToLevelOpOcc(vnfInstance, scaleVnfToLevelRequest);
 		eventManager.sendActionVnfm(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<>());
@@ -185,7 +191,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public VnfBlueprint scale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstanceService.findById(uuid);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(uuid);
 		ensureInstantiated(vnfInstance);
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createScaleOpOcc(vnfInstance, scaleVnfRequest);
 		eventManager.sendActionVnfm(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<>());
@@ -194,7 +200,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public VnfBlueprint operate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
-		final VnfInstance vnfInstance = vnfInstanceService.findById(uuid);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(uuid);
 		ensureInstantiated(vnfInstance);
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, operateVnfRequest);
 		eventManager.sendActionVnfm(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<>());
@@ -208,7 +214,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public VnfBlueprint changeExtConn(@NotNull final UUID uuid, final ChangeExtVnfConnRequest cevcr) {
-		final VnfInstance vnfInstance = vnfInstanceService.findById(uuid);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(uuid);
 		ensureInstantiated(vnfInstance);
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, cevcr);
 		eventManager.sendActionVnfm(ActionType.VNF_CHANGE_CONN, lcmOpOccs.getId(), new HashMap<>());

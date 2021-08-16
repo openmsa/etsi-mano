@@ -44,6 +44,7 @@ import com.ubiqube.etsi.mano.orchestrator.Bundle;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceServiceVnfm;
 import com.ubiqube.etsi.mano.service.graph.VduNamingStrategy;
 import com.ubiqube.etsi.mano.service.graph.VnfBundleAdapter;
 import com.ubiqube.etsi.mano.service.plan.ScalingStrategy;
@@ -62,12 +63,15 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 	private final VduNamingStrategy vduNamingStrategy;
 	private final VnfInstanceService vnfInstanceService;
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
-	public VnfV2ComputeContributor(final ScalingStrategy _scalingStrategy, final VduNamingStrategy _vduNamingStrategy, final VnfInstanceService _vnfInstanceService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
+	public VnfV2ComputeContributor(final ScalingStrategy _scalingStrategy, final VduNamingStrategy _vduNamingStrategy, final VnfInstanceService _vnfInstanceService,
+			final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		scalingStrategy = _scalingStrategy;
 		vduNamingStrategy = _vduNamingStrategy;
 		vnfInstanceService = _vnfInstanceService;
 		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 			return doTerminatePlan(blueprint.getVnfInstance());
 		}
 		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
-		final Instance vnfInstance = vnfInstanceService.findById(blueprint.getInstance().getId());
+		final Instance vnfInstance = vnfInstanceServiceVnfm.findById(blueprint.getInstance().getId());
 		final Set<ScaleInfo> scaling = merge(blueprint, vnfInstance);
 		final List<ComputeVt> ret = new ArrayList<>();
 		vnfPackage.getVnfCompute().forEach(x -> {

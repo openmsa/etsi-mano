@@ -14,17 +14,17 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service;
+package com.ubiqube.etsi.mano.service;
 
 import java.util.UUID;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
-import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
+import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 
 /**
  *
@@ -32,18 +32,26 @@ import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
  *
  */
 @Service
-@ConditionalOnMissingBean(VnfInstanceGatewayService.class)
-public class VnfInstanceServiceNfvo implements VnfInstanceGatewayService {
+public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 
 	private final VnfInstanceJpa vnfInstanceJpa;
 
-	public VnfInstanceServiceNfvo(final VnfInstanceJpa _vnfInstanceJpa) {
-		vnfInstanceJpa = _vnfInstanceJpa;
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public VnfInstanceServiceVnfm(final VnfInstanceJpa vnfInstanceJpa, final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
+		this.vnfInstanceJpa = vnfInstanceJpa;
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 	}
 
 	@Override
 	public VnfInstance findById(final UUID id) {
-		return vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find " + id));
+		final VnfInstance inst = vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find VNF instance: " + id));
+		inst.setInstantiationState(isLive(id));
+		return inst;
+	}
+
+	private InstantiationState isLive(final UUID id) {
+		return vnfLiveInstanceJpa.findByVnfInstanceId(id).isEmpty() ? InstantiationState.NOT_INSTANTIATED : InstantiationState.INSTANTIATED;
 	}
 
 }

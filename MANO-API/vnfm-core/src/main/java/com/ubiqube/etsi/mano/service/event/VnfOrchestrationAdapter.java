@@ -38,6 +38,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceServiceVnfm;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.WorkflowEvent;
@@ -56,14 +57,17 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask, Vn
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 	private final VnfPackageService vnfPackageService;
 	private final EventManager eventManager;
+	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
-	public VnfOrchestrationAdapter(final VnfInstanceService vnfInstancesService, final VnfBlueprintService blueprintService, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final EventManager eventManager, final VnfPackageService _vnfPackageService) {
+	public VnfOrchestrationAdapter(final VnfInstanceService vnfInstancesService, final VnfBlueprintService blueprintService, final VnfLiveInstanceJpa vnfLiveInstanceJpa,
+			final EventManager eventManager, final VnfPackageService _vnfPackageService, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super();
 		this.vnfInstancesService = vnfInstancesService;
 		this.blueprintService = blueprintService;
 		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 		this.eventManager = eventManager;
 		vnfPackageService = _vnfPackageService;
+		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 
 	@Override
@@ -85,7 +89,7 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask, Vn
 
 	@Override
 	public Instance getInstance(final UUID blueprintId) {
-		return vnfInstancesService.findById(blueprintId);
+		return vnfInstanceServiceVnfm.findById(blueprintId);
 	}
 
 	@Override

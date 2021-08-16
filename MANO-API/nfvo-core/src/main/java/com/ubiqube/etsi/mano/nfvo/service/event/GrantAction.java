@@ -37,7 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
@@ -59,11 +59,11 @@ public class GrantAction extends AbstractGrantAction {
 
 	private final VimManager vimManager;
 
-	private final VnfInstanceService vnfInstanceService;
+	private final VnfInstanceGatewayService vnfInstanceService;
 
 	private final VnfPackageService vnfPackageService;
 
-	public GrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VnfInstanceService _vnfInstancesRepository, final VimElection _vimElection, final VnfPackageService _vnfPackageService) {
+	public GrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VnfInstanceGatewayService _vnfInstancesRepository, final VimElection _vimElection, final VnfPackageService _vnfPackageService) {
 		super(_grantJpa, _vimManager, _vimElection);
 		grantJpa = _grantJpa;
 		vimManager = _vimManager;

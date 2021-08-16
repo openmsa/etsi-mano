@@ -39,10 +39,9 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.factory.LcmFactory;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
-import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
-import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -50,17 +49,15 @@ import ma.glasnost.orika.MapperFacade;
 public class NsInstanceControllerImpl implements NsInstanceController {
 	private final NsBlueprintService blueprintService;
 	private final NsInstanceService nsInstanceService;
-	private final NsdPackageJpa nsdPackageJpa;
 	private final MapperFacade mapper;
-	private final VnfInstanceService vnfInstancesService;
+	private final VnfInstanceGatewayService vnfInstancesService;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
 	public NsInstanceControllerImpl(final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
-			final NsdPackageJpa nsdPackageJpa, final MapperFacade mapper, final VnfInstanceService vnfInstancesService) {
+			final MapperFacade mapper, final VnfInstanceGatewayService vnfInstancesService) {
 		nsInstanceService = _nsInstanceService;
 		blueprintService = _lcmOpOccsService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
-		this.nsdPackageJpa = nsdPackageJpa;
 		this.mapper = mapper;
 		this.vnfInstancesService = vnfInstancesService;
 	}

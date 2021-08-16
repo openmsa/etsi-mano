@@ -41,6 +41,7 @@ import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 import com.ubiqube.etsi.mano.service.VnfInstanceService;
+import com.ubiqube.etsi.mano.service.VnfInstanceServiceVnfm;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 
 import ma.glasnost.orika.MapperFacade;
@@ -63,12 +64,16 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 
 	private final MapperFacade mapper;
 
-	public VnfInstanceGenericFrontControllerImpl(final VnfPackageService vnfPackageService, final VnfInstanceLcm vnfInstanceLcm, final VnfInstanceService vnfInstancesService, final MapperFacade mapper) {
+	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
+
+	public VnfInstanceGenericFrontControllerImpl(final VnfPackageService vnfPackageService, final VnfInstanceLcm vnfInstanceLcm, final VnfInstanceService vnfInstancesService,
+			final MapperFacade mapper, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super();
 		this.vnfPackageService = vnfPackageService;
 		this.vnfInstanceLcm = vnfInstanceLcm;
 		this.vnfInstancesService = vnfInstancesService;
 		this.mapper = mapper;
+		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 
 	@Override
@@ -96,14 +101,14 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 
 	@Override
 	public <U> ResponseEntity<Void> snapshot(final UUID vnfInstanceId, final U body) {
-		final VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 	}
 
 	@Override
 	public <V> ResponseEntity<V> modify(final UUID vnfInstanceId, final String body, final String ifMatch, final Function<VnfInstance, String> getSelfLink) {
-		VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
+		VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		vnfInstance = vnfInstancesService.vnfLcmPatch(vnfInstance, body, ifMatch);
 		final String link = getSelfLink.apply(vnfInstance);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
@@ -127,14 +132,14 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 
 	@Override
 	public ResponseEntity<Void> heal(final UUID vnfInstanceId, final String cause, final Map<String, String> hashMap) {
-		final VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 	}
 
 	@Override
 	public <U> ResponseEntity<U> findById(final UUID vnfInstanceId, final Class<U> clazz, final Consumer<U> makeLink, final String instanceSelfLink) {
-		final VnfInstance vnfInstanceDb = vnfInstancesService.findById(vnfInstanceId);
+		final VnfInstance vnfInstanceDb = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		final U vnfInstance = mapper.map(vnfInstanceDb, clazz);
 
 		final VnfPackage vnfPackage = vnfPackageService.findById(vnfInstanceDb.getVnfPkg().getId());
@@ -151,28 +156,28 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 
 	@Override
 	public <U> ResponseEntity<Void> createSnapshot(final UUID vnfInstanceId, final U object, final Function<VnfBlueprint, String> getSelfLink) {
-		final VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 	}
 
 	@Override
 	public <U> ResponseEntity<Void> changeVnfPkg(final UUID vnfInstanceId, final U object, final Function<VnfBlueprint, String> getSelfLink) {
-		final VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 	}
 
 	@Override
 	public <U> ResponseEntity<Void> changeFlavour(final UUID vnfInstanceId, final U object, final Function<VnfBlueprint, String> getSelfLink) {
-		final VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		throw new GenericException("TODO");
 	}
 
 	@Override
 	public <U> ResponseEntity<Void> changeExtConn(final UUID vnfInstanceId, final U object, final Function<VnfBlueprint, String> getSelfLink) {
-		final VnfInstance vnfInstance = vnfInstancesService.findById(vnfInstanceId);
+		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		final ChangeExtVnfConnRequest cevcr = mapper.map(object, ChangeExtVnfConnRequest.class);
 		final VnfBlueprint lcm = vnfInstanceLcm.changeExtConn(vnfInstanceId, cevcr);
