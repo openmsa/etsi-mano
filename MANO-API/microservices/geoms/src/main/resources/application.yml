@@ -1,0 +1,51 @@
+eureka:
+  instance:
+    health-check-url: /actuator/heath/
+    lease-expiration-duration-in-seconds: 2
+    lease-renewal-interval-in-seconds: 5
+keycloak:
+  auth-server-url: http://localhost:8800/auth/realms/bootadmin/protocol/openid-connect/token
+  autodetect-bearer-only: true
+  credentials:
+    secret: b4195da2-5565-4327-91c4-832da5e0d021
+  enabled: true
+  principal-attribute: preferred_username
+  realm: bootadmin
+  resource: app-actuators
+  ssl-required: external
+  token-minimum-time-to-live: 30
+  use-resource-role-mappings: true
+logging:
+  level:
+    de:
+      codecentric: DEBUG
+    org:
+      keycloak: DEBUG
+      springframework:
+        security: DEBUG
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    git:
+      mode: full
+  metrics:
+    export:
+      elastic:
+        host: http://msa_es:9200
+server:
+  port: 8110
+spring:
+  application:
+    name: mano-geo-service
+  boot:
+    admin:
+      client:
+        url: http://mano-db:8761/admin
+  jmx:
+    enabled: true
