@@ -29,7 +29,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnflcm.VnfLcmOpOccGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.AffectedVirtualLink;
@@ -40,6 +39,7 @@ import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOccLinks;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOccResourceChanges;
+import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfLcmOpOccGenericFrontController;
 
 import ma.glasnost.orika.MapperFacade;
 

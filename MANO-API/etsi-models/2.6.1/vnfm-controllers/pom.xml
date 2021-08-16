@@ -140,5 +140,10 @@
 			<artifactId>orika-eclipse-tools</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>vnfm-front-controller</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>	
 </project>

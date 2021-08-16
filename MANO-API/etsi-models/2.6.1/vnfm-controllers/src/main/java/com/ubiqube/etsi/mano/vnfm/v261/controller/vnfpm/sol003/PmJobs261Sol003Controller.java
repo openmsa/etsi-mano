@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.nsperfo.PerformanceReport;
-import com.ubiqube.etsi.mano.controller.vnfpm.VnfmPmGenericFrontController;
+import com.ubiqube.etsi.mano.vnfm.fc.vnfpm.VnfmPmGenericFrontController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmJobLinks;

@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
-import com.ubiqube.etsi.mano.nfvo.config.OrikaConfiguration;
+import com.ubiqube.etsi.mano.nfvo.config.NfvoOrikaConfiguration;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -45,7 +45,7 @@ public class TaskToGrantTest {
 	private final MapperFacade mapper;
 
 	public TaskToGrantTest() {
-		final OrikaConfiguration orikaConfiguration = new OrikaConfiguration();
+		final NfvoOrikaConfiguration orikaConfiguration = new NfvoOrikaConfiguration();
 		mapperFactory = new DefaultMapperFactory.Builder().build();
 		orikaConfiguration.configure(mapperFactory);
 		mapper = mapperFactory.getMapperFacade();
