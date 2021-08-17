@@ -102,7 +102,7 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdOperatePost(final String vnfInstanceId, final OperateVnfRequest operateVnfRequest) {
-		return frontController.operate(getSafeUUID(vnfInstanceId), null, VnfLcm261Sol003Controller::getLcmLink);
+		return frontController.operate(getSafeUUID(vnfInstanceId), operateVnfRequest, VnfLcm261Sol003Controller::getLcmLink);
 	}
 
 	@Override
