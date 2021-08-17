@@ -73,6 +73,14 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 
 	@Override
 	public <U> ResponseEntity<U> findById(final UUID vnfPkgId, final Class<U> clazz, final Consumer<U> makeLinks) {
+		final VnfPackage vnfPackage = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
+		final U vnfPkgInfo = mapper.map(vnfPackage, clazz);
+		makeLinks.accept(vnfPkgInfo);
+		return ResponseEntity.ok().eTag("" + vnfPackage.getVersion()).body(vnfPkgInfo);
+	}
+
+	@Override
+	public <U> ResponseEntity<U> findByIdReadOnly(final UUID vnfPkgId, final Class<U> clazz, final Consumer<U> makeLinks) {
 		final U vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId, clazz);
 		makeLinks.accept(vnfPkgInfo);
 		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);

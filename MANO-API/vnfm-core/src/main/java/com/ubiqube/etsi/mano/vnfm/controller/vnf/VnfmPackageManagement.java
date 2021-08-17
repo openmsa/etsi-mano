@@ -72,6 +72,11 @@ public class VnfmPackageManagement extends SearchableService implements VnfPacka
 	}
 
 	@Override
+	public VnfPackage vnfPackagesVnfPkgIdGet(final UUID vnfPkgId) {
+		throw new IllegalAccessError("There is no method for writing over HTTP.");
+	}
+
+	@Override
 	public List<VnfPackage> vnfPackagesGet(final String filter) {
 		// XXX We have to change interface protocol.
 		final UriComponentsBuilder builder = nfvoRest.uriBuilder()

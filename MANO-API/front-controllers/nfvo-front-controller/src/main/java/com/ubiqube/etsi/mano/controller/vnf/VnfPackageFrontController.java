@@ -51,6 +51,8 @@ public interface VnfPackageFrontController {
 
 	<U> ResponseEntity<U> findById(@Nonnull UUID vnfPkgId, Class<U> clazz, Consumer<U> makeLinks);
 
+	<U> ResponseEntity<U> findByIdReadOnly(@Nonnull UUID vnfPkgId, Class<U> clazz, Consumer<U> makeLinks);
+
 	ResponseEntity<Resource> getManifest(UUID vnfPkgId, String includeSignature);
 
 	ResponseEntity<List<ResourceRegion>> getContent(@Nonnull UUID vnfPkgId, String range);

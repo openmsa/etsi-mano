@@ -61,7 +61,7 @@ public class VnfPackages271Sol003Controller implements VnfPackages271Sol003Api {
 
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, @Valid final String includeSignature) {
-		return frontController.findById(getSafeUUID(vnfPkgId), VnfPkgInfo.class, links::makeLinks);
+		return frontController.findByIdReadOnly(getSafeUUID(vnfPkgId), VnfPkgInfo.class, links::makeLinks);
 	}
 
 	@Override

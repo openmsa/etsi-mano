@@ -81,6 +81,11 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	}
 
 	@Override
+	public VnfPackage vnfPackagesVnfPkgIdGet(final UUID vnfPkgId) {
+		return vnfPackageRepository.get(vnfPkgId);
+	}
+
+	@Override
 	public List<VnfPackage> vnfPackagesGet(final String filter) {
 		return vnfPackageRepository.query(filter);
 	}
