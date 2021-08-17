@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -27,13 +28,18 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -51,9 +57,12 @@ public class VnfLcmService {
 
 	private final EntityManager em;
 
-	public VnfLcmService(final VnfBlueprintJpa _planJpa, final EntityManager _em) {
+	private final VnfInstanceService vnfInstancesService;
+
+	public VnfLcmService(final VnfBlueprintJpa _planJpa, final EntityManager _em, final VnfInstanceService vnfInstancesService) {
 		planJpa = _planJpa;
 		em = _em;
+		this.vnfInstancesService = vnfInstancesService;
 	}
 
 	@Nonnull
@@ -113,6 +122,11 @@ public class VnfLcmService {
 		final OperateChanges opChanges = lcmOpOccs.getOperateChanges();
 		opChanges.setTerminationType(OperationalStateType.fromValue(operateVnfRequest.getChangeStateTo().toString()));
 		opChanges.setGracefulTerminationTimeout(operateVnfRequest.getGracefulStopTimeout());
+		final List<VnfLiveInstance> instantiatedCompute = vnfInstancesService.getLiveComputeInstanceOf(vnfInstance);
+		instantiatedCompute.forEach(x -> {
+			final VnfTask affectedCompute = copyInstantiedResource(x, new ComputeTask(), lcmOpOccs);
+			lcmOpOccs.addTask(affectedCompute);
+		});
 		return planJpa.save(lcmOpOccs);
 	}
 
@@ -129,5 +143,15 @@ public class VnfLcmService {
 		final VnfBlueprint lcmOpOccs = VnfLcmFactory.createVnfLcmOpOccs(PlanOperationType.CHANGE_EXTERNAL_VNF_CONNECTIVITY, vnfInstance.getId());
 		lcmOpOccs.setChangeExtVnfConnRequest(cevcr);
 		return planJpa.save(lcmOpOccs);
+	}
+
+	private static <T extends VnfTask> T copyInstantiedResource(final VnfLiveInstance x, final T task, final VnfBlueprint blueprint) {
+		task.setChangeType(ChangeType.REMOVED);
+		task.setStatus(PlanStatusType.STARTED);
+		task.setBlueprint(blueprint);
+		task.setStartDate(LocalDateTime.now());
+		task.setToscaName(x.getTask().getToscaName());
+		task.setVimResourceId(x.getResourceId());
+		return task;
 	}
 }

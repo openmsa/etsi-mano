@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service.event;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +26,6 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
@@ -36,10 +34,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.event.AbstractGenericAction;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -84,16 +79,9 @@ public class VnfmActions extends AbstractGenericAction {
 	public void vnfOperate(@NotNull final UUID blueprintId) {
 		final VnfBlueprint blueprint = blueprintService.findById(blueprintId);
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(blueprint.getVnfInstance().getId());
-		// XXX Move this to controller.
-		final List<VnfLiveInstance> instantiatedCompute = vnfInstancesService.getLiveComputeInstanceOf(vnfInstance);
-		instantiatedCompute.forEach(x -> {
-			final VnfTask affectedCompute = copyInstantiedResource(x, new ComputeTask(), blueprint);
-			blueprint.addTask(affectedCompute);
-		});
-		final VnfBlueprint localBlueprint = blueprintService.save(blueprint);
 		final VimConnectionInformation vimConnection = vnfInstance.getVimConnectionInfo().iterator().next();
 		final Vim vim = vimManager.getVimById(vimConnection.getId());
-		localBlueprint.getTasks().forEach(x -> {
+		blueprint.getTasks().forEach(x -> {
 			if (blueprint.getOperateChanges().getTerminationType() == OperationalStateType.STARTED) {
 				vim.startServer(vimConnection, x.getVimResourceId());
 				// vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STARTED);
@@ -103,16 +91,6 @@ public class VnfmActions extends AbstractGenericAction {
 			}
 		});
 		vnfInstancesService.save(vnfInstance);
-	}
-
-	private static <T extends VnfTask> T copyInstantiedResource(final VnfLiveInstance x, final T task, final VnfBlueprint blueprint) {
-		task.setChangeType(ChangeType.REMOVED);
-		task.setStatus(PlanStatusType.STARTED);
-		task.setBlueprint(blueprint);
-		task.setStartDate(LocalDateTime.now());
-		task.setToscaName(x.getTask().getToscaName());
-		task.setVimResourceId(x.getTask().getVimResourceId());
-		return task;
 	}
 
 	private Map<String, String> getLiveVl(final VnfInstance vnfInstance) {
