@@ -2,35 +2,30 @@
 <metadata>
     <map>
         <entry>
-            <key>FILE_TYPE</key>
-            <value>text</value>
+            <key>DISPLAYNAME</key>
+            <value>SOL001_NS_LCM.xml</value>
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1592384861879</value>
-        </entry>
-        <entry>
-            <key>COMMENT</key>
-            <value></value>
+            <value>1629219247268</value>
         </entry>
         <entry>
             <key>REPOSITORY</key>
+            <value>Process</value>
         </entry>
         <entry>
             <key>DATE_CREATION</key>
-            <value>1591258217980</value>
-        </entry>
-        <entry>
-            <key>CONFIGURATION_FILTER</key>
-            <value></value>
-        </entry>
-        <entry>
-            <key>TYPE</key>
-            <value>UPLOAD</value>
+            <value>1629219247268</value>
         </entry>
         <entry>
             <key>TAG</key>
-            <value>SOL001_NS_LCM.xml</value>
+        </entry>
+        <entry>
+            <key>TYPE</key>
+            <value>FILE</value>
+        </entry>
+        <entry>
+            <key>COMMENT</key>
         </entry>
     </map>
 </metadata>
