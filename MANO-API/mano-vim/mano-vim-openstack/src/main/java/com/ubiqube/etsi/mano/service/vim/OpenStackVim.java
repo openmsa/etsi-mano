@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.vim;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -164,7 +165,7 @@ public class OpenStackVim implements Vim {
 		bs.name(instanceName);
 		bs.flavor(flavorId);
 		if ((null != cloudInitData) && !cloudInitData.isEmpty()) {
-			bs.userData(Base64.getEncoder().encodeToString(cloudInitData.getBytes()));
+			bs.userData(Base64.getEncoder().encodeToString(cloudInitData.getBytes(Charset.defaultCharset())));
 		}
 		if (!networks.isEmpty()) {
 			bs.networks(networks);
