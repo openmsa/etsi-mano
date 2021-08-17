@@ -1,369 +1,264 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <ObjectDefinition>
-	<information>
-    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
-    <description/>
-    <displayField>device_id</displayField>
-    <serviceTaskType>php</serviceTaskType>
-    <executionDetailsVisibility>5</executionDetailsVisibility>
-    <executionMode>TRANSACTION</executionMode>
-    <group>NFV|NFVO</group>
-    <icon>/images/repository/CommandDefinition/icons/page icon.jpg</icon>
-    <name>VNF / NS Packages Management</name>
-    <order>10000</order>
-    <poolId>0</poolId>
-    <readVariableVisibility>5</readVariableVisibility>
-    <showDetailedServiceInstances>true</showDetailedServiceInstances>
-    <showProcessExecConsole>true</showProcessExecConsole>
-    <showProcessResult>false</showProcessResult>
-    <showVariables>false</showVariables>
-    <visibility>5</visibility>
-  </information>
-	<variables frozen="0">
-    <variable displayName="Device Id" displayOrder="0" keepOnImport="true" maxLength="165" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+  <variables frozen="0">
+    <variable displayName="Device Id" name="params.device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="true" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Sync to NFVO</section>
+        <sections>Sync to NFVO</sections>
       </sections>
       <sdTypes>
-        <sdType manId="17010303" modId="17010305"/>
-        <sdType manId="17010304" modId="17010306"/>
+        <sdTypes manId="17010303" modId="17010305"/>
+        <sdTypes manId="17010304" modId="17010306"/>
       </sdTypes>
     </variable>
-    <variable displayName="NSD Package IDs" displayOrder="2" maxLength="100" name="params.nsdPkgIds.0" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String"/>
-    <variable displayName="Vnfpkgid" displayOrder="3" maxLength="100" name="params.vnfPkgId" numberOfRowMax="0" refDeviceIdVar="params.device_id" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+    <variable displayName="NSD Package IDs" name="params.nsdPkgIds.0" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="2" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="Vnfpkgid" name="params.vnfPkgId" startIncrement="0" type="OBMFRef" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" refDeviceIdVar="params.device_id" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>VNF Package ID</section>
+        <sections>VNF Package ID</sections>
       </sections>
       <classes>
         <class>vnf_catalogs</class>
       </classes>
     </variable>
-    <variable displayName="Nsdpkgid" displayOrder="4" maxLength="100" name="params.nsdPkgId" numberOfRowMax="0" refDeviceIdVar="params.device_id" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+    <variable displayName="Nsdpkgid" name="params.nsdPkgId" startIncrement="0" type="OBMFRef" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="4" increment="0" refServiceURI="" refDeviceIdVar="params.device_id" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>NSD Package ID</section>
+        <sections>NSD Package ID</sections>
       </sections>
       <classes>
         <class>ns_catalogs</class>
       </classes>
     </variable>
-    <variable default="false" displayName="State enbled ?" displayOrder="5" maxLength="100" name="params.state" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Boolean">
+    <variable displayName="State enbled ?" name="params.state" startIncrement="0" type="Boolean" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="5" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="false" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Enable/Disable State</section>
+        <sections>Enable/Disable State</sections>
       </sections>
     </variable>
-    <variable displayName="Customerid" displayOrder="6" maxLength="100" name="params.customerId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Customerid" name="params.customerId" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="6" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create NS Package</section>
+        <sections>Create NS Package</sections>
       </sections>
     </variable>
-    <variable displayName="Name" displayOrder="7" maxLength="100" name="params.name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Name" name="params.name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="7" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create NS Package</section>
+        <sections>Create NS Package</sections>
       </sections>
     </variable>
-    <variable displayName="Vimid" displayOrder="8" keepOnImport="true" maxLength="165" name="params.vimId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+    <variable displayName="Vimid" name="params.vimId" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="8" increment="0" refServiceURI="" keepOnImport="true" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create NS Package</section>
+        <sections>Create NS Package</sections>
       </sections>
       <sdTypes>
-        <sdType manId="14020603" modId="16051904"/>
-        <sdType manId="14020603" modId="16051903"/>
+        <sdTypes manId="14020603" modId="16051904"/>
+        <sdTypes manId="14020603" modId="16051903"/>
       </sdTypes>
     </variable>
-    <variable displayName="Vnfpkgids" displayOrder="9" maxLength="100" name="params.vnfPkgIds.0" numberOfRowMax="0" refDeviceIdVar="params.device_id" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+    <variable displayName="Vnfpkgids" name="params.vnfPkgIds.0" startIncrement="0" type="OBMFRef" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="9" increment="0" refServiceURI="" refDeviceIdVar="params.device_id" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Package</section>
+        <sections>Create VNF Package</sections>
       </sections>
       <classes>
         <class>vnf_catalogs</class>
       </classes>
     </variable>
-    <variable displayName="Manufacturerid" displayOrder="10" maxLength="100" name="params.manufacturerId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Manufacturerid" name="params.manufacturerId" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="10" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Package</section>
+        <sections>Create VNF Package</sections>
       </sections>
     </variable>
-    <variable displayName="Modelid" displayOrder="11" maxLength="100" name="params.modelId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Modelid" name="params.modelId" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="11" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Package</section>
+        <sections>Create VNF Package</sections>
       </sections>
     </variable>
-    <variable displayName="Device Login" displayOrder="12" maxLength="100" name="params.device_login" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Device Login" name="params.device_login" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="12" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Package</section>
+        <sections>Create VNF Package</sections>
       </sections>
     </variable>
-    <variable displayName="Device Password" displayOrder="13" maxLength="100" name="params.device_password" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Device Password" name="params.device_password" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="13" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Package</section>
+        <sections>Create VNF Package</sections>
       </sections>
     </variable>
-    <variable cols="100" displayName="Vnf Pkg Content" displayOrder="14" editable="false" maxLength="100" name="params.vnf_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="File">
+    <variable displayName="Vnf Pkg Content" name="params.vnf_pkg_content" startIncrement="0" type="File" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="14" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Package</section>
+        <sections>Create VNF Package</sections>
       </sections>
-      <repositories>
-        <repository>Datafiles</repository>
-      </repositories>
     </variable>
-    <variable cols="100" displayName="Nsd Pkg Content" displayOrder="15" editable="false" maxLength="100" name="params.nsd_pkg_content" numberOfRowMax="0" rows="70" startIncrement="0" tableSizeFix="false" type="File">
+    <variable displayName="Nsd Pkg Content" name="params.nsd_pkg_content" startIncrement="0" type="File" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="15" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create NS Package</section>
+        <sections>Create NS Package</sections>
       </sections>
-      <repositories>
-        <repository>Datafiles</repository>
-      </repositories>
     </variable>
-    <variable displayName="Vnf Package Name" displayOrder="17" maxLength="100" name="params.vnf_package_name" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vnf Package Name" name="params.vnf_package_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="17" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create VNF Package</section>
+        <sections>Create VNF Package</sections>
       </sections>
     </variable>
   </variables>
-	<example>
-		<content/>
-	</example>
-
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_NS_Package">
-		<visibility>5</visibility>
-		<displayName>Create VNF Package</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-
-
-		<task name="Task_Create_VNF_Package.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_NS_Package/Tasks/
-			</processPath>
-			<displayName>Create VNF Package</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchronize</displayName>
-		</task>
-	</process>
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_VNF">
-		<visibility>5</visibility>
-		<displayName>Enable VNF</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-
-		<task name="Task_ED_VNF.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_VNF/Tasks/
-			</processPath>
-			<displayName>ED VNF</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchronize</displayName>
-		</task>
-	</process>
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Disable_VNF">
-		<visibility>5</visibility>
-		<displayName>Disable VNF</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-		<task name="Task_DIS_VNF.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Disable_VNF/Tasks/
-			</processPath>
-			<displayName>DIS VNF</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchronize</displayName>
-		</task>
-	</process>
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_VNF">
-		<visibility>5</visibility>
-		<displayName>Delete VNF</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-
-
-		<task name="Task_Delete_VNF.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_VNF/Tasks/
-			</processPath>
-			<displayName>Delete VNF</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchro</displayName>
-		</task>
-	</process>
-
-
-
-
-
-
-
-
-
-
-
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_VNF">
-		<visibility>5</visibility>
-		<displayName>Onboard VNF</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-
-
-		<task name="Task_Onboard_VNF.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_VNF/Tasks/
-			</processPath>
-			<displayName>Onboard VNF</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchronization</displayName>
-		</task>
-	</process>
-
-
-
-
-
-
-
-
-
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_VNF_Package">
-		<visibility>5</visibility>
-		<displayName>New service</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>CREATE</type>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Sync to NFVO</displayName>
-		</task>
-	</process>
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Move_To_Trash">
-		<visibility>5</visibility>
-		<displayName>Move To Trash</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>DELETE</type>
-	</process>
-
-
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_new_service">
-		<visibility>5</visibility>
-		<displayName>Create NS Package</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-
-		<task name="Task_Create_NS_Package.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_new_service/Tasks/
-			</processPath>
-			<displayName>Create NS Package</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchronize</displayName>
-		</task>
-	</process>
-		<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_NSD">
-		<visibility>5</visibility>
-		<displayName>Enable NSD</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-
-
-		<task name="Task_ED_NSD.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_NSD/Tasks/
-			</processPath>
-			<displayName>ED NSD</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchronization</displayName>
-		</task>
-	</process>
-
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Disable_NSD">
-		<visibility>5</visibility>
-		<displayName>Disable NSD</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-		<task name="Task_DIS_NSD.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Disable_NSD/Tasks/
-			</processPath>
-			<displayName>DIS NSD</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchronize</displayName>
-		</task>
-	</process>
-	
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_NSD">
-		<visibility>5</visibility>
-		<displayName>Delete NSD</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-
-
-		<task name="Task_Delete_NSD.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_NSD/Tasks/
-			</processPath>
-			<displayName>Delete NSD</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchro</displayName>
-		</task>
-	</process>
-	<process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_NSD">
-		<visibility>5</visibility>
-		<displayName>Onboard NSD</displayName>
-		<icon/>
-		<poolId>0</poolId>
-		<compensation/>
-		<allowSchedule>false</allowSchedule>
-		<type>UPDATE</type>
-
-
-		<task name="Task_Onboard_NSD.php">
-			<processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_NSD/Tasks/
-			</processPath>
-			<displayName>Onboard NSD</displayName>
-		</task>
-		<task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
-			<processPath/>
-			<displayName>Synchronization</displayName>
-		</task>
-	</process>
-
-
+  <example/>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_NS_Package">
+    <displayName>Create VNF Package</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Create_VNF_Package.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_NS_Package/Tasks/</processPath>
+      <displayName>Create VNF Package</displayName>
+    </task>
+    <task name="Task_msa_synchronize_objects.php">
+      <processPath>/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/</processPath>
+      <displayName>Synchronize</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_VNF">
+    <displayName>Enable VNF</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_ED_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_VNF/Tasks/</processPath>
+      <displayName>ED VNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronize</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Disable_VNF">
+    <displayName>Disable VNF</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_DIS_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Disable_VNF/Tasks/</processPath>
+      <displayName>DIS VNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronize</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_VNF">
+    <displayName>Delete VNF</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Delete_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_VNF/Tasks/</processPath>
+      <displayName>Delete VNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchro</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_VNF">
+    <displayName>Onboard VNF</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Onboard_VNF.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_VNF/Tasks/</processPath>
+      <displayName>Onboard VNF</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronization</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Create_VNF_Package">
+    <displayName>New service</displayName>
+    <type>CREATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Sync to NFVO</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Move_To_Trash">
+    <displayName>Move To Trash</displayName>
+    <type>DELETE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_new_service">
+    <displayName>Create NS Package</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Create_NS_Package.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_new_service/Tasks/</processPath>
+      <displayName>Create NS Package</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronize</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_NSD">
+    <displayName>Enable NSD</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_ED_NSD.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Enable_Disable_NSD/Tasks/</processPath>
+      <displayName>ED NSD</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronization</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Disable_NSD">
+    <displayName>Disable NSD</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_DIS_NSD.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Disable_NSD/Tasks/</processPath>
+      <displayName>DIS NSD</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronize</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_NSD">
+    <displayName>Delete NSD</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Delete_NSD.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Delete_NSD/Tasks/</processPath>
+      <displayName>Delete NSD</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchro</displayName>
+    </task>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_NSD">
+    <displayName>Onboard NSD</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Onboard_NSD.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFVO_Packages_creation/Process_Onboard_NSD/Tasks/</processPath>
+      <displayName>Onboard NSD</displayName>
+    </task>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+      <processPath/>
+      <displayName>Synchronization</displayName>
+    </task>
+  </process>
+  <information>
+    <icon>/images/repository/CommandDefinition/icons/page icon.jpg</icon>
+    <description/>
+    <displayField>device_id</displayField>
+    <serviceTaskType>php</serviceTaskType>
+    <order>10000</order>
+    <visibility>5</visibility>
+    <name>VNF / NS Packages Management</name>
+    <group>NFV|NFVO</group>
+  </information>
 </ObjectDefinition>
