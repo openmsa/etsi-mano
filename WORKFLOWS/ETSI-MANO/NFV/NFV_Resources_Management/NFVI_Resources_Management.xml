@@ -1,86 +1,66 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ObjectDefinition>  <information>
-    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
-    <description/>
-    <displayField>service_id</displayField>
-    <serviceTaskType>php</serviceTaskType>
-    <executionDetailsVisibility>5</executionDetailsVisibility>
-    <executionMode>TRANSACTION</executionMode>
-    <group>NFV|NFVO</group>
-    <icon>/images/repository/CommandDefinition/icons/fibre channel disk subsystem.jpg</icon>
-    <name>NFVI Resources Management</name>
-    <order>10000</order>
-    <poolId>0</poolId>
-    <readVariableVisibility>5</readVariableVisibility>
-    <showDetailedServiceInstances>true</showDetailedServiceInstances>
-    <showProcessExecConsole>true</showProcessExecConsole>
-    <showProcessResult>false</showProcessResult>
-    <showVariables>false</showVariables>
-    <visibility>5</visibility>
-  </information>  <variables frozen="0">
-    <variable displayName="NFVO " displayOrder="0" maxLength="100" name="params.device_id" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+<ObjectDefinition>
+  <variables frozen="0">
+    <variable displayName="NFVO " name="params.device_id" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Sync to NFVO</section>
+        <sections>Sync to NFVO</sections>
       </sections>
     </variable>
-    <variable default="OPENSTACK_V3" displayName="Vimtype" displayOrder="2" maxLength="100" name="params.vimType" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vimtype" name="params.vimType" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="2" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="OPENSTACK_V3" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Register VIM Resources </section>
+        <sections>Register VIM Resources </sections>
       </sections>
     </variable>
-    <variable default="http://172.21.7.5:5000/v3" displayName="Interfaceinfo" displayOrder="3" maxLength="100" name="params.interfaceInfo" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Interfaceinfo" name="params.interfaceInfo" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="3" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="http://172.21.7.5:5000/v3" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Register VIM Resources </section>
+        <sections>Register VIM Resources </sections>
       </sections>
     </variable>
-    <variable default="ubiqube-user" displayName="Username" displayOrder="4" maxLength="100" name="params.username" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Username" name="params.username" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="4" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="ubiqube-user" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Register VIM Resources </section>
+        <sections>Register VIM Resources </sections>
       </sections>
     </variable>
-    <variable default="U*ubiqube$" displayName="Password" displayOrder="5" maxLength="100" name="params.password" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Password">
+    <variable displayName="Password" name="params.password" startIncrement="0" type="Password" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="5" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="U*ubiqube$" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Register VIM Resources </section>
+        <sections>Register VIM Resources </sections>
       </sections>
     </variable>
-    <variable default="61ae0186fc634bdb8cba1d6bf2a8afd8" displayName="Projectid" displayOrder="6" maxLength="100" name="params.projectId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Projectid" name="params.projectId" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="6" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="61ae0186fc634bdb8cba1d6bf2a8afd8" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Register VIM Resources </section>
+        <sections>Register VIM Resources </sections>
       </sections>
     </variable>
-    <variable default="Default" displayName="Projectdomain" displayOrder="7" maxLength="100" name="params.projectDomain" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Projectdomain" name="params.projectDomain" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="7" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="Default" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Register VIM Resources </section>
+        <sections>Register VIM Resources </sections>
       </sections>
     </variable>
-    <variable default="Default" displayName="Userdomain" displayOrder="8" maxLength="100" name="params.userDomain" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Userdomain" name="params.userDomain" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="8" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="Default" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Register VIM Resources </section>
+        <sections>Register VIM Resources </sections>
       </sections>
     </variable>
-    <variable default="cbamnso" displayName="Vim Project" displayOrder="9" maxLength="100" name="params.vim_project" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
+    <variable displayName="Vim Project" name="params.vim_project" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="9" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" default="cbamnso" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Register VIM Resources </section>
+        <sections>Register VIM Resources </sections>
       </sections>
     </variable>
-    <variable displayName="Vimid" displayOrder="13" maxLength="100" name="params.vimId" numberOfRowMax="0" refDeviceIdVar="params.device_id" startIncrement="0" tableSizeFix="false" type="OBMFRef">
+    <variable displayName="Vimid" name="params.vimId" startIncrement="0" type="OBMFRef" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="13" increment="0" refServiceURI="" refDeviceIdVar="params.device_id" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Delete VIM Resources</section>
+        <sections>Delete VIM Resources</sections>
       </sections>
       <classes>
         <class>nfvi_resources</class>
       </classes>
     </variable>
-  </variables>  <example>    <content/>  </example>
-<process name="Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_New_Service">
-    <visibility>5</visibility>
+  </variables>
+  <example/>
+  <process name="Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_New_Service">
     <displayName>New Service</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>CREATE</type>
-  
-  <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="/opt/fmc_repository/Process/Reference/MSActivator/OrderCommand/Task_msa_synchronize_objects.php">
       <processPath/>
       <displayName>Sync to NFVO</displayName>
     </task>
@@ -90,14 +70,11 @@
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_Register_VIM">
-    <visibility>5</visibility>
     <displayName>Register  VIM</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-  <task name="Task_Register_VIM_Resources_.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Register_VIM_Resources_.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_Register_VIM/Tasks/</processPath>
       <displayName>Register VIM Resources</displayName>
     </task>
@@ -107,24 +84,17 @@
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_Get_VIM_list">
-    <visibility>5</visibility>
     <displayName>Get VIM list</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  </process>
-  
-  <process name="Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_Delete_VIM">
     <visibility>5</visibility>
-    <displayName>Delete VIM</displayName>
-    <icon/>
-    <poolId>0</poolId>
     <allowSchedule>false</allowSchedule>
+  </process>
+  <process name="Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_Delete_VIM">
+    <displayName>Delete VIM</displayName>
     <type>UPDATE</type>
-  
-  
-  <task name="Task_Delete_VIM_Resources.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Delete_VIM_Resources.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_Delete_VIM/Tasks/</processPath>
       <displayName>Delete VIM Resources</displayName>
     </task>
@@ -133,14 +103,20 @@
       <displayName>Sync to NFVO</displayName>
     </task>
   </process>
-
-
-<process name="Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_Delete_Service">
-    <visibility>5</visibility>
+  <process name="Process/ETSI-MANO/NFV/NFV_Resources_Management/Process_Delete_Service">
     <displayName>Delete Service</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
   </process>
+  <information>
+    <icon>/images/repository/CommandDefinition/icons/fibre channel disk subsystem.jpg</icon>
+    <description/>
+    <displayField>service_id</displayField>
+    <serviceTaskType>php</serviceTaskType>
+    <order>10000</order>
+    <visibility>5</visibility>
+    <name>NFVI Resources Management</name>
+    <group>NFV|NFVO</group>
+  </information>
 </ObjectDefinition>

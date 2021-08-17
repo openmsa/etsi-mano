@@ -15,8 +15,10 @@ $vnfInstanceId = $vnfInstance['id'];
 
 $vnfLcm = new VnfLcmSol003($context['url']);
 
+$content = ' { "gracefulTerminationTimeout": 0, "terminationType": "FORCEFUL", "additionalParams": {} }';
+
 try {
-	$response = $vnfLcm->vnfLcmTerminateVnf($vnfInstanceId);
+	$response = $vnfLcm->vnfLcmTerminateVnf($vnfInstanceId, $content);
 	$location = preg_split("/[\\/]+/", trim($response['location']));
 	$vnfLcmOpOccId = $location[7];
 } catch (ManoException $e) {
