@@ -118,8 +118,7 @@ public class GrantResponse implements BaseEntity, Auditable {
 	private GrantVimAssetsEntity vimAssets = null;
 
 	@Valid
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = null;
 
 	@Valid
