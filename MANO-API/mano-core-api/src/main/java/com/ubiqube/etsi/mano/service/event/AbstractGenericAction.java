@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -109,12 +110,17 @@ public abstract class AbstractGenericAction {
 			setInstanceStatus(vnfInstance, localPlan, newScale);
 		}
 		// XXX ??? error duplicate key in NSD.
-		vnfInstance.setVimConnectionInfo(null);
+		copyVimConnections(vnfInstance, localPlan);
 		orchestrationAdapter.save(vnfInstance);
 		LOG.info("Saving VNF LCM OP OCCS.");
 		localPlan = orchestrationAdapter.save(localPlan);
 		// XXX Send COMPLETED event.
 		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), localPlan.getId());
+	}
+
+	private static void copyVimConnections(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
+		vnfInstance.setVimConnectionInfo(new LinkedHashSet<>());
+		localPlan.getVimConnections().forEach(x -> vnfInstance.addVimConnectionInfo(x));
 	}
 
 	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint localPlan, Instance vnfInstance);

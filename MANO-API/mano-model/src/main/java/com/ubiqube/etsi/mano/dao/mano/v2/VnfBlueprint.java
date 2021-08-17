@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -71,8 +72,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	private Set<VnfTask> tasks = new HashSet<>();
 
 	@Valid
-	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-	@JoinColumn
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	private Set<VimConnectionInformation> vimConnections = null;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
@@ -80,7 +80,6 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	@Valid
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<BlueZoneGroupInformation> zoneGroups = null;
 
 	@FullTextField
@@ -220,6 +219,14 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	public void setChangeExtVnfConnRequest(final ChangeExtVnfConnRequest changeExtVnfConnRequest) {
 		this.changeExtVnfConnRequest = changeExtVnfConnRequest;
+	}
+
+	@Override
+	public void addVimConnection(final VimConnectionInformation vimConnection) {
+		if (this.vimConnections == null) {
+			this.vimConnections = new LinkedHashSet<>();
+		}
+		this.vimConnections.add(vimConnection);
 	}
 
 }

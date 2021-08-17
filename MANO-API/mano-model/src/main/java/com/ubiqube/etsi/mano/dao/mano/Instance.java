@@ -32,6 +32,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
@@ -77,7 +78,7 @@ public class Instance implements BaseEntity, Auditable {
 	private Map<String, String> metadata = null;
 
 	// 3.3.1 it's a map
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH })
 	private Set<VimConnectionInformation> vimConnectionInfo = new LinkedHashSet<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -103,5 +104,12 @@ public class Instance implements BaseEntity, Auditable {
 	private long version;
 
 	private Audit audit = new Audit();
+
+	public void addVimConnectionInfo(final VimConnectionInformation x) {
+		if (null == this.vimConnectionInfo) {
+			this.vimConnectionInfo = new LinkedHashSet<>();
+		}
+		vimConnectionInfo.add(x);
+	}
 
 }

@@ -155,4 +155,9 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 		return nsInstance;
 	}
 
+	@Override
+	public void addVimConnection(final VimConnectionInformation vimConnection) {
+		//
+	}
+
 }
