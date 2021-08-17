@@ -47,4 +47,6 @@ public interface NsLiveInstanceJpa extends CrudRepository<NsLiveInstance, UUID> 
 	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND t.class = ?2")
 	List<NsLiveInstance> findByNsdInstanceAndClass(NsdInstance instance, String simpleName);
 
+	long countByNsInstance(NsdInstance nsInstance);
+
 }

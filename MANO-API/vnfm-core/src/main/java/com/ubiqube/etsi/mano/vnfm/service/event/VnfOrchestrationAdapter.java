@@ -25,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.Instance;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -114,6 +115,8 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask, Vn
 
 	@Override
 	public Instance save(final Instance vnfInstance) {
+		final long c = vnfLiveInstanceJpa.countByVnfInstance(vnfInstance);
+		vnfInstance.setInstantiationState(c > 0 ? InstantiationState.INSTANTIATED : InstantiationState.NOT_INSTANTIATED);
 		return vnfInstancesService.save((VnfInstance) vnfInstance);
 	}
 

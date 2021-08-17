@@ -22,6 +22,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 
@@ -57,4 +58,6 @@ public interface VnfLiveInstanceJpa extends CrudRepository<VnfLiveInstance, UUID
 	List<VnfLiveInstance> findByVnfInstanceId(UUID id);
 
 	List<VnfLiveInstance> findByVnfInstance(VnfInstance vnfInstance);
+
+	long countByVnfInstance(Instance vnfInstance);
 }

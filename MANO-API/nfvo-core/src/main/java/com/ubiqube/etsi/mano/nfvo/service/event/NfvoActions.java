@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
@@ -199,6 +200,9 @@ public class NfvoActions {
 				nsLiveInstanceJpa.deleteById(vli.get().getId());
 			}
 		});
+		final NsdInstance inst = blueprint.getNsInstance();
+		final long c = nsLiveInstanceJpa.countByNsInstance(inst);
+		inst.setInstantiationState(c > 0 ? InstantiationState.INSTANTIATED : InstantiationState.NOT_INSTANTIATED);
 		LOG.info("Saving NS LCM.");
 		nsBlueprintService.save(blueprint);
 	}
