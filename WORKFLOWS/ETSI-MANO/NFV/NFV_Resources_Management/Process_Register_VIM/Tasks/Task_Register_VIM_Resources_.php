@@ -30,12 +30,15 @@ $accessInfo = array("username" => $context['username'],
 		    "vim_project" => $context['vim_project'],
 		    "device_id" => $context['device_id'],
 	);
+	
+$geoloc = array("lng" => 45.75801, "lat" => 4.8001016);
 
-$body_array = array("id" => gen_uuid(),
+$body_array = array("vimId" => gen_uuid(),
 	      "vimType" => $context['vimType'],
 	      "interfaceInfo" => array("endpoint" => $context['interfaceInfo']),
 	      "vimType" => $context['vimType'],
-	      "accessInfo" => $accessInfo		
+	      "accessInfo" => $accessInfo,
+	      "geoloc" => $geoloc
 	);
 
 try{
