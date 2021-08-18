@@ -25,7 +25,7 @@ if (empty($nsLcmOpOccsInfo) || $nsLcmOpOccsInfo == null) {
 }
 
 $context['nsLcmOpOccs'] = $nsLcmOpOccsInfo;
-$operationState = json_decode($nsLcmOpOccsInfo['operationState'], 1);
+$operationState = json_decode($nsLcmOpOccsInfo, 1)['operationState'];
 
 if (strpos($operationState , 'FAILED')) {
 	task_error("NS Instance Operation Occurence state is '$operationState'.");
