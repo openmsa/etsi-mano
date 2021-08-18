@@ -159,6 +159,7 @@ public class NfvoActions {
 		// XXX elect vim?
 		final Map<String, String> pubNet = vim.network(vimInfo).getPublicNetworks();
 		final NsParameters params = new NsParameters(vim, vimInfo, pubNet, null);
+		setVimInformations(localBlueprint, vimInfo);
 		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localBlueprint, ChangeType.ADDED);
 		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execCreate(executionPlane, () -> new UowNsTaskCreateProvider(params));
 		setLiveStatus(localBlueprint, results);
@@ -168,6 +169,13 @@ public class NfvoActions {
 		// XXX Send COMPLETED event.
 		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, localBlueprint.getId());
 		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
+	}
+
+	private static void setVimInformations(final NsBlueprint localBlueprint, final VimConnectionInformation vimInfo) {
+		localBlueprint.getTasks().forEach(x -> {
+			x.setVimConnectionId(vimInfo.getVimId());
+			x.setVimResourceId(vimInfo.getVimType());
+		});
 	}
 
 	private static void setResultLcmInstance(@NotNull final NsBlueprint blueprint, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {

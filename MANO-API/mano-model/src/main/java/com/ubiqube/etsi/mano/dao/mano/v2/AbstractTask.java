@@ -33,6 +33,16 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @MappedSuperclass
 public abstract class AbstractTask implements Task {
 
@@ -67,129 +77,12 @@ public abstract class AbstractTask implements Task {
 	private PlanStatusType status;
 	@FullTextField
 	private String vimResourceId;
+
 	private String vimConnectionId;
 
+	private String resourceProviderId;
 	private UUID removedLiveInstance;
 
 	public abstract void setId(final UUID id);
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
-	@Override
-	public ChangeType getChangeType() {
-		return changeType;
-	}
-
-	@Override
-	public void setChangeType(final ChangeType changeType) {
-		this.changeType = changeType;
-	}
-
-	@Override
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	@Override
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	@Override
-	public String getAlias() {
-		return alias;
-	}
-
-	public void setAlias(final String alias) {
-		this.alias = alias;
-	}
-
-	public LocalDateTime getStartDate() {
-		return startDate;
-	}
-
-	@Override
-	public void setStartDate(final LocalDateTime startDate) {
-		this.startDate = startDate;
-	}
-
-	public LocalDateTime getEndDate() {
-		return endDate;
-	}
-
-	@Override
-	public void setEndDate(final LocalDateTime endDate) {
-		this.endDate = endDate;
-	}
-
-	public PlanStatusType getStatus() {
-		return status;
-	}
-
-	@Override
-	public void setStatus(final PlanStatusType status) {
-		this.status = status;
-	}
-
-	@Override
-	public String getVimResourceId() {
-		return vimResourceId;
-	}
-
-	@Override
-	public void setVimResourceId(final String vimResourceId) {
-		this.vimResourceId = vimResourceId;
-	}
-
-	@Override
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	@Override
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
-	@Override
-	public String getState() {
-		return state;
-	}
-
-	@Override
-	public void setState(final String state) {
-		this.state = state;
-	}
-
-	@Override
-	public String getVimConnectionId() {
-		return vimConnectionId;
-	}
-
-	public void setVimConnectionId(final String vimConnectionId) {
-		this.vimConnectionId = vimConnectionId;
-	}
-
-	@Override
-	public UUID getRemovedLiveInstance() {
-		return removedLiveInstance;
-	}
-
-	public void setRemovedLiveInstance(final UUID removedLiveInstance) {
-		this.removedLiveInstance = removedLiveInstance;
-	}
 
 }

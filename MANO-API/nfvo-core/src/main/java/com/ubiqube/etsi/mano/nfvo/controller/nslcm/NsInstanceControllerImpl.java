@@ -94,7 +94,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 			vlDto.setNsVirtualLinkDescId(x.getNsTask().getToscaName());
 			// vlDto.setNsVirtualLinkProfileId(nsVirtualLinkProfileId);
 			final List<ResourceHandle> resourceHandle = new ArrayList<>();
-			final ResourceHandle r = mapper.map(x.getNsTask(), ResourceHandle.class);
+			final ResourceHandle r = mapper.map(x, ResourceHandle.class);
 			resourceHandle.add(r);
 			vlDto.setResourceHandle(resourceHandle);
 			return vlDto;
