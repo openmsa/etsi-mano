@@ -69,7 +69,8 @@ public abstract class AbstractNsTaskUow extends Task<UnitOfWork<NsTask, NsParame
 		resource.setStatus(PlanStatusType.STARTED);
 		try {
 			LOG.info("Task {} Started.", uaow.getName());
-			function.apply(params);
+			final String res = function.apply(params);
+			resource.setVimResourceId(res);
 			resource.setStatus(PlanStatusType.SUCCESS);
 		} catch (final RuntimeException e) {
 			LOG.warn("Task {} failed.", uaow.getName(), e);

@@ -21,9 +21,11 @@ import org.springframework.stereotype.Component;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.VimResource;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfcResourceInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
@@ -121,6 +123,15 @@ public class NfvoOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(NsInstanceDto.class, NsdInstance.class)
 				.field("flavourId", "instanceFlavourId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfcResourceInfoEntity.class, ComputeTask.class)
+				.field("vduId", "vnfCompute.toscaName")
+				.field("storageResourceIds", "vnfCompute.storages")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VimResource.class, ComputeTask.class)
+				.field("resourceId", "vimResourceId")
 				.byDefault()
 				.register();
 		/*

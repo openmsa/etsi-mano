@@ -16,16 +16,26 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
+import com.ubiqube.etsi.mano.dao.mano.VimResource;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
+import com.ubiqube.etsi.mano.dao.mano.VnfcResourceInfoEntity;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
+import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
 import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -39,14 +49,27 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfInstanceServiceVnfm(final VnfInstanceJpa vnfInstanceJpa, final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
+	private final MapperFacade mapper;
+
+	public VnfInstanceServiceVnfm(final VnfInstanceJpa vnfInstanceJpa, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final MapperFacade mapper) {
 		this.vnfInstanceJpa = vnfInstanceJpa;
 		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
+		this.mapper = mapper;
 	}
 
 	@Override
 	public VnfInstance findById(final UUID id) {
 		final VnfInstance inst = vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find VNF instance: " + id));
+		final BlueprintParameters vnfInfo = inst.getInstantiatedVnfInfo();
+		final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByVnfInstance(inst);
+		final List<VnfLiveInstance> computeVli = vli.stream().filter(x -> x.getTask() instanceof ComputeTask).collect(Collectors.toList());
+		final Set<VnfcResourceInfoEntity> vnfcResourceInfo = computeVli.stream().map(x -> {
+			final VnfcResourceInfoEntity ret = mapper.map(x, VnfcResourceInfoEntity.class);
+			ret.setComputeResource(mapper.map(x.getTask(), VimResource.class));
+			ret.getComputeResource().setResourceId(x.getResourceId());
+			return ret;
+		}).collect(Collectors.toSet());
+		vnfInfo.setVnfcResourceInfo(vnfcResourceInfo);
 		inst.setInstantiationState(isLive(id));
 		return inst;
 	}
