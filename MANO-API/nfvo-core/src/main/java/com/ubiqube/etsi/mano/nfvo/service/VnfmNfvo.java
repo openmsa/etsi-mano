@@ -58,4 +58,9 @@ public class VnfmNfvo implements VnfmInterface {
 		return lcm.terminate(UUID.fromString(nsInstanceId), CancelModeTypeEnum.FORCEFUL, null);
 	}
 
+	@Override
+	public VnfInstance getVnfInstance(final String vnfInstance) {
+		return lcm.findById(vnfInstance);
+	}
+
 }

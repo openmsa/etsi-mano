@@ -61,4 +61,6 @@ public interface VnfInstanceLcm {
 
 	VnfBlueprint changeExtConn(@NotNull UUID vnfInstanceId, ChangeExtVnfConnRequest cevcr);
 
+	VnfInstance findById(String vnfInstance);
+
 }

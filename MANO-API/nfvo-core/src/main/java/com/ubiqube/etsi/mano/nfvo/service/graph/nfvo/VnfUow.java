@@ -26,6 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
@@ -88,6 +90,10 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public String rollback(final NsParameters params) {
+		final VnfInstance inst = vnfm.getVnfInstance(task.getVnfInstance());
+		if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
+			return null;
+		}
 		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getVnfInstance());
 		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {

@@ -36,4 +36,6 @@ public interface VnfmInterface {
 
 	VnfBlueprint vnfTerminate(@Nonnull String nsInstanceId);
 
+	VnfInstance getVnfInstance(String vnfInstance);
+
 }

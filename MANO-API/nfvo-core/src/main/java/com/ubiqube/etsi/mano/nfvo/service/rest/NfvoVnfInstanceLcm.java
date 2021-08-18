@@ -103,4 +103,10 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		return null;
 	}
 
+	@Override
+	public VnfInstance findById(final String vnfInstance) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

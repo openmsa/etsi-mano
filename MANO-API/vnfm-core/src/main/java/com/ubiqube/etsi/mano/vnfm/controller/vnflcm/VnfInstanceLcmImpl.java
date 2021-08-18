@@ -20,6 +20,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 import static com.ubiqube.etsi.mano.Constants.getSingleField;
 
 import java.util.HashMap;
@@ -220,6 +221,11 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, cevcr);
 		eventManager.sendActionVnfm(ActionType.VNF_CHANGE_CONN, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
+	}
+
+	@Override
+	public VnfInstance findById(final String vnfInstance) {
+		return vnfInstanceServiceVnfm.findById(getSafeUUID(vnfInstance));
 	}
 
 }
