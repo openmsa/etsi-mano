@@ -10,7 +10,7 @@ use Ubiqube\EtsiMano\ManoException;
 function list_args()
 {
   create_var_def('nfvo_device', 'Device');
-  create_var_def('nsPkgId', 'OBMFRef');
+  create_var_def('nsPkgId', 'String');
 }
 
 check_mandatory_param('nsPkgId');
