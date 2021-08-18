@@ -59,7 +59,7 @@ public class VrQanService {
 		this.em = em;
 	}
 
-	@Scheduled(fixedDelay = 10_000)
+	@Scheduled(fixedDelay = 1000_000)
 	public void run() {
 		final Iterable<VimConnectionInformation> l = vimManager.findAllVimconnections();
 		StreamSupport.stream(l.spliterator(), false).forEach(x -> {
