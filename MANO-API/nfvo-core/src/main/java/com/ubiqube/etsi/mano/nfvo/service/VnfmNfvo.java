@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service;
 
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+
 import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
@@ -61,6 +63,11 @@ public class VnfmNfvo implements VnfmInterface {
 	@Override
 	public VnfInstance getVnfInstance(final String vnfInstance) {
 		return lcm.findById(vnfInstance);
+	}
+
+	@Override
+	public void delete(final String vnfInstance) {
+		lcm.delete(getSafeUUID(vnfInstance));
 	}
 
 }

@@ -99,6 +99,8 @@ public class VnfUow extends AbstractNsUnitOfWork {
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
+		// XXX OVI: We need some other mechanism, we should not delete the instance at this point. But as long a vnf instance exist you can't delete the package.
+		vnfm.delete(task.getVnfInstance());
 		return result.getId().toString();
 	}
 

@@ -38,4 +38,6 @@ public interface VnfmInterface {
 
 	VnfInstance getVnfInstance(String vnfInstance);
 
+	void delete(String vnfInstance);
+
 }
