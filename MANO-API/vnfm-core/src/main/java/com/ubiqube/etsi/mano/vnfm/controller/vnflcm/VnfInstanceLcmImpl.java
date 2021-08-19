@@ -20,6 +20,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
+import static com.ubiqube.etsi.mano.Constants.ensureNotLocked;
 import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 import static com.ubiqube.etsi.mano.Constants.getSingleField;
 
@@ -127,6 +128,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public void delete(@Nonnull final UUID vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
+		ensureNotLocked(vnfInstance);
 		planService.deleteByVnfInstance(vnfInstance);
 		vnfInstanceService.delete(vnfInstanceId);
 		if (!vnfInstanceService.isInstantiate(vnfInstance.getVnfPkg().getId())) {
@@ -141,7 +143,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public VnfBlueprint instantiate(@Nonnull final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
-
+		ensureNotLocked(vnfInstance);
 		final UUID vnfPkgId = vnfInstance.getVnfPkg().getId();
 		final VnfPackage vnfPkg = vnfPackageRepository.get(vnfPkgId);
 		ensureIsEnabled(vnfPkg);
@@ -175,6 +177,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public VnfBlueprint terminate(@Nonnull final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
+		ensureNotLocked(vnfInstance);
 		final VnfBlueprint blueprint = vnfLcmService.createTerminateOpOcc(vnfInstance);
 		eventManager.sendActionVnfm(ActionType.VNF_TERMINATE, blueprint.getId(), new HashMap<>());
 		LOG.info("Terminate sent for instancce: {}", vnfInstanceId);
@@ -185,6 +188,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public VnfBlueprint scaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(uuid);
 		ensureInstantiated(vnfInstance);
+		ensureNotLocked(vnfInstance);
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createScaleToLevelOpOcc(vnfInstance, scaleVnfToLevelRequest);
 		eventManager.sendActionVnfm(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
@@ -194,6 +198,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public VnfBlueprint scale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(uuid);
 		ensureInstantiated(vnfInstance);
+		ensureNotLocked(vnfInstance);
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createScaleOpOcc(vnfInstance, scaleVnfRequest);
 		eventManager.sendActionVnfm(ActionType.VNF_SCALE_TO_LEVEL, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
@@ -203,6 +208,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public VnfBlueprint operate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(uuid);
 		ensureInstantiated(vnfInstance);
+		ensureNotLocked(vnfInstance);
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, operateVnfRequest);
 		eventManager.sendActionVnfm(ActionType.VNF_OPERATE, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;
@@ -217,6 +223,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public VnfBlueprint changeExtConn(@NotNull final UUID uuid, final ChangeExtVnfConnRequest cevcr) {
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(uuid);
 		ensureInstantiated(vnfInstance);
+		ensureNotLocked(vnfInstance);
 		final VnfBlueprint lcmOpOccs = vnfLcmService.createOperateOpOcc(vnfInstance, cevcr);
 		eventManager.sendActionVnfm(ActionType.VNF_CHANGE_CONN, lcmOpOccs.getId(), new HashMap<>());
 		return lcmOpOccs;

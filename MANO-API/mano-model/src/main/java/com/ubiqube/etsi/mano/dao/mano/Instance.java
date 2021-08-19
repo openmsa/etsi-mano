@@ -103,6 +103,8 @@ public class Instance implements BaseEntity, Auditable {
 	@Version
 	private long version;
 
+	private boolean locked;
+
 	private Audit audit = new Audit();
 
 	public void addVimConnectionInfo(final VimConnectionInformation x) {

@@ -20,6 +20,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureInstantiated;
 import static com.ubiqube.etsi.mano.Constants.ensureIsEnabled;
 import static com.ubiqube.etsi.mano.Constants.ensureIsOnboarded;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
+import static com.ubiqube.etsi.mano.Constants.ensureNotLocked;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -101,6 +102,7 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 	public NsBlueprint instantiate(final UUID nsUuid, final NsInstantiate req) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsUuid);
 		ensureNotInstantiated(nsInstanceDb);
+		ensureNotLocked(nsInstanceDb);
 		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.INSTANTIATE);
 		nsBlueprintService.save(nsLcm);
 		mapper.map(req, nsInstanceDb);
@@ -113,6 +115,7 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 	public NsBlueprint terminate(final UUID nsInstanceUuid, final OffsetDateTime terminationTime) {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
 		ensureInstantiated(nsInstanceDb);
+		ensureNotLocked(nsInstanceDb);
 		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.TERMINATE);
 		nsBlueprintService.save(nsLcm);
 		// XXX we can use quartz cron job for terminationTime.

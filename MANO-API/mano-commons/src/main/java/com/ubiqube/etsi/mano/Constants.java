@@ -176,6 +176,12 @@ public final class Constants {
 		}
 	}
 
+	public static void ensureNotLocked(final Instance vnfInstance) {
+		if (vnfInstance.isLocked()) {
+			throw new ConflictException("The Instance " + vnfInstance.getId() + " is locked.");
+		}
+	}
+
 	@Nonnull
 	public static UUID getSafeUUID(final String uuid) {
 		return UUID.fromString(uuid);
