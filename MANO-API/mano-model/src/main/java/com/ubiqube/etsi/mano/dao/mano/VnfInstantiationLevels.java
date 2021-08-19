@@ -25,6 +25,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.ubiqube.etsi.mano.utils.ToStringIgnore;
+
 @Entity
 public class VnfInstantiationLevels implements Serializable {
 	/** Serial. */
@@ -41,6 +43,7 @@ public class VnfInstantiationLevels implements Serializable {
 	private int scaleInfoLevel;
 
 	@ManyToOne
+	@ToStringIgnore
 	private VnfPackage vnfPackage;
 
 	public VnfInstantiationLevels() {
@@ -96,7 +99,7 @@ public class VnfInstantiationLevels implements Serializable {
 
 	@Override
 	public String toString() {
-		return "VnfInstantiationLevels [id=" + id + ", levelName=" + levelName + ", scaleInfoName=" + scaleInfoName + ", scaleInfoLevel=" + scaleInfoLevel + ", vnfPackage=" + vnfPackage + "]\n";
+		return "VnfInstantiationLevels [id=" + id + ", levelName=" + levelName + ", scaleInfoName=" + scaleInfoName + ", scaleInfoLevel=" + scaleInfoLevel + ", vnfPackage=[Ignored] ]\n";
 	}
 
 }

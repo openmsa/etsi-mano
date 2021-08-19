@@ -50,6 +50,8 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.pkg.PackageSecurityOptionType;
+import com.ubiqube.etsi.mano.utils.ToStringIgnore;
+import com.ubiqube.etsi.mano.utils.ToStringUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -149,6 +151,7 @@ public class VnfPackage implements PackageBase, Auditable {
 	@IndexedEmbedded
 	private Set<VnfExtCp> vnfExtCp = new LinkedHashSet<>();
 
+	@ToStringIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<NsdInstance> nsInstance;
 
@@ -167,6 +170,7 @@ public class VnfPackage implements PackageBase, Auditable {
 	@IndexedEmbedded
 	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
 
+	@ToStringIgnore
 	@ManyToMany(cascade = CascadeType.DETACH, mappedBy = "vnfPackage")
 	private Set<NsdPackageVnfPackage> nsdPackages;
 
@@ -203,4 +207,8 @@ public class VnfPackage implements PackageBase, Auditable {
 		nsdPackages.add(nsdPackage);
 	}
 
+	@Override
+	public String toString() {
+		return ToStringUtil.toString(this);
+	}
 }

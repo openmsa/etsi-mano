@@ -26,6 +26,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.ubiqube.etsi.mano.utils.ToStringIgnore;
+
 @Entity
 @EntityListeners(AuditListener.class)
 public class VnfLinkPort implements BaseEntity, Auditable {
@@ -49,6 +51,7 @@ public class VnfLinkPort implements BaseEntity, Auditable {
 	private int interfaceOrder;
 
 	@ManyToOne
+	@ToStringIgnore
 	private VnfPackage vnfPackage;
 
 	@Embedded
