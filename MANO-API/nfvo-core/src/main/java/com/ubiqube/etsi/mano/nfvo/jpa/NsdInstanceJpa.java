@@ -21,7 +21,14 @@ import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface NsdInstanceJpa extends CrudRepository<NsdInstance, UUID> {
-	// Empty.
+
+	int countByNsdInfo(NsdPackage nsPackage);
 }

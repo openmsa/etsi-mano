@@ -116,4 +116,8 @@ public class NsInstanceService {
 		return sq.getCriteria(filter, NsdInstance.class);
 	}
 
+	public boolean isInstantiated(final NsdPackage nsPackage) {
+		return 0 != nsdInstanceJpa.countByNsdInfo(nsPackage);
+	}
+
 }

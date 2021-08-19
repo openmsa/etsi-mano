@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.alarm.ResourceHandle;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsVirtualLinkInfoDto;
@@ -39,6 +41,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.nfvo.factory.LcmFactory;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
+import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
@@ -52,14 +55,16 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	private final MapperFacade mapper;
 	private final VnfInstanceGatewayService vnfInstancesService;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
+	private final NsdPackageJpa nsdPackageJpa;
 
 	public NsInstanceControllerImpl(final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
-			final MapperFacade mapper, final VnfInstanceGatewayService vnfInstancesService) {
+			final MapperFacade mapper, final VnfInstanceGatewayService vnfInstancesService, final NsdPackageJpa nsdPackageJpa) {
 		nsInstanceService = _nsInstanceService;
 		blueprintService = _lcmOpOccsService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 		this.mapper = mapper;
 		this.vnfInstancesService = vnfInstancesService;
+		this.nsdPackageJpa = nsdPackageJpa;
 	}
 
 	@Override
@@ -72,6 +77,11 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(id);
 		ensureNotInstantiated(nsInstanceDb);
 		nsInstanceService.delete(id);
+		if (!nsInstanceService.isInstantiated(nsInstanceDb.getNsdInfo())) {
+			final NsdPackage nsPkg = nsdPackageJpa.findById(nsInstanceDb.getNsdInfo().getId()).orElseThrow(() -> new GenericException("Could not find NSD " + nsInstanceDb.getNsdInfo().getId()));
+			nsPkg.setNsdUsageState(PackageUsageState.NOT_IN_USE);
+			nsdPackageJpa.save(nsPkg);
+		}
 	}
 
 	@Override

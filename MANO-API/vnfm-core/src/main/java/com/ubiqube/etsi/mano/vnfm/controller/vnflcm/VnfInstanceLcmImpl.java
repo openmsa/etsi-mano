@@ -127,14 +127,13 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 	public void delete(@Nonnull final UUID vnfInstanceId) {
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureNotInstantiated(vnfInstance);
-
+		planService.deleteByVnfInstance(vnfInstance);
+		vnfInstanceService.delete(vnfInstanceId);
 		if (!vnfInstanceService.isInstantiate(vnfInstance.getVnfPkg().getId())) {
 			final VnfPackage vnfPkg = vnfPackageRepository.get(vnfInstance.getVnfPkg().getId());
 			vnfPkg.setUsageState(PackageUsageState.NOT_IN_USE);
 			vnfPackageRepository.save(vnfPkg);
 		}
-		planService.deleteByVnfInstance(vnfInstance);
-		vnfInstanceService.delete(vnfInstanceId);
 		// VnfIdentitifierDeletionNotification NFVO + EM
 	}
 
