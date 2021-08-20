@@ -36,6 +36,8 @@ import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.exception.ConflictException;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
@@ -177,8 +179,20 @@ public final class Constants {
 	}
 
 	public static void ensureNotLocked(final Instance vnfInstance) {
-		if (vnfInstance.isLocked()) {
-			throw new ConflictException("The Instance " + vnfInstance.getId() + " is locked.");
+		if (vnfInstance.getLockedBy() != null) {
+			throw new ConflictException("The Instance " + vnfInstance.getId() + " is locked by LCMopOcc: " + vnfInstance.getLockedBy() + ".");
+		}
+	}
+
+	public static void ensureLockedByMyself(final Instance vnfInstance, final UUID lcmOpOccsId) {
+		if ((vnfInstance.getLockedBy() != null) && vnfInstance.getLockedBy().equals(lcmOpOccsId)) {
+			throw new ConflictException("The Instance " + vnfInstance.getId() + " is locked by LCMopOcc: " + vnfInstance.getLockedBy() + ".");
+		}
+	}
+
+	public static void ensureFailedTemp(final Blueprint<?, ?> vnfInstance) {
+		if (vnfInstance.getOperationStatus() != OperationStatusType.FAILED_TEMP) {
+			throw new ConflictException("The LCM OP OCCS  " + vnfInstance.getId() + " must be in FAILED_TEMP status.");
 		}
 	}
 
