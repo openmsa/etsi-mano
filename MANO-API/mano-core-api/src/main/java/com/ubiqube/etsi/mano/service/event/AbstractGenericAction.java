@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
-import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -41,31 +40,24 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
-import com.ubiqube.etsi.mano.orchestrator.Planner;
 import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.WorkflowEvent;
 import com.ubiqube.etsi.mano.service.vim.Vim;
-import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 public abstract class AbstractGenericAction {
 
-	private final static Logger LOG = LoggerFactory.getLogger(AbstractGenericAction.class);
-
-	private final VimManager vimManager;
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractGenericAction.class);
 
 	private final Workflow vnfWorkflow;
 
 	private final VimResourceService vimResourceService;
 
-	private Planner planner;
-
 	OrchestrationAdapter<?, ?> orchestrationAdapter;
 
-	protected AbstractGenericAction(final VimManager vimManager, final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter) {
+	protected AbstractGenericAction(final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter) {
 		super();
-		this.vimManager = vimManager;
 		this.vnfWorkflow = vnfWorkflow;
 		this.vimResourceService = vimResourceService;
 		this.orchestrationAdapter = orchestrationAdapter;
@@ -80,11 +72,7 @@ public abstract class AbstractGenericAction {
 			orchestrationAdapter.fireEvent(WorkflowEvent.INSTANTIATE_SUCCESS, blueprintId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
-			vnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
-			blueprint.setOperationStatus(OperationStatusType.FAILED);
-			blueprint.setError(new FailureDetails(500L, e.getMessage()));
-			orchestrationAdapter.save(blueprint);
-			orchestrationAdapter.save(vnfInstance);
+			onFailure(WorkflowEvent.INSTANTIATE_FAILED, blueprint, vnfInstance, e);
 		}
 	}
 
@@ -120,7 +108,7 @@ public abstract class AbstractGenericAction {
 
 	private static void copyVimConnections(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
 		vnfInstance.setVimConnectionInfo(new LinkedHashSet<>());
-		localPlan.getVimConnections().forEach(x -> vnfInstance.addVimConnectionInfo(x));
+		localPlan.getVimConnections().forEach(vnfInstance::addVimConnectionInfo);
 	}
 
 	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint localPlan, Instance vnfInstance);
@@ -175,12 +163,8 @@ public abstract class AbstractGenericAction {
 			orchestrationAdapter.fireEvent(WorkflowEvent.TERMINATE_SUCCESS, blueprintId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);
-			blueprint.setOperationStatus(OperationStatusType.FAILED);
-			blueprint.setError(new FailureDetails(500L, e.getMessage()));
-			blueprint.setStateEnteredTime(new Date());
-			orchestrationAdapter.save(blueprint);
 			orchestrationAdapter.save(vnfInstance);
-			orchestrationAdapter.fireEvent(WorkflowEvent.TERMINATE_FAILED, blueprintId);
+			onFailure(WorkflowEvent.TERMINATE_FAILED, blueprint, vnfInstance, e);
 		}
 	}
 
@@ -193,11 +177,7 @@ public abstract class AbstractGenericAction {
 			orchestrationAdapter.fireEvent(WorkflowEvent.SCALETOLEVEL_SUCCESS, blueprintId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Scale to level Failed", e);
-			blueprint.setOperationStatus(OperationStatusType.FAILED);
-			blueprint.setError(new FailureDetails(500L, e.getMessage()));
-			blueprint.setStateEnteredTime(new Date());
-			orchestrationAdapter.save(blueprint);
-			orchestrationAdapter.fireEvent(WorkflowEvent.SCALETOLEVEL_FAILED, blueprintId);
+			onFailure(WorkflowEvent.SCALETOLEVEL_FAILED, blueprint, vnfInstance, e);
 		}
 	}
 
@@ -210,12 +190,19 @@ public abstract class AbstractGenericAction {
 			orchestrationAdapter.fireEvent(WorkflowEvent.SCALE_SUCCESS, blueprintId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Scale to level Failed", e);
-			blueprint.setOperationStatus(OperationStatusType.FAILED);
-			blueprint.setError(new FailureDetails(500L, e.getMessage()));
-			blueprint.setStateEnteredTime(new Date());
-			orchestrationAdapter.save(blueprint);
-			orchestrationAdapter.fireEvent(WorkflowEvent.SCALE_FAILED, blueprintId);
+			onFailure(WorkflowEvent.SCALE_FAILED, blueprint, vnfInstance, e);
 		}
+	}
+
+	private final void onFailure(final WorkflowEvent workflowEvent, final Blueprint<?, ?> blueprintOrig, final Instance instance, final Exception e) {
+		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintOrig.getId());
+		blueprint.setOperationStatus(OperationStatusType.FAILED);
+		blueprint.setError(new FailureDetails(500L, e.getMessage()));
+		blueprint.setStateEnteredTime(new Date());
+		orchestrationAdapter.save(blueprint);
+		instance.setLockedBy(null);
+		orchestrationAdapter.save(instance);
+		orchestrationAdapter.fireEvent(workflowEvent, blueprint.getId());
 	}
 
 	private void setLiveSatus(@NotNull final Blueprint<? extends Task, ? extends Instance> blueprint, @NotNull final Instance vnfInstance, final OrchExecutionResults<Task> res) {

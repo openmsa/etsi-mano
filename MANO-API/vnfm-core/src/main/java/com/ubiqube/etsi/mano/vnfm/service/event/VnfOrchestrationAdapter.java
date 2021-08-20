@@ -143,6 +143,8 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask, Vn
 			return NotificationEvent.VNF_INSTANCE_CREATE;
 		case INSTANTIATE_SUCCESS:
 			return NotificationEvent.VNF_INSTANTIATE;
+		case INSTANTIATE_FAILED:
+			return NotificationEvent.VNF_INSTANTIATE_FAILED;
 		case SCALE_FAILED:
 			return NotificationEvent.VNF_SCALE;
 		case SCALE_SUCCESS:
