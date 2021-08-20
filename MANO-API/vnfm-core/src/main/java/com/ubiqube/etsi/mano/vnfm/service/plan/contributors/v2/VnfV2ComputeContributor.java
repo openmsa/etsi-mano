@@ -26,6 +26,7 @@ import javax.annotation.Priority;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
