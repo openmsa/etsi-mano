@@ -38,6 +38,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsHeal;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.nfvo.factory.LcmFactory;
@@ -121,5 +123,17 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 		// XXX we can use quartz cron job for terminationTime.
 		eventManager.sendActionNfvo(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<>());
 		return nsLcm;
+	}
+
+	@Override
+	public NsBlueprint heal(final UUID nsInstanceUuid, final NsHeal nsHeal) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NsBlueprint heal(final UUID nsInstanceUuid, final NsScale nsInst) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

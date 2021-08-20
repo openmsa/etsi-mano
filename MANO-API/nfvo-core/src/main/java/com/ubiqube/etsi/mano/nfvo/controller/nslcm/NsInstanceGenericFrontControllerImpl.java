@@ -37,6 +37,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.CreateNsInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstanceDto;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsHeal;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -93,10 +95,12 @@ public class NsInstanceGenericFrontControllerImpl implements NsInstanceGenericFr
 	}
 
 	@Override
-	public <U> ResponseEntity<U> heal(final String nsInstanceId, final Object request) {
+	public <U> ResponseEntity<U> heal(final String nsInstanceId, final Object request, final Function<NsBlueprint, String> getSelfLink) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsInstanceDto nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdGet(nsInstanceUuid);
-		throw new GenericException("TODO");
+		final NsHeal nsInst = mapper.map(request, NsHeal.class);
+		final NsBlueprint nsLcm = nsInstanceControllerService.heal(nsInstanceUuid, nsInst);
+		final String link = getSelfLink.apply(nsLcm);
+		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
 
 	@Override
@@ -109,10 +113,12 @@ public class NsInstanceGenericFrontControllerImpl implements NsInstanceGenericFr
 	}
 
 	@Override
-	public <U> ResponseEntity<U> scale(final String nsInstanceId, final Object request) {
+	public <U> ResponseEntity<U> scale(final String nsInstanceId, final Object request, final Function<NsBlueprint, String> getSelfLink) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
-		final NsdInstance nsInstanceDb = nsLcmController.nsInstancesNsInstanceIdScalePost(nsInstanceUuid);
-		throw new GenericException("TODO");
+		final NsScale nsInst = mapper.map(request, NsScale.class);
+		final NsBlueprint nsLcm = nsInstanceControllerService.heal(nsInstanceUuid, nsInst);
+		final String link = getSelfLink.apply(nsLcm);
+		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
 
 	@Override
@@ -125,7 +131,7 @@ public class NsInstanceGenericFrontControllerImpl implements NsInstanceGenericFr
 	}
 
 	@Override
-	public <U> ResponseEntity<U> update(final String nsInstanceId, final Object request) {
+	public <U> ResponseEntity<U> update(final String nsInstanceId, final Object request, final Function<NsBlueprint, String> getSelfLink) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		nsLcmController.nsInstancesNsInstanceIdUpdatePost(nsInstanceUuid);
 		throw new GenericException("TODO");

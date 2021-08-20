@@ -46,15 +46,15 @@ public interface NsInstanceGenericFrontController {
 
 	<U> ResponseEntity<U> findById(String nsInstanceId, Class<U> clazz, Consumer<U> makeLink);
 
-	<U> ResponseEntity<U> heal(String nsInstanceId, Object request);
+	<U> ResponseEntity<U> heal(String nsInstanceId, Object request, final Function<NsBlueprint, String> getSelfLink);
 
 	<U> ResponseEntity<U> instantiate(String nsInstanceId, Object request, Function<NsBlueprint, String> getSelfLink);
 
-	<U> ResponseEntity<U> scale(String nsInstanceId, Object request);
+	<U> ResponseEntity<U> scale(String nsInstanceId, Object request, final Function<NsBlueprint, String> getSelfLink);
 
 	<U> ResponseEntity<U> terminate(String nsInstanceId, Object request, Function<NsBlueprint, String> getSelfLink);
 
-	<U> ResponseEntity<U> update(String nsInstanceId, Object request);
+	<U> ResponseEntity<U> update(String nsInstanceId, Object request, final Function<NsBlueprint, String> getSelfLink);
 
 	<U> ResponseEntity<U> create(Object request, Class<U> clazz, Consumer<U> makeLink, Function<U, String> getSelfLink);
 

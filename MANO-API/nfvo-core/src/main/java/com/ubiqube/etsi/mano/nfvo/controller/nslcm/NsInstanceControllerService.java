@@ -28,6 +28,8 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsHeal;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 
 /**
@@ -45,4 +47,8 @@ public interface NsInstanceControllerService {
 	NsBlueprint terminate(UUID nsInstanceUuid, @Nullable OffsetDateTime terminationTime);
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
+
+	NsBlueprint heal(UUID nsInstanceUuid, NsHeal nsHeal);
+
+	NsBlueprint heal(UUID nsInstanceUuid, NsScale nsInst);
 }
