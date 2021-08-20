@@ -99,6 +99,7 @@ public abstract class AbstractGenericAction {
 		}
 		// XXX ??? error duplicate key in NSD.
 		copyVimConnections(vnfInstance, localPlan);
+		vnfInstance.setLockedBy(null);
 		orchestrationAdapter.save(vnfInstance);
 		LOG.info("Saving VNF LCM OP OCCS.");
 		localPlan = orchestrationAdapter.save(localPlan);

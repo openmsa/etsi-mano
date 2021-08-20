@@ -90,6 +90,7 @@ public class VnfmActions extends AbstractGenericAction {
 				// vnfInstance.getInstantiatedVnfInfo().setVnfState(OperationalStateType.STOPPED);
 			}
 		});
+		vnfInstance.setLockedBy(null);
 		vnfInstancesService.save(vnfInstance);
 	}
 
