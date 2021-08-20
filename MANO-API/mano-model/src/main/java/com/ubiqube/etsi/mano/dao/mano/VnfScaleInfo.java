@@ -17,13 +17,26 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
+import java.util.UUID;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-@Embeddable
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Entity
 public class VnfScaleInfo implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
 
 	private ScaleTypeEnum scaleType = null;
 
@@ -39,30 +52,6 @@ public class VnfScaleInfo implements Serializable {
 		super();
 		this.scaleType = scaleType;
 		this.numberOfSteps = numberOfSteps;
-		this.aspectId = aspectId;
-	}
-
-	public ScaleTypeEnum getScaleType() {
-		return scaleType;
-	}
-
-	public void setScaleType(final ScaleTypeEnum scaleType) {
-		this.scaleType = scaleType;
-	}
-
-	public Integer getNumberOfSteps() {
-		return numberOfSteps;
-	}
-
-	public void setNumberOfSteps(final Integer numberOfSteps) {
-		this.numberOfSteps = numberOfSteps;
-	}
-
-	public String getAspectId() {
-		return aspectId;
-	}
-
-	public void setAspectId(final String aspectId) {
 		this.aspectId = aspectId;
 	}
 

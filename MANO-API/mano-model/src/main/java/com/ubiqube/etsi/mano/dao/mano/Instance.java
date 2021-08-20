@@ -103,7 +103,10 @@ public class Instance implements BaseEntity, Auditable {
 	@Version
 	private long version;
 
-	private boolean locked;
+	/**
+	 * UUID of an lcm op occ.
+	 */
+	private UUID lockedBy;
 
 	private Audit audit = new Audit();
 

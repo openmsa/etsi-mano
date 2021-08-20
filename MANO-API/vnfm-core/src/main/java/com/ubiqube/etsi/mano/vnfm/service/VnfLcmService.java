@@ -77,8 +77,8 @@ public class VnfLcmService {
 
 	@Nonnull
 	private VnfBlueprint createIntatiateTerminateVnfBlueprint(final VnfInstance vnfInstance, final PlanOperationType state) {
-		final VnfBlueprint VnfBlueprint = VnfLcmFactory.createVnfBlueprint(state, vnfInstance.getId());
-		return planJpa.save(VnfBlueprint);
+		final VnfBlueprint lcmOpOccs = VnfLcmFactory.createVnfBlueprint(state, vnfInstance.getId());
+		return saveLcmOppOcc(lcmOpOccs, vnfInstance);
 	}
 
 	public VnfBlueprint createScaleToLevelOpOcc(final VnfInstance vnfInstance, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
@@ -90,7 +90,7 @@ public class VnfLcmService {
 					.collect(Collectors.toSet());
 			lcmOpOccs.getParameters().setScaleStatus(scaleStatus);
 		}
-		return planJpa.save(lcmOpOccs);
+		return saveLcmOppOcc(lcmOpOccs, vnfInstance);
 	}
 
 	public VnfBlueprint createScaleOpOcc(final VnfInstance vnfInstance, final VnfScaleRequest scaleVnfRequest) {
@@ -103,7 +103,7 @@ public class VnfLcmService {
 				.map(x -> new ScaleInfo(x.getAspectId(), addDec(scaleVnfRequest.getType(), scaleVnfRequest.getNumberOfSteps(), x.getScaleLevel())))
 				.collect(Collectors.toSet());
 		lcmOpOccs.getParameters().setScaleStatus(scaleStatus);
-		return planJpa.save(lcmOpOccs);
+		return saveLcmOppOcc(lcmOpOccs, vnfInstance);
 	}
 
 	private static int addDec(@NotNull final ScaleTypeEnum type, final int numberOfSteps, final int scaleLevel) {
@@ -127,7 +127,7 @@ public class VnfLcmService {
 			final VnfTask affectedCompute = copyInstantiedResource(x, new ComputeTask(), lcmOpOccs);
 			lcmOpOccs.addTask(affectedCompute);
 		});
-		return planJpa.save(lcmOpOccs);
+		return saveLcmOppOcc(lcmOpOccs, vnfInstance);
 	}
 
 	public List<VnfBlueprint> query(final String filter) {
@@ -142,7 +142,15 @@ public class VnfLcmService {
 	public VnfBlueprint createOperateOpOcc(final VnfInstance vnfInstance, final ChangeExtVnfConnRequest cevcr) {
 		final VnfBlueprint lcmOpOccs = VnfLcmFactory.createVnfLcmOpOccs(PlanOperationType.CHANGE_EXTERNAL_VNF_CONNECTIVITY, vnfInstance.getId());
 		lcmOpOccs.setChangeExtVnfConnRequest(cevcr);
-		return planJpa.save(lcmOpOccs);
+		return saveLcmOppOcc(lcmOpOccs, vnfInstance);
+	}
+
+	@Nonnull
+	private VnfBlueprint saveLcmOppOcc(final VnfBlueprint blueprint, final VnfInstance vnfInstance) {
+		final VnfBlueprint bp = planJpa.save(blueprint);
+		vnfInstance.setLockedBy(bp.getId());
+		vnfInstancesService.save(vnfInstance);
+		return bp;
 	}
 
 	private static <T extends VnfTask> T copyInstantiedResource(final VnfLiveInstance x, final T task, final VnfBlueprint blueprint) {
@@ -153,5 +161,9 @@ public class VnfLcmService {
 		task.setToscaName(x.getTask().getToscaName());
 		task.setVimResourceId(x.getResourceId());
 		return task;
+	}
+
+	public VnfBlueprint save(final VnfBlueprint lcm) {
+		return planJpa.save(lcm);
 	}
 }

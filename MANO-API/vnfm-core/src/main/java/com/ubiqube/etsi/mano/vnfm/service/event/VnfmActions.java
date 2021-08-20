@@ -68,7 +68,7 @@ public class VnfmActions extends AbstractGenericAction {
 	public VnfmActions(final VimManager _vimManager, final VnfOrchestrationAdapter orchestrationAdapter, final VnfInstanceService _vnfInstancesService,
 			final VnfWorkflow _planner, final VnfBlueprintService _blueprintService, final ManoGrantService _vimResourceService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa,
 			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
-		super(_vimManager, _planner, _vimResourceService, orchestrationAdapter);
+		super(_planner, _vimResourceService, orchestrationAdapter);
 		vimManager = _vimManager;
 		vnfInstancesService = _vnfInstancesService;
 		blueprintService = _blueprintService;

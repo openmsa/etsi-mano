@@ -36,4 +36,6 @@ public interface VnfLcmController {
 
 	VnfBlueprint vnfLcmOpOccsVnfLcmOpOccIdGet(final UUID id);
 
+	void failed(UUID id);
+
 }

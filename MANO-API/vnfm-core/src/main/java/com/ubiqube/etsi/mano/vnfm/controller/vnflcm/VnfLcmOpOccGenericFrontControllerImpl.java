@@ -66,7 +66,8 @@ public class VnfLcmOpOccGenericFrontControllerImpl implements VnfLcmOpOccGeneric
 
 	@Override
 	public <U> ResponseEntity<U> lcmOpOccFail(final UUID id) {
-		return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		vnfLcmController.failed(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Override

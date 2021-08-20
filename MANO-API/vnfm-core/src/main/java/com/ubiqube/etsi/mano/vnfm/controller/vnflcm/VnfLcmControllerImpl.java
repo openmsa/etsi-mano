@@ -16,13 +16,18 @@
  */
 package com.ubiqube.etsi.mano.vnfm.controller.vnflcm;
 
+import static com.ubiqube.etsi.mano.Constants.ensureFailedTemp;
+
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.vnfm.service.VnfLcmService;
@@ -35,14 +40,27 @@ import com.ubiqube.etsi.mano.vnfm.service.VnfLcmService;
 @Service
 public class VnfLcmControllerImpl extends SearchableService implements VnfLcmController {
 	private final VnfLcmService vnfLcmOpOccsRepository;
+	private final VnfInstanceJpa vnfInstanceJpa;
 
-	public VnfLcmControllerImpl(final VnfLcmService _vnfLcmOpOccsRepository, final EntityManager _em, final ManoSearchResponseService searchService) {
+	public VnfLcmControllerImpl(final VnfLcmService _vnfLcmOpOccsRepository, final EntityManager _em, final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa) {
 		super(searchService, _em, VnfBlueprint.class);
 		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
+		this.vnfInstanceJpa = vnfInstanceJpa;
 	}
 
 	@Override
 	public VnfBlueprint vnfLcmOpOccsVnfLcmOpOccIdGet(final UUID id) {
 		return vnfLcmOpOccsRepository.findById(id);
+	}
+
+	@Override
+	public void failed(final UUID id) {
+		final VnfBlueprint lcm = vnfLcmOpOccsRepository.findById(id);
+		final VnfInstance instance = lcm.getVnfInstance();
+		ensureFailedTemp(lcm);
+		instance.setLockedBy(null);
+		vnfInstanceJpa.save(instance);
+		lcm.setOperationStatus(OperationStatusType.FAILED);
+		vnfLcmOpOccsRepository.save(lcm);
 	}
 }

@@ -26,8 +26,6 @@ import javax.annotation.Priority;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.ChangeType;
-import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -37,7 +35,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
-import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.orchestrator.Bundle;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
@@ -125,10 +122,8 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 		final int toCreate = numInst.getWanted() - numInst.getCurrent();
 		final List<ComputeVt> ret = new ArrayList<>();
 		for (int i = 0; i < toCreate; i++) {
-			final ComputeTask computeTask = new ComputeTask();
+			final ComputeTask computeTask = createTask(ComputeTask::new);
 			computeTask.setVnfCompute(vnfCompute);
-			computeTask.setChangeType(ChangeType.ADDED);
-			computeTask.setStatus(PlanStatusType.NOT_STARTED);
 			computeTask.setType(ResourceTypeEnum.COMPUTE);
 			computeTask.setScaleInfo(scaleInfo);
 			computeTask.setAlias(vduNamingStrategy.nameVdu(plan, vnfCompute.getToscaName(), numInst.getCurrent() + i));
