@@ -246,6 +246,7 @@ public class ContextResolver {
 			LOG.debug("Handling map of {}", generic);
 			final Map map = (Map) cls;
 			handleRealMap(map, generic, caps, props, cls);
+			return cls;
 		}
 		final Stream<PropertyDescriptor> stream = Arrays.stream(props);
 		stream.forEach(x -> {
