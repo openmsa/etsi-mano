@@ -38,14 +38,17 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.parser.tosca.ZipUtil.Entry;
 import com.ubiqube.parser.tosca.api.ToscaApi;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
 import com.ubiqube.parser.tosca.scalar.Size;
 
+import tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements;
 import tosca.groups.nfv.PlacementGroup;
 import tosca.nodes.Compute;
 import tosca.nodes.nfv.VduCp;
+import tosca.nodes.nfv.VnfExtCp;
 import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.VirtualBlockStorage;
 import tosca.nodes.nfv.vdu.VirtualObjectStorage;
@@ -74,7 +77,9 @@ public class ToscaApiTest {
 
 	@Test
 	public void testUbiCsar() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/ubi-tosca.csar");
+		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
+		final ToscaParser tp = new ToscaParser("/tmp/ubi-tosca.csar");
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.vdu.Compute.class);
@@ -90,7 +95,17 @@ public class ToscaApiTest {
 		assertEquals(1, listPg.size());
 		final List<VduInstantiationLevels> listvduIl = toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
 		assertEquals(1, listvduIl.size());
-		System.out.println("" + res);
+		final List<VnfExtCp> listExtCp = toscaApi.getObjects(root, parameters, VnfExtCp.class);
+		assertEquals(1, listExtCp.size());
+		testVnfExtCp(listExtCp.get(0));
+	}
+
+	private static void testVnfExtCp(final VnfExtCp vnfExtCp) {
+		assertEquals("ext01", vnfExtCp.getInternalName());
+		final List<VirtualNetworkInterfaceRequirements> vnirs = vnfExtCp.getVirtualNetworkInterfaceRequirements();
+		assertEquals(1, vnirs.size());
+		final VirtualNetworkInterfaceRequirements vnir = vnirs.get(0);
+		assertEquals("vl01", vnir.getName());
 	}
 
 	// @Test
