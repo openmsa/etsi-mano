@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.parser.tosca.Artifact;
 import com.ubiqube.parser.tosca.CapabilityDefinition;
 import com.ubiqube.parser.tosca.CapabilityTypes;
 import com.ubiqube.parser.tosca.DataType;
@@ -48,6 +49,7 @@ import com.ubiqube.parser.tosca.annotations.Relationship;
 import com.ubiqube.parser.tosca.constraints.Constraint;
 
 public class ToscaWalker {
+	private static final String STRING = "string";
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaWalker.class);
 	private ToscaContext root = null;
 	private final Map<String, DataType> primitive = new HashMap<>();
@@ -88,14 +90,22 @@ public class ToscaWalker {
 			if (cache.contains(entry.getKey())) {
 				continue;
 			}
-			generateToscaClass(entry.getKey(), entry.getValue(), listener);
+			if ("tosca.artifacts.Root".equals(entry.getKey())) {
+				createArtifactRoot(listener);
+			} else {
+				generateToscaClass(entry.getKey(), entry.getValue(), listener);
+			}
 		}
 		arts = root.getNodeType().entrySet();
 		for (final Entry<String, ToscaClass> entry : arts) {
 			if (cache.contains(entry.getKey())) {
 				continue;
 			}
-			generateToscaClass(entry.getKey(), entry.getValue(), listener);
+			if ("tosca.nodes.Root".equals(entry.getKey())) {
+				createNodeRoot(listener);
+			} else {
+				generateToscaClass(entry.getKey(), entry.getValue(), listener);
+			}
 		}
 
 		final Set<Entry<String, GroupType>> groups = root.getGroupType().entrySet();
@@ -115,35 +125,23 @@ public class ToscaWalker {
 		listener.terminateDocument();
 	}
 
-	private void generateArtifactToscaClass(final String className, final ToscaClass toscaClass, final ToscaListener listener) {
-		LOG.info("generate Artifact class: {}", className);
-		startClass(className, toscaClass.getDerivedFrom(), listener);
-		Optional.ofNullable(toscaClass.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
-		Optional.ofNullable(toscaClass.getAttributes()).ifPresent(x -> generateFields(listener, x));
-		Optional.ofNullable(toscaClass.getCapabilities()).ifPresent(x -> generateCaps(listener, x));
-		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(listener, x));
-		Optional.ofNullable(toscaClass.getDescription()).ifPresent(listener::onClassDescription);
-		// Add members
-		// Description
-		final ValueObject vo = ValueObject.listOf("string");
-		listener.startField("description", vo);
-		listener.onClassDescription("The optional description for the artifact definition.");
+	private void createNodeRoot(final ToscaListener listener) {
+		startClass("tosca.nodes.Root", null, listener);
+
+		listener.startField("artifacts", ValueObject.mapOf(Artifact.class.getName()));
 		listener.onFieldTerminate();
-		// file.
-		listener.startField("file", vo);
-		listener.onFieldNonNull();
-		listener.onClassDescription("The required URI string (relative or absolute) which can be used to locate the artifact’s file.");
+
+		cache.add("tosca.nodes.Root");
+		listener.terminateClass();
+	}
+
+	private void createArtifactRoot(final ToscaListener listener) {
+		startClass("tosca.artifacts.Root", null, listener);
+
+		listener.startField("file", new ValueObject(STRING));
 		listener.onFieldTerminate();
-		// repository
-		listener.startField("repository", vo);
-		listener.onClassDescription("The optional name of the repository definition which contains the location of the external repository that contains the artifact.  The artifact is expected to be referenceable by its file URI within the repository.");
-		listener.onFieldTerminate();
-		// deploy_path
-		listener.startField("deployPath", vo);
-		listener.onClassDescription("The file path the associated file would be deployed into within the target node’s container. ");
-		listener.onFieldTerminate();
-		LOG.debug("Caching {}", className);
-		cache.add(className);
+
+		cache.add("tosca.artifacts.Root");
 		listener.terminateClass();
 	}
 
@@ -153,7 +151,7 @@ public class ToscaWalker {
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
 		// add members
-		ValueObject vo = ValueObject.listOf("string");
+		ValueObject vo = ValueObject.listOf(STRING);
 		listener.startField("targets", vo);
 		if (null != definition.getTargets()) {
 			definition.getTargets().forEach(listener::onClassDescription);
@@ -175,7 +173,7 @@ public class ToscaWalker {
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
 		// add members
-		final ValueObject vo = ValueObject.listOf("string");
+		final ValueObject vo = ValueObject.listOf(STRING);
 		listener.startField("members", vo);
 		if (null != definition.getMembers()) {
 			definition.getMembers().forEach(x -> listener.onFieldAnnotate(Members.class, x));
@@ -342,9 +340,8 @@ public class ToscaWalker {
 	private static void generateRequirements(final ToscaListener listener, final RequirementDefinition requirements) {
 		requirements.getRequirements().forEach((final String x, final Requirement y) -> {
 			final String fieldName = fieldCamelCase(x + "_req");
-			final List<String> occ = y.getOccurrences();
 			LOG.debug("Forcing field Object");
-			listener.startField(fieldName, "string", false);
+			listener.startField(fieldName, STRING, false);
 
 			// XXX: Probably one may be a concrete type.
 			if (null != y.getNode()) {
@@ -450,7 +447,7 @@ public class ToscaWalker {
 		boolean ret = false;
 		switch (val.getDerivedFrom()) {
 		case "integer":
-		case "string":
+		case STRING:
 			ret = true;
 			break;
 		default:
