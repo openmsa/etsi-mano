@@ -3,7 +3,7 @@ description: >
   Sample VNF for integration testing.
 
 imports:
-  - etsi_nfv_sol001_vnfd_types.yaml
+  - https://forge.etsi.org/rep/nfv/SOL001/raw/master/etsi_nfv_sol001_vnfd_types.yaml
 
 topology_template:
   inputs:
@@ -87,6 +87,10 @@ topology_template:
       type: tosca.nodes.nfv.Vdu.Compute
       name: leftVdu01
       description: A node.
+      artifacts:
+        sw_image:
+          type: tosca.artifacts.deployment.image.vm.QCOW2
+          file: myFile.qcow2
       properties:
         sw_image_data:
           name: cirros
@@ -106,6 +110,20 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
+        boot_data:
+          vim_specific_properties: # tosca.datatypes.nfv.BootDataVimSpecificProperties
+            vim_type: vimtype
+            properties: # map of String
+              key: value
+          kvp_data: # tosca.datatypes.nfv.KvpData
+            data: # map of string
+              key: value
+          content_or_file_data: # tosca.datatypes.nfv.ContentOrFileData
+            data:
+              key: value
+              content: cloud_init
+              source_path: file://
+              destination_path: /opt/
       requirements:
         - virtual_storage: block01
       capabilities:
@@ -216,6 +234,7 @@ topology_template:
           - passive_monitoring
         monitoring_parameters:
           Usage:
+            name: Usage
             collection_period: 60 s
             performance_metric: v_cpu_usage_mean_vnf
         vl_profile: # tosca.datatypes.nfv.VlProfile
@@ -242,7 +261,6 @@ topology_template:
                 ip_allocation_pools: # list tosca.datatypes.nfv.IpAllocationPool
                   - start_ip_address: 192.168.0.100
                     end_ip_address: 192.168.0.254
-              associated_layer_protocol: ipv4
           qos: # tosca.datatypes.nfv.Qos
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -265,7 +283,6 @@ topology_template:
           min_bitrate_requirements:
             root: 11
             leaf: 16
-          virtual_link_protocol_data:
           qos:
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -303,7 +320,6 @@ topology_template:
           min_bitrate_requirements:
             root: 11
             leaf: 16
-          virtual_link_protocol_data:
           qos:
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -350,14 +366,14 @@ topology_template:
       properties:
         bitrate_requirement: 5
         virtual_network_interface_requirements: # list tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements
-          name: req01
-          description: Description
-          support_mandatory: false
-          network_interface_requirements:
-            read: openstack
-          nic_io_requirements: # tosca.datatypes.nfv.LogicalNodeData
-            logical_node_requirements:
+          - name: req01
+            description: Description
+            support_mandatory: false
+            network_interface_requirements:
               read: openstack
+            nic_io_requirements: # tosca.datatypes.nfv.LogicalNodeData
+              logical_node_requirements:
+                read: openstack
         order: 5
         vnic_type: virtio
       requirements:
