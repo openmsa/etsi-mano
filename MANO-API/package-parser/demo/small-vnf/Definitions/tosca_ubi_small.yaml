@@ -54,6 +54,10 @@ topology_template:
       type: tosca.nodes.nfv.Vdu.Compute
       name: webserver
       description: A node.
+      artifacts:
+        sw_image:
+          type: tosca.artifacts.Deployment.Image.VM.QCOW2
+          file: Fedora-Cloud-Base-34-1.2.x86_64.qcow2
       properties:
         sw_image_data:
           name: cirros
