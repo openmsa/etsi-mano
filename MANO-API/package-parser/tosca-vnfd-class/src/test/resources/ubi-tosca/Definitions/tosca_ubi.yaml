@@ -53,7 +53,7 @@ topology_template:
             max_recommended_graceful_termination_timeout: 120 s
           change_ext_connectivity: #tosca.datatypes.nfv.VnfChangeExtConnectivityOperationConfiguration
         monitoring_parameters: # list tosca.datatypes.nfv.VnfMonitoringParameter
-          - name: mon01
+          mon01:
             performance_metric: v_disk_usage_peak_vnf
             collection_period: 1 m
         vnf_profile: # tosca.datatypes.nfv.VnfProfile
@@ -100,7 +100,7 @@ topology_template:
           min_ram: 2 GiB
           operating_system: centos8
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
-          - name: metric name
+          name:
             performance_metric: v_cpu_usage_mean_vnf
             collection_period: 60 s
         vdu_profile:
@@ -215,7 +215,7 @@ topology_template:
         test_access:
           - passive_monitoring
         monitoring_parameters:
-          - name: Vcpu Peak Usage
+          Usage:
             collection_period: 60 s
             performance_metric: v_cpu_usage_mean_vnf
         vl_profile: # tosca.datatypes.nfv.VlProfile
