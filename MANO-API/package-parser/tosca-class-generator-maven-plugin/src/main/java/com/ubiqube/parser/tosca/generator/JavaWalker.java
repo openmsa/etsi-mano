@@ -309,6 +309,7 @@ public class JavaWalker extends AbstractWalker {
 			if (null != cahed) {
 				return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
 			}
+			return codeModel.ref(Map.class).narrow(String.class, getClassOf(subType));
 		}
 		if ("trigger".equals(type)) {
 			return codeModel.ref(TriggerDefinition.class);

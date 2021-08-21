@@ -40,6 +40,15 @@ public class ValueObject {
 		return vo;
 	}
 
+	public static ValueObject mapOf(final String type) {
+		final ValueObject vo = new ValueObject();
+		vo.setType("map");
+		final EntrySchema entrySchema = new EntrySchema();
+		entrySchema.setType(type);
+		vo.setEntrySchema(entrySchema);
+		return vo;
+	}
+
 	public String getType() {
 		return type;
 	}
