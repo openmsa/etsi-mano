@@ -180,7 +180,10 @@ public class ContextResolver {
 		if (null != props) {
 			handleMap(props, clazz, propsDescr, cls, null);
 		}
-
+		final Object artifacts = node.getArtifacts();
+		if (null != artifacts) {
+			handleArtifacts(artifacts, clazz, propsDescr, cls, null);
+		}
 		final RequirementDefinition req = node.getRequirements();
 		if ((null != req) && (null != req.getRequirements())) {
 			handleRequirements(req.getRequirements(), clazz, propsDescr, cls, null);
@@ -192,6 +195,11 @@ public class ContextResolver {
 		setProperty(cls, "setName", node.getName());
 		setProperty(cls, "setDescription", node.getDescription());
 		return cls;
+	}
+
+	private static void handleArtifacts(final Object artifacts, final Class clazz, final PropertyDescriptor[] propsDescr, final Object cls, final Object object) {
+		final Method rm = findReadMethod(propsDescr, "artifacts");
+		methodInvoke(rm, cls, artifacts);
 	}
 
 	private static void setProperty2(final Object cls, final Method write, final Object value) {
