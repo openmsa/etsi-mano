@@ -75,8 +75,10 @@ topology_template:
             description: descr
             support_mandatory: false
             network_interface_requirements: # map
+              key: value
             nic_io_requirements:
               logical_node_requirements: #map
+                key: value
       requirements:
         - external_virtual_link: 
             node: public
@@ -91,20 +93,36 @@ topology_template:
         sw_image:
           type: tosca.artifacts.deployment.image.vm.QCOW2
           file: myFile.qcow2
+          deploy_path: deploy path
+          checksum: 1234
+          checksum_algorithm: ssh512
+          description: desc
+          repository: repo
+          vim_type: vimtype
+          artifact_version: 1.0.0
+          properties:
+            key: value
       properties:
         sw_image_data:
           name: cirros
+          provider: provider
           version: 1.0.0
+          supported_virtualisation_environments:
+            - test
           checksum:
             hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
             algorithm: SHA-256
           container_format: BARE
           disk_format: QCOW2
+          size: 1 Gib
           min_disk: 6 GiB
           min_ram: 2 GiB
           operating_system: centos8
+        nfvi_constraints:
+          key: value
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
           name:
+            name: name
             performance_metric: v_cpu_usage_mean_vnf
             collection_period: 60 s
         vdu_profile:
@@ -121,9 +139,9 @@ topology_template:
           content_or_file_data: # tosca.datatypes.nfv.ContentOrFileData
             data:
               key: value
-              content: cloud_init
-              source_path: file://
-              destination_path: /opt/
+            content: cloud_init
+            source_path: file://
+            destination_path: /opt/
       requirements:
         - virtual_storage: block01
       capabilities:
@@ -155,6 +173,7 @@ topology_template:
                 cpu_architecture: x86_64
                 num_virtual_cpu: 1
                 virtual_cpu_clock: 3 GHz
+                virtual_cpu_oversubscription_policy: plo
                 vdu_cpu_requirements: # map string
                   read: openstack
                 virtual_cpu_pinning: # tosca.datatypes.nfv.VirtualCpuPinning
@@ -204,8 +223,12 @@ topology_template:
       properties:
         virtual_block_storage_data:
           size_of_storage: 6 GB
+          vdu_storage_requirements:
+            key: value
         sw_image_data:
           name: cirros
+          provider: prov
+          size: 1 Gib
           version: 1.0.0
           checksum:
             hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
@@ -215,6 +238,9 @@ topology_template:
           min_disk: 6 GB
           min_ram: 2 GB
           operating_system: centos8
+          supported_virtualisation_environments:
+            - openstack
+            - glance
 
     storageVo:
       type: tosca.nodes.nfv.Vdu.VirtualObjectStorage
@@ -251,6 +277,7 @@ topology_template:
                 vlan_transparent: true
                 network_type: flat
                 mtu: 1500
+                segmentation_id: a
               l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
                 dhcp_enabled: true
                 cidr: 192.168.0.0/24
@@ -355,6 +382,8 @@ topology_template:
               logical_node_requirements: #map
         order: 5
         vnic_type: virtio
+      capabilities:
+        trunk_binding: # tosca.capabilities.nfv.TrunkBindable
       requirements:
         - virtual_link:
             node: leftVl01

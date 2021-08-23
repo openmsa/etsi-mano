@@ -17,22 +17,26 @@
 package com.ubiqube.parser.tosca;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import java.beans.MethodDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Arrays;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
+import java.util.Set;
+import java.util.Stack;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -42,7 +46,9 @@ import com.ubiqube.parser.tosca.ZipUtil.Entry;
 import com.ubiqube.parser.tosca.api.ToscaApi;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
+import com.ubiqube.parser.tosca.scalar.Frequency;
 import com.ubiqube.parser.tosca.scalar.Size;
+import com.ubiqube.parser.tosca.scalar.Time;
 
 import tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements;
 import tosca.groups.nfv.PlacementGroup;
@@ -61,9 +67,19 @@ public class ToscaApiTest {
 	private final ConvertApi conv = new ConvertApi();
 
 	private final Map<String, String> parameters = new HashMap<>();
+	private final Set<Class<?>> complex = new HashSet<>();
 
 	public ToscaApiTest() {
 		conv.register(Size.class.getCanonicalName(), new SizeConverter());
+		complex.add(String.class);
+		complex.add(UUID.class);
+		complex.add(Long.class);
+		complex.add(Integer.class);
+		complex.add(Boolean.class);
+		complex.add(OffsetDateTime.class);
+		complex.add(Size.class);
+		complex.add(Frequency.class);
+		complex.add(Time.class);
 	}
 
 	// @Test
@@ -83,14 +99,20 @@ public class ToscaApiTest {
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.vdu.Compute.class);
+		assertEquals(2, res.size());
+		// checknull(res.get(0));
 		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, parameters, VirtualBlockStorage.class);
 		assertEquals(1, list.size());
+		// checknull(list.get(0));
 		final List<VirtualObjectStorage> vos = toscaApi.getObjects(root, parameters, VirtualObjectStorage.class);
 		assertEquals(1, vos.size());
+		// checknull(vos.get(0));
 		final List<VnfVirtualLink> listVl = toscaApi.getObjects(root, parameters, VnfVirtualLink.class);
 		assertEquals(3, listVl.size());
+		// checknull(listVl.get(0));
 		final List<VduCp> listVduCp = toscaApi.getObjects(root, parameters, VduCp.class);
 		assertEquals(4, listVduCp.size());
+		// checknull(listVduCp.get(0));
 		final List<PlacementGroup> listPg = toscaApi.getObjects(root, parameters, PlacementGroup.class);
 		assertEquals(1, listPg.size());
 		final List<VduInstantiationLevels> listvduIl = toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
@@ -98,6 +120,7 @@ public class ToscaApiTest {
 		final List<VnfExtCp> listExtCp = toscaApi.getObjects(root, parameters, VnfExtCp.class);
 		assertEquals(1, listExtCp.size());
 		testVnfExtCp(listExtCp.get(0));
+		checknull(listExtCp.get(0));
 	}
 
 	private static void testVnfExtCp(final VnfExtCp vnfExtCp) {
@@ -108,126 +131,147 @@ public class ToscaApiTest {
 		assertEquals("vl01", vnir.getName());
 	}
 
-	// @Test
-	void testResolvValue() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
-		final ToscaContext root = tp.getContext();
-		final ToscaApi toscaApi = new ToscaApi();
-		final List<NodeTemplate> res = toscaApi.getNodeMatching(root, parameters, Compute.class);
-		assertEquals(2, res.size(), "Size of the list must be 2");
-		final NodeTemplate obj = res.get(0);
-		final Map<String, Object> caps = (Map<String, Object>) obj.getCapabilities();
-		final Object maps = handleMap(caps, Compute.class, null);
-		LOG.debug("map={}", maps);
-	}
-
-	private Object handleMap(final Map<String, Object> caps, final Class clazz, final Class generic) {
-		final Object cls = newInstance(clazz);
-		BeanInfo beanInfo;
-		try {
-			beanInfo = Introspector.getBeanInfo(clazz);
-		} catch (final IntrospectionException e) {
-			throw new ParseException(e);
-		}
-		final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
-		LOG.info("class=>{}[{}] --- [{}]", clazz.getName(), caps, Arrays.toString(props));
-		if (clazz.isAssignableFrom(Map.class)) {
-			LOG.debug("Handling map of {}", generic);
-			final Map map = (Map) cls;
-			handleRealMap(map, generic, caps);
-		}
-		final Stream<PropertyDescriptor> stream = Arrays.stream(props);
-		stream.forEach(x -> {
-			final Object res = caps.get(camelCaseToUnderscore(x.getName()));
-			if (null != res) {
-				LOG.info("Property: {}={}", x.getName(), res);
-				handleCaps(res, x, cls);
+	protected void assertFullEqual(final Object orig, final Object tgt, final Set<String> ignore, final Deque<String> stack) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		final BeanInfo beanInfo = Introspector.getBeanInfo(orig.getClass());
+		final MethodDescriptor[] m = beanInfo.getMethodDescriptors();
+		for (final MethodDescriptor methodDescriptor : m) {
+			if (!methodDescriptor.getName().startsWith("get") || "getClass".equals(methodDescriptor.getName()) || ignore.contains(methodDescriptor.getName())) {
+				continue;
 			}
-		});
-		return cls;
-	}
-
-	private void handleRealMap(final Map map, final Class generic, final Map<String, Object> caps) {
-		caps.forEach((x, y) -> {
-			final Object res = handleMap((Map<String, Object>) y, generic, null);
-			map.put(x, res);
-		});
-	}
-
-	private void handleCaps(final Object res, final PropertyDescriptor x, final Object cls) {
-		if (res instanceof Map) {
-			Map<String, Object> caps = (Map<String, Object>) res;
-			if (null != caps.get("properties")) {
-				caps = (Map<String, Object>) caps.get("properties");
+			LOG.debug(" + {}", methodDescriptor.getName());
+			stack.push(methodDescriptor.getName());
+			final Object src = methodDescriptor.getMethod().invoke(orig);
+			final Object dst = methodDescriptor.getMethod().invoke(tgt);
+			if (null == src) {
+				LOG.warn("  - {} is null", methodDescriptor.getName());
+				continue;
 			}
-			LOG.debug("Recursing: {}", caps);
-			final Method rm = x.getReadMethod();
-			final Class zz = getReturnType(rm);
-			Object ret = null;
-			if (rm.getReturnType().isAssignableFrom(Map.class)) {
-				ret = handleMap(caps, Map.class, zz);
+			if (src instanceof List) {
+				final List sl = (List) src;
+				final List dl = (List) dst;
+				assertNotNull(dl, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
+				assertEquals(sl.size(), dl.size(), "List are not equals " + methodDescriptor.getName() + prettyStack(stack));
+				Collections.sort(sl, Comparator.comparing(Object::toString));
+				Collections.sort(dl, Comparator.comparing(Object::toString));
+				for (int i = 0; i < sl.size(); i++) {
+					final Object so = sl.get(i);
+					final Object dobj = dl.get(i);
+					stack.push("[" + i + "]");
+					if (isComplex(so)) {
+						LOG.warn("  + Looping: {}", src.getClass());
+						assertFullEqual(so, dobj, ignore, stack);
+					} else {
+						assertEquals(so, dobj, "List in " + methodDescriptor.getName() + ": is not equal at " + i + prettyStack(stack));
+					}
+					stack.pop();
+				}
+				stack.pop();
+				continue;
+			}
+			if (src instanceof Map) {
+				stack.pop();
+				continue;
+			}
+			if (src instanceof Set) {
+				stack.pop();
+				continue;
+			}
+			if (isComplex(src)) {
+				LOG.warn("  + Looping: {}", src.getClass());
+				assertNotNull(dst, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
+				assertFullEqual(src, dst, ignore, stack);
 			} else {
-				ret = handleMap(caps, zz, zz);
+				assertEquals(src, dst, "Field " + methodDescriptor.getName() + ": must be equals." + prettyStack(stack));
 			}
-			LOG.debug("return: {} for property: {}", ret, x.getName());
-			final Method meth = x.getWriteMethod();
-			methodInvoke(meth, cls, ret);
-		} else {
-			final Method writeMethod = x.getWriteMethod();
-			methodInvoke(writeMethod, cls, convert(res, writeMethod.getParameterTypes()[0]));
+			stack.pop();
 		}
 	}
 
-	private Object convert(final Object res, final Class<?> parameterType) {
-		if (res.getClass().equals(parameterType)) {
-			return res;
-		}
-		LOG.debug("Converting: {} into {}", res.getClass(), parameterType.getName());
-		return conv.map(parameterType.getName(), res);
+	private static String prettyStack(final Deque<String> stack) {
+		return "\n" + stack.toString();
 	}
 
-	private static Class getReturnType(final Method readMethod) {
-		LOG.debug("Return Type={}", readMethod.getReturnType());
-		final Type returnTypes = readMethod.getGenericReturnType();
-		if (returnTypes instanceof ParameterizedType) {
-			final ParameterizedType rt = (ParameterizedType) returnTypes;
-			final Type[] ata = rt.getActualTypeArguments();
-			if (ata.length == 1) {
-				return (Class) ata[0];
+	private void checknull(final Object avcDb) throws IntrospectionException, IllegalArgumentException, InvocationTargetException, IllegalAccessException {
+		final List<String> err = new ArrayList<>();
+		final List<String> ignore = new ArrayList<>();
+		ignore.add("getInternalDescription");
+		ignore.add("getInternalName");
+		checknullInternal(avcDb, ignore, err, new Stack<>());
+		if (!err.isEmpty()) {
+			final String str = err.stream().collect(Collectors.joining("\n"));
+			LOG.error("Following errors have been found:\n" + str);
+			throw new RuntimeException("Some errors:\n" + str);
+		}
+	}
+
+	private void checknullInternal(final Object avcDb, final List<String> ignore, final List<String> err, final Stack<String> stack) throws IntrospectionException, IllegalArgumentException, InvocationTargetException, IllegalAccessException {
+		final BeanInfo beanInfo = Introspector.getBeanInfo(avcDb.getClass());
+		final MethodDescriptor[] m = beanInfo.getMethodDescriptors();
+		for (final MethodDescriptor methodDescriptor : m) {
+			if (!methodDescriptor.getName().startsWith("get") || "getClass".equals(methodDescriptor.getName())) {
+				continue;
 			}
-			return (Class) ata[1];
-		}
-		return readMethod.getReturnType();
-	}
+			stack.push(methodDescriptor.getName());
+			LOG.trace(" + {}", methodDescriptor.getName());
+			final Object r = methodDescriptor.getMethod().invoke(avcDb, null);
+			if ((null == r)) {
+				if (!ignore.contains(methodDescriptor.getName())) {
+					LOG.warn("  - {} is null", methodDescriptor.getName());
+					err.add(buildError(stack));
 
-	private static String camelCaseToUnderscore(final String key) {
-		final Matcher m = Pattern.compile("(?<=[a-z])[A-Z]").matcher(key);
-
-		final StringBuffer sb = new StringBuffer();
-		while (m.find()) {
-			m.appendReplacement(sb, "_" + m.group().toLowerCase());
-		}
-		m.appendTail(sb);
-		LOG.trace("Underscore:  {}<=>{}", key, sb.toString());
-		return sb.toString();
-	}
-
-	private static Object newInstance(final Class<?> clazz) {
-		try {
-			if (clazz.isAssignableFrom(Map.class)) {
-				return new HashMap();
+				}
+				stack.pop();
+				continue;
 			}
-			return clazz.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new ParseException(e);
+			if (r instanceof List) {
+				int i = 0;
+				final List l = (List) r;
+				for (final Object obj : l) {
+					if (isComplex(obj)) {
+						LOG.warn("  + Looping: {}", r.getClass());
+						stack.push("[" + i + "]");
+						checknullInternal(obj, ignore, err, stack);
+						stack.pop();
+					}
+					i++;
+				}
+				stack.pop();
+				continue;
+			}
+			if (r instanceof Map) {
+				final Map<Object, Object> mm = (Map) r;
+				final Set<Map.Entry<Object, Object>> e = mm.entrySet();
+				for (final Map.Entry me : e) {
+					if (isComplex(me.getValue())) {
+						LOG.warn("  + Looping: {}", r.getClass());
+						stack.push("" + me.getKey());
+						checknullInternal(me.getValue(), ignore, err, stack);
+						stack.pop();
+					}
+				}
+				stack.pop();
+				continue;
+			}
+			if (r instanceof Set) {
+				stack.pop();
+				continue;
+			}
+			if (isComplex(r)) {
+				LOG.warn("  + Looping: {}", r.getClass());
+				checknullInternal(r, ignore, err, stack);
+			}
+			stack.pop();
 		}
 	}
 
-	private static void methodInvoke(final Method method, final Object instance, final Object paramter) {
-		try {
-			method.invoke(instance, paramter);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			throw new ParseException(e);
+	private static String buildError(final Stack<String> stack) {
+		return stack.stream().collect(Collectors.joining(" -> "));
+	}
+
+	private boolean isComplex(final Object r) {
+		if (r instanceof Enum) {
+			return false;
 		}
+		return !complex.contains(r.getClass());
 	}
 }
