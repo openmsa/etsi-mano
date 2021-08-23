@@ -4,8 +4,6 @@
  * This file is necessary to include to use all the in-built libraries of /opt/fmc_repository/Reference/Common
  */
 require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
-require_once '/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/utility.php';
-
 
 /**
  * List all the parameters required by the task
@@ -21,12 +19,18 @@ function list_args()
    *
    * Add as many variables as needed
    */
- 
+
+}
+sleep(20);
+$id = substr($context['deviceid'], 3);
+$response = synchronize_objects_and_verify_response($id);
+$response = json_decode($response, true);
+if ($response['wo_status'] !== ENDED) {
+        $response = json_encode($response);
+        echo $response;
+        exit;
 }
 
-$api=$context['kubernetes_endpoint']."api/v1/namespaces/".$context['namespace']."/secrets/".$context['secret_name'];
-$response=create_kubernetes_operation_request("DELETE", $api, $context['token_id'], '',"50", 
-"50");
-$response = shell_exec($response);
-task_exit(ENDED, $response);
+$response = prepare_json_response(ENDED, "Objects Synchronization successful for the device " . $context['deviceid'], $context, true);
+echo $response;
 ?>

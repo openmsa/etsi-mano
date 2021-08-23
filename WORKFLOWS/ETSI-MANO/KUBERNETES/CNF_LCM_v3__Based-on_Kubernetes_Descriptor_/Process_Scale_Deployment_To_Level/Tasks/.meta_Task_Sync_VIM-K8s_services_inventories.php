@@ -3,19 +3,19 @@
     <map>
         <entry>
             <key>DISPLAYNAME</key>
-            <value>Task_Get_status.php</value>
+            <value>Task_Sync_VIM-K8s_services_inventories.php</value>
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1629730022026</value>
+            <value>1629671407351</value>
         </entry>
         <entry>
             <key>REPOSITORY</key>
-            <value>ETSI-MANO</value>
+            <value>Process</value>
         </entry>
         <entry>
             <key>DATE_CREATION</key>
-            <value>1629730022024</value>
+            <value>1629671407346</value>
         </entry>
         <entry>
             <key>TAG</key>

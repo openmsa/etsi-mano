@@ -6,7 +6,6 @@
 require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
 require_once '/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/utility.php';
 
-
 /**
  * List all the parameters required by the task
  */
@@ -21,12 +20,30 @@ function list_args()
    *
    * Add as many variables as needed
    */
- 
+  create_var_def('level', 'String');
+  create_var_def('deployment_name', 'String');
+  create_var_def('namespace', 'String');
+
 }
 
-$api=$context['kubernetes_endpoint']."api/v1/namespaces/".$context['namespace']."/secrets/".$context['secret_name'];
-$response=create_kubernetes_operation_request("DELETE", $api, $context['token_id'], '',"50", 
+$json_body='
+{
+  "kind": "Scale",
+  "apiVersion": "autoscaling/v1",
+  "metadata": {
+    "name": "'.$context['deployment_name'].'",
+    "namespace": "'.$context['namespace'].'"
+  },
+  "spec": {
+    "replicas": '.$context['level'].'
+  }
+}
+';
+
+$api=$context['kubernetes_endpoint']."apis/apps/v1/namespaces/".$context['namespace']."/deployments/".$context['deployment_name']."/scale";
+$response=create_kubernetes_operation_request("PUT", $api, $context['token_id'], $json_body,"50",
 "50");
 $response = shell_exec($response);
 task_exit(ENDED, $response);
+
 ?>

@@ -31,6 +31,8 @@ if ($context['resource'] == 'services') {
     $api=$context['kubernetes_endpoint']."api/v1/namespaces/".$context['namespace']."/".$context['resource'];
 } elseif ($context['resource'] == 'deployments') {
     $api=$context['kubernetes_endpoint']."apis/apps/v1/namespaces/".$context['namespace']."/".$context['resource'];
+} elseif ($context['resource'] == 'namespaces') {
+    $api=$context['kubernetes_endpoint']."api/v1/".$context['resource'];
 } else {
     // default api
     $api=$context['kubernetes_endpoint']."api/v1/namespaces/".$context['namespace']."/".$context['resource'];

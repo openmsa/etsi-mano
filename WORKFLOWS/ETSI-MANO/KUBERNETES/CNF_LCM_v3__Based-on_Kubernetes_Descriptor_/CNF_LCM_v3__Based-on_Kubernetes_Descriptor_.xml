@@ -15,232 +15,261 @@
     <variable displayName="secret_name" name="params.secret_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
     <variable displayName="app_name" name="params.lb.0.app_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
     <variable displayName="service_lb_name" name="params.lb.0.service_lb_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
-    <variable displayName="resource" name="params.resource" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="resource" name="params.resource" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
+      <values>
+        <values displayValue="namespaces">namespaces</values>
+        <values displayValue="deployments">deployments</values>
+        <values displayValue="services">services</values>
+      </values>
+    </variable>
+    <variable displayName="service_lb_name" name="params.service_lb_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="docker_reg_url" name="params.docker_reg_url" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="docker_reg_username" name="params.docker_reg_username" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="docker_reg_password" name="params.docker_reg_password" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="docker_reg_email" name="params.docker_reg_email" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="docker_reg_config" name="params.docker_reg_config" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="docker_reg_config_base64" name="params.docker_reg_config_base64" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="load_balancer_template" name="params.load_balancer_template" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="load_balancer_service_name" name="params.load_balancer_service_name" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="ssh_remote_access_ip" name="params.ssh_remote_access_ip" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="ssh_remote_access_port" name="params.ssh_remote_access_port" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="container_port" name="params.container_port" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="customer" name="params.customer" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="manufacturer_id" name="params.manufacturer_id" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="model_id" name="params.model_id" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="device_id" name="params.device_id" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="status in msa" name="params.status in msa" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="username" name="params.username" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="device_password" name="params.device_password" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="remote_access_ip" name="params.lb.0.remote_access_ip" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="remote_access_port" name="params.lb.0.remote_access_port" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="container_port" name="params.lb.0.container_port" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+    <variable displayName="level" name="params.level" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
   </variables>
   <example/>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Create_Instance">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Create_Instance">
     <displayName>Create Instance</displayName>
     <type>CREATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Create.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Create_Instance/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Create_Instance/Tasks</processPath>
       <displayName>Create</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments">
     <displayName>CNF Deployments</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Sync_VIM-K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Deploy.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Deploy</displayName>
     </task>
     <task name="Task_Synchronize_K8S_cluster_microservices.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Synchronize K8S cluster microservices</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Stop_CNF">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Stop_CNF">
     <displayName>Stop CNF</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
-    <task name="Task_Sync_K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Stop_CNF/Tasks</processPath>
-      <displayName>Sync K8S services inventories</displayName>
+    <task name="Task_Sync_VIM-K8S_services_inventories.php">
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Stop_CNF/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Stop_CNF.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Stop_CNF/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Stop_CNF/Tasks</processPath>
       <displayName>Stop CNF</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Start_CNF">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Start_CNF">
     <displayName>Start CNF</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
-    <task name="Task_Sync_K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Start_CNF/Tasks</processPath>
-      <displayName>Sync K8S services inventories</displayName>
+    <task name="Task_Sync_VIM-K8S_services_inventories.php">
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Start_CNF/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Start_CNF.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Start_CNF/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Start_CNF/Tasks</processPath>
       <displayName>Start CNF</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Get_CNF_status">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Get_CNF_status">
     <displayName>Get CNF status</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Sync_VIM-K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Get_CNF_status/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Get_CNF_status/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Get_status.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Get_CNF_status/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Get_CNF_status/Tasks</processPath>
       <displayName>Get status</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF">
     <displayName>Terminate CNF</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
-    <task name="Task_Sync_K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF/Tasks</processPath>
-      <displayName>Sync K8S services inventories</displayName>
+    <task name="Task_Sync_VIM-K8S_services_inventories.php">
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Terminate_CNF.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF/Tasks</processPath>
       <displayName>Terminate CNF</displayName>
     </task>
     <task name="Task_Delete_load_balancer_service.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF/Tasks</processPath>
       <displayName>Delete load balancer service</displayName>
     </task>
     <task name="Task_Delete_MSA_device.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Terminate_CNF/Tasks</processPath>
       <displayName>Delete MSA device</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret">
     <displayName>Add Docker Private Registry Secret</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Sync_VIM-K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Generate_docker_config_json.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret/Tasks</processPath>
       <displayName>Generate docker config.json</displayName>
     </task>
     <task name="Task_Docker_config_json_base64_encoding.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret/Tasks</processPath>
       <displayName>Docker config.json base64 encoding</displayName>
     </task>
     <task name="Task_Create_private_registry_secret.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Docker_Private_Registry_Secret/Tasks</processPath>
       <displayName>Create private registry secret</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Delete_Docker_Private_Registry_Secret">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Delete_Docker_Private_Registry_Secret">
     <displayName>Delete Docker Private Registry Secret</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Sync_VIM-K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Delete_Docker_Private_Registry_Secret/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Delete_Docker_Private_Registry_Secret/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Delete_private_registry_secret.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Delete_Docker_Private_Registry_Secret/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Delete_Docker_Private_Registry_Secret/Tasks</processPath>
       <displayName>Delete private registry secret</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation">
     <displayName>MSA Managed Entity Creation</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Sync_VIM-K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_CNF_load_balancer.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
       <displayName>CNF load balancer</displayName>
     </task>
     <task name="Task_Create_corresponding_MSA_device.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
       <displayName>Create corresponding MSA device</displayName>
     </task>
     <task name="Task_Update_device_management_port.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
       <displayName>Update device management port</displayName>
     </task>
     <task name="Task_Ping_device.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
       <displayName>Ping device</displayName>
     </task>
     <task name="Task_MSA_initial_device_provisioning.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_MSA_Managed_Entity_Creation/Tasks</processPath>
       <displayName>MSA initial device provisioning</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Dedicated_Loadbalancer">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Dedicated_Loadbalancer">
     <displayName>Add Dedicated Loadbalancer</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Sync_VIM-K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Dedicated_Loadbalancer/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Dedicated_Loadbalancer/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Add_load_balancers.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Dedicated_Loadbalancer/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Add_Dedicated_Loadbalancer/Tasks</processPath>
       <displayName>Add load balancers</displayName>
     </task>
   </process>
-  <process name="Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Remove_Dedicated_Loadbalancer">
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Remove_Dedicated_Loadbalancer">
     <displayName>Remove Dedicated Loadbalancer</displayName>
     <type>UPDATE</type>
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Sync_VIM-K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Remove_Dedicated_Loadbalancer/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Sync VIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Remove_Dedicated_Loadbalancer/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Delete_load_balancers.php">
-      <processPath>/opt/fmc_repository/Process/workflows/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Remove_Dedicated_Loadbalancer/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Remove_Dedicated_Loadbalancer/Tasks</processPath>
       <displayName>Delete load balancers</displayName>
     </task>
   </process>
@@ -250,19 +279,41 @@
     <visibility>5</visibility>
     <allowSchedule/>
     <task name="Task_Sync_WIM-K8S_services_inventories.php">
-      <processPath>/opt/fmc_repository/Process/Telekom_Malaysia/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Apply/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Apply/Tasks</processPath>
       <displayName>Sync WIM-K8S services inventories</displayName>
     </task>
     <task name="Task_Get_token.php">
-      <processPath>/opt/fmc_repository/Process/Telekom_Malaysia/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Apply/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Apply/Tasks</processPath>
       <displayName>Get token</displayName>
     </task>
     <task name="Task_Apply_configuration.php">
-      <processPath>/opt/fmc_repository/Process/Telekom_Malaysia/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Apply/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Apply/Tasks</processPath>
       <displayName>Apply configuration</displayName>
     </task>
     <task name="Task_Synchronize_K8S_cluster_microservices.php">
-      <processPath>/opt/fmc_repository/Process/Telekom_Malaysia/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Apply/Tasks</processPath>
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Apply/Tasks</processPath>
+      <displayName>Synchronize K8S cluster microservices</displayName>
+    </task>
+  </process>
+  <process name="/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Scale_Deployment_To_Level/">
+    <displayName>Scale Deployment To Level</displayName>
+    <type>UPDATE</type>
+    <visibility>5</visibility>
+    <allowSchedule/>
+    <task name="Task_Sync_VIM-K8S_services_inventories.php">
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <displayName>Sync VIM-K8S services inventories</displayName>
+    </task>
+    <task name="Task_Get_token.php">
+      <processPath>/opt/fmc_repository/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_CNF_Deployments/Tasks</processPath>
+      <displayName>Get token</displayName>
+    </task>
+    <task name="Task_Scale_to_level.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Scale_Deployment_To_Level/Tasks</processPath>
+      <displayName>Scale to level</displayName>
+    </task>
+    <task name="Task_Synchronize_K8S_cluster_microservices.php">
+      <processPath>/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/CNF_LCM_v3__Based-on_Kubernetes_Descriptor_/Process_Scale_Deployment_To_Level/Tasks</processPath>
       <displayName>Synchronize K8S cluster microservices</displayName>
     </task>
   </process>
@@ -274,6 +325,6 @@
     <order>10000</order>
     <visibility>5</visibility>
     <name>CNF LCM v3 (Based-on Kubernetes Descriptor)</name>
-    <group>NFV|CNF</group>
+    <group>NFV|CNF|V3</group>
   </information>
 </ObjectDefinition>

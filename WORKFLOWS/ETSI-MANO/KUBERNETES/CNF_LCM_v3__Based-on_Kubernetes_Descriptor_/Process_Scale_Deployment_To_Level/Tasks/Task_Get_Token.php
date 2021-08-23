@@ -27,11 +27,11 @@ $response = _keystone_project_scoped_token_get($keystone_public_endpoint, $user_
 
 $response = json_decode($response, true);
 if ($response['wo_status'] !== ENDED) {
-	$response = json_encode($response);
-	echo $response;
-	exit;
+        $response = json_encode($response);
+        echo $response;
+        exit;
 }
-	
+
 $response_raw_headers = $response['wo_newparams']['response_raw_headers'];
 $response_headers = http_parse_headers($response_raw_headers);
 $token_id = $response_headers[X_SUBJECT_TOKEN];
