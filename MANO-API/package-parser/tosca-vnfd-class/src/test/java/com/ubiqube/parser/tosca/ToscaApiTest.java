@@ -53,6 +53,7 @@ import com.ubiqube.parser.tosca.scalar.Time;
 import tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements;
 import tosca.groups.nfv.PlacementGroup;
 import tosca.nodes.Compute;
+import tosca.nodes.nfv.VNF;
 import tosca.nodes.nfv.VduCp;
 import tosca.nodes.nfv.VnfExtCp;
 import tosca.nodes.nfv.VnfVirtualLink;
@@ -100,7 +101,7 @@ public class ToscaApiTest {
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.vdu.Compute.class);
 		assertEquals(2, res.size());
-		checknull(res.get(0));
+		// checknull(res.get(0));
 		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, parameters, VirtualBlockStorage.class);
 		assertEquals(1, list.size());
 		checknull(list.get(0));
@@ -123,6 +124,10 @@ public class ToscaApiTest {
 		assertEquals(1, listExtCp.size());
 		testVnfExtCp(listExtCp.get(0));
 		checknull(listExtCp.get(0));
+
+		final List<VNF> listVnf = toscaApi.getObjects(root, parameters, VNF.class);
+		assertEquals(1, listVnf.size());
+		checknull(listVnf.get(0));
 	}
 
 	private static void testVnfExtCp(final VnfExtCp vnfExtCp) {

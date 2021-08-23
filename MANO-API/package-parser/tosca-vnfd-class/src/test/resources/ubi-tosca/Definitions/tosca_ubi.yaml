@@ -44,24 +44,46 @@ topology_template:
         default_localization_language: en_US
         lcm_operations_configuration: # tosca.datatypes.nfv.VnfLcmOperationsConfiguration
           instantiate: # tosca.datatypes.nfv.VnfInstantiateOperationConfiguration
+            name: virtual
           scale: # tosca.datatypes.nfv.VnfScaleOperationConfiguration
             scaling_by_more_than_one_step_supported: true
           scale_to_level: # tosca.datatypes.nfv.VnfScaleToLevelOperationConfiguration
             arbitrary_target_levels_supported: true
+          change_flavour: # tosca.datatypes.nfv.VnfChangeFlavourOperationConfiguration
+            name: name
+          heal: # tosca.datatypes.nfv.VnfHealOperationConfiguration
+            causes:
+              - string
           terminate: # tosca.datatypes.nfv.VnfTerminateOperationConfiguration
             min_graceful_termination_timeout: 60 s
             max_recommended_graceful_termination_timeout: 120 s
-          change_ext_connectivity: #tosca.datatypes.nfv.VnfChangeExtConnectivityOperationConfiguration
+          operate: # tosca.datatypes.nfv.VnfOperateOperationConfiguration
+            min_graceful_stop_timeout: 5m
+            max_recommended_graceful_stop_timeout: 1m
+          change_ext_connectivity: # tosca.datatypes.nfv.VnfChangeExtConnectivityOperationConfiguration
+            name: name
+          change_current_package: # tosca.datatypes.nfv.VnfChangeCurrentPackageOperationConfiguration
+            name: name
+          create_snapshot: # tosca.datatypes.nfv.VnfCreateSnapshotOperationConfiguration
+            name: name
+          revert_to_snapshot: # tosca.datatypes.nfv.VnfRevertToSnapshotOperationConfiguration
+            name: name
         monitoring_parameters: # list tosca.datatypes.nfv.VnfMonitoringParameter
           mon01:
+            name: mon01
             performance_metric: v_disk_usage_peak_vnf
             collection_period: 1 m
         vnf_profile: # tosca.datatypes.nfv.VnfProfile
           instantiation_level: demo
           min_number_of_instances: 1
           max_number_of_instances: 10
+          service_availability_level: 1
+        scale_status: # map of tosca.datatypes.nfv.ScaleInfo
+          aspectid: #
+            scale_level: 1
       requirements:
-        - virtual_link: public
+        - virtual_link: 
+            node: public
 
 
 
