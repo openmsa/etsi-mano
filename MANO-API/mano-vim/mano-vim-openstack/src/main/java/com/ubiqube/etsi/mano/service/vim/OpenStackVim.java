@@ -101,8 +101,9 @@ public class OpenStackVim implements Vim {
 	}
 
 	private static OSClientV3 authenticate(final VimConnectionInformation vci) {
+		final Map<String, String> ii = vci.getInterfaceInfo();
 		final V3 base = OSFactory.builderV3()
-				.endpoint(vci.getInterfaceInfo().get("endpoint"));
+				.endpoint(ii.get("endpoint"));
 		final Map<String, String> ai = vci.getAccessInfo();
 		final String userDomain = ai.get("userDomain");
 		if (null != userDomain) {
@@ -111,7 +112,9 @@ public class OpenStackVim implements Vim {
 		} else {
 			base.credentials(ai.get("username"), ai.get("password"));
 		}
-
+		if ("true".equals(ii.get("non-strict-ssl"))) {
+			base.useNonStrictSSLClient(true);
+		}
 		final String project = ai.get("project");
 		final String projectId = ai.get("projectId");
 		if (null != project) {
