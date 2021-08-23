@@ -100,23 +100,25 @@ public class ToscaApiTest {
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.vdu.Compute.class);
 		assertEquals(2, res.size());
-		// checknull(res.get(0));
+		checknull(res.get(0));
 		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, parameters, VirtualBlockStorage.class);
 		assertEquals(1, list.size());
-		// checknull(list.get(0));
+		checknull(list.get(0));
 		final List<VirtualObjectStorage> vos = toscaApi.getObjects(root, parameters, VirtualObjectStorage.class);
 		assertEquals(1, vos.size());
-		// checknull(vos.get(0));
+		checknull(vos.get(0));
 		final List<VnfVirtualLink> listVl = toscaApi.getObjects(root, parameters, VnfVirtualLink.class);
 		assertEquals(3, listVl.size());
-		// checknull(listVl.get(0));
+		checknull(listVl.get(0));
 		final List<VduCp> listVduCp = toscaApi.getObjects(root, parameters, VduCp.class);
 		assertEquals(4, listVduCp.size());
-		// checknull(listVduCp.get(0));
+		checknull(listVduCp.get(0));
 		final List<PlacementGroup> listPg = toscaApi.getObjects(root, parameters, PlacementGroup.class);
 		assertEquals(1, listPg.size());
+		checknull(listPg.get(0));
 		final List<VduInstantiationLevels> listvduIl = toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
 		assertEquals(1, listvduIl.size());
+		// checknull(listvduIl.get(0));
 		final List<VnfExtCp> listExtCp = toscaApi.getObjects(root, parameters, VnfExtCp.class);
 		assertEquals(1, listExtCp.size());
 		testVnfExtCp(listExtCp.get(0));
@@ -196,6 +198,7 @@ public class ToscaApiTest {
 		final List<String> ignore = new ArrayList<>();
 		ignore.add("getInternalDescription");
 		ignore.add("getInternalName");
+		ignore.add("getArtifacts");
 		checknullInternal(avcDb, ignore, err, new Stack<>());
 		if (!err.isEmpty()) {
 			final String str = err.stream().collect(Collectors.joining("\n"));

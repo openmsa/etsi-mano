@@ -70,6 +70,23 @@ topology_template:
     ext01:
       type: tosca.nodes.nfv.VnfExtCp
       properties:
+        layer_protocols:
+          - ethernet
+          - ipv4
+        role: root
+        description: descr.
+        protocol: # list of tosca.datatypes.nfv.CpProtocolData
+          - associated_layer_protocol: ethernet
+            address_data: #list of tosca.datatypes.nfv.AddressData
+              - address_type: mac_address
+                l2_address_data: # tosca.datatypes.nfv.L2AddressData
+                  mac_address_assignment: true
+                l3_address_data: # tosca.datatypes.nfv.L3AddressData
+                  ip_address_assignment: true
+                  floating_ip_activated: true
+                  ip_address_type: ipv4
+                  number_of_ip_address: 1
+        trunk_mode: false
         virtual_network_interface_requirements:
           - name: vl01
             description: descr
@@ -143,8 +160,11 @@ topology_template:
             source_path: file://
             destination_path: /opt/
       requirements:
-        - virtual_storage: block01
+        - virtual_storage:
+            node: block01
       capabilities:
+        virtual_binding: # List of tosca.capabilities.nfv.VirtualBindable
+          name: test
         virtual_compute:
           properties:
             logical_node:  # map tosca.datatypes.nfv.LogicalNodeData
@@ -241,12 +261,18 @@ topology_template:
           supported_virtualisation_environments:
             - openstack
             - glance
+      capabilities:
+        virtual_storage: # tosca.capabilities.nfv.VirtualStorage
+          name: test
 
     storageVo:
       type: tosca.nodes.nfv.Vdu.VirtualObjectStorage
       properties:
-        virtual_object_storage_data:
+        virtual_object_storage_data: # tosca.datatypes.nfv.VirtualObjectStorageData
           max_size_of_storage: 6 GB
+      capabilities:
+        virtual_storage: # tosca.capabilities.nfv.VirtualStorage
+          name: test
 
     leftVl01:
       type: tosca.nodes.nfv.VnfVirtualLink
@@ -293,7 +319,8 @@ topology_template:
             packet_delay_variation: 1 s
             packet_loss_ratio: 0.01
       capabilities:
-        # virtual_linkable: test
+        virtual_linkable: # tosca.capabilities.nfv.VirtualLinkable
+          node: test
 
     middleVl01:
       type: tosca.nodes.nfv.VnfVirtualLink
@@ -373,17 +400,36 @@ topology_template:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
-        virtual_network_interface_requirements:
+        virtual_network_interface_requirements: # list of tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements
           - name: vl01
             description: descr
             support_mandatory: false
-            network_interface_requirements: # map
-            nic_io_requirements:
-              logical_node_requirements: #map
+            network_interface_requirements: # map string
+              key: value
+            nic_io_requirements: # tosca.datatypes.nfv.LogicalNodeData
+              logical_node_requirements: #map String
+                key: value
         order: 5
         vnic_type: virtio
+        layer_protocols:
+          - ipv4
+        description: descr.
+        role: leaf
+        protocol: # list of tosca.datatypes.nfv.CpProtocolData
+          - associated_layer_protocol: ethernet
+            address_data: #list of tosca.datatypes.nfv.AddressData
+              - address_type: mac_address
+                l2_address_data: # tosca.datatypes.nfv.L2AddressData
+                  mac_address_assignment: true
+                l3_address_data: # tosca.datatypes.nfv.L3AddressData
+                  ip_address_assignment: true
+                  floating_ip_activated: true
+                  ip_address_type: ipv4
+                  number_of_ip_address: 1
+        trunk_mode: false
       capabilities:
         trunk_binding: # tosca.capabilities.nfv.TrunkBindable
+          node: tb
       requirements:
         - virtual_link:
             node: leftVl01
