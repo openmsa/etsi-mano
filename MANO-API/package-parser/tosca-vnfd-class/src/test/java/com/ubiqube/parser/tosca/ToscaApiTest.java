@@ -101,7 +101,7 @@ public class ToscaApiTest {
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.vdu.Compute.class);
 		assertEquals(2, res.size());
-		// checknull(res.get(0));
+		checknull(res.get(0));
 		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, parameters, VirtualBlockStorage.class);
 		assertEquals(1, list.size());
 		checknull(list.get(0));
@@ -119,7 +119,7 @@ public class ToscaApiTest {
 		checknull(listPg.get(0));
 		final List<VduInstantiationLevels> listvduIl = toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
 		assertEquals(1, listvduIl.size());
-		// checknull(listvduIl.get(0));
+		checknull(listvduIl.get(0));
 		final List<VnfExtCp> listExtCp = toscaApi.getObjects(root, parameters, VnfExtCp.class);
 		assertEquals(1, listExtCp.size());
 		testVnfExtCp(listExtCp.get(0));
@@ -224,7 +224,7 @@ public class ToscaApiTest {
 			final Object r = methodDescriptor.getMethod().invoke(avcDb, null);
 			if ((null == r)) {
 				if (!ignore.contains(methodDescriptor.getName())) {
-					LOG.warn("  - {} is null", methodDescriptor.getName());
+					LOG.warn("  - {} is null at {}", methodDescriptor.getName(), buildError(stack));
 					err.add(buildError(stack));
 
 				}
