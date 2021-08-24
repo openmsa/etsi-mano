@@ -86,7 +86,12 @@ public class ContextResolver {
 
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
-		return (List<T>) policies.stream().map(x -> handlePolicy(x, destination, stack)).collect(Collectors.toList());
+		try {
+			return (List<T>) policies.stream().map(x -> handlePolicy(x, destination, stack)).collect(Collectors.toList());
+		} catch (final RuntimeException e) {
+			throwException("Runtime error.", stack, e);
+		}
+		return new ArrayList<>();
 	}
 
 	public <T> List<T> mapGroupsToClass(final List<GroupDefinition> groups, final Class<T> destination) {
@@ -490,7 +495,7 @@ public class ContextResolver {
 		throw new ParseException(string + "\n" + buildError(stack));
 	}
 
-	private static void throwException(final String string, final Deque<String> stack, final ReflectiveOperationException e) {
+	private static void throwException(final String string, final Deque<String> stack, final Exception e) {
 		throw new ParseException(string + "\n" + buildError(stack), e);
 	}
 
