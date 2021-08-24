@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
@@ -155,6 +156,7 @@ public class JavaWalker extends AbstractWalker {
 	@Override
 	public void startField(final String fieldName, final ValueObject value) {
 		currentField = currentClass.field(JMod.PRIVATE, resolvVo(value), fieldName);
+		currentField.annotate(Valid.class);
 	}
 
 	@Override

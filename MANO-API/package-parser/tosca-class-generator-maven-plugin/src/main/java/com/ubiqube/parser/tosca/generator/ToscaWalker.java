@@ -275,8 +275,10 @@ public class ToscaWalker {
 				listener.onFieldSetDefaultValue(value.getDef());
 			}
 			if (!value.getConstraints().isEmpty()) {
-				final List<Constraint> cont = value.getConstraints();
-				cont.forEach(listener::onFieldConstraints);
+				if (!value.getType().startsWith("scalar-unit.")) {
+					final List<Constraint> cont = value.getConstraints();
+					cont.forEach(listener::onFieldConstraints);
+				}
 			}
 			if (primitive.containsKey(value.getType())) {
 				final List<Constraint> cont = primitive.get(value.getType()).getConstraints();
