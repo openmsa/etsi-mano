@@ -35,6 +35,7 @@ import com.ubiqube.parser.tosca.CapabilityTypes;
 import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.GroupType;
 import com.ubiqube.parser.tosca.ParseException;
+import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.PolicyType;
 import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
@@ -120,9 +121,23 @@ public class ToscaWalker {
 			if (cache.contains(entry.getKey())) {
 				continue;
 			}
-			generatePolicyType(entry.getKey(), entry.getValue(), listener);
+			if ("tosca.policies.Root".equals(entry.getKey())) {
+				createPolicyRoot(listener);
+			} else {
+				generatePolicyType(entry.getKey(), entry.getValue(), listener);
+			}
 		}
 		listener.terminateDocument();
+	}
+
+	private void createPolicyRoot(final ToscaListener listener) {
+		startClass("tosca.policies.Root", null, listener);
+
+		listener.startField("triggers", ValueObject.mapOf(PolicyDefinition.class.getName()));
+		listener.onFieldTerminate();
+
+		cache.add("tosca.policies.Root");
+		listener.terminateClass();
 	}
 
 	private void createNodeRoot(final ToscaListener listener) {
@@ -151,15 +166,11 @@ public class ToscaWalker {
 		Optional.ofNullable(definition.getProperties()).ifPresent(x -> generateFields(listener, x.getProperties()));
 		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
 		// add members
-		ValueObject vo = ValueObject.listOf(STRING);
+		final ValueObject vo = ValueObject.listOf(STRING);
 		listener.startField("targets", vo);
 		if (null != definition.getTargets()) {
 			definition.getTargets().forEach(listener::onClassDescription);
 		}
-		listener.onFieldTerminate();
-		// triggers
-		vo = ValueObject.listOf("trigger");
-		listener.startField("triggers", vo);
 		listener.onFieldTerminate();
 		LOG.debug("generateClassPolicyType end {}", className);
 		cache.add(className);
