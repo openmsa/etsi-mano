@@ -549,17 +549,24 @@ policies:
         schedule:
           start_time: 12345
           end_time: 54321
-          target_filter:
-            description: Trigger description.
-          condition:
-            - my_attribute: [{equal: my_value}]
-            - my_other_attribute: [{equal: my_other_value}]
-          action:
-            - delegate: myWorkflow
+        target_filter:
+          description: Trigger description.
+          node: node
+          requirement: req
+          capability: cap
+        condition:
+          - my_attribute: [{equal: my_value}]
+          - my_other_attribute: [{equal: my_other_value}]
+        action:
+          - delegate: myWorkflow
+            workflow: mywf
+            inputs: # map of parameter assignments
+              my_attr: 110
 
 # scaling aspect
   scaling_aspects:
     type: tosca.policies.nfv.ScalingAspects
+    targets: [ "" ]
     properties:
       aspects:
         left_aspect:
@@ -643,9 +650,10 @@ policies:
     type: tosca.policies.nfv.VirtualLinkBitrateInitialDelta
     targets: [ vl01 ]
     properties:
-      bitrate_requirements:
-        root: 500
-        leaf: 1000
+      initial_delta: # tosca.datatypes.nfv.VirtualLinkBitrateLevel
+        bitrate_requirements: # tosca.datatypes.nfv.LinkBitrateRequirements
+          root: 500
+          leaf: 1000
 
   affinity_01:
     type: tosca.policies.nfv.AffinityRule
@@ -655,6 +663,7 @@ policies:
 
   security:
     type: tosca.policies.nfv.SecurityGroupRule
+    targets: [ "" ]
     properties:
       description: Descr.
       direction: ingress
@@ -674,11 +683,12 @@ policies:
           authority:
             user_info: ubiqube
             host: auth.ubiqube.com
-            port: 80
+            port: "80"
           path: /
           query: r=1
           fragment: frag
         interface_specific_data: # map of Strings
+          hello: value
  
 
 

@@ -59,7 +59,14 @@ import tosca.nodes.nfv.VnfExtCp;
 import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.VirtualBlockStorage;
 import tosca.nodes.nfv.vdu.VirtualObjectStorage;
+import tosca.policies.nfv.AffinityRule;
+import tosca.policies.nfv.ScalingAspects;
+import tosca.policies.nfv.SecurityGroupRule;
+import tosca.policies.nfv.SupportedVnfInterface;
+import tosca.policies.nfv.VduInitialDelta;
 import tosca.policies.nfv.VduInstantiationLevels;
+import tosca.policies.nfv.VduScalingAspectDeltas;
+import tosca.policies.nfv.VirtualLinkBitrateInitialDelta;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ToscaApiTest {
@@ -125,9 +132,21 @@ public class ToscaApiTest {
 		testVnfExtCp(listExtCp.get(0));
 		checknull(listExtCp.get(0));
 
-		final List<VNF> listVnf = toscaApi.getObjects(root, parameters, VNF.class);
-		assertEquals(1, listVnf.size());
-		checknull(listVnf.get(0));
+		testToscaClass(toscaApi, 1, root, parameters, VNF.class);
+		testToscaClass(toscaApi, 1, root, parameters, ScalingAspects.class);
+		testToscaClass(toscaApi, 2, root, parameters, VduInitialDelta.class);
+		testToscaClass(toscaApi, 2, root, parameters, VduScalingAspectDeltas.class);
+		testToscaClass(toscaApi, 1, root, parameters, SecurityGroupRule.class);
+		testToscaClass(toscaApi, 1, root, parameters, SupportedVnfInterface.class);
+		testToscaClass(toscaApi, 1, root, parameters, AffinityRule.class);
+		testToscaClass(toscaApi, 1, root, parameters, VirtualLinkBitrateInitialDelta.class);
+	}
+
+	private List<?> testToscaClass(final ToscaApi toscaApi, final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<?> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {
+		final List<?> listVsad = toscaApi.getObjects(root, parameters, clazz);
+		assertEquals(i, listVsad.size());
+		checknull(listVsad.get(0));
+		return listVsad;
 	}
 
 	private static void testVnfExtCp(final VnfExtCp vnfExtCp) {
@@ -204,6 +223,7 @@ public class ToscaApiTest {
 		ignore.add("getInternalDescription");
 		ignore.add("getInternalName");
 		ignore.add("getArtifacts");
+		ignore.add("getTriggers");
 		checknullInternal(avcDb, ignore, err, new Stack<>());
 		if (!err.isEmpty()) {
 			final String str = err.stream().collect(Collectors.joining("\n"));
