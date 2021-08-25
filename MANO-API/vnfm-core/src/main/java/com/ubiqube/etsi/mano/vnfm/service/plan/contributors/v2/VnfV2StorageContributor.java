@@ -98,7 +98,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 	private void removeStorage(final List<StorageVt> ret, final ComputeTask computeTask, final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> vs = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
 		computeTask.getVnfCompute().getStorages().forEach(x -> {
-			findStorageByName(x, vs).ifPresent(y -> {
+			findStorageByName(x + "-" + computeTask.getAlias(), vs).ifPresent(y -> {
 				final StorageTask task = createDeleteTask(StorageTask::new, y);
 				task.setType(ResourceTypeEnum.STORAGE);
 				task.setRemovedLiveInstance(y.getId());
@@ -112,7 +112,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 	private static Optional<VnfLiveInstance> findStorageByName(final String y, final List<VnfLiveInstance> vs) {
 		for (final VnfLiveInstance vnfLiveInstance : vs) {
 			final StorageTask t = (StorageTask) vnfLiveInstance.getTask();
-			if (t.getAlias().equals(y)) {
+			if (t.getToscaName().equals(y)) {
 				return Optional.of(vnfLiveInstance);
 			}
 		}
