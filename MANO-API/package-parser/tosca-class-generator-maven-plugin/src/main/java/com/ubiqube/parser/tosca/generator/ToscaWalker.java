@@ -356,8 +356,9 @@ public class ToscaWalker {
 			final String fieldName = fieldCamelCase(x + "_req");
 			LOG.debug("Forcing field Object");
 			listener.startField(fieldName, STRING, isList(y.getOccurrences()));
-
-			listener.onFieldAnnotate(Occurence.class, y.getOccurrences().toArray(new String[0]));
+			if (null != y.getOccurrences()) {
+				listener.onFieldAnnotate(Occurence.class, y.getOccurrences().toArray(new String[0]));
+			}
 			// XXX: Probably one may be a concrete type.
 			if (null != y.getNode()) {
 				listener.onFieldAnnotate(Node.class, y.getNode());
