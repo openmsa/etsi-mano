@@ -19,6 +19,19 @@ class VnfLcmSol003 extends BaseApi
 		return json_decode($this->doPost($url_frag, $_body), 1);
 	}
 
+        /**
+         * Scale UP the VNF instance.
+         *
+         * @param string $body
+         *
+         * @return unknown
+         */
+        public function vnfLcmOperateInstanceVnf($vnfInstanceId, $_body)
+        {
+          $url_frag = self::BASE_URL . '/' . urlencode($vnfInstanceId) . '/operate';
+                return json_decode($this->doPostReturnLocation($url_frag, $_body), 1);
+        }
+
 	/**
          * Scale To Level VNF instance.
          *

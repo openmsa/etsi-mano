@@ -123,6 +123,7 @@ class BaseApi
 		curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $_url);
 		$this->setParameters($ch);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, '{}');
 		$response = curl_exec($ch);
 		$this->checkError($ch, $_url, $response);
 		curl_close($ch);

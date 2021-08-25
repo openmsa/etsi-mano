@@ -1,60 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ObjectDefinition>  <information>
-    <allowLaunchOnFailedProcess>true</allowLaunchOnFailedProcess>
-    <description/>
-    <displayField>service_id</displayField>
-    <serviceTaskType>php</serviceTaskType>
-    <executionDetailsVisibility>5</executionDetailsVisibility>
-    <executionMode>TRANSACTION</executionMode>
-    <group>NFV|NFVO</group>
-    <icon>/images/repository/CommandDefinition/icons/network management.jpg</icon>
-    <name>NS LCM (NSD based-on SOL001)</name>
-    <order>10000</order>
-    <poolId>0</poolId>
-    <readVariableVisibility>5</readVariableVisibility>
-    <showDetailedServiceInstances>true</showDetailedServiceInstances>
-    <showProcessExecConsole>true</showProcessExecConsole>
-    <showProcessResult>false</showProcessResult>
-    <showVariables>false</showVariables>
-    <visibility>5</visibility>
-  </information>  <variables frozen="0">
-    <variable displayName="Nfvo Device" displayOrder="0" maxLength="100" name="params.nfvo_device" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="Device">
+<ObjectDefinition>
+  <variables frozen="0">
+    <variable displayName="Nfvo Device" name="params.nfvo_device" startIncrement="0" type="Device" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="0" increment="0" refServiceURI="" keepOnImport="false" editable="true" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false">
       <sections>
-        <section>Create NS Instance Resource</section>
+        <sections>Create NS Instance Resource</sections>
       </sections>
     </variable>
-    <variable displayName="Nspkgid" displayOrder="1" maxLength="100" name="params.nsPkgId" numberOfRowMax="0" startIncrement="0" tableSizeFix="false" type="String">
-      <sections>
-        <section>Create NS Instance Resource</section>
-      </sections>
-      <classes>
-        <class>nsd_catalogs</class>
-      </classes>
-    </variable>
-  </variables>  <example>    <content/>  </example>
+    <variable displayName="nsdId" name="params.nsPkgId" startIncrement="0" type="String" mandatoryArray="false" visible="true" description="" groupSeparator="" groupDisplayName="" displayOrder="1" increment="0" refServiceURI="" keepOnImport="false" editable="false" onlyDetailView="false" localVarNameMatch="" remoteVarNameMatch="" arrayCanAdd="true" arrayCanRemove="true" arrayCanMove="true" arrayCanEdit="true" displayNameHeader="" fullDisplayName="" isMandatory="false" isUserLocked="false" isGrouped="false" isSearchable="false" isUniqueGlobal="false"/>
+  </variables>
+  <example/>
   <process name="Process/ETSI-MANO/NFV/SOL001_NS_LCM/Process_Create_NS_Instance">
-    <visibility>5</visibility>
     <displayName>Create NS Instance</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>CREATE</type>
-  <task name="Task_Create_NS_Instance_Resource.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Create_NS_Instance_Resource.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_NS_LCM/Process_Create_NS_Instance/Tasks/</processPath>
       <displayName>Create NS Instance Resource</displayName>
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/SOL001_NS_LCM/Process_Instantiate_NS">
-    <visibility>5</visibility>
     <displayName>Instantiate NS</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-    
-    
-  <task name="Task_Instantiate_NS.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Instantiate_NS.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_NS_LCM/Process_Instantiate_NS/Tasks/</processPath>
       <displayName>Instantiate NS</displayName>
     </task>
@@ -68,16 +37,11 @@
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/SOL001_NS_LCM/Process_Terminate_NS">
-    <visibility>5</visibility>
     <displayName>Terminate NS</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>UPDATE</type>
-  
-    
-    
-  <task name="Task_Terminate_NS.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Terminate_NS.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_NS_LCM/Process_Terminate_NS/Tasks/</processPath>
       <displayName>Terminate NS</displayName>
     </task>
@@ -91,15 +55,23 @@
     </task>
   </process>
   <process name="Process/ETSI-MANO/NFV/SOL001_NS_LCM/Process_Delete_NS_Instance">
-    <visibility>5</visibility>
     <displayName>Delete NS Instance</displayName>
-    <icon/>
-    <poolId>0</poolId>
-    <allowSchedule>false</allowSchedule>
     <type>DELETE</type>
-  <task name="Task_Delete_NS_Instance.php">
+    <visibility>5</visibility>
+    <allowSchedule>false</allowSchedule>
+    <task name="Task_Delete_NS_Instance.php">
       <processPath>/opt/fmc_repository/Process/ETSI-MANO/NFV/SOL001_NS_LCM/Process_Delete_NS_Instance/Tasks/</processPath>
       <displayName>Delete NS Instance</displayName>
     </task>
   </process>
+  <information>
+    <icon>/images/repository/CommandDefinition/icons/network management.jpg</icon>
+    <description/>
+    <displayField>service_id</displayField>
+    <serviceTaskType>php</serviceTaskType>
+    <order>10000</order>
+    <visibility>5</visibility>
+    <name>NS LCM (NSD based-on SOL001)</name>
+    <group>NFV|NFVO</group>
+  </information>
 </ObjectDefinition>

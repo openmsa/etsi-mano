@@ -25,7 +25,8 @@ if (empty($vnfLcmOpOccsInfo) || $vnfLcmOpOccsInfo == null) {
 }
 
 $context['vnfLcmOpOccs'] = $vnfLcmOpOccsInfo;
-$operationState = json_decode($vnfLcmOpOccsInfo['operationState'], 1);
+# $operationState = json_decode($vnfLcmOpOccsInfo['operationState'], 1);
+$operationState = json_decode($vnfLcmOpOccsInfo, 1)['operationState'];
 
 if (strpos($operationState , 'FAILED')) {
 	task_error("VNF Instance Operation Occurence state is '$operationState'.");

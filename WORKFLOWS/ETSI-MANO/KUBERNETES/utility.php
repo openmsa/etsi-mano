@@ -74,4 +74,18 @@ function kubernetes_pod_deployment ($operation, $kubernetes_rest_api, $auth_toke
 	return $curl_cmd;
 }
 
+function kubernetes_apply_yaml ($operation, $kubernetes_rest_api, $auth_token = "", $yaml_body = "",$connection_timeout, $max_time) {
+
+
+        $curl_cmd = "curl --tlsv1.2 -i -sw '\nHTTP_CODE=%{http_code}' --connect-timeout $connection_timeout --max-time $max_time -X {$operation} --header \"Authorization: Bearer $auth_token\" -H \"Content-Type: application/yaml\" -k '{$kubernetes_rest_api}'";
+
+        if ($yaml_body !== "") {
+                $yaml_body = file_get_contents($yaml_body);
+                $curl_cmd .= " -d '" . $yaml_body . "'";
+        }
+        //logToFile("Curl Request : $curl_cmd\n");
+        return $curl_cmd;
+}
+
+
 ?>
