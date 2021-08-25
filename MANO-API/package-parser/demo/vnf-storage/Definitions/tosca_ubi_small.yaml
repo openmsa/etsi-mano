@@ -234,7 +234,7 @@ policies:
           description: Default instantiation level.
           scale_info:
             webserver:
-              scale_level: 1
+              scale_level: 0
         premium:
           description: Premium instantiation level.
           scale_info:
