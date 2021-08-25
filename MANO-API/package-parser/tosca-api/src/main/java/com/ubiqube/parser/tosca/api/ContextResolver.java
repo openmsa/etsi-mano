@@ -96,12 +96,22 @@ public class ContextResolver {
 
 	public <T> List<T> mapGroupsToClass(final List<GroupDefinition> groups, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
-		return (List<T>) groups.stream().map(x -> handleGroup(x, destination, stack)).collect(Collectors.toList());
+		try {
+			return (List<T>) groups.stream().map(x -> handleGroup(x, destination, stack)).collect(Collectors.toList());
+		} catch (final RuntimeException e) {
+			throwException("Runtime error.", stack, e);
+		}
+		return new ArrayList<>();
 	}
 
 	public <T> List<T> mapToscaToClass(final List<NodeTemplate> nodes, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
-		return (List<T>) nodes.stream().map(x -> handleObject(x, destination, stack)).collect(Collectors.toList());
+		try {
+			return (List<T>) nodes.stream().map(x -> handleObject(x, destination, stack)).collect(Collectors.toList());
+		} catch (final RuntimeException e) {
+			throwException("Runtime error.", stack, e);
+		}
+		return new ArrayList<>();
 	}
 
 	public <T> T resolvValue(final String key, final Class<?> target) {
