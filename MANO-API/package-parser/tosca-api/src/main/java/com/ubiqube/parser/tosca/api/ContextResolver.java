@@ -283,7 +283,10 @@ public class ContextResolver {
 				throwException("Unable to find property: " + x.getKey() + " on object :" + clazz.getName(), stack);
 			}
 			stack.push(x.getKey());
-			handleCaps(x.getValue(), propo.get(), props, cls, stack);
+			final Object v = x.getValue();
+			if (v != null) {
+				handleCaps(v, propo.get(), props, cls, stack);
+			}
 			stack.pop();
 		});
 		return cls;
