@@ -256,7 +256,19 @@ public class ContextResolver {
 			// XXX I think it could be ONE of Node, caps, Link
 			final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
 			if (props != null) {
-				methodInvoke(props.getWriteMethod(), cls, y.getNode());
+				final Class<?> p = props.getPropertyType();
+				if (p.isAssignableFrom(List.class)) {
+					final List r = methodInvoke(props.getReadMethod(), cls);
+					if (null == r) {
+						final List l = new ArrayList<>();
+						l.add(y.getNode());
+						methodInvoke(props.getWriteMethod(), cls, l);
+					} else {
+						r.add(y.getNode());
+					}
+				} else {
+					methodInvoke(props.getWriteMethod(), cls, y.getNode());
+				}
 			}
 		});
 	}

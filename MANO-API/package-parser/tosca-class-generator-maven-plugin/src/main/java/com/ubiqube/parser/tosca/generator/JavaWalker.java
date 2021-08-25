@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -59,6 +60,8 @@ import com.ubiqube.parser.tosca.constraints.LessThan;
 import com.ubiqube.parser.tosca.constraints.MinLength;
 import com.ubiqube.parser.tosca.constraints.Pattern;
 import com.ubiqube.parser.tosca.constraints.ValidValues;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class JavaWalker extends AbstractWalker {
 	private static final Logger LOG = LoggerFactory.getLogger(JavaWalker.class);
@@ -233,6 +236,15 @@ public class JavaWalker extends AbstractWalker {
 	public void onFieldAnnotate(final Class<? extends Annotation> class1, final String node) {
 		LOG.debug("Annotate: {}, {}", class1.getName(), node);
 		currentField.annotate(class1).param(VALUE, node);
+	}
+
+	@Override
+	public void onFieldAnnotate(final Class<? extends Annotation> class1, final String[] array) {
+		LOG.debug("Annotate: {}, {}", class1.getName(), Arrays.toString(array));
+		final JAnnotationArrayMember ann = currentField.annotate(class1).paramArray(VALUE);
+		for (final String string : array) {
+			ann.param(string);
+		}
 	}
 
 	@Override

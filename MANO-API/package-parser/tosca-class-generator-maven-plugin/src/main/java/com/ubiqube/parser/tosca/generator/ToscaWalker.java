@@ -46,6 +46,7 @@ import com.ubiqube.parser.tosca.ValueObject;
 import com.ubiqube.parser.tosca.annotations.Capability;
 import com.ubiqube.parser.tosca.annotations.Members;
 import com.ubiqube.parser.tosca.annotations.Node;
+import com.ubiqube.parser.tosca.annotations.Occurence;
 import com.ubiqube.parser.tosca.annotations.Relationship;
 import com.ubiqube.parser.tosca.constraints.Constraint;
 
@@ -354,8 +355,9 @@ public class ToscaWalker {
 		requirements.getRequirements().forEach((final String x, final Requirement y) -> {
 			final String fieldName = fieldCamelCase(x + "_req");
 			LOG.debug("Forcing field Object");
-			listener.startField(fieldName, STRING, false);
+			listener.startField(fieldName, STRING, isList(y.getOccurrences()));
 
+			listener.onFieldAnnotate(Occurence.class, y.getOccurrences().toArray(new String[0]));
 			// XXX: Probably one may be a concrete type.
 			if (null != y.getNode()) {
 				listener.onFieldAnnotate(Node.class, y.getNode());
