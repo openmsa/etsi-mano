@@ -496,9 +496,9 @@ public class ContextResolver {
 		}
 	}
 
-	private static void methodInvoke(final Method method, final Object instance, final Object paramter) {
+	private static <U> U methodInvoke(final Method method, final Object instance, final Object... paramter) {
 		try {
-			method.invoke(instance, paramter);
+			return (U) method.invoke(instance, paramter);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new ParseException("Could not invoke: " + method + " with parameters of type :" + paramter.getClass(), e);
 		}
