@@ -47,6 +47,7 @@ public class SubNetworkTask extends VnfTask {
 		super();
 		this.l3Data = l3Data;
 		this.ipPool = ipPool;
+		setToscaName("sub-" + parentName);
 		this.parentName = parentName;
 	}
 

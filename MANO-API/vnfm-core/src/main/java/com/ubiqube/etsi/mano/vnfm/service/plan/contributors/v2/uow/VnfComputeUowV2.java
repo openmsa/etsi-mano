@@ -49,7 +49,7 @@ public class VnfComputeUowV2 extends AbstractUowV2<ComputeTask> {
 		final ComputeTask t = getTask().getParameters();
 
 		final List<String> storages = getTask().getParameters().getVnfCompute().getStorages().stream()
-				.map(x -> context.getParent(Storage.class, x))
+				.map(x -> context.getParent(Storage.class, x + "-" + getTask().getAlias()))
 				.flatMap(List::stream)
 				.collect(Collectors.toList());
 		final List<String> net = t.getVnfCompute().getNetworks().stream()

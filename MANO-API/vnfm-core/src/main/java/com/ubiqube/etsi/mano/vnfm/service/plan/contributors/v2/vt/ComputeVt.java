@@ -45,7 +45,7 @@ public class ComputeVt extends VnfVtBase<ComputeTask> {
 				.collect(Collectors.toList());
 		final List<NamedDependency> storages = getParameters().getVnfCompute().getStorages()
 				.stream()
-				.map(x -> new NamedDependency(Storage.class, x))
+				.map(x -> new NamedDependency(Storage.class, x + "-" + getAlias()))
 				.collect(Collectors.toList());
 		ret.addAll(storages);
 		return ret;

@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +26,11 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.graph.DefaultListenableGraph;
 import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.nio.dot.DOTExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,6 +40,7 @@ import com.github.dexecutor.core.DexecutorConfig;
 import com.github.dexecutor.core.ExecutionConfig;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.github.dexecutor.core.task.TaskProvider;
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.service.ImplementationService;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
@@ -184,6 +189,7 @@ public class PlannerImpl<U> implements Planner<U> {
 			return finalDelete;
 		}
 		// Execute create.
+		exportGraph(impl.getCreateImplementation(), "vnf-added.dot");
 		final ExecutionResults<UnitOfWork<?>, String> res = execCreate(impl.getCreateImplementation(), context, listener);
 		finalDelete.addAll(convertResults(res));
 		return finalDelete;
@@ -224,4 +230,12 @@ public class PlannerImpl<U> implements Planner<U> {
 		});
 	}
 
+	public static <U extends UnitOfWork> void exportGraph(final ListenableGraph g, final String fileName) {
+		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getTask().getName().replace('-', '_') + "_" + RandomStringUtils.random(5, true, true));
+		try (final FileOutputStream out = new FileOutputStream(fileName)) {
+			exporter.exportGraph(g, out);
+		} catch (final IOException e) {
+			LOG.trace("Error in graph export", e);
+		}
+	}
 }

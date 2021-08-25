@@ -70,4 +70,10 @@ public class ProvBVt extends AbstractVirtualTask<TestParameters> {
 		return null;
 	}
 
+	@Override
+	public String getAlias() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

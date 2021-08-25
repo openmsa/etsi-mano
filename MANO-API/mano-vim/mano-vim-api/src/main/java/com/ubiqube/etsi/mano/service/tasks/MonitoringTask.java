@@ -92,4 +92,10 @@ public class MonitoringTask implements VirtualTask<MonitoringTask> {
 		return null;
 	}
 
+	@Override
+	public String getAlias() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

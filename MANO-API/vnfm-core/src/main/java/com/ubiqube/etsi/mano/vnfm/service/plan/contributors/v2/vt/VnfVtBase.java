@@ -70,4 +70,9 @@ public abstract class VnfVtBase<U extends VnfTask> implements VirtualTask<U> {
 	public String getName() {
 		return nt.getToscaName();
 	}
+
+	@Override
+	public String getAlias() {
+		return nt.getAlias();
+	}
 }

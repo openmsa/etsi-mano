@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ import javax.annotation.Priority;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
@@ -68,17 +70,67 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 				.filter(ComputeTask.class::isInstance)
 				.map(ComputeTask.class::cast)
 				.forEach(x -> {
-					x.getVnfCompute().getStorages().forEach(y -> {
-						final StorageTask task = createTask(StorageTask::new);
-						task.setType(ResourceTypeEnum.STORAGE);
-						task.setToscaName(y);
-						task.setAlias(y + "-" + x.getAlias() + "-" + RandomStringUtils.random(5, true, true));
-						task.setParentAlias(x.getAlias());
-						task.setVnfStorage(findVnfStorage(vnfPackage.getVnfStorage(), y));
-						ret.add(new StorageVt(task));
-					});
+					if (x.getChangeType() == ChangeType.REMOVED) {
+						removeStorage(ret, x, plan.getInstance());
+					} else {
+						createStorage(ret, x, vnfPackage, plan.getInstance());
+					}
 				});
 		return ret;
+	}
+
+	private void createStorage(final List<StorageVt> ret, final ComputeTask x, final VnfPackage vnfPackage, final VnfInstance vnfInstance) {
+		x.getVnfCompute().getStorages().forEach(y -> {
+			final int cnt = countVli(vnfInstance, x.getAlias());
+			if (cnt != 0) {
+				return;
+			}
+			final StorageTask task = createTask(StorageTask::new);
+			task.setType(ResourceTypeEnum.STORAGE);
+			task.setToscaName(y + "-" + x.getAlias());
+			task.setAlias(y + "-" + x.getAlias() + "-" + RandomStringUtils.random(5, true, true));
+			task.setParentAlias(x.getAlias());
+			task.setVnfStorage(findVnfStorage(vnfPackage.getVnfStorage(), y));
+			ret.add(new StorageVt(task));
+		});
+	}
+
+	private void removeStorage(final List<StorageVt> ret, final ComputeTask computeTask, final VnfInstance vnfInstance) {
+		final List<VnfLiveInstance> vs = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
+		computeTask.getVnfCompute().getStorages().forEach(x -> {
+			findStorageByName(x, vs).ifPresent(y -> {
+				final StorageTask task = createDeleteTask(StorageTask::new, y);
+				task.setType(ResourceTypeEnum.STORAGE);
+				task.setRemovedLiveInstance(y.getId());
+				task.setVnfStorage(((StorageTask) y.getTask()).getVnfStorage());
+				ret.add(new StorageVt(task));
+			});
+		});
+	}
+
+	// XXX move this in JPA this is a SQL query.
+	private static Optional<VnfLiveInstance> findStorageByName(final String y, final List<VnfLiveInstance> vs) {
+		for (final VnfLiveInstance vnfLiveInstance : vs) {
+			final StorageTask t = (StorageTask) vnfLiveInstance.getTask();
+			if (t.getAlias().equals(y)) {
+				return Optional.of(vnfLiveInstance);
+			}
+		}
+		return Optional.empty();
+	}
+
+	// XXX move this in JPA this is a SQL query.
+	private int countVli(final VnfInstance vnfInstance, final String computeAlias) {
+		final List<VnfLiveInstance> vs = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
+		int i = 0;
+		for (final VnfLiveInstance vnfLiveInstance : vs) {
+			if (vnfLiveInstance.getTask()instanceof final StorageTask t) {
+				if (t.getParentAlias().equals(computeAlias)) {
+					i++;
+				}
+			}
+		}
+		return i;
 	}
 
 	private List<StorageVt> doTerminatePlan(final VnfInstance vnfInstance) {

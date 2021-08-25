@@ -47,4 +47,6 @@ public interface VirtualTask<U> {
 	boolean isDeleteTask();
 
 	String getName();
+
+	String getAlias();
 }
