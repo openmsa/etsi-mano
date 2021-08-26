@@ -109,6 +109,9 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.field("virtualCompute.virtualCpu.cpuArchitecture", "cpuArchitecture")
 				.field("virtualCompute.virtualMemory.virtualMemSize", "virtualMemorySize")
 				.field("virtualCompute.virtualLocalStorage[0].sizeOfStorage", "diskSize")
+				.field("bootData.contentOrFileData.content", "cloudInit")
+				.field("bootData.contentOrFileData.sourcePath", "sourcePath")
+				.field("bootData.contentOrFileData.destinationPath", "destinationPath")
 				.byDefault()
 				.register();
 		mapperFactory.classMap(VduCp.class, VnfLinkPort.class)
@@ -139,6 +142,7 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.register();
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public ProviderData getProviderPadata() {
 		final List<ProviderData> vnfs = getListOf(VNF.class, ProviderData.class, new HashMap<>());

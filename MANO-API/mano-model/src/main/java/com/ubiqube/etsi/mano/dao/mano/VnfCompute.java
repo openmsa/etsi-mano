@@ -38,6 +38,16 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 @EntityListeners(AuditListener.class)
 @Indexed
@@ -65,7 +75,9 @@ public class VnfCompute implements ToscaEntity, Auditable {
 
 	@Column(length = 9000)
 	@GenericField
-	private String bootData;
+	private String cloudInit;
+	private String sourcePath;
+	private String destinationPath;
 
 	@GenericField
 	private long virtualMemorySize;
@@ -108,159 +120,6 @@ public class VnfCompute implements ToscaEntity, Auditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
 	private Set<VnfComputeAspectDelta> scalingAspectDeltas;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-	public SoftwareImage getSoftwareImage() {
-		return softwareImage;
-	}
-
-	public void setSoftwareImage(final SoftwareImage _softwareImage) {
-		softwareImage = _softwareImage;
-	}
-
-	@Override
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	@Override
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
-	@Override
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	@Override
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	@Override
-	public String getState() {
-		return state;
-	}
-
-	@Override
-	public void setState(final String state) {
-		this.state = state;
-	}
-
-	public Set<String> getStorages() {
-		return storages;
-	}
-
-	public void setStorages(final Set<String> storages) {
-		this.storages = storages;
-	}
-
-	public Set<MonitoringParams> getMonitoringParameters() {
-		return monitoringParameters;
-	}
-
-	public void setMonitoringParameters(final Set<MonitoringParams> monitoringParameters) {
-		this.monitoringParameters = monitoringParameters;
-	}
-
-	public long getVirtualMemorySize() {
-		return virtualMemorySize;
-	}
-
-	public void setVirtualMemorySize(final long virtualMemorySize) {
-		this.virtualMemorySize = virtualMemorySize;
-	}
-
-	public String getCpuArchitecture() {
-		return cpuArchitecture;
-	}
-
-	public void setCpuArchitecture(final String cpuArchitecture) {
-		this.cpuArchitecture = cpuArchitecture;
-	}
-
-	public long getNumVcpu() {
-		return numVcpu;
-	}
-
-	public void setNumVcpu(final long numVcpu) {
-		this.numVcpu = numVcpu;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
-	public Set<String> getNetworks() {
-		return networks;
-	}
-
-	public void setNetworks(final Set<String> networks) {
-		this.networks = networks;
-	}
-
-	public VduProfile getVduProfile() {
-		return vduProfile;
-	}
-
-	public void setVduProfile(final VduProfile vduProfile) {
-		this.vduProfile = vduProfile;
-	}
-
-	public Set<VduInstantiationLevel> getInstantiationLevel() {
-		return instantiationLevel;
-	}
-
-	public void setInstantiationLevel(final Set<VduInstantiationLevel> instantiationLevel) {
-		this.instantiationLevel = instantiationLevel;
-	}
-
-	public Integer getInitialNumberOfInstance() {
-		return initialNumberOfInstance;
-	}
-
-	public void setInitialNumberOfInstance(final Integer initialNumberOfInstance) {
-		this.initialNumberOfInstance = initialNumberOfInstance;
-	}
-
-	public Set<VnfComputeAspectDelta> getScalingAspectDeltas() {
-		return scalingAspectDeltas;
-	}
-
-	public void setScalingAspectDeltas(final Set<VnfComputeAspectDelta> scalingAspectDeltas) {
-		this.scalingAspectDeltas = scalingAspectDeltas;
-	}
-
 	public void addScalingAspectDeltas(final VnfComputeAspectDelta scalingDelta) {
 		if (null == scalingAspectDeltas) {
 			scalingAspectDeltas = new LinkedHashSet<>();
@@ -269,27 +128,11 @@ public class VnfCompute implements ToscaEntity, Auditable {
 		scalingAspectDeltas.add(scalingDelta);
 	}
 
-	public String getBootData() {
-		return bootData;
-	}
-
-	public void setBootData(final String bootData) {
-		this.bootData = bootData;
-	}
-
 	public void addVduInstantiationLevel(final VduInstantiationLevel _vduInstantiationLevel) {
 		if (null == instantiationLevel) {
 			instantiationLevel = new LinkedHashSet<>();
 		}
 		instantiationLevel.add(_vduInstantiationLevel);
-	}
-
-	public long getDiskSize() {
-		return diskSize;
-	}
-
-	public void setDiskSize(final long diskSize) {
-		this.diskSize = diskSize;
 	}
 
 }
