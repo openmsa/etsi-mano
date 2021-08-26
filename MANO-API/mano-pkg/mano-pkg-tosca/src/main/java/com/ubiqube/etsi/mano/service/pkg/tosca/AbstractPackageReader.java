@@ -79,6 +79,14 @@ public abstract class AbstractPackageReader {
 				.collect(Collectors.toSet());
 	}
 
+	@Nonnull
+	protected <T> Set<T> getSetOf(final Class<T> toscaClass, final Map<String, String> parameters) {
+		final List<T> list = toscaApi.getObjects(root, parameters, toscaClass);
+		LOG.debug("Found {} {} node in TOSCA model", list.size(), toscaClass.getSimpleName());
+		return list.stream()
+				.collect(Collectors.toSet());
+	}
+
 	@SuppressWarnings("null")
 	@Nonnull
 	protected <T, U> List<U> getListOf(final Class<T> toscaClass, final Class<U> to, final Map<String, String> parameters) {

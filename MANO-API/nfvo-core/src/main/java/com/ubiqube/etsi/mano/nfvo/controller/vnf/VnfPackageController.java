@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.controller.vnf;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public interface VnfPackageController {
 
 	VnfPackage vnfPackagesVnfPkgIdPatch(UUID id, String body, String ifMatch);
 
-	void vnfPackagesVnfPkgIdPackageContentPut(UUID id, byte[] data, String accept);
+	void vnfPackagesVnfPkgIdPackageContentPut(UUID id, InputStream inputStream, String accept);
 
 	void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(UUID id, String contentType, String uri);
 

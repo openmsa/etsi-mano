@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.event;
 
-import java.util.Base64;
 import java.util.Map;
 import java.util.UUID;
 
@@ -54,8 +53,7 @@ public class NfvoActionController {
 			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("uri"));
 			break;
 		case VNF_PKG_ONBOARD_FROM_BYTES:
-			final byte[] bytes = Base64.getDecoder().decode((String) parameters.get("data"));
-			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString(), bytes);
+			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString());
 			break;
 		case NSD_PKG_ONBOARD_FROM_BYTES:
 			nsPackagingManager.nsOnboarding(objectId);

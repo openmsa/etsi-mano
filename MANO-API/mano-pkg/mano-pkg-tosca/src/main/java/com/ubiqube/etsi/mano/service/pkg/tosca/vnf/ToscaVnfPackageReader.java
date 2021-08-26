@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -158,9 +159,17 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 		return getCsarFiles(AdditionalArtifact.class);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public Set<VnfCompute> getVnfComputeNodes(final Map<String, String> parameters) {
-		return this.getSetOf(Compute.class, VnfCompute.class, parameters);
+		final Set<Compute> r = this.getSetOf(Compute.class, parameters);
+		return r.stream().map(x -> {
+			final VnfCompute o = getMapper().map(x, VnfCompute.class);
+			Optional.ofNullable(x.getArtifacts()).map(y -> y.get("sw_image")).ifPresent(y -> {
+				o.getSoftwareImage().setFile(y.getFile());
+			});
+			return o;
+		}).collect(Collectors.toSet());
 	}
 
 	@Override

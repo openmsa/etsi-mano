@@ -60,7 +60,7 @@ topology_template:
           file: Fedora-Cloud-Base-34-1.2.x86_64.qcow2
       properties:
         sw_image_data:
-          name: cirros
+          name: fedora-34-cloud-init
           version: 1.0.0
           checksum:
             hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b

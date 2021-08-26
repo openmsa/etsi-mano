@@ -96,7 +96,8 @@ public class VnfPackageOnboardingImpl {
 		vnfPackageService = _vnfPackageService;
 	}
 
-	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId, final byte[] data) {
+	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId) {
+		final byte[] data = vnfPackageRepository.getBinary(UUID.fromString(vnfPkgId), "vnfd");
 		VnfPackage vnfPpackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		vnfPpackage = startOnboarding(vnfPpackage);
 		return uploadAndFinishOnboarding(vnfPpackage, data);

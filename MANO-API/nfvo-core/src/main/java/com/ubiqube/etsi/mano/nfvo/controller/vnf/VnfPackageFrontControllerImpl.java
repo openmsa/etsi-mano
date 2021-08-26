@@ -20,6 +20,7 @@ import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_DEFAULT_EXCLUDE_FIELDS;
 import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -142,8 +143,8 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 
 	@Override
 	public ResponseEntity<Void> putContent(final UUID id, final String accept, final MultipartFile file) {
-		try {
-			vnfPackageController.vnfPackagesVnfPkgIdPackageContentPut(id, file.getBytes(), accept);
+		try (InputStream is = file.getInputStream()) {
+			vnfPackageController.vnfPackagesVnfPkgIdPackageContentPut(id, is, accept);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

@@ -117,6 +117,11 @@ spring:
             instanceId: AUTO
           threadPool:
             threadCount: 10
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
 springfox:
   documentation:
     swagger:

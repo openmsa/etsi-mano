@@ -20,6 +20,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureDisabled;
 import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
 import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.nfvo.factory.VnfPackageFactory;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
@@ -40,11 +42,14 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	private final VnfPackageService vnfPackageService;
 	private final Patcher patcher;
 	private final EventManager eventManager;
+	private final VnfPackageRepository vnfPackageRepository;
 
-	public VnfPackageControllerImpl(final Patcher _patcher, final EventManager _eventManager, final VnfPackageService vnfPackageService) {
+	public VnfPackageControllerImpl(final Patcher _patcher, final EventManager _eventManager, final VnfPackageService vnfPackageService,
+			final VnfPackageRepository vnfPackageRepository) {
 		patcher = _patcher;
 		eventManager = _eventManager;
 		this.vnfPackageService = vnfPackageService;
+		this.vnfPackageRepository = vnfPackageRepository;
 	}
 
 	@Override
@@ -73,11 +78,11 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	}
 
 	@Override
-	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id, final byte[] data, final String accept) {
+	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id, final InputStream is, final String accept) {
 		final VnfPackage vnfPackage = vnfPackageService.findById(id);
 		ensureNotOnboarded(vnfPackage);
+		vnfPackageRepository.storeBinary(id, "vnfd", is);
 		final Map<String, Object> map = new HashMap<>();
-		map.put("data", data);
 		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, map);
 	}
 
