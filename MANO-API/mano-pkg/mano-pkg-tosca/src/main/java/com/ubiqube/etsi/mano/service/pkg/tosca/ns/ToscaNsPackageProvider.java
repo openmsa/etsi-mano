@@ -99,6 +99,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 				.register();
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public NsInformations getNsInformations(final Map<String, String> userData) {
 		final List<NsInformations> nss = getListOf(NS.class, NsInformations.class, userData);
@@ -115,12 +116,14 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		return getSetOf(Sap.class, NsSap.class, userData);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
 		final List<SecurityGroupRule> sgr = getObjects(SecurityGroupRule.class, userData);
 		return sgr.stream().map(x -> new SecurityGroupAdapter(getMapper().map(x, SecurityGroup.class), x.getTargets())).collect(Collectors.toSet());
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public Set<String> getNestedNsd(final Map<String, String> userData) {
 		final List<NsTopology> sgr = getObjects(NsTopology.class, userData);
@@ -130,6 +133,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 				.collect(Collectors.toSet());
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public Set<String> getVnfd(final Map<String, String> userData) {
 		final List<NsTopology> sgr = getObjects(NsTopology.class, userData);

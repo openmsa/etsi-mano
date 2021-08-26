@@ -69,6 +69,7 @@ public abstract class AbstractPackageReader {
 
 	protected abstract void additionalMapping(MapperFactory mapperFactory);
 
+	@SuppressWarnings("null")
 	@Nonnull
 	protected <T, U> Set<U> getSetOf(final Class<T> toscaClass, final Class<U> to, final Map<String, String> parameters) {
 		final List<T> list = toscaApi.getObjects(root, parameters, toscaClass);
@@ -78,12 +79,14 @@ public abstract class AbstractPackageReader {
 				.collect(Collectors.toSet());
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
 	protected <T, U> List<U> getListOf(final Class<T> toscaClass, final Class<U> to, final Map<String, String> parameters) {
 		final List<T> obj = toscaApi.getObjects(root, parameters, toscaClass);
 		return mapper.mapAsList(obj, to);
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
 	protected <U> List<U> getObjects(final Class<U> toscaClass, final Map<String, String> parameters) {
 		return toscaApi.getObjects(root, parameters, toscaClass);
@@ -94,6 +97,7 @@ public abstract class AbstractPackageReader {
 		return toscaParser.getFiles();
 	}
 
+	@SuppressWarnings("null")
 	@Nonnull
 	protected <U> Set<U> getCsarFiles(final Class<U> dest) {
 		return toscaParser.getFiles().stream()

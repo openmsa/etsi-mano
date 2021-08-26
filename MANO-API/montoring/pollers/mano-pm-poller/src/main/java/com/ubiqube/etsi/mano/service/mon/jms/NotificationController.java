@@ -19,8 +19,6 @@ package com.ubiqube.etsi.mano.service.mon.jms;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -38,8 +36,6 @@ import com.ubiqube.etsi.mano.service.vim.VimManager;
  */
 @Service
 public class NotificationController {
-	private static final Logger LOG = LoggerFactory.getLogger(NotificationController.class);
-
 	private final VimManager vimManager;
 	private final GnocchiSubTelemetry gnocchiSubTelemetry;
 	private final JmsTemplate jmsTopicTemplate;

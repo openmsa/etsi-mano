@@ -41,6 +41,7 @@ public interface OrchestrationAdapter<B extends Task, V extends Instance> {
 	@Nonnull
 	Blueprint<B, V> getBluePrint(@Nonnull UUID blueprintId);
 
+	@Nonnull
 	Instance getInstance(@Nonnull UUID blueprintId);
 
 	PackageBase getPackage(@Nonnull Instance instance);

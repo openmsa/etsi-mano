@@ -48,17 +48,16 @@ import com.ubiqube.etsi.mano.service.mon.data.Metric;
 public class GnocchiSubTelemetry {
 	private static final Logger LOG = LoggerFactory.getLogger(GnocchiSubTelemetry.class);
 
-	public List<TelemetryMetricsResult> getMetricsForVnfc(final VimConnectionInformation vimConnectionInformation, final String vnfcId, final List<Metric> collectedMetrics, final UUID uuid) {
+	public static List<TelemetryMetricsResult> getMetricsForVnfc(final VimConnectionInformation vimConnectionInformation, final String vnfcId, final List<Metric> collectedMetrics, final UUID uuid) {
 		final OSClientV3 os = authenticate(vimConnectionInformation);
 		return getMetrics(uuid, vnfcId, collectedMetrics, os);
 	}
 
-	private List<TelemetryMetricsResult> getMetrics(final UUID uuid, final String vnfcId, final List<Metric> collectedMetrics, final OSClientV3 os) {
+	private static List<TelemetryMetricsResult> getMetrics(final UUID uuid, final String vnfcId, final List<Metric> collectedMetrics, final OSClientV3 os) {
 		final List<String> colls = collectedMetrics.stream().map(Metric::getName).collect(Collectors.toList());
 		final Resource instanceResources = os.telemetry().resources().instance(vnfcId);
 		final List<Entry<String, String>> colMeter = instanceResources.getMetrics().entrySet().stream().filter(x -> colls.contains(x.getKey())).collect(Collectors.toList());
-		final List<TelemetryMetricsResult> newList = colMeter.stream().map(x -> map(x, vnfcId, uuid, os)).collect(Collectors.toList());
-		return newList;
+		return colMeter.stream().map(x -> map(x, vnfcId, uuid, os)).collect(Collectors.toList());
 	}
 
 	private static TelemetryMetricsResult map(final Entry<String, String> x, final String vnfInstanceId, final UUID id, final OSClientV3 os) {
