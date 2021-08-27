@@ -19,7 +19,13 @@ package com.ubiqube.parser.tosca.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import com.ubiqube.parser.tosca.GroupDefinition;
 import com.ubiqube.parser.tosca.NodeTemplate;
@@ -64,6 +70,13 @@ public class ToscaApi {
 			return contextResolver.mapPoliciesToClass(policies, destination);
 		}
 		return new ArrayList<>();
+	}
+
+	public static <U> Set<ConstraintViolation<U>> validate(final U object) {
+		try (final ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+			final Validator validator = factory.getValidator();
+			return validator.validate(object);
+		}
 	}
 
 	private static <T> List<PolicyDefinition> getPoliciesMatching(final ToscaContext root, final Class<T> destination) {

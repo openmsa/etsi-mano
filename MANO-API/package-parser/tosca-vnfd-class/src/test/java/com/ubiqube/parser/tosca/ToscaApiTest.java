@@ -18,6 +18,7 @@ package com.ubiqube.parser.tosca;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -146,6 +147,13 @@ public class ToscaApiTest {
 		final List<?> listVsad = toscaApi.getObjects(root, parameters, clazz);
 		assertEquals(i, listVsad.size());
 		checknull(listVsad.get(0));
+		final Set<?> violations = ToscaApi.validate(listVsad.get(0));
+		if (!violations.isEmpty()) {
+			violations.forEach(x -> {
+				LOG.error("{}", x);
+			});
+			assertTrue(false);
+		}
 		return listVsad;
 	}
 
