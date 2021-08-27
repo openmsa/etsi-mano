@@ -69,6 +69,7 @@ import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.VimService;
+import com.ubiqube.etsi.mano.vim.dto.SwImage;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -252,7 +253,7 @@ public class OpenStackTest {
 		img.setName("Junit-uploaded-image");
 		img.setSize(1L);
 		img.setImagePath("/home/olivier/Downloads/cirros-0.5.1-x86_64-disk.img");
-		final SoftwareImage lid = vim.storage(vimConnectionInformation).uploadSoftwareImage(img);
+		final SwImage lid = vim.storage(vimConnectionInformation).uploadSoftwareImage(null, img);
 		assertNotNull(lid);
 	}
 
@@ -297,8 +298,8 @@ public class OpenStackTest {
 		final Identifier domainIdentifier = Identifier.byName("Default");
 		return OSFactory.builderV3()
 				.endpoint("http://10.31.1.240:5000/v3")
-				.credentials("admin", "84612d9a2e404ac9", domainIdentifier)
-				.scopeToProject(Identifier.byId("df1f081bf2d345099e6bb53f6b9407ff"))
+				.credentials("admin", "13f83cb78a4f4213", domainIdentifier)
+				.scopeToProject(Identifier.byId("d45cdd393cda4255915f855527f9c98e"))
 				.authenticate();
 	}
 

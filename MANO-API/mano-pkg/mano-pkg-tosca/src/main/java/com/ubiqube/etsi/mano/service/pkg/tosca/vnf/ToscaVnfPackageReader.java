@@ -166,7 +166,7 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 		return r.stream().map(x -> {
 			final VnfCompute o = getMapper().map(x, VnfCompute.class);
 			Optional.ofNullable(x.getArtifacts()).map(y -> y.get("sw_image")).ifPresent(y -> {
-				o.getSoftwareImage().setFile(y.getFile());
+				o.getSoftwareImage().setImagePath(y.getFile());
 			});
 			return o;
 		}).collect(Collectors.toSet());

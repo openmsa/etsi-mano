@@ -74,5 +74,4 @@ public class SoftwareImage implements Auditable {
 
 	private Audit audit;
 
-	private String file;
 }

@@ -9,6 +9,9 @@ logging:
       glasnost:
         orika: INFO
     org:
+      apache:
+        http:
+          wire: INFO
       hibernate:
         SQL: INFO
       openstack4j: INFO

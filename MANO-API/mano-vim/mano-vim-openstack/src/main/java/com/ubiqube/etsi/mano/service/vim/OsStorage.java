@@ -16,9 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.vim;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +30,9 @@ import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
 import org.openstack4j.model.compute.Image;
-import org.openstack4j.model.image.ContainerFormat;
-import org.openstack4j.model.image.DiskFormat;
-import org.openstack4j.model.image.builder.ImageBuilder;
+import org.openstack4j.model.image.v2.ContainerFormat;
+import org.openstack4j.model.image.v2.DiskFormat;
+import org.openstack4j.model.image.v2.builder.ImageBuilder;
 import org.openstack4j.model.storage.block.Volume;
 import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.slf4j.Logger;
@@ -42,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.sys.SysImage;
+import com.ubiqube.etsi.mano.vim.dto.SwImage;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -71,49 +71,38 @@ public class OsStorage implements Storage {
 	}
 
 	@Override
-	public Optional<SoftwareImage> getSwImageMatching(final SoftwareImage img) {
+	public Optional<SwImage> getSwImageMatching(final SoftwareImage img) {
 		// XXX: Checksum is not comparated, and checksum exist in os.image()
 		final Optional<? extends Image> image = os.compute().images().list().stream()
 				.filter(x -> x.getName().equals(img.getName()))
 				.findFirst();
 		if (image.isPresent()) {
-			final SoftwareImage swImage = mapper.map(image.get(), SoftwareImage.class);
+			final SwImage swImage = mapper.map(image.get(), SwImage.class);
 			return Optional.of(swImage);
 		}
 		return Optional.empty();
 	}
 
 	@Override
-	public SoftwareImage uploadSoftwareImage(final SoftwareImage img) {
-		final String imagePath = img.getImagePath();
-		// XXX A little bit simple.
-		if (imagePath.startsWith("http")) {
-			try (Payload<URL> payload = Payloads.create(new URL(imagePath))) {
-				return doUpload(img, payload);
-			} catch (final IOException e) {
-				throw new VimException(e);
-			}
-		}
-		try (Payload<File> payload = Payloads.create(new File(imagePath))) {
-			return doUpload(img, payload);
+	public SwImage uploadSoftwareImage(final InputStream is, final SoftwareImage softwareImage) {
+		try (Payload<InputStream> payload = Payloads.create(is)) {
+			return doUpload(softwareImage, payload);
 		} catch (final IOException e) {
 			throw new VimException(e);
 		}
 	}
 
-	private SoftwareImage doUpload(final SoftwareImage img, final Payload<?> payload) {
-		final ImageBuilder bImg = Builders.image()
+	private SwImage doUpload(final SoftwareImage img, final Payload<?> payload) {
+		final ImageBuilder bImg = Builders.imageV2()
 				.containerFormat(ContainerFormat.valueOf(img.getContainerFormat())).diskFormat(DiskFormat.valueOf(img.getDiskFormat()))
 				.minDisk(img.getMinDisk())
 				.minRam(img.getMinRam())
-				.size(img.getSize());
-		if (null != img.getChecksum()) {
-			bImg.checksum(img.getChecksum().getHash());
-		}
-		final org.openstack4j.model.image.Image osImage = os.images().create(bImg.build(), payload);
+				.name(img.getName());
+		final org.openstack4j.model.image.v2.Image osImage = os.imagesV2().create(bImg.build());
 		img.setProvider(img.getProvider());
 		img.setVimId(osImage.getId());
-		return img;
+		os.imagesV2().upload(osImage.getId(), payload, bImg.build());
+		return new SwImage(osImage.getId());
 	}
 
 	@Override

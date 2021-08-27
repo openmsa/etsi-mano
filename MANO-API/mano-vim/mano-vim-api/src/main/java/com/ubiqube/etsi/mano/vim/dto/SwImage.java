@@ -1,4 +1,5 @@
 /**
+
  *     Copyright (C) 2019-2020 Ubiqube.
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -14,21 +15,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.repository;
+package com.ubiqube.etsi.mano.vim.dto;
 
-import java.nio.file.Path;
-import java.util.UUID;
-
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.service.VnfPackageService;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
- * @deprecated Use {@link VnfPackageService}.
+ *
  */
-@Deprecated
-public interface VnfPackageRepository extends CrudRepositoryNg<VnfPackage>, BinaryRepository {
+@Getter
+@Setter
+public class SwImage {
 
-	Path getPathByVnfdId(UUID fromString);
+	private String vimResourceId;
+
+	public SwImage(final String vimResourceId) {
+		super();
+		this.vimResourceId = vimResourceId;
+	}
+
 }

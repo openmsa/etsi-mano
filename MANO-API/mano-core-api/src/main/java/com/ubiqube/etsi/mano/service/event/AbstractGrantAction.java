@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.event;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -56,6 +58,7 @@ import com.ubiqube.etsi.mano.service.event.elect.VimElection;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
+import com.ubiqube.etsi.mano.vim.dto.SwImage;
 
 /**
  *
@@ -159,7 +162,7 @@ public abstract class AbstractGrantAction {
 		final GrantVimAssetsEntity grantVimAssetsEntity = new GrantVimAssetsEntity();
 		grants.setVimAssets(grantVimAssetsEntity);
 		// XXX Push only needed ones. ( in case of terminate no need to push assets.)
-		final Runnable getSoftwareImages = () -> grantVimAssetsEntity.setSoftwareImages(getSoftwareImage(vimInfo, vim, grants.getId()));
+		final Runnable getSoftwareImages = () -> grantVimAssetsEntity.setSoftwareImages(getSoftwareImage(vimInfo, vim, grants));
 		executorService.submit(getSoftwareImages);
 
 		final Runnable getComputeResourceFlavours = () -> {
@@ -229,34 +232,41 @@ public abstract class AbstractGrantAction {
 		return listVcrfe;
 	}
 
-	private Set<VimSoftwareImageEntity> getSoftwareImage(final VimConnectionInformation vimInfo, final Vim vim, final UUID id) {
+	private Set<VimSoftwareImageEntity> getSoftwareImage(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {
 		final Set<VimSoftwareImageEntity> listVsie = new HashSet<>();
-		final Map<String, SoftwareImage> cache = new HashMap<>();
-		getVnfCompute(id).forEach(x -> {
+		final Map<String, SwImage> cache = new HashMap<>();
+		getVnfCompute(grants.getId()).forEach(x -> {
 			final SoftwareImage img = x.getSoftwareImage();
 			if (null != img) {
 				// Get Vim or create vim resource via Or-Vi
-				final SoftwareImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
-					final Optional<SoftwareImage> newImg = vim.storage(vimInfo).getSwImageMatching(img);
-					// Use or-vi, Vim is not on the same server. Path is given in tosca file.
-					return newImg.orElseGet(() -> vim.storage(vimInfo).uploadSoftwareImage(x.getSoftwareImage()));
+				final SwImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
+					final Optional<SwImage> newImg = vim.storage(vimInfo).getSwImageMatching(img);
+					try (final InputStream is = findImage(x.getSoftwareImage(), grants.getVnfdId())) {
+						// Use or-vi, Vim is not on the same server. Path is given in tosca file.
+						return newImg.orElseGet(() -> vim.storage(vimInfo).uploadSoftwareImage(is, img));
+					} catch (final IOException e) {
+						throw new GenericException(e);
+					}
 				});
 				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
 			}
 		});
-		final Set<VnfStorage> storage = getVnfStorage(id);
+		final Set<VnfStorage> storage = getVnfStorage(grants.getId());
 		storage.forEach(x -> {
 			final SoftwareImage img = x.getSoftwareImage();
 			if (null != img) {
-				listVsie.add(mapSoftwareImage(img, x.getId(), vimInfo, vim));
+				final SwImage imgCached = cache.get(img.getName());
+				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
 			}
 		});
 		return listVsie;
 	}
 
-	private static VimSoftwareImageEntity mapSoftwareImage(final SoftwareImage softwareImage, final UUID vduId, final VimConnectionInformation vimInfo, final Vim vim) {
+	protected abstract InputStream findImage(final SoftwareImage softwareImage, final String vnfdId);
+
+	private static VimSoftwareImageEntity mapSoftwareImage(final SwImage softwareImage, final UUID vduId, final VimConnectionInformation vimInfo, final Vim vim) {
 		final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
-		vsie.setVimSoftwareImageId(softwareImage.getId().toString());
+		vsie.setVimSoftwareImageId(softwareImage.getVimResourceId());
 		vsie.setVnfdSoftwareImageId(vduId.toString());
 		vsie.setVimConnectionId(vimInfo.getVimId());
 		vsie.setResourceProviderId(vim.getType());

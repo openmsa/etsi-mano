@@ -57,14 +57,14 @@ topology_template:
       artifacts:
         sw_image:
           type: tosca.artifacts.Deployment.Image.VM.QCOW2
-          file: Fedora-Cloud-Base-34-1.2.x86_64.qcow2
+          file: cirros-0.5.2-x86_64-disk.img
       properties:
         sw_image_data:
           name: fedora-34-cloud-init
           version: 1.0.0
           checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
+            hash: 6b813aa46bb90b4da216a4d19376593fa3f4fc7e617f03a92b7fe11e9a3981cbe8f0959dbebe36225e5f53dc4492341a4863cac4ed1ee0909f3fc78ef9c3e869
+            algorithm: SHA-512
           container_format: BARE
           disk_format: QCOW2
           min_disk: 1 GiB

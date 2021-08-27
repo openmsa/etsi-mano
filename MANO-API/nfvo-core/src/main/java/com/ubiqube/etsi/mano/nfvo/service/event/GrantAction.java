@@ -16,12 +16,19 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.event;
 
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.vfs2.FileContent;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,6 +36,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -153,6 +161,21 @@ public class GrantAction extends AbstractGrantAction {
 				.filter(x -> x.getId().compareTo(vduId) == 0)
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException("VduId not found " + vduId));
+	}
+
+	@Override
+	protected InputStream findImage(final SoftwareImage softwareImage, final String vnfdId) {
+		final Path path = vnfPackageService.getPathByVnfdId(UUID.fromString(vnfdId));
+		try {
+			final FileSystemManager fsManager = VFS.getManager();
+			final FileObject fo = fsManager.resolveFile("zip:" + path.toString());
+			final FileObject img = fo.getChild(softwareImage.getImagePath());
+			final FileContent fc = img.getContent();
+			return fc.getInputStream();
+		} catch (final FileSystemException e) {
+			LOG.error("", e);
+			throw new GenericException(e);
+		}
 	}
 
 }

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.vim;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.service.sys.SysImage;
+import com.ubiqube.etsi.mano.vim.dto.SwImage;
 
 /**
  *
@@ -41,9 +43,9 @@ public interface Storage {
 	 */
 	// TODO void addNodeToPlans(VnfConnections connectionStorage);
 
-	Optional<SoftwareImage> getSwImageMatching(SoftwareImage img);
+	Optional<SwImage> getSwImageMatching(SoftwareImage img);
 
-	SoftwareImage uploadSoftwareImage(SoftwareImage img);
+	SwImage uploadSoftwareImage(InputStream is, SoftwareImage softwareImage);
 
 	String createStorage(VnfStorage vnfStorage, final String aliasName);
 
