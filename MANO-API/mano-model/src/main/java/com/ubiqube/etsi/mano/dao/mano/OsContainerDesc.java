@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,7 +35,10 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class OsContainerDesc {
+public class OsContainerDesc implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Unique identifier of this OsContainerDesc in the VNFD.
 	 */

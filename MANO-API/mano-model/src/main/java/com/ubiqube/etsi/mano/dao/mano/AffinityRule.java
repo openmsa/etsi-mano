@@ -16,19 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.io.Serializable;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,32 +26,15 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Entity
 @Getter
 @Setter
-@Entity
-public class VnfExtCp implements Serializable, ToscaEntity {
+public class AffinityRule extends PlacementGroup {
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+	private AffinityScopeType scope;
 
-	private String toscaId;
-
-	private String toscaName;
-
-	private String state;
-
-	private String externalVirtualLink;
-
-	private String internalVirtualLink;
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<VirtualNicReq> virtualNetworkInterfaceRequirements;
-
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<SecurityGroup> securityGroup;
-
+	private boolean isAnti;
 }

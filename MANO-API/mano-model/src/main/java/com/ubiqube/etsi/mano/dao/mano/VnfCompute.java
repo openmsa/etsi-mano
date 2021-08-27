@@ -30,6 +30,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -106,6 +107,11 @@ public class VnfCompute implements ToscaEntity, Auditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
 	private Set<VduInstantiationLevel> instantiationLevel;
 
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<PlacementGroup> placementGroup;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<AffinityRule> affinityRule;
 	/**
 	 * Initial delta.
 	 */

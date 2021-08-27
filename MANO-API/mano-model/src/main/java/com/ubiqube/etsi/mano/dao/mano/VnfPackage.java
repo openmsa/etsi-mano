@@ -49,6 +49,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.ind.VnfIndicators;
 import com.ubiqube.etsi.mano.dao.mano.pkg.PackageSecurityOptionType;
 import com.ubiqube.etsi.mano.utils.ToStringIgnore;
 import com.ubiqube.etsi.mano.utils.ToStringUtil;
@@ -188,6 +189,9 @@ public class VnfPackage implements PackageBase, Auditable {
 	private List<String> compatibleSpecificationVersions;
 	// 2.7.1
 	private FailureDetails onboardingFailureDetails = null;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<VnfIndicators> vnfIndicators;
 
 	@Version
 	private long version;

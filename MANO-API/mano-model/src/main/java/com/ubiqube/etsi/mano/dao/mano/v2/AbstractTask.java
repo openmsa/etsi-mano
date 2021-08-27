@@ -26,6 +26,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
@@ -64,6 +65,7 @@ public abstract class AbstractTask implements Task {
 	private String toscaName;
 
 	private String toscaId = UUID.randomUUID().toString();
+
 	private String state;
 	@FullTextField
 	private String alias;
@@ -84,5 +86,8 @@ public abstract class AbstractTask implements Task {
 	private UUID removedLiveInstance;
 
 	public abstract void setId(final UUID id);
+
+	@Version
+	private Long version;
 
 }

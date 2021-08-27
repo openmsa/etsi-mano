@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -26,8 +27,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 @EntityListeners(AuditListener.class)
 public class VnfVl implements ToscaEntity, Auditable {
@@ -56,85 +68,9 @@ public class VnfVl implements ToscaEntity, Auditable {
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private VlProfileEntity vlProfileEntity;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<PlacementGroup> placementGroup;
 
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-	@Override
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	@Override
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
-	@Override
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	@Override
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	@Override
-	public String getState() {
-		return state;
-	}
-
-	@Override
-	public void setState(final String state) {
-		this.state = state;
-	}
-
-	public VlProfileEntity getVlProfileEntity() {
-		return vlProfileEntity;
-	}
-
-	public void setVlProfileEntity(final VlProfileEntity vlProfileEntity) {
-		this.vlProfileEntity = vlProfileEntity;
-	}
-
-	public int getInitialBrRoot() {
-		return initialBrRoot;
-	}
-
-	public void setInitialBrRoot(final int initialBrRoot) {
-		this.initialBrRoot = initialBrRoot;
-	}
-
-	public int getInitialBrLeaf() {
-		return initialBrLeaf;
-	}
-
-	public void setInitialBrLeaf(final int initialBrLeaf) {
-		this.initialBrLeaf = initialBrLeaf;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<AffinityRule> affinityRules;
 }
