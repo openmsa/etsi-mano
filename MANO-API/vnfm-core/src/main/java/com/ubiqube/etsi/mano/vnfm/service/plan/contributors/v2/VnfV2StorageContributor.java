@@ -97,15 +97,13 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 
 	private void removeStorage(final List<StorageVt> ret, final ComputeTask computeTask, final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> vs = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
-		computeTask.getVnfCompute().getStorages().forEach(x -> {
-			findStorageByName(x + "-" + computeTask.getAlias(), vs).ifPresent(y -> {
-				final StorageTask task = createDeleteTask(StorageTask::new, y);
-				task.setType(ResourceTypeEnum.STORAGE);
-				task.setRemovedLiveInstance(y.getId());
-				task.setVnfStorage(((StorageTask) y.getTask()).getVnfStorage());
-				ret.add(new StorageVt(task));
-			});
-		});
+		computeTask.getVnfCompute().getStorages().forEach(x -> findStorageByName(x + "-" + computeTask.getAlias(), vs).ifPresent(y -> {
+			final StorageTask task = createDeleteTask(StorageTask::new, y);
+			task.setType(ResourceTypeEnum.STORAGE);
+			task.setRemovedLiveInstance(y.getId());
+			task.setVnfStorage(((StorageTask) y.getTask()).getVnfStorage());
+			ret.add(new StorageVt(task));
+		}));
 	}
 
 	// XXX move this in JPA this is a SQL query.
@@ -124,10 +122,8 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 		final List<VnfLiveInstance> vs = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
 		int i = 0;
 		for (final VnfLiveInstance vnfLiveInstance : vs) {
-			if (vnfLiveInstance.getTask()instanceof final StorageTask t) {
-				if (t.getParentAlias().equals(computeAlias)) {
-					i++;
-				}
+			if (vnfLiveInstance.getTask()instanceof final StorageTask t && t.getParentAlias().equals(computeAlias)) {
+				i++;
 			}
 		}
 		return i;
