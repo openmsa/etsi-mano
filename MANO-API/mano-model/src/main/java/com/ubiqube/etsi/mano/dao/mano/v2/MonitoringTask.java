@@ -28,11 +28,16 @@ import javax.persistence.ManyToOne;
 import com.ubiqube.etsi.mano.dao.mano.MonitoringParams;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 @Entity
 public class MonitoringTask extends VnfTask {
 
@@ -44,35 +49,10 @@ public class MonitoringTask extends VnfTask {
 	private UUID id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	MonitoringParams monitoringParams;
+	private MonitoringParams monitoringParams;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	VnfCompute VnfCompute;
+	private VnfCompute VnfCompute;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public MonitoringParams getMonitoringParams() {
-		return monitoringParams;
-	}
-
-	public void setMonitoringParams(final MonitoringParams monitoringParams) {
-		this.monitoringParams = monitoringParams;
-	}
-
-	public VnfCompute getVnfCompute() {
-		return VnfCompute;
-	}
-
-	public void setVnfCompute(final VnfCompute vnfCompute) {
-		VnfCompute = vnfCompute;
-	}
-
+	private String parentAlias;
 }
