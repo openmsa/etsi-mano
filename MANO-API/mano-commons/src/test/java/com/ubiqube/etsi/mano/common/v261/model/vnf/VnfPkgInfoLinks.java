@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Links to resources related to this resource.
  */
-@ApiModel(description = "Links to resources related to this resource. ")
+@Schema(description = "Links to resources related to this resource. ")
 @Validated
 public class VnfPkgInfoLinks {
 	@JsonProperty("self")
@@ -54,7 +54,7 @@ public class VnfPkgInfoLinks {
 	 *
 	 * @return self
 	 **/
-	@ApiModelProperty(required = true, value = "URI of this resource. ")
+	@Schema(required = true, description = "URI of this resource. ")
 	@NotNull
 
 	@Valid
@@ -77,7 +77,7 @@ public class VnfPkgInfoLinks {
 	 *
 	 * @return vnfd
 	 **/
-	@ApiModelProperty(value = "Link to the VNFD resource. ")
+	@Schema(description = "Link to the VNFD resource. ")
 
 	@Valid
 
@@ -99,7 +99,7 @@ public class VnfPkgInfoLinks {
 	 *
 	 * @return packageContent
 	 **/
-	@ApiModelProperty(required = true, value = "Link to the \"VNF package content\" resource. ")
+	@Schema(required = true, description = "Link to the \"VNF package content\" resource. ")
 	@NotNull
 
 	@Valid

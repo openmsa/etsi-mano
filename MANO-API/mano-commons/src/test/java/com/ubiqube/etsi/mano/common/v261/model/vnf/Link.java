@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class Link {
 	@JsonProperty("href")
@@ -38,7 +38,7 @@ public class Link {
 	 *
 	 * @return href
 	 **/
-	@ApiModelProperty(required = true, value = "URI of another resource referenced from a resource. Shall be an absolute URI (i.e. a UTI that contains {apiRoot}). ")
+	@Schema(required = true, description = "URI of another resource referenced from a resource. Shall be an absolute URI (i.e. a UTI that contains {apiRoot}). ")
 	@NotNull
 
 	public String getHref() {

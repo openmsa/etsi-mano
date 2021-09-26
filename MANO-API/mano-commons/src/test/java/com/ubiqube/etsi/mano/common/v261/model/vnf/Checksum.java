@@ -25,13 +25,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the checksum of a VNF package or an artifact file.
  */
-@ApiModel(description = "This type represents the checksum of a VNF package or an artifact file. ")
+@Schema(description = "This type represents the checksum of a VNF package or an artifact file. ")
 @Validated
 public class Checksum {
 	@JsonProperty("algorithm")
@@ -51,7 +51,7 @@ public class Checksum {
 	 *
 	 * @return algorithm
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the algorithm used to generate the checksum, as defined in ETSI GS NFV-SOL 004 [5]. For example, SHA-256, SHA-512. ")
+	@Schema(required = true, description = "Name of the algorithm used to generate the checksum, as defined in ETSI GS NFV-SOL 004 [5]. For example, SHA-256, SHA-512. ")
 	@NotNull
 
 	public String getAlgorithm() {
@@ -72,7 +72,7 @@ public class Checksum {
 	 *
 	 * @return hash
 	 **/
-	@ApiModelProperty(required = true, value = "The hexadecimal value of the checksum. ")
+	@Schema(required = true, description = "The hexadecimal value of the checksum. ")
 	@NotNull
 
 	public String getHash() {

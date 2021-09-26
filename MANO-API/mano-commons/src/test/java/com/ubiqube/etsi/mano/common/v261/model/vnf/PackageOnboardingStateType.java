@@ -21,12 +21,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The enumeration PackageOnboardingStateType shall comply with the provisions
- * defined in Table 9.5.4.3-1. Permitted values: - CREATED: The VNF package
- * resource has been created. - UPLOADING: The associated VNF package content is
- * being uploaded. - PROCESSING: The associated VNF package content is being
- * processed, e.g. validation. - ONBOARDED: The associated VNF package content
- * is successfully on-boarded.
+ * The enumeration PackageOnboardingStateType shall comply with the provisions defined in Table 9.5.4.3-1. Permitted values: - CREATED: The VNF package resource has been created. - UPLOADING: The associated VNF package content is being uploaded. - PROCESSING: The associated VNF package content is being processed, e.g. validation. - ONBOARDED: The associated VNF package content is successfully on-boarded.
  */
 public enum PackageOnboardingStateType {
 

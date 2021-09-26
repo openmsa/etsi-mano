@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the links to resources that a VNF package management notification can contain.
  */
-@ApiModel(description = "This type represents the links to resources that a VNF package management notification can contain.   ")
+@Schema(description = "This type represents the links to resources that a VNF package management notification can contain.   ")
 @Validated
 public class PkgmLinks {
 	@JsonProperty("vnfPackage")
@@ -51,7 +51,7 @@ public class PkgmLinks {
 	 *
 	 * @return vnfPackage
 	 **/
-	@ApiModelProperty(required = true, value = "Link to the resource representing the VNF package to which the notified change applies, i.e. the individual on boarded VNF package resource that represents the VNF package. ")
+	@Schema(required = true, description = "Link to the resource representing the VNF package to which the notified change applies, i.e. the individual on boarded VNF package resource that represents the VNF package. ")
 	@NotNull
 
 	@Valid
@@ -74,7 +74,7 @@ public class PkgmLinks {
 	 *
 	 * @return subscription
 	 **/
-	@ApiModelProperty(required = true, value = "Link to the related subscription. ")
+	@Schema(required = true, description = "Link to the related subscription. ")
 	@NotNull
 
 	@Valid
