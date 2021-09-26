@@ -17,135 +17,130 @@
 package com.ubiqube.etsi.mano.nfvo.v331.model.vnf;
 
 import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
- * Parameters for authentication/authorization using OAuth 2.0.
+ * Parameters for authentication/authorization using OAuth 2.0. 
  */
-@ApiModel(description = "Parameters for authentication/authorization using OAuth 2.0. ")
+@Schema(description = "Parameters for authentication/authorization using OAuth 2.0. ")
 @Validated
-public class UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials {
-	@JsonProperty("clientId")
-	private String clientId = null;
 
-	@JsonProperty("clientPassword")
-	private String clientPassword = null;
 
-	@JsonProperty("tokenEndpoint")
-	private String tokenEndpoint = null;
+public class UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials   {
+  @JsonProperty("clientId")
+  private String clientId = null;
 
-	public UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials clientId(final String clientId) {
-		this.clientId = clientId;
-		return this;
-	}
+  @JsonProperty("clientPassword")
+  private String clientPassword = null;
 
-	/**
-	 * Client identifier to be used in the access token request of the OAuth 2.0
-	 * client credentials grant type.
-	 *
-	 * @return clientId
-	 **/
-	@ApiModelProperty(required = true, value = "Client identifier to be used in the access token request of the OAuth 2.0 client credentials grant type. ")
-	@NotNull
+  @JsonProperty("tokenEndpoint")
+  private String tokenEndpoint = null;
 
-	public String getClientId() {
-		return clientId;
-	}
+  public UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials clientId(String clientId) {
+    this.clientId = clientId;
+    return this;
+  }
 
-	public void setClientId(final String clientId) {
-		this.clientId = clientId;
-	}
+  /**
+   * Client identifier to be used in the access token request of the OAuth 2.0 client credentials grant type. 
+   * @return clientId
+   **/
+  @Schema(required = true, description = "Client identifier to be used in the access token request of the OAuth 2.0 client credentials grant type. ")
+      @NotNull
 
-	public UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials clientPassword(final String clientPassword) {
-		this.clientPassword = clientPassword;
-		return this;
-	}
+    public String getClientId() {
+    return clientId;
+  }
 
-	/**
-	 * Client password to be used in the access token request of the OAuth 2.0
-	 * client credentials grant type. Shall not be present in response bodies.
-	 *
-	 * @return clientPassword
-	 **/
-	@ApiModelProperty(required = true, value = "Client password to be used in the access token request of the OAuth 2.0 client credentials grant type. Shall not be present in response bodies. ")
-	@NotNull
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
+  }
 
-	public String getClientPassword() {
-		return clientPassword;
-	}
+  public UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials clientPassword(String clientPassword) {
+    this.clientPassword = clientPassword;
+    return this;
+  }
 
-	public void setClientPassword(final String clientPassword) {
-		this.clientPassword = clientPassword;
-	}
+  /**
+   * Client password to be used in the access token request of the OAuth 2.0 client credentials grant type. Shall not be present in response bodies. 
+   * @return clientPassword
+   **/
+  @Schema(required = true, description = "Client password to be used in the access token request of the OAuth 2.0 client credentials grant type. Shall not be present in response bodies. ")
+      @NotNull
 
-	public UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials tokenEndpoint(final String tokenEndpoint) {
-		this.tokenEndpoint = tokenEndpoint;
-		return this;
-	}
+    public String getClientPassword() {
+    return clientPassword;
+  }
 
-	/**
-	 * Get tokenEndpoint
-	 *
-	 * @return tokenEndpoint
-	 **/
-	@ApiModelProperty(required = true, value = "")
-	@NotNull
+  public void setClientPassword(String clientPassword) {
+    this.clientPassword = clientPassword;
+  }
 
-	public String getTokenEndpoint() {
-		return tokenEndpoint;
-	}
+  public UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials tokenEndpoint(String tokenEndpoint) {
+    this.tokenEndpoint = tokenEndpoint;
+    return this;
+  }
 
-	public void setTokenEndpoint(final String tokenEndpoint) {
-		this.tokenEndpoint = tokenEndpoint;
-	}
+  /**
+   * Get tokenEndpoint
+   * @return tokenEndpoint
+   **/
+  @Schema(required = true, description = "")
+      @NotNull
 
-	@Override
-	public boolean equals(final java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if ((o == null) || (getClass() != o.getClass())) {
-			return false;
-		}
-		final UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials uploadVnfPkgFromUriRequestParamsOauth2ClientCredentials = (UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials) o;
-		return Objects.equals(this.clientId, uploadVnfPkgFromUriRequestParamsOauth2ClientCredentials.clientId) &&
-				Objects.equals(this.clientPassword, uploadVnfPkgFromUriRequestParamsOauth2ClientCredentials.clientPassword) &&
-				Objects.equals(this.tokenEndpoint, uploadVnfPkgFromUriRequestParamsOauth2ClientCredentials.tokenEndpoint);
-	}
+    public String getTokenEndpoint() {
+    return tokenEndpoint;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(clientId, clientPassword, tokenEndpoint);
-	}
+  public void setTokenEndpoint(String tokenEndpoint) {
+    this.tokenEndpoint = tokenEndpoint;
+  }
 
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("class UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials {\n");
 
-		sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
-		sb.append("    clientPassword: ").append(toIndentedString(clientPassword)).append("\n");
-		sb.append("    tokenEndpoint: ").append(toIndentedString(tokenEndpoint)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials uploadVnfPkgFromUriRequestParamsOauth2ClientCredentials = (UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials) o;
+    return Objects.equals(this.clientId, uploadVnfPkgFromUriRequestParamsOauth2ClientCredentials.clientId) &&
+        Objects.equals(this.clientPassword, uploadVnfPkgFromUriRequestParamsOauth2ClientCredentials.clientPassword) &&
+        Objects.equals(this.tokenEndpoint, uploadVnfPkgFromUriRequestParamsOauth2ClientCredentials.tokenEndpoint);
+  }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(final java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(clientId, clientPassword, tokenEndpoint);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class UploadVnfPkgFromUriRequestParamsOauth2ClientCredentials {\n");
+    
+    sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
+    sb.append("    clientPassword: ").append(toIndentedString(clientPassword)).append("\n");
+    sb.append("    tokenEndpoint: ").append(toIndentedString(tokenEndpoint)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

@@ -17,108 +17,105 @@
 package com.ubiqube.etsi.mano.nfvo.v331.model.vnf;
 
 import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
- * This type represents the checksum of a VNF package or an artifact file.
+ * This type represents the checksum of a VNF package or an artifact file. 
  */
-@ApiModel(description = "This type represents the checksum of a VNF package or an artifact file. ")
+@Schema(description = "This type represents the checksum of a VNF package or an artifact file. ")
 @Validated
-public class Checksum {
-	@JsonProperty("algorithm")
-	private String algorithm = null;
 
-	@JsonProperty("hash")
-	private String hash = null;
 
-	public Checksum algorithm(final String algorithm) {
-		this.algorithm = algorithm;
-		return this;
-	}
+public class Checksum   {
+  @JsonProperty("algorithm")
+  private String algorithm = null;
 
-	/**
-	 * Name of the algorithm used to generate the checksum, as defined in ETSI GS
-	 * NFV-SOL 004 [5]. For example, SHA-256, SHA-512.
-	 *
-	 * @return algorithm
-	 **/
-	@ApiModelProperty(required = true, value = "Name of the algorithm used to generate the checksum, as defined in ETSI GS NFV-SOL 004 [5]. For example, SHA-256, SHA-512. ")
-	@NotNull
+  @JsonProperty("hash")
+  private String hash = null;
 
-	public String getAlgorithm() {
-		return algorithm;
-	}
+  public Checksum algorithm(String algorithm) {
+    this.algorithm = algorithm;
+    return this;
+  }
 
-	public void setAlgorithm(final String algorithm) {
-		this.algorithm = algorithm;
-	}
+  /**
+   * Name of the algorithm used to generate the checksum, as defined in ETSI GS NFV-SOL 004 [5]. For example, SHA-256, SHA-512. 
+   * @return algorithm
+   **/
+  @Schema(required = true, description = "Name of the algorithm used to generate the checksum, as defined in ETSI GS NFV-SOL 004 [5]. For example, SHA-256, SHA-512. ")
+      @NotNull
 
-	public Checksum hash(final String hash) {
-		this.hash = hash;
-		return this;
-	}
+    public String getAlgorithm() {
+    return algorithm;
+  }
 
-	/**
-	 * The hexadecimal value of the checksum.
-	 *
-	 * @return hash
-	 **/
-	@ApiModelProperty(required = true, value = "The hexadecimal value of the checksum. ")
-	@NotNull
+  public void setAlgorithm(String algorithm) {
+    this.algorithm = algorithm;
+  }
 
-	public String getHash() {
-		return hash;
-	}
+  public Checksum hash(String hash) {
+    this.hash = hash;
+    return this;
+  }
 
-	public void setHash(final String hash) {
-		this.hash = hash;
-	}
+  /**
+   * The hexadecimal value of the checksum. 
+   * @return hash
+   **/
+  @Schema(required = true, description = "The hexadecimal value of the checksum. ")
+      @NotNull
 
-	@Override
-	public boolean equals(final java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if ((o == null) || (getClass() != o.getClass())) {
-			return false;
-		}
-		final Checksum checksum = (Checksum) o;
-		return Objects.equals(this.algorithm, checksum.algorithm) &&
-				Objects.equals(this.hash, checksum.hash);
-	}
+    public String getHash() {
+    return hash;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(algorithm, hash);
-	}
+  public void setHash(String hash) {
+    this.hash = hash;
+  }
 
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("class Checksum {\n");
 
-		sb.append("    algorithm: ").append(toIndentedString(algorithm)).append("\n");
-		sb.append("    hash: ").append(toIndentedString(hash)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Checksum checksum = (Checksum) o;
+    return Objects.equals(this.algorithm, checksum.algorithm) &&
+        Objects.equals(this.hash, checksum.hash);
+  }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(final java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(algorithm, hash);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class Checksum {\n");
+    
+    sb.append("    algorithm: ").append(toIndentedString(algorithm)).append("\n");
+    sb.append("    hash: ").append(toIndentedString(hash)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }

@@ -28,14 +28,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * This type represents an artifact other than a software image which is contained in or external to a VNF package. It shall comply with provisions defined in Table 9.5.3.3-1.
  */
-@ApiModel(description = "This type represents an artifact other than a software image which is contained in or external to a VNF package. It shall comply with provisions defined in Table 9.5.3.3-1. ")
+@Schema(description = "This type represents an artifact other than a software image which is contained in or external to a VNF package. It shall comply with provisions defined in Table 9.5.3.3-1. ")
 @Validated
+
 public class VnfPackageArtifactInfo {
 	@JsonProperty("artifactPath")
 	private String artifactPath = null;
@@ -101,7 +101,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return artifactPath
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getArtifactPath() {
 		return artifactPath;
@@ -121,7 +121,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return artifactURI
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getArtifactURI() {
 		return artifactURI;
@@ -141,7 +141,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return checksum
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -163,7 +163,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return artifactClassification
 	 **/
-	@ApiModelProperty(value = "Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 [5] - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 [5] - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004 [5] ")
+	@Schema(description = "Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 [5] - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 [5] - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004 [5] ")
 
 	public ArtifactClassificationEnum getArtifactClassification() {
 		return artifactClassification;
@@ -183,7 +183,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return isEncrypted
 	 **/
-	@ApiModelProperty(required = true, value = "Reflects whether the artifact is encrypted (true) or not (false). ")
+	@Schema(required = true, description = "Reflects whether the artifact is encrypted (true) or not (false). ")
 	@NotNull
 
 	public Boolean isIsEncrypted() {
@@ -204,7 +204,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return nonManoArtifactSetId
 	 **/
-	@ApiModelProperty(value = "Non-MANO artifact set identifier of the non-MANO artifact set to which the artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004 [5]. Shall be provided if the artifact is a non-MANO artifact, and shall be omitted otherwise. ")
+	@Schema(description = "Non-MANO artifact set identifier of the non-MANO artifact set to which the artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004 [5]. Shall be provided if the artifact is a non-MANO artifact, and shall be omitted otherwise. ")
 
 	public String getNonManoArtifactSetId() {
 		return nonManoArtifactSetId;
@@ -224,7 +224,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public Map<String, String> getMetadata() {

@@ -30,14 +30,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * This type represents an artifact contained in or external to a VNF package which represents a software image.
  */
-@ApiModel(description = "This type represents an artifact contained in or external to a VNF package which represents a software image. ")
+@Schema(description = "This type represents an artifact contained in or external to a VNF package which represents a software image. ")
 @Validated
+
 public class VnfPackageSoftwareImageInfo {
 	@JsonProperty("id")
 	private String id = null;
@@ -183,7 +183,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getId() {
@@ -204,7 +204,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return name
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the software image. ")
+	@Schema(required = true, description = "Name of the software image. ")
 	@NotNull
 
 	public String getName() {
@@ -225,7 +225,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return provider
 	 **/
-	@ApiModelProperty(required = true, value = "Provider of the software image. ")
+	@Schema(required = true, description = "Provider of the software image. ")
 	@NotNull
 
 	public String getProvider() {
@@ -246,7 +246,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return version
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getVersion() {
@@ -267,7 +267,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return checksum
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -289,7 +289,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return isEncrypted
 	 **/
-	@ApiModelProperty(required = true, value = "Reflects whether the image is encrypted (true) or not (false). ")
+	@Schema(required = true, description = "Reflects whether the image is encrypted (true) or not (false). ")
 	@NotNull
 
 	public Boolean isIsEncrypted() {
@@ -310,7 +310,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return containerFormat
 	 **/
-	@ApiModelProperty(required = true, value = "Container format indicates whether the software image is in a file format that also contains meta-data about the actual software. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ram disk image format - BARE: the image does not have a container or meta-data envelope - DOCKER: docker container format - OVA: OVF package in a tar file - OVF: OVF container format ")
+	@Schema(required = true, description = "Container format indicates whether the software image is in a file format that also contains meta-data about the actual software. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ram disk image format - BARE: the image does not have a container or meta-data envelope - DOCKER: docker container format - OVA: OVF package in a tar file - OVF: OVF container format ")
 	@NotNull
 
 	public ContainerFormatEnum getContainerFormat() {
@@ -332,7 +332,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return diskFormat
 	 **/
-	@ApiModelProperty(required = true, value = "Disk format of a software image is the format of the underlying disk image. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ramdisk image format - ISO: an archive format for the data contents of an optical disc, such as CD-ROM - QCOW2: a common disk image format, which can expand dynamically and supports copy on write - RAW: an unstructured disk image format - VDI: a common disk image format - VHD: a common disk image format - VHDX: enhanced version of VHD format - VMDK: a common disk image format ")
+	@Schema(required = true, description = "Disk format of a software image is the format of the underlying disk image. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ramdisk image format - ISO: an archive format for the data contents of an optical disc, such as CD-ROM - QCOW2: a common disk image format, which can expand dynamically and supports copy on write - RAW: an unstructured disk image format - VDI: a common disk image format - VHD: a common disk image format - VHDX: enhanced version of VHD format - VMDK: a common disk image format ")
 	@NotNull
 
 	public DiskFormatEnum getDiskFormat() {
@@ -353,7 +353,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return createdAt
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -375,7 +375,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return minDisk
 	 **/
-	@ApiModelProperty(required = true, value = "The minimal disk for this software image in bytes. ")
+	@Schema(required = true, description = "The minimal disk for this software image in bytes. ")
 	@NotNull
 
 	@Min(0)
@@ -397,7 +397,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return minRam
 	 **/
-	@ApiModelProperty(required = true, value = "The minimal RAM for this software image in bytes. ")
+	@Schema(required = true, description = "The minimal RAM for this software image in bytes. ")
 	@NotNull
 
 	@Min(0)
@@ -419,7 +419,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return size
 	 **/
-	@ApiModelProperty(required = true, value = "Size of this software image in bytes. ")
+	@Schema(required = true, description = "Size of this software image in bytes. ")
 	@NotNull
 
 	@Min(0)
@@ -441,7 +441,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return userMetadata
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public Map<String, String> getUserMetadata() {
@@ -463,7 +463,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return imagePath
 	 **/
-	@ApiModelProperty(required = true, value = "Path, which identifies the image artifact and also allows to access a copy of the image artifact. For a software image contained as a file in the VNF package, this attribute shall be present, and the value of this attribute shall start with the name of the first segment in the path in the package, i.e., it shall not be prefixed by path separator characters such as \".\" and \"/\". EXAMPLE: foo/bar/m%40ster.vhd For an external software image represented as a URI in the VNF descriptor, this attribute shall be present if the image artifact has been downloaded by the NFVO and shall be absent otherwise. If present, it shall contain the artifactPath under which the image artifact can be obtained using the \"Individual artifact in a VNF package\" resource defined in clause 9.4.7. It is the responsibility of the NFVO to synthesize this path in a manner that avoids any collision of the synthesized artifact path with the paths and names of image artifacts included in the package. ")
+	@Schema(required = true, description = "Path, which identifies the image artifact and also allows to access a copy of the image artifact. For a software image contained as a file in the VNF package, this attribute shall be present, and the value of this attribute shall start with the name of the first segment in the path in the package, i.e., it shall not be prefixed by path separator characters such as \".\" and \"/\". EXAMPLE: foo/bar/m%40ster.vhd For an external software image represented as a URI in the VNF descriptor, this attribute shall be present if the image artifact has been downloaded by the NFVO and shall be absent otherwise. If present, it shall contain the artifactPath under which the image artifact can be obtained using the \"Individual artifact in a VNF package\" resource defined in clause 9.4.7. It is the responsibility of the NFVO to synthesize this path in a manner that avoids any collision of the synthesized artifact path with the paths and names of image artifacts included in the package. ")
 	@NotNull
 
 	public String getImagePath() {
@@ -484,7 +484,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return imageUri
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getImageUri() {
 		return imageUri;
