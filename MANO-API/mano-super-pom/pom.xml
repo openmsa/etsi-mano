@@ -249,36 +249,6 @@
 				<version>3.0.2</version>
 			</dependency>
 			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger-ui</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger2</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-spring-webmvc</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-spring-web</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-core</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-spi</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>io.swagger</groupId>
 				<artifactId>swagger-annotations</artifactId>
 				<version>1.6.2</version>

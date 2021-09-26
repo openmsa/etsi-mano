@@ -17,62 +17,19 @@
 
 package com.ubiqube.etsi.mano.vnfm.v271.configuration;
 
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-
-import org.springframework.beans.factory.annotation.Value;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.paths.DefaultPathProvider;
-import springfox.documentation.spring.web.paths.Paths;
-import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class SwaggerDocumentationConfigVnfm271 {
-	@Value("${server.servlet.contextPath}")
-	private String contextPath;
-
-	ApiInfo apiInfo() {
-		return new ApiInfoBuilder()
-				.title("SOL003 - VNF Package Management interface")
-				.description("SOL003 - VNF Package Management interface  IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to. In case of discrepancies the published ETSI Group Specification takes precedence.  In clause 4.3.2 of ETSI GS NFV-SOL 003 v2.4.1, an attribute-based filtering mechanism is defined. This mechanism is currently not included in the corresponding OpenAPI design for this GS version. Changes to the attribute-based filtering mechanism are being considered in v2.5.1 of this GS for inclusion in the corresponding future ETSI NFV OpenAPI design. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis&list_id=61&product=NFV&resolution= ")
-				.license("ETSI Forge copyright notice")
-				.licenseUrl("https://forge.etsi.org/etsi-forge-copyright-notice.txt")
-				.termsOfServiceUrl("")
-				.version("2.7.1-impl:etsi.org:ETSI_NFV_OpenAPI:1")
-				.contact(new Contact("", "", ""))
-				.build();
-	}
-
+	@SuppressWarnings("static-method")
 	@Bean
-	public Docket customImplementationVnfm271() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.pathProvider(new CustomPathProvider())
-				.groupName("vnfm-etsi-mano-2.7.1")
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.ubiqube.etsi.mano.vnfm.v271"))
-				.build()
-				.directModelSubstitute(LocalDate.class, java.sql.Date.class)
-				.directModelSubstitute(OffsetDateTime.class, java.util.Date.class)
-				.apiInfo(apiInfo());
-	}
-
-	public class CustomPathProvider extends DefaultPathProvider {
-		@Override
-		public String getOperationPath(final String op) {
-			String operationPath = op;
-			if (operationPath.startsWith(contextPath)) {
-				operationPath = operationPath.substring(contextPath.length());
-			}
-			return Paths.removeAdjacentForwardSlashes(UriComponentsBuilder.newInstance().replacePath(operationPath).build().toString());
-		}
+	public GroupedOpenApi customImplementationVnfm271() {
+		return GroupedOpenApi.builder()
+				.group("vnfm-etsi-mano-2.7.1")
+				.packagesToScan("com.ubiqube.etsi.mano.vnfm.v271")
+				.build();
 	}
 
 }

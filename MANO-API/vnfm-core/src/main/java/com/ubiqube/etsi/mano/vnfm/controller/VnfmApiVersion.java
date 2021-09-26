@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -44,6 +46,9 @@ import com.ubiqube.etsi.mano.model.ApiVersionInformationApiVersions;
 @RequestMapping(value = { "sol002", "/sol003" })
 @Lazy
 public class VnfmApiVersion {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfmApiVersion.class);
+
 	private final MultiValueMap<String, String> dedupe = new LinkedMultiValueMap<>();
 
 	private final ApplicationContext applicationContext;
@@ -67,7 +72,11 @@ public class VnfmApiVersion {
 				final List<String> version = getVersion(req.headers());
 				if ((version != null) && (req.value().length > 0)) {
 					final String part = findMatch(req.value()[0]);
-					version.forEach(y -> res.put(part + y, new Endpoint(part.replace("/", ""), y)));
+					if (null == part) {
+						LOG.warn("Ignoring controller: {}", x);
+					} else {
+						version.forEach(y -> res.put(part + y, new Endpoint(part.replace("/", ""), y)));
+					}
 				}
 			}
 		});

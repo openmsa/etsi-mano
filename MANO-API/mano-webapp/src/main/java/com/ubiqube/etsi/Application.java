@@ -25,10 +25,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import ma.glasnost.orika.OrikaSystemProperties;
 import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 @SpringBootApplication
-@EnableSwagger2WebMvc
 @EnableScheduling
 @EnableJms
 public class Application extends SpringBootServletInitializer {

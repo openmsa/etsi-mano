@@ -34,10 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 
-import springfox.documentation.annotations.ApiIgnore;
-
 @Controller
-@ApiIgnore
+//@ApiIgnore
 public class ManoErrorController extends AbstractErrorController {
 	private static final Logger LOG = LoggerFactory.getLogger(ManoErrorController.class);
 

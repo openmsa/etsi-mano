@@ -34,30 +34,27 @@ import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.nfvo.service.TemporaryDownloadService;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
-import ma.glasnost.orika.MapperFacade;
-import springfox.documentation.annotations.ApiIgnore;
-
 @Controller
-@ApiIgnore
+//@ApiIgnore
 public class HomeController {
 	private final VimConnectionInformationJpa vciJpa;
-	private final MapperFacade mapper;
 	private final TemporaryDownloadService temporaryDownloadService;
 	private final VimManager vimManager;
 
-	public HomeController(final VimConnectionInformationJpa _vciJpa, final MapperFacade _mapper, final TemporaryDownloadService _temporaryDownloadService,
+	public HomeController(final VimConnectionInformationJpa _vciJpa, final TemporaryDownloadService _temporaryDownloadService,
 			final VimManager _vimManager) {
 		vciJpa = _vciJpa;
-		mapper = _mapper;
 		temporaryDownloadService = _temporaryDownloadService;
 		vimManager = _vimManager;
 	}
 
+	@SuppressWarnings("static-method")
 	@GetMapping(value = "/")
 	public String index() {
 		return "redirect:swagger-ui.html";
 	}
 
+	@SuppressWarnings("static-method")
 	@GetMapping(value = "/test/{id}")
 	public ResponseEntity<VnfPackage> test(@PathVariable("id") final VnfPackage vnfPackage) {
 		return ResponseEntity.ok(vnfPackage);

@@ -66,10 +66,10 @@ import com.ubiqube.etsi.mano.vnfm.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.vnfm.service.graph.vnfm.VnfParameters;
 import com.ubiqube.etsi.mano.vnfm.service.plan.VnfPlanner;
 
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 
 @Controller
-@ApiIgnore
+@Hidden
 @RequestMapping("/poc")
 public class Poc {
 

@@ -70,16 +70,20 @@ public class NfvoApiVersion {
 		final Map<String, Endpoint> res = new HashMap<>();
 		list.stream().forEach(x -> {
 			LOG.debug("Reading: {}", x);
-			if ("nfvoApiVersion".equals(x) || "vnfmApiVersion".equals(x)) {
+			if ("nfvoApiVersion".equals(x) || "vnfmApiVersion".equals(x) || "swaggerWelcome".equals(x)) {
 				return;
 			}
 			final Object obj = applicationContext.getBean(x);
 			final RequestMapping req = AnnotationUtils.findAnnotation(obj.getClass(), RequestMapping.class);
 			if ((null != req) && (req.headers() != null)) {
 				final List<String> version = getVersion(req.headers());
-				if ((version != null) && (req.value().length > 0)) {
+				if ((!version.isEmpty()) && (req.value().length > 0)) {
 					final String part = findMatch(req.value()[0]);
-					version.forEach(y -> res.put(part + y, new Endpoint(part.replace("/", ""), y)));
+					if (null == part) {
+						LOG.warn("Ignoring controller: {}", x);
+					} else {
+						version.forEach(y -> res.put(part + y, new Endpoint(part.replace("/", ""), y)));
+					}
 				}
 			}
 		});
@@ -88,7 +92,7 @@ public class NfvoApiVersion {
 	}
 
 	private static String findMatch(final String url) {
-		final Set<String> mutableSet = new HashSet<>(Arrays.asList("/vnfpkgm/", "/grant/", "/vnfpm/", "/vnflcm/", "/vnfind/", "/vnffm/", "/vrgan/", "/nsd/", "/nsfm/", "/nslcm/", "/nspm/", "/vnfpkgm/"));
+		final Set<String> mutableSet = new HashSet<>(Arrays.asList("/vrqan/", "/vnfpkgm/", "/grant/", "/vnfpm/", "/vnflcm/", "/vnfind/", "/vnffm/", "/vrgan/", "/nsd/", "/nsfm/", "/nslcm/", "/nspm/", "/vnfpkgm/", "/vnfconfig/", "/vnfsnapshotpkgm/", "/nsiun/"));
 		for (final String string : mutableSet) {
 			if (url.contains(string)) {
 				return string;

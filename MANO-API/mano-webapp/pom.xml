@@ -219,7 +219,6 @@
 			<artifactId>etsi-nfvo-281-controllers</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-
 		 <dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-vnfm-331-controllers</artifactId>
@@ -230,13 +229,11 @@
 			<artifactId>etsi-nfvo-331-controllers</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-sol012-341</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
- 
 		<!-- 
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
@@ -289,14 +286,6 @@
 			<version>1.5.1</version>
 		</dependency>
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
@@ -307,7 +296,10 @@
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>
 			<artifactId>orika-core</artifactId>
-			<version>1.5.5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-security</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -36,10 +36,8 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 import ma.glasnost.orika.MapperFacade;
-import springfox.documentation.annotations.ApiIgnore;
 
 @Controller
-@ApiIgnore
 @RequestMapping("/admin")
 public class AdminController {
 	private final VimConnectionInformationJpa vciJpa;
