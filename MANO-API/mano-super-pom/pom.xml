@@ -38,6 +38,7 @@
 		<com.ubiqube.swagger3>2.1.10</com.ubiqube.swagger3>
 		<com.ubiqube.mockito.version>3.11.2</com.ubiqube.mockito.version>
 		<com.ubiqube.elasticsearch.version>7.13.2</com.ubiqube.elasticsearch.version>
+		<com.ubiqube.springdoc.version>1.5.10</com.ubiqube.springdoc.version>
 	</properties>
 	<build>
 		<plugins>
@@ -384,6 +385,22 @@
 				<artifactId>commons-vfs2</artifactId>
 				<version>2.9.0</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-ui</artifactId>
+				<version>${com.ubiqube.springdoc.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-security</artifactId>
+				<version>${com.ubiqube.springdoc.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-data-rest</artifactId>
+				<version>latest.version</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 </project>
