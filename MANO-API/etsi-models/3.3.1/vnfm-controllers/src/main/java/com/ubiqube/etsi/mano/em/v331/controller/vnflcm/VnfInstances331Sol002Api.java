@@ -54,7 +54,6 @@ import com.ubiqube.etsi.mano.em.v331.model.vnflcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfIdentifierDeletionNotification;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfInstance;
 
-import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -90,7 +89,7 @@ public interface VnfInstances331Sol002Api {
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@GetMapping(produces = { "application/json" })
 	ResponseEntity<String> vnfInstancesGet(
-			@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams,
+			@Parameter(in = ParameterIn.QUERY, description = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams,
 			@Parameter(in = ParameterIn.QUERY, description = "Marker to obtain the next page of a paged response. Shall be supported by the NFV-MANO functional entity if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ", schema = @Schema()) @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@Operation(summary = "", description = "The POST method creates a new VNF instance resource based on a VNF package that is onboarded and in \"ENABLED\" state. ", tags = {})
