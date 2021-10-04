@@ -37,6 +37,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -48,7 +49,10 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.ind.VnfIndicators;
 import com.ubiqube.etsi.mano.dao.mano.pkg.PackageSecurityOptionType;
+import com.ubiqube.etsi.mano.utils.ToStringIgnore;
+import com.ubiqube.etsi.mano.utils.ToStringUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -139,6 +143,7 @@ public class VnfPackage implements PackageBase, Auditable {
 	private Set<VnfStorage> vnfStorage = new LinkedHashSet<>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	@IndexedEmbedded
 	private Set<VnfLinkPort> vnfLinkPort = new LinkedHashSet<>();
 
@@ -147,6 +152,7 @@ public class VnfPackage implements PackageBase, Auditable {
 	@IndexedEmbedded
 	private Set<VnfExtCp> vnfExtCp = new LinkedHashSet<>();
 
+	@ToStringIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Set<NsdInstance> nsInstance;
 
@@ -165,6 +171,7 @@ public class VnfPackage implements PackageBase, Auditable {
 	@IndexedEmbedded
 	private Set<VnfInstantiationLevels> vnfInstantiationLevels;
 
+	@ToStringIgnore
 	@ManyToMany(cascade = CascadeType.DETACH, mappedBy = "vnfPackage")
 	private Set<NsdPackageVnfPackage> nsdPackages;
 
@@ -183,6 +190,12 @@ public class VnfPackage implements PackageBase, Auditable {
 	// 2.7.1
 	private FailureDetails onboardingFailureDetails = null;
 
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<VnfIndicators> vnfIndicators;
+
+	@Version
+	private long version;
+
 	public void addInstantiationLevel(final VnfInstantiationLevels il) {
 		if (null == vnfInstantiationLevels) {
 			vnfInstantiationLevels = new HashSet<>();
@@ -198,4 +211,8 @@ public class VnfPackage implements PackageBase, Auditable {
 		nsdPackages.add(nsdPackage);
 	}
 
+	@Override
+	public String toString() {
+		return ToStringUtil.toString(this);
+	}
 }

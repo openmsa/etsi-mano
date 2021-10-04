@@ -22,8 +22,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
-import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
-import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
@@ -68,10 +66,6 @@ public class VnfGrantsRequest implements GrantInterface, BaseEntity {
 	private Set<GrantInformation> updateResources = new HashSet<>();
 
 	private GrantVimAssetsEntity vimAssets = null;
-
-	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = null;
-
-	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
 
 	private Map<String, String> additionalParams = null;
 
@@ -183,22 +177,6 @@ public class VnfGrantsRequest implements GrantInterface, BaseEntity {
 
 	public void setVimAssets(final GrantVimAssetsEntity vimAssets) {
 		this.vimAssets = vimAssets;
-	}
-
-	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
-		return extVirtualLinks;
-	}
-
-	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
-		this.extVirtualLinks = extVirtualLinks;
-	}
-
-	public Set<ExtManagedVirtualLinkDataEntity> getExtManagedVirtualLinks() {
-		return extManagedVirtualLinks;
-	}
-
-	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
-		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
 	public Map<String, String> getAdditionalParams() {

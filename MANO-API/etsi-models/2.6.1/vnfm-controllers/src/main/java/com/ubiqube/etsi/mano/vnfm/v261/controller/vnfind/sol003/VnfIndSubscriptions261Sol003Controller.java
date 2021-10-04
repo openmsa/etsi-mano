@@ -20,7 +20,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,9 +58,9 @@ public class VnfIndSubscriptions261Sol003Controller implements VnfIndSubscriptio
 	}
 
 	@Override
-	public ResponseEntity<VnfIndicatorSubscription> subscriptionsPost(@Valid final VnfIndicatorSubscriptionRequest vnfIndicatorSubscriptionRequest) throws URISyntaxException {
+	public ResponseEntity<VnfIndicatorSubscription> subscriptionsPost(@Valid final VnfIndicatorSubscriptionRequest vnfIndicatorSubscriptionRequest) {
 		final VnfIndicatorSubscription res = subscriptionService.create(vnfIndicatorSubscriptionRequest, VnfIndicatorSubscription.class, VnfIndSubscriptions261Sol003Controller::makeLinks, SubscriptionType.VNFPM);
-		final URI location = new URI(res.getLinks().getSelf().getHref());
+		final URI location = URI.create(res.getLinks().getSelf().getHref());
 		return ResponseEntity.created(location).body(res);
 	}
 

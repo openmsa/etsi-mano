@@ -27,8 +27,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 public class VnfExtCp implements Serializable, ToscaEntity {
 	/** Serial. */
@@ -52,67 +63,7 @@ public class VnfExtCp implements Serializable, ToscaEntity {
 	@JoinColumn
 	private Set<VirtualNicReq> virtualNetworkInterfaceRequirements;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	@Override
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	@Override
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
-	@Override
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	@Override
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	@Override
-	public String getState() {
-		return state;
-	}
-
-	@Override
-	public void setState(final String state) {
-		this.state = state;
-	}
-
-	public String getExternalVirtualLink() {
-		return externalVirtualLink;
-	}
-
-	public void setExternalVirtualLink(final String externalVirtualLink) {
-		this.externalVirtualLink = externalVirtualLink;
-	}
-
-	public String getInternalVirtualLink() {
-		return internalVirtualLink;
-	}
-
-	public void setInternalVirtualLink(final String internalVirtualLink) {
-		this.internalVirtualLink = internalVirtualLink;
-	}
-
-	public Set<VirtualNicReq> getVirtualNetworkInterfaceRequirements() {
-		return virtualNetworkInterfaceRequirements;
-	}
-
-	public void setVirtualNetworkInterfaceRequirements(final Set<VirtualNicReq> virtualNetworkInterfaceRequirements) {
-		this.virtualNetworkInterfaceRequirements = virtualNetworkInterfaceRequirements;
-	}
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<SecurityGroup> securityGroup;
 
 }

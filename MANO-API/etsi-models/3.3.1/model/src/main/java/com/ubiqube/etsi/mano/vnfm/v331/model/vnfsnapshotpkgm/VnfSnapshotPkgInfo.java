@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnfsnapshotpkgm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnfsnapshotpkgm.SnapshotPkgArtifactInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnfsnapshotpkgm.VnfSnapshotPkgInfoFailureDetails;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnfsnapshotpkgm.VnfSnapshotPkgInfoLinks;
@@ -132,7 +132,7 @@ public class VnfSnapshotPkgInfo   {
   private VnfSnapshotPkgInfoFailureDetails failureDetails = null;
 
   @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+  private Map<String, String> userDefinedData = null;
 
   @JsonProperty("_links")
   private VnfSnapshotPkgInfoLinks _links = null;
@@ -455,7 +455,7 @@ public class VnfSnapshotPkgInfo   {
     this.failureDetails = failureDetails;
   }
 
-  public VnfSnapshotPkgInfo userDefinedData(KeyValuePairs userDefinedData) {
+  public VnfSnapshotPkgInfo userDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
     return this;
   }
@@ -467,11 +467,11 @@ public class VnfSnapshotPkgInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getUserDefinedData() {
+    public Map<String, String> getUserDefinedData() {
     return userDefinedData;
   }
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
+  public void setUserDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
   }
 

@@ -27,14 +27,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an externally provided link port to be used to connect
  * an external connection point to an external VL.
  */
-@ApiModel(description = "This type represents an externally provided link port to be used to connect an external connection point to an external VL. ")
+@Schema(description = "This type represents an externally provided link port to be used to connect an external connection point to an external VL. ")
 @Validated
 public class ExtLinkPortData {
 	@JsonProperty("id")
@@ -54,7 +54,7 @@ public class ExtLinkPortData {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this link port as provided by the entity that has created the link port. ")
+	@Schema(required = true, description = "Identifier of this link port as provided by the entity that has created the link port. ")
 	@NotNull
 
 	public String getId() {
@@ -75,7 +75,7 @@ public class ExtLinkPortData {
 	 *
 	 * @return resourceHandle
 	 **/
-	@ApiModelProperty(required = true, value = "Reference to the virtualised resource realizing this link port. ")
+	@Schema(required = true, description = "Reference to the virtualised resource realizing this link port. ")
 	@NotNull
 
 	@Valid

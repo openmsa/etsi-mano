@@ -18,6 +18,12 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U> Task parameters.
+ */
 public interface Task<U> extends VirtualTask<U> {
-
+	// Nothing.
 }

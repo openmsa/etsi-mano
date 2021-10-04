@@ -19,8 +19,8 @@ package com.ubiqube.etsi.mano.vnfm.v261.model.vnfind;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
@@ -49,7 +49,7 @@ public class VnfInstanceSubscriptionFilterVersions   {
    * Software version to match. 
    * @return vnfSoftwareVersion
   **/
-  @ApiModelProperty(required = true, value = "Software version to match. ")
+  @Schema(required = true, description = "Software version to match. ")
   @NotNull
 
 
@@ -78,7 +78,7 @@ public class VnfInstanceSubscriptionFilterVersions   {
    * If present, match VNF instances that belong to VNF products with certain VNFD versions, a certain software version and a certain product name, from one particular provider. 
    * @return vnfdVersions
   **/
-  @ApiModelProperty(value = "If present, match VNF instances that belong to VNF products with certain VNFD versions, a certain software version and a certain product name, from one particular provider. ")
+  @Schema(description = "If present, match VNF instances that belong to VNF products with certain VNFD versions, a certain software version and a certain product name, from one particular provider. ")
 
 
   public List<String> getVnfdVersions() {

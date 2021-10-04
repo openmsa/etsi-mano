@@ -28,8 +28,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdOperationalStateType;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an NSD management notification, which informs the
@@ -42,7 +42,7 @@ import io.swagger.annotations.ApiModelProperty;
  * attribute has changed, and the \&quot;nsdOperationalState\&quot; attribute
  * has the value \&quot;ONBOARDED\&quot;.
  */
-@ApiModel(description = "This type represents an NSD management notification, which informs the receiver of a change of the \"nsdOperationalState\" attribute of an on-boarded NSD. Changes in the value of the \"nsdUsageState\" and \"nsdOnboardingState\" attributes are not reported. The notification shall comply with the provisions defined in Table 5.5.2.11-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the value of the \"nsdOperationalState\" attribute has changed, and the \"nsdOperationalState\" attribute has the value \"ONBOARDED\". ")
+@Schema(description = "This type represents an NSD management notification, which informs the receiver of a change of the \"nsdOperationalState\" attribute of an on-boarded NSD. Changes in the value of the \"nsdUsageState\" and \"nsdOnboardingState\" attributes are not reported. The notification shall comply with the provisions defined in Table 5.5.2.11-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the value of the \"nsdOperationalState\" attribute has changed, and the \"nsdOperationalState\" attribute has the value \"ONBOARDED\". ")
 @Validated
 
 
@@ -81,7 +81,7 @@ public class NsdChangeNotification {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getId() {
@@ -103,7 +103,7 @@ public class NsdChangeNotification {
 	 *
 	 * @return notificationType
 	 **/
-	@ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"NsdChangeNotification\" for this notification type. ")
+	@Schema(required = true, description = "Discriminator for the different notification types. Shall be set to \"NsdChangeNotification\" for this notification type. ")
 	@NotNull
 
 	public String getNotificationType() {
@@ -124,7 +124,7 @@ public class NsdChangeNotification {
 	 *
 	 * @return subscriptionId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getSubscriptionId() {
@@ -145,7 +145,7 @@ public class NsdChangeNotification {
 	 *
 	 * @return timeStamp
 	 **/
-	@ApiModelProperty(required = true, value = "Date-time of the generation of the notification. ")
+	@Schema(required = true, description = "Date-time of the generation of the notification. ")
 	@NotNull
 
 	@Valid
@@ -168,7 +168,7 @@ public class NsdChangeNotification {
 	 *
 	 * @return nsdInfoId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getNsdInfoId() {
@@ -189,7 +189,7 @@ public class NsdChangeNotification {
 	 *
 	 * @return nsdId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getNsdId() {
@@ -210,7 +210,7 @@ public class NsdChangeNotification {
 	 *
 	 * @return nsdOperationalState
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -233,7 +233,7 @@ public class NsdChangeNotification {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

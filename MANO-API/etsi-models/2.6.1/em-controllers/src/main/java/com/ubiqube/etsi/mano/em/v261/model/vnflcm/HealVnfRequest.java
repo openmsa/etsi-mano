@@ -27,7 +27,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * HealVnfRequest
@@ -66,7 +66,7 @@ public class HealVnfRequest {
 	 *
 	 * @return vnfcInstanceId
 	 **/
-	@ApiModelProperty(value = "List of VNFC instances requiring a healing action. ")
+	@Schema(description = "List of VNFC instances requiring a healing action. ")
 
 	public List<String> getVnfcInstanceId() {
 		return vnfcInstanceId;
@@ -86,7 +86,7 @@ public class HealVnfRequest {
 	 *
 	 * @return cause
 	 **/
-	@ApiModelProperty(value = "Indicates the reason why a healing procedure is required. ")
+	@Schema(description = "Indicates the reason why a healing procedure is required. ")
 
 	public String getCause() {
 		return cause;
@@ -106,7 +106,7 @@ public class HealVnfRequest {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \"HealVnfOpConfig\". ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \"HealVnfOpConfig\". ")
 
 	@Valid
 
@@ -128,7 +128,7 @@ public class HealVnfRequest {
 	 *
 	 * @return healScript
 	 **/
-	@ApiModelProperty(value = "Provides link to a script that should be executed as part of the healing action or a set of rules for healing procedure. ")
+	@Schema(description = "Provides link to a script that should be executed as part of the healing action or a set of rules for healing procedure. ")
 
 	public String getHealScript() {
 		return healScript;

@@ -28,13 +28,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information about added, deleted and modified VLs. It shall comply with the provisions in Table 6.5.3.4-1.
  */
-@ApiModel(description = "This type provides information about added, deleted and modified VLs.  It shall comply with the provisions in Table 6.5.3.4-1. ")
+@Schema(description = "This type provides information about added, deleted and modified VLs.  It shall comply with the provisions in Table 6.5.3.4-1. ")
 @Validated
 
 public class AffectedVl {
@@ -133,7 +133,7 @@ public class AffectedVl {
 	 *
 	 * @return nsVirtualLinkInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VL Instance. ")
+	@Schema(required = true, description = "Identifier of the VL Instance. ")
 	@NotNull
 
 	public String getNsVirtualLinkInstanceId() {
@@ -154,7 +154,7 @@ public class AffectedVl {
 	 *
 	 * @return nsVirtualLinkDescId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VLD in the NSD for this VL. ")
+	@Schema(required = true, description = "Identifier of the VLD in the NSD for this VL. ")
 	@NotNull
 
 	public String getNsVirtualLinkDescId() {
@@ -175,7 +175,7 @@ public class AffectedVl {
 	 *
 	 * @return vlProfileId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VLD in the NSD for this VL. ")
+	@Schema(required = true, description = "Identifier of the VLD in the NSD for this VL. ")
 	@NotNull
 
 	public UUID getVlProfileId() {
@@ -196,7 +196,7 @@ public class AffectedVl {
 	 *
 	 * @return changeType
 	 **/
-	@ApiModelProperty(value = "Signals the type of change. Permitted values: - ADD - DELETE - MODIFY - ADD_LINK_PORT - REMOVE_LINK_PORT ")
+	@Schema(description = "Signals the type of change. Permitted values: - ADD - DELETE - MODIFY - ADD_LINK_PORT - REMOVE_LINK_PORT ")
 
 	public ChangeTypeEnum getChangeType() {
 		return changeType;
@@ -216,7 +216,7 @@ public class AffectedVl {
 	 *
 	 * @return changeResult
 	 **/
-	@ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
+	@Schema(description = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
 
 	public ChangeResultEnum getChangeResult() {
 		return changeResult;

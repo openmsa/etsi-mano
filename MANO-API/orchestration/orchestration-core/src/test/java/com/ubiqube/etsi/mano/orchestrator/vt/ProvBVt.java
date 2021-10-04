@@ -47,4 +47,33 @@ public class ProvBVt extends AbstractVirtualTask<TestParameters> {
 		return Arrays.asList(new NamedDependency(Compute.class, "vdu01"));
 	}
 
+	@Override
+	public boolean isDeleteTask() {
+		return false;
+	}
+
+	@Override
+	public void setParameters(final TestParameters u) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getVimConnectionId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getAlias() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

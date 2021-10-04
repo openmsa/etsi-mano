@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v331.controller.vnflcm;
 
-import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+import static com.ubiqube.etsi.mano.vnfm.fc.Constants.getSafeUUID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -29,9 +29,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.ChangeCurrentVnfPkgRequest;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.ChangeVnfFlavourRequest;
@@ -76,22 +76,22 @@ public class VnfInstances331Sol003Controller implements VnfInstances331Sol003Api
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(final String vnfInstanceId, @Valid final ChangeExtVnfConnectivityRequest body) {
-		return frontController.changeExtConn(getSafeUUID(vnfInstanceId), body);
+		return frontController.changeExtConn(getSafeUUID(vnfInstanceId), body, VnfInstances331Sol003Controller::getLcmLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId, @Valid final ChangeVnfFlavourRequest body) {
-		return frontController.changeFlavour(getSafeUUID(vnfInstanceId), body);
+		return frontController.changeFlavour(getSafeUUID(vnfInstanceId), body, VnfInstances331Sol003Controller::getLcmLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeVnfpkgPost(final String vnfInstanceId, @Valid final ChangeCurrentVnfPkgRequest body) {
-		return frontController.changeVnfPkg(getSafeUUID(vnfInstanceId), body);
+		return frontController.changeVnfPkg(getSafeUUID(vnfInstanceId), body, VnfInstances331Sol003Controller::getLcmLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdCreateSnapshotPost(final String vnfInstanceId, @Valid final CreateVnfSnapshotRequest body) {
-		return frontController.createSnapshot(getSafeUUID(vnfInstanceId), body);
+		return frontController.createSnapshot(getSafeUUID(vnfInstanceId), body, VnfInstances331Sol003Controller::getLcmLink);
 	}
 
 	@Override

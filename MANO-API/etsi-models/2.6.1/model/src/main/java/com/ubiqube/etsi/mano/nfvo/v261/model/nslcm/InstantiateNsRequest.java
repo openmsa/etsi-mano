@@ -30,13 +30,12 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * InstantiateNsRequest
  */
 @Validated
-
 
 public class InstantiateNsRequest {
 	@JsonProperty("nsFlavourId")
@@ -93,7 +92,7 @@ public class InstantiateNsRequest {
 	 *
 	 * @return nsFlavourId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NS deployment flavor to be instantiated. ")
+	@Schema(required = true, description = "Identifier of the NS deployment flavor to be instantiated. ")
 	@NotNull
 
 	public String getNsFlavourId() {
@@ -122,7 +121,7 @@ public class InstantiateNsRequest {
 	 *
 	 * @return sapData
 	 **/
-	@ApiModelProperty(value = "Create data concerning the SAPs of this NS. ")
+	@Schema(description = "Create data concerning the SAPs of this NS. ")
 
 	@Valid
 
@@ -152,7 +151,7 @@ public class InstantiateNsRequest {
 	 *
 	 * @return addpnfData
 	 **/
-	@ApiModelProperty(value = "Information on the PNF(s) that are part of this NS. ")
+	@Schema(description = "Information on the PNF(s) that are part of this NS. ")
 
 	@Valid
 
@@ -178,13 +177,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Specify an existing VNF instance to be used in the NS. If needed, the VNF
-	 * Profile to be used for this VNF instance is also provided. The DF of the VNF
-	 * instance shall match the VNF DF present in the associated VNF Profile.
+	 * Specify an existing VNF instance to be used in the NS. If needed, the VNF Profile to be used for this VNF instance is also provided. The DF of the VNF instance shall match the VNF DF present in the associated VNF Profile.
 	 *
 	 * @return vnfInstanceData
 	 **/
-	@ApiModelProperty(value = "Specify an existing VNF instance to be used in the NS. If needed, the VNF Profile to be used for this VNF instance is also provided. The DF of the VNF instance shall match the VNF DF  present in the associated VNF Profile. ")
+	@Schema(description = "Specify an existing VNF instance to be used in the NS. If needed, the VNF Profile to be used for this VNF instance is also provided. The DF of the VNF instance shall match the VNF DF  present in the associated VNF Profile. ")
 
 	@Valid
 
@@ -210,17 +207,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Specify an existing NS instance to be used as a nested NS within the NS. If
-	 * needed, the NS Profile to be used for this nested NS instance is also
-	 * provided. NOTE 2: The NS DF of each nested NS shall be one of the allowed
-	 * flavours in the associated NSD (as referenced in the nestedNsd attribute of
-	 * the NSD of the NS to be instantiated). NOTE 3: The NSD of each referenced NSs
-	 * (i.e. each nestedInstanceId) shall match the one of the nested NSD in the
-	 * composite NSD.
+	 * Specify an existing NS instance to be used as a nested NS within the NS. If needed, the NS Profile to be used for this nested NS instance is also provided. NOTE 2: The NS DF of each nested NS shall be one of the allowed flavours in the associated NSD (as referenced in the nestedNsd attribute of the NSD of the NS to be instantiated). NOTE 3: The NSD of each referenced NSs (i.e. each nestedInstanceId) shall match the one of the nested NSD in the composite NSD.
 	 *
 	 * @return nestedNsInstanceData
 	 **/
-	@ApiModelProperty(value = "Specify an existing NS instance to be used as a nested NS within the NS. If needed, the NS Profile to be used for this nested NS  instance is also provided. NOTE 2: The NS DF of each nested NS shall be one of the  allowed flavours in the associated NSD (as referenced in the nestedNsd attribute of the NSD of the NS to be instantiated). NOTE 3: The NSD of each referenced NSs (i.e. each  nestedInstanceId) shall match the one of the nested NSD in  the composite NSD. ")
+	@Schema(description = "Specify an existing NS instance to be used as a nested NS within the NS. If needed, the NS Profile to be used for this nested NS  instance is also provided. NOTE 2: The NS DF of each nested NS shall be one of the  allowed flavours in the associated NSD (as referenced in the nestedNsd attribute of the NSD of the NS to be instantiated). NOTE 3: The NSD of each referenced NSs (i.e. each  nestedInstanceId) shall match the one of the nested NSD in  the composite NSD. ")
 
 	@Valid
 
@@ -246,13 +237,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Defines the location constraints for the VNF to be instantiated as part of
-	 * the NS instantiation. An example can be a constraint for the VNF to be in a
-	 * specific geographic location..
+	 * Defines the location constraints for the VNF to be instantiated as part of the NS instantiation. An example can be a constraint for the VNF to be in a specific geographic location..
 	 *
 	 * @return locationConstraints
 	 **/
-	@ApiModelProperty(value = "Defines the location constraints for the VNF to be instantiated as part of the NS instantiation. An example can be a constraint for the VNF to be in a specific geographic location.. ")
+	@Schema(description = "Defines the location constraints for the VNF to be instantiated as part of the NS instantiation. An example can be a constraint for the VNF to be in a specific geographic location.. ")
 
 	@Valid
 
@@ -270,14 +259,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Allows the OSS/BSS to provide additional parameter(s) at the composite NS
-	 * level (as opposed to the VNF level, which is covered in
-	 * additionalParamsForVnf), and as opposed to the nested NS level, which is
-	 * covered in additionalParamForNestedNs.
+	 * Allows the OSS/BSS to provide additional parameter(s) at the composite NS level (as opposed to the VNF level, which is covered in additionalParamsForVnf), and as opposed to the nested NS level, which is covered in additionalParamForNestedNs.
 	 *
 	 * @return additionalParamsForNs
 	 **/
-	@ApiModelProperty(value = "Allows the OSS/BSS to provide additional parameter(s) at the composite NS level (as opposed to the VNF level,  which is covered in additionalParamsForVnf), and as  opposed to the nested NS level, which is covered in additionalParamForNestedNs. ")
+	@Schema(description = "Allows the OSS/BSS to provide additional parameter(s) at the composite NS level (as opposed to the VNF level,  which is covered in additionalParamsForVnf), and as  opposed to the nested NS level, which is covered in additionalParamForNestedNs. ")
 
 	@Valid
 
@@ -303,16 +289,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Allows the OSS/BSS to provide additional parameter(s) per nested NS instance
-	 * (as opposed to the composite NS level, which is covered in
-	 * additionalParamForNs, and as opposed to the VNF level, which is covered in
-	 * additionalParamForVnf). This is for nested NS instances that are to be
-	 * created by the NFVO as part of the NS instantiation and not for existing
-	 * nested NS instances that are referenced for reuse.
+	 * Allows the OSS/BSS to provide additional parameter(s) per nested NS instance (as opposed to the composite NS level, which is covered in additionalParamForNs, and as opposed to the VNF level, which is covered in additionalParamForVnf). This is for nested NS instances that are to be created by the NFVO as part of the NS instantiation and not for existing nested NS instances that are referenced for reuse.
 	 *
 	 * @return additionalParamForNestedNs
 	 **/
-	@ApiModelProperty(value = "Allows the OSS/BSS to provide additional parameter(s) per nested NS instance (as opposed to the composite NS level, which is covered in additionalParamForNs, and as opposed to the VNF level, which is covered in additionalParamForVnf). This is for nested NS instances that are to be created by the NFVO as part of the NS instantiation and not for existing nested NS instances that are referenced for reuse. ")
+	@Schema(description = "Allows the OSS/BSS to provide additional parameter(s) per nested NS instance (as opposed to the composite NS level, which is covered in additionalParamForNs, and as opposed to the VNF level, which is covered in additionalParamForVnf). This is for nested NS instances that are to be created by the NFVO as part of the NS instantiation and not for existing nested NS instances that are referenced for reuse. ")
 
 	@Valid
 
@@ -338,16 +319,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Allows the OSS/BSS to provide additional parameter(s) per VNF instance (as
-	 * opposed to the composite NS level, which is covered in additionalParamsForNs
-	 * and as opposed to the nested NS level, which is covered in
-	 * additionalParamForNestedNs). This is for VNFs that are to be created by the
-	 * NFVO as part of the NS instantiation and not for existing VNF that are
-	 * referenced for reuse.
+	 * Allows the OSS/BSS to provide additional parameter(s) per VNF instance (as opposed to the composite NS level, which is covered in additionalParamsForNs and as opposed to the nested NS level, which is covered in additionalParamForNestedNs). This is for VNFs that are to be created by the NFVO as part of the NS instantiation and not for existing VNF that are referenced for reuse.
 	 *
 	 * @return additionalParamsForVnf
 	 **/
-	@ApiModelProperty(value = "Allows the OSS/BSS to provide additional parameter(s) per VNF instance (as opposed to the composite NS level,  which is covered in additionalParamsForNs and as opposed  to the nested NS level, which is covered in  additionalParamForNestedNs). This is for VNFs that are  to be created by the NFVO as part of the NS instantiation  and not for existing VNF that are referenced for reuse. ")
+	@Schema(description = "Allows the OSS/BSS to provide additional parameter(s) per VNF instance (as opposed to the composite NS level,  which is covered in additionalParamsForNs and as opposed  to the nested NS level, which is covered in  additionalParamForNestedNs). This is for VNFs that are  to be created by the NFVO as part of the NS instantiation  and not for existing VNF that are referenced for reuse. ")
 
 	@Valid
 
@@ -365,12 +341,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Timestamp indicating the earliest time to instantiate the NS. Cardinality
-	 * \"0\" indicates the NS instantiation takes place immediately.
+	 * Timestamp indicating the earliest time to instantiate the NS. Cardinality \"0\" indicates the NS instantiation takes place immediately.
 	 *
 	 * @return startTime
 	 **/
-	@ApiModelProperty(value = "Timestamp indicating the earliest time to instantiate the NS.  Cardinality \"0\" indicates the NS instantiation takes place immediately. ")
+	@Schema(description = "Timestamp indicating the earliest time to instantiate the NS.  Cardinality \"0\" indicates the NS instantiation takes place immediately. ")
 
 	@Valid
 
@@ -388,13 +363,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Identifies one of the NS instantiation levels declared in the DF applicable
-	 * to this NS instance. If not present, the default NS instantiation level as
-	 * declared in the NSD shall be used.
+	 * Identifies one of the NS instantiation levels declared in the DF applicable to this NS instance. If not present, the default NS instantiation level as declared in the NSD shall be used.
 	 *
 	 * @return nsInstantiationLevelId
 	 **/
-	@ApiModelProperty(value = "Identifies one of the NS instantiation levels declared in the DF applicable to this NS instance. If not present, the default NS instantiation level as declared in the NSD shall be used. ")
+	@Schema(description = "Identifies one of the NS instantiation levels declared in the DF applicable to this NS instance. If not present, the default NS instantiation level as declared in the NSD shall be used. ")
 
 	public String getNsInstantiationLevelId() {
 		return nsInstantiationLevelId;
@@ -418,13 +391,11 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Specifies additional affinity or anti-affinity constraint for the VNF
-	 * instances to be instantiated as part of the NS instantiation. Shall not
-	 * conflict with rules already specified in the NSD.
+	 * Specifies additional affinity or anti-affinity constraint for the VNF instances to be instantiated as part of the NS instantiation. Shall not conflict with rules already specified in the NSD.
 	 *
 	 * @return additionalAffinityOrAntiAffinityRule
 	 **/
-	@ApiModelProperty(value = "Specifies additional affinity or anti-affinity constraint for the VNF instances to be instantiated as part of the NS instantiation. Shall not conflict with rules already specified in the NSD. ")
+	@Schema(description = "Specifies additional affinity or anti-affinity constraint for the VNF instances to be instantiated as part of the NS instantiation. Shall not conflict with rules already specified in the NSD. ")
 
 	@Valid
 
@@ -486,8 +457,7 @@ public class InstantiateNsRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

@@ -70,18 +70,11 @@ public class VnfTask extends AbstractTask implements VimTask {
 	@ManyToOne
 	private VnfBlueprint blueprint;
 
-	private UUID removedVnfLiveInstance;
-
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ScaleInfo scaleInfo;
 
 	private String resourceProviderId;
 
 	private String vimConnectionId;
-
-	@Override
-	public UUID getRemovedLiveInstance() {
-		return removedVnfLiveInstance;
-	}
 
 }

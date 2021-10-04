@@ -16,11 +16,14 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -51,8 +54,10 @@ public interface VnfPackageService {
 
 	VduInstantiationLevel findByVnfComputeAndInstantiationLevel(final VnfCompute x, final String scaleInfoName);
 
+	@NotNull
 	VnfPackage findById(final VnfPackage vnfPackage);
 
+	@NotNull
 	VnfPackage findById(final UUID vnfPkgId);
 
 	List<VnfInstantiationLevels> findVnfInstantiationLevelsByVnfComputeAndLevel(final VnfPackage vnfPackage, final String level);
@@ -72,4 +77,9 @@ public interface VnfPackageService {
 	VnfPackage findByVnfdId(final UUID id);
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
+
+	void delete(UUID id);
+
+	Path getPathByVnfdId(UUID fromString);
+
 }

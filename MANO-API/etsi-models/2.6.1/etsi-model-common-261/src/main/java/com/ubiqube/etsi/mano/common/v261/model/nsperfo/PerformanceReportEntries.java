@@ -28,7 +28,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * PerformanceReportEntries
@@ -57,13 +57,11 @@ public class PerformanceReportEntries {
 	}
 
 	/**
-	 * Defines the object type for which performance information is reported (i.e.
-	 * VNF type). The string value shall be set to the vnfdId of the VNF instance to
-	 * which the performance information relates.
+	 * Defines the object type for which performance information is reported (i.e. VNF type). The string value shall be set to the vnfdId of the VNF instance to which the performance information relates.
 	 *
 	 * @return objectType
 	 **/
-	@ApiModelProperty(required = true, value = "Defines the object type for which performance information is reported (i.e. VNF type). The string value shall be set to the vnfdId of the VNF instance to which the performance information relates. ")
+	@Schema(required = true, description = "Defines the object type for which performance information is reported (i.e. VNF type). The string value shall be set to the vnfdId of the VNF instance to which the performance information relates. ")
 	@NotNull
 
 	public String getObjectType() {
@@ -80,12 +78,11 @@ public class PerformanceReportEntries {
 	}
 
 	/**
-	 * The object instance (i.e. VNF instance) for which the performance metric is
-	 * reported.
+	 * The object instance (i.e. VNF instance) for which the performance metric is reported.
 	 *
 	 * @return objectInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "The object instance (i.e. VNF instance) for which the performance metric is reported. ")
+	@Schema(required = true, description = "The object instance (i.e. VNF instance) for which the performance metric is reported. ")
 	@NotNull
 
 	public String getObjectInstanceId() {
@@ -102,18 +99,12 @@ public class PerformanceReportEntries {
 	}
 
 	/**
-	 * Identifier of the sub-object of the measured object (i.e. a VNFC instance)
-	 * for which the performance metric is reported. Shall be present if this is
-	 * required in the measurement specification. The sub-object allows to structure
-	 * the measured object, but is not to be confused with sub-counters which allow
-	 * to structure the measurement. EXAMPLE: Measured object: VnfInstanceXYZ
-	 * Sub-object: VnfcInstance1 Measurement: vCPU_utilization Sub-counters: vCPU
-	 * utilization of each of the vCPUs of VnfcInstance1 (vCPU_utilization.vCPU1,
-	 * vCPU_utilization.vCPU2, etc.).
+	 * Identifier of the sub-object of the measured object (i.e. a VNFC instance) for which the performance metric is reported. Shall be present if this is required in the measurement specification. The sub-object allows to structure the measured object, but is not to be confused with sub-counters which allow to structure the measurement. EXAMPLE: Measured object: VnfInstanceXYZ Sub-object: VnfcInstance1 Measurement: vCPU_utilization Sub-counters: vCPU utilization of each of the vCPUs of
+	 * VnfcInstance1 (vCPU_utilization.vCPU1, vCPU_utilization.vCPU2, etc.).
 	 *
 	 * @return subObjectInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of the sub-object of the measured object (i.e. a VNFC instance) for which the performance metric is reported. Shall be present if this is required in the measurement specification. The sub-object allows to structure the measured object, but is not to be confused with sub-counters which allow to structure the measurement. EXAMPLE:   Measured object:  VnfInstanceXYZ   Sub-object:       VnfcInstance1   Measurement:      vCPU_utilization   Sub-counters:     vCPU utilization of each of the vCPUs of VnfcInstance1                     (vCPU_utilization.vCPU1, vCPU_utilization.vCPU2, etc.). ")
+	@Schema(description = "Identifier of the sub-object of the measured object (i.e. a VNFC instance) for which the performance metric is reported. Shall be present if this is required in the measurement specification. The sub-object allows to structure the measured object, but is not to be confused with sub-counters which allow to structure the measurement. EXAMPLE:   Measured object:  VnfInstanceXYZ   Sub-object:       VnfcInstance1   Measurement:      vCPU_utilization   Sub-counters:     vCPU utilization of each of the vCPUs of VnfcInstance1                     (vCPU_utilization.vCPU1, vCPU_utilization.vCPU2, etc.). ")
 
 	public String getSubObjectInstanceId() {
 		return subObjectInstanceId;
@@ -129,12 +120,11 @@ public class PerformanceReportEntries {
 	}
 
 	/**
-	 * Name of the metric collected. This attribute shall contain the related
-	 * \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027.
+	 * Name of the metric collected. This attribute shall contain the related \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027.
 	 *
 	 * @return performanceMetric
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the metric collected. This attribute shall contain the related \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027. ")
+	@Schema(required = true, description = "Name of the metric collected. This attribute shall contain the related \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027. ")
 	@NotNull
 
 	public String getPerformanceMetric() {
@@ -163,7 +153,7 @@ public class PerformanceReportEntries {
 	 *
 	 * @return performanceValues
 	 **/
-	@ApiModelProperty(value = "List of performance values with associated timestamp. ")
+	@Schema(description = "List of performance values with associated timestamp. ")
 
 	@Valid
 
@@ -211,8 +201,7 @@ public class PerformanceReportEntries {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

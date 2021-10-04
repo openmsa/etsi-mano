@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -57,9 +57,9 @@ public class ExtVirtualLinkInfoEntity implements BaseEntity, Auditable {
 	private VimResource resourceHandle = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private List<ExtLinkPortInfoEntity> extLinkPorts = null;
+	private Set<ExtLinkPortInfoEntity> extLinkPorts = null;
 
 	// 3.3.1
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private List<VnfExtCpDataEntity> currentVnfExtCpData = new ArrayList<>();
+	private Set<VnfExtCpDataEntity> currentVnfExtCpData = new LinkedHashSet<>();
 }

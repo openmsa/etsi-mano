@@ -27,7 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnffm.FaultMngtSubscriptionsFrontController;
+import com.ubiqube.etsi.mano.vnfm.fc.vnffm.FaultMngtSubscriptionsFrontController;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnffm.FmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnffm.FmSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnffm.FmSubscriptionRequest;

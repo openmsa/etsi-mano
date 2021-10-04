@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents modifications of an entry in an array of \&quot;VnfcInfo\&quot; objects. It shall comply with the provisions defined in table 5.5.3.24-1.
  */
-@ApiModel(description = "This type represents modifications of an entry in an array of \"VnfcInfo\" objects. It shall comply with the provisions defined in table 5.5.3.24-1. ")
+@Schema(description = "This type represents modifications of an entry in an array of \"VnfcInfo\" objects. It shall comply with the provisions defined in table 5.5.3.24-1. ")
 @Validated
 
 public class VnfcInfoModifications {
@@ -52,7 +52,7 @@ public class VnfcInfoModifications {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNFC instance of which the information is to be modified. ")
+	@Schema(required = true, description = "Identifier of the VNFC instance of which the information is to be modified. ")
 	@NotNull
 
 	public String getId() {
@@ -73,7 +73,7 @@ public class VnfcInfoModifications {
 	 *
 	 * @return vnfcConfigurableProperties
 	 **/
-	@ApiModelProperty(required = true, value = "Changes of the configurable properties of the VNFC instance. ")
+	@Schema(required = true, description = "Changes of the configurable properties of the VNFC instance. ")
 	@NotNull
 
 	@Valid

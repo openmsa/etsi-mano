@@ -29,14 +29,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpConfig;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents configuration information for external CPs created from
  * a CPD.
  */
-@ApiModel(description = "This type represents configuration information for external CPs created from a CPD. ")
+@Schema(description = "This type represents configuration information for external CPs created from a CPD. ")
 @Validated
 public class VnfExtCpData {
 	@JsonProperty("cpdId")
@@ -56,7 +56,7 @@ public class VnfExtCpData {
 	 *
 	 * @return cpdId
 	 **/
-	@ApiModelProperty(required = true, value = "The identifier of the CPD in the VNFD. ")
+	@Schema(required = true, description = "The identifier of the CPD in the VNFD. ")
 	@NotNull
 
 	public String getCpdId() {
@@ -86,7 +86,7 @@ public class VnfExtCpData {
 	 *
 	 * @return cpConfig
 	 **/
-	@ApiModelProperty(value = "List of instance data that need to be configured on the CP instances created from the respective CPD. ")
+	@Schema(description = "List of instance data that need to be configured on the CP instances created from the respective CPD. ")
 
 	@Valid
 

@@ -25,15 +25,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a monitoring parameter that is tracked by the VNFM, for
  * example, for auto-scaling purposes. It shall comply with the provisions
  * defined in Table 6.5.3.69-1.
  */
-@ApiModel(description = "This type represents a monitoring parameter that is tracked by the VNFM, for example,  for auto-scaling purposes. It shall comply with the provisions defined in Table 6.5.3.69-1. ")
+@Schema(description = "This type represents a monitoring parameter that is tracked by the VNFM, for example,  for auto-scaling purposes. It shall comply with the provisions defined in Table 6.5.3.69-1. ")
 @Validated
 public class VnfMonitoringParameter {
 	@JsonProperty("id")
@@ -55,7 +55,7 @@ public class VnfMonitoringParameter {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the monitoring parameter defined in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the monitoring parameter defined in the VNFD. ")
 	@NotNull
 
 	public String getId() {
@@ -76,7 +76,7 @@ public class VnfMonitoringParameter {
 	 *
 	 * @return name
 	 **/
-	@ApiModelProperty(value = "Human readable name of the monitoring parameter, as defined in the VNFD. ")
+	@Schema(description = "Human readable name of the monitoring parameter, as defined in the VNFD. ")
 
 	public String getName() {
 		return name;
@@ -98,7 +98,7 @@ public class VnfMonitoringParameter {
 	 *
 	 * @return performanceMetric
 	 **/
-	@ApiModelProperty(required = true, value = "Performance metric that is monitored. This attribute shall contain the related  \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027. ")
+	@Schema(required = true, description = "Performance metric that is monitored. This attribute shall contain the related  \"Measurement Name\" value as defined in clause 7.2 of ETSI GS NFV-IFA 027. ")
 	@NotNull
 
 	public String getPerformanceMetric() {

@@ -20,8 +20,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.vnfm.v261.model.vnfind.VnfInstanceSubscriptionFilter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +31,7 @@ import javax.validation.constraints.*;
 /**
  * This type represents a subscription filter related to notifications about VNF indicator value changes. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \&quot;and\&quot; between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \&quot;or\&quot; between the values of one filter attribute). 
  */
-@ApiModel(description = "This type represents a subscription filter related to notifications about VNF indicator value changes. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
+@Schema(description = "This type represents a subscription filter related to notifications about VNF indicator value changes. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
 @Validated
 
 public class VnfIndicatorNotificationsFilter   {
@@ -51,7 +51,7 @@ public class VnfIndicatorNotificationsFilter   {
    * Filter criteria to select VNF instances about which to notify. 
    * @return vnfInstanceSubscriptionFilter
   **/
-  @ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify. ")
+  @Schema(description = "Filter criteria to select VNF instances about which to notify. ")
 
   @Valid
 
@@ -80,7 +80,7 @@ public class VnfIndicatorNotificationsFilter   {
    * Match particular VNF indicator identifiers. 
    * @return indicatorIds
   **/
-  @ApiModelProperty(value = "Match particular VNF indicator identifiers. ")
+  @Schema(description = "Match particular VNF indicator identifiers. ")
 
 
   public List<String> getIndicatorIds() {

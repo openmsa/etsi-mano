@@ -30,14 +30,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents information about an external CP of a VNF. It shall
  * comply with the provisions defined in Table 6.5.3.70-1.
  */
-@ApiModel(description = "This type represents information about an external CP of a VNF. It shall comply  with the provisions defined in Table 6.5.3.70-1. ")
+@Schema(description = "This type represents information about an external CP of a VNF. It shall comply  with the provisions defined in Table 6.5.3.70-1. ")
 @Validated
 public class VnfExtCpInfo {
 	@JsonProperty("id")
@@ -72,7 +72,7 @@ public class VnfExtCpInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the external CP instance and the related information instance. ")
+	@Schema(required = true, description = "Identifier of the external CP instance and the related information instance. ")
 	@NotNull
 
 	public String getId() {
@@ -93,7 +93,7 @@ public class VnfExtCpInfo {
 	 *
 	 * @return cpdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the external CPD, VnfExtCpd, in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the external CPD, VnfExtCpd, in the VNFD. ")
 	@NotNull
 
 	public String getCpdId() {
@@ -122,7 +122,7 @@ public class VnfExtCpInfo {
 	 *
 	 * @return cpProtocolInfo
 	 **/
-	@ApiModelProperty(value = "Network protocol information for this CP. ")
+	@Schema(description = "Network protocol information for this CP. ")
 
 	@Valid
 	@Size(min = 1)
@@ -146,7 +146,7 @@ public class VnfExtCpInfo {
 	 *
 	 * @return extLinkPortId
 	 **/
-	@ApiModelProperty(value = "Identifier of the \"extLinkPortInfo\" structure inside the \"extVirtualLinkInfo\"  structure. Shall be present if the CP is associated to a link port. ")
+	@Schema(description = "Identifier of the \"extLinkPortInfo\" structure inside the \"extVirtualLinkInfo\"  structure. Shall be present if the CP is associated to a link port. ")
 
 	@Valid
 
@@ -168,7 +168,7 @@ public class VnfExtCpInfo {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "Metadata about this external CP. ")
+	@Schema(description = "Metadata about this external CP. ")
 
 	@Valid
 
@@ -194,7 +194,7 @@ public class VnfExtCpInfo {
 	 *
 	 * @return associatedVnfcCpId
 	 **/
-	@ApiModelProperty(value = "Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure  that represents the VNFC CP which is exposed by this external CP instance.  Shall be present in case this CP instance maps to a VNFC CP(s). The attributes \"associatedVnfcCpId\" and \"associatedVnfVirtualLinkId\" are  mutually exclusive. One and only one shall be present. ")
+	@Schema(description = "Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure  that represents the VNFC CP which is exposed by this external CP instance.  Shall be present in case this CP instance maps to a VNFC CP(s). The attributes \"associatedVnfcCpId\" and \"associatedVnfVirtualLinkId\" are  mutually exclusive. One and only one shall be present. ")
 
 	public String getAssociatedVnfcCpId() {
 		return associatedVnfcCpId;
@@ -218,7 +218,7 @@ public class VnfExtCpInfo {
 	 *
 	 * @return associatedVnfVirtualLinkId
 	 **/
-	@ApiModelProperty(value = "Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents  the internal VL, which is exposed by this external CP instance. Shall be  present in case this CP instance maps to an internal VL. The attributes \"associatedVnfcCpId\" and \"associatedVnfVirtualLinkId\" are  mutually exclusive. One and only one shall be present. ")
+	@Schema(description = "Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents  the internal VL, which is exposed by this external CP instance. Shall be  present in case this CP instance maps to an internal VL. The attributes \"associatedVnfcCpId\" and \"associatedVnfVirtualLinkId\" are  mutually exclusive. One and only one shall be present. ")
 
 	public String getAssociatedVnfVirtualLinkId() {
 		return associatedVnfVirtualLinkId;

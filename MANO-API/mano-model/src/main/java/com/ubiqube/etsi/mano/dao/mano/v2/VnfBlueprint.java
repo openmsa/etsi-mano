@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.Valid;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
@@ -42,10 +44,12 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 
 @Entity
 @Indexed
@@ -68,8 +72,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	private Set<VnfTask> tasks = new HashSet<>();
 
 	@Valid
-	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-	@JoinColumn
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	private Set<VimConnectionInformation> vimConnections = null;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
@@ -77,7 +80,6 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	@Valid
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
 	private Set<BlueZoneGroupInformation> zoneGroups = null;
 
 	@FullTextField
@@ -93,6 +95,12 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private ChangeExtVnfConnRequest changeExtVnfConnRequest;
 
 	@Override
 	public UUID getId() {
@@ -195,6 +203,30 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	@Override
 	public VnfInstance getInstance() {
 		return vnfInstance;
+	}
+
+	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
+		return extVirtualLinks;
+	}
+
+	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		this.extVirtualLinks = extVirtualLinks;
+	}
+
+	public ChangeExtVnfConnRequest getChangeExtVnfConnRequest() {
+		return changeExtVnfConnRequest;
+	}
+
+	public void setChangeExtVnfConnRequest(final ChangeExtVnfConnRequest changeExtVnfConnRequest) {
+		this.changeExtVnfConnRequest = changeExtVnfConnRequest;
+	}
+
+	@Override
+	public void addVimConnection(final VimConnectionInformation vimConnection) {
+		if (this.vimConnections == null) {
+			this.vimConnections = new LinkedHashSet<>();
+		}
+		this.vimConnections.add(vimConnection);
 	}
 
 }

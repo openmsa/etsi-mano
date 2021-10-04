@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -37,7 +37,7 @@ public class CreateVnfSnapshotPkgInfoRequest   {
   private String name = null;
 
   @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+  private Map<String, String> userDefinedData = null;
 
   public CreateVnfSnapshotPkgInfoRequest name(String name) {
     this.name = name;
@@ -59,7 +59,7 @@ public class CreateVnfSnapshotPkgInfoRequest   {
     this.name = name;
   }
 
-  public CreateVnfSnapshotPkgInfoRequest userDefinedData(KeyValuePairs userDefinedData) {
+  public CreateVnfSnapshotPkgInfoRequest userDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
     return this;
   }
@@ -71,11 +71,11 @@ public class CreateVnfSnapshotPkgInfoRequest   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getUserDefinedData() {
+    public Map<String, String> getUserDefinedData() {
     return userDefinedData;
   }
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
+  public void setUserDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
   }
 

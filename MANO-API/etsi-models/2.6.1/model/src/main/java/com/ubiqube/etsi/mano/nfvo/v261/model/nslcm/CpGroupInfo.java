@@ -30,15 +30,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents describes a group of CPs and/or SAPs pairs associated to
  * the same position in an NFP. It shall comply with the provisions defined in
  * Table 6.5.3.71-1.
  */
-@ApiModel(description = "This type represents describes a group of CPs and/or SAPs pairs associated to  the same position in an NFP. It shall comply with the provisions defined in  Table 6.5.3.71-1. ")
+@Schema(description = "This type represents describes a group of CPs and/or SAPs pairs associated to  the same position in an NFP. It shall comply with the provisions defined in  Table 6.5.3.71-1. ")
 @Validated
 
 
@@ -109,7 +109,7 @@ public class CpGroupInfo {
 	 * 
 	 * @return cpPairInfo
 	 **/
-	@ApiModelProperty(value = "One or more pair(s) of ingress and egress CPs or SAPs which the NFP passes by. All CP or SAP pairs in a group shall be instantiated from connection point  descriptors or service access point descriptors referenced in the corresponding  NfpPositionDesc. ")
+	@Schema(description = "One or more pair(s) of ingress and egress CPs or SAPs which the NFP passes by. All CP or SAP pairs in a group shall be instantiated from connection point  descriptors or service access point descriptors referenced in the corresponding  NfpPositionDesc. ")
 
 	@Valid
 	@Size(min = 1)
@@ -135,7 +135,7 @@ public class CpGroupInfo {
 	 * 
 	 * @return forwardingBehaviour
 	 **/
-	@ApiModelProperty(value = "Identifies a rule to apply to forward traffic to the ingress CPs or SAPs of  the group. Permitted values: * ALL = Traffic flows shall be forwarded simultaneously to all CPs or SAPs  of the group. * LB = Traffic flows shall be forwarded to one CP or SAP of the group selected  based on a loadbalancing algorithm. ")
+	@Schema(description = "Identifies a rule to apply to forward traffic to the ingress CPs or SAPs of  the group. Permitted values: * ALL = Traffic flows shall be forwarded simultaneously to all CPs or SAPs  of the group. * LB = Traffic flows shall be forwarded to one CP or SAP of the group selected  based on a loadbalancing algorithm. ")
 
 	public ForwardingBehaviourEnum getForwardingBehaviour() {
 		return forwardingBehaviour;
@@ -156,7 +156,7 @@ public class CpGroupInfo {
 	 * 
 	 * @return forwardingBehaviourInputParameters
 	 **/
-	@ApiModelProperty(value = "Provides input parameters to configure the forwarding behaviour (e.g. identifies  a load balancing algorithm and criteria). ")
+	@Schema(description = "Provides input parameters to configure the forwarding behaviour (e.g. identifies  a load balancing algorithm and criteria). ")
 
 	@Valid
 

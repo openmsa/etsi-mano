@@ -30,7 +30,7 @@ public abstract class AbstractJpaOnly<U> implements CrudRepositoryNg<U> {
 	private final EntityManager em;
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
 
-	public AbstractJpaOnly(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository) {
+	protected AbstractJpaOnly(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository) {
 		this.em = em;
 		this.repository = repository;
 	}

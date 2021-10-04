@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdArchiveArtifactInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdOnboardingStateType;
@@ -125,7 +125,7 @@ public class NsdInfo  implements AnyOfNsdInfo {
   private NsdUsageStateType nsdUsageState = null;
 
   @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+  private Map<String, String> userDefinedData = null;
 
   @JsonProperty("_links")
   private NsdInfoLinks _links = null;
@@ -474,7 +474,7 @@ public class NsdInfo  implements AnyOfNsdInfo {
     this.nsdUsageState = nsdUsageState;
   }
 
-  public NsdInfo userDefinedData(KeyValuePairs userDefinedData) {
+  public NsdInfo userDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
     return this;
   }
@@ -486,11 +486,11 @@ public class NsdInfo  implements AnyOfNsdInfo {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getUserDefinedData() {
+    public Map<String, String> getUserDefinedData() {
     return userDefinedData;
   }
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
+  public void setUserDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
   }
 

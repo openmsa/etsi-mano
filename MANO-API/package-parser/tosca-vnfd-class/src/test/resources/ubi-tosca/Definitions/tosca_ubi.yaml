@@ -3,7 +3,7 @@ description: >
   Sample VNF for integration testing.
 
 imports:
-  - etsi_nfv_sol001_vnfd_types.yaml
+  - https://forge.etsi.org/rep/nfv/SOL001/raw/master/etsi_nfv_sol001_vnfd_types.yaml
 
 topology_template:
   inputs:
@@ -44,24 +44,46 @@ topology_template:
         default_localization_language: en_US
         lcm_operations_configuration: # tosca.datatypes.nfv.VnfLcmOperationsConfiguration
           instantiate: # tosca.datatypes.nfv.VnfInstantiateOperationConfiguration
+            internal_name: virtual
           scale: # tosca.datatypes.nfv.VnfScaleOperationConfiguration
             scaling_by_more_than_one_step_supported: true
           scale_to_level: # tosca.datatypes.nfv.VnfScaleToLevelOperationConfiguration
             arbitrary_target_levels_supported: true
+          change_flavour: # tosca.datatypes.nfv.VnfChangeFlavourOperationConfiguration
+            internal_name: name
+          heal: # tosca.datatypes.nfv.VnfHealOperationConfiguration
+            causes:
+              - string
           terminate: # tosca.datatypes.nfv.VnfTerminateOperationConfiguration
             min_graceful_termination_timeout: 60 s
             max_recommended_graceful_termination_timeout: 120 s
-          change_ext_connectivity: #tosca.datatypes.nfv.VnfChangeExtConnectivityOperationConfiguration
+          operate: # tosca.datatypes.nfv.VnfOperateOperationConfiguration
+            min_graceful_stop_timeout: 5m
+            max_recommended_graceful_stop_timeout: 1m
+          change_ext_connectivity: # tosca.datatypes.nfv.VnfChangeExtConnectivityOperationConfiguration
+            internal_name: name
+          change_current_package: # tosca.datatypes.nfv.VnfChangeCurrentPackageOperationConfiguration
+            internal_name: name
+          create_snapshot: # tosca.datatypes.nfv.VnfCreateSnapshotOperationConfiguration
+            internal_name: name
+          revert_to_snapshot: # tosca.datatypes.nfv.VnfRevertToSnapshotOperationConfiguration
+            internal_name: name
         monitoring_parameters: # list tosca.datatypes.nfv.VnfMonitoringParameter
-          - name: mon01
+          mon01:
+            name: mon01
             performance_metric: v_disk_usage_peak_vnf
             collection_period: 1 m
         vnf_profile: # tosca.datatypes.nfv.VnfProfile
           instantiation_level: demo
           min_number_of_instances: 1
           max_number_of_instances: 10
+          service_availability_level: 1
+        scale_status: # map of tosca.datatypes.nfv.ScaleInfo
+          aspectid: #
+            scale_level: 1
       requirements:
-        - virtual_link: public
+        - virtual_link: 
+            node: public
 
 
 
@@ -70,13 +92,32 @@ topology_template:
     ext01:
       type: tosca.nodes.nfv.VnfExtCp
       properties:
+        layer_protocols:
+          - ethernet
+          - ipv4
+        role: root
+        description: descr.
+        protocol: # list of tosca.datatypes.nfv.CpProtocolData
+          - associated_layer_protocol: ethernet
+            address_data: #list of tosca.datatypes.nfv.AddressData
+              - address_type: mac_address
+                l2_address_data: # tosca.datatypes.nfv.L2AddressData
+                  mac_address_assignment: true
+                l3_address_data: # tosca.datatypes.nfv.L3AddressData
+                  ip_address_assignment: true
+                  floating_ip_activated: true
+                  ip_address_type: ipv4
+                  number_of_ip_address: 1
+        trunk_mode: false
         virtual_network_interface_requirements:
           - name: vl01
             description: descr
             support_mandatory: false
             network_interface_requirements: # map
+              key: value
             nic_io_requirements:
               logical_node_requirements: #map
+                key: value
       requirements:
         - external_virtual_link: 
             node: public
@@ -87,68 +128,103 @@ topology_template:
       type: tosca.nodes.nfv.Vdu.Compute
       name: leftVdu01
       description: A node.
+      artifacts:
+        sw_image:
+          type: tosca.artifacts.deployment.image.vm.QCOW2
+          file: myFile.qcow2
+          deploy_path: deploy path
+          checksum: 1234
+          checksum_algorithm: ssh512
+          description: desc
+          repository: repo
+          vim_type: vimtype
+          artifact_version: 1.0.0
+          properties:
+            key: value
       properties:
         sw_image_data:
           name: cirros
+          provider: provider
           version: 1.0.0
+          supported_virtualisation_environments:
+            - test
           checksum:
             hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
             algorithm: SHA-256
           container_format: BARE
           disk_format: QCOW2
+          size: 1 Gib
           min_disk: 6 GiB
           min_ram: 2 GiB
           operating_system: centos8
+        nfvi_constraints:
+          key: value
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
-          - name: metric name
+          name:
+            name: name
             performance_metric: v_cpu_usage_mean_vnf
             collection_period: 60 s
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
+        boot_data:
+          vim_specific_properties: # tosca.datatypes.nfv.BootDataVimSpecificProperties
+            vim_type: vimtype
+            properties: # map of String
+              key: value
+          kvp_data: # tosca.datatypes.nfv.KvpData
+            data: # map of string
+              key: value
+          content_or_file_data: # tosca.datatypes.nfv.ContentOrFileData
+            data:
+              key: value
+            content: cloud_init
+            source_path: file://
+            destination_path: /opt/
       requirements:
-        - virtual_storage: block01
+        - virtual_storage:
+            node: block01
       capabilities:
+        virtual_binding: # List of tosca.capabilities.nfv.VirtualBindable
+          internal_name: test
         virtual_compute:
-          properties:
-            logical_node:  # map tosca.datatypes.nfv.LogicalNodeData
-              key:
-                logical_node_requirements:
-                  map: string
-            requested_additional_capabilities: # map tosca.datatypes.nfv.RequestedAdditionalCapability
-              name:
-                requested_additional_capability_name:  name02
-                support_mandatory: false
-                min_requested_additional_capability_version: 0.0.1
-                preferred_requested_additional_capability_version: 0.0.2
-                target_performance_parameters:
-                  map: string
-            compute_requirements: # map string
-              req: requirement
-            virtual_memory: # tosca.datatypes.nfv.VirtualMemory
-              properties:
-                virtual_mem_size: 2 GiB
-                virtual_mem_oversubscription_policy: what
-                vdu_mem_requirements:
-                  read: openstack
-                numa_enabled: true
-            virtual_cpu: # tosca.datatypes.nfv.VirtualCpu
-              properties:
-                cpu_architecture: x86_64
-                num_virtual_cpu: 1
-                virtual_cpu_clock: 3 GHz
-                vdu_cpu_requirements: # map string
-                  read: openstack
-                virtual_cpu_pinning: # tosca.datatypes.nfv.VirtualCpuPinning
-                  virtual_cpu_pinning_policy: static
-                  virtual_cpu_pinning_rule:
-                    - rule0
-                    - rule1
-            virtual_local_storage: # list tosca.datatypes.nfv.VirtualBlockStorageData
-              - size_of_storage: 512 mb
-                vdu_storage_requirements: # map string
-                  read: openstack
-                rdma_enabled: false
+          logical_node:  # map tosca.datatypes.nfv.LogicalNodeData
+            key:
+              logical_node_requirements:
+                map: string
+          requested_additional_capabilities: # map tosca.datatypes.nfv.RequestedAdditionalCapability
+            name:
+              requested_additional_capability_name:  name02
+              support_mandatory: false
+              min_requested_additional_capability_version: 0.0.1
+              preferred_requested_additional_capability_version: 0.0.2
+              target_performance_parameters:
+                map: string
+          compute_requirements: # map string
+            req: requirement
+          virtual_memory: # tosca.datatypes.nfv.VirtualMemory
+            virtual_mem_size: 2 GiB
+            virtual_mem_oversubscription_policy: what
+            vdu_mem_requirements:
+              read: openstack
+            numa_enabled: true
+          virtual_cpu: # tosca.datatypes.nfv.VirtualCpu
+            cpu_architecture: x86_64
+            num_virtual_cpu: 1
+            virtual_cpu_clock: 3 GHz
+            virtual_cpu_oversubscription_policy: plo
+            vdu_cpu_requirements: # map string
+              read: openstack
+            virtual_cpu_pinning: # tosca.datatypes.nfv.VirtualCpuPinning
+              virtual_cpu_pinning_policy: static
+              virtual_cpu_pinning_rule:
+                - rule0
+                - rule1
+          virtual_local_storage: # list tosca.datatypes.nfv.VirtualBlockStorageData
+            - size_of_storage: 512 mb
+              vdu_storage_requirements: # map string
+                read: openstack
+              rdma_enabled: false
 
 
     rightVdu01:
@@ -172,22 +248,23 @@ topology_template:
           operating_system: centos8
       capabilities:
         virtual_compute:
-          properties:
-            virtual_memory:
-              properties:
-                virtual_mem_size: 2 GiB
-            virtual_cpu:
-              properties:
-                cpu_architecture: x86_64
-                num_virtual_cpu: 1
+          virtual_memory:
+            virtual_mem_size: 2 GiB
+          virtual_cpu:
+            cpu_architecture: x86_64
+            num_virtual_cpu: 1
 
     block01:
       type: tosca.nodes.nfv.Vdu.VirtualBlockStorage
       properties:
         virtual_block_storage_data:
           size_of_storage: 6 GB
+          vdu_storage_requirements:
+            key: value
         sw_image_data:
           name: cirros
+          provider: prov
+          size: 1 Gib
           version: 1.0.0
           checksum:
             hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
@@ -197,12 +274,21 @@ topology_template:
           min_disk: 6 GB
           min_ram: 2 GB
           operating_system: centos8
+          supported_virtualisation_environments:
+            - openstack
+            - glance
+      capabilities:
+        virtual_storage: # tosca.capabilities.nfv.VirtualStorage
+          internal_name: test
 
     storageVo:
       type: tosca.nodes.nfv.Vdu.VirtualObjectStorage
       properties:
-        virtual_object_storage_data:
+        virtual_object_storage_data: # tosca.datatypes.nfv.VirtualObjectStorageData
           max_size_of_storage: 6 GB
+      capabilities:
+        virtual_storage: # tosca.capabilities.nfv.VirtualStorage
+          internal_name: test
 
     leftVl01:
       type: tosca.nodes.nfv.VnfVirtualLink
@@ -215,7 +301,8 @@ topology_template:
         test_access:
           - passive_monitoring
         monitoring_parameters:
-          - name: Vcpu Peak Usage
+          Usage:
+            name: Usage
             collection_period: 60 s
             performance_metric: v_cpu_usage_mean_vnf
         vl_profile: # tosca.datatypes.nfv.VlProfile
@@ -232,6 +319,7 @@ topology_template:
                 vlan_transparent: true
                 network_type: flat
                 mtu: 1500
+                segmentation_id: a
               l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
                 dhcp_enabled: true
                 cidr: 192.168.0.0/24
@@ -242,13 +330,13 @@ topology_template:
                 ip_allocation_pools: # list tosca.datatypes.nfv.IpAllocationPool
                   - start_ip_address: 192.168.0.100
                     end_ip_address: 192.168.0.254
-              associated_layer_protocol: ipv4
           qos: # tosca.datatypes.nfv.Qos
             latency: 5 ms
             packet_delay_variation: 1 s
             packet_loss_ratio: 0.01
       capabilities:
-        # virtual_linkable: test
+        virtual_linkable: # tosca.capabilities.nfv.VirtualLinkable
+          internal_name: test
 
     middleVl01:
       type: tosca.nodes.nfv.VnfVirtualLink
@@ -265,7 +353,6 @@ topology_template:
           min_bitrate_requirements:
             root: 11
             leaf: 16
-          virtual_link_protocol_data:
           qos:
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -303,7 +390,6 @@ topology_template:
           min_bitrate_requirements:
             root: 11
             leaf: 16
-          virtual_link_protocol_data:
           qos:
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -330,15 +416,36 @@ topology_template:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
-        virtual_network_interface_requirements:
+        virtual_network_interface_requirements: # list of tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements
           - name: vl01
             description: descr
             support_mandatory: false
-            network_interface_requirements: # map
-            nic_io_requirements:
-              logical_node_requirements: #map
+            network_interface_requirements: # map string
+              key: value
+            nic_io_requirements: # tosca.datatypes.nfv.LogicalNodeData
+              logical_node_requirements: #map String
+                key: value
         order: 5
         vnic_type: virtio
+        layer_protocols:
+          - ipv4
+        description: descr.
+        role: leaf
+        protocol: # list of tosca.datatypes.nfv.CpProtocolData
+          - associated_layer_protocol: ethernet
+            address_data: #list of tosca.datatypes.nfv.AddressData
+              - address_type: mac_address
+                l2_address_data: # tosca.datatypes.nfv.L2AddressData
+                  mac_address_assignment: true
+                l3_address_data: # tosca.datatypes.nfv.L3AddressData
+                  ip_address_assignment: true
+                  floating_ip_activated: true
+                  ip_address_type: ipv4
+                  number_of_ip_address: 1
+        trunk_mode: false
+      capabilities:
+        trunk_binding: # tosca.capabilities.nfv.TrunkBindable
+          internal_name: tb
       requirements:
         - virtual_link:
             node: leftVl01
@@ -350,14 +457,14 @@ topology_template:
       properties:
         bitrate_requirement: 5
         virtual_network_interface_requirements: # list tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements
-          name: req01
-          description: Description
-          support_mandatory: false
-          network_interface_requirements:
-            read: openstack
-          nic_io_requirements: # tosca.datatypes.nfv.LogicalNodeData
-            logical_node_requirements:
+          - name: req01
+            description: Description
+            support_mandatory: false
+            network_interface_requirements:
               read: openstack
+            nic_io_requirements: # tosca.datatypes.nfv.LogicalNodeData
+              logical_node_requirements:
+                read: openstack
         order: 5
         vnic_type: virtio
       requirements:
@@ -442,17 +549,24 @@ policies:
         schedule:
           start_time: 12345
           end_time: 54321
-          target_filter:
-            description: Trigger description.
-          condition:
-            - my_attribute: [{equal: my_value}]
-            - my_other_attribute: [{equal: my_other_value}]
-          action:
-            - delegate: myWorkflow
+        target_filter:
+          description: Trigger description.
+          node: node
+          requirement: req
+          capability: cap
+        condition:
+          - my_attribute: [{equal: my_value}]
+          - my_other_attribute: [{equal: my_other_value}]
+        action:
+          - delegate: myWorkflow
+            workflow: mywf
+            inputs: # map of parameter assignments
+              my_attr: 110
 
 # scaling aspect
   scaling_aspects:
     type: tosca.policies.nfv.ScalingAspects
+    targets: [ "" ]
     properties:
       aspects:
         left_aspect:
@@ -536,9 +650,10 @@ policies:
     type: tosca.policies.nfv.VirtualLinkBitrateInitialDelta
     targets: [ vl01 ]
     properties:
-      bitrate_requirements:
-        root: 500
-        leaf: 1000
+      initial_delta: # tosca.datatypes.nfv.VirtualLinkBitrateLevel
+        bitrate_requirements: # tosca.datatypes.nfv.LinkBitrateRequirements
+          root: 500
+          leaf: 1000
 
   affinity_01:
     type: tosca.policies.nfv.AffinityRule
@@ -548,6 +663,7 @@ policies:
 
   security:
     type: tosca.policies.nfv.SecurityGroupRule
+    targets: [ "" ]
     properties:
       description: Descr.
       direction: ingress
@@ -567,11 +683,12 @@ policies:
           authority:
             user_info: ubiqube
             host: auth.ubiqube.com
-            port: 80
+            port: "80"
           path: /
           query: r=1
           fragment: frag
         interface_specific_data: # map of Strings
+          hello: value
  
 
 

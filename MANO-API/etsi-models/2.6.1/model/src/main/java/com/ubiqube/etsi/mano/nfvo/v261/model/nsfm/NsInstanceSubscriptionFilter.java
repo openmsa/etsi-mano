@@ -26,8 +26,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents subscription filter criteria to match NS instances. NOTE
@@ -42,7 +42,7 @@ import io.swagger.annotations.ApiModelProperty;
  * not be used both in the same filter instance, but one alternative should be
  * chosen.
  */
-@ApiModel(description = "This type represents subscription filter criteria to match NS instances. NOTE 1: The attributes \"nsdIds\", \"vnfdIds\" and \"pnfdIds\" are alternatives to reference to NS instances that are created based on certain NSDs, or contain VNF instances that are based on certain VNFDs, or contain PNFs that are based on certain PNFDs in a filter. They should not be used together in the same filter instance, but one alternative should be chosen. NOTE 2: The attributes \"nsInstanceIds\" and \"nsInstanceNames\" are alternatives to reference to particular NS Instances in a filter. They should not be used both in the same filter instance, but one alternative should be chosen. ")
+@Schema(description = "This type represents subscription filter criteria to match NS instances. NOTE 1: The attributes \"nsdIds\", \"vnfdIds\" and \"pnfdIds\" are alternatives to reference to NS instances that are created based on certain NSDs, or contain VNF instances that are based on certain VNFDs, or contain PNFs that are based on certain PNFDs in a filter. They should not be used together in the same filter instance, but one alternative should be chosen. NOTE 2: The attributes \"nsInstanceIds\" and \"nsInstanceNames\" are alternatives to reference to particular NS Instances in a filter. They should not be used both in the same filter instance, but one alternative should be chosen. ")
 @Validated
 public class NsInstanceSubscriptionFilter {
 	@JsonProperty("nsdIds")
@@ -84,7 +84,7 @@ public class NsInstanceSubscriptionFilter {
 	 *
 	 * @return nsdIds
 	 **/
-	@ApiModelProperty(value = "If present, match NS instances that were created based on a NSD identified by one of the nsdId values listed in this attribute. ")
+	@Schema(description = "If present, match NS instances that were created based on a NSD identified by one of the nsdId values listed in this attribute. ")
 
 	public List<String> getNsdIds() {
 		return nsdIds;
@@ -114,7 +114,7 @@ public class NsInstanceSubscriptionFilter {
 	 *
 	 * @return vnfdIds
 	 **/
-	@ApiModelProperty(value = "If present, match NS instances that contain VNF instances that were created based on a VNFD identified by one of the vnfdId values listed in this attribute. ")
+	@Schema(description = "If present, match NS instances that contain VNF instances that were created based on a VNFD identified by one of the vnfdId values listed in this attribute. ")
 
 	public List<String> getVnfdIds() {
 		return vnfdIds;
@@ -143,7 +143,7 @@ public class NsInstanceSubscriptionFilter {
 	 *
 	 * @return pnfdIds
 	 **/
-	@ApiModelProperty(value = "If present, match NS instances that contain PNFs that are represented by a PNFD identified by one of the pnfdId values listed in this attribute. ")
+	@Schema(description = "If present, match NS instances that contain PNFs that are represented by a PNFD identified by one of the pnfdId values listed in this attribute. ")
 
 	public List<String> getPnfdIds() {
 		return pnfdIds;
@@ -172,7 +172,7 @@ public class NsInstanceSubscriptionFilter {
 	 *
 	 * @return nsInstanceIds
 	 **/
-	@ApiModelProperty(value = "If present, match NS instances with an instance identifier listed in this attribute. ")
+	@Schema(description = "If present, match NS instances with an instance identifier listed in this attribute. ")
 
 	public List<String> getNsInstanceIds() {
 		return nsInstanceIds;
@@ -201,7 +201,7 @@ public class NsInstanceSubscriptionFilter {
 	 *
 	 * @return nsInstanceNames
 	 **/
-	@ApiModelProperty(value = "If present, match NS instances with a NS Instance Name listed in this attribute. ")
+	@Schema(description = "If present, match NS instances with a NS Instance Name listed in this attribute. ")
 
 	public List<String> getNsInstanceNames() {
 		return nsInstanceNames;

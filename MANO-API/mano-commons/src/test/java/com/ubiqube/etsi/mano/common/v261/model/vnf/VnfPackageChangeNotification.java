@@ -27,8 +27,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a VNF package management notification, which informs the
@@ -44,7 +44,7 @@ import io.swagger.annotations.ApiModelProperty;
  * attribute of the package has the value \&quot;ONBOARDED\&quot;. - The
  * on-boarded VNF package has been deleted.
  */
-@ApiModel(description = "This type represents a VNF package management notification, which informs the receiver of a change of the status in an on-boarded VNF package. Only changes in the \"operationalState\" attribute of an on-boarded VNF package and the deletion of the VNF package will be reported. Change in the \"usageState\" and \"onboardingState\" attributes are not reported. The notification shall comply with the provisions defined in Table 9.5.2.9-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when there is a change in the status of an onboarded VNF package, as follows.   - The \"operationalState\" attribute of a VNF package has changed, and the \"onboardingState\" attribute of the     package has the value \"ONBOARDED\".   - The on-boarded VNF package has been deleted. ")
+@Schema(description = "This type represents a VNF package management notification, which informs the receiver of a change of the status in an on-boarded VNF package. Only changes in the \"operationalState\" attribute of an on-boarded VNF package and the deletion of the VNF package will be reported. Change in the \"usageState\" and \"onboardingState\" attributes are not reported. The notification shall comply with the provisions defined in Table 9.5.2.9-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when there is a change in the status of an onboarded VNF package, as follows.   - The \"operationalState\" attribute of a VNF package has changed, and the \"onboardingState\" attribute of the     package has the value \"ONBOARDED\".   - The on-boarded VNF package has been deleted. ")
 @Validated
 public class VnfPackageChangeNotification {
 	@JsonProperty("id")
@@ -86,7 +86,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this notification. If a notification is sent multiple times due to multiple subscriptions, the \"id\" attribute of all these notifications shall have the same value. ")
+	@Schema(required = true, description = "Identifier of this notification. If a notification is sent multiple times due to multiple subscriptions, the \"id\" attribute of all these notifications shall have the same value. ")
 	@NotNull
 
 	public String getId() {
@@ -108,7 +108,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return notificationType
 	 **/
-	@ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"VnfPackageChangeNotification\" for this notification type. ")
+	@Schema(required = true, description = "Discriminator for the different notification types. Shall be set to \"VnfPackageChangeNotification\" for this notification type. ")
 	@NotNull
 
 	public String getNotificationType() {
@@ -129,7 +129,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return subscriptionId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the subscription that this notification relates to. ")
+	@Schema(required = true, description = "Identifier of the subscription that this notification relates to. ")
 	@NotNull
 
 	public String getSubscriptionId() {
@@ -150,7 +150,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return timeStamp
 	 **/
-	@ApiModelProperty(required = true, value = "Date and time of the generation of the notification. ")
+	@Schema(required = true, description = "Date and time of the generation of the notification. ")
 	@NotNull
 
 	@Valid
@@ -175,7 +175,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return vnfPkgId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the on-boarded VNF package. This identifier is allocated by the NFVO. Its value is the same as the value of the \"id\" attribute of the related \"Individual VNF package\" resource. ")
+	@Schema(required = true, description = "Identifier of the on-boarded VNF package. This identifier is allocated by the NFVO. Its value is the same as the value of the \"id\" attribute of the related \"Individual VNF package\" resource. ")
 	@NotNull
 
 	public String getVnfPkgId() {
@@ -198,7 +198,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return vnfdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNFD contained in the VNF package, which also identifies the VNF package. This identifier is allocated by the VNF provider and copied from the VNFD. ")
+	@Schema(required = true, description = "Identifier of the VNFD contained in the VNF package, which also identifies the VNF package. This identifier is allocated by the VNF provider and copied from the VNFD. ")
 	@NotNull
 
 	public String getVnfdId() {
@@ -219,7 +219,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return changeType
 	 **/
-	@ApiModelProperty(required = true, value = "The type of change of the VNF package. ")
+	@Schema(required = true, description = "The type of change of the VNF package. ")
 	@NotNull
 
 	@Valid
@@ -243,7 +243,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return operationalState
 	 **/
-	@ApiModelProperty(value = "New operational state of the VNF package. Only present when changeType is OP_STATE_CHANGE. ")
+	@Schema(description = "New operational state of the VNF package. Only present when changeType is OP_STATE_CHANGE. ")
 
 	@Valid
 
@@ -265,7 +265,7 @@ public class VnfPackageChangeNotification {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "Links to resources related to this notification. ")
+	@Schema(required = true, description = "Links to resources related to this notification. ")
 	@NotNull
 
 	@Valid

@@ -35,10 +35,10 @@ import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.service.vim.OpenStackVim;
 import com.ubiqube.etsi.mano.service.vim.VimCapability;
 
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 
 @Controller
-@ApiIgnore
+@Hidden
 @RequestMapping("/poc")
 public class Poc {
 

@@ -28,8 +28,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents location constraints for a VNF to be instantiated. The
@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiModelProperty;
  * followed by a civic address based on the format defined by IETF RFC 4776
  * [13].
  */
-@ApiModel(description = "This type represents location constraints for a VNF to be instantiated. The location constraints shall be presented as a country code, optionally followed by a civic address based on the format defined by IETF RFC 4776 [13]. ")
+@Schema(description = "This type represents location constraints for a VNF to be instantiated. The location constraints shall be presented as a country code, optionally followed by a civic address based on the format defined by IETF RFC 4776 [13]. ")
 @Validated
 
 
@@ -59,7 +59,7 @@ public class LocationConstraints {
 	 * 
 	 * @return countryCode
 	 **/
-	@ApiModelProperty(required = true, value = "The two-letter ISO 3166 [29] country code in capital letters. ")
+	@Schema(required = true, description = "The two-letter ISO 3166 [29] country code in capital letters. ")
 	@NotNull
 
 	public String getCountryCode() {
@@ -88,7 +88,7 @@ public class LocationConstraints {
 	 * 
 	 * @return civicAddressElement
 	 **/
-	@ApiModelProperty(value = "Zero or more elements comprising the civic address. ")
+	@Schema(description = "Zero or more elements comprising the civic address. ")
 
 	@Valid
 

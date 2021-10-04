@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.ResourceHandle;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfcResourceInfoVnfcCpInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -64,7 +64,7 @@ public class VnfcResourceInfo   {
   private List<VnfcResourceInfoVnfcCpInfo> vnfcCpInfo = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   public VnfcResourceInfo id(String id) {
     this.id = id;
@@ -238,7 +238,7 @@ public class VnfcResourceInfo   {
     this.vnfcCpInfo = vnfcCpInfo;
   }
 
-  public VnfcResourceInfo metadata(KeyValuePairs metadata) {
+  public VnfcResourceInfo metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -250,11 +250,11 @@ public class VnfcResourceInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

@@ -10,13 +10,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents configuration parameters of a VNFC instance.
  */
-@ApiModel(description = "This type represents configuration parameters of a VNFC instance. ")
+@Schema(description = "This type represents configuration parameters of a VNFC instance. ")
 @Validated
 
 public class VnfcConfigurationData {
@@ -42,7 +42,7 @@ public class VnfcConfigurationData {
 	 *
 	 * @return vnfcInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of a VNFC instance to which this set of configuration data applies. ")
+	@Schema(required = true, description = "Identifier of a VNFC instance to which this set of configuration data applies. ")
 	@NotNull
 
 	public String getVnfcInstanceId() {
@@ -63,7 +63,7 @@ public class VnfcConfigurationData {
 	 *
 	 * @return extCpConfig
 	 **/
-	@ApiModelProperty(value = "Configuration parameters for the external CPs of the VNFC instance. ")
+	@Schema(description = "Configuration parameters for the external CPs of the VNFC instance. ")
 
 	@Valid
 
@@ -85,7 +85,7 @@ public class VnfcConfigurationData {
 	 *
 	 * @return dhcpServer
 	 **/
-	@ApiModelProperty(value = "IP address of the DHCP server that the VNF instance can use to obtain IP addresses to be assigned to its external CPs. ")
+	@Schema(description = "IP address of the DHCP server that the VNF instance can use to obtain IP addresses to be assigned to its external CPs. ")
 
 	public String getDhcpServer() {
 		return dhcpServer;
@@ -105,7 +105,7 @@ public class VnfcConfigurationData {
 	 *
 	 * @return vnfcSpecificData
 	 **/
-	@ApiModelProperty(value = "Additional configurable properties of the VNFC instance declared in the VNFD as \"VnfcConfigurableProperties\". ")
+	@Schema(description = "Additional configurable properties of the VNFC instance declared in the VNFD as \"VnfcConfigurableProperties\". ")
 
 	@Valid
 

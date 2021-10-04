@@ -29,14 +29,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents information about a link port of a VL instance. It shall
  * comply with the provisions defined in Table 6.5.3.55-1.
  */
-@ApiModel(description = "This type represents information about a link port of a VL instance. It shall comply with the provisions defined in Table 6.5.3.55-1. ")
+@Schema(description = "This type represents information about a link port of a VL instance. It shall comply with the provisions defined in Table 6.5.3.55-1. ")
 @Validated
 
 
@@ -62,7 +62,7 @@ public class NsLinkPortInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this link port as provided by the entity that has created the link port. ")
+	@Schema(required = true, description = "Identifier of this link port as provided by the entity that has created the link port. ")
 	@NotNull
 
 	public String getId() {
@@ -83,7 +83,7 @@ public class NsLinkPortInfo {
 	 *
 	 * @return resourceHandle
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the virtualised network resource realizing this link port. ")
+	@Schema(required = true, description = "Identifier of the virtualised network resource realizing this link port. ")
 	@NotNull
 
 	@Valid
@@ -117,7 +117,7 @@ public class NsLinkPortInfo {
 	 *
 	 * @return nsCpHandle
 	 **/
-	@ApiModelProperty(value = "Identifier of the CP/SAP instance to be connected to this link port. The value refers to a vnfExtCpInfo item in the VnfInstance, or a pnfExtCpInfo item in the PnfInfo, or a sapInfo item in the NS instance. There shall be at most one link port associated with any connection point instance. ")
+	@Schema(description = "Identifier of the CP/SAP instance to be connected to this link port. The value refers to a vnfExtCpInfo item in the VnfInstance, or a pnfExtCpInfo item in the PnfInfo, or a sapInfo item in the NS instance. There shall be at most one link port associated with any connection point instance. ")
 
 	@Valid
 

@@ -45,7 +45,8 @@ public final class ClassUtils {
 			return null;
 		}
 		final int pi = key.lastIndexOf('.');
-		return key.substring(0, pi);
+		final String p = key.substring(0, pi).toLowerCase();
+		return p.replaceFirst("\\.abstract", ".Abstract");
 	}
 
 	public static String toscaToJava(final String derivedFrom) {

@@ -34,7 +34,7 @@ public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBi
 	private final EntityManager em;
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
 
-	public AbstractDirectJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+	protected AbstractDirectJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
 		super(contentManager, jsonMapper, namingStrategy);
 		this.em = em;
 		this.repository = repository;

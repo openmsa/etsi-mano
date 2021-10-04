@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -29,26 +29,26 @@ import java.util.List;
 /**
   * This type represents a PM job. 
  **/
-@ApiModel(description="This type represents a PM job. ")
+@Schema(description="This type represents a PM job. ")
 public class PmJobsPmJob  {
   
-  @ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
+  @Schema(required = true, description = "An identifier with the intention of being globally unique. ")
  /**
    * An identifier with the intention of being globally unique. 
   **/
   private String id = null;
 
-  @ApiModelProperty(required = true, value = "Identifiers of the NS instances for which performance information is collected. ")
+  @Schema(required = true, description = "Identifiers of the NS instances for which performance information is collected. ")
  /**
    * Identifiers of the NS instances for which performance information is collected. 
   **/
   private List<String> objectInstanceIds = new ArrayList<String>();
 
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private PmJobsPmJobCriteria criteria = null;
 
-  @ApiModelProperty(value = "")
+  @Schema(description = "")
   @Valid
   private PmJobsPmJobReports reports = null;
  /**

@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mec.lcm;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -119,6 +120,14 @@ public class AppBlueprint extends AbstractBlueprint<AppTask, AppInstance> implem
 	@Override
 	public AppInstance getInstance() {
 		return appInstance;
+	}
+
+	@Override
+	public void addVimConnection(final VimConnectionInformation vimConnection) {
+		if (this.vimConnections == null) {
+			this.vimConnections = new LinkedHashSet<>();
+		}
+		this.vimConnections.add(vimConnection);
 	}
 
 }

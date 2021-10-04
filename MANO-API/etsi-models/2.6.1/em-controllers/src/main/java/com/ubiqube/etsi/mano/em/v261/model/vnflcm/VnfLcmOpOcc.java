@@ -30,13 +30,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a VNF lifecycle management operation occurrence.
  */
-@ApiModel(description = "This type represents a VNF lifecycle management operation occurrence. ")
+@Schema(description = "This type represents a VNF lifecycle management operation occurrence. ")
 @Validated
 public class VnfLcmOpOcc {
 	@JsonProperty("id")
@@ -99,7 +99,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this VNF lifecycle management operation occurrence. ")
+	@Schema(required = true, description = "Identifier of this VNF lifecycle management operation occurrence. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -119,7 +119,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return operationState
 	 **/
-	@ApiModelProperty(required = true, value = "The state of the LCM operation. ")
+	@Schema(required = true, description = "The state of the LCM operation. ")
 	@NotNull
 	@Valid
 	public LcmOperationStateType getOperationState() {
@@ -140,7 +140,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return stateEnteredTime
 	 **/
-	@ApiModelProperty(required = true, value = "Date-time when the current state has been entered. ")
+	@Schema(required = true, description = "Date-time when the current state has been entered. ")
 	@NotNull
 	public Date getStateEnteredTime() {
 		return stateEnteredTime;
@@ -160,7 +160,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return startTime
 	 **/
-	@ApiModelProperty(required = true, value = "Date-time of the start of the operation. ")
+	@Schema(required = true, description = "Date-time of the start of the operation. ")
 	@NotNull
 
 	public Date getStartTime() {
@@ -181,7 +181,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF instance to which the operation applies ")
+	@Schema(required = true, description = "Identifier of the VNF instance to which the operation applies ")
 	@NotNull
 	public String getVnfInstanceId() {
 		return vnfInstanceId;
@@ -202,7 +202,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return grantId
 	 **/
-	@ApiModelProperty(value = "Identifier of the grant related to this VNF LCM operation occurrence, if such grant exists. ")
+	@Schema(description = "Identifier of the grant related to this VNF LCM operation occurrence, if such grant exists. ")
 	public String getGrantId() {
 		return grantId;
 	}
@@ -222,7 +222,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return operation
 	 **/
-	@ApiModelProperty(required = true, value = "Type of the actual LCM operation represented by this VNF LCM operation occurrence. ")
+	@Schema(required = true, description = "Type of the actual LCM operation represented by this VNF LCM operation occurrence. ")
 	@NotNull
 	@Valid
 	public LcmOperationType getOperation() {
@@ -246,7 +246,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return isAutomaticInvocation
 	 **/
-	@ApiModelProperty(required = true, value = "Set to true if this VNF LCM operation occurrence has been triggered by an automated procedure inside the VNFM (i.e. ScaleVnf / ScaleVnfToLevel triggered by auto-scale, or HealVnf triggered by auto-heal). Set to false otherwise. ")
+	@Schema(required = true, description = "Set to true if this VNF LCM operation occurrence has been triggered by an automated procedure inside the VNFM (i.e. ScaleVnf / ScaleVnfToLevel triggered by auto-scale, or HealVnf triggered by auto-heal). Set to false otherwise. ")
 	@NotNull
 	public Boolean isIsAutomaticInvocation() {
 		return isAutomaticInvocation;
@@ -273,7 +273,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return operationParams
 	 **/
-	@ApiModelProperty(required = true, value = "Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between operationType and the data type of this attribute shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR: ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE: TerminateVnfRequest * MODIFY_INFO: VnfInfoModificationRequest ")
+	@Schema(required = true, description = "Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between operationType and the data type of this attribute shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR: ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE: TerminateVnfRequest * MODIFY_INFO: VnfInfoModificationRequest ")
 	@NotNull
 	public Map<String, String> getOperationParams() {
 		return operationParams;
@@ -295,7 +295,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return isCancelPending
 	 **/
-	@ApiModelProperty(required = true, value = "If the VNF LCM operation occurrence is in \"STARTING\", \"PROCESSING\" or \"ROLLING_BACK\" state and the operation is being cancelled, this attribute shall be set to true. Otherwise, it shall be set to false. ")
+	@Schema(required = true, description = "If the VNF LCM operation occurrence is in \"STARTING\", \"PROCESSING\" or \"ROLLING_BACK\" state and the operation is being cancelled, this attribute shall be set to true. Otherwise, it shall be set to false. ")
 	@NotNull
 	public Boolean isIsCancelPending() {
 		return isCancelPending;
@@ -316,7 +316,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return cancelMode
 	 **/
-	@ApiModelProperty(value = "The mode of an ongoing cancellation. Shall be present when isCancelPending=true, and shall be absent otherwise. ")
+	@Schema(description = "The mode of an ongoing cancellation. Shall be present when isCancelPending=true, and shall be absent otherwise. ")
 	@Valid
 	public CancelModeType getCancelMode() {
 		return cancelMode;
@@ -340,7 +340,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return error
 	 **/
-	@ApiModelProperty(value = "If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\" is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and contain error information, unless it has been requested to be excluded via an attribute selector. ")
+	@Schema(description = "If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\" is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and contain error information, unless it has been requested to be excluded via an attribute selector. ")
 	@Valid
 	public ProblemDetails getError() {
 		return error;
@@ -360,7 +360,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return resourceChanges
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -385,7 +385,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return changedInfo
 	 **/
-	@ApiModelProperty(value = "Information about the changed VNF instance information, including VNF configurable properties, if applicable. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
+	@Schema(description = "Information about the changed VNF instance information, including VNF configurable properties, if applicable. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
 	@Valid
 	public VnfInfoModifications getChangedInfo() {
 		return changedInfo;
@@ -416,7 +416,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return changedExtConnectivity
 	 **/
-	@ApiModelProperty(value = "Information about changed external connectivity, if applicable. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
+	@Schema(description = "Information about changed external connectivity, if applicable. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
 	@Valid
 	public List<ExtVirtualLinkInfo> getChangedExtConnectivity() {
 		return changedExtConnectivity;
@@ -436,7 +436,7 @@ public class VnfLcmOpOcc {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 	@Valid
 	public VnfLcmOpOccLinks getLinks() {
 		return links;

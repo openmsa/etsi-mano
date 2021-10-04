@@ -28,8 +28,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents attribute modifications for an individual NS descriptor
@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiModelProperty;
  * one of the attributes - nsdOperationalState and userDefinedData - shall be
  * present.
  */
-@ApiModel(description = "This type represents attribute modifications for an individual NS descriptor resource based on the NsdInfo data type. The attributes of NsdInfo that can be modified are included in the NsdInfoModifications data type.NOTE: At least one of the attributes - nsdOperationalState and userDefinedData - shall be present. ")
+@Schema(description = "This type represents attribute modifications for an individual NS descriptor resource based on the NsdInfo data type. The attributes of NsdInfo that can be modified are included in the NsdInfoModifications data type.NOTE: At least one of the attributes - nsdOperationalState and userDefinedData - shall be present. ")
 @Validated
 
 
@@ -60,7 +60,7 @@ public class NsdInfoModifications {
 	 *
 	 * @return nsdOperationalState
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -93,7 +93,7 @@ public class NsdInfoModifications {
 	 *
 	 * @return userDefinedData
 	 **/
-	@ApiModelProperty(value = "Modifications of the userDefinedData attribute in NsdInfo data type. See note. If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396 [25]). NOTE- At least one of the attributes - nsdOperationalState and userDefinedData - shall be present. ")
+	@Schema(description = "Modifications of the userDefinedData attribute in NsdInfo data type. See note. If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396 [25]). NOTE- At least one of the attributes - nsdOperationalState and userDefinedData - shall be present. ")
 
 	@Valid
 

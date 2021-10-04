@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.1</version>
+		<version>2.5.4</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ubiqube.mano</groupId>
@@ -29,15 +29,16 @@
 		</repository>
 	</distributionManagement>
 
-	<properties>
+	<properties> 
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<com.ubiqube.hibernate-search.version>5.11.9.Final</com.ubiqube.hibernate-search.version>
-		<com.ubiqube.hibernate-search6.version>6.0.5.Final</com.ubiqube.hibernate-search6.version>
+		<com.ubiqube.hibernate-search6.version>6.0.6.Final</com.ubiqube.hibernate-search6.version>
 		<com.ubiqube.springfox-swagger.version>3.0.0-SNAPSHOT</com.ubiqube.springfox-swagger.version>
 		<com.ubiqube.openstack4j.version>3.11-SNAPSHOT</com.ubiqube.openstack4j.version>
-		<com.ubiqube.swagger3>2.1.9</com.ubiqube.swagger3>
+		<com.ubiqube.swagger3>2.1.10</com.ubiqube.swagger3>
 		<com.ubiqube.mockito.version>3.11.2</com.ubiqube.mockito.version>
 		<com.ubiqube.elasticsearch.version>7.13.2</com.ubiqube.elasticsearch.version>
+		<com.ubiqube.springdoc.version>1.5.10</com.ubiqube.springdoc.version>
 	</properties>
 	<build>
 		<plugins>
@@ -248,36 +249,6 @@
 				<version>3.0.2</version>
 			</dependency>
 			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger-ui</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger2</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-spring-webmvc</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-spring-web</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-core</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-spi</artifactId>
-				<version>${com.ubiqube.springfox-swagger.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>io.swagger</groupId>
 				<artifactId>swagger-annotations</artifactId>
 				<version>1.6.2</version>
@@ -379,6 +350,27 @@
 				<artifactId>podam</artifactId>
 				<version>7.2.7.RELEASE</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-vfs2</artifactId>
+				<version>2.9.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-ui</artifactId>
+				<version>${com.ubiqube.springdoc.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-security</artifactId>
+				<version>${com.ubiqube.springdoc.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-data-rest</artifactId>
+				<version>latest.version</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 </project>

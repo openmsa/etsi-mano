@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.nslcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -40,7 +40,7 @@ public class RevertVnfToSnapshotData   {
   private String vnfSnapshotInfoId = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   public RevertVnfToSnapshotData vnfInstanceId(String vnfInstanceId) {
     this.vnfInstanceId = vnfInstanceId;
@@ -82,7 +82,7 @@ public class RevertVnfToSnapshotData   {
     this.vnfSnapshotInfoId = vnfSnapshotInfoId;
   }
 
-  public RevertVnfToSnapshotData additionalParams(KeyValuePairs additionalParams) {
+  public RevertVnfToSnapshotData additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -94,11 +94,11 @@ public class RevertVnfToSnapshotData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

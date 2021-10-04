@@ -28,13 +28,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a request to create a PM job.
  */
-@ApiModel(description = "This type represents a request to create a PM job. ")
+@Schema(description = "This type represents a request to create a PM job. ")
 @Validated
 
 
@@ -65,7 +65,7 @@ public class CreatePmJobRequest {
 	 * 
 	 * @return objectInstanceIds
 	 **/
-	@ApiModelProperty(value = "Identifiers of the VNF instances for which performance information is requested to be collected. ")
+	@Schema(description = "Identifiers of the VNF instances for which performance information is requested to be collected. ")
 
 	public List<String> getObjectInstanceIds() {
 		return objectInstanceIds;
@@ -85,7 +85,7 @@ public class CreatePmJobRequest {
 	 * 
 	 * @return criteria
 	 **/
-	@ApiModelProperty(required = true, value = "Criteria of the collection of performance information. ")
+	@Schema(required = true, description = "Criteria of the collection of performance information. ")
 	@NotNull
 
 	@Valid

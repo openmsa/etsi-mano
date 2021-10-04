@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -27,22 +27,22 @@ import javax.validation.constraints.NotNull;
 /**
   * Links to resources related to this notification. 
  **/
-@ApiModel(description="Links to resources related to this notification. ")
+@Schema(description="Links to resources related to this notification. ")
 public class SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotificationLinks  {
   
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private PmJobsPmJobReportsLinksSelf subscription = null;
 
-  @ApiModelProperty(value = "")
+  @Schema(description = "")
   @Valid
   private PmJobsPmJobReportsLinksSelf objectInstance = null;
 
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private PmJobsPmJobReportsLinksSelf pmJob = null;
 
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private PmJobsPmJobReportsLinksSelf performanceReport = null;
  /**

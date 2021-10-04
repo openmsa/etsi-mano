@@ -18,22 +18,22 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
   * Parameters for authentication/authorization using BASIC. Shall be present if authType is \"BASIC\" and the contained information has not been provisioned out of band. Shall be absent otherwise. 
  **/
-@ApiModel(description="Parameters for authentication/authorization using BASIC. Shall be present if authType is \"BASIC\" and the contained information has not been provisioned out of band. Shall be absent otherwise. ")
+@Schema(description="Parameters for authentication/authorization using BASIC. Shall be present if authType is \"BASIC\" and the contained information has not been provisioned out of band. Shall be absent otherwise. ")
 public class SubscriptionsPmSubscriptionRequestAuthenticationParamsBasic  {
   
-  @ApiModelProperty(value = "Username to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. ")
+  @Schema(description = "Username to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. ")
  /**
    * Username to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. 
   **/
   private String userName = null;
 
-  @ApiModelProperty(value = "Password to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. ")
+  @Schema(description = "Password to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. ")
  /**
    * Password to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. 
   **/

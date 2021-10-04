@@ -26,14 +26,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents modifications to the information of a VNF package. It
  * shall comply with the provisions defined in Table 9.5.2.3-1.
  */
-@ApiModel(description = "This type represents modifications to the information of a VNF package.  It shall comply with the provisions defined in Table 9.5.2.3-1. ")
+@Schema(description = "This type represents modifications to the information of a VNF package.  It shall comply with the provisions defined in Table 9.5.2.3-1. ")
 @Validated
 public class VnfPkgInfoModifications {
 	@JsonProperty("operationalState")
@@ -53,7 +53,7 @@ public class VnfPkgInfoModifications {
 	 *
 	 * @return operationalState
 	 **/
-	@ApiModelProperty(value = "New value of the operational state of the on-boarded instance of the VNF package. ")
+	@Schema(description = "New value of the operational state of the on-boarded instance of the VNF package. ")
 
 	@Valid
 
@@ -75,7 +75,7 @@ public class VnfPkgInfoModifications {
 	 *
 	 * @return userDefinedData
 	 **/
-	@ApiModelProperty(value = "User defined data to be updated. For existing keys, the value is replaced. ")
+	@Schema(description = "User defined data to be updated. For existing keys, the value is replaced. ")
 
 	@Valid
 

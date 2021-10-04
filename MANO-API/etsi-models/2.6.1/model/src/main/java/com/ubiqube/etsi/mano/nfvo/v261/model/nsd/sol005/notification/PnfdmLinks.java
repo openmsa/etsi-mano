@@ -27,14 +27,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the links to resources that a PNFD management
  * notification can contain.
  */
-@ApiModel(description = "This type represents the links to resources that a PNFD management notification can contain.")
+@Schema(description = "This type represents the links to resources that a PNFD management notification can contain.")
 @Validated
 
 
@@ -55,7 +55,7 @@ public class PnfdmLinks {
 	 * 
 	 * @return pnfdInfo
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -78,7 +78,7 @@ public class PnfdmLinks {
 	 * 
 	 * @return subscription
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

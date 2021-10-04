@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -27,16 +27,16 @@ import javax.validation.constraints.NotNull;
 /**
   * This type represents a request to create a threshold. 
  **/
-@ApiModel(description="This type represents a request to create a threshold. ")
+@Schema(description="This type represents a request to create a threshold. ")
 public class ThresholdsCreateThresholdRequest  {
   
-  @ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
+  @Schema(required = true, description = "An identifier with the intention of being globally unique. ")
  /**
    * An identifier with the intention of being globally unique. 
   **/
   private String objectInstanceId = null;
 
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private ThresholdsThresholdCriteria criteria = null;
  /**

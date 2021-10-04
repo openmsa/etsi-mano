@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.ind;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -27,7 +28,10 @@ import lombok.Data;
 
 @Data
 @Entity
-public class VnfIndicators {
+public class VnfIndicators implements Serializable{
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Identifier of this VNF indicator.
 	 */

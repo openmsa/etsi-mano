@@ -29,14 +29,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.CpProtocolData;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the configuration data on the external CP of the PNF. It
  * shall comply with the provisions defined in Table 6.5.3.16-1.
  */
-@ApiModel(description = "This type represents the configuration data on the external CP of the PNF. It shall comply with the provisions defined in Table 6.5.3.16-1. ")
+@Schema(description = "This type represents the configuration data on the external CP of the PNF. It shall comply with the provisions defined in Table 6.5.3.16-1. ")
 @Validated
 
 
@@ -61,7 +61,7 @@ public class PnfExtCpData {
 	 *
 	 * @return cpInstanceI16
 	 **/
-	@ApiModelProperty(value = "Identifier of the CP. Shall be present for existing CP. ")
+	@Schema(description = "Identifier of the CP. Shall be present for existing CP. ")
 
 	public String getCpInstanceI16() {
 		return cpInstanceI16;
@@ -82,7 +82,7 @@ public class PnfExtCpData {
 	 *
 	 * @return cpdId
 	 **/
-	@ApiModelProperty(value = "Identifier of the Connection Point Descriptor (CPD) for this CP. Shall be present for new CP. ")
+	@Schema(description = "Identifier of the Connection Point Descriptor (CPD) for this CP. Shall be present for new CP. ")
 
 	public String getCpdId() {
 		return cpdId;
@@ -107,7 +107,7 @@ public class PnfExtCpData {
 	 *
 	 * @return cpProtocolData
 	 **/
-	@ApiModelProperty(required = true, value = "Address assigned for this CP. ")
+	@Schema(required = true, description = "Address assigned for this CP. ")
 	@NotNull
 
 	@Valid

@@ -27,7 +27,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * ExtManagedVirtualLinkInfo
@@ -58,7 +58,7 @@ public class ExtManagedVirtualLinkInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the externally-managed internal VL and the related externally-managed VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
+	@Schema(required = true, description = "Identifier of the externally-managed internal VL and the related externally-managed VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
 	@NotNull
 
 	public String getId() {
@@ -79,7 +79,7 @@ public class ExtManagedVirtualLinkInfo {
 	 *
 	 * @return vnfVirtualLinkDescId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD. ")
 	@NotNull
 
 	public String getVnfVirtualLinkDescId() {
@@ -100,7 +100,7 @@ public class ExtManagedVirtualLinkInfo {
 	 *
 	 * @return networkResource
 	 **/
-	@ApiModelProperty(value = "Reference to the VirtualNetwork resource. ")
+	@Schema(description = "Reference to the VirtualNetwork resource. ")
 
 	@Valid
 
@@ -130,7 +130,7 @@ public class ExtManagedVirtualLinkInfo {
 	 *
 	 * @return vnfLinkPorts
 	 **/
-	@ApiModelProperty(value = "Link ports of this VL. ")
+	@Schema(description = "Link ports of this VL. ")
 
 	@Valid
 

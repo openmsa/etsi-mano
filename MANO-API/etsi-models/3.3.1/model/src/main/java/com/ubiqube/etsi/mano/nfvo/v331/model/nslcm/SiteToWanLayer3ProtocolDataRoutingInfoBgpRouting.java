@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.nslcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -40,7 +40,7 @@ public class SiteToWanLayer3ProtocolDataRoutingInfoBgpRouting   {
   private String bgpNeighbour = null;
 
   @JsonProperty("bgpAdditionalParam")
-  private KeyValuePairs bgpAdditionalParam = null;
+  private Map<String, String> bgpAdditionalParam = null;
 
   public SiteToWanLayer3ProtocolDataRoutingInfoBgpRouting bgpAs(Object bgpAs) {
     this.bgpAs = bgpAs;
@@ -81,7 +81,7 @@ public class SiteToWanLayer3ProtocolDataRoutingInfoBgpRouting   {
     this.bgpNeighbour = bgpNeighbour;
   }
 
-  public SiteToWanLayer3ProtocolDataRoutingInfoBgpRouting bgpAdditionalParam(KeyValuePairs bgpAdditionalParam) {
+  public SiteToWanLayer3ProtocolDataRoutingInfoBgpRouting bgpAdditionalParam(Map<String, String> bgpAdditionalParam) {
     this.bgpAdditionalParam = bgpAdditionalParam;
     return this;
   }
@@ -93,11 +93,11 @@ public class SiteToWanLayer3ProtocolDataRoutingInfoBgpRouting   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getBgpAdditionalParam() {
+    public Map<String, String> getBgpAdditionalParam() {
     return bgpAdditionalParam;
   }
 
-  public void setBgpAdditionalParam(KeyValuePairs bgpAdditionalParam) {
+  public void setBgpAdditionalParam(Map<String, String> bgpAdditionalParam) {
     this.bgpAdditionalParam = bgpAdditionalParam;
   }
 

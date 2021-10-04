@@ -64,7 +64,7 @@ public class NsInstances331Sol005Controller implements NsInstances331Sol005Api {
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, @Valid final HealNsRequest body) {
-		return nsInstanceGenericFrontController.heal(nsInstanceId, body);
+		return nsInstanceGenericFrontController.heal(nsInstanceId, body, NsInstances331Sol005Controller::getNsbLink);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class NsInstances331Sol005Controller implements NsInstances331Sol005Api {
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, @Valid final ScaleNsRequest body) {
-		return nsInstanceGenericFrontController.scale(nsInstanceId, body);
+		return nsInstanceGenericFrontController.scale(nsInstanceId, body, NsInstances331Sol005Controller::getNsbLink);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class NsInstances331Sol005Controller implements NsInstances331Sol005Api {
 
 	@Override
 	public ResponseEntity<Void> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, @Valid final UpdateNsRequest body) {
-		return nsInstanceGenericFrontController.update(nsInstanceId, body);
+		return nsInstanceGenericFrontController.update(nsInstanceId, body, NsInstances331Sol005Controller::getNsbLink);
 	}
 
 	@Override

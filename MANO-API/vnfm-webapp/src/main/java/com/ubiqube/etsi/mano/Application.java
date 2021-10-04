@@ -21,15 +21,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
+import ma.glasnost.orika.OrikaSystemProperties;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 
 @SpringBootApplication
-@EnableSwagger2WebMvc
+@EnableScheduling
 @EnableJms
 public class Application extends SpringBootServletInitializer {
 
 	public static void main(final String[] args) {
+		System.setProperty(OrikaSystemProperties.COMPILER_STRATEGY, EclipseJdtCompilerStrategy.class.getName());
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES, "true");
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/okika");
 		SpringApplication.run(Application.class, args);
 	}
 

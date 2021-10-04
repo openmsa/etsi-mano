@@ -27,8 +27,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information used to scale an NS instance to a target
@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiModelProperty;
  * NS instantiation levels, the NS scaling aspects and their corresponding NS
  * scale levels applicable to the NS instance are declared in the NSD.
  */
-@ApiModel(description = "This type represents the information used to scale an NS instance to a target size. The target size is either expressed as an NS instantiation level or as a list of NS scale levels, one per NS scaling aspect, of the current DF. The NS instantiation levels, the NS scaling aspects and their corresponding NS scale levels applicable to the NS instance are declared in the NSD. ")
+@Schema(description = "This type represents the information used to scale an NS instance to a target size. The target size is either expressed as an NS instantiation level or as a list of NS scale levels, one per NS scaling aspect, of the current DF. The NS instantiation levels, the NS scaling aspects and their corresponding NS scale levels applicable to the NS instance are declared in the NSD. ")
 @Validated
 
 
@@ -60,7 +60,7 @@ public class ScaleNsToLevelData {
 	 * 
 	 * @return nsInstantiationLevel
 	 **/
-	@ApiModelProperty(value = "Identifier of the target NS instantiation level of the current DF to which the NS instance is requested to be scaled. ")
+	@Schema(description = "Identifier of the target NS instantiation level of the current DF to which the NS instance is requested to be scaled. ")
 
 	public String getNsInstantiationLevel() {
 		return nsInstantiationLevel;
@@ -89,7 +89,7 @@ public class ScaleNsToLevelData {
 	 * 
 	 * @return nsScaleInfo
 	 **/
-	@ApiModelProperty(value = "For each NS scaling aspect of the current DF, defines the target NS scale level to which the NS instance is to be scaled. ")
+	@Schema(description = "For each NS scaling aspect of the current DF, defines the target NS scale level to which the NS instance is to be scaled. ")
 
 	@Valid
 

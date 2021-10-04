@@ -30,13 +30,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * The alarm data type encapsulates information about an alarm.
  */
-@ApiModel(description = "The alarm data type encapsulates information about an alarm. ")
+@Schema(description = "The alarm data type encapsulates information about an alarm. ")
 @Validated
 
 
@@ -137,7 +137,7 @@ public class Alarm {
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this Alarm information element. ")
+	@Schema(required = true, description = "Identifier of this Alarm information element. ")
 	@NotNull
 
 	public String getId() {
@@ -158,7 +158,7 @@ public class Alarm {
 	 * 
 	 * @return managedObjectId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the affected VNF instance. ")
+	@Schema(required = true, description = "Identifier of the affected VNF instance. ")
 	@NotNull
 
 	public String getManagedObjectId() {
@@ -184,7 +184,7 @@ public class Alarm {
 	 *
 	 * @return vnfcInstanceIds
 	 **/
-	@ApiModelProperty(required = true, value = "Identifiers of the affected VNFC instances. ")
+	@Schema(required = true, description = "Identifiers of the affected VNFC instances. ")
 	@NotNull
 
 	public List<String> getVnfcInstanceIds() {
@@ -205,7 +205,7 @@ public class Alarm {
 	 * 
 	 * @return rootCauseFaultyResource
 	 **/
-	@ApiModelProperty(required = true, value = "The virtualised resources that are causing the VNF fault. ")
+	@Schema(required = true, description = "The virtualised resources that are causing the VNF fault. ")
 	@NotNull
 
 	@Valid
@@ -228,7 +228,7 @@ public class Alarm {
 	 * 
 	 * @return alarmRaisedTime
 	 **/
-	@ApiModelProperty(required = true, value = "Time stamp indicating when the alarm is raised by the managed object. ")
+	@Schema(required = true, description = "Time stamp indicating when the alarm is raised by the managed object. ")
 	@NotNull
 
 	public String getAlarmRaisedTime() {
@@ -250,7 +250,7 @@ public class Alarm {
 	 * 
 	 * @return alarmChangedTime
 	 **/
-	@ApiModelProperty(value = "Time stamp indicating when the alarm was last changed. It shall be present if the alarm has been updated. ")
+	@Schema(description = "Time stamp indicating when the alarm was last changed. It shall be present if the alarm has been updated. ")
 
 	public String getAlarmChangedTime() {
 		return alarmChangedTime;
@@ -271,7 +271,7 @@ public class Alarm {
 	 * 
 	 * @return alarmClearedTime
 	 **/
-	@ApiModelProperty(value = "Time stamp indicating when the alarm was cleared. It shall be present if the alarm has been cleared. ")
+	@Schema(description = "Time stamp indicating when the alarm was cleared. It shall be present if the alarm has been cleared. ")
 
 	public String getAlarmClearedTime() {
 		return alarmClearedTime;
@@ -292,7 +292,7 @@ public class Alarm {
 	 * 
 	 * @return ackState
 	 **/
-	@ApiModelProperty(required = true, value = "Acknowledgement state of the alarm. Permitted values: * UNACKNOWLEDGED * ACKNOWLEDGED. ")
+	@Schema(required = true, description = "Acknowledgement state of the alarm. Permitted values: * UNACKNOWLEDGED * ACKNOWLEDGED. ")
 	@NotNull
 
 	public AckStateEnum getAckState() {
@@ -313,7 +313,7 @@ public class Alarm {
 	 * 
 	 * @return perceivedSeverity
 	 **/
-	@ApiModelProperty(required = true, value = "Perceived severity of the managed object failure. ")
+	@Schema(required = true, description = "Perceived severity of the managed object failure. ")
 	@NotNull
 
 	@Valid
@@ -336,7 +336,7 @@ public class Alarm {
 	 * 
 	 * @return eventTime
 	 **/
-	@ApiModelProperty(required = true, value = "Time stamp indicating when the fault was observed. ")
+	@Schema(required = true, description = "Time stamp indicating when the fault was observed. ")
 	@NotNull
 
 	public String getEventTime() {
@@ -357,7 +357,7 @@ public class Alarm {
 	 * 
 	 * @return eventType
 	 **/
-	@ApiModelProperty(required = true, value = "Type of event. ")
+	@Schema(required = true, description = "Type of event. ")
 	@NotNull
 
 	@Valid
@@ -380,7 +380,7 @@ public class Alarm {
 	 * 
 	 * @return faultType
 	 **/
-	@ApiModelProperty(value = "Additional information to clarify the type of the fault. ")
+	@Schema(description = "Additional information to clarify the type of the fault. ")
 
 	public String getFaultType() {
 		return faultType;
@@ -400,7 +400,7 @@ public class Alarm {
 	 * 
 	 * @return probableCause
 	 **/
-	@ApiModelProperty(required = true, value = "Information about the probable cause of the fault. ")
+	@Schema(required = true, description = "Information about the probable cause of the fault. ")
 	@NotNull
 
 	public String getProbableCause() {
@@ -423,7 +423,7 @@ public class Alarm {
 	 * 
 	 * @return isRootCause
 	 **/
-	@ApiModelProperty(required = true, value = "Attribute indicating if this fault is the root for other correlated alarms. If TRUE, then the alarms listed in the attribute CorrelatedAlarmId are caused by this fault. ")
+	@Schema(required = true, description = "Attribute indicating if this fault is the root for other correlated alarms. If TRUE, then the alarms listed in the attribute CorrelatedAlarmId are caused by this fault. ")
 	@NotNull
 
 	public Boolean getIsRootCause() {
@@ -452,7 +452,7 @@ public class Alarm {
 	 * 
 	 * @return correlatedAlarmIds
 	 **/
-	@ApiModelProperty(value = "List of identifiers of other alarms correlated to this fault. ")
+	@Schema(description = "List of identifiers of other alarms correlated to this fault. ")
 
 	public List<String> getCorrelatedAlarmIds() {
 		return correlatedAlarmIds;
@@ -480,7 +480,7 @@ public class Alarm {
 	 * 
 	 * @return faultDetails
 	 **/
-	@ApiModelProperty(value = "Provides additional information about the fault. ")
+	@Schema(description = "Provides additional information about the fault. ")
 
 	public List<String> getFaultDetails() {
 		return faultDetails;
@@ -500,7 +500,7 @@ public class Alarm {
 	 * 
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

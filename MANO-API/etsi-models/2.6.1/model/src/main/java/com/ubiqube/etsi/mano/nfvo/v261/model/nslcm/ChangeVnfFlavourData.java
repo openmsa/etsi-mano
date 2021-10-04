@@ -31,15 +31,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * The type represents the information that is requested to be changed
  * deployment flavor for an existing VNF instance. It shall comply with the
  * provisions defined in Table 6.5.3.25-1.
  */
-@ApiModel(description = "The type represents the information that is requested to be changed deployment flavor for an existing VNF instance. It shall comply with the provisions defined in Table 6.5.3.25-1. ")
+@Schema(description = "The type represents the information that is requested to be changed deployment flavor for an existing VNF instance. It shall comply with the provisions defined in Table 6.5.3.25-1. ")
 @Validated
 
 
@@ -74,7 +74,7 @@ public class ChangeVnfFlavourData {
 	 *
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF instance to be modified. ")
+	@Schema(required = true, description = "Identifier of the VNF instance to be modified. ")
 	@NotNull
 
 	public String getVnfInstanceId() {
@@ -95,7 +95,7 @@ public class ChangeVnfFlavourData {
 	 *
 	 * @return newFlavourId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF deployment flavor to be instantiated. ")
+	@Schema(required = true, description = "Identifier of the VNF deployment flavor to be instantiated. ")
 	@NotNull
 
 	public String getNewFlavourId() {
@@ -118,7 +118,7 @@ public class ChangeVnfFlavourData {
 	 *
 	 * @return instantiationLevelId
 	 **/
-	@ApiModelProperty(value = "Identifier of the instantiation level of the deployment flavor to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
+	@Schema(description = "Identifier of the instantiation level of the deployment flavor to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
 
 	public String getInstantiationLevelId() {
 		return instantiationLevelId;
@@ -146,7 +146,7 @@ public class ChangeVnfFlavourData {
 	 *
 	 * @return extVirtualLinks
 	 **/
-	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
+	@Schema(description = "Information about external VLs to connect the VNF to. ")
 
 	@Valid
 
@@ -176,7 +176,7 @@ public class ChangeVnfFlavourData {
 	 *
 	 * @return extManagedVirtualLinks
 	 **/
-	@ApiModelProperty(value = "information about internal VLs that are managed by NFVO. ")
+	@Schema(description = "information about internal VLs that are managed by NFVO. ")
 
 	@Valid
 
@@ -200,7 +200,7 @@ public class ChangeVnfFlavourData {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional input parameters for the flavor change process, specific to the VNF being modified, as declared in the VNFD as part of \"ChangeVnfFlavourOpConfig\". ")
+	@Schema(description = "Additional input parameters for the flavor change process, specific to the VNF being modified, as declared in the VNFD as part of \"ChangeVnfFlavourOpConfig\". ")
 
 	@Valid
 

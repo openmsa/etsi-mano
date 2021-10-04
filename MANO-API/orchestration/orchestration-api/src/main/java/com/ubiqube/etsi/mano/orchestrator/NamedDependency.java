@@ -41,7 +41,7 @@ public class NamedDependency {
 		if (y.getType() != type) {
 			return false;
 		}
-		if (y.getName() != name) {
+		if (!y.getName().equals(name)) {
 			return false;
 		}
 		return true;

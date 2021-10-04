@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ResourceHandle;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class AffectedVirtualLink   {
   private List<String> vnfLinkPortIds = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   public AffectedVirtualLink id(String id) {
     this.id = id;
@@ -224,7 +224,7 @@ public class AffectedVirtualLink   {
     this.vnfLinkPortIds = vnfLinkPortIds;
   }
 
-  public AffectedVirtualLink metadata(KeyValuePairs metadata) {
+  public AffectedVirtualLink metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -236,11 +236,11 @@ public class AffectedVirtualLink   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

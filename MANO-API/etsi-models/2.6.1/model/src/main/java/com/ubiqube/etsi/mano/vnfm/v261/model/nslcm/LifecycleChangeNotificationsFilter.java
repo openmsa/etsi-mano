@@ -39,8 +39,8 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.vnfm.v261.model.VnfInstanceSubscriptionFilter;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription filter related to notifications about VNF
@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiModelProperty;
  * values in the array matches (logical \&quot;or\&quot; between the values of
  * one filter attribute).
  */
-@ApiModel(description = "This type represents a subscription filter related to notifications about VNF lifecycle changes. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
+@Schema(description = "This type represents a subscription filter related to notifications about VNF lifecycle changes. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
 
 public class LifecycleChangeNotificationsFilter {
 	@JsonProperty("vnfInstanceSubscriptionFilter")
@@ -110,7 +110,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * @return vnfInstanceSubscriptionFilter
 	 **/
 	@JsonProperty("vnfInstanceSubscriptionFilter")
-	@ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify. ")
+	@Schema(description = "Filter criteria to select VNF instances about which to notify. ")
 	public VnfInstanceSubscriptionFilter getVnfInstanceSubscriptionFilter() {
 		return vnfInstanceSubscriptionFilter;
 	}
@@ -142,7 +142,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * @return notificationTypes
 	 **/
 	@JsonProperty("notificationTypes")
-	@ApiModelProperty(value = "Match particular notification types. Permitted values: * VnfLcmOperationOccurrenceNotification * VnfIdentifierCreationNotification * VnfIdentifierDeletionNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. ")
+	@Schema(description = "Match particular notification types. Permitted values: * VnfLcmOperationOccurrenceNotification * VnfIdentifierCreationNotification * VnfIdentifierDeletionNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. ")
 	public List<NotificationTypesEnum> getNotificationTypes() {
 		return notificationTypes;
 	}
@@ -174,7 +174,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * @return operationTypes
 	 **/
 	@JsonProperty("operationTypes")
-	@ApiModelProperty(value = "Match particular VNF lifecycle operation types for the notification of type VnfLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"VnfLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
+	@Schema(description = "Match particular VNF lifecycle operation types for the notification of type VnfLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"VnfLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
 	public List<LcmOperationType> getOperationTypes() {
 		return operationTypes;
 	}
@@ -206,7 +206,7 @@ public class LifecycleChangeNotificationsFilter {
 	 * @return operationStates
 	 **/
 	@JsonProperty("operationStates")
-	@ApiModelProperty(value = "Match particular LCM operation state values as reported in notifications of type VnfLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"VnfLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
+	@Schema(description = "Match particular LCM operation state values as reported in notifications of type VnfLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"VnfLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
 	public List<LcmOperationStateType> getOperationStates() {
 		return operationStates;
 	}

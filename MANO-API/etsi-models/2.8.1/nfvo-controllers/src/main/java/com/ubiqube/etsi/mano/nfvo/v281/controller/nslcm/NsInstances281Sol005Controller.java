@@ -92,7 +92,7 @@ public class NsInstances281Sol005Controller implements NsInstances281Sol005Api {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final HealNsRequest body) {
-		return frontController.heal(nsInstanceId, body);
+		return frontController.heal(nsInstanceId, body, NsInstances281Sol005Controller::getSelfLink);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class NsInstances281Sol005Controller implements NsInstances281Sol005Api {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final ScaleNsRequest body) {
-		return frontController.scale(nsInstanceId, body);
+		return frontController.scale(nsInstanceId, body, NsInstances281Sol005Controller::getSelfLink);
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class NsInstances281Sol005Controller implements NsInstances281Sol005Api {
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final UpdateNsRequest body) {
-		return frontController.update(nsInstanceId, body);
+		return frontController.update(nsInstanceId, body, NsInstances281Sol005Controller::getSelfLink);
 	}
 
 	/**

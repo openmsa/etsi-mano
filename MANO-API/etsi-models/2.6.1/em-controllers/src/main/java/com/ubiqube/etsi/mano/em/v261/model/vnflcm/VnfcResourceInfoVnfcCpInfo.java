@@ -28,7 +28,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * VnfcResourceInfoVnfcCpInfo
@@ -64,7 +64,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this VNFC CP instance and the associated array entry. ")
+	@Schema(required = true, description = "Identifier of this VNFC CP instance and the associated array entry. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -84,7 +84,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return cpdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VDU CPD, cpdId, in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the VDU CPD, cpdId, in the VNFD. ")
 	@NotNull
 	public String getCpdId() {
 		return cpdId;
@@ -105,7 +105,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return vnfExtCpId
 	 **/
-	@ApiModelProperty(value = "When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. ")
+	@Schema(description = "When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. ")
 	public String getVnfExtCpId() {
 		return vnfExtCpId;
 	}
@@ -132,7 +132,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return cpProtocolInfo
 	 **/
-	@ApiModelProperty(value = "Network protocol information for this CP. ")
+	@Schema(description = "Network protocol information for this CP. ")
 	@Valid
 	public List<CpProtocolInfo> getCpProtocolInfo() {
 		return cpProtocolInfo;
@@ -154,7 +154,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return vnfLinkPortId
 	 **/
-	@ApiModelProperty(value = "Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
+	@Schema(description = "Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
 
 	public String getVnfLinkPortId() {
 		return vnfLinkPortId;
@@ -174,7 +174,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "Metadata about this CP. ")
+	@Schema(description = "Metadata about this CP. ")
 
 	@Valid
 

@@ -21,10 +21,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * \"The enumeration PackageUsageStateType shall comply with the provisions.
- * Acceptable values are: -IN_USE - VNF instances instantiated from this VNF
- * package exist. -NOT_IN_USE - No existing VNF instance is instantiated from
- * this VNF package\"
+ * \"The enumeration PackageUsageStateType shall comply with the provisions. Acceptable values are: -IN_USE - VNF instances instantiated from this VNF package exist. -NOT_IN_USE - No existing VNF instance is instantiated from this VNF package\"
  */
 public enum PackageUsageStateType {
 

@@ -36,14 +36,14 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfOperationalStateType;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents request parameters for the \&quot;Operate VNF\&quot;
  * operation.
  */
-@ApiModel(description = "This type represents request parameters for the \"Operate VNF\" operation. ")
+@Schema(description = "This type represents request parameters for the \"Operate VNF\" operation. ")
 
 public class OperateVnfRequest {
 	@JsonProperty("changeStateTo")
@@ -69,7 +69,7 @@ public class OperateVnfRequest {
 	 * @return changeStateTo
 	 **/
 	@JsonProperty("changeStateTo")
-	@ApiModelProperty(required = true, value = "The desired operational state (i.e. started or stopped) to change the VNF to. ")
+	@Schema(required = true, description = "The desired operational state (i.e. started or stopped) to change the VNF to. ")
 	@NotNull
 	public VnfOperationalStateType getChangeStateTo() {
 		return changeStateTo;
@@ -98,7 +98,7 @@ public class OperateVnfRequest {
 	 * @return stopType
 	 **/
 	@JsonProperty("stopType")
-	@ApiModelProperty(value = "It signals whether forceful or graceful stop is requested. The “stopType” and “gracefulStopTimeout” attributes shall be absent, when the “changeStateTo” attribute is equal to “STARTED”. The “gracefulStopTimeout” attribute shall be present, when the “changeStateTo” is equal to “STOPPED” and the “stopType” attribute is equal to “GRACEFUL”. The “gracefulStopTimeout” attribute shall be absent, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is equal to “FORCEFUL”. The request shall be treated as if the “stopType” attribute was set to ”FORCEFUL”, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is absent. ")
+	@Schema(description = "It signals whether forceful or graceful stop is requested. The “stopType” and “gracefulStopTimeout” attributes shall be absent, when the “changeStateTo” attribute is equal to “STARTED”. The “gracefulStopTimeout” attribute shall be present, when the “changeStateTo” is equal to “STOPPED” and the “stopType” attribute is equal to “GRACEFUL”. The “gracefulStopTimeout” attribute shall be absent, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is equal to “FORCEFUL”. The request shall be treated as if the “stopType” attribute was set to ”FORCEFUL”, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is absent. ")
 	public StopType getStopType() {
 		return stopType;
 	}
@@ -127,7 +127,7 @@ public class OperateVnfRequest {
 	 * @return gracefulStopTimeout
 	 **/
 	@JsonProperty("gracefulStopTimeout")
-	@ApiModelProperty(value = "The time interval (in seconds) to wait for the VNF to be taken out of service during graceful stop, before stopping the VNF. The “stopType” and “gracefulStopTimeout” attributes shall be absent, when the “changeStateTo” attribute is equal to “STARTED”. The “gracefulStopTimeout” attribute shall be present, when the “changeStateTo” is equal to “STOPPED” and the “stopType” attribute is equal to “GRACEFUL”. The “gracefulStopTimeout” attribute shall be absent, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is equal to “FORCEFUL”. The request shall be treated as if the “stopType” attribute was set to ”FORCEFUL”, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is absent. ")
+	@Schema(description = "The time interval (in seconds) to wait for the VNF to be taken out of service during graceful stop, before stopping the VNF. The “stopType” and “gracefulStopTimeout” attributes shall be absent, when the “changeStateTo” attribute is equal to “STARTED”. The “gracefulStopTimeout” attribute shall be present, when the “changeStateTo” is equal to “STOPPED” and the “stopType” attribute is equal to “GRACEFUL”. The “gracefulStopTimeout” attribute shall be absent, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is equal to “FORCEFUL”. The request shall be treated as if the “stopType” attribute was set to ”FORCEFUL”, when the “changeStateTo” attribute is equal to “STOPPED” and the “stopType” attribute is absent. ")
 	public Integer getGracefulStopTimeout() {
 		return gracefulStopTimeout;
 	}
@@ -149,7 +149,7 @@ public class OperateVnfRequest {
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\". ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\". ")
 	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}

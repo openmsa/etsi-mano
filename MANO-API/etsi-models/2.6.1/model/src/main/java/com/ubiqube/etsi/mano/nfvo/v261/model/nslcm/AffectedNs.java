@@ -27,14 +27,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information about added, deleted and modified nested NSs.
  * It shall comply with the provisions in Table 6.5.3.6-1.
  */
-@ApiModel(description = "This type provides information about added, deleted and modified nested NSs. It shall comply with the provisions in Table 6.5.3.6-1. ")
+@Schema(description = "This type provides information about added, deleted and modified nested NSs. It shall comply with the provisions in Table 6.5.3.6-1. ")
 @Validated
 
 
@@ -139,7 +139,7 @@ public class AffectedNs {
 	 * 
 	 * @return nsInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the nested NS instance. ")
+	@Schema(required = true, description = "Identifier of the nested NS instance. ")
 	@NotNull
 
 	public String getNsInstanceId() {
@@ -160,7 +160,7 @@ public class AffectedNs {
 	 * 
 	 * @return nsdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NSD of the nested NS instance. ")
+	@Schema(required = true, description = "Identifier of the NSD of the nested NS instance. ")
 	@NotNull
 
 	public String getNsdId() {
@@ -182,7 +182,7 @@ public class AffectedNs {
 	 * 
 	 * @return changeType
 	 **/
-	@ApiModelProperty(required = true, value = "Signals the type of lifecycle change. Permitted values: - ADD - REMOVE - INSTANTIATE - SCALE - UPDATE - HEAL - TERMINATE ")
+	@Schema(required = true, description = "Signals the type of lifecycle change. Permitted values: - ADD - REMOVE - INSTANTIATE - SCALE - UPDATE - HEAL - TERMINATE ")
 	@NotNull
 
 	public ChangeTypeEnum getChangeType() {
@@ -204,7 +204,7 @@ public class AffectedNs {
 	 * 
 	 * @return changeResult
 	 **/
-	@ApiModelProperty(required = true, value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED - PARTIALLY_COMPLETED ")
+	@Schema(required = true, description = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED - PARTIALLY_COMPLETED ")
 	@NotNull
 
 	public ChangeResultEnum getChangeResult() {

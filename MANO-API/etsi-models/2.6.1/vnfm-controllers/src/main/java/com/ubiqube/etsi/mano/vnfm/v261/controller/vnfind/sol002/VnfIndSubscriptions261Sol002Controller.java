@@ -29,12 +29,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.controller.vnfind.VnfIndSubscriptionsFrontController;
+import com.ubiqube.etsi.mano.vnfm.fc.vnfind.VnfIndSubscriptionsFrontController;
 import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicatorSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicatorSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicatorSubscriptionRequest;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:19:34.580+01:00")
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>

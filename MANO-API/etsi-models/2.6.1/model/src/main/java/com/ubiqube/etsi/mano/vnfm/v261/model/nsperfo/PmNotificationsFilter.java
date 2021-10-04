@@ -28,14 +28,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.vnfm.v261.model.VnfInstanceSubscriptionFilter;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a filter that can be used to subscribe for notifications
  * related to performance management events.
  */
-@ApiModel(description = "This type represents a filter that can be used to subscribe for notifications related to performance management events. ")
+@Schema(description = "This type represents a filter that can be used to subscribe for notifications related to performance management events. ")
 @Validated
 
 
@@ -91,7 +91,7 @@ public class PmNotificationsFilter {
 	 *
 	 * @return vnfInstanceSubscriptionFilter
 	 **/
-	@ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify. ")
+	@Schema(description = "Filter criteria to select VNF instances about which to notify. ")
 
 	@Valid
 
@@ -117,7 +117,7 @@ public class PmNotificationsFilter {
 	 *
 	 * @return notificationTypes
 	 **/
-	@ApiModelProperty(value = "Match particular notification types. Permitted values: * ThresholdCrossedNotification * PerformanceInformationAvailableNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. ")
+	@Schema(description = "Match particular notification types. Permitted values: * ThresholdCrossedNotification * PerformanceInformationAvailableNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. ")
 
 	public NotificationTypesEnum getNotificationTypes() {
 		return notificationTypes;

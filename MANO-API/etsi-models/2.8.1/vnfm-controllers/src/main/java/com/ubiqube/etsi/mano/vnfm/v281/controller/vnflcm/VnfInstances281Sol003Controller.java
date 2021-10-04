@@ -28,9 +28,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.nslcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ChangeVnfFlavourRequest;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.CreateVnfRequest;
@@ -71,12 +71,12 @@ public class VnfInstances281Sol003Controller implements VnfInstances281Sol003Api
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeExtConnPost(final String vnfInstanceId, @Valid final ChangeExtVnfConnectivityRequest body) {
-		return frontController.changeExtConn(getSafeUUID(vnfInstanceId), body);
+		return frontController.changeExtConn(getSafeUUID(vnfInstanceId), body, VnfInstances281Sol003Controller::getLcmLink);
 	}
 
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdChangeFlavourPost(final String vnfInstanceId, @Valid final ChangeVnfFlavourRequest body) {
-		return frontController.changeFlavour(getSafeUUID(vnfInstanceId), body);
+		return frontController.changeFlavour(getSafeUUID(vnfInstanceId), body, VnfInstances281Sol003Controller::getLcmLink);
 	}
 
 	@Override

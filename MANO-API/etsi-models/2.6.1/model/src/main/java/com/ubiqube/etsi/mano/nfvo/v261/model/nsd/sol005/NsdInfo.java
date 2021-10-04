@@ -32,13 +32,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.NsdOnboardingStateType;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a response for the query NSD operation.
  */
-@ApiModel(description = "This type represents a response for the query NSD operation. ")
+@Schema(description = "This type represents a response for the query NSD operation. ")
 @Validated
 
 public class NsdInfo {
@@ -100,7 +100,7 @@ public class NsdInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the on boarded individual NS descriptor resource. This identifier is allocated by the NFVO. ")
+	@Schema(required = true, description = "Identifier of the on boarded individual NS descriptor resource. This identifier is allocated by the NFVO. ")
 	@NotNull
 
 	public String getId() {
@@ -121,7 +121,7 @@ public class NsdInfo {
 	 *
 	 * @return nsdId
 	 **/
-	@ApiModelProperty(value = "This identifier, which is allocated by the NSD designer, identifies the NSD in a globally unique way. It is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
+	@Schema(description = "This identifier, which is allocated by the NSD designer, identifies the NSD in a globally unique way. It is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
 
 	public String getNsdId() {
 		return nsdId;
@@ -141,7 +141,7 @@ public class NsdInfo {
 	 *
 	 * @return nsdName
 	 **/
-	@ApiModelProperty(value = "Name of the on boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
+	@Schema(description = "Name of the on boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
 
 	public String getNsdName() {
 		return nsdName;
@@ -161,7 +161,7 @@ public class NsdInfo {
 	 *
 	 * @return nsdVersion
 	 **/
-	@ApiModelProperty(value = "Version of the on-boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
+	@Schema(description = "Version of the on-boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
 
 	public String getNsdVersion() {
 		return nsdVersion;
@@ -181,7 +181,7 @@ public class NsdInfo {
 	 *
 	 * @return nsdDesigner
 	 **/
-	@ApiModelProperty(value = "Designer of the on-boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
+	@Schema(description = "Designer of the on-boarded NSD. This information is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
 
 	public String getNsdDesigner() {
 		return nsdDesigner;
@@ -201,7 +201,7 @@ public class NsdInfo {
 	 *
 	 * @return nsdInvariantId
 	 **/
-	@ApiModelProperty(value = "This identifier, which is allocated by the NSD designer, identifies an NSD in a version independent manner. This information is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
+	@Schema(description = "This identifier, which is allocated by the NSD designer, identifies an NSD in a version independent manner. This information is copied from the NSD content and shall be present after the NSD content is on-boarded. ")
 
 	public String getNsdInvariantId() {
 		return nsdInvariantId;
@@ -229,7 +229,7 @@ public class NsdInfo {
 	 *
 	 * @return vnfPkgIds
 	 **/
-	@ApiModelProperty(value = "Identifies the VNF package for the VNFD referenced by the on-boarded NS descriptor resource. ")
+	@Schema(description = "Identifies the VNF package for the VNFD referenced by the on-boarded NS descriptor resource. ")
 
 	public List<UUID> getVnfPkgIds() {
 		return vnfPkgIds;
@@ -257,7 +257,7 @@ public class NsdInfo {
 	 *
 	 * @return pnfdInfoIds
 	 **/
-	@ApiModelProperty(value = "Identifies the PnfdInfo element for the PNFD referenced by the on-boarded NS descriptor resource. ")
+	@Schema(description = "Identifies the PnfdInfo element for the PNFD referenced by the on-boarded NS descriptor resource. ")
 
 	public List<UUID> getPnfdInfoIds() {
 		return pnfdInfoIds;
@@ -285,7 +285,7 @@ public class NsdInfo {
 	 *
 	 * @return nestedNsdInfoIds
 	 **/
-	@ApiModelProperty(value = "Identifies the NsdInfo element for the nested NSD referenced by the on-boarded NS descriptor resource. ")
+	@Schema(description = "Identifies the NsdInfo element for the nested NSD referenced by the on-boarded NS descriptor resource. ")
 
 	public List<UUID> getNestedNsdInfoIds() {
 		return nestedNsdInfoIds;
@@ -305,7 +305,7 @@ public class NsdInfo {
 	 *
 	 * @return nsdOnboardingState
 	 **/
-	@ApiModelProperty(required = true, value = "On boarding state of the individual NS descriptor resource. ")
+	@Schema(required = true, description = "On boarding state of the individual NS descriptor resource. ")
 	@NotNull
 
 	@Valid
@@ -328,7 +328,7 @@ public class NsdInfo {
 	 *
 	 * @return onboardingFailureDetails
 	 **/
-	@ApiModelProperty(value = "Failure details of current on boarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. It shall be present when the \"nsdOnboardingState\" attribute is CREATED and the uploading or processing fails in NFVO. ")
+	@Schema(description = "Failure details of current on boarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. It shall be present when the \"nsdOnboardingState\" attribute is CREATED and the uploading or processing fails in NFVO. ")
 
 	@Valid
 
@@ -350,7 +350,7 @@ public class NsdInfo {
 	 *
 	 * @return nsdOperationalState
 	 **/
-	@ApiModelProperty(required = true, value = "Operational state of the individual NS descriptor resource. This attribute can be modified with the PATCH method. ")
+	@Schema(required = true, description = "Operational state of the individual NS descriptor resource. This attribute can be modified with the PATCH method. ")
 	@NotNull
 
 	@Valid
@@ -373,7 +373,7 @@ public class NsdInfo {
 	 *
 	 * @return nsdUsageState
 	 **/
-	@ApiModelProperty(required = true, value = "Usage state of the individual NS descriptor resource. ")
+	@Schema(required = true, description = "Usage state of the individual NS descriptor resource. ")
 	@NotNull
 
 	@Valid
@@ -396,7 +396,7 @@ public class NsdInfo {
 	 *
 	 * @return userDefinedData
 	 **/
-	@ApiModelProperty(value = "User defined data for the individual NS descriptor resource. This attribute can be modified with the PATCH method. ")
+	@Schema(description = "User defined data for the individual NS descriptor resource. This attribute can be modified with the PATCH method. ")
 
 	@Valid
 
@@ -418,7 +418,7 @@ public class NsdInfo {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

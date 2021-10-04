@@ -23,8 +23,6 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
@@ -39,8 +37,6 @@ import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
-
-	private static final Logger LOG = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
 
 	private final EntityManager em;
 

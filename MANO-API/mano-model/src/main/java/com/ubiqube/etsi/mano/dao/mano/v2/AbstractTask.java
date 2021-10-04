@@ -26,6 +26,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
@@ -33,6 +34,16 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @MappedSuperclass
 public abstract class AbstractTask implements Task {
 
@@ -53,7 +64,8 @@ public abstract class AbstractTask implements Task {
 	@FullTextField
 	private String toscaName;
 
-	private String toscaId;
+	private String toscaId = UUID.randomUUID().toString();
+
 	private String state;
 	@FullTextField
 	private String alias;
@@ -68,106 +80,14 @@ public abstract class AbstractTask implements Task {
 	@FullTextField
 	private String vimResourceId;
 
+	private String vimConnectionId;
+
+	private String resourceProviderId;
+	private UUID removedLiveInstance;
+
 	public abstract void setId(final UUID id);
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
-
-	@Override
-	public ChangeType getChangeType() {
-		return changeType;
-	}
-
-	public void setChangeType(final ChangeType changeType) {
-		this.changeType = changeType;
-	}
-
-	@Override
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	@Override
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	@Override
-	public String getAlias() {
-		return alias;
-	}
-
-	public void setAlias(final String alias) {
-		this.alias = alias;
-	}
-
-	public LocalDateTime getStartDate() {
-		return startDate;
-	}
-
-	@Override
-	public void setStartDate(final LocalDateTime startDate) {
-		this.startDate = startDate;
-	}
-
-	public LocalDateTime getEndDate() {
-		return endDate;
-	}
-
-	@Override
-	public void setEndDate(final LocalDateTime endDate) {
-		this.endDate = endDate;
-	}
-
-	public PlanStatusType getStatus() {
-		return status;
-	}
-
-	@Override
-	public void setStatus(final PlanStatusType status) {
-		this.status = status;
-	}
-
-	@Override
-	public String getVimResourceId() {
-		return vimResourceId;
-	}
-
-	@Override
-	public void setVimResourceId(final String vimResourceId) {
-		this.vimResourceId = vimResourceId;
-	}
-
-	@Override
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	@Override
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
-	@Override
-	public String getState() {
-		return state;
-	}
-
-	@Override
-	public void setState(final String state) {
-		this.state = state;
-	}
+	@Version
+	private Long version;
 
 }

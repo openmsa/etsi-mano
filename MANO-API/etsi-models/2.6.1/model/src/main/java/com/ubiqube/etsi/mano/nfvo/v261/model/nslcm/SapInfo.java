@@ -29,14 +29,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.CpProtocolInfo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an SAP instance. It shall comply with the provisions
  * defined in Table 6.5.3.67-1.
  */
-@ApiModel(description = "This type represents an SAP instance. It shall comply with the provisions defined in Table 6.5.3.67-1. ")
+@Schema(description = "This type represents an SAP instance. It shall comply with the provisions defined in Table 6.5.3.67-1. ")
 @Validated
 
 
@@ -67,7 +67,7 @@ public class SapInfo {
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the SAP instance. ")
+	@Schema(required = true, description = "Identifier of the SAP instance. ")
 	@NotNull
 
 	public String getId() {
@@ -88,7 +88,7 @@ public class SapInfo {
 	 * 
 	 * @return sapdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the SAPD in the NSD. ")
+	@Schema(required = true, description = "Identifier of the SAPD in the NSD. ")
 	@NotNull
 
 	public String getSapdId() {
@@ -109,7 +109,7 @@ public class SapInfo {
 	 * 
 	 * @return sapName
 	 **/
-	@ApiModelProperty(required = true, value = "Human readable name for the SAP instance. ")
+	@Schema(required = true, description = "Human readable name for the SAP instance. ")
 	@NotNull
 
 	public String getSapName() {
@@ -130,7 +130,7 @@ public class SapInfo {
 	 * 
 	 * @return description
 	 **/
-	@ApiModelProperty(value = "Human readable description for the SAP instance. ")
+	@Schema(description = "Human readable description for the SAP instance. ")
 
 	public String getDescription() {
 		return description;
@@ -155,7 +155,7 @@ public class SapInfo {
 	 * 
 	 * @return sapProtocolInfo
 	 **/
-	@ApiModelProperty(required = true, value = "Network protocol information for this SAP. ")
+	@Schema(required = true, description = "Network protocol information for this SAP. ")
 	@NotNull
 
 	@Valid

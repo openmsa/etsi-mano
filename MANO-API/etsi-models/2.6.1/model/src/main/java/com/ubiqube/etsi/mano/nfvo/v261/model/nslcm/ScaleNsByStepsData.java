@@ -27,8 +27,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information used to scale an NS instance by one or
@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiModelProperty;
  * another. The NS scaling aspects and their corresponding NS scale levels
  * applicable to the NS instance are declared in the NSD.
  */
-@ApiModel(description = "This type represents the information used to scale an NS instance by one or more scaling steps, with respect to a particular NS scaling aspect. Performing a scaling step means increasing/decreasing the capacity of an NS instance in a discrete manner, i.e. moving from one NS scale level to another. The NS scaling aspects and their corresponding NS scale levels applicable to the NS instance are declared in the NSD. ")
+@Schema(description = "This type represents the information used to scale an NS instance by one or more scaling steps, with respect to a particular NS scaling aspect. Performing a scaling step means increasing/decreasing the capacity of an NS instance in a discrete manner, i.e. moving from one NS scale level to another. The NS scaling aspects and their corresponding NS scale levels applicable to the NS instance are declared in the NSD. ")
 @Validated
 
 
@@ -93,7 +93,7 @@ public class ScaleNsByStepsData {
 	 * 
 	 * @return scalingDirection
 	 **/
-	@ApiModelProperty(required = true, value = "The scaling direction. Possible values are: - SCALE_IN - SCALE_OUT. ")
+	@Schema(required = true, description = "The scaling direction. Possible values are: - SCALE_IN - SCALE_OUT. ")
 	@NotNull
 
 	public ScalingDirectionEnum getScalingDirection() {
@@ -114,7 +114,7 @@ public class ScaleNsByStepsData {
 	 * 
 	 * @return aspectId
 	 **/
-	@ApiModelProperty(required = true, value = "The aspect of the NS that is requested to be scaled, as declared in the NSD. ")
+	@Schema(required = true, description = "The aspect of the NS that is requested to be scaled, as declared in the NSD. ")
 	@NotNull
 
 	public String getAspectId() {
@@ -135,7 +135,7 @@ public class ScaleNsByStepsData {
 	 * 
 	 * @return numberOfSteps
 	 **/
-	@ApiModelProperty(value = "The number of scaling steps to be performed. Defaults to 1. ")
+	@Schema(description = "The number of scaling steps to be performed. Defaults to 1. ")
 
 	public Integer getNumberOfSteps() {
 		return numberOfSteps;

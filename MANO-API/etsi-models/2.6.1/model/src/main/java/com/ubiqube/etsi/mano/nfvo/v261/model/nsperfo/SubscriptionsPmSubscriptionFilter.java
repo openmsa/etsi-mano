@@ -25,17 +25,17 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a filter that can be used to subscribe for notifications related to performance management events. It shall comply with the provisions defined in Table 7.5.3.2-1. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical
  * \"or\" between the values of one filter attribute).
  **/
-@ApiModel(description = "This type represents a filter that can be used to subscribe for  notifications related to performance management events. It shall comply with the provisions defined in Table 7.5.3.2-1. At a particular nesting level in the filter structure, the following applies:  All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes).  If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
+@Schema(description = "This type represents a filter that can be used to subscribe for  notifications related to performance management events. It shall comply with the provisions defined in Table 7.5.3.2-1. At a particular nesting level in the filter structure, the following applies:  All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes).  If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
 public class SubscriptionsPmSubscriptionFilter {
 
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 	@Valid
 	private SubscriptionsPmSubscriptionFilterNsInstanceSubscriptionFilter nsInstanceSubscriptionFilter = null;
 
@@ -71,7 +71,7 @@ public class SubscriptionsPmSubscriptionFilter {
 		}
 	}
 
-	@ApiModelProperty(value = "Match particular notification types. Permitted values: - ThresholdCrossedNotification - PerformanceInformationAvailableNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems.           ")
+	@Schema(description = "Match particular notification types. Permitted values: - ThresholdCrossedNotification - PerformanceInformationAvailableNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems.           ")
 	/**
 	 * Match particular notification types. Permitted values: - ThresholdCrossedNotification - PerformanceInformationAvailableNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems.
 	 **/

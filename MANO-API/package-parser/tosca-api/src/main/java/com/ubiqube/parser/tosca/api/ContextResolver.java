@@ -24,16 +24,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,15 +85,33 @@ public class ContextResolver {
 	}
 
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
-		return (List<T>) policies.stream().map(x -> handlePolicy(x, destination)).collect(Collectors.toList());
+		final Deque<String> stack = new ArrayDeque<>();
+		try {
+			return (List<T>) policies.stream().map(x -> handlePolicy(x, destination, stack)).collect(Collectors.toList());
+		} catch (final RuntimeException e) {
+			throwException("Runtime error.", stack, e);
+		}
+		return new ArrayList<>();
 	}
 
 	public <T> List<T> mapGroupsToClass(final List<GroupDefinition> groups, final Class<T> destination) {
-		return (List<T>) groups.stream().map(x -> handleGroup(x, destination)).collect(Collectors.toList());
+		final Deque<String> stack = new ArrayDeque<>();
+		try {
+			return (List<T>) groups.stream().map(x -> handleGroup(x, destination, stack)).collect(Collectors.toList());
+		} catch (final RuntimeException e) {
+			throwException("Runtime error.", stack, e);
+		}
+		return new ArrayList<>();
 	}
 
 	public <T> List<T> mapToscaToClass(final List<NodeTemplate> nodes, final Class<T> destination) {
-		return (List<T>) nodes.stream().map(x -> handleObject(x, destination)).collect(Collectors.toList());
+		final Deque<String> stack = new ArrayDeque<>();
+		try {
+			return (List<T>) nodes.stream().map(x -> handleObject(x, destination, stack)).collect(Collectors.toList());
+		} catch (final RuntimeException e) {
+			throwException("Runtime error.", stack, e);
+		}
+		return new ArrayList<>();
 	}
 
 	public <T> T resolvValue(final String key, final Class<?> target) {
@@ -103,7 +126,7 @@ public class ContextResolver {
 		return null;
 	}
 
-	private Object handlePolicy(final PolicyDefinition policy, final Class clazz) {
+	private Object handlePolicy(final PolicyDefinition policy, final Class clazz, final Deque<String> stack) {
 		BeanInfo beanInfo;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz);
@@ -115,7 +138,7 @@ public class ContextResolver {
 		final Object cls = newInstance(clazz);
 		final Map<String, Object> props = policy.getProperties();
 		if (null != props) {
-			handleMap(props, clazz, propsDescr, cls, null);
+			handleMap(props, clazz, propsDescr, cls, null, stack);
 		}
 		// Fixed fields
 		setProperty2(cls, findReadMethod(propsDescr, "targets"), policy.getTargets());
@@ -129,7 +152,7 @@ public class ContextResolver {
 		return cls;
 	}
 
-	private Object handleGroup(final GroupDefinition group, final Class clazz) {
+	private Object handleGroup(final GroupDefinition group, final Class clazz, final Deque<String> stack) {
 		BeanInfo beanInfo;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz);
@@ -141,7 +164,7 @@ public class ContextResolver {
 		final Object cls = newInstance(clazz);
 		final Map<String, Object> props = group.getProperties();
 		if (null != props) {
-			handleMap(props, clazz, propsDescr, cls, null);
+			handleMap(props, clazz, propsDescr, cls, null, stack);
 		}
 		// Fixed fields
 		setProperty2(cls, findReadMethod(propsDescr, "members"), group.getMembers());
@@ -161,8 +184,9 @@ public class ContextResolver {
 				.findFirst().orElseThrow(() -> new ParseException("Method: " + string + " doesn't have a write method."));
 	}
 
-	private Object handleObject(final NodeTemplate node, final Class clazz) {
+	private Object handleObject(final NodeTemplate node, final Class clazz, final Deque<String> stack) {
 		BeanInfo beanInfo;
+		stack.push(node.getName());
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz);
 		} catch (final IntrospectionException e) {
@@ -174,13 +198,20 @@ public class ContextResolver {
 
 		final Object caps = node.getCapabilities();
 		if (null != caps) {
-			handleMap((Map<String, Object>) caps, clazz, propsDescr, cls, null);
+			stack.push("capabilities");
+			handleMap((Map<String, Object>) caps, clazz, propsDescr, cls, null, stack);
+			stack.pop();
 		}
 		final Map<String, Object> props = node.getProperties();
 		if (null != props) {
-			handleMap(props, clazz, propsDescr, cls, null);
+			stack.push("properties");
+			handleMap(props, clazz, propsDescr, cls, null, stack);
+			stack.pop();
 		}
-
+		final Object artifacts = node.getArtifacts();
+		if (null != artifacts) {
+			handleArtifacts(artifacts, clazz, propsDescr, cls, null);
+		}
 		final RequirementDefinition req = node.getRequirements();
 		if ((null != req) && (null != req.getRequirements())) {
 			handleRequirements(req.getRequirements(), clazz, propsDescr, cls, null);
@@ -191,7 +222,13 @@ public class ContextResolver {
 		tib.setInternalDescription(node.getDescription());
 		setProperty(cls, "setName", node.getName());
 		setProperty(cls, "setDescription", node.getDescription());
+		stack.pop();
 		return cls;
+	}
+
+	private static void handleArtifacts(final Object artifacts, final Class clazz, final PropertyDescriptor[] propsDescr, final Object cls, final Object object) {
+		final Method rm = findReadMethod(propsDescr, "artifacts");
+		methodInvoke(rm, cls, artifacts);
 	}
 
 	private static void setProperty2(final Object cls, final Method write, final Object value) {
@@ -219,7 +256,19 @@ public class ContextResolver {
 			// XXX I think it could be ONE of Node, caps, Link
 			final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
 			if (props != null) {
-				methodInvoke(props.getWriteMethod(), cls, y.getNode());
+				final Class<?> p = props.getPropertyType();
+				if (p.isAssignableFrom(List.class)) {
+					final List r = methodInvoke(props.getReadMethod(), cls);
+					if (null == r) {
+						final List l = new ArrayList<>();
+						l.add(y.getNode());
+						methodInvoke(props.getWriteMethod(), cls, l);
+					} else {
+						r.add(y.getNode());
+					}
+				} else {
+					methodInvoke(props.getWriteMethod(), cls, y.getNode());
+				}
 			}
 		});
 	}
@@ -233,29 +282,38 @@ public class ContextResolver {
 		return null;
 	}
 
-	private Object handleMap(final Map<String, Object> caps, final Class<?> clazz, final PropertyDescriptor[] props, final Object cls, final Class generic) {
+	private Object handleMap(final Map<String, Object> caps, final Class<?> clazz, final PropertyDescriptor[] props, final Object cls, final Class generic, final Deque<String> stack) {
 		if (clazz.isAssignableFrom(Map.class)) {
 			LOG.debug("Handling map of {}", generic);
 			final Map map = (Map) cls;
-			handleRealMap(map, generic, caps, props, cls);
+			handleRealMap(map, generic, caps, props, cls, stack);
+			return cls;
 		}
-		final Stream<PropertyDescriptor> stream = Arrays.stream(props);
-		stream.forEach(x -> {
-			final Object res = caps.get(camelCaseToUnderscore(x.getName()));
-			if (null != res) {
-				LOG.debug("Property: {}={}", x.getName(), res);
-				handleCaps(res, x, props, cls);
+		caps.entrySet().forEach(x -> {
+			final Optional<PropertyDescriptor> propo = findProperty(props, x.getKey());
+			if (!propo.isPresent()) {
+				throwException("Unable to find property: " + x.getKey() + " on object :" + clazz.getName(), stack);
 			}
+			stack.push(x.getKey());
+			final Object v = x.getValue();
+			if (v != null) {
+				handleCaps(v, propo.get(), props, cls, stack);
+			}
+			stack.pop();
 		});
 		return cls;
 	}
 
-	private void handleRealMap(final Map<Object, Object> map, final Class<?> generic, final Map<String, Object> caps, final PropertyDescriptor[] propsDescr, final Object cls) {
+	private static Optional<PropertyDescriptor> findProperty(final PropertyDescriptor[] props, final String camelCaseToUnderscore) {
+		return Arrays.stream(props).filter(x -> camelCaseToUnderscore(x.getName()).equals(camelCaseToUnderscore)).findFirst();
+	}
+
+	private void handleRealMap(final Map<Object, Object> map, final Class<?> generic, final Map<String, Object> caps, final PropertyDescriptor[] propsDescr, final Object cls, final Deque<String> stack) {
 		caps.forEach((x, y) -> {
 			Object res;
 			try {
 				if (y instanceof Map) {
-					res = handleMap((Map<String, Object>) y, generic, propsDescr, generic.newInstance(), null);
+					res = handleMap((Map<String, Object>) y, generic, propsDescr, generic.newInstance(), null, stack);
 					map.put(x, res);
 				} else {
 					map.put(x, y);
@@ -267,7 +325,7 @@ public class ContextResolver {
 		});
 	}
 
-	private void handleCaps(final Object res, final PropertyDescriptor x, final PropertyDescriptor[] propsDescr, final Object cls) {
+	private void handleCaps(final Object res, final PropertyDescriptor x, final PropertyDescriptor[] propsDescr, final Object cls, final Deque<String> stack) {
 		if (res instanceof Map) {
 			Map<String, Object> caps = (Map<String, Object>) res;
 			if (null != caps.get("properties")) {
@@ -288,7 +346,7 @@ public class ContextResolver {
 
 			Object ret = null;
 			if (rm.getReturnType().isAssignableFrom(Map.class)) {
-				ret = handleMap(caps, Map.class, propsDescrNew, new HashMap(), zz);
+				ret = handleMap(caps, Map.class, propsDescrNew, new HashMap(), zz, stack);
 			} else if (rm.getReturnType().isAssignableFrom(String.class)
 					|| rm.getReturnType().isAssignableFrom(Integer.class)
 					|| rm.getReturnType().isAssignableFrom(Size.class)) {
@@ -299,7 +357,7 @@ public class ContextResolver {
 				// ret = new ScriptingValue();
 			} else {
 				final Object clsNew = newInstance(zz);
-				ret = handleMap(caps, zz, propsDescrNew, clsNew, zz);
+				ret = handleMap((Map<String, Object>) res, zz, propsDescrNew, clsNew, zz, stack);
 			}
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
@@ -318,7 +376,7 @@ public class ContextResolver {
 			final PropertyDescriptor[] propsDescrNew = beanInfo.getPropertyDescriptors();
 			LOG.info("class=>{} --- [{}]", zz.getName(), Arrays.toString(propsDescrNew));
 			final Object clsNew = newInstance(zz);
-			final Object ret = handleList((List) res, zz, propsDescrNew, clsNew, zz);
+			final Object ret = handleList((List) res, zz, propsDescrNew, clsNew, zz, stack);
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
 			methodInvoke(meth, cls, ret);
@@ -364,23 +422,25 @@ public class ContextResolver {
 		return ret;
 	}
 
-	private Object handleList(final List res, final Class<?> zz, final PropertyDescriptor[] propsDescr, final Object clsNew, final Class generic) {
+	private Object handleList(final List res, final Class<?> zz, final PropertyDescriptor[] propsDescr, final Object clsNew, final Class generic, final Deque<String> stack) {
 		final ArrayList<Object> ret = new ArrayList<>();
+		final AtomicInteger inc = new AtomicInteger(0);
 		res.forEach(x -> {
-			Object elem;
+			stack.push("[" + inc.getAndIncrement() + "]");
+			Object elem = null;
 			if (x instanceof Map) {
 				try {
-					elem = handleMap((Map<String, Object>) x, generic, propsDescr, generic.newInstance(), null);
+					elem = handleMap((Map<String, Object>) x, generic, propsDescr, generic.newInstance(), null, stack);
 				} catch (InstantiationException | IllegalAccessException e) {
-					throw new ParseException(e);
+					throwException("Error in map", stack, e);
 				}
 			} else {
 				elem = x;
 			}
 			ret.add(elem);
+			stack.pop();
 		});
 		return ret;
-
 	}
 
 	private Object convert(final Object res, final Class<?> parameterType) {
@@ -448,12 +508,24 @@ public class ContextResolver {
 		}
 	}
 
-	private static void methodInvoke(final Method method, final Object instance, final Object paramter) {
+	private static <U> U methodInvoke(final Method method, final Object instance, final Object... paramter) {
 		try {
-			method.invoke(instance, paramter);
+			return (U) method.invoke(instance, paramter);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new ParseException("Could not invoke: " + method + " with parameters of type :" + paramter.getClass(), e);
 		}
+	}
+
+	private static void throwException(final String string, final Deque<String> stack) {
+		throw new ParseException(string + "\n" + buildError(stack));
+	}
+
+	private static void throwException(final String string, final Deque<String> stack, final Exception e) {
+		throw new ParseException(string + "\n" + buildError(stack), e);
+	}
+
+	private static String buildError(final Deque<String> stack) {
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(stack.descendingIterator(), Spliterator.ORDERED), false).collect(Collectors.joining(" -> "));
 	}
 
 }

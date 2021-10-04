@@ -28,6 +28,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 public class VnfExtCpDataEntity implements Serializable {
 	/** Serial. */
@@ -35,7 +45,9 @@ public class VnfExtCpDataEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID cpdId = null;
+	private UUID id;
+
+	private String cpdId = null;
 
 	@Valid
 	@OneToMany(mappedBy = "vnfExtCpDataEntity")
@@ -43,29 +55,5 @@ public class VnfExtCpDataEntity implements Serializable {
 
 	@OneToOne
 	private ExtVirtualLinkDataEntity extVirtualLinkDataEntity;
-
-	public UUID getCpdId() {
-		return cpdId;
-	}
-
-	public void setCpdId(final UUID cpdId) {
-		this.cpdId = cpdId;
-	}
-
-	public List<VnfExtCpConfiguration> getCpConfig() {
-		return cpConfig;
-	}
-
-	public void setCpConfig(final List<VnfExtCpConfiguration> cpConfig) {
-		this.cpConfig = cpConfig;
-	}
-
-	public ExtVirtualLinkDataEntity getExtVirtualLinkDataEntity() {
-		return extVirtualLinkDataEntity;
-	}
-
-	public void setExtVirtualLinkDataEntity(final ExtVirtualLinkDataEntity extVirtualLinkDataEntity) {
-		this.extVirtualLinkDataEntity = extVirtualLinkDataEntity;
-	}
 
 }

@@ -28,7 +28,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * PkgmNotificationsFilterVersions
@@ -52,7 +52,7 @@ public class PkgmNotificationsFilterVersions {
 	 *
 	 * @return vnfSoftwareVersion
 	 **/
-	@ApiModelProperty(required = true, value = "VNF software version to match ")
+	@Schema(required = true, description = "VNF software version to match ")
 	@NotNull
 
 	public String getVnfSoftwareVersion() {
@@ -77,13 +77,11 @@ public class PkgmNotificationsFilterVersions {
 	}
 
 	/**
-	 * If present, match VNF packages that contain VNF products with certain VNFD
-	 * versions, a certain software version and a certain product name, from one
-	 * particular provider.
+	 * If present, match VNF packages that contain VNF products with certain VNFD versions, a certain software version and a certain product name, from one particular provider.
 	 *
 	 * @return vnfdVersions
 	 **/
-	@ApiModelProperty(value = "If present, match VNF packages that contain VNF products with certain VNFD versions, a certain software version and a certain product name, from one particular provider. ")
+	@Schema(description = "If present, match VNF packages that contain VNF products with certain VNFD versions, a certain software version and a certain product name, from one particular provider. ")
 
 	public List<String> getVnfdVersions() {
 		return vnfdVersions;
@@ -123,8 +121,7 @@ public class PkgmNotificationsFilterVersions {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

@@ -1,0 +1,7 @@
+   ____                  __  __   ____  
+  / ___|   ___    ___   |  \/  | / ___| 
+ | |  _   / _ \  / _ \  | |\/| | \___ \ 
+ | |_| | |  __/ | (_) | | |  | |  ___) |
+  \____|  \___|  \___/  |_|  |_| |____/ 
+                                        
+Geo-MS: ${application.version}  Spring: ${AnsiColor.BRIGHT_GREEN}${spring-boot.version}${AnsiColor.DEFAULT}

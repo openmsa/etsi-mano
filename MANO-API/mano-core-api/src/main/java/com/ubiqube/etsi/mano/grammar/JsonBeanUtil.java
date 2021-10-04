@@ -79,11 +79,7 @@ public class JsonBeanUtil {
 			return cached;
 		}
 		Map<String, JsonBeanProperty> res;
-		try {
-			res = buildCache(_object);
-		} catch (final IntrospectionException e) {
-			throw new GenericException(e);
-		}
+		res = buildCache(_object);
 		cached = rebuildProperties(res);
 		CACHE.put(_object.getName(), cached);
 		return cached;
@@ -133,17 +129,26 @@ public class JsonBeanUtil {
 		return sj.toString();
 	}
 
-	private Map<String, JsonBeanProperty> buildCache(final Class<?> clazz) throws IntrospectionException {
+	private Map<String, JsonBeanProperty> buildCache(final Class<?> clazz) {
+		if (CACHE.containsKey(clazz.getName())) {
+			return CACHE.get(clazz.getName());
+		}
+		final Map<String, JsonBeanProperty> ast = buildAst(clazz);
+		CACHE.put(clazz.getName(), ast);
+		return ast;
+	}
+
+	private Map<String, JsonBeanProperty> buildAst(final Class<?> clazz) {
 		final Map<String, JsonBeanProperty> properties = new HashMap<>();
 		LOG.debug("Building AST of a {}", clazz.getName());
-		final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+		final BeanInfo beanInfo = getIntrospector(clazz);
 		final PropertyDescriptor[] propDescs = beanInfo.getPropertyDescriptors();
 
 		for (final PropertyDescriptor propertyDescriptor : propDescs) {
 			if (isJavaInnerClass(propertyDescriptor.getName())) {
 				continue;
 			}
-			LOG.debug("Handling property: {}", propertyDescriptor.getName());
+			LOG.trace("Handling property: {}", propertyDescriptor.getName());
 			final String jsonName = getPropertyName(clazz, propertyDescriptor);
 			final JsonBeanProperty jsonBeanProperty = new JsonBeanProperty(propertyDescriptor, jsonName);
 			final Class<?> propertyType = propertyDescriptor.getPropertyType();
@@ -159,8 +164,16 @@ public class JsonBeanUtil {
 			}
 			properties.put(jsonName, jsonBeanProperty);
 		}
-		LOG.debug("AST of a {} is Done...", clazz.getName());
+		LOG.trace("AST of a {} is Done...", clazz.getName());
 		return properties;
+	}
+
+	private static BeanInfo getIntrospector(final Class<?> clazz) {
+		try {
+			return Introspector.getBeanInfo(clazz);
+		} catch (final IntrospectionException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	private static String getPropertyName(final Class<?> clazz, final PropertyDescriptor propertyDescriptor) {
@@ -196,6 +209,7 @@ public class JsonBeanUtil {
 			final Field field = clazz.getDeclaredField(name);
 			return field.getAnnotation(JsonProperty.class);
 		} catch (NoSuchFieldException | SecurityException e) {
+			LOG.trace("", e);
 			LOG.warn("Could not find field for annotation: {}", name);
 		}
 		return null;
@@ -214,7 +228,7 @@ public class JsonBeanUtil {
 		if (clazz.isEnum()) {
 			return false;
 		}
-		LOG.warn("not in List/Map => {}", clazz.getName());
+		LOG.trace("not in List/Map => {}", clazz.getName());
 		return false;
 	}
 
@@ -233,7 +247,7 @@ public class JsonBeanUtil {
 			LOG.warn("Could not handle {}, considering as a simple type.", name);
 			return false;
 		}
-		LOG.debug("Complex: {}", propertyType.getName());
+		LOG.trace("Complex: {}", propertyType.getName());
 		return true;
 	}
 }

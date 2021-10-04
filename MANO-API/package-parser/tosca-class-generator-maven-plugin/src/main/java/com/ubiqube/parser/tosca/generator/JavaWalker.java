@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
@@ -33,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
@@ -58,6 +60,8 @@ import com.ubiqube.parser.tosca.constraints.LessThan;
 import com.ubiqube.parser.tosca.constraints.MinLength;
 import com.ubiqube.parser.tosca.constraints.Pattern;
 import com.ubiqube.parser.tosca.constraints.ValidValues;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class JavaWalker extends AbstractWalker {
 	private static final Logger LOG = LoggerFactory.getLogger(JavaWalker.class);
@@ -155,6 +159,7 @@ public class JavaWalker extends AbstractWalker {
 	@Override
 	public void startField(final String fieldName, final ValueObject value) {
 		currentField = currentClass.field(JMod.PRIVATE, resolvVo(value), fieldName);
+		currentField.annotate(Valid.class);
 	}
 
 	@Override
@@ -234,6 +239,15 @@ public class JavaWalker extends AbstractWalker {
 	}
 
 	@Override
+	public void onFieldAnnotate(final Class<? extends Annotation> class1, final String[] array) {
+		LOG.debug("Annotate: {}, {}", class1.getName(), Arrays.toString(array));
+		final JAnnotationArrayMember ann = currentField.annotate(class1).paramArray(VALUE);
+		for (final String string : array) {
+			ann.param(string);
+		}
+	}
+
+	@Override
 	public void onFieldNonNull() {
 		currentField.annotate(NotNull.class);
 		nonnull = true;
@@ -261,7 +275,7 @@ public class JavaWalker extends AbstractWalker {
 		if (null != pack) {
 			return pack;
 		}
-		pack = codeModel._package(p.toLowerCase());
+		pack = codeModel._package(p);
 		cachePackage.put(p, pack);
 		return pack;
 	}
@@ -309,6 +323,7 @@ public class JavaWalker extends AbstractWalker {
 			if (null != cahed) {
 				return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
 			}
+			return codeModel.ref(Map.class).narrow(String.class, getClassOf(subType));
 		}
 		if ("trigger".equals(type)) {
 			return codeModel.ref(TriggerDefinition.class);

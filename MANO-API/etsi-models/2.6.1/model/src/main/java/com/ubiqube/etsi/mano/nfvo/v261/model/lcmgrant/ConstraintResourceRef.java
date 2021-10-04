@@ -27,8 +27,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type references a resource either by its VIM-level identifier for
@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiModelProperty;
  * \&quot;ResourceDefinition\&quot; structure in the \&quot;GrantRequest\&quot;
  * structure for new resources.
  */
-@ApiModel(description = "This type references a resource either by its VIM-level identifier for existing resources, or by the identifier of a \"ResourceDefinition\" structure in the \"GrantRequest\" structure for new resources. ")
+@Schema(description = "This type references a resource either by its VIM-level identifier for existing resources, or by the identifier of a \"ResourceDefinition\" structure in the \"GrantRequest\" structure for new resources. ")
 @Validated
 
 
@@ -102,7 +102,7 @@ public class ConstraintResourceRef {
 	 * 
 	 * @return idType
 	 **/
-	@ApiModelProperty(required = true, value = "The type of the identifier. Permitted values: * RES_MGMT: Resource-management-level identifier; this identifier is   managed by the VIM in the direct mode of VNF-related resource   management, and is managed by the NFVO in the indirect mode) * GRANT: Reference to the identifier of a \"ResourceDefinition\" structure in the \"GrantRequest\" structure. ")
+	@Schema(required = true, description = "The type of the identifier. Permitted values: * RES_MGMT: Resource-management-level identifier; this identifier is   managed by the VIM in the direct mode of VNF-related resource   management, and is managed by the NFVO in the indirect mode) * GRANT: Reference to the identifier of a \"ResourceDefinition\" structure in the \"GrantRequest\" structure. ")
 	@NotNull
 
 	public IdTypeEnum getIdType() {
@@ -125,7 +125,7 @@ public class ConstraintResourceRef {
 	 * 
 	 * @return resourceId
 	 **/
-	@ApiModelProperty(required = true, value = "An actual resource-management-level identifier (idType=RES_MGMT), or an identifier that references a \"ResourceDefinition\" structure in the related \"GrantRequest\" structure (idType=GRANT). ")
+	@Schema(required = true, description = "An actual resource-management-level identifier (idType=RES_MGMT), or an identifier that references a \"ResourceDefinition\" structure in the related \"GrantRequest\" structure (idType=GRANT). ")
 	@NotNull
 
 	public String getResourceId() {
@@ -151,7 +151,7 @@ public class ConstraintResourceRef {
 	 * 
 	 * @return vimConnectionId
 	 **/
-	@ApiModelProperty(value = "Identifier of the VIM connection for managing the resource. It shall only be present when idType = RES_MGMT. The applicable \"VimConnectionInfo\" structure, which is referenced by vimConnectionId, can be obtained from the \"vimConnectionInfo\" attribute of the \"VnfInstance\" structure. This attribute shall only be supported when VNF-related resource management in direct mode is applicable. ")
+	@Schema(description = "Identifier of the VIM connection for managing the resource. It shall only be present when idType = RES_MGMT. The applicable \"VimConnectionInfo\" structure, which is referenced by vimConnectionId, can be obtained from the \"vimConnectionInfo\" attribute of the \"VnfInstance\" structure. This attribute shall only be supported when VNF-related resource management in direct mode is applicable. ")
 
 	public String getVimConnectionId() {
 		return vimConnectionId;
@@ -174,7 +174,7 @@ public class ConstraintResourceRef {
 	 * 
 	 * @return resourceProviderId
 	 **/
-	@ApiModelProperty(value = "Identifier of the resource provider. It shall only be present when idType = RES_MGMT. This attribute shall only be supported when VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
+	@Schema(description = "Identifier of the resource provider. It shall only be present when idType = RES_MGMT. This attribute shall only be supported when VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
 
 	public String getResourceProviderId() {
 		return resourceProviderId;

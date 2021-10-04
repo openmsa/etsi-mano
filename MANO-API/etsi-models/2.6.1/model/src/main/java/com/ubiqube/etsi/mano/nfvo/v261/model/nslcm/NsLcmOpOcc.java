@@ -31,13 +31,13 @@ import com.ubiqube.etsi.mano.common.v261.model.nslcm.CancelModeType;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a request a NS lifecycle operation occurrence. It shall comply with the provisions defined in Table 6.5.2.3-1.
  */
-@ApiModel(description = "This type represents a request a NS lifecycle operation occurrence. It shall comply with the provisions defined in Table 6.5.2.3-1. ")
+@Schema(description = "This type represents a request a NS lifecycle operation occurrence. It shall comply with the provisions defined in Table 6.5.2.3-1. ")
 @Validated
 
 public class NsLcmOpOcc {
@@ -90,7 +90,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this NS lifecycle operation occurrence. ")
+	@Schema(required = true, description = "Identifier of this NS lifecycle operation occurrence. ")
 	@NotNull
 
 	public String getId() {
@@ -111,7 +111,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return operationState
 	 **/
-	@ApiModelProperty(required = true, value = "The state of the NS LCM operation. ")
+	@Schema(required = true, description = "The state of the NS LCM operation. ")
 	@NotNull
 
 	@Valid
@@ -134,7 +134,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return statusEnteredTime
 	 **/
-	@ApiModelProperty(value = "Date-time when the current state has been entered. ")
+	@Schema(description = "Date-time when the current state has been entered. ")
 
 	@Valid
 	public OffsetDateTime getStatusEnteredTime() {
@@ -155,7 +155,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return nsInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NS instance to which the operation applies. ")
+	@Schema(required = true, description = "Identifier of the NS instance to which the operation applies. ")
 	@NotNull
 
 	public UUID getNsInstanceId() {
@@ -176,7 +176,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return lcmOperationType
 	 **/
-	@ApiModelProperty(required = true, value = "Type of the actual LCM operation represented by this lcm operation occurrence. ")
+	@Schema(required = true, description = "Type of the actual LCM operation represented by this lcm operation occurrence. ")
 	@NotNull
 
 	@Valid
@@ -198,7 +198,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return startTime
 	 **/
-	@ApiModelProperty(required = true, value = "Date-time of the start of the operation. ")
+	@Schema(required = true, description = "Date-time of the start of the operation. ")
 	@NotNull
 
 	@Valid
@@ -220,7 +220,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return isAutomaticInvocation
 	 **/
-	@ApiModelProperty(required = true, value = "Set to true if this NS LCM operation occurrence has been automatically triggered by the NFVO. This occurs in the case of auto-scaling, auto-healing and when a nested NS is modified as a result of an operation on its composite NS. Set to false otherwise. ")
+	@Schema(required = true, description = "Set to true if this NS LCM operation occurrence has been automatically triggered by the NFVO. This occurs in the case of auto-scaling, auto-healing and when a nested NS is modified as a result of an operation on its composite NS. Set to false otherwise. ")
 	@NotNull
 
 	public Boolean isIsAutomaticInvocation() {
@@ -242,7 +242,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return operationParams
 	 **/
-	@ApiModelProperty(value = "Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between lcmOperationType and the data type of this attribute shall apply: - INSTANTIATE: InstantiateNsRequest - SCALE: ScaleNsRequest - UPDATE: UpdateNsRequest - HEAL: HealNsRequest - TERMINATE: TerminateNsRequest This attribute shall be present if this data type is returned in a response to reading an individual resource, and may be present according to the chosen attribute selector parameter if this data type is returned in a response to a query of a container resource. ")
+	@Schema(description = "Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between lcmOperationType and the data type of this attribute shall apply: - INSTANTIATE: InstantiateNsRequest - SCALE: ScaleNsRequest - UPDATE: UpdateNsRequest - HEAL: HealNsRequest - TERMINATE: TerminateNsRequest This attribute shall be present if this data type is returned in a response to reading an individual resource, and may be present according to the chosen attribute selector parameter if this data type is returned in a response to a query of a container resource. ")
 
 	public OperationParamsEnum getOperationParams() {
 		return operationParams;
@@ -262,7 +262,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return isCancelPending
 	 **/
-	@ApiModelProperty(required = true, value = "If the LCM operation occurrence is in \"PROCESSING\" or \"ROLLING_BACK\" state and the operation is being cancelled, this attribute shall be set to true. Otherwise, it shall be set to false. ")
+	@Schema(required = true, description = "If the LCM operation occurrence is in \"PROCESSING\" or \"ROLLING_BACK\" state and the operation is being cancelled, this attribute shall be set to true. Otherwise, it shall be set to false. ")
 	@NotNull
 
 	public Boolean isIsCancelPending() {
@@ -283,7 +283,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return cancelMode
 	 **/
-	@ApiModelProperty(value = "The mode of an ongoing cancellation. Shall be present when isCancelPending=true, and shall be absent otherwise. ")
+	@Schema(description = "The mode of an ongoing cancellation. Shall be present when isCancelPending=true, and shall be absent otherwise. ")
 
 	@Valid
 	public CancelModeType getCancelMode() {
@@ -304,7 +304,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return error
 	 **/
-	@ApiModelProperty(value = "If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\" is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and contain error information, unless it has been requested to be excluded via an attribute selector. ")
+	@Schema(description = "If \"operationState\" is \"FAILED_TEMP\" or \"FAILED\" or \"operationState\" is \"PROCESSING\" or \"ROLLING_BACK\" and previous value of \"operationState\" was \"FAILED_TEMP\", this attribute shall be present and contain error information, unless it has been requested to be excluded via an attribute selector. ")
 
 	@Valid
 	public ProblemDetails getError() {
@@ -325,7 +325,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return resourceChanges
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public NsLcmOpOccResourceChanges getResourceChanges() {
@@ -346,7 +346,7 @@ public class NsLcmOpOcc {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

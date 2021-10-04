@@ -38,8 +38,6 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfoLinks;
 
-import io.swagger.annotations.Api;
-
 /**
  * SOL005 - NSD Management Interface
  *
@@ -48,7 +46,6 @@ import io.swagger.annotations.Api;
  *
  */
 @RestController
-@Api(value = "/sol005/nsd/v1/ns_descriptors")
 public class NsDescriptor261Sol005Controller implements NsDescriptor261Sol005Api {
 	private final NsDescriptorGenericFrontController nsDescriptorGenericFrontController;
 

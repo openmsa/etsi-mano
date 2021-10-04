@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.em.v331.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -40,10 +40,10 @@ public class CreateVnfSnapshotRequest   {
   private String vnfcInstanceId = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+  private Map<String, String> userDefinedData = null;
 
   public CreateVnfSnapshotRequest vnfSnapshotInfoId(String vnfSnapshotInfoId) {
     this.vnfSnapshotInfoId = vnfSnapshotInfoId;
@@ -83,7 +83,7 @@ public class CreateVnfSnapshotRequest   {
     this.vnfcInstanceId = vnfcInstanceId;
   }
 
-  public CreateVnfSnapshotRequest additionalParams(KeyValuePairs additionalParams) {
+  public CreateVnfSnapshotRequest additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -95,15 +95,15 @@ public class CreateVnfSnapshotRequest   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 
-  public CreateVnfSnapshotRequest userDefinedData(KeyValuePairs userDefinedData) {
+  public CreateVnfSnapshotRequest userDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
     return this;
   }
@@ -115,11 +115,11 @@ public class CreateVnfSnapshotRequest   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getUserDefinedData() {
+    public Map<String, String> getUserDefinedData() {
     return userDefinedData;
   }
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
+  public void setUserDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
   }
 

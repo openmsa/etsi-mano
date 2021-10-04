@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * ScaleInfo
@@ -46,46 +46,45 @@ public class ScaleInfo {
 	@JsonProperty("scaleLevel")
 	private Integer scaleLevel = null;
 
-	public ScaleInfo aspectId(String aspectId) {
+	public ScaleInfo aspectId(final String aspectId) {
 		this.aspectId = aspectId;
 		return this;
 	}
 
 	/**
 	 * Identifier of the scaling aspect.
-	 * 
+	 *
 	 * @return aspectId
 	 **/
 	@JsonProperty("aspectId")
-	@ApiModelProperty(required = true, value = "Identifier of the scaling aspect. ")
+	@Schema(required = true, description = "Identifier of the scaling aspect. ")
 	@NotNull
 	public String getAspectId() {
 		return aspectId;
 	}
 
-	public void setAspectId(String aspectId) {
+	public void setAspectId(final String aspectId) {
 		this.aspectId = aspectId;
 	}
 
-	public ScaleInfo scaleLevel(Integer scaleLevel) {
+	public ScaleInfo scaleLevel(final Integer scaleLevel) {
 		this.scaleLevel = scaleLevel;
 		return this;
 	}
 
 	/**
-	 * Indicates the scale level. The minimum value shall be 0 and the maximum value
-	 * shall be &lt;&#x3D; maxScaleLevel as described in the VNFD.
-	 * 
+	 * Indicates the scale level. The minimum value shall be 0 and the maximum value shall be &lt;&#x3D; maxScaleLevel as described in the VNFD.
+	 *
 	 * @return scaleLevel
 	 **/
 	@JsonProperty("scaleLevel")
-	@ApiModelProperty(required = true, value = "Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD. ")
+	@Schema(required = true, description = "Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD. ")
 	@NotNull
 	public Integer getScaleLevel() {
 		return scaleLevel;
 	}
 
-	public void setScaleLevel(Integer scaleLevel) {
+	public void setScaleLevel(final Integer scaleLevel) {
 		this.scaleLevel = scaleLevel;
 	}
 
@@ -101,10 +100,9 @@ public class ScaleInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

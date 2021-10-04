@@ -28,15 +28,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents describes a pair of ingress and egress CPs or SAPs which
  * the NFP passes by. It shall comply with the provisions defined in Table
  * 6.5.3.72-1.
  */
-@ApiModel(description = "This type represents describes a pair of ingress and egress CPs or SAPs which  the NFP passes by. It shall comply with the provisions defined in Table 6.5.3.72-1. ")
+@Schema(description = "This type represents describes a pair of ingress and egress CPs or SAPs which  the NFP passes by. It shall comply with the provisions defined in Table 6.5.3.72-1. ")
 @Validated
 
 
@@ -73,7 +73,7 @@ public class CpPairInfo {
 	 * 
 	 * @return vnfExtCpIds
 	 **/
-	@ApiModelProperty(value = "Identifier(s) of the VNF CP(s) which form the pair. The presence of a single vnfExpCpId, pnfExtCpId, or sapId occurrence indicates  that the CP or SAP is used both as an ingress and egress port at a particular  NFP position. ")
+	@Schema(description = "Identifier(s) of the VNF CP(s) which form the pair. The presence of a single vnfExpCpId, pnfExtCpId, or sapId occurrence indicates  that the CP or SAP is used both as an ingress and egress port at a particular  NFP position. ")
 
 	@Size(max = 2)
 	public List<String> getVnfExtCpIds() {
@@ -104,7 +104,7 @@ public class CpPairInfo {
 	 * 
 	 * @return pnfExtCpIds
 	 **/
-	@ApiModelProperty(value = "Identifier(s) of the PNF CP(s) which form the pair. The presence of a single vnfExpCpId, pnfExtCpId, or sapId occurrence indicates  that the CP or SAP is used both as an ingress and egress port at a particular  NFP position. ")
+	@Schema(description = "Identifier(s) of the PNF CP(s) which form the pair. The presence of a single vnfExpCpId, pnfExtCpId, or sapId occurrence indicates  that the CP or SAP is used both as an ingress and egress port at a particular  NFP position. ")
 
 	@Size(max = 2)
 	public List<String> getPnfExtCpIds() {
@@ -135,7 +135,7 @@ public class CpPairInfo {
 	 * 
 	 * @return sapIds
 	 **/
-	@ApiModelProperty(value = "Identifier(s) of the SAP(s) which form the pair. The presence of a single vnfExpCpId, pnfExtCpId, or sapId occurrence indicates  that the CP or SAP is used both as an ingress and egress port at a particular  NFP position. ")
+	@Schema(description = "Identifier(s) of the SAP(s) which form the pair. The presence of a single vnfExpCpId, pnfExtCpId, or sapId occurrence indicates  that the CP or SAP is used both as an ingress and egress port at a particular  NFP position. ")
 
 	@Size(max = 2)
 	public List<String> getSapIds() {

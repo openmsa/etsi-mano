@@ -31,9 +31,26 @@ public class ValueObject {
 	private List<Constraint> constraints = new ArrayList<>();
 	private String status;
 
+	public ValueObject() {
+		// Nothing.
+	}
+
+	public ValueObject(final String string) {
+		this.type = string;
+	}
+
 	public static ValueObject listOf(final String type) {
 		final ValueObject vo = new ValueObject();
 		vo.setType("list");
+		final EntrySchema entrySchema = new EntrySchema();
+		entrySchema.setType(type);
+		vo.setEntrySchema(entrySchema);
+		return vo;
+	}
+
+	public static ValueObject mapOf(final String type) {
+		final ValueObject vo = new ValueObject();
+		vo.setType("map");
 		final EntrySchema entrySchema = new EntrySchema();
 		entrySchema.setType(type);
 		vo.setEntrySchema(entrySchema);

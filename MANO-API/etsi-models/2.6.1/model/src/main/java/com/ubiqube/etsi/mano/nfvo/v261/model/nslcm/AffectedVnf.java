@@ -28,14 +28,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information about added, deleted and modified VNFs. It
  * shall comply with the provisions in Table 6.5.3.2-1.
  */
-@ApiModel(description = "This type provides information about added, deleted and modified VNFs.  It shall comply with the provisions in Table 6.5.3.2-1. ")
+@Schema(description = "This type provides information about added, deleted and modified VNFs.  It shall comply with the provisions in Table 6.5.3.2-1. ")
 @Validated
 
 
@@ -155,7 +155,7 @@ public class AffectedVnf {
 	 *
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF instance.  ")
+	@Schema(required = true, description = "Identifier of the VNF instance.  ")
 	@NotNull
 
 	public String getVnfInstanceId() {
@@ -176,7 +176,7 @@ public class AffectedVnf {
 	 *
 	 * @return vnfdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNFD of the VNF Instance. ")
+	@Schema(required = true, description = "Identifier of the VNFD of the VNF Instance. ")
 	@NotNull
 
 	public String getVnfdId() {
@@ -197,7 +197,7 @@ public class AffectedVnf {
 	 *
 	 * @return vnfProfileId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF profile of the NSD. ")
+	@Schema(required = true, description = "Identifier of the VNF profile of the NSD. ")
 	@NotNull
 
 	public String getVnfProfileId() {
@@ -218,7 +218,7 @@ public class AffectedVnf {
 	 *
 	 * @return vnfName
 	 **/
-	@ApiModelProperty(value = "Name of the VNF Instance. ")
+	@Schema(description = "Name of the VNF Instance. ")
 
 	public String getVnfName() {
 		return vnfName;
@@ -240,7 +240,7 @@ public class AffectedVnf {
 	 *
 	 * @return changeType
 	 **/
-	@ApiModelProperty(value = "Signals the type of change Permitted values: - ADD - REMOVE - INSTANTIATE - TERMINATE - SCALE - CHANGE_FLAVOUR - HEAL - OPERATE - MODIFY_INFORMATION - CHANGE_EXTERNAL_VNF_CONNECTIVITY ")
+	@Schema(description = "Signals the type of change Permitted values: - ADD - REMOVE - INSTANTIATE - TERMINATE - SCALE - CHANGE_FLAVOUR - HEAL - OPERATE - MODIFY_INFORMATION - CHANGE_EXTERNAL_VNF_CONNECTIVITY ")
 
 	public ChangeTypeEnum getChangeType() {
 		return changeType;
@@ -261,7 +261,7 @@ public class AffectedVnf {
 	 *
 	 * @return changeResult
 	 **/
-	@ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
+	@Schema(description = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
 
 	public ChangeResultEnum getChangeResult() {
 		return changeResult;
@@ -281,7 +281,7 @@ public class AffectedVnf {
 	 *
 	 * @return changedInfo
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 

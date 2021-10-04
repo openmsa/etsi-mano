@@ -33,7 +33,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * HealVnfRequest
@@ -57,7 +57,7 @@ public class HealVnfRequest {
 	 * @return cause
 	 **/
 	@JsonProperty("cause")
-	@ApiModelProperty(value = "Indicates the reason why a healing procedure is required. ")
+	@Schema(description = "Indicates the reason why a healing procedure is required. ")
 	public String getCause() {
 		return cause;
 	}
@@ -72,14 +72,12 @@ public class HealVnfRequest {
 	}
 
 	/**
-	 * Additional parameters passed by the NFVO as input to the healing process,
-	 * specific to the VNF being healed, as declared in the VNFD as part of
-	 * \&quot;HealVnfOpConfig\&quot;.
+	 * Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \&quot;HealVnfOpConfig\&quot;.
 	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \"HealVnfOpConfig\". ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \"HealVnfOpConfig\". ")
 	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
@@ -100,8 +98,7 @@ public class HealVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

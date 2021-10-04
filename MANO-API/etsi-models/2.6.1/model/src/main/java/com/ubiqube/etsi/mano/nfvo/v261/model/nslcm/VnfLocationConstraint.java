@@ -26,15 +26,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the association of location constraints to a VNF
  * instance to be created according to a specific VNF profile. It shall comply
  * with the provisions defined in Table 6.5.3.20-1.
  */
-@ApiModel(description = "This type represents the association of location constraints to a VNF instance to be created according to a specific VNF profile. It shall comply with the provisions defined in Table 6.5.3.20-1. ")
+@Schema(description = "This type represents the association of location constraints to a VNF instance to be created according to a specific VNF profile. It shall comply with the provisions defined in Table 6.5.3.20-1. ")
 @Validated
 
 
@@ -56,7 +56,7 @@ public class VnfLocationConstraint {
 	 * 
 	 * @return vnfProfileId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of (reference to) a vnfProfile to which the additional parameters apply. ")
+	@Schema(required = true, description = "Identifier of (reference to) a vnfProfile to which the additional parameters apply. ")
 	@NotNull
 
 	public String getVnfProfileId() {
@@ -78,7 +78,7 @@ public class VnfLocationConstraint {
 	 * 
 	 * @return locationConstraints
 	 **/
-	@ApiModelProperty(value = "Defines the location constraints for the VNF instance to be created based on the VNF profile. ")
+	@Schema(description = "Defines the location constraints for the VNF instance to be created based on the VNF profile. ")
 
 	@Valid
 

@@ -26,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * ApiVersionInformationApiVersions
@@ -53,7 +53,7 @@ public class ApiVersionInformationApiVersions {
 	 *
 	 * @return version
 	 **/
-	@ApiModelProperty(required = true, value = "Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1. ")
+	@Schema(required = true, description = "Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1. ")
 	@NotNull
 
 	public String getVersion() {
@@ -74,7 +74,7 @@ public class ApiVersionInformationApiVersions {
 	 *
 	 * @return isDeprecated
 	 **/
-	@ApiModelProperty(value = "If such information is available, this attribute indicates whether use of the version signaled by the version attribute is deprecated (true) or not (false). A deprecated version is still supported by the API producer but is recommended not to be used any longer. When a version is no longer supported, it does not appear in the response body. ")
+	@Schema(description = "If such information is available, this attribute indicates whether use of the version signaled by the version attribute is deprecated (true) or not (false). A deprecated version is still supported by the API producer but is recommended not to be used any longer. When a version is no longer supported, it does not appear in the response body. ")
 
 	public Boolean getIsDeprecated() {
 		return isDeprecated;
@@ -94,7 +94,7 @@ public class ApiVersionInformationApiVersions {
 	 *
 	 * @return retirementDate
 	 **/
-	@ApiModelProperty(value = "The date and time after which the API version will no longer be supported. This attribute may be included if the value of the isDeprecated attribute is set to true and shall be absent otherwise. ")
+	@Schema(description = "The date and time after which the API version will no longer be supported. This attribute may be included if the value of the isDeprecated attribute is set to true and shall be absent otherwise. ")
 
 	@Valid
 

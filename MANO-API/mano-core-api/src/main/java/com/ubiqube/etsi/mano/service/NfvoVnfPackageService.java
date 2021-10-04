@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -147,6 +148,18 @@ public class NfvoVnfPackageService implements VnfPackageService {
 
 	@Override
 	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void delete(final UUID id) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Path getPathByVnfdId(final UUID fromString) {
 		// TODO Auto-generated method stub
 		return null;
 	}

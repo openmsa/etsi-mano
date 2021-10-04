@@ -27,14 +27,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information about added, deleted and modified VNFFG
  * instances. It shall comply with the provisions in Table 6.5.3.5-1.
  */
-@ApiModel(description = "This type provides information about added, deleted and modified VNFFG instances. It shall comply with the provisions in Table 6.5.3.5-1. ")
+@Schema(description = "This type provides information about added, deleted and modified VNFFG instances. It shall comply with the provisions in Table 6.5.3.5-1. ")
 @Validated
 
 
@@ -128,7 +128,7 @@ public class AffectedVnffg {
 	 * 
 	 * @return vnffgInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNFFG instance. ")
+	@Schema(required = true, description = "Identifier of the VNFFG instance. ")
 	@NotNull
 
 	public String getVnffgInstanceId() {
@@ -149,7 +149,7 @@ public class AffectedVnffg {
 	 * 
 	 * @return vnffgdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNFFGD of the VNFFG instance. ")
+	@Schema(required = true, description = "Identifier of the VNFFGD of the VNFFG instance. ")
 	@NotNull
 
 	public String getVnffgdId() {
@@ -170,7 +170,7 @@ public class AffectedVnffg {
 	 * 
 	 * @return changeType
 	 **/
-	@ApiModelProperty(value = "Signals the type of change. Permitted values: - ADD - DELETE - MODIFY ")
+	@Schema(description = "Signals the type of change. Permitted values: - ADD - DELETE - MODIFY ")
 
 	public ChangeTypeEnum getChangeType() {
 		return changeType;
@@ -191,7 +191,7 @@ public class AffectedVnffg {
 	 * 
 	 * @return changeResult
 	 **/
-	@ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
+	@Schema(description = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
 
 	public ChangeResultEnum getChangeResult() {
 		return changeResult;

@@ -62,9 +62,4 @@ public class NsTask extends AbstractTask {
 		return null;
 	}
 
-	@Override
-	public UUID getRemovedLiveInstance() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

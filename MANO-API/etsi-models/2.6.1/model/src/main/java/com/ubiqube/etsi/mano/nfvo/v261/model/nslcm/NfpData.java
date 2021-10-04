@@ -27,15 +27,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type contains information used to create or modify NFP instance
  * parameters for the update of an existing VNFFG instance. It shall comply with
  * the provisions defined in Table 6.5.3.38-1.
  */
-@ApiModel(description = "This type contains information used to create or modify NFP instance parameters for the update of an existing VNFFG instance. It shall comply with the provisions defined in Table 6.5.3.38-1. ")
+@Schema(description = "This type contains information used to create or modify NFP instance parameters for the update of an existing VNFFG instance. It shall comply with the provisions defined in Table 6.5.3.38-1. ")
 @Validated
 
 
@@ -68,7 +68,7 @@ public class NfpData {
 	 * 
 	 * @return nfpInfoId
 	 **/
-	@ApiModelProperty(value = "Identifier of the NFP to be modified. It shall be present for modified NFPs and shall be absent for the new NFP. It shall be present for modified NFPs and shall be absent  for the new NFP. ")
+	@Schema(description = "Identifier of the NFP to be modified. It shall be present for modified NFPs and shall be absent for the new NFP. It shall be present for modified NFPs and shall be absent  for the new NFP. ")
 
 	public String getNfpInfoId() {
 		return nfpInfoId;
@@ -90,7 +90,7 @@ public class NfpData {
 	 * 
 	 * @return nfpName
 	 **/
-	@ApiModelProperty(value = "Human readable name for the NFP. It shall be present for the new NFP, and it may be present otherwise. It shall be present for the new NFP, and it may be  present otherwise. ")
+	@Schema(description = "Human readable name for the NFP. It shall be present for the new NFP, and it may be present otherwise. It shall be present for the new NFP, and it may be  present otherwise. ")
 
 	public String getNfpName() {
 		return nfpName;
@@ -112,7 +112,7 @@ public class NfpData {
 	 * 
 	 * @return description
 	 **/
-	@ApiModelProperty(value = "Human readable description for the NFP. It shall be present for the new NFP, and it may be present otherwise. It shall be present for the new NFP, and it may be  present otherwise. ")
+	@Schema(description = "Human readable description for the NFP. It shall be present for the new NFP, and it may be present otherwise. It shall be present for the new NFP, and it may be  present otherwise. ")
 
 	public String getDescription() {
 		return description;
@@ -145,7 +145,7 @@ public class NfpData {
 	 * 
 	 * @return cpGroup
 	 **/
-	@ApiModelProperty(value = "Group(s) of CPs and/or SAPs which the NFP passes by. Cardinality can be 0 if only updated or newly created NFP classification and selection rule which applied to an existing NFP is provided. At least a CP or an nfpRule shall be present. When multiple identifiers are included, the position of  the identifier in the cpGroup value specifies the position  of the group in the path. ")
+	@Schema(description = "Group(s) of CPs and/or SAPs which the NFP passes by. Cardinality can be 0 if only updated or newly created NFP classification and selection rule which applied to an existing NFP is provided. At least a CP or an nfpRule shall be present. When multiple identifiers are included, the position of  the identifier in the cpGroup value specifies the position  of the group in the path. ")
 
 	@Valid
 
@@ -167,7 +167,7 @@ public class NfpData {
 	 * 
 	 * @return nfpRule
 	 **/
-	@ApiModelProperty(value = "NFP classification and selection rule. See note 1. ")
+	@Schema(description = "NFP classification and selection rule. See note 1. ")
 
 	@Valid
 

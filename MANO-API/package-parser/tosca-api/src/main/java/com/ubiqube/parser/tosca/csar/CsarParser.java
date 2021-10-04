@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -97,6 +99,7 @@ public class CsarParser {
 		return resolver;
 	}
 
+	@NotNull
 	public List<ArtefactInformations> getFiles() {
 		final List<ArtefactInformations> ret = new ArrayList<>();
 		try {

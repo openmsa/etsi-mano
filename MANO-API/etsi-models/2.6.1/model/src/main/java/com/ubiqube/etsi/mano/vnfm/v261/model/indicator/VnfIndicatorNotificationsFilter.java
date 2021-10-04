@@ -28,8 +28,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.vnfm.v261.model.VnfInstanceSubscriptionFilter;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription filter related to notifications about VNF
@@ -40,7 +40,7 @@ import io.swagger.annotations.ApiModelProperty;
  * least one of the values in the array matches (logical \&quot;or\&quot;
  * between the values of one filter attribute).
  */
-@ApiModel(description = "This type represents a subscription filter related to notifications about VNF indicator value changes. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
+@Schema(description = "This type represents a subscription filter related to notifications about VNF indicator value changes. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
 @Validated
 public class VnfIndicatorNotificationsFilter {
 	@JsonProperty("vnfInstanceSubscriptionFilter")
@@ -60,7 +60,7 @@ public class VnfIndicatorNotificationsFilter {
 	 *
 	 * @return vnfInstanceSubscriptionFilter
 	 **/
-	@ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify. ")
+	@Schema(description = "Filter criteria to select VNF instances about which to notify. ")
 
 	@Valid
 
@@ -90,7 +90,7 @@ public class VnfIndicatorNotificationsFilter {
 	 *
 	 * @return indicatorIds
 	 **/
-	@ApiModelProperty(value = "Match particular VNF indicator identifiers. ")
+	@Schema(description = "Match particular VNF indicator identifiers. ")
 
 	public List<String> getIndicatorIds() {
 		return indicatorIds;

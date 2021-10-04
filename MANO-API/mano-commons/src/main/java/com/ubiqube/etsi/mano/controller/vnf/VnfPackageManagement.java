@@ -33,8 +33,23 @@ import org.springframework.util.MultiValueMap;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
 public interface VnfPackageManagement {
-
+	/**
+	 * Only for read.
+	 *
+	 * @param <U>      The json class.
+	 * @param vnfPkgId A Id.
+	 * @param u        The json class.
+	 * @return A Json instance.
+	 */
 	<U> U vnfPackagesVnfPkgIdGet(@Nonnull UUID vnfPkgId, Class<U> u);
+
+	/**
+	 * Only for write.
+	 *
+	 * @param vnfPkgId An Id.
+	 * @return A VnfPackage instance.
+	 */
+	VnfPackage vnfPackagesVnfPkgIdGet(UUID vnfPkgId);
 
 	List<VnfPackage> vnfPackagesGet(String filter);
 
@@ -68,4 +83,5 @@ public interface VnfPackageManagement {
 	ResponseEntity<Resource> onboardedGetManifestByVnfd(UUID vnfdId, @Valid String includeSignature);
 
 	ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsGet(UUID vnfdId, String range);
+
 }

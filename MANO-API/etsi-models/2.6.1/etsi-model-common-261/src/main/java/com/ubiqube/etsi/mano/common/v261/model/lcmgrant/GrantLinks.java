@@ -27,13 +27,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Links to resources related to this resource.
  */
-@ApiModel(description = "Links to resources related to this resource. ")
+@Schema(description = "Links to resources related to this resource. ")
 @Validated
 public class GrantLinks {
 	@JsonProperty("self")
@@ -55,7 +55,7 @@ public class GrantLinks {
 	 *
 	 * @return self
 	 **/
-	@ApiModelProperty(required = true, value = "URI of this resource. ")
+	@Schema(required = true, description = "URI of this resource. ")
 	@NotNull
 
 	@Valid
@@ -78,7 +78,7 @@ public class GrantLinks {
 	 *
 	 * @return vnfLcmOpOcc
 	 **/
-	@ApiModelProperty(required = true, value = "Related VNF lifecycle management operation occurrence. ")
+	@Schema(required = true, description = "Related VNF lifecycle management operation occurrence. ")
 	@NotNull
 
 	@Valid
@@ -101,7 +101,7 @@ public class GrantLinks {
 	 *
 	 * @return vnfInstance
 	 **/
-	@ApiModelProperty(required = true, value = "Related VNF instance. ")
+	@Schema(required = true, description = "Related VNF instance. ")
 	@NotNull
 
 	@Valid

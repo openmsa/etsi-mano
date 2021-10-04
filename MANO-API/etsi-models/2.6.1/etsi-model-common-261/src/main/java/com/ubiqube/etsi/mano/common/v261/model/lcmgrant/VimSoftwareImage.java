@@ -25,15 +25,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type contains a mapping between a software image definition the VNFD and
  * the corresponding software image managed by the NFVO in the VIM which is
  * needed during compute resource instantiation.
  */
-@ApiModel(description = "This type contains a mapping between a software image definition the VNFD and the corresponding software image managed by the NFVO in the VIM which is needed during compute resource instantiation. ")
+@Schema(description = "This type contains a mapping between a software image definition the VNFD and the corresponding software image managed by the NFVO in the VIM which is needed during compute resource instantiation. ")
 @Validated
 public class VimSoftwareImage {
 	@JsonProperty("vimConnectionId")
@@ -63,7 +63,7 @@ public class VimSoftwareImage {
 	 *
 	 * @return vimConnectionId
 	 **/
-	@ApiModelProperty(value = "Identifier of the VIM connection to access the software image referenced in this structure. The applicable \"VimConnectionInfo\" structure, which is referenced by vimConnectionId, can be obtained from the \"vimConnectionInfo\" attribute of the \"VnfInstance\" structure. This attribute shall only be supported and present if VNF-related resource management in direct mode is applicable. ")
+	@Schema(description = "Identifier of the VIM connection to access the software image referenced in this structure. The applicable \"VimConnectionInfo\" structure, which is referenced by vimConnectionId, can be obtained from the \"vimConnectionInfo\" attribute of the \"VnfInstance\" structure. This attribute shall only be supported and present if VNF-related resource management in direct mode is applicable. ")
 
 	public String getVimConnectionId() {
 		return vimConnectionId;
@@ -86,7 +86,7 @@ public class VimSoftwareImage {
 	 *
 	 * @return resourceProviderId
 	 **/
-	@ApiModelProperty(value = "Identifies the entity responsible for the management of the virtualised resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
+	@Schema(description = "Identifies the entity responsible for the management of the virtualised resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
 
 	public String getResourceProviderId() {
 		return resourceProviderId;
@@ -106,7 +106,7 @@ public class VimSoftwareImage {
 	 *
 	 * @return vnfdSoftwareImageId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier which references the software image descriptor in the VNFD. ")
+	@Schema(required = true, description = "Identifier which references the software image descriptor in the VNFD. ")
 	@NotNull
 
 	public String getVnfdSoftwareImageId() {
@@ -127,7 +127,7 @@ public class VimSoftwareImage {
 	 *
 	 * @return vimSoftwareImageId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the software image in the resource management layer (i.e. VIM). ")
+	@Schema(required = true, description = "Identifier of the software image in the resource management layer (i.e. VIM). ")
 	@NotNull
 
 	public String getVimSoftwareImageId() {

@@ -16,6 +16,21 @@
  */
 package com.ubiqube.etsi.mano.orchestrator.uow;
 
-public interface UnitOfWork {
+import com.ubiqube.etsi.mano.orchestrator.Context;
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface UnitOfWork<U> {
+	VirtualTask<U> getTask();
+
+	String execute(Context context);
+
+	String rollback(Context context);
+
+	Class<? extends Node> getNode();
 }

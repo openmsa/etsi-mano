@@ -23,7 +23,7 @@ public class TriggerDefinition {
 	private String event;
 	private TimeInterval schedule;
 	private EventFilter target_filter;
-	private CondictionClause condition;
+	private List<CondictionClause> condition;
 	private List<ActionDefinition> action;
 
 	public String getDescription() {
@@ -58,11 +58,11 @@ public class TriggerDefinition {
 		this.target_filter = target_filter;
 	}
 
-	public CondictionClause getCondition() {
+	public List<CondictionClause> getCondition() {
 		return condition;
 	}
 
-	public void setCondition(final CondictionClause condition) {
+	public void setCondition(final List<CondictionClause> condition) {
 		this.condition = condition;
 	}
 

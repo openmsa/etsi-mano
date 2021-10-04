@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -27,10 +27,10 @@ import javax.validation.constraints.NotNull;
 /**
   * Request parameters to create a threshold resource.             
  **/
-@ApiModel(description="Request parameters to create a threshold resource.             ")
+@Schema(description="Request parameters to create a threshold resource.             ")
 public class CreateThresholdRequest  {
   
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private ThresholdsCreateThresholdRequest createThresholdRequest = null;
  /**

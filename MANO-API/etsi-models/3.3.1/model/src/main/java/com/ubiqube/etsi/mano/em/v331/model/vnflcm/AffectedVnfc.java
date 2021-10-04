@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ResourceHandle;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public class AffectedVnfc   {
   private ResourceHandle computeResource = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   @JsonProperty("affectedVnfcCpIds")
   @Valid
@@ -201,7 +201,7 @@ public class AffectedVnfc   {
     this.computeResource = computeResource;
   }
 
-  public AffectedVnfc metadata(KeyValuePairs metadata) {
+  public AffectedVnfc metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -213,11 +213,11 @@ public class AffectedVnfc   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

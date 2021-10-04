@@ -25,15 +25,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type specifies an existing nested NS instance to be used in the NS
  * instance and if needed, the NsProfile to use for this nested NS instance. It
  * shall comply with the provisions defined in Table 6.5.3.19a-1.
  */
-@ApiModel(description = "This type specifies an existing nested NS instance to be used in the NS instance  and if needed, the NsProfile to use for this nested NS instance.  It shall comply with the provisions defined in Table 6.5.3.19a-1. ")
+@Schema(description = "This type specifies an existing nested NS instance to be used in the NS instance  and if needed, the NsProfile to use for this nested NS instance.  It shall comply with the provisions defined in Table 6.5.3.19a-1. ")
 @Validated
 
 
@@ -54,7 +54,7 @@ public class NestedNsInstanceData {
 	 * 
 	 * @return nestedNsInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the existing nested NS instance to be used in the NS. ")
+	@Schema(required = true, description = "Identifier of the existing nested NS instance to be used in the NS. ")
 	@NotNull
 
 	public String getNestedNsInstanceId() {
@@ -77,7 +77,7 @@ public class NestedNsInstanceData {
 	 * 
 	 * @return nsProfileId
 	 **/
-	@ApiModelProperty(value = "Identifier of an NsProfile defined in the NSD which the existing  nested NS instance shall be matched with. If not present, the NFVO will select the NsProfile matching the  information in the nested NS instance. ")
+	@Schema(description = "Identifier of an NsProfile defined in the NSD which the existing  nested NS instance shall be matched with. If not present, the NFVO will select the NsProfile matching the  information in the nested NS instance. ")
 
 	public String getNsProfileId() {
 		return nsProfileId;

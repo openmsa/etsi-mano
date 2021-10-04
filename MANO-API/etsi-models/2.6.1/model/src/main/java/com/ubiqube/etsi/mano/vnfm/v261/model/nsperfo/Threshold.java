@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a threshold.
  */
-@ApiModel(description = "This type represents a threshold. ")
+@Schema(description = "This type represents a threshold. ")
 @Validated
 
 
@@ -59,7 +59,7 @@ public class Threshold {
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this threshold resource. ")
+	@Schema(required = true, description = "Identifier of this threshold resource. ")
 	@NotNull
 
 	public String getId() {
@@ -80,7 +80,7 @@ public class Threshold {
 	 * 
 	 * @return objectInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF instance associated with the threshold. ")
+	@Schema(required = true, description = "Identifier of the VNF instance associated with the threshold. ")
 	@NotNull
 
 	public String getObjectInstanceId() {
@@ -101,7 +101,7 @@ public class Threshold {
 	 * 
 	 * @return criteria
 	 **/
-	@ApiModelProperty(required = true, value = "Criteria that define this threshold. ")
+	@Schema(required = true, description = "Criteria that define this threshold. ")
 	@NotNull
 
 	@Valid
@@ -124,7 +124,7 @@ public class Threshold {
 	 * 
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

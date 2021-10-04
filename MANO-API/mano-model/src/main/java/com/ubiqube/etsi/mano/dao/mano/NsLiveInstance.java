@@ -29,6 +29,16 @@ import javax.persistence.ManyToOne;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 @EntityListeners(AuditListener.class)
 public class NsLiveInstance implements BaseEntity, Auditable {
@@ -47,6 +57,12 @@ public class NsLiveInstance implements BaseEntity, Auditable {
 
 	private String resourceId;
 
+	private String vimConnectionId;
+
+	private String resourceProviderId;
+
+	private String vimLevelResourceType;
+
 	@ManyToOne
 	private NsdInstance nsInstance;
 
@@ -63,6 +79,7 @@ public class NsLiveInstance implements BaseEntity, Auditable {
 		this.nsTask = nsTask;
 		this.nsBlueprint = nsBlueprint;
 		this.nsInstance = nsInstance;
+		this.vimConnectionId = nsTask.getVimConnectionId();
 	}
 
 	@Override

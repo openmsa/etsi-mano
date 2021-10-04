@@ -30,14 +30,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * The alarm data type encapsulates information about an alarm. It shall comply
  * with the provisions defined in Table 8.5.2.4-1
  */
-@ApiModel(description = "The alarm data type encapsulates information about an alarm. It shall comply with the provisions defined in Table 8.5.2.4-1 ")
+@Schema(description = "The alarm data type encapsulates information about an alarm. It shall comply with the provisions defined in Table 8.5.2.4-1 ")
 @Validated
 public class Alarm {
 	@JsonProperty("id")
@@ -134,7 +134,7 @@ public class Alarm {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getId() {
@@ -155,7 +155,7 @@ public class Alarm {
 	 *
 	 * @return managedObjectId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getManagedObjectId() {
@@ -176,7 +176,7 @@ public class Alarm {
 	 *
 	 * @return rootCauseFaultyComponent
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -198,7 +198,7 @@ public class Alarm {
 	 *
 	 * @return rootCauseFaultyResource
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public FaultyResourceInfo getRootCauseFaultyResource() {
@@ -219,7 +219,7 @@ public class Alarm {
 	 *
 	 * @return alarmRaisedTime
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -241,7 +241,7 @@ public class Alarm {
 	 *
 	 * @return alarmChangedTime
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public LocalDateTime getAlarmChangedTime() {
@@ -262,7 +262,7 @@ public class Alarm {
 	 *
 	 * @return alarmClearedTime
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public LocalDateTime getAlarmClearedTime() {
@@ -284,7 +284,7 @@ public class Alarm {
 	 *
 	 * @return ackState
 	 **/
-	@ApiModelProperty(required = true, value = "Acknowledgment state of the alarm. Permitted values: UNACKNOWLEDGED ACKNOWLEDGED ")
+	@Schema(required = true, description = "Acknowledgment state of the alarm. Permitted values: UNACKNOWLEDGED ACKNOWLEDGED ")
 	@NotNull
 
 	public AckStateEnum getAckState() {
@@ -305,7 +305,7 @@ public class Alarm {
 	 *
 	 * @return perceivedSeverity
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -327,7 +327,7 @@ public class Alarm {
 	 *
 	 * @return eventTime
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -349,7 +349,7 @@ public class Alarm {
 	 *
 	 * @return eventType
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -371,7 +371,7 @@ public class Alarm {
 	 *
 	 * @return faultType
 	 **/
-	@ApiModelProperty(value = "Additional information to clarify the type of the fault. ")
+	@Schema(description = "Additional information to clarify the type of the fault. ")
 
 	public String getFaultType() {
 		return faultType;
@@ -391,7 +391,7 @@ public class Alarm {
 	 *
 	 * @return probableCause
 	 **/
-	@ApiModelProperty(required = true, value = "Information about the probable cause of the fault. ")
+	@Schema(required = true, description = "Information about the probable cause of the fault. ")
 	@NotNull
 
 	public String getProbableCause() {
@@ -414,7 +414,7 @@ public class Alarm {
 	 *
 	 * @return isRootCause
 	 **/
-	@ApiModelProperty(required = true, value = "Attribute indicating if this fault is the root for other correlated alarms. If TRUE, then the alarms listed in the attribute CorrelatedAlarmId are caused by this fault. ")
+	@Schema(required = true, description = "Attribute indicating if this fault is the root for other correlated alarms. If TRUE, then the alarms listed in the attribute CorrelatedAlarmId are caused by this fault. ")
 	@NotNull
 
 	public Boolean isIsRootCause() {
@@ -443,7 +443,7 @@ public class Alarm {
 	 *
 	 * @return correlatedAlarmIds
 	 **/
-	@ApiModelProperty(value = "List of identifiers of other alarms correlated to this fault. ")
+	@Schema(description = "List of identifiers of other alarms correlated to this fault. ")
 
 	public List<String> getCorrelatedAlarmIds() {
 		return correlatedAlarmIds;
@@ -463,7 +463,7 @@ public class Alarm {
 	 *
 	 * @return faultDetails
 	 **/
-	@ApiModelProperty(value = "Provides additional information about the fault.. ")
+	@Schema(description = "Provides additional information about the fault.. ")
 
 	public String getFaultDetails() {
 		return faultDetails;
@@ -483,7 +483,7 @@ public class Alarm {
 	 *
 	 * @return _links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

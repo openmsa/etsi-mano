@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.nslcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.OperationalStates;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.StopType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -48,7 +48,7 @@ public class OperateVnfData   {
   private Integer gracefulStopTimeout = null;
 
   @JsonProperty("additionalParam")
-  private KeyValuePairs additionalParam = null;
+  private Map<String, String> additionalParam = null;
 
   public OperateVnfData vnfInstanceId(String vnfInstanceId) {
     this.vnfInstanceId = vnfInstanceId;
@@ -130,7 +130,7 @@ public class OperateVnfData   {
     this.gracefulStopTimeout = gracefulStopTimeout;
   }
 
-  public OperateVnfData additionalParam(KeyValuePairs additionalParam) {
+  public OperateVnfData additionalParam(Map<String, String> additionalParam) {
     this.additionalParam = additionalParam;
     return this;
   }
@@ -142,11 +142,11 @@ public class OperateVnfData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParam() {
+    public Map<String, String> getAdditionalParam() {
     return additionalParam;
   }
 
-  public void setAdditionalParam(KeyValuePairs additionalParam) {
+  public void setAdditionalParam(Map<String, String> additionalParam) {
     this.additionalParam = additionalParam;
   }
 

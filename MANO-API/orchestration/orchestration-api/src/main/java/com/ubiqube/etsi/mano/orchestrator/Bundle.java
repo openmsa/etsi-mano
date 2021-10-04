@@ -16,6 +16,11 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface Bundle {
-
+	// Nothing.
 }

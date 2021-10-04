@@ -42,7 +42,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.CpProtocolInfo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * VnfcResourceInfoVnfcCpInfo
@@ -78,7 +78,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this VNFC CP instance and the associated array entry. ")
+	@Schema(required = true, description = "Identifier of this VNFC CP instance and the associated array entry. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -98,7 +98,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return cpdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VDU CPD, cpdId, in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the VDU CPD, cpdId, in the VNFD. ")
 	@NotNull
 	public String getCpdId() {
 		return cpdId;
@@ -114,12 +114,11 @@ public class VnfcResourceInfoVnfcCpInfo {
 	}
 
 	/**
-	 * When the VNFC CP is exposed as external CP of the VNF, the identifier of this
-	 * external VNF CP.
+	 * When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP.
 	 *
 	 * @return vnfExtCpId
 	 **/
-	@ApiModelProperty(value = "When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. ")
+	@Schema(description = "When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. ")
 	public String getVnfExtCpId() {
 		return vnfExtCpId;
 	}
@@ -146,7 +145,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return cpProtocolInfo
 	 **/
-	@ApiModelProperty(value = "Network protocol information for this CP. ")
+	@Schema(description = "Network protocol information for this CP. ")
 	@Valid
 	public List<CpProtocolInfo> getCpProtocolInfo() {
 		return cpProtocolInfo;
@@ -162,13 +161,11 @@ public class VnfcResourceInfoVnfcCpInfo {
 	}
 
 	/**
-	 * Identifier of the \"vnfLinkPorts\" structure in the
-	 * \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is
-	 * associated to a link port.
+	 * Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port.
 	 *
 	 * @return vnfLinkPortId
 	 **/
-	@ApiModelProperty(value = "Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
+	@Schema(description = "Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
 
 	public String getVnfLinkPortId() {
 		return vnfLinkPortId;
@@ -188,7 +185,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "Metadata about this CP. ")
+	@Schema(description = "Metadata about this CP. ")
 
 	@Valid
 
@@ -237,8 +234,7 @@ public class VnfcResourceInfoVnfcCpInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

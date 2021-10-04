@@ -25,8 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnffm.AlarmFrontController;
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
+import com.ubiqube.etsi.mano.vnfm.fc.vnffm.AlarmFrontController;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnffm.Alarm;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnffm.AlarmLinks;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnffm.AlarmModifications;

@@ -17,62 +17,19 @@
 
 package com.ubiqube.etsi.mano.nfvo.v271.controller.configuration;
 
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-
-import org.springframework.beans.factory.annotation.Value;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.paths.DefaultPathProvider;
-import springfox.documentation.spring.web.paths.Paths;
-import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class SwaggerDocumentationConfigNfvo271 {
-	@Value("${server.servlet.contextPath}")
-	private String contextPath;
-
-	ApiInfo apiInfo() {
-		return new ApiInfoBuilder()
-				.title("SOL005 - VNF Package Management Interface")
-				.description("SOL005 - VNF Package Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis ")
-				.license("ETSI Forge copyright notice")
-				.licenseUrl("https://forge.etsi.org/etsi-forge-copyright-notice.txt")
-				.termsOfServiceUrl("")
-				.version("2.7.1-impl:etsi.org:ETSI_NFV_OpenAPI:1")
-				.contact(new Contact("", "", ""))
-				.build();
-	}
-
+	@SuppressWarnings("static-method")
 	@Bean
-	public Docket customImplementationNfvo271() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.pathProvider(new CustomPathProvider())
-				.groupName("nfvo-etsi-mano-2.7.1")
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.ubiqube.etsi.mano.nfvo.v271"))
-				.build()
-				.directModelSubstitute(LocalDate.class, java.sql.Date.class)
-				.directModelSubstitute(OffsetDateTime.class, java.util.Date.class)
-				.apiInfo(apiInfo());
-	}
-
-	public class CustomPathProvider extends DefaultPathProvider {
-		@Override
-		public String getOperationPath(final String op) {
-			String operationPath = op;
-			if (operationPath.startsWith(contextPath)) {
-				operationPath = operationPath.substring(contextPath.length());
-			}
-			return Paths.removeAdjacentForwardSlashes(UriComponentsBuilder.newInstance().replacePath(operationPath).build().toString());
-		}
+	public GroupedOpenApi customImplementationNfvo271() {
+		return GroupedOpenApi.builder()
+				.group("nfvo-etsi-mano-2.7.1")
+				.packagesToScan("com.ubiqube.etsi.mano.nfvo.v271")
+				.build();
 	}
 
 }

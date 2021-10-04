@@ -26,15 +26,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a VNF instance for which the operational state needs to
  * be changed and the requested new state. It shall comply with the provisions
  * defined in Table 6.5.3.31-1.
  */
-@ApiModel(description = "This type represents a VNF instance for which the operational state  needs to be changed and the requested new state. It shall comply with the provisions defined in Table 6.5.3.31-1. ")
+@Schema(description = "This type represents a VNF instance for which the operational state  needs to be changed and the requested new state. It shall comply with the provisions defined in Table 6.5.3.31-1. ")
 @Validated
 
 
@@ -61,7 +61,7 @@ public class OperateVnfData {
 	 * 
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF instance. ")
+	@Schema(required = true, description = "Identifier of the VNF instance. ")
 	@NotNull
 
 	public String getVnfInstanceId() {
@@ -82,7 +82,7 @@ public class OperateVnfData {
 	 * 
 	 * @return changeStateTo
 	 **/
-	@ApiModelProperty(required = true, value = "The desired operational state (i.e. started or stopped) to change the VNF to. ")
+	@Schema(required = true, description = "The desired operational state (i.e. started or stopped) to change the VNF to. ")
 	@NotNull
 
 	@Valid
@@ -105,7 +105,7 @@ public class OperateVnfData {
 	 * 
 	 * @return stopType
 	 **/
-	@ApiModelProperty(value = "It signals whether forceful or graceful stop is requested.            ")
+	@Schema(description = "It signals whether forceful or graceful stop is requested.            ")
 
 	@Valid
 
@@ -128,7 +128,7 @@ public class OperateVnfData {
 	 * 
 	 * @return gracefulStopTimeout
 	 **/
-	@ApiModelProperty(value = "The time interval (in seconds) to wait for the VNF to be taken out of service during graceful stop, before stopping the VNF. ")
+	@Schema(description = "The time interval (in seconds) to wait for the VNF to be taken out of service during graceful stop, before stopping the VNF. ")
 
 	public Integer getGracefulStopTimeout() {
 		return gracefulStopTimeout;

@@ -29,10 +29,12 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
 public interface SystemBuilder {
 	List<UnitOfWorkConnectivity> getEdges();
 
-	UnitOfWork getSingle();
+	UnitOfWork<?> getSingle();
 
-	List<UnitOfWork> getIncomingVertex();
+	List<UnitOfWork<?>> getIncomingVertex();
 
-	List<UnitOfWork> getOutgoingVertex();
+	List<UnitOfWork<?>> getOutgoingVertex();
+
+	void add(UnitOfWork<?> src, UnitOfWork<?> dest);
 
 }

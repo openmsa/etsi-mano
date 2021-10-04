@@ -33,14 +33,14 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * An IP address range used, e.g., in case of egress connections. Exactly one of
  * \&quot;addresses\&quot; or \&quot;addressRange\&quot; shall be present.
  */
-@ApiModel(description = "An IP address range used, e.g., in case of egress connections. Exactly one of \"addresses\" or \"addressRange\" shall be present. ")
+@Schema(description = "An IP address range used, e.g., in case of egress connections. Exactly one of \"addresses\" or \"addressRange\" shall be present. ")
 public class IpOverEthernetAddressInfoAddressRange {
 	@JsonProperty("minAddress")
 	private String minAddress = null;
@@ -59,7 +59,7 @@ public class IpOverEthernetAddressInfoAddressRange {
 	 * @return minAddress
 	 **/
 	@JsonProperty("minAddress")
-	@ApiModelProperty(required = true, value = "Lowest IP address belonging to the range. ")
+	@Schema(required = true, description = "Lowest IP address belonging to the range. ")
 	@NotNull
 	public String getMinAddress() {
 		return minAddress;
@@ -80,7 +80,7 @@ public class IpOverEthernetAddressInfoAddressRange {
 	 * @return maxAddress
 	 **/
 	@JsonProperty("maxAddress")
-	@ApiModelProperty(required = true, value = "Highest IP address belonging to the range ")
+	@Schema(required = true, description = "Highest IP address belonging to the range ")
 	@NotNull
 	public String getMaxAddress() {
 		return maxAddress;

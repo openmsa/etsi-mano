@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.repository.phys;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Profile;
@@ -54,6 +55,12 @@ public class VnfPackagePhys extends AbstractGenericBinaryRepository<VnfPackage> 
 	@Override
 	protected String getFilename() {
 		return "vnfPkgInfo.json";
+	}
+
+	@Override
+	public Path getPathByVnfdId(final UUID fromString) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

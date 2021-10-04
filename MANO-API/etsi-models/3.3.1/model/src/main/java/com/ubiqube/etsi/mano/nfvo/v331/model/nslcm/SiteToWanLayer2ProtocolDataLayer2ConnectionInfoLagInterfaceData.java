@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.nslcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class SiteToWanLayer2ProtocolDataLayer2ConnectionInfoLagInterfaceData   {
   private Boolean lacpActivation = null;
 
   @JsonProperty("lacpConfig")
-  private KeyValuePairs lacpConfig = null;
+  private Map<String, String> lacpConfig = null;
 
   public SiteToWanLayer2ProtocolDataLayer2ConnectionInfoLagInterfaceData aggregatedEndpoints(List<String> aggregatedEndpoints) {
     this.aggregatedEndpoints = aggregatedEndpoints;
@@ -90,7 +90,7 @@ public class SiteToWanLayer2ProtocolDataLayer2ConnectionInfoLagInterfaceData   {
     this.lacpActivation = lacpActivation;
   }
 
-  public SiteToWanLayer2ProtocolDataLayer2ConnectionInfoLagInterfaceData lacpConfig(KeyValuePairs lacpConfig) {
+  public SiteToWanLayer2ProtocolDataLayer2ConnectionInfoLagInterfaceData lacpConfig(Map<String, String> lacpConfig) {
     this.lacpConfig = lacpConfig;
     return this;
   }
@@ -103,11 +103,11 @@ public class SiteToWanLayer2ProtocolDataLayer2ConnectionInfoLagInterfaceData   {
       @NotNull
 
     @Valid
-    public KeyValuePairs getLacpConfig() {
+    public Map<String, String> getLacpConfig() {
     return lacpConfig;
   }
 
-  public void setLacpConfig(KeyValuePairs lacpConfig) {
+  public void setLacpConfig(Map<String, String> lacpConfig) {
     this.lacpConfig = lacpConfig;
   }
 

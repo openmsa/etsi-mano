@@ -21,6 +21,16 @@ import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 public class ExternalCpTask extends VnfTask {
 
@@ -30,12 +40,6 @@ public class ExternalCpTask extends VnfTask {
 	@ManyToOne
 	private VnfExtCp vnfExtCp;
 
-	public VnfExtCp getVnfExtCp() {
-		return vnfExtCp;
-	}
-
-	public void setVnfExtCp(final VnfExtCp vnfExtCp) {
-		this.vnfExtCp = vnfExtCp;
-	}
+	private Boolean port;
 
 }

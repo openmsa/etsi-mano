@@ -11,13 +11,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents configuration parameters of a VNF instance and its VNFC instances.
  */
-@ApiModel(description = "This type represents configuration parameters of a VNF instance and its VNFC instances. ")
+@Schema(description = "This type represents configuration parameters of a VNF instance and its VNFC instances. ")
 @Validated
 
 public class VnfConfiguration {
@@ -38,7 +38,7 @@ public class VnfConfiguration {
 	 *
 	 * @return vnfConfigurationData
 	 **/
-	@ApiModelProperty(required = true, value = "Configuration parameters of the VNF instance. ")
+	@Schema(required = true, description = "Configuration parameters of the VNF instance. ")
 	@NotNull
 
 	@Valid
@@ -69,7 +69,7 @@ public class VnfConfiguration {
 	 *
 	 * @return vnfcConfigurationData
 	 **/
-	@ApiModelProperty(value = "Configuration parameters of the VNFC instances. ")
+	@Schema(description = "Configuration parameters of the VNFC instances. ")
 
 	@Valid
 

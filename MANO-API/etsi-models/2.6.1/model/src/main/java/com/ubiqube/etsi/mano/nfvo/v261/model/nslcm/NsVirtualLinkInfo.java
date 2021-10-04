@@ -29,14 +29,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type specifies the information about an NS VL instance. It shall comply
  * with the provisions defined in Table 6.5.3.53-1
  */
-@ApiModel(description = "This type specifies the information about an NS VL instance.  It shall comply with the provisions defined in Table 6.5.3.53-1 ")
+@Schema(description = "This type specifies the information about an NS VL instance.  It shall comply with the provisions defined in Table 6.5.3.53-1 ")
 @Validated
 
 
@@ -68,7 +68,7 @@ public class NsVirtualLinkInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VL instance. ")
+	@Schema(required = true, description = "Identifier of the VL instance. ")
 	@NotNull
 
 	public String getId() {
@@ -89,7 +89,7 @@ public class NsVirtualLinkInfo {
 	 *
 	 * @return nsVirtualLinkDescId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VLD in the NSD. ")
+	@Schema(required = true, description = "Identifier of the VLD in the NSD. ")
 	@NotNull
 
 	public String getNsVirtualLinkDescId() {
@@ -110,7 +110,7 @@ public class NsVirtualLinkInfo {
 	 *
 	 * @return nsVirtualLinkProfileId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VL profile in the NSD. ")
+	@Schema(required = true, description = "Identifier of the VL profile in the NSD. ")
 	@NotNull
 
 	public String getNsVirtualLinkProfileId() {
@@ -140,7 +140,7 @@ public class NsVirtualLinkInfo {
 	 *
 	 * @return resourceHandle
 	 **/
-	@ApiModelProperty(value = "Identifier(s) of the virtualised network resource(s) realizing the VL instance. See note. ")
+	@Schema(description = "Identifier(s) of the virtualised network resource(s) realizing the VL instance. See note. ")
 
 	@Valid
 
@@ -171,7 +171,7 @@ public class NsVirtualLinkInfo {
 	 *
 	 * @return linkPort
 	 **/
-	@ApiModelProperty(value = "Link ports of the VL instance. Cardinality of zero indicates that no port has yet been created for the VL instance. ")
+	@Schema(description = "Link ports of the VL instance. Cardinality of zero indicates that no port has yet been created for the VL instance. ")
 
 	@Valid
 

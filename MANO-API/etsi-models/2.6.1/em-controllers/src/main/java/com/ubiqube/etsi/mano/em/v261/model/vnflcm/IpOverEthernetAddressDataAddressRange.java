@@ -24,13 +24,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * An IP address range to be used, e.g. in case of egress connections. In case this attribute is present, IP addresses from the range will be used.
  */
-@ApiModel(description = "An IP address range to be used, e.g. in case of egress connections. In case this attribute is present, IP addresses from the range will be used. ")
+@Schema(description = "An IP address range to be used, e.g. in case of egress connections. In case this attribute is present, IP addresses from the range will be used. ")
 @Validated
 
 public class IpOverEthernetAddressDataAddressRange {
@@ -50,7 +50,7 @@ public class IpOverEthernetAddressDataAddressRange {
 	 *
 	 * @return minAddress
 	 **/
-	@ApiModelProperty(required = true, value = "Lowest IP address belonging to the range. ")
+	@Schema(required = true, description = "Lowest IP address belonging to the range. ")
 	@NotNull
 
 	public String getMinAddress() {
@@ -71,7 +71,7 @@ public class IpOverEthernetAddressDataAddressRange {
 	 *
 	 * @return maxAddress
 	 **/
-	@ApiModelProperty(required = true, value = "Highest IP address belonging to the range. ")
+	@Schema(required = true, description = "Highest IP address belonging to the range. ")
 	@NotNull
 
 	public String getMaxAddress() {

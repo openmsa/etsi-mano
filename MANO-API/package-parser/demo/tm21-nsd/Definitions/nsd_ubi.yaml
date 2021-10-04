@@ -1,0 +1,152 @@
+#
+#
+#
+#
+tosca_definitions_version: tosca_simple_yaml_1_0
+description: >
+  Sample NSD for integration testing.
+
+imports:
+  - etsi_nfv_sol001_nsd_types.yaml
+  - fix_ubiqube.yaml
+
+
+topology_template:
+  node_templates:
+    nested_ns01:
+      type: tosca.nodes.nfv.NS
+      properties:
+        descriptor_id: 2e5958f9-9bfd-46c6-b8fe-75cf0b3c78ab
+        designer: ovi@ubiqube.com
+        version: 0.0.1
+        name: Small NSD.
+        invariant_id: 2e5958f9-9bfd-46c6-b8fe-75cf0b3c78ab
+        flavour_id: flavor01
+        ns_profile: # tosca.datatypes.nfv.NsProfile
+          ns_instantiation_level: demo
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          flavour_id: flavor02
+      requirements:
+        #- virtual_link: # tosca.nodes.nfv.NsVirtualLink
+
+
+    ubiqube:
+      type: tosca.nodes.nfv.NsTopology
+      properties:
+        flavour_id: flavor01
+        vnfd_invariant:
+          - d0bd6d65-0302-4922-8c4d-73282cfcfc08
+          - fadf3699-e4c2-4259-9ef2-e0a137f33624
+
+
+    internal:
+      type: tosca.nodes.nfv.NsVirtualLink
+      properties:
+        description: First VL
+        vl_profile: # tosca.datatypes.nfv.NsVlProfile
+          max_bitrate_requirements:
+            root: 1000
+            leaf: 5000
+          min_bitrate_requirements:
+            root: 200
+            leaf: 400
+          qos: # tosca.datatypes.nfv.NsVirtualLinkQos
+            priority: 0
+          service_availability_level: 1
+          virtual_link_protocol_data: # list of tosca.datatypes.nfv.NsVirtualLinkProtocolData
+            - associated_layer_protocol:
+              l2_protocol_data: # tosca.datatypes.nfv.NsL2ProtocolData
+                name: internal-l2
+                vlan_transparent: false
+                mtu: 1442
+                segmentation_id: "0"
+              l3_protocol_data: #tosca.datatypes.nfv.NsL3ProtocolData
+                name: internal-l3
+                ip_version: ipv4
+                cidr: 10.1.0.0/24
+                dhcp_enabled: true
+                ip_allocation_pools: # list of tosca.datatypes.nfv.NsIpAllocationPool
+                  - start_ip_address: 10.1.0.5
+                    end_ip_address: 10.1.0.250
+        connectivity_type: # tosca.datatypes.nfv.ConnectivityType
+          layer_protocols:
+            - ipv4
+          flow_pattern: mesh
+        test_access:
+          - test
+
+    internal2:
+      type: tosca.nodes.nfv.NsVirtualLink
+      properties:
+        description: First VL
+        vl_profile: # tosca.datatypes.nfv.NsVlProfile
+          max_bitrate_requirements:
+            root: 1000
+            leaf: 5000
+          min_bitrate_requirements:
+            root: 200
+            leaf: 400
+          qos: # tosca.datatypes.nfv.NsVirtualLinkQos
+            priority: 0
+          service_availability: # tosca.datatypes.nfv.ServiceAvailability
+            level: level1
+          virtual_link_protocol_data: # list of tosca.datatypes.nfv.NsVirtualLinkProtocolData
+            - associated_layer_protocol:
+              l2_protocol_data: # tosca.datatypes.nfv.NsL2ProtocolData
+                name: internal2-l2
+                vlan_transparent: false
+                mtu: 1442
+                segmentation_id: "1"
+              l3_protocol_data: #tosca.datatypes.nfv.NsL3ProtocolData
+                name: internal2-l3
+                ip_version: ipv4
+                cidr: 10.10.0.0/24
+                dhcp_enabled: true
+                ip_allocation_pools: # list of tosca.datatypes.nfv.NsIpAllocationPool
+                  - start_ip_address: 10.10.0.5
+                    end_ip_address: 10.10.0.250
+        connectivity_type: # tosca.datatypes.nfv.ConnectivityType
+          layer_protocols:
+            - ipv4
+          flow_pattern: mesh
+        test_access:
+          - test
+
+
+policies:
+  affinity:
+    type: tosca.policies.nfv.AffinityRule
+    properties:
+      scope: nfvi_pop
+    targets: 
+      - vl01
+
+
+  anti_affinity:
+    type: tosca.policies.nfv.AntiAffinityRule
+    properties:
+      scope: zone
+    targets:
+      - vl01
+
+
+  security_group01:
+    type: tosca.policies.nfv.SecurityGroupRule
+    properties:
+      description: test SG
+      direction: egress
+      ether_type: ipv4
+      protocol: tcp
+      port_range_min: 0
+      port_range_max: 65535
+    targets:
+      - sap01
+
+
+
+
+
+
+
+

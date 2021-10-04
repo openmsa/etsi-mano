@@ -18,10 +18,20 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 import java.util.List;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
-public interface PlanContributor {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ * @param <T>
+ * @param <P>
+ */
+public interface PlanContributor<U, T extends VirtualTask<U>, P> {
 
-	List<? extends VirtualTask<?>> contribute(Bundle bundle);
+	List<T> contribute(Bundle bundle, P parameters);
 
+	Class<? extends Node> getNode();
 }

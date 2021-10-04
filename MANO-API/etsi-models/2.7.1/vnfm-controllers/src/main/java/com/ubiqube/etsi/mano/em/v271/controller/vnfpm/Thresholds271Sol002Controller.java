@@ -25,12 +25,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnfpm.VnfmThresholdFrontController;
 import com.ubiqube.etsi.mano.em.v271.model.vnfind.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnfind.Link;
 import com.ubiqube.etsi.mano.em.v271.model.vnfind.Threshold;
 import com.ubiqube.etsi.mano.em.v271.model.vnfind.ThresholdLinks;
 import com.ubiqube.etsi.mano.em.v271.model.vnfind.ThresholdModifications;
+import com.ubiqube.etsi.mano.vnfm.fc.vnfpm.VnfmThresholdFrontController;
 
 /**
  *

@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
@@ -40,7 +40,7 @@ public class PerformanceReportPerformanceValues   {
   private Object value = null;
 
   @JsonProperty("context")
-  private KeyValuePairs context = null;
+  private Map<String, String> context = null;
 
   public PerformanceReportPerformanceValues timeStamp(OffsetDateTime timeStamp) {
     this.timeStamp = timeStamp;
@@ -82,7 +82,7 @@ public class PerformanceReportPerformanceValues   {
     this.value = value;
   }
 
-  public PerformanceReportPerformanceValues context(KeyValuePairs context) {
+  public PerformanceReportPerformanceValues context(Map<String, String> context) {
     this.context = context;
     return this;
   }
@@ -94,11 +94,11 @@ public class PerformanceReportPerformanceValues   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getContext() {
+    public Map<String, String> getContext() {
     return context;
   }
 
-  public void setContext(KeyValuePairs context) {
+  public void setContext(Map<String, String> context) {
     this.context = context;
   }
 

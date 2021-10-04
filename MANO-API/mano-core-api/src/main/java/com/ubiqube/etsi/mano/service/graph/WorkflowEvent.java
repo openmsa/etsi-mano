@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.service.graph;
 public enum WorkflowEvent {
 	INSTANTIATE_PROCESSING,
 	INSTANTIATE_SUCCESS,
+	INSTANTIATE_FAILED,
 
 	SCALE_SUCCESS,
 	SCALE_FAILED,

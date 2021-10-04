@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -40,13 +40,13 @@ public class VimConnectionInfo   {
   private String vimType = null;
 
   @JsonProperty("interfaceInfo")
-  private KeyValuePairs interfaceInfo = null;
+  private Map<String, String> interfaceInfo = null;
 
   @JsonProperty("accessInfo")
-  private KeyValuePairs accessInfo = null;
+  private Map<String, String> accessInfo = null;
 
   @JsonProperty("extra")
-  private KeyValuePairs extra = null;
+  private Map<String, String> extra = null;
 
   public VimConnectionInfo vimId(String vimId) {
     this.vimId = vimId;
@@ -87,7 +87,7 @@ public class VimConnectionInfo   {
     this.vimType = vimType;
   }
 
-  public VimConnectionInfo interfaceInfo(KeyValuePairs interfaceInfo) {
+  public VimConnectionInfo interfaceInfo(Map<String, String> interfaceInfo) {
     this.interfaceInfo = interfaceInfo;
     return this;
   }
@@ -99,15 +99,15 @@ public class VimConnectionInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getInterfaceInfo() {
+    public Map<String, String> getInterfaceInfo() {
     return interfaceInfo;
   }
 
-  public void setInterfaceInfo(KeyValuePairs interfaceInfo) {
+  public void setInterfaceInfo(Map<String, String> interfaceInfo) {
     this.interfaceInfo = interfaceInfo;
   }
 
-  public VimConnectionInfo accessInfo(KeyValuePairs accessInfo) {
+  public VimConnectionInfo accessInfo(Map<String, String> accessInfo) {
     this.accessInfo = accessInfo;
     return this;
   }
@@ -119,15 +119,15 @@ public class VimConnectionInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAccessInfo() {
+    public Map<String, String> getAccessInfo() {
     return accessInfo;
   }
 
-  public void setAccessInfo(KeyValuePairs accessInfo) {
+  public void setAccessInfo(Map<String, String> accessInfo) {
     this.accessInfo = accessInfo;
   }
 
-  public VimConnectionInfo extra(KeyValuePairs extra) {
+  public VimConnectionInfo extra(Map<String, String> extra) {
     this.extra = extra;
     return this;
   }
@@ -139,11 +139,11 @@ public class VimConnectionInfo   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getExtra() {
+    public Map<String, String> getExtra() {
     return extra;
   }
 
-  public void setExtra(KeyValuePairs extra) {
+  public void setExtra(Map<String, String> extra) {
     this.extra = extra;
   }
 

@@ -33,14 +33,14 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription related to notifications about VNF
  * lifecycle changes.
  */
-@ApiModel(description = "This type represents a subscription related to notifications about VNF lifecycle changes. ")
+@Schema(description = "This type represents a subscription related to notifications about VNF lifecycle changes. ")
 
 public class LccnSubscription {
 	@JsonProperty("id")
@@ -66,7 +66,7 @@ public class LccnSubscription {
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of this subscription resource. ")
+	@Schema(required = true, description = "Identifier of this subscription resource. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -89,7 +89,7 @@ public class LccnSubscription {
 	 * @return filter
 	 **/
 	@JsonProperty("filter")
-	@ApiModelProperty(value = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
+	@Schema(description = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
 	public LifecycleChangeNotificationsFilter getFilter() {
 		return filter;
 	}
@@ -109,7 +109,7 @@ public class LccnSubscription {
 	 * @return callbackUri
 	 **/
 	@JsonProperty("callbackUri")
-	@ApiModelProperty(required = true, value = "The URI of the endpoint to send the notification to. ")
+	@Schema(required = true, description = "The URI of the endpoint to send the notification to. ")
 	@NotNull
 	public String getCallbackUri() {
 		return callbackUri;
@@ -130,7 +130,7 @@ public class LccnSubscription {
 	 * @return links
 	 **/
 	@JsonProperty("_links")
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 	public LccnSubscriptionLinks getLinks() {
 		return links;

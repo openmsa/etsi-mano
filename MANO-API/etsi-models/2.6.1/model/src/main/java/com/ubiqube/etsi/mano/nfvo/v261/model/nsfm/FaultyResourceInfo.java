@@ -25,14 +25,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the faulty virtual resources that have a negative impact
  * on a NS.
  */
-@ApiModel(description = "This type represents the faulty virtual resources that have a negative impact on a NS. ")
+@Schema(description = "This type represents the faulty virtual resources that have a negative impact on a NS. ")
 @Validated
 public class FaultyResourceInfo {
 	@JsonProperty("faultyResource")
@@ -51,7 +51,7 @@ public class FaultyResourceInfo {
 	 *
 	 * @return faultyResource
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -73,7 +73,7 @@ public class FaultyResourceInfo {
 	 *
 	 * @return faultyResourceType
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

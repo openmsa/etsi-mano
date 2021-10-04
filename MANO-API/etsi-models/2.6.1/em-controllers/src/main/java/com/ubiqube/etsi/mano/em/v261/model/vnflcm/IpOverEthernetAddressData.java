@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents network address data for IP over Ethernet.
  */
-@ApiModel(description = "This type represents network address data for IP over Ethernet. ")
+@Schema(description = "This type represents network address data for IP over Ethernet. ")
 @Validated
 
 public class IpOverEthernetAddressData {
@@ -53,7 +53,7 @@ public class IpOverEthernetAddressData {
 	 *
 	 * @return macAddress
 	 **/
-	@ApiModelProperty(value = "MAC address. If this attribute is not present, it shall be chosen by the VIM. At least one of \"macAddress\" or \"ipAddresses\" shall be present. ")
+	@Schema(description = "MAC address. If this attribute is not present, it shall be chosen by the VIM. At least one of \"macAddress\" or \"ipAddresses\" shall be present. ")
 
 	public String getMacAddress() {
 		return macAddress;
@@ -81,7 +81,7 @@ public class IpOverEthernetAddressData {
 	 *
 	 * @return ipAddresses
 	 **/
-	@ApiModelProperty(value = "List of IP addresses to assign to the CP instance. Each entry represents IP address data for fixed or dynamic IP address assignment per subnet. If this attribute is not present, no IP address shall be assigned. ")
+	@Schema(description = "List of IP addresses to assign to the CP instance. Each entry represents IP address data for fixed or dynamic IP address assignment per subnet. If this attribute is not present, no IP address shall be assigned. ")
 
 	@Valid
 

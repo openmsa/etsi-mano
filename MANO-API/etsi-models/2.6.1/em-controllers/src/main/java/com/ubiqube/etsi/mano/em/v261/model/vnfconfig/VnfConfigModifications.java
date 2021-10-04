@@ -10,13 +10,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents request parameters for the \&quot;Set Configuration\&quot; operation. * NOTE 1: At least one of \&quot;vnfConfigurationData\&quot; and \&quot;vnfcConfigurationData\&quot; shall be present. * NOTE 2: The VnfcConfiguration data type can only be used to modify the configuration of existing VNFC instances.
  */
-@ApiModel(description = "This type represents request parameters for the \"Set Configuration\" operation.   * NOTE 1: At least one of \"vnfConfigurationData\" and \"vnfcConfigurationData\"             shall be present.   * NOTE 2: The VnfcConfiguration data type can only be used to modify the configuration             of existing VNFC instances. ")
+@Schema(description = "This type represents request parameters for the \"Set Configuration\" operation.   * NOTE 1: At least one of \"vnfConfigurationData\" and \"vnfcConfigurationData\"             shall be present.   * NOTE 2: The VnfcConfiguration data type can only be used to modify the configuration             of existing VNFC instances. ")
 @Validated
 
 public class VnfConfigModifications {
@@ -41,7 +41,7 @@ public class VnfConfigModifications {
 	 *
 	 * @return vnfConfigurationData
 	 **/
-	@ApiModelProperty(value = "Modifications to configuration data for the VNF instance. See NOTE 1. If present, the modifications of the \"vnfConfigurationData\" attribute shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
+	@Schema(description = "Modifications to configuration data for the VNF instance. See NOTE 1. If present, the modifications of the \"vnfConfigurationData\" attribute shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
 
 	@Valid
 
@@ -73,7 +73,7 @@ public class VnfConfigModifications {
 	 *
 	 * @return vnfcConfigurationData
 	 **/
-	@ApiModelProperty(value = "Modifications to configuration data for certain VNFC instances. See NOTE 1 and NOTE 2. If present, the modifications of the \"vnfcConfigurationData\" attribute shall follow these provisions:   Modifying an attribute that is an array of objects of type \"VnfcConfigurationData\".     Assumptions:       1) \"oldList\" is the \"VnfcConfigurationData\" array to be modified and \"newList\"          is the \"VnfcConfigurationData\" array that contains the changes.       2) \"oldEntry\" is an entry in \"oldList\" and \"newEntry\" is an entry in \"newList\".       3) A \"newEntry\" has a \"corresponding entry\" if there exists an \"oldEntry\" that          has the same content of the \"vnfcInstanceId\" attribute as the \"newEntry\";          a \"newEntry\" has no corresponding entry if no such \"oldEntry\" exists.       4) In any array of \"VnfcConfigurationData\" structures, the content of \"vnfcInstanceId\"          is unique (i.e. there shall be no two entries with the same content of \"vnfcInstanceId\").     Provisions:       1) For each \"newEntry\" in \"newList\" that has no corresponding entry in \"oldList\",          the \"oldList\" array shall be modified by adding that \"newEntry\".        2) For each \"newEntry\" in \"newList\" that has a corresponding \"oldEntry\" in \"oldList\",          the value of \"oldEntry\" shall be updated with the value of \"newEntry\" according to         the rules of JSON Merge PATCH (see IETF RFC 7396 ). ")
+	@Schema(description = "Modifications to configuration data for certain VNFC instances. See NOTE 1 and NOTE 2. If present, the modifications of the \"vnfcConfigurationData\" attribute shall follow these provisions:   Modifying an attribute that is an array of objects of type \"VnfcConfigurationData\".     Assumptions:       1) \"oldList\" is the \"VnfcConfigurationData\" array to be modified and \"newList\"          is the \"VnfcConfigurationData\" array that contains the changes.       2) \"oldEntry\" is an entry in \"oldList\" and \"newEntry\" is an entry in \"newList\".       3) A \"newEntry\" has a \"corresponding entry\" if there exists an \"oldEntry\" that          has the same content of the \"vnfcInstanceId\" attribute as the \"newEntry\";          a \"newEntry\" has no corresponding entry if no such \"oldEntry\" exists.       4) In any array of \"VnfcConfigurationData\" structures, the content of \"vnfcInstanceId\"          is unique (i.e. there shall be no two entries with the same content of \"vnfcInstanceId\").     Provisions:       1) For each \"newEntry\" in \"newList\" that has no corresponding entry in \"oldList\",          the \"oldList\" array shall be modified by adding that \"newEntry\".        2) For each \"newEntry\" in \"newList\" that has a corresponding \"oldEntry\" in \"oldList\",          the value of \"oldEntry\" shall be updated with the value of \"newEntry\" according to         the rules of JSON Merge PATCH (see IETF RFC 7396 ). ")
 
 	@Valid
 
@@ -103,7 +103,7 @@ public class VnfConfigModifications {
 	 *
 	 * @return vnfcConfigurationDataDeleteIds
 	 **/
-	@ApiModelProperty(value = "List of identifiers entries to be deleted from the 'vnfcConfigurationData\" attribute array to be used as \"deleteIdList\" as defined below this table. ")
+	@Schema(description = "List of identifiers entries to be deleted from the 'vnfcConfigurationData\" attribute array to be used as \"deleteIdList\" as defined below this table. ")
 
 	public List<String> getVnfcConfigurationDataDeleteIds() {
 		return vnfcConfigurationDataDeleteIds;

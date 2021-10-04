@@ -1,0 +1,63 @@
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: true
+  instance:
+    metadata-map:
+      user:
+        name: admin
+        password: admin
+keycloak:
+  auth-server-url: http://localhost:8083/auth
+  credentials:
+    secret: 7efbc054-d95d-4b08-bd8e-b30683d563fc
+  enabled: true
+  principal-attribute: preferred_username
+  realm: bootadmin
+  resource: app-admin
+  ssl-required: external
+  token-minimum-time-to-live: 30
+  use-resource-role-mappings: true
+logging:
+  level:
+    com:
+      netflix:
+        discovery: 'OFF'
+        eureka: 'OFF'
+    de:
+      codecentric: INFO
+    org:
+      keycloak: INFO
+      springframework:
+        boot:
+          autoconfigure:
+            logging:
+              ConditionEvaluationReportLoggingListener: INFO
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    git:
+      mode: full
+server:
+  port: 8761
+spring:
+  application:
+    name: mano-eureka-registry
+  boot:
+    admin:
+      context-path: /admin
+  cloud:
+    discovery:
+      enabled: true
+  jmx:
+    enabled: true
+  security:
+    user:
+      name: admin
+      password: admin

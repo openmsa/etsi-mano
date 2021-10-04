@@ -28,14 +28,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type specifies an PNF to be modified in the NS instance. It shall comply
  * with the provisions defined in Table 6.5.3.15-1.
  */
-@ApiModel(description = "This type specifies an PNF to be modified in the NS instance. It shall comply with the provisions defined in Table 6.5.3.15-1. ")
+@Schema(description = "This type specifies an PNF to be modified in the NS instance. It shall comply with the provisions defined in Table 6.5.3.15-1. ")
 @Validated
 
 
@@ -60,7 +60,7 @@ public class ModifyPnfData {
 	 * 
 	 * @return pnfId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the PNF. This identifier is allocated by the OSS/BSS. ")
+	@Schema(required = true, description = "Identifier of the PNF. This identifier is allocated by the OSS/BSS. ")
 	@NotNull
 
 	public String getPnfId() {
@@ -81,7 +81,7 @@ public class ModifyPnfData {
 	 * 
 	 * @return pnfName
 	 **/
-	@ApiModelProperty(value = "Name of the PNF. ")
+	@Schema(description = "Name of the PNF. ")
 
 	public String getPnfName() {
 		return pnfName;
@@ -109,7 +109,7 @@ public class ModifyPnfData {
 	 * 
 	 * @return cpData
 	 **/
-	@ApiModelProperty(value = "Address assigned for the PNF external CP(s). ")
+	@Schema(description = "Address assigned for the PNF external CP(s). ")
 
 	@Valid
 

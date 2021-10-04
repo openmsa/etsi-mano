@@ -18,7 +18,9 @@ package com.ubiqube.etsi.mano.orchestrator.service;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
+import com.ubiqube.etsi.mano.orchestrator.exceptions.OrchestrationException;
+import com.ubiqube.etsi.mano.orchestrator.repository.SystemConnectionsJpa;
 
 /**
  *
@@ -27,9 +29,16 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
  */
 @Service
 public class SystemManager {
+	private final SystemConnectionsJpa systemConnectionsJpa;
 
-	public VimConnectionInformation findVimByVimId(final String providerId) {
-		return null;
+	public SystemManager(final SystemConnectionsJpa systemConnectionsJpa) {
+		super();
+		this.systemConnectionsJpa = systemConnectionsJpa;
+	}
+
+	public SystemConnections findVimByVimIdAndProviderId(final String systemConnectionId, final String vimType) {
+		return systemConnectionsJpa.findByVimIdAndVimType(systemConnectionId, vimType)
+				.orElseThrow(() -> new OrchestrationException("Unable to find System: " + systemConnectionId + ", vimtype: " + vimType));
 	}
 
 }

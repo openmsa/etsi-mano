@@ -25,7 +25,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * PerformanceReportPerformanceValues
@@ -48,7 +48,7 @@ public class PerformanceReportPerformanceValues {
 	 *
 	 * @return timeStamp
 	 **/
-	@ApiModelProperty(required = true, value = "Time stamp indicating when the data has been collected. ")
+	@Schema(required = true, description = "Time stamp indicating when the data has been collected. ")
 	@NotNull
 
 	public String getTimeStamp() {
@@ -65,13 +65,11 @@ public class PerformanceReportPerformanceValues {
 	}
 
 	/**
-	 * Value of the metric collected. The type of this attribute shall correspond to
-	 * the related \"Measurement Unit\" as defined in clause 7.2. of ETSI GS NFV-IFA
-	 * 027.
+	 * Value of the metric collected. The type of this attribute shall correspond to the related \"Measurement Unit\" as defined in clause 7.2. of ETSI GS NFV-IFA 027.
 	 *
 	 * @return value
 	 **/
-	@ApiModelProperty(value = "Value of the metric collected. The type of this attribute shall correspond to the related \"Measurement Unit\" as defined in clause 7.2. of ETSI GS NFV-IFA 027. ")
+	@Schema(description = "Value of the metric collected. The type of this attribute shall correspond to the related \"Measurement Unit\" as defined in clause 7.2. of ETSI GS NFV-IFA 027. ")
 
 	public Object getValue() {
 		return value;
@@ -111,8 +109,7 @@ public class PerformanceReportPerformanceValues {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

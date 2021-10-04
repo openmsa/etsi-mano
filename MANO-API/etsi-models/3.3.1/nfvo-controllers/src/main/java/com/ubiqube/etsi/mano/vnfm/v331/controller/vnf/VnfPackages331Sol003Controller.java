@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v331.controller.vnf;
 
-import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+import static com.ubiqube.etsi.mano.nfvo.fc.controller.NfvoConstants.getSafeUUID;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class VnfPackages331Sol003Controller implements VnfPackages331Sol003Api {
 
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(final String vnfPkgId, @Valid final String includeSignature) {
-		return frontController.findById(getSafeUUID(vnfPkgId), VnfPkgInfo.class, LinksSol003::makeLinks);
+		return frontController.findByIdReadOnly(getSafeUUID(vnfPkgId), VnfPkgInfo.class, LinksSol003::makeLinks);
 	}
 
 	@Override

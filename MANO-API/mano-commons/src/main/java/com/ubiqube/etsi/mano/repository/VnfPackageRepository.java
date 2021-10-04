@@ -16,8 +16,19 @@
  */
 package com.ubiqube.etsi.mano.repository;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import java.nio.file.Path;
+import java.util.UUID;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @deprecated Use {@link VnfPackageService}.
+ */
+@Deprecated
 public interface VnfPackageRepository extends CrudRepositoryNg<VnfPackage>, BinaryRepository {
-	// Nothing
+
+	Path getPathByVnfdId(UUID fromString);
 }

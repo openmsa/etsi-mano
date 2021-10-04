@@ -32,6 +32,8 @@ public class NetworkTask extends VnfTask {
 
 	private String vimZoneId;
 
+	private String qosPolicy;
+
 	public VnfVl getVnfVl() {
 		return vnfVl;
 	}
@@ -46,6 +48,14 @@ public class NetworkTask extends VnfTask {
 
 	public void setVimZoneId(final String vimZoneId) {
 		this.vimZoneId = vimZoneId;
+	}
+
+	public String getQosPolicy() {
+		return qosPolicy;
+	}
+
+	public void setQosPolicy(final String qosPolicy) {
+		this.qosPolicy = qosPolicy;
 	}
 
 }

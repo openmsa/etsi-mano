@@ -30,13 +30,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents request parameters for the \&quot;Operate VNF\&quot; operation.
  */
-@ApiModel(description = "This type represents request parameters for the \"Operate VNF\" operation. ")
+@Schema(description = "This type represents request parameters for the \"Operate VNF\" operation. ")
 @Validated
 
 public class OperateVnfRequest {
@@ -100,7 +100,7 @@ public class OperateVnfRequest {
 	 *
 	 * @return vnfcInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of VNFC instances. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance. ")
+	@Schema(description = "Identifier of VNFC instances. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance. ")
 
 	public List<String> getVnfcInstanceId() {
 		return vnfcInstanceId;
@@ -120,7 +120,7 @@ public class OperateVnfRequest {
 	 *
 	 * @return changeStateTo
 	 **/
-	@ApiModelProperty(required = true, value = "The desired operational state (i.e. started or stopped) to change the VNF to. ")
+	@Schema(required = true, description = "The desired operational state (i.e. started or stopped) to change the VNF to. ")
 	@NotNull
 
 	@Valid
@@ -143,7 +143,7 @@ public class OperateVnfRequest {
 	 *
 	 * @return stopType
 	 **/
-	@ApiModelProperty(value = "It signals whether forceful or graceful stop is requested. Ignored if changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down the VNF or the affected VNFCs immediately after accepting the request. ")
+	@Schema(description = "It signals whether forceful or graceful stop is requested. Ignored if changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down the VNF or the affected VNFCs immediately after accepting the request. ")
 
 	public StopTypeEnum getStopType() {
 		return stopType;
@@ -163,7 +163,7 @@ public class OperateVnfRequest {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\". ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\". ")
 
 	@Valid
 

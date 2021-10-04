@@ -40,14 +40,14 @@ import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents request parameters for the \&quot;Change VNF
  * flavour\&quot; operation.
  */
-@ApiModel(description = "This type represents request parameters for the \"Change VNF flavour\" operation. ")
+@Schema(description = "This type represents request parameters for the \"Change VNF flavour\" operation. ")
 
 public class ChangeVnfFlavourRequest {
 	@JsonProperty("newFlavourId")
@@ -79,7 +79,7 @@ public class ChangeVnfFlavourRequest {
 	 * @return newFlavourId
 	 **/
 	@JsonProperty("newFlavourId")
-	@ApiModelProperty(required = true, value = "Identifier of the VNF deployment flavour to be instantiated. ")
+	@Schema(required = true, description = "Identifier of the VNF deployment flavour to be instantiated. ")
 	@NotNull
 	public String getNewFlavourId() {
 		return newFlavourId;
@@ -102,7 +102,7 @@ public class ChangeVnfFlavourRequest {
 	 * @return instantiationLevelId
 	 **/
 	@JsonProperty("instantiationLevelId")
-	@ApiModelProperty(value = "Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
+	@Schema(description = "Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
 	public String getInstantiationLevelId() {
 		return instantiationLevelId;
 	}
@@ -130,7 +130,7 @@ public class ChangeVnfFlavourRequest {
 	 * @return extVirtualLinks
 	 **/
 	@JsonProperty("extVirtualLinks")
-	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
+	@Schema(description = "Information about external VLs to connect the VNF to. ")
 	public List<ExtVirtualLinkData> getExtVirtualLinks() {
 		return extVirtualLinks;
 	}
@@ -158,7 +158,7 @@ public class ChangeVnfFlavourRequest {
 	 * @return extManagedVirtualLinks
 	 **/
 	@JsonProperty("extManagedVirtualLinks")
-	@ApiModelProperty(value = "Information about internal VLs that are managed by the NFVO. ")
+	@Schema(description = "Information about internal VLs that are managed by the NFVO. ")
 	public List<ExtManagedVirtualLinkData> getExtManagedVirtualLinks() {
 		return extManagedVirtualLinks;
 	}
@@ -189,7 +189,7 @@ public class ChangeVnfFlavourRequest {
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
-	@ApiModelProperty(value = "Information about VIM connections to be used for managing the resources for the VNF instance, or refer to external / externally-managed virtual links. This attribute shall only be supported and may be present if VNF-related resource management in direct mode is applicable. ")
+	@Schema(description = "Information about VIM connections to be used for managing the resources for the VNF instance, or refer to external / externally-managed virtual links. This attribute shall only be supported and may be present if VNF-related resource management in direct mode is applicable. ")
 	public List<VimConnectionInfo> getVimConnectionInfo() {
 		return vimConnectionInfo;
 	}
@@ -211,7 +211,7 @@ public class ChangeVnfFlavourRequest {
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
-	@ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of  \"InstantiateVnfOpConfig\". ")
+	@Schema(description = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of  \"InstantiateVnfOpConfig\". ")
 	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}

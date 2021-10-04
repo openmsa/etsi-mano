@@ -39,13 +39,13 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance.
  */
-@ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance. ")
+@Schema(description = "This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance. ")
 public class VnfVirtualLinkResourceInfo {
 	@JsonProperty("id")
 	private String id = null;
@@ -76,7 +76,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of this VnfVirtualLinkResourceInfo instance. ")
+	@Schema(required = true, description = "Identifier of this VnfVirtualLinkResourceInfo instance. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -97,7 +97,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * @return vnfVirtualLinkDescId
 	 **/
 	@JsonProperty("vnfVirtualLinkDescId")
-	@ApiModelProperty(required = true, value = "Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD. ")
 	@NotNull
 	public UUID getVnfVirtualLinkDescId() {
 		return vnfVirtualLinkDescId;
@@ -118,7 +118,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * @return networkResource
 	 **/
 	@JsonProperty("networkResource")
-	@ApiModelProperty(required = true, value = "Reference to the VirtualNetwork resource. ")
+	@Schema(required = true, description = "Reference to the VirtualNetwork resource. ")
 	@NotNull
 	public ResourceHandle getNetworkResource() {
 		return networkResource;
@@ -139,7 +139,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * @return reservationId
 	 **/
 	@JsonProperty("reservationId")
-	@ApiModelProperty(value = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
+	@Schema(description = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
 	public String getReservationId() {
 		return reservationId;
 	}
@@ -167,7 +167,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * @return vnfLinkPorts
 	 **/
 	@JsonProperty("vnfLinkPorts")
-	@ApiModelProperty(value = "Links ports of this VL. Shall be present when the linkPort is used for external connectivity by the VNF (refer to VnfLinkPortInfo). May be present otherwise. ")
+	@Schema(description = "Links ports of this VL. Shall be present when the linkPort is used for external connectivity by the VNF (refer to VnfLinkPortInfo). May be present otherwise. ")
 	public List<VnfLinkPortInfo> getVnfLinkPorts() {
 		return vnfLinkPorts;
 	}
@@ -187,7 +187,7 @@ public class VnfVirtualLinkResourceInfo {
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
-	@ApiModelProperty(value = "Metadata about this resource. ")
+	@Schema(description = "Metadata about this resource. ")
 	public Map<String, String> getMetadata() {
 		return metadata;
 	}

@@ -17,9 +17,12 @@
 		<maven.compiler.source>11</maven.compiler.source>
 	</properties>
 	<modules>
+		<module>mano-super-protocols</module>
+		<module>test-helper</module>
 		<module>2.6.1</module>
 		<module>2.7.1</module>
 		<module>2.8.1</module>
 		<module>3.3.1</module>
+		<module>3.4.1</module>
 	</modules>
 </project>

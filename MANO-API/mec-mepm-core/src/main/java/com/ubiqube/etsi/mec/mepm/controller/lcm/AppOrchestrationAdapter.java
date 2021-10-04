@@ -67,7 +67,7 @@ public class AppOrchestrationAdapter implements OrchestrationAdapter<AppTask, Ap
 	}
 
 	@Override
-	public void createLiveInstance(@NotNull final Instance vnfInstance, final String il, final Task task, @NotNull final Blueprint<? extends Task, ? extends Instance> blueprint, final String vimResourceId) {
+	public void createLiveInstance(@NotNull final Instance vnfInstance, final String il, final Task task, @NotNull final Blueprint<? extends Task, ? extends Instance> blueprint) {
 		final AppLiveInstance vli = new AppLiveInstance((AppInstance) vnfInstance, il, (AppTask) task, (AppBlueprint) blueprint, task.getVimResourceId());
 		instancesService.save(vli);
 	}

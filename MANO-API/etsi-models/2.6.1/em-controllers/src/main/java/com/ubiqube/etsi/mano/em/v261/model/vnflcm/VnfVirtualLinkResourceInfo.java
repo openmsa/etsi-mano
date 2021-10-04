@@ -28,13 +28,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance.
  */
-@ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance. ")
+@Schema(description = "This type represents the information that allows addressing a virtualised resource that is used by an internal VL instance in a VNF instance. ")
 @Validated
 
 public class VnfVirtualLinkResourceInfo {
@@ -67,7 +67,7 @@ public class VnfVirtualLinkResourceInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this VnfVirtualLinkResourceInfo instance. ")
+	@Schema(required = true, description = "Identifier of this VnfVirtualLinkResourceInfo instance. ")
 	@NotNull
 
 	public String getId() {
@@ -88,7 +88,7 @@ public class VnfVirtualLinkResourceInfo {
 	 *
 	 * @return vnfVirtualLinkDescId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the VNF Virtual Link Descriptor (VLD) in the VNFD. ")
 	@NotNull
 
 	public String getVnfVirtualLinkDescId() {
@@ -109,7 +109,7 @@ public class VnfVirtualLinkResourceInfo {
 	 *
 	 * @return networkResource
 	 **/
-	@ApiModelProperty(required = true, value = "Reference to the VirtualNetwork resource. ")
+	@Schema(required = true, description = "Reference to the VirtualNetwork resource. ")
 	@NotNull
 
 	@Valid
@@ -132,7 +132,7 @@ public class VnfVirtualLinkResourceInfo {
 	 *
 	 * @return reservationId
 	 **/
-	@ApiModelProperty(value = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
+	@Schema(description = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
 
 	public String getReservationId() {
 		return reservationId;
@@ -160,7 +160,7 @@ public class VnfVirtualLinkResourceInfo {
 	 *
 	 * @return vnfLinkPorts
 	 **/
-	@ApiModelProperty(value = "Links ports of this VL. Shall be present when the linkPort is used for external connectivity by the VNF (refer to VnfLinkPortInfo). May be present otherwise. ")
+	@Schema(description = "Links ports of this VL. Shall be present when the linkPort is used for external connectivity by the VNF (refer to VnfLinkPortInfo). May be present otherwise. ")
 
 	@Valid
 
@@ -182,7 +182,7 @@ public class VnfVirtualLinkResourceInfo {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "Metadata about this resource. ")
+	@Schema(description = "Metadata about this resource. ")
 
 	@Valid
 

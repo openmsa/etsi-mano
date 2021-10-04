@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +27,7 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
+import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
@@ -35,16 +37,17 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfComputeAspectDeltaJpa;
 import com.ubiqube.etsi.mano.jpa.VnfComputeJpa;
 import com.ubiqube.etsi.mano.jpa.VnfExtCpJpa;
+import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstantiationLevelsJpa;
 import com.ubiqube.etsi.mano.jpa.VnfLinkPortJpa;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
 import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 /**
  *
@@ -53,6 +56,8 @@ import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
  */
 @Service
 public class VnfPackageServiceImpl extends SearchableService implements VnfPackageService {
+	private final VnfPackageRepository vnfPackageRepository;
+
 	private final VnfComputeAspectDeltaJpa vnfComputeAspectDeltaJpa;
 
 	private final VnfStorageJpa vnfStorageJpa;
@@ -69,8 +74,13 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 
 	private final VnfLinkPortJpa vnfLinkPortJpa;
 
-	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa _vnfComputeAspectDeltaJpa, final VnfStorageJpa _vnfStorageJpa, final VnfVlJpa _vnfVl, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfPackageJpa _vnfPackageJpa, final VnfInstantiationLevelsJpa _vnfInstantiationLevelsJpa, final VnfLinkPortJpa _vnfLinkPortJpa, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, PmJob.class);
+	private final VnfInstanceJpa vnfInstanceJpa;
+
+	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa _vnfComputeAspectDeltaJpa, final VnfStorageJpa _vnfStorageJpa,
+			final VnfVlJpa _vnfVl, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfPackageJpa _vnfPackageJpa,
+			final VnfInstantiationLevelsJpa _vnfInstantiationLevelsJpa, final VnfLinkPortJpa _vnfLinkPortJpa, final EntityManager _em,
+			final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa, final VnfPackageRepository vnfPackageRepository) {
+		super(searchService, _em, VnfPackage.class);
 		vnfComputeAspectDeltaJpa = _vnfComputeAspectDeltaJpa;
 		vnfStorageJpa = _vnfStorageJpa;
 		vnfVl = _vnfVl;
@@ -79,6 +89,8 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 		vnfPackageJpa = _vnfPackageJpa;
 		vnfInstantiationLevelsJpa = _vnfInstantiationLevelsJpa;
 		vnfLinkPortJpa = _vnfLinkPortJpa;
+		this.vnfInstanceJpa = vnfInstanceJpa;
+		this.vnfPackageRepository = vnfPackageRepository;
 	}
 
 	@Override
@@ -118,12 +130,15 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 
 	@Override
 	public VnfPackage findById(final VnfPackage vnfPackage) {
-		return vnfPackageJpa.findById(vnfPackage.getId()).orElseThrow(() -> new NotFoundException("VNF Package" + vnfPackage.getId() + " not found."));
+		return findById(vnfPackage.getId());
 	}
 
 	@Override
 	public VnfPackage findById(final UUID vnfPkgId) {
-		return vnfPackageJpa.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("VNF Package: " + vnfPkgId + " not found."));
+		final VnfPackage ret = vnfPackageJpa.findById(vnfPkgId).orElseThrow(() -> new NotFoundException("VNF Package: " + vnfPkgId + " not found."));
+		final int i = vnfInstanceJpa.countByVnfPkgId(vnfPkgId);
+		ret.setUsageState(i == 0 ? PackageUsageState.NOT_IN_USE : PackageUsageState.IN_USE);
+		return ret;
 	}
 
 	@Override
@@ -138,7 +153,7 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 
 	@Override
 	public VnfPackage save(final VnfPackage vnfPackage) {
-		return vnfPackageJpa.save(vnfPackage);
+		return vnfPackageRepository.save(vnfPackage);
 	}
 
 	@Override
@@ -164,6 +179,16 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 	@Override
 	public VnfPackage findByVnfdId(final UUID id) {
 		return vnfPackageJpa.findByVnfdIdAndOnboardingState(id.toString(), OnboardingStateType.ONBOARDED).orElseThrow(() -> new NotFoundException("Could not find vnfdId: " + id + ", or it is not ONBOARDED."));
+	}
+
+	@Override
+	public void delete(final UUID id) {
+		vnfPackageJpa.deleteById(id);
+	}
+
+	@Override
+	public Path getPathByVnfdId(final UUID fromString) {
+		return vnfPackageRepository.getPathByVnfdId(fromString);
 	}
 
 }

@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -78,11 +80,9 @@ public class ToscaParser {
 		}
 	}
 
-	private ToscaRoot loadToscaBase() {
-		final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("TOSCA_definition_1_0.yaml");
-		String content;
-		try {
-			content = IOUtils.toString(stream, Charset.defaultCharset());
+	private static ToscaRoot loadToscaBase() {
+		try (final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("TOSCA_definition_1_0.yaml")) {
+			final String content = IOUtils.toString(stream, Charset.defaultCharset());
 			final ObjectMapper mapper = getMapper();
 			return mapper.readValue(content.getBytes(), ToscaRoot.class);
 		} catch (final IOException e) {
@@ -104,6 +104,7 @@ public class ToscaParser {
 		return res.find();
 	}
 
+	@NotNull
 	public List<ArtefactInformations> getFiles() {
 		return csar.getFiles();
 	}

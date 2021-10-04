@@ -4,12 +4,14 @@ logging:
   level:
     com:
       ubiqube:
-        etsi:
-          mano: DEBUG
+        etsi: DEBUG
+    ma:
+      glasnost:
+        orika: INFO
     org:
       hibernate:
         SQL: INFO
-      openstack4j: DEBUG
+      openstack4j: INFO
       springframework:
         boot:
           autoconfigure:
@@ -29,6 +31,22 @@ management:
   info:
     git:
       mode: full
+
+mano:
+  election:
+    script-path: /tmp/etsi-mano/election/groovy
+  nfvo:
+    vnfm:
+      password: nfv
+      url: http://vnfm:8080/ubi-etsi-mano/sol003
+      username: nfvo
+  repository:
+    phys-root: /tmp/etsi-mano/repository
+  vnfm:
+    nfvo:
+      password: vnfm
+      url: http://nfvo:8110/ubi-etsi-mano/sol005
+      username: vnfm
 
 server:
   error:
@@ -65,18 +83,23 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
       indent-output: true
+      write-empty-json-arrays: false
   jmx:
     enabled: true
   jpa:
+    hibernate:
+      ddl-auto: update
     open-in-view: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
         search:
           backend:
             directory:
               root: /tmp/etsi-mano/indexes
+            type: lucene
   liquibase:
-    enabled: true
+    enabled: false
   mvc:
     log-request-details: true
   output:

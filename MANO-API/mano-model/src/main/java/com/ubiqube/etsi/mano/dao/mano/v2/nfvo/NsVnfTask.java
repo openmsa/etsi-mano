@@ -16,9 +16,12 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,6 +31,16 @@ import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 public class NsVnfTask extends NsTask {
 
@@ -41,9 +54,12 @@ public class NsVnfTask extends NsTask {
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private NsdPackageVnfPackage nsPackageVnfPackage;
 
-	private UUID vnfInstance;
+	private String vnfInstance;
 
 	private String vnfdId;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> externalNetworks = new LinkedHashSet<>();
 
 	@Override
 	public UUID getId() {
@@ -53,30 +69,6 @@ public class NsVnfTask extends NsTask {
 	@Override
 	public void setId(final UUID id) {
 		this.id = id;
-	}
-
-	public NsdPackageVnfPackage getNsPackageVnfPackage() {
-		return nsPackageVnfPackage;
-	}
-
-	public void setNsPackageVnfPackage(final NsdPackageVnfPackage nsPackageVnfPackage) {
-		this.nsPackageVnfPackage = nsPackageVnfPackage;
-	}
-
-	public UUID getVnfInstance() {
-		return vnfInstance;
-	}
-
-	public void setVnfInstance(final UUID vnfInstance) {
-		this.vnfInstance = vnfInstance;
-	}
-
-	public String getVnfdId() {
-		return vnfdId;
-	}
-
-	public void setVnfdId(final String vnfdId) {
-		this.vnfdId = vnfdId;
 	}
 
 }

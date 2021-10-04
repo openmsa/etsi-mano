@@ -48,7 +48,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 
 	private final ResourceAllocate nfvo;
 
-	public AbstractGrantService(final MapperFacade _mapper, final ResourceAllocate _nfvo) {
+	protected AbstractGrantService(final MapperFacade _mapper, final ResourceAllocate _nfvo) {
 		mapper = _mapper;
 		nfvo = _nfvo;
 	}
@@ -82,7 +82,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 			task.setResourceProviderId(x.getResourceProviderId());
 			task.setVimConnectionId(x.getVimConnectionId());
 		});
-		plan.setVimConnections(grantsResp.getVimConnections());
+		grantsResp.getVimConnections().forEach(x -> plan.addVimConnection(x));
 		plan.setZoneGroups(mapper.mapAsSet(grantsResp.getZoneGroups(), BlueZoneGroupInformation.class));
 		plan.setZones(grantsResp.getZones());
 		plan.setExtManagedVirtualLinks(grantsResp.getExtManagedVirtualLinks());

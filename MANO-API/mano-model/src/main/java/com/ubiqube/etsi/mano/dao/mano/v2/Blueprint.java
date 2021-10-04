@@ -69,4 +69,6 @@ public interface Blueprint<U extends Task, V extends Instance> extends BaseEntit
 	Set<VimConnectionInformation> getVimConnections();
 
 	V getInstance();
+
+	void addVimConnection(VimConnectionInformation vimConnection);
 }

@@ -93,7 +93,7 @@ public final class NsInstances261Sol005Controller implements NsInstances261Sol00
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdHealPost(final String nsInstanceId, final HealNsRequest body) {
-		return frontController.heal(nsInstanceId, body);
+		return frontController.heal(nsInstanceId, body, NsInstances261Sol005Controller::getSelfLink);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public final class NsInstances261Sol005Controller implements NsInstances261Sol00
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdScalePost(final String nsInstanceId, final ScaleNsRequest body) {
-		return frontController.scale(nsInstanceId, body);
+		return frontController.scale(nsInstanceId, body, NsInstances261Sol005Controller::getSelfLink);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public final class NsInstances261Sol005Controller implements NsInstances261Sol00
 	 */
 	@Override
 	public ResponseEntity<NsInstance> nsInstancesNsInstanceIdUpdatePost(final String nsInstanceId, final UpdateNsRequest body) {
-		return frontController.update(nsInstanceId, body);
+		return frontController.update(nsInstanceId, body, NsInstances261Sol005Controller::getSelfLink);
 	}
 
 	/**
@@ -187,4 +187,5 @@ public final class NsInstances261Sol005Controller implements NsInstances261Sol00
 	private static String getSelfLink(final NsInstance nsdInfo) {
 		return linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdHealPost(nsdInfo.getId(), null)).withSelfRel().getHref();
 	}
+
 }

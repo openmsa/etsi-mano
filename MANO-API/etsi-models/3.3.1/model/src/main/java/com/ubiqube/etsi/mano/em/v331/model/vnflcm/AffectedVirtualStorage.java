@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ResourceHandle;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
@@ -85,7 +85,7 @@ public class AffectedVirtualStorage   {
   private ResourceHandle storageResource = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   public AffectedVirtualStorage id(String id) {
     this.id = id;
@@ -187,7 +187,7 @@ public class AffectedVirtualStorage   {
     this.storageResource = storageResource;
   }
 
-  public AffectedVirtualStorage metadata(KeyValuePairs metadata) {
+  public AffectedVirtualStorage metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -199,11 +199,11 @@ public class AffectedVirtualStorage   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getMetadata() {
+    public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

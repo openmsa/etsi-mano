@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -28,14 +28,14 @@ import java.util.List;
 /**
   * Links for this resource. 
  **/
-@ApiModel(description="Links for this resource. ")
+@Schema(description="Links for this resource. ")
 public class PmJobsPmJobReportsLinks  {
   
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private PmJobsPmJobReportsLinksSelf self = null;
 
-  @ApiModelProperty(value = "Links to resources representing the NS instances for which performance information is collected. Shall be present if the NS instance information is accessible as a resource. ")
+  @Schema(description = "Links to resources representing the NS instances for which performance information is collected. Shall be present if the NS instance information is accessible as a resource. ")
   @Valid
  /**
    * Links to resources representing the NS instances for which performance information is collected. Shall be present if the NS instance information is accessible as a resource. 

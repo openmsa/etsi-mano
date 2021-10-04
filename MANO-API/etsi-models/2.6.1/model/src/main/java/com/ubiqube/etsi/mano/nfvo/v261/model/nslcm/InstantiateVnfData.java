@@ -31,8 +31,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information related to a SAP of a NS. The
@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiModelProperty;
  * parameters are then passed by the NFVO to the VNFM. It shall comply with the
  * provisions defined in Table 6.5.3.24-1.
  */
-@ApiModel(description = "This type represents the information related to a SAP of a NS. The InstantiateVnfData data type specifies the parameters that are needed for VNF instantiation. This information element is used for the bottom-up NS creation when the OSS/BSS explicitly requests VNF instantiation for a given NS. When the NFVO invokes the Instantiate VNF update operation, a set of these parameters are then passed by the NFVO to the VNFM. It shall comply with the provisions defined in Table 6.5.3.24-1. ")
+@Schema(description = "This type represents the information related to a SAP of a NS. The InstantiateVnfData data type specifies the parameters that are needed for VNF instantiation. This information element is used for the bottom-up NS creation when the OSS/BSS explicitly requests VNF instantiation for a given NS. When the NFVO invokes the Instantiate VNF update operation, a set of these parameters are then passed by the NFVO to the VNFM. It shall comply with the provisions defined in Table 6.5.3.24-1. ")
 @Validated
 
 
@@ -94,7 +94,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return vnfdId
 	 **/
-	@ApiModelProperty(required = true, value = "Information sufficient to identify the VNFD which defines the VNF to be instantiated. ")
+	@Schema(required = true, description = "Information sufficient to identify the VNFD which defines the VNF to be instantiated. ")
 	@NotNull
 
 	public String getVnfdId() {
@@ -115,7 +115,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return vnfFlavourId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF deployment flavor to be instantiated. ")
+	@Schema(required = true, description = "Identifier of the VNF deployment flavor to be instantiated. ")
 	@NotNull
 
 	public String getVnfFlavourId() {
@@ -138,7 +138,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return vnfInstantiationLevelId
 	 **/
-	@ApiModelProperty(value = "Identifier of the instantiation level of the deployment flavor to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
+	@Schema(description = "Identifier of the instantiation level of the deployment flavor to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
 
 	public String getVnfInstantiationLevelId() {
 		return vnfInstantiationLevelId;
@@ -158,7 +158,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return vnfInstanceName
 	 **/
-	@ApiModelProperty(value = "Human-readable name of the VNF instance to be created. ")
+	@Schema(description = "Human-readable name of the VNF instance to be created. ")
 
 	public String getVnfInstanceName() {
 		return vnfInstanceName;
@@ -178,7 +178,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return vnfInstanceDescription
 	 **/
-	@ApiModelProperty(value = "Human-readable description of the VNF instance to be created. ")
+	@Schema(description = "Human-readable description of the VNF instance to be created. ")
 
 	public String getVnfInstanceDescription() {
 		return vnfInstanceDescription;
@@ -206,7 +206,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return extVirtualLinks
 	 **/
-	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
+	@Schema(description = "Information about external VLs to connect the VNF to. ")
 
 	@Valid
 
@@ -237,7 +237,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return extManagedVirtualLinks
 	 **/
-	@ApiModelProperty(value = "Information about internal VLs that are managed by other entities than the VNFM. ")
+	@Schema(description = "Information about internal VLs that are managed by other entities than the VNFM. ")
 
 	@Valid
 
@@ -260,7 +260,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return localizationLanguage
 	 **/
-	@ApiModelProperty(value = "Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. ")
+	@Schema(description = "Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. ")
 
 	public String getLocalizationLanguage() {
 		return localizationLanguage;
@@ -281,7 +281,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated. ")
+	@Schema(description = "Additional input parameters for the instantiation process, specific to the VNF being instantiated. ")
 
 	@Valid
 
@@ -304,7 +304,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "This attribute provides values for the \"metadata\" input parameter of the Create VNF Identifier operation. ")
+	@Schema(description = "This attribute provides values for the \"metadata\" input parameter of the Create VNF Identifier operation. ")
 
 	@Valid
 
@@ -327,7 +327,7 @@ public class InstantiateVnfData {
 	 *
 	 * @return extensions
 	 **/
-	@ApiModelProperty(value = "This attribute provides values for the \"extensions\" input parameter of the Instantiate VNF operation. ")
+	@Schema(description = "This attribute provides values for the \"extensions\" input parameter of the Instantiate VNF operation. ")
 
 	@Valid
 

@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.model.vnf;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -29,12 +30,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * VnfPkgInfo
  */
 @Validated
+
 public class VnfPkgInfo {
 	@JsonProperty("id")
 	private String id = null;
@@ -61,8 +63,7 @@ public class VnfPkgInfo {
 	private Checksum checksum = null;
 
 	/**
-	 * Signals the security option used by the package as defined in clause 5.1 of
-	 * ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
+	 * Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
 	 */
 	public enum PackageSecurityOptionEnum {
 		_1("OPTION_1"),
@@ -120,7 +121,7 @@ public class VnfPkgInfo {
 	private List<String> vnfmInfo = new ArrayList<>();
 
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	@JsonProperty("onboardingFailureDetails")
 	private ProblemDetails onboardingFailureDetails = null;
@@ -138,7 +139,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getId() {
@@ -159,7 +160,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return vnfdId
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getVnfdId() {
 		return vnfdId;
@@ -175,13 +176,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Provider of the VNF package and the VNFD. This information is copied from the
-	 * VNFD. It shall be present after the VNF package content has been on-boarded
-	 * and absent otherwise.
+	 * Provider of the VNF package and the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfProvider
 	 **/
-	@ApiModelProperty(value = "Provider of the VNF package and the VNFD. This information is copied from the VNFD.  It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+	@Schema(description = "Provider of the VNF package and the VNFD. This information is copied from the VNFD.  It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfProvider() {
 		return vnfProvider;
@@ -197,13 +196,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This
-	 * information is copied from the VNFD. It shall be present after the VNF
-	 * package content has been on-boarded and absent otherwise.
+	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfProductName
 	 **/
-	@ApiModelProperty(value = "Name to identify the VNF product.Invariant for the VNF product lifetime.  This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+	@Schema(description = "Name to identify the VNF product.Invariant for the VNF product lifetime.  This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfProductName() {
 		return vnfProductName;
@@ -223,7 +220,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return vnfSoftwareVersion
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getVnfSoftwareVersion() {
 		return vnfSoftwareVersion;
@@ -243,7 +240,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return vnfdVersion
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getVnfdVersion() {
 		return vnfdVersion;
@@ -263,7 +260,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return compatibleSpecificationVersions
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getCompatibleSpecificationVersions() {
 		return compatibleSpecificationVersions;
@@ -283,7 +280,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return checksum
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public Checksum getChecksum() {
@@ -300,12 +297,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Signals the security option used by the package as defined in clause 5.1 of
-	 * ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
+	 * Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
 	 *
 	 * @return packageSecurityOption
 	 **/
-	@ApiModelProperty(required = true, value = "Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2 ")
+	@Schema(required = true, description = "Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2 ")
 	@NotNull
 
 	public PackageSecurityOptionEnum getPackageSecurityOption() {
@@ -322,12 +318,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * The singleton signing certificate if it is included as a file in the VNF
-	 * package.
+	 * The singleton signing certificate if it is included as a file in the VNF package.
 	 *
 	 * @return signingCertificate
 	 **/
-	@ApiModelProperty(value = "The singleton signing certificate if it is included as a file in the VNF package. ")
+	@Schema(description = "The singleton signing certificate if it is included as a file in the VNF package. ")
 
 	public String getSigningCertificate() {
 		return signingCertificate;
@@ -351,14 +346,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts that are software images. This
-	 * attribute shall not be present before the VNF package content is on-boarded.
-	 * Otherwise, this attribute shall be present unless it has been requested to be
-	 * excluded per attribute selector.
+	 * Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector.
 	 *
 	 * @return softwareImages
 	 **/
-	@ApiModelProperty(value = "Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector. ")
+	@Schema(description = "Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector. ")
 	@Valid
 	public List<VnfPackageSoftwareImageInfo> getSoftwareImages() {
 		return softwareImages;
@@ -382,14 +374,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts contained in the VNF package that are
-	 * not software images. This attribute shall not be present before the VNF
-	 * package content is on-boarded. Otherwise, this attribute shall be present if
-	 * the VNF package contains additional artifacts.
+	 * Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts.
 	 *
 	 * @return additionalArtifacts
 	 **/
-	@ApiModelProperty(value = "Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts. ")
+	@Schema(description = "Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts. ")
 	@Valid
 	public List<VnfPackageArtifactInfo> getAdditionalArtifacts() {
 		return additionalArtifacts;
@@ -409,7 +398,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return onboardingState
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -431,7 +420,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return operationalState
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -453,7 +442,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return usageState
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -476,12 +465,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Specifies VNFMs compatible with the VNF. This information is copied from the
-	 * VNFD. See note 4.
+	 * Specifies VNFMs compatible with the VNF. This information is copied from the VNFD. See note 4.
 	 *
 	 * @return vnfmInfo
 	 **/
-	@ApiModelProperty(required = true, value = "Specifies VNFMs compatible with the VNF. This information is copied from the VNFD. See note 4. ")
+	@Schema(required = true, description = "Specifies VNFMs compatible with the VNF. This information is copied from the VNFD. See note 4. ")
 	@NotNull
 
 	public List<String> getVnfmInfo() {
@@ -492,7 +480,7 @@ public class VnfPkgInfo {
 		this.vnfmInfo = vnfmInfo;
 	}
 
-	public VnfPkgInfo userDefinedData(final KeyValuePairs userDefinedData) {
+	public VnfPkgInfo userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -502,14 +490,14 @@ public class VnfPkgInfo {
 	 *
 	 * @return userDefinedData
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
@@ -523,7 +511,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return onboardingFailureDetails
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public ProblemDetails getOnboardingFailureDetails() {
@@ -544,7 +532,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return _links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -620,8 +608,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.parser.tosca.ZipUtil.Entry;
 import com.ubiqube.parser.tosca.api.ToscaApi;
 
 import tosca.nodes.nfv.VnfExtCp;
@@ -36,7 +37,9 @@ public class UbiToscaTest {
 
 	@Test
 	void testUbiCsar() throws Exception {
-		final ToscaParser toscaParser = new ToscaParser("src/test/resources/ubi-tosca.csar");
+		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
+		final ToscaParser toscaParser = new ToscaParser("/tmp/ubi-tosca.csar");
 		final ToscaContext root = toscaParser.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 
@@ -49,7 +52,9 @@ public class UbiToscaTest {
 
 	@Test
 	void testUbiCsarCompute() throws Exception {
-		final ToscaParser toscaParser = new ToscaParser("src/test/resources/ubi-tosca.csar");
+		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
+		final ToscaParser toscaParser = new ToscaParser("/tmp/ubi-tosca.csar");
 		final ToscaContext root = toscaParser.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 

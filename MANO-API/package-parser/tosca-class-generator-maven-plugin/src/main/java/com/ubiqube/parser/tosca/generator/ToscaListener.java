@@ -58,4 +58,6 @@ public interface ToscaListener {
 
 	void onClassDescription(String description);
 
+	void onFieldAnnotate(Class<? extends Annotation> class1, String[] array);
+
 }

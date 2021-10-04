@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -38,7 +38,7 @@ public class VnfSnapshotPkgInfoModifications  implements AnyOfVnfSnapshotPkgInfo
   private String name = null;
 
   @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+  private Map<String, String> userDefinedData = null;
 
   /**
    * New value of the \"state\" of the VNF snapshot package. Permitted values:  - AVAILABLE: to change the \"Individual VNF snapshot package\" resource state to \"AVAILABLE\". Explicit change of state is only permitted from the following states: - ERROR_EXTRACTING  At least one of the three parameters shall be present. If the VNF snapshot package  is not uploaded or built, the operation is used only to update existing or add additional  user defined data using the userDefinedData attribute. 
@@ -90,7 +90,7 @@ public class VnfSnapshotPkgInfoModifications  implements AnyOfVnfSnapshotPkgInfo
     this.name = name;
   }
 
-  public VnfSnapshotPkgInfoModifications userDefinedData(KeyValuePairs userDefinedData) {
+  public VnfSnapshotPkgInfoModifications userDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
     return this;
   }
@@ -102,11 +102,11 @@ public class VnfSnapshotPkgInfoModifications  implements AnyOfVnfSnapshotPkgInfo
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getUserDefinedData() {
+    public Map<String, String> getUserDefinedData() {
     return userDefinedData;
   }
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
+  public void setUserDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
   }
 

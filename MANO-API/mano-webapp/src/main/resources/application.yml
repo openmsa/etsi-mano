@@ -1,16 +1,20 @@
 debug: true
-eureka:
-  client:
-    enabled: true
+
 logging:
   level:
     com:
       ubiqube:
         etsi: DEBUG
+    ma:
+      glasnost:
+        orika: INFO
     org:
+      apache:
+        http:
+          wire: INFO
       hibernate:
         SQL: INFO
-      openstack4j: DEBUG
+      openstack4j: INFO
       springframework:
         boot:
           autoconfigure:
@@ -58,10 +62,19 @@ spring:
     name: etsi-mano
   artemis:
     mode: embedded
+  cloud:
+    httpclientfactories:
+      ok:
+        enabled: false
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:file:~/etsi-mano.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
     username: sa
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
     default-property-inclusion: NON_NULL
@@ -107,6 +120,11 @@ spring:
             instanceId: AUTO
           threadPool:
             threadCount: 10
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
 springfox:
   documentation:
     swagger:

@@ -17,61 +17,35 @@
 
 package com.ubiqube.etsi.mano.config;
 
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-
-import org.springframework.beans.factory.annotation.Value;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.paths.DefaultPathProvider;
-import springfox.documentation.spring.web.paths.Paths;
-import springfox.documentation.spring.web.plugins.Docket;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class SwaggerDocumentationConfigMain {
-	@Value("${server.servlet.contextPath}")
-	private String contextPath;
-
-	public static ApiInfo apiInfo() {
-		return new ApiInfoBuilder()
-				.title("ETSI MANO API")
-				.description("ETSI MANO API")
-				.license("ETSI Forge copyright notice")
-				.licenseUrl("https://forge.etsi.org/etsi-forge-copyright-notice.txt")
-				.termsOfServiceUrl("")
-				.version("2.0.0-SNAPSHOT:ubiqube.com:ETSI_NFV_OpenAPI:1")
-				.contact(new Contact("", "", ""))
-				.build();
-	}
-
+	@SuppressWarnings("static-method")
 	@Bean
-	public Docket swaggerMainDocumentation() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.pathProvider(new CustomPathProvider())
-				.groupName("main")
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.ubiqube.etsi.mano.controller"))
-				.build()
-				.directModelSubstitute(LocalDate.class, java.sql.Date.class)
-				.directModelSubstitute(OffsetDateTime.class, java.util.Date.class)
-				.apiInfo(apiInfo());
+	public OpenAPI OpenApiMain() {
+		return new OpenAPI()
+				.components(new Components().addSecuritySchemes("basicScheme", new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
+				.info(new Info().title("ETSI Main API")
+						.description("ETSI MANO API")
+						.license(new License().name("ETSI Forge copyright notice").url("https://forge.etsi.org/etsi-forge-copyright-notice.txt"))
+						.version("1.0.0-impl:etsi.org:ETSI_NFV_OpenAPI:1"));
 	}
 
-	public class CustomPathProvider extends DefaultPathProvider {
-		@Override
-		public String getOperationPath(final String op) {
-			String operationPath = op;
-			if (operationPath.startsWith(contextPath)) {
-				operationPath = operationPath.substring(contextPath.length());
-			}
-			return Paths.removeAdjacentForwardSlashes(UriComponentsBuilder.newInstance().replacePath(operationPath).build().toString());
-		}
+	@SuppressWarnings("static-method")
+	@Bean
+	public GroupedOpenApi customImplementationMain() {
+		return GroupedOpenApi.builder()
+				.group("main")
+				.packagesToScan("com.ubiqube.etsi.mano.controller")
+				.build();
 	}
 }

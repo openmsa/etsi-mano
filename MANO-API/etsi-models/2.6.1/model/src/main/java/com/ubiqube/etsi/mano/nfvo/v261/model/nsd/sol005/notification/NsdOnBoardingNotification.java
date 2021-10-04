@@ -27,8 +27,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an NSD management notification, which informs the
@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiModelProperty;
  * nsdOnboardingState\&quot; attribute of a new NSD has changed to
  * \&quot;ONBOARDED\&quot;.
  */
-@ApiModel(description = "This type represents an NSD management notification, which informs the receiver of the successful on-boarding of an NSD. It shall comply with the provisions defined in Table 5.5.2.9-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the \" nsdOnboardingState\" attribute of a new NSD has changed to \"ONBOARDED\". ")
+@Schema(description = "This type represents an NSD management notification, which informs the receiver of the successful on-boarding of an NSD. It shall comply with the provisions defined in Table 5.5.2.9-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the \" nsdOnboardingState\" attribute of a new NSD has changed to \"ONBOARDED\". ")
 @Validated
 
 
@@ -74,7 +74,7 @@ public class NsdOnBoardingNotification {
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getId() {
@@ -96,7 +96,7 @@ public class NsdOnBoardingNotification {
 	 * 
 	 * @return notificationType
 	 **/
-	@ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"NsdOnboardingNotification\" for this notification type. ")
+	@Schema(required = true, description = "Discriminator for the different notification types. Shall be set to \"NsdOnboardingNotification\" for this notification type. ")
 	@NotNull
 
 	public String getNotificationType() {
@@ -117,7 +117,7 @@ public class NsdOnBoardingNotification {
 	 * 
 	 * @return subscriptionId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getSubscriptionId() {
@@ -138,7 +138,7 @@ public class NsdOnBoardingNotification {
 	 * 
 	 * @return timeStamp
 	 **/
-	@ApiModelProperty(required = true, value = "Date-time of the generation of the notification. ")
+	@Schema(required = true, description = "Date-time of the generation of the notification. ")
 	@NotNull
 
 	@Valid
@@ -161,7 +161,7 @@ public class NsdOnBoardingNotification {
 	 * 
 	 * @return nsdInfoId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getNsdInfoId() {
@@ -182,7 +182,7 @@ public class NsdOnBoardingNotification {
 	 * 
 	 * @return nsdId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getNsdId() {
@@ -203,7 +203,7 @@ public class NsdOnBoardingNotification {
 	 * 
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,7 +25,9 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
@@ -57,13 +58,13 @@ public class BlueprintParameters implements Serializable {
 
 	String instantiationLevelId;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
 	private Set<ScaleInfo> scaleStatus = null;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private List<ScaleInfo> maxScaleLevels;
+	private Set<ScaleInfo> maxScaleLevels;
 
 	@Valid
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -82,21 +83,21 @@ public class BlueprintParameters implements Serializable {
 
 	private String localizationLanguage;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@Transient
 	private Set<VnfMonitoringParameter> vnfMonitoringParameter;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@Transient
 	private Set<VirtualStorageResourceInfo> virtualStorageResourceInfo;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@Transient
 	private Set<ExtVirtualLinkInfoEntity> extVirtualLinkInfo;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@Transient
 	private Set<ExtCpInfo> extCpInfo;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@Transient
 	private Set<VnfcResourceInfoEntity> vnfcResourceInfo;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@Transient
 	private Set<VirtualLinkInfo> virtualLinkResourceInfo;
 }

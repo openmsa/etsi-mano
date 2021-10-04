@@ -34,13 +34,13 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Links to resources related to this resource.
  */
-@ApiModel(description = "Links to resources related to this resource. ")
+@Schema(description = "Links to resources related to this resource. ")
 public class VnfInstanceLinks {
 	@JsonProperty("self")
 	private Link self = null;
@@ -83,7 +83,7 @@ public class VnfInstanceLinks {
 	 * @return self
 	 **/
 	@JsonProperty("self")
-	@ApiModelProperty(required = true, value = "URI of this resource.")
+	@Schema(required = true, description = "URI of this resource.")
 	@NotNull
 	public Link getSelf() {
 		return self;
@@ -104,7 +104,7 @@ public class VnfInstanceLinks {
 	 * @return indicators
 	 **/
 	@JsonProperty("indicators")
-	@ApiModelProperty(value = "Indicators related to this VNF instance, if applicable.")
+	@Schema(description = "Indicators related to this VNF instance, if applicable.")
 	public Link getIndicators() {
 		return indicators;
 	}
@@ -126,7 +126,7 @@ public class VnfInstanceLinks {
 	 * @return instantiate
 	 **/
 	@JsonProperty("instantiate")
-	@ApiModelProperty(value = "Link to the \"instantiate\" task resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance in NOT_INSTANTIATED state). ")
+	@Schema(description = "Link to the \"instantiate\" task resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance in NOT_INSTANTIATED state). ")
 	public Link getInstantiate() {
 		return instantiate;
 	}
@@ -148,7 +148,7 @@ public class VnfInstanceLinks {
 	 * @return terminate
 	 **/
 	@JsonProperty("terminate")
-	@ApiModelProperty(value = "Link to the \"terminate\" task resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"terminate\" task resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
 	public Link getTerminate() {
 		return terminate;
 	}
@@ -170,7 +170,7 @@ public class VnfInstanceLinks {
 	 * @return scale
 	 **/
 	@JsonProperty("scale")
-	@ApiModelProperty(value = "Link to the \"scale\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"scale\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
 	public Link getScale() {
 		return scale;
 	}
@@ -193,7 +193,7 @@ public class VnfInstanceLinks {
 	 * @return scaleToLevel
 	 **/
 	@JsonProperty("scaleToLevel")
-	@ApiModelProperty(value = "Link to the \"scale_to_level\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"scale_to_level\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
 	public Link getScaleToLevel() {
 		return scaleToLevel;
 	}
@@ -216,7 +216,7 @@ public class VnfInstanceLinks {
 	 * @return changeFlavour
 	 **/
 	@JsonProperty("changeFlavour")
-	@ApiModelProperty(value = "Link to the \"change_flavour\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"change_flavour\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
 	public Link getChangeFlavour() {
 		return changeFlavour;
 	}
@@ -238,7 +238,7 @@ public class VnfInstanceLinks {
 	 * @return heal
 	 **/
 	@JsonProperty("heal")
-	@ApiModelProperty(value = "Link to the \"heal\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"heal\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
 	public Link getHeal() {
 		return heal;
 	}
@@ -260,7 +260,7 @@ public class VnfInstanceLinks {
 	 * @return operate
 	 **/
 	@JsonProperty("operate")
-	@ApiModelProperty(value = "Link to the \"operate\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"operate\" task resource, if the related operation is supported for this VNF instance, and is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
 	public Link getOperate() {
 		return operate;
 	}
@@ -282,7 +282,7 @@ public class VnfInstanceLinks {
 	 * @return changeExtConn
 	 **/
 	@JsonProperty("changeExtConn")
-	@ApiModelProperty(value = "Link to the \"change_ext_conn\" task resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"change_ext_conn\" task resource, if the related operation is possible based on the current status of this VNF instance resource (i.e. VNF instance is in INSTANTIATED state). ")
 	public Link getChangeExtConn() {
 		return changeExtConn;
 	}

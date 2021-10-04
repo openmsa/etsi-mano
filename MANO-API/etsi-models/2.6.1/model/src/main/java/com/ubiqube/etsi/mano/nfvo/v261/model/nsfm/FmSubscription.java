@@ -25,14 +25,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription related to notifications about VNF
  * faults.
  */
-@ApiModel(description = "This type represents a subscription related to notifications about VNF faults. ")
+@Schema(description = "This type represents a subscription related to notifications about VNF faults. ")
 @Validated
 public class FmSubscription {
 	@JsonProperty("id")
@@ -57,7 +57,7 @@ public class FmSubscription {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getId() {
@@ -78,7 +78,7 @@ public class FmSubscription {
 	 *
 	 * @return filter
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public FmNotificationsFilter getFilter() {
@@ -99,7 +99,7 @@ public class FmSubscription {
 	 *
 	 * @return callbackUri
 	 **/
-	@ApiModelProperty(required = true, value = "The URI of the endpoint to send the notification to. ")
+	@Schema(required = true, description = "The URI of the endpoint to send the notification to. ")
 	@NotNull
 
 	public String getCallbackUri() {
@@ -120,7 +120,7 @@ public class FmSubscription {
 	 *
 	 * @return _links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

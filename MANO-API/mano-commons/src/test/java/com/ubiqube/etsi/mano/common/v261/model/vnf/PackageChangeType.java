@@ -21,10 +21,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The enumeration PackageChangeType shall comply with the provisions defined in
- * Table 9.5.4.6-1. Permitted Values: - OP_STATE_CHANGE: The
- * \"operationalState\" attribute has been changed. - PKG_DELETE: The VNF
- * package has been deleted.
+ * The enumeration PackageChangeType shall comply with the provisions defined in Table 9.5.4.6-1. Permitted Values: - OP_STATE_CHANGE: The \"operationalState\" attribute has been changed. - PKG_DELETE: The VNF package has been deleted.
  */
 public enum PackageChangeType {
 

@@ -27,8 +27,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This operation supports the healing of an NS instance, either by healing the
@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiModelProperty;
  * part of this NS. It shall comply with the provisions defined in Table
  * 6.5.2.13-1.
  */
-@ApiModel(description = "This operation supports the healing of an NS instance,  either by healing the complete NS instance or by healing one of more of the VNF instances that are part of this NS.  It shall comply with the provisions defined in Table 6.5.2.13-1. ")
+@Schema(description = "This operation supports the healing of an NS instance,  either by healing the complete NS instance or by healing one of more of the VNF instances that are part of this NS.  It shall comply with the provisions defined in Table 6.5.2.13-1. ")
 @Validated
 
 
@@ -58,7 +58,7 @@ public class HealNsRequest {
 	 * 
 	 * @return healNsData
 	 **/
-	@ApiModelProperty(value = "Indicates the reason why a healing procedure is required. ")
+	@Schema(description = "Indicates the reason why a healing procedure is required. ")
 
 	@Valid
 
@@ -90,7 +90,7 @@ public class HealNsRequest {
 	 * 
 	 * @return healVnfData
 	 **/
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \"HealVnfOpConfig\".         ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed, as declared in the VNFD as part of \"HealVnfOpConfig\".         ")
 
 	@Valid
 

@@ -26,14 +26,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information about a PNF that is part of an NS
  * instance. It shall comply with the provisions defined in Table 6.5.3.13-1.
  */
-@ApiModel(description = "This type represents the information about a PNF that is part of an NS instance.  It shall comply with the provisions defined in Table 6.5.3.13-1. ")
+@Schema(description = "This type represents the information about a PNF that is part of an NS instance.  It shall comply with the provisions defined in Table 6.5.3.13-1. ")
 @Validated
 
 
@@ -66,7 +66,7 @@ public class PnfInfo {
 	 * 
 	 * @return pnfId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the PNF. This identifier is allocated by the OSS/BSS. ")
+	@Schema(required = true, description = "Identifier of the PNF. This identifier is allocated by the OSS/BSS. ")
 	@NotNull
 
 	public String getPnfId() {
@@ -87,7 +87,7 @@ public class PnfInfo {
 	 * 
 	 * @return pnfName
 	 **/
-	@ApiModelProperty(value = "Name of the PNF. ")
+	@Schema(description = "Name of the PNF. ")
 
 	public String getPnfName() {
 		return pnfName;
@@ -107,7 +107,7 @@ public class PnfInfo {
 	 * 
 	 * @return pnfdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the PNFD on which the PNF is based. ")
+	@Schema(required = true, description = "Identifier of the PNFD on which the PNF is based. ")
 	@NotNull
 
 	public String getPnfdId() {
@@ -129,7 +129,7 @@ public class PnfInfo {
 	 * 
 	 * @return pnfdInfoId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the PNFD information onject related to this PNF. This identifier is allocated by the NFVO ")
+	@Schema(required = true, description = "Identifier of the PNFD information onject related to this PNF. This identifier is allocated by the NFVO ")
 	@NotNull
 
 	public String getPnfdInfoId() {
@@ -150,7 +150,7 @@ public class PnfInfo {
 	 * 
 	 * @return pnfProfileId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the related PnfProfile in the NSD on which the PNF is based. ")
+	@Schema(required = true, description = "Identifier of the related PnfProfile in the NSD on which the PNF is based. ")
 	@NotNull
 
 	public String getPnfProfileId() {
@@ -171,7 +171,7 @@ public class PnfInfo {
 	 * 
 	 * @return cpInfo
 	 **/
-	@ApiModelProperty(value = "Information on the external CP of the PNF. ")
+	@Schema(description = "Information on the external CP of the PNF. ")
 
 	@Valid
 

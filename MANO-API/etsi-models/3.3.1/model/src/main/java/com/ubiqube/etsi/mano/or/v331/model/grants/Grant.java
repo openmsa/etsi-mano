@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.or.v331.model.grants.GrantLinks;
-import com.ubiqube.etsi.mano.or.v331.model.grants.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -44,7 +44,7 @@ public class Grant   {
   private String nsLcmOpOccId = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   @JsonProperty("_links")
   private GrantLinks _links = null;
@@ -109,7 +109,7 @@ public class Grant   {
     this.nsLcmOpOccId = nsLcmOpOccId;
   }
 
-  public Grant additionalParams(KeyValuePairs additionalParams) {
+  public Grant additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -121,11 +121,11 @@ public class Grant   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getAdditionalParams() {
+    public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

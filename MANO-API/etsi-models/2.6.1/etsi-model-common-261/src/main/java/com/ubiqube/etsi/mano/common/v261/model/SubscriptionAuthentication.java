@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * SubscriptionAuthentication
@@ -91,19 +91,12 @@ public class SubscriptionAuthentication {
 	}
 
 	/**
-	 * Defines the types of Authentication / Authorization which the API consumer is
-	 * willing to accept when receiving a notification. Permitted values: - BASIC:
-	 * In every HTTP request to the notification endpoint, use HTTP Basic
-	 * authentication with the client credentials. - OAUTH2_CLIENT_CREDENTIALS: In
-	 * every HTTP request to the notification endpoint, use an OAuth 2.0 Bearer
-	 * token, obtained using the client credentials grant type. - TLS_CERT: Every
-	 * HTTP request to the notification endpoint is sent over a mutually
-	 * authenticated TLS session, i.e. not only the server is authenticated, but
-	 * also the client is authenticated during the TLS tunnel setup.
+	 * Defines the types of Authentication / Authorization which the API consumer is willing to accept when receiving a notification. Permitted values: - BASIC: In every HTTP request to the notification endpoint, use HTTP Basic authentication with the client credentials. - OAUTH2_CLIENT_CREDENTIALS: In every HTTP request to the notification endpoint, use an OAuth 2.0 Bearer token, obtained using the client credentials grant type. - TLS_CERT: Every HTTP request to the notification endpoint is sent
+	 * over a mutually authenticated TLS session, i.e. not only the server is authenticated, but also the client is authenticated during the TLS tunnel setup.
 	 *
 	 * @return authType
 	 **/
-	@ApiModelProperty(required = true, value = "Defines the types of Authentication / Authorization which the API consumer is willing to accept when receiving a notification. Permitted values: - BASIC: In every HTTP request to the notification endpoint, use   HTTP Basic authentication with the client credentials. - OAUTH2_CLIENT_CREDENTIALS: In every HTTP request to the   notification endpoint, use an OAuth 2.0 Bearer token, obtained   using the client credentials grant type. - TLS_CERT: Every HTTP request to the notification endpoint is sent   over a mutually authenticated TLS session, i.e. not only the   server is authenticated, but also the client is authenticated   during the TLS tunnel setup. ")
+	@Schema(required = true, description = "Defines the types of Authentication / Authorization which the API consumer is willing to accept when receiving a notification. Permitted values: - BASIC: In every HTTP request to the notification endpoint, use   HTTP Basic authentication with the client credentials. - OAUTH2_CLIENT_CREDENTIALS: In every HTTP request to the   notification endpoint, use an OAuth 2.0 Bearer token, obtained   using the client credentials grant type. - TLS_CERT: Every HTTP request to the notification endpoint is sent   over a mutually authenticated TLS session, i.e. not only the   server is authenticated, but also the client is authenticated   during the TLS tunnel setup. ")
 	@NotNull
 
 	public List<AuthTypeEnum> getAuthType() {
@@ -124,7 +117,7 @@ public class SubscriptionAuthentication {
 	 *
 	 * @return paramsBasic
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -146,7 +139,7 @@ public class SubscriptionAuthentication {
 	 *
 	 * @return paramsOauth2ClientCredentials
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -190,8 +183,7 @@ public class SubscriptionAuthentication {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

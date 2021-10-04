@@ -29,14 +29,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.VnfExtCpData;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an external VL. It shall comply with the provisions
  * defined in Table 6.5.3.26-1.
  */
-@ApiModel(description = "This type represents an external VL. It shall comply with the provisions defined in Table 6.5.3.26-1. ")
+@Schema(description = "This type represents an external VL. It shall comply with the provisions defined in Table 6.5.3.26-1. ")
 @Validated
 public class ExtVirtualLinkData {
 	@JsonProperty("extVirtualLinkId")
@@ -69,7 +69,7 @@ public class ExtVirtualLinkData {
 	 *
 	 * @return extVirtualLinkId
 	 **/
-	@ApiModelProperty(value = "The identifier of the external VL instance, if provided. ")
+	@Schema(description = "The identifier of the external VL instance, if provided. ")
 
 	public String getExtVirtualLinkId() {
 		return extVirtualLinkId;
@@ -91,7 +91,7 @@ public class ExtVirtualLinkData {
 	 *
 	 * @return vimId
 	 **/
-	@ApiModelProperty(value = "Identifier of the VIM that manages this resource. This attribute shall only be supported and present if VNFrelated resource management in direct mode is applicable. ")
+	@Schema(description = "Identifier of the VIM that manages this resource. This attribute shall only be supported and present if VNFrelated resource management in direct mode is applicable. ")
 
 	public String getVimId() {
 		return vimId;
@@ -114,7 +114,7 @@ public class ExtVirtualLinkData {
 	 *
 	 * @return resourceProviderId
 	 **/
-	@ApiModelProperty(value = "Identifies the entity responsible for the management of this resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
+	@Schema(description = "Identifies the entity responsible for the management of this resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document. ")
 
 	public String getResourceProviderId() {
 		return resourceProviderId;
@@ -135,7 +135,7 @@ public class ExtVirtualLinkData {
 	 *
 	 * @return resourceId
 	 **/
-	@ApiModelProperty(required = true, value = "The identifier of the resource in the scope of the VIM or the resource provider. ")
+	@Schema(required = true, description = "The identifier of the resource in the scope of the VIM or the resource provider. ")
 	@NotNull
 
 	public String getResourceId() {
@@ -161,7 +161,7 @@ public class ExtVirtualLinkData {
 	 *
 	 * @return extCps
 	 **/
-	@ApiModelProperty(required = true, value = "External CPs of the VNF to be connected to this external VL. ")
+	@Schema(required = true, description = "External CPs of the VNF to be connected to this external VL. ")
 	@NotNull
 
 	@Valid
@@ -193,7 +193,7 @@ public class ExtVirtualLinkData {
 	 *
 	 * @return extLinkPorts
 	 **/
-	@ApiModelProperty(value = "Externally provided link ports to be used to connect external connection points to this external VL. ")
+	@Schema(description = "Externally provided link ports to be used to connect external connection points to this external VL. ")
 
 	@Valid
 

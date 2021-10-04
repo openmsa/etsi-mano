@@ -26,15 +26,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * The PortRange data type provides the lower and upper bounds of a range of
  * Internet ports. It shall comply with the provisions defined in Table
  * 6.5.3.42-1.
  */
-@ApiModel(description = "The PortRange data type provides the lower and upper bounds of a range of Internet ports. It shall comply with the provisions defined in Table 6.5.3.42-1. ")
+@Schema(description = "The PortRange data type provides the lower and upper bounds of a range of Internet ports. It shall comply with the provisions defined in Table 6.5.3.42-1. ")
 @Validated
 
 
@@ -55,7 +55,7 @@ public class PortRange {
 	 * 
 	 * @return lowerPort
 	 **/
-	@ApiModelProperty(required = true, value = "Identifies the lower bound of the port range. upperPort Integer ")
+	@Schema(required = true, description = "Identifies the lower bound of the port range. upperPort Integer ")
 	@NotNull
 
 	@Min(0)
@@ -77,7 +77,7 @@ public class PortRange {
 	 * 
 	 * @return upperPort
 	 **/
-	@ApiModelProperty(required = true, value = "Identifies the upper bound of the port range. ")
+	@Schema(required = true, description = "Identifies the upper bound of the port range. ")
 	@NotNull
 
 	@Min(0)

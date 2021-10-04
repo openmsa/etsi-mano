@@ -26,14 +26,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a NS termination request. It shall comply with the
  * provisions defined in Table 6.5.2.15-1.
  */
-@ApiModel(description = "This type represents a NS termination request.  It shall comply with the provisions defined in Table 6.5.2.15-1. ")
+@Schema(description = "This type represents a NS termination request.  It shall comply with the provisions defined in Table 6.5.2.15-1. ")
 @Validated
 
 
@@ -53,7 +53,7 @@ public class TerminateNsRequest {
 	 * 
 	 * @return terminationTime
 	 **/
-	@ApiModelProperty(value = "Timestamp indicating the end time of the NS, i.e. the NS will be terminated automatically at this timestamp. Cardinality \"0\" indicates the NS termination takes place immediately ")
+	@Schema(description = "Timestamp indicating the end time of the NS, i.e. the NS will be terminated automatically at this timestamp. Cardinality \"0\" indicates the NS termination takes place immediately ")
 
 	@Valid
 

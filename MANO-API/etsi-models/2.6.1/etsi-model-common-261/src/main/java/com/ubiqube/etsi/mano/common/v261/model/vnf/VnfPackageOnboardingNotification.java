@@ -27,8 +27,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a VNF package management notification, which informs the
@@ -40,7 +40,7 @@ import io.swagger.annotations.ApiModelProperty;
  * \&quot;onboardingState\&quot; attribute of a new VNF package has changed to
  * \&quot;ONBOARDED\&quot;.
  */
-@ApiModel(description = "This type represents a VNF package management notification, which informs the receiver that the on boarding process of a VNF package incomplete and the package is ready for use. A change of the on-boarding state before the VNF package is on-boarded is not reported. It shall comply with the provisions defined in Table 9.5.2.8-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the value of the \"onboardingState\" attribute of a new VNF package has changed to \"ONBOARDED\". ")
+@Schema(description = "This type represents a VNF package management notification, which informs the receiver that the on boarding process of a VNF package incomplete and the package is ready for use. A change of the on-boarding state before the VNF package is on-boarded is not reported. It shall comply with the provisions defined in Table 9.5.2.8-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the value of the \"onboardingState\" attribute of a new VNF package has changed to \"ONBOARDED\". ")
 @Validated
 public class VnfPackageOnboardingNotification {
 	@JsonProperty("id")
@@ -76,7 +76,7 @@ public class VnfPackageOnboardingNotification {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this notification. If a notification is sent multiple times due to multiple subscriptions, the \"id\" attribute of all these notifications shall have the same value. ")
+	@Schema(required = true, description = "Identifier of this notification. If a notification is sent multiple times due to multiple subscriptions, the \"id\" attribute of all these notifications shall have the same value. ")
 	@NotNull
 
 	public String getId() {
@@ -98,7 +98,7 @@ public class VnfPackageOnboardingNotification {
 	 *
 	 * @return notificationType
 	 **/
-	@ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"VnfPackageOnboardingNotification\" for this notification type. ")
+	@Schema(required = true, description = "Discriminator for the different notification types. Shall be set to \"VnfPackageOnboardingNotification\" for this notification type. ")
 	@NotNull
 
 	public String getNotificationType() {
@@ -119,7 +119,7 @@ public class VnfPackageOnboardingNotification {
 	 *
 	 * @return subscriptionId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the subscription that this notification relates to. ")
+	@Schema(required = true, description = "Identifier of the subscription that this notification relates to. ")
 	@NotNull
 
 	public String getSubscriptionId() {
@@ -140,7 +140,7 @@ public class VnfPackageOnboardingNotification {
 	 *
 	 * @return timeStamp
 	 **/
-	@ApiModelProperty(required = true, value = "Date and time of the generation of the notification. ")
+	@Schema(required = true, description = "Date and time of the generation of the notification. ")
 	@NotNull
 
 	@Valid
@@ -165,7 +165,7 @@ public class VnfPackageOnboardingNotification {
 	 *
 	 * @return vnfPkgId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF package. This identifier is allocated by the NFVO. Its value is the same as the value of the \"id\" attribute of the related \"Individual VNF package\" resource. ")
+	@Schema(required = true, description = "Identifier of the VNF package. This identifier is allocated by the NFVO. Its value is the same as the value of the \"id\" attribute of the related \"Individual VNF package\" resource. ")
 	@NotNull
 
 	public String getVnfPkgId() {
@@ -188,7 +188,7 @@ public class VnfPackageOnboardingNotification {
 	 *
 	 * @return vnfdId
 	 **/
-	@ApiModelProperty(required = true, value = "This identifier, which is managed by the VNF provider, identifies the VNF package and the VNFD in a globally unique way. It is copied from the VNFD of the on-boarded VNF package. ")
+	@Schema(required = true, description = "This identifier, which is managed by the VNF provider, identifies the VNF package and the VNFD in a globally unique way. It is copied from the VNFD of the on-boarded VNF package. ")
 	@NotNull
 
 	public String getVnfdId() {
@@ -209,7 +209,7 @@ public class VnfPackageOnboardingNotification {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "Links to resources related to this notification. ")
+	@Schema(required = true, description = "Links to resources related to this notification. ")
 	@NotNull
 
 	@Valid

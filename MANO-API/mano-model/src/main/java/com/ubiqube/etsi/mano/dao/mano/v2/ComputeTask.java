@@ -36,6 +36,8 @@ public class ComputeTask extends VnfTask {
 
 	private String imageId;
 
+	private String bootData;
+
 	public VnfCompute getVnfCompute() {
 		return vnfCompute;
 	}
@@ -58,6 +60,14 @@ public class ComputeTask extends VnfTask {
 
 	public void setImageId(final String imageId) {
 		this.imageId = imageId;
+	}
+
+	public String getBootData() {
+		return bootData;
+	}
+
+	public void setBootData(final String bootData) {
+		this.bootData = bootData;
 	}
 
 }

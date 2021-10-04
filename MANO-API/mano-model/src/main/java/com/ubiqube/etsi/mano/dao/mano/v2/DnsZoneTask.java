@@ -18,6 +18,8 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import javax.persistence.Entity;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+
 @Entity
 public class DnsZoneTask extends VnfTask {
 
@@ -26,12 +28,22 @@ public class DnsZoneTask extends VnfTask {
 
 	private String domainName;
 
+	private VnfVl vnfVl;
+
 	public String getDomainName() {
 		return domainName;
 	}
 
 	public void setDomainName(final String domainName) {
 		this.domainName = domainName;
+	}
+
+	public VnfVl getVnfVl() {
+		return vnfVl;
+	}
+
+	public void setVnfVl(final VnfVl vnfVl) {
+		this.vnfVl = vnfVl;
 	}
 
 }

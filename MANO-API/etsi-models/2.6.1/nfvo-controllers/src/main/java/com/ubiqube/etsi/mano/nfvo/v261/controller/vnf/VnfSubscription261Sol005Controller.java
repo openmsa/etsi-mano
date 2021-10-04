@@ -20,7 +20,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
@@ -48,7 +47,7 @@ public class VnfSubscription261Sol005Controller implements VnfSubscription261Sol
 	}
 
 	@Override
-	public ResponseEntity<List<PkgmSubscription>> subscriptionsGet(@RequestParam(value = "filter", required = false) final String filters) {
+	public ResponseEntity<List<PkgmSubscription>> subscriptionsGet(final String filters) {
 		return vnfSubscriptionSol005FrontController.search(filters, PkgmSubscription.class, links::makeSubscriptionLink);
 	}
 

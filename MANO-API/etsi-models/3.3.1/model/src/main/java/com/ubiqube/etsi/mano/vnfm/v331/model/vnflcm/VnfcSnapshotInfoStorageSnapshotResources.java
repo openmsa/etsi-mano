@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -36,7 +36,7 @@ public class VnfcSnapshotInfoStorageSnapshotResources   {
   private String storageResourceId = null;
 
   @JsonProperty("storageSnapshotResource")
-  private KeyValuePairs storageSnapshotResource = null;
+  private Map<String, String> storageSnapshotResource = null;
 
   public VnfcSnapshotInfoStorageSnapshotResources storageResourceId(String storageResourceId) {
     this.storageResourceId = storageResourceId;
@@ -58,7 +58,7 @@ public class VnfcSnapshotInfoStorageSnapshotResources   {
     this.storageResourceId = storageResourceId;
   }
 
-  public VnfcSnapshotInfoStorageSnapshotResources storageSnapshotResource(KeyValuePairs storageSnapshotResource) {
+  public VnfcSnapshotInfoStorageSnapshotResources storageSnapshotResource(Map<String, String> storageSnapshotResource) {
     this.storageSnapshotResource = storageSnapshotResource;
     return this;
   }
@@ -70,11 +70,11 @@ public class VnfcSnapshotInfoStorageSnapshotResources   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getStorageSnapshotResource() {
+    public Map<String, String> getStorageSnapshotResource() {
     return storageSnapshotResource;
   }
 
-  public void setStorageSnapshotResource(KeyValuePairs storageSnapshotResource) {
+  public void setStorageSnapshotResource(Map<String, String> storageSnapshotResource) {
     this.storageSnapshotResource = storageSnapshotResource;
   }
 
