@@ -27,15 +27,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type defines the additional parameters for the VNF instance to be
  * created associated with an NS instance. It shall comply with the provisions
  * defined in Table 6.5.3.22-1.
  */
-@ApiModel(description = "This type defines the additional parameters for the VNF instance to be created associated with an NS instance. It shall comply with the provisions defined in Table 6.5.3.22-1. ")
+@Schema(description = "This type defines the additional parameters for the VNF instance to be created associated with an NS instance. It shall comply with the provisions defined in Table 6.5.3.22-1. ")
 @Validated
 
 
@@ -57,7 +57,7 @@ public class ParamsForVnf {
 	 *
 	 * @return vnfProfileId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of (reference to) a vnfProfile to which the additional parameters apply. ")
+	@Schema(required = true, description = "Identifier of (reference to) a vnfProfile to which the additional parameters apply. ")
 	@NotNull
 
 	public String getVnfProfileId() {
@@ -78,7 +78,7 @@ public class ParamsForVnf {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional parameters that are applied for the VNF instance to be created. ")
+	@Schema(description = "Additional parameters that are applied for the VNF instance to be created. ")
 
 	@Valid
 

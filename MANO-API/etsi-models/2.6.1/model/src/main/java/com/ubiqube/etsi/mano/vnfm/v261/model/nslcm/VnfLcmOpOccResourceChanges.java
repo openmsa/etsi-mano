@@ -39,15 +39,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This attribute contains information about the cumulative changes to
  * virtualised resources that were performed so far by the LCM operation since
  * its start, if applicable.
  */
-@ApiModel(description = "This attribute contains information about the cumulative changes to virtualised resources that were performed so far by the LCM operation since its start, if applicable. ")
+@Schema(description = "This attribute contains information about the cumulative changes to virtualised resources that were performed so far by the LCM operation since its start, if applicable. ")
 @Validated
 public class VnfLcmOpOccResourceChanges {
 	@JsonProperty("affectedVnfcs")
@@ -83,7 +83,7 @@ public class VnfLcmOpOccResourceChanges {
 	 *
 	 * @return affectedVnfcs
 	 **/
-	@ApiModelProperty(value = "Information about VNFC instances that were affected during the lifecycle operation. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
+	@Schema(description = "Information about VNFC instances that were affected during the lifecycle operation. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
 	@Valid
 	public List<AffectedVnfc> getAffectedVnfcs() {
 		return affectedVnfcs;
@@ -114,7 +114,7 @@ public class VnfLcmOpOccResourceChanges {
 	 *
 	 * @return affectedVirtualLinks
 	 **/
-	@ApiModelProperty(value = "Information about VL instances that were affected during the lifecycle operation. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
+	@Schema(description = "Information about VL instances that were affected during the lifecycle operation. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
 	@Valid
 	public List<AffectedVirtualLink> getAffectedVirtualLinks() {
 		return affectedVirtualLinks;
@@ -145,7 +145,7 @@ public class VnfLcmOpOccResourceChanges {
 	 *
 	 * @return affectedVirtualStorages
 	 **/
-	@ApiModelProperty(value = "Information about virtualised storage instances that were affected during the lifecycle operation. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
+	@Schema(description = "Information about virtualised storage instances that were affected during the lifecycle operation. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter. ")
 	@Valid
 	public List<AffectedVirtualStorage> getAffectedVirtualStorages() {
 		return affectedVirtualStorages;

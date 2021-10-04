@@ -37,7 +37,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * ExtVirtualLinkInfo
@@ -58,14 +58,12 @@ public class ExtVirtualLinkInfo {
 	}
 
 	/**
-	 * Identifier of the external VL and the related external VL information
-	 * instance. The identifier is assigned by the NFV-MANO entity that manages this
-	 * VL instance.
+	 * Identifier of the external VL and the related external VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance.
 	 *
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of the external VL and the related external VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
+	@Schema(required = true, description = "Identifier of the external VL and the related external VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -86,7 +84,7 @@ public class ExtVirtualLinkInfo {
 	 * @return resourceHandle
 	 **/
 	@JsonProperty("resourceHandle")
-	@ApiModelProperty(required = true, value = "Reference to the resource realizing this VL. ")
+	@Schema(required = true, description = "Reference to the resource realizing this VL. ")
 	@NotNull
 	public ResourceHandle getResourceHandle() {
 		return resourceHandle;
@@ -115,7 +113,7 @@ public class ExtVirtualLinkInfo {
 	 * @return extLinkPorts
 	 **/
 	@JsonProperty("extLinkPorts")
-	@ApiModelProperty(value = "Link ports of this VL. ")
+	@Schema(description = "Link ports of this VL. ")
 	public List<ExtLinkPortInfo> getExtLinkPorts() {
 		return extLinkPorts;
 	}
@@ -137,8 +135,7 @@ public class ExtVirtualLinkInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

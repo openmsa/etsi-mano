@@ -22,17 +22,17 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  *
  * TODO DELETE this. Details of the subscription to be created.
  **/
-@ApiModel(description = "Details of the subscription to be created.             ")
+@Schema(description = "Details of the subscription to be created.             ")
 public class SubscriptionsPostQuery {
 
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@Valid
 	private SubscriptionsPmSubscriptionRequest pmSubscriptionRequest = null;
 

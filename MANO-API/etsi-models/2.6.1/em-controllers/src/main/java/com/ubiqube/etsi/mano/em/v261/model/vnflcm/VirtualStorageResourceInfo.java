@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information that allows addressing a virtualised resource that is used by a VNF instance.
  */
-@ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance. ")
+@Schema(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance. ")
 @Validated
 
 public class VirtualStorageResourceInfo {
@@ -61,7 +61,7 @@ public class VirtualStorageResourceInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this VirtualStorageResourceInfo instance. ")
+	@Schema(required = true, description = "Identifier of this VirtualStorageResourceInfo instance. ")
 	@NotNull
 
 	public String getId() {
@@ -82,7 +82,7 @@ public class VirtualStorageResourceInfo {
 	 *
 	 * @return virtualStorageDescId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VirtualStorageDesc in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the VirtualStorageDesc in the VNFD. ")
 	@NotNull
 
 	public String getVirtualStorageDescId() {
@@ -103,7 +103,7 @@ public class VirtualStorageResourceInfo {
 	 *
 	 * @return storageResource
 	 **/
-	@ApiModelProperty(required = true, value = "Reference to the VirtualStorage resource. ")
+	@Schema(required = true, description = "Reference to the VirtualStorage resource. ")
 	@NotNull
 
 	@Valid
@@ -126,7 +126,7 @@ public class VirtualStorageResourceInfo {
 	 *
 	 * @return reservationId
 	 **/
-	@ApiModelProperty(value = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
+	@Schema(description = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
 
 	public String getReservationId() {
 		return reservationId;
@@ -146,7 +146,7 @@ public class VirtualStorageResourceInfo {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "Metadata about this resource. ")
+	@Schema(description = "Metadata about this resource. ")
 
 	@Valid
 

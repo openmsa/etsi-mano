@@ -27,14 +27,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type describes the information to scale a VNF instance by steps. The
  * NFVO shall then invoke the Scale VNF operation towards the appropriate VNFM.
  */
-@ApiModel(description = "This type describes the information to scale a VNF instance by steps.  The NFVO shall then invoke the Scale VNF operation towards the appropriate VNFM. ")
+@Schema(description = "This type describes the information to scale a VNF instance by steps.  The NFVO shall then invoke the Scale VNF operation towards the appropriate VNFM. ")
 @Validated
 
 
@@ -59,7 +59,7 @@ public class ScaleByStepData {
 	 *
 	 * @return aspectId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of (reference to) the aspect of the VNF that is requested to be scaled, as declared in the VNFD. ")
+	@Schema(required = true, description = "Identifier of (reference to) the aspect of the VNF that is requested to be scaled, as declared in the VNFD. ")
 	@NotNull
 
 	public String getAspectId() {
@@ -83,7 +83,7 @@ public class ScaleByStepData {
 	 *
 	 * @return numberOfSteps
 	 **/
-	@ApiModelProperty(value = "Number of scaling steps. It shall be a positive number. Defaults to 1. The VNF provider defines in the VNFD whether or not a particular VNF supports performing more than one step at a time. Such a property in the VNFD applies for all instances of a particular VNF. ")
+	@Schema(description = "Number of scaling steps. It shall be a positive number. Defaults to 1. The VNF provider defines in the VNFD whether or not a particular VNF supports performing more than one step at a time. Such a property in the VNFD applies for all instances of a particular VNF. ")
 
 	public Integer getNumberOfSteps() {
 		return numberOfSteps;
@@ -104,7 +104,7 @@ public class ScaleByStepData {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF instance being scaled. ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF instance being scaled. ")
 
 	@Valid
 

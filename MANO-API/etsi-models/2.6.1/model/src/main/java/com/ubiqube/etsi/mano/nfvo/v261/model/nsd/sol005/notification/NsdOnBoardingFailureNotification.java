@@ -28,8 +28,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an NSD management notification, which informs the
@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiModelProperty;
  * mandatory. The notification shall be triggered by the NFVO when the
  * on-boarding of an NSD has failed.
  */
-@ApiModel(description = "This type represents an NSD management notification, which informs the receiver of the failure of on-boarding an NSD. It shall comply with the provisions defined in Table 5.5.2.10-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the on-boarding of an NSD has failed. ")
+@Schema(description = "This type represents an NSD management notification, which informs the receiver of the failure of on-boarding an NSD. It shall comply with the provisions defined in Table 5.5.2.10-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the on-boarding of an NSD has failed. ")
 @Validated
 
 
@@ -77,7 +77,7 @@ public class NsdOnBoardingFailureNotification {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getId() {
@@ -99,7 +99,7 @@ public class NsdOnBoardingFailureNotification {
 	 *
 	 * @return notificationType
 	 **/
-	@ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"NsdOnboardingFailureNotification\" for this notification type. ")
+	@Schema(required = true, description = "Discriminator for the different notification types. Shall be set to \"NsdOnboardingFailureNotification\" for this notification type. ")
 	@NotNull
 
 	public String getNotificationType() {
@@ -120,7 +120,7 @@ public class NsdOnBoardingFailureNotification {
 	 *
 	 * @return subscriptionId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getSubscriptionId() {
@@ -141,7 +141,7 @@ public class NsdOnBoardingFailureNotification {
 	 *
 	 * @return timeStamp
 	 **/
-	@ApiModelProperty(required = true, value = "Date-time of the generation of the notification. ")
+	@Schema(required = true, description = "Date-time of the generation of the notification. ")
 	@NotNull
 
 	@Valid
@@ -164,7 +164,7 @@ public class NsdOnBoardingFailureNotification {
 	 *
 	 * @return nsdInfoId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getNsdInfoId() {
@@ -185,7 +185,7 @@ public class NsdOnBoardingFailureNotification {
 	 *
 	 * @return nsdId
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getNsdId() {
 		return nsdId;
@@ -206,7 +206,7 @@ public class NsdOnBoardingFailureNotification {
 	 *
 	 * @return onboardingFailureDetails
 	 **/
-	@ApiModelProperty(required = true, value = "Failure details of current onboarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. ")
+	@Schema(required = true, description = "Failure details of current onboarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. ")
 	@NotNull
 
 	@Valid
@@ -229,7 +229,7 @@ public class NsdOnBoardingFailureNotification {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

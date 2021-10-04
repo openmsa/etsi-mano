@@ -32,13 +32,13 @@ import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a grant.
  */
-@ApiModel(description = "This type represents a grant. ")
+@Schema(description = "This type represents a grant. ")
 @Validated
 public class Grant {
 	@JsonProperty("id")
@@ -114,7 +114,7 @@ public class Grant {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the grant. ")
+	@Schema(required = true, description = "Identifier of the grant. ")
 	@NotNull
 
 	public String getId() {
@@ -135,7 +135,7 @@ public class Grant {
 	 *
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the related VNF instance. ")
+	@Schema(required = true, description = "Identifier of the related VNF instance. ")
 	@NotNull
 
 	public String getVnfInstanceId() {
@@ -156,7 +156,7 @@ public class Grant {
 	 *
 	 * @return vnfLcmOpOccId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the related VNF lifecycle management operation occurrence. ")
+	@Schema(required = true, description = "Identifier of the related VNF lifecycle management operation occurrence. ")
 	@NotNull
 
 	public String getVnfLcmOpOccId() {
@@ -198,7 +198,7 @@ public class Grant {
 	 *
 	 * @return vimConnections
 	 **/
-	@ApiModelProperty(value = "Provides information regarding VIM connections that are approved to be used by the VNFM to allocate resources, and provides parameters of these VIM connections. The VNFM shall update the \" vimConnectionInfo\" attribute of the \"VnfInstance\" structure by adding unknown entries received in this attribute. This attribute is not intended for the modification of VimConnection entries passed earlier; for that, the VnfInfoModificationRequest structure shall be used. This attribute shall only be supported when VNF-related Resource Management in direct mode is applicable. In direct mode, this parameter shall be absent if the VIM information was configured to the VNFM in another way, present otherwise. This interface allows to signal the use of multiple VIMs per VNF. However, due to the partial support of this feature in the present release, it is recommended in the present document that the number of entries in the \"vims\" attribute in the Grant is not greater than 1. ")
+	@Schema(description = "Provides information regarding VIM connections that are approved to be used by the VNFM to allocate resources, and provides parameters of these VIM connections. The VNFM shall update the \" vimConnectionInfo\" attribute of the \"VnfInstance\" structure by adding unknown entries received in this attribute. This attribute is not intended for the modification of VimConnection entries passed earlier; for that, the VnfInfoModificationRequest structure shall be used. This attribute shall only be supported when VNF-related Resource Management in direct mode is applicable. In direct mode, this parameter shall be absent if the VIM information was configured to the VNFM in another way, present otherwise. This interface allows to signal the use of multiple VIMs per VNF. However, due to the partial support of this feature in the present release, it is recommended in the present document that the number of entries in the \"vims\" attribute in the Grant is not greater than 1. ")
 
 	@Valid
 
@@ -229,7 +229,7 @@ public class Grant {
 	 *
 	 * @return zones
 	 **/
-	@ApiModelProperty(value = "Identifies resource zones where the resources are approved to be allocated by the VNFM. ")
+	@Schema(description = "Identifies resource zones where the resources are approved to be allocated by the VNFM. ")
 
 	@Valid
 
@@ -263,7 +263,7 @@ public class Grant {
 	 *
 	 * @return zoneGroups
 	 **/
-	@ApiModelProperty(value = "Information about groups of resource zones that are related and that the NFVO has chosen to fulfil a zoneGroup constraint in the GrantVnfLifecycleOperation request. This information confirms that the NFVO has honoured the zoneGroup constraints that were passed as part of \"placementConstraints\" in the GrantRequest. ")
+	@Schema(description = "Information about groups of resource zones that are related and that the NFVO has chosen to fulfil a zoneGroup constraint in the GrantVnfLifecycleOperation request. This information confirms that the NFVO has honoured the zoneGroup constraints that were passed as part of \"placementConstraints\" in the GrantRequest. ")
 
 	@Valid
 
@@ -289,7 +289,7 @@ public class Grant {
 	 *
 	 * @return computeReservationId
 	 **/
-	@ApiModelProperty(value = "Information that identifies a reservation applicable to the compute resource requirements of the corresponding grant request. At least one of (computeReservationId, networkReservationId, storageReservationId) shall be present when policy is GRANT_RESERVE_SINGLE and an applicable reservation exists. None of these shall be present otherwise. ")
+	@Schema(description = "Information that identifies a reservation applicable to the compute resource requirements of the corresponding grant request. At least one of (computeReservationId, networkReservationId, storageReservationId) shall be present when policy is GRANT_RESERVE_SINGLE and an applicable reservation exists. None of these shall be present otherwise. ")
 
 	public String getComputeReservationId() {
 		return computeReservationId;
@@ -313,7 +313,7 @@ public class Grant {
 	 *
 	 * @return networkReservationId
 	 **/
-	@ApiModelProperty(value = "Information that identifies a reservation applicable to the network resource requirements of the corresponding grant request. At least one of (computeReservationId, networkReservationId, storageReservationId) shall be present when policy is GRANT_RESERVE_SINGLE and an applicable reservation exists. None of these shall be present otherwise. ")
+	@Schema(description = "Information that identifies a reservation applicable to the network resource requirements of the corresponding grant request. At least one of (computeReservationId, networkReservationId, storageReservationId) shall be present when policy is GRANT_RESERVE_SINGLE and an applicable reservation exists. None of these shall be present otherwise. ")
 
 	public String getNetworkReservationId() {
 		return networkReservationId;
@@ -337,7 +337,7 @@ public class Grant {
 	 *
 	 * @return storageReservationId
 	 **/
-	@ApiModelProperty(value = "Information that identifies a reservation applicable to the storage resource requirements of the corresponding grant request. At least one of (computeReservationId, networkReservationId, storageReservationId) shall be present when policy is GRANT_RESERVE_SINGLE and an applicable reservation exists. None of these shall be present otherwise. ")
+	@Schema(description = "Information that identifies a reservation applicable to the storage resource requirements of the corresponding grant request. At least one of (computeReservationId, networkReservationId, storageReservationId) shall be present when policy is GRANT_RESERVE_SINGLE and an applicable reservation exists. None of these shall be present otherwise. ")
 
 	public String getStorageReservationId() {
 		return storageReservationId;
@@ -365,7 +365,7 @@ public class Grant {
 	 *
 	 * @return addResources
 	 **/
-	@ApiModelProperty(value = "List of resources that are approved to be added, with one entry per resource. ")
+	@Schema(description = "List of resources that are approved to be added, with one entry per resource. ")
 
 	@Valid
 
@@ -396,7 +396,7 @@ public class Grant {
 	 *
 	 * @return tempResources
 	 **/
-	@ApiModelProperty(value = "List of resources that are approved to be temporarily instantiated during the runtime of the lifecycle operation, with one entry per resource. ")
+	@Schema(description = "List of resources that are approved to be temporarily instantiated during the runtime of the lifecycle operation, with one entry per resource. ")
 
 	@Valid
 
@@ -427,7 +427,7 @@ public class Grant {
 	 *
 	 * @return removeResources
 	 **/
-	@ApiModelProperty(value = "List of resources that are approved to be removed, with one entry per resource. ")
+	@Schema(description = "List of resources that are approved to be removed, with one entry per resource. ")
 
 	@Valid
 
@@ -458,7 +458,7 @@ public class Grant {
 	 *
 	 * @return updateResources
 	 **/
-	@ApiModelProperty(value = "List of resources that are approved to be modified, with one entry per resource. ")
+	@Schema(description = "List of resources that are approved to be modified, with one entry per resource. ")
 
 	@Valid
 
@@ -480,7 +480,7 @@ public class Grant {
 	 *
 	 * @return vimAssets
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -516,7 +516,7 @@ public class Grant {
 	 *
 	 * @return extVirtualLinks
 	 **/
-	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. External and/or externally-managed internal VLs can be passed in VNF lifecycle management operation requests such as InstantiateVnf or ChangeVnfFlavor, and/or in the grant response. The NFVO may choose to override in the grant response external and/or externally-managed VL instances that have been passed previously in the associated VNF lifecycle management request, if the lifecycle management request has originated from the NFVO itself. ")
+	@Schema(description = "Information about external VLs to connect the VNF to. External and/or externally-managed internal VLs can be passed in VNF lifecycle management operation requests such as InstantiateVnf or ChangeVnfFlavor, and/or in the grant response. The NFVO may choose to override in the grant response external and/or externally-managed VL instances that have been passed previously in the associated VNF lifecycle management request, if the lifecycle management request has originated from the NFVO itself. ")
 
 	@Valid
 
@@ -558,7 +558,7 @@ public class Grant {
 	 *
 	 * @return extManagedVirtualLinks
 	 **/
-	@ApiModelProperty(value = "Information about internal VLs that are managed by other entities than the VNFM. The indication of externally-managed internal VLs is needed in case networks have been pre-configured for use with certain VNFs, for instance to ensure that these networks have certain properties such as security or acceleration features, or to address particular network topologies. The present document assumes that externally-managed internal VLs are managed by the NFVO and created towards the VIM. External and/or externally-managed internal VLs can be passed in VNF lifecycle management operation requests such as InstantiateVnf or ChangeVnfFlavor, and/or in the grant response. The NFVO may choose to override in the grant response external and/or externally-managed VL instances that have been passed previously in the associated VNF lifecycle management request, if the lifecycle management request has originated from the NFVO itself. ")
+	@Schema(description = "Information about internal VLs that are managed by other entities than the VNFM. The indication of externally-managed internal VLs is needed in case networks have been pre-configured for use with certain VNFs, for instance to ensure that these networks have certain properties such as security or acceleration features, or to address particular network topologies. The present document assumes that externally-managed internal VLs are managed by the NFVO and created towards the VIM. External and/or externally-managed internal VLs can be passed in VNF lifecycle management operation requests such as InstantiateVnf or ChangeVnfFlavor, and/or in the grant response. The NFVO may choose to override in the grant response external and/or externally-managed VL instances that have been passed previously in the associated VNF lifecycle management request, if the lifecycle management request has originated from the NFVO itself. ")
 
 	@Valid
 
@@ -581,7 +581,7 @@ public class Grant {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO, specific to the VNF and the LCM operation. ")
+	@Schema(description = "Additional parameters passed by the NFVO, specific to the VNF and the LCM operation. ")
 
 	@Valid
 
@@ -603,7 +603,7 @@ public class Grant {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

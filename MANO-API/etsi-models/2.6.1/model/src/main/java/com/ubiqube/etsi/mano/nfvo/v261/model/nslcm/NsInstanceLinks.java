@@ -29,13 +29,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Links to resources related to this resource.
  */
-@ApiModel(description = "Links to resources related to this resource.")
+@Schema(description = "Links to resources related to this resource.")
 @Validated
 
 
@@ -72,7 +72,7 @@ public class NsInstanceLinks {
 	 *
 	 * @return self
 	 **/
-	@ApiModelProperty(required = true, value = "URI of this resource. ")
+	@Schema(required = true, description = "URI of this resource. ")
 	@NotNull
 
 	@Valid
@@ -103,7 +103,7 @@ public class NsInstanceLinks {
 	 *
 	 * @return nestedNsInstances
 	 **/
-	@ApiModelProperty(value = "Links to resources related to this notification. ")
+	@Schema(description = "Links to resources related to this notification. ")
 
 	@Valid
 
@@ -127,7 +127,7 @@ public class NsInstanceLinks {
 	 *
 	 * @return instantiate
 	 **/
-	@ApiModelProperty(value = "Link to the \"instantiate\" task resource, if the related operation is possible based on the current status of this NS instance resource (i.e. NS instance in NOT_INSTANTIATED state). ")
+	@Schema(description = "Link to the \"instantiate\" task resource, if the related operation is possible based on the current status of this NS instance resource (i.e. NS instance in NOT_INSTANTIATED state). ")
 
 	@Valid
 
@@ -151,7 +151,7 @@ public class NsInstanceLinks {
 	 *
 	 * @return terminate
 	 **/
-	@ApiModelProperty(value = "Link to the \"terminate\" task resource, if the related operation is possible based on the current status of this NS instance resource (i.e. NS instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"terminate\" task resource, if the related operation is possible based on the current status of this NS instance resource (i.e. NS instance is in INSTANTIATED state). ")
 
 	@Valid
 
@@ -175,7 +175,7 @@ public class NsInstanceLinks {
 	 *
 	 * @return update
 	 **/
-	@ApiModelProperty(value = "Link to the \"update\" task resource, if the related operation is possible based on the current status of this NS instance resource (i.e. NS instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"update\" task resource, if the related operation is possible based on the current status of this NS instance resource (i.e. NS instance is in INSTANTIATED state). ")
 
 	@Valid
 
@@ -199,7 +199,7 @@ public class NsInstanceLinks {
 	 *
 	 * @return scale
 	 **/
-	@ApiModelProperty(value = "Link to the \"scale\" task resource, if the related operation is supported for this NS instance, and is possible based on the current status of this NS instance resource (i.e. NS instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"scale\" task resource, if the related operation is supported for this NS instance, and is possible based on the current status of this NS instance resource (i.e. NS instance is in INSTANTIATED state). ")
 
 	@Valid
 
@@ -223,7 +223,7 @@ public class NsInstanceLinks {
 	 *
 	 * @return heal
 	 **/
-	@ApiModelProperty(value = "Link to the \"heal\" task resource, if the related operation is supported for this NS instance, and is possible based on the current status of this NS instance resource (i.e. NS instance is in INSTANTIATED state). ")
+	@Schema(description = "Link to the \"heal\" task resource, if the related operation is supported for this NS instance, and is possible based on the current status of this NS instance resource (i.e. NS instance is in INSTANTIATED state). ")
 
 	@Valid
 

@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -28,34 +28,34 @@ import java.util.Date;
 /**
   * Information about available reports collected by this PM job. 
  **/
-@ApiModel(description="Information about available reports collected by this PM job. ")
+@Schema(description="Information about available reports collected by this PM job. ")
 public class PmJobsPmJobReports  {
   
-  @ApiModelProperty(required = true, value = "String formatted according to IETF RFC 3986. ")
+  @Schema(required = true, description = "String formatted according to IETF RFC 3986. ")
  /**
    * String formatted according to IETF RFC 3986. 
   **/
   private String href = null;
 
-  @ApiModelProperty(required = true, value = "Date-time stamp.  Representation: String formatted according to IETF RFC 3339. ")
+  @Schema(required = true, description = "Date-time stamp.  Representation: String formatted according to IETF RFC 3339. ")
  /**
    * Date-time stamp.  Representation: String formatted according to IETF RFC 3339. 
   **/
   private Date readyTime = null;
 
-  @ApiModelProperty(value = "Date-time stamp.  Representation: String formatted according to IETF RFC 3339. ")
+  @Schema(description = "Date-time stamp.  Representation: String formatted according to IETF RFC 3339. ")
  /**
    * Date-time stamp.  Representation: String formatted according to IETF RFC 3339. 
   **/
   private Date expiryTime = null;
 
-  @ApiModelProperty(value = "The size of the report file in bytes, if known. ")
+  @Schema(description = "The size of the report file in bytes, if known. ")
  /**
    * The size of the report file in bytes, if known. 
   **/
   private Integer fileSize = null;
 
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private PmJobsPmJobReportsLinks links = null;
  /**

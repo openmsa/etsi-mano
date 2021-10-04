@@ -22,13 +22,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Network address that has been configured on the CP. See NOTE 1.
  */
-@ApiModel(description = "Network address that has been configured on the CP. See NOTE 1. ")
+@Schema(description = "Network address that has been configured on the CP. See NOTE 1. ")
 @Validated
 public class CpAddressAddress {
 	@JsonProperty("macAddress")
@@ -47,7 +47,7 @@ public class CpAddressAddress {
 	 *
 	 * @return macAddress
 	 **/
-	@ApiModelProperty(value = "Mac address. See NOTE 2. ")
+	@Schema(description = "Mac address. See NOTE 2. ")
 
 	public String getMacAddress() {
 		return macAddress;
@@ -67,7 +67,7 @@ public class CpAddressAddress {
 	 *
 	 * @return ipAddress
 	 **/
-	@ApiModelProperty(value = "IP address. See NOTE 2. ")
+	@Schema(description = "IP address. See NOTE 2. ")
 
 	public String getIpAddress() {
 		return ipAddress;

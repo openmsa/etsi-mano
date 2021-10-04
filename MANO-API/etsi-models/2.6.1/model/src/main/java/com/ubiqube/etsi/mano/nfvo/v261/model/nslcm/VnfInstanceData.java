@@ -25,15 +25,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type specifies an existing VNF instance to be used in the NS instance
  * and if needed, the VNF Profile to use for this VNF instance. It shall comply
  * with the provisions defined in Table 6.5.3.19-1.
  */
-@ApiModel(description = "This type specifies an existing VNF instance to be used in the NS instance and if needed, the VNF Profile to use for this VNF instance. It shall comply with the provisions defined in Table 6.5.3.19-1. ")
+@Schema(description = "This type specifies an existing VNF instance to be used in the NS instance and if needed, the VNF Profile to use for this VNF instance. It shall comply with the provisions defined in Table 6.5.3.19-1. ")
 @Validated
 
 
@@ -54,7 +54,7 @@ public class VnfInstanceData {
 	 * 
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the existing VNF instance to be used in the NS. ")
+	@Schema(required = true, description = "Identifier of the existing VNF instance to be used in the NS. ")
 	@NotNull
 
 	public String getVnfInstanceId() {
@@ -77,7 +77,7 @@ public class VnfInstanceData {
 	 * 
 	 * @return vnfProfileId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of (Reference to) a vnfProfile defined in the NSD which the existing VNF instance shall be matched with. If not present, the NFVO will select the VnfProfile matching the information in the VNF instance. ")
+	@Schema(required = true, description = "Identifier of (Reference to) a vnfProfile defined in the NSD which the existing VNF instance shall be matched with. If not present, the NFVO will select the VnfProfile matching the information in the VNF instance. ")
 	@NotNull
 
 	public String getVnfProfileId() {

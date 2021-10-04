@@ -36,14 +36,14 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information that allows addressing a virtualised
  * resource that is used by a VNF instance.
  */
-@ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance. ")
+@Schema(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance. ")
 public class VirtualStorageResourceInfo {
 	@JsonProperty("id")
 	private String id = null;
@@ -71,7 +71,7 @@ public class VirtualStorageResourceInfo {
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of this VirtualStorageResourceInfo instance. ")
+	@Schema(required = true, description = "Identifier of this VirtualStorageResourceInfo instance. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -92,7 +92,7 @@ public class VirtualStorageResourceInfo {
 	 * @return virtualStorageDescId
 	 **/
 	@JsonProperty("virtualStorageDescId")
-	@ApiModelProperty(required = true, value = "Identifier of the VirtualStorageDesc in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the VirtualStorageDesc in the VNFD. ")
 	@NotNull
 	public String getVirtualStorageDescId() {
 		return virtualStorageDescId;
@@ -113,7 +113,7 @@ public class VirtualStorageResourceInfo {
 	 * @return storageResource
 	 **/
 	@JsonProperty("storageResource")
-	@ApiModelProperty(required = true, value = "Reference to the VirtualStorage resource. ")
+	@Schema(required = true, description = "Reference to the VirtualStorage resource. ")
 	@NotNull
 	public ResourceHandle getStorageResource() {
 		return storageResource;
@@ -135,7 +135,7 @@ public class VirtualStorageResourceInfo {
 	 * @return reservationId
 	 **/
 	@JsonProperty("reservationId")
-	@ApiModelProperty(value = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
+	@Schema(description = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
 	public String getReservationId() {
 		return reservationId;
 	}
@@ -155,7 +155,7 @@ public class VirtualStorageResourceInfo {
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
-	@ApiModelProperty(value = "Metadata about this resource. ")
+	@Schema(description = "Metadata about this resource. ")
 	public Map<String, String> getMetadata() {
 		return metadata;
 	}

@@ -27,15 +27,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information to heal a VNF that is part of an NS. The
  * NFVO shall then invoke the HealVNF operation towards the appropriate VNFM. It
  * shall comply with the provisions defined in Table 6.5.3.44-1.
  */
-@ApiModel(description = "This type represents the information to heal a VNF that is part of an NS.  The NFVO shall then invoke the HealVNF operation towards the appropriate VNFM.  It shall comply with the provisions defined in Table 6.5.3.44-1. ")
+@Schema(description = "This type represents the information to heal a VNF that is part of an NS.  The NFVO shall then invoke the HealVNF operation towards the appropriate VNFM.  It shall comply with the provisions defined in Table 6.5.3.44-1. ")
 @Validated
 
 
@@ -59,7 +59,7 @@ public class HealVnfData {
 	 *
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifies the VNF instance, part of the NS, requiring a healing action. ")
+	@Schema(required = true, description = "Identifies the VNF instance, part of the NS, requiring a healing action. ")
 	@NotNull
 
 	public String getVnfInstanceId() {
@@ -80,7 +80,7 @@ public class HealVnfData {
 	 *
 	 * @return cause
 	 **/
-	@ApiModelProperty(value = "Indicates the reason why a healing procedure is required. ")
+	@Schema(description = "Indicates the reason why a healing procedure is required. ")
 
 	public String getCause() {
 		return cause;
@@ -102,7 +102,7 @@ public class HealVnfData {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed. EXAMPLE: Input parameters to VNF-specific healing procedures. ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the healing process, specific to the VNF being healed. EXAMPLE: Input parameters to VNF-specific healing procedures. ")
 
 	@Valid
 

@@ -18,42 +18,42 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import java.util.List;
 
 /**
   * This type represents subscription filter criteria to match NS instances. 
  **/
-@ApiModel(description="This type represents subscription filter criteria to match NS instances. ")
+@Schema(description="This type represents subscription filter criteria to match NS instances. ")
 public class SubscriptionsPmSubscriptionFilterNsInstanceSubscriptionFilter  {
   
-  @ApiModelProperty(value = "If present, match NS instances that were created based on a NSD identified by one of the nsdId values listed in this attribute. ")
+  @Schema(description = "If present, match NS instances that were created based on a NSD identified by one of the nsdId values listed in this attribute. ")
  /**
    * If present, match NS instances that were created based on a NSD identified by one of the nsdId values listed in this attribute. 
   **/
   private List<String> nsdIds = null;
 
-  @ApiModelProperty(value = "If present, match NS instances that contain VNF instances that were created based on a VNFD identified by one of the vnfdId values listed in this attribute. ")
+  @Schema(description = "If present, match NS instances that contain VNF instances that were created based on a VNFD identified by one of the vnfdId values listed in this attribute. ")
  /**
    * If present, match NS instances that contain VNF instances that were created based on a VNFD identified by one of the vnfdId values listed in this attribute. 
   **/
   private List<String> vnfdIds = null;
 
-  @ApiModelProperty(value = "If present, match NS instances that contain PNFs that are represented by a PNFD identified by one of the pnfdId values listed in this attribute. ")
+  @Schema(description = "If present, match NS instances that contain PNFs that are represented by a PNFD identified by one of the pnfdId values listed in this attribute. ")
  /**
    * If present, match NS instances that contain PNFs that are represented by a PNFD identified by one of the pnfdId values listed in this attribute. 
   **/
   private List<String> pnfdIds = null;
 
-  @ApiModelProperty(value = "If present, match NS instances with an instance identifier listed in this attribute. ")
+  @Schema(description = "If present, match NS instances with an instance identifier listed in this attribute. ")
  /**
    * If present, match NS instances with an instance identifier listed in this attribute. 
   **/
   private List<String> nsInstanceIds = null;
 
-  @ApiModelProperty(value = "If present, match NS instances with a NS Instance Name listed in this attribute. ")
+  @Schema(description = "If present, match NS instances with a NS Instance Name listed in this attribute. ")
  /**
    * If present, match NS instances with a NS Instance Name listed in this attribute. 
   **/

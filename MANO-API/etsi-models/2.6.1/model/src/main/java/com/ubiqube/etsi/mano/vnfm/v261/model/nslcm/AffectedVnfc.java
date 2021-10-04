@@ -40,14 +40,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information about added, deleted, modified and temporary
  * VNFCs.
  */
-@ApiModel(description = "This type provides information about added, deleted, modified and temporary VNFCs.   ")
+@Schema(description = "This type provides information about added, deleted, modified and temporary VNFCs.   ")
 
 public class AffectedVnfc {
 	@JsonProperty("id")
@@ -124,7 +124,7 @@ public class AffectedVnfc {
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of the Vnfc instance, identifying the applicable \"vnfcResourceInfo\" entry in the \"VnfInstance\" data type. ")
+	@Schema(required = true, description = "Identifier of the Vnfc instance, identifying the applicable \"vnfcResourceInfo\" entry in the \"VnfInstance\" data type. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -145,7 +145,7 @@ public class AffectedVnfc {
 	 * @return vduId
 	 **/
 	@JsonProperty("vduId")
-	@ApiModelProperty(required = true, value = "Identifier of the related VDU in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the related VDU in the VNFD. ")
 	@NotNull
 	public String getVduId() {
 		return vduId;
@@ -168,7 +168,7 @@ public class AffectedVnfc {
 	 * @return changeType
 	 **/
 	@JsonProperty("changeType")
-	@ApiModelProperty(required = true, value = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVnfc structure exists as long as the temporary resource exists. ")
+	@Schema(required = true, description = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVnfc structure exists as long as the temporary resource exists. ")
 	@NotNull
 	public ChangeTypeEnum getChangeType() {
 		return changeType;
@@ -191,7 +191,7 @@ public class AffectedVnfc {
 	 * @return computeResource
 	 **/
 	@JsonProperty("computeResource")
-	@ApiModelProperty(required = true, value = "Reference to the VirtualCompute resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. ")
+	@Schema(required = true, description = "Reference to the VirtualCompute resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. ")
 	@NotNull
 	public ResourceHandle getComputeResource() {
 		return computeResource;
@@ -214,7 +214,7 @@ public class AffectedVnfc {
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
-	@ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfcResourceInfo structure. ")
+	@Schema(description = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfcResourceInfo structure. ")
 	public Map<String, String> getMetadata() {
 		return metadata;
 	}
@@ -245,7 +245,7 @@ public class AffectedVnfc {
 	 * @return affectedVnfcCpIds
 	 **/
 	@JsonProperty("affectedVnfcCpIds")
-	@ApiModelProperty(value = "Identifiers of CP(s) of the VNFC instance that were affected by the change.  Shall be present for those affected CPs of the VNFC instance that are associated to an external CP of the VNF instance. May be present for further affected CPs of the VNFC instance. ")
+	@Schema(description = "Identifiers of CP(s) of the VNFC instance that were affected by the change.  Shall be present for those affected CPs of the VNFC instance that are associated to an external CP of the VNF instance. May be present for further affected CPs of the VNFC instance. ")
 	public List<String> getAffectedVnfcCpIds() {
 		return affectedVnfcCpIds;
 	}
@@ -276,7 +276,7 @@ public class AffectedVnfc {
 	 * @return addedStorageResourceIds
 	 **/
 	@JsonProperty("addedStorageResourceIds")
-	@ApiModelProperty(value = "References to VirtualStorage resources that have been added. Each value refers to a VirtualStorageResourceInfo item in the VnfInstance that was added to the VNFC. It shall be provided if at least one storage resource was added to the VNFC. ")
+	@Schema(description = "References to VirtualStorage resources that have been added. Each value refers to a VirtualStorageResourceInfo item in the VnfInstance that was added to the VNFC. It shall be provided if at least one storage resource was added to the VNFC. ")
 	public List<String> getAddedStorageResourceIds() {
 		return addedStorageResourceIds;
 	}
@@ -307,7 +307,7 @@ public class AffectedVnfc {
 	 * @return removedStorageResourceIds
 	 **/
 	@JsonProperty("removedStorageResourceIds")
-	@ApiModelProperty(value = "References to VirtualStorage resources that have been removed. The value contains the identifier of a VirtualStorageResourceInfo item that has been removed from the VNFC, and might no longer exist in the VnfInstance. It shall be provided if at least one storage resource was removed from the VNFC. ")
+	@Schema(description = "References to VirtualStorage resources that have been removed. The value contains the identifier of a VirtualStorageResourceInfo item that has been removed from the VNFC, and might no longer exist in the VnfInstance. It shall be provided if at least one storage resource was removed from the VNFC. ")
 	public List<String> getRemovedStorageResourceIds() {
 		return removedStorageResourceIds;
 	}

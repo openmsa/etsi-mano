@@ -37,7 +37,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.CpProtocolInfo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * VnfInstanceInstantiatedVnfInfoExtCpInfo
@@ -67,7 +67,7 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of the external CP instance and the related information instance. ")
+	@Schema(required = true, description = "Identifier of the external CP instance and the related information instance. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -88,7 +88,7 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 	 * @return cpdId
 	 **/
 	@JsonProperty("cpdId")
-	@ApiModelProperty(required = true, value = "Identifier of the external CPD, VnfExtCpd, in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the external CPD, VnfExtCpd, in the VNFD. ")
 	@NotNull
 	public String getCpdId() {
 		return cpdId;
@@ -117,7 +117,7 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 	 * @return cpProtocolInfo
 	 **/
 	@JsonProperty("cpProtocolInfo")
-	@ApiModelProperty(value = "Network protocol information for this CP. ")
+	@Schema(description = "Network protocol information for this CP. ")
 	public List<CpProtocolInfo> getCpProtocolInfo() {
 		return cpProtocolInfo;
 	}
@@ -132,14 +132,12 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 	}
 
 	/**
-	 * Identifier of the \&quot;extLinkPortInfo\&quot; structure inside the the
-	 * \&quot;extVirtualLinkInfo\&quot; structure. Shall be present if the CP is
-	 * associated to a link port.
+	 * Identifier of the \&quot;extLinkPortInfo\&quot; structure inside the the \&quot;extVirtualLinkInfo\&quot; structure. Shall be present if the CP is associated to a link port.
 	 *
 	 * @return extLinkPortId
 	 **/
 	@JsonProperty("extLinkPortId")
-	@ApiModelProperty(value = "Identifier of the \"extLinkPortInfo\" structure inside the  the \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to a link port. ")
+	@Schema(description = "Identifier of the \"extLinkPortInfo\" structure inside the  the \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to a link port. ")
 	public String getExtLinkPortId() {
 		return extLinkPortId;
 	}
@@ -162,8 +160,7 @@ public class VnfInstanceInstantiatedVnfInfoExtCpInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

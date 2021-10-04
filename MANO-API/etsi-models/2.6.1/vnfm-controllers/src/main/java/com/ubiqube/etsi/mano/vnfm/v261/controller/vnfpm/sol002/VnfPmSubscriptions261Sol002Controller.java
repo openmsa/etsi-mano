@@ -20,7 +20,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,8 +36,6 @@ import com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002.FaultmngtSubscrip
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nsperfo.PmSubscriptionRequest;
-
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:14:16.145+01:00")
 
 /**
  *
@@ -61,9 +58,9 @@ public class VnfPmSubscriptions261Sol002Controller implements VnfPmSubscriptions
 	}
 
 	@Override
-	public ResponseEntity<PmSubscription> subscriptionsPost(@Valid final PmSubscriptionRequest pmSubscriptionRequest) throws URISyntaxException {
+	public ResponseEntity<PmSubscription> subscriptionsPost(@Valid final PmSubscriptionRequest pmSubscriptionRequest) {
 		final PmSubscription res = subscriptionService.create(pmSubscriptionRequest, PmSubscription.class, VnfPmSubscriptions261Sol002Controller::makeLinks, SubscriptionType.VNFPM);
-		final URI location = new URI(res.getLinks().getSelf().getHref());
+		final URI location = URI.create(res.getLinks().getSelf().getHref());
 		return ResponseEntity.created(location).body(res);
 	}
 

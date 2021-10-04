@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * IpOverEthernetAddressDataIpAddresses
@@ -94,7 +94,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	 *
 	 * @return type
 	 **/
-	@ApiModelProperty(required = true, value = "The type of the IP addresses. Permitted values: IPV4, IPV6. ")
+	@Schema(required = true, description = "The type of the IP addresses. Permitted values: IPV4, IPV6. ")
 	@NotNull
 
 	public TypeEnum getType() {
@@ -119,13 +119,11 @@ public class IpOverEthernetAddressDataIpAddresses {
 	}
 
 	/**
-	 * Fixed addresses to assign (from the subnet defined by \"subnetId\" if
-	 * provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or
-	 * \"ipAddressRange\" shall be present.
+	 * Fixed addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present.
 	 *
 	 * @return fixedAddresses
 	 **/
-	@ApiModelProperty(value = "Fixed addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present. ")
+	@Schema(description = "Fixed addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present. ")
 
 	public List<String> getFixedAddresses() {
 		return fixedAddresses;
@@ -141,13 +139,11 @@ public class IpOverEthernetAddressDataIpAddresses {
 	}
 
 	/**
-	 * Number of dynamic addresses to assign (from the subnet defined by
-	 * \"subnetId\" if provided). Exactly one of \"fixedAddresses\",
-	 * \"numDynamicAddresses\" or \"ipAddressRange\" shall be present.
+	 * Number of dynamic addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present.
 	 *
 	 * @return numDynamicAddresses
 	 **/
-	@ApiModelProperty(value = "Number of dynamic addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present. ")
+	@Schema(description = "Number of dynamic addresses to assign (from the subnet defined by \"subnetId\" if provided). Exactly one of \"fixedAddresses\", \"numDynamicAddresses\" or \"ipAddressRange\" shall be present. ")
 
 	public Integer getNumDynamicAddresses() {
 		return numDynamicAddresses;
@@ -167,7 +163,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	 *
 	 * @return addressRange
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -185,13 +181,11 @@ public class IpOverEthernetAddressDataIpAddresses {
 	}
 
 	/**
-	 * Subnet defined by the identifier of the subnet resource in the VIM. In case
-	 * this attribute is present, IP addresses from that subnet will be assigned;
-	 * otherwise, IP addresses not bound to a subnet will be assigned.
+	 * Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses from that subnet will be assigned; otherwise, IP addresses not bound to a subnet will be assigned.
 	 *
 	 * @return subnetId
 	 **/
-	@ApiModelProperty(value = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses from that subnet will be assigned; otherwise, IP addresses not bound to a subnet will be assigned. ")
+	@Schema(description = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses from that subnet will be assigned; otherwise, IP addresses not bound to a subnet will be assigned. ")
 
 	public String getSubnetId() {
 		return subnetId;
@@ -237,8 +231,7 @@ public class IpOverEthernetAddressDataIpAddresses {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

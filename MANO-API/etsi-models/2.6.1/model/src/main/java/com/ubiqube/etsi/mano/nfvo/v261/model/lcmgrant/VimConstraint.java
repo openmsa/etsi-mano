@@ -29,15 +29,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information regarding a VIM selection constraint. A set of
  * such constraints may be sent by the VNFM to the NFVO to influence the VIM
  * selection decisions made by the NFVO as part of the granting process.
  */
-@ApiModel(description = "This type provides information regarding a VIM selection constraint. A set of such constraints may be sent by the VNFM to the NFVO to influence the VIM selection decisions made by the NFVO as part of the granting process. ")
+@Schema(description = "This type provides information regarding a VIM selection constraint. A set of such constraints may be sent by the VNFM to the NFVO to influence the VIM selection decisions made by the NFVO as part of the granting process. ")
 @Validated
 
 
@@ -61,7 +61,7 @@ public class VimConstraint {
 	 * 
 	 * @return sameResourceGroup
 	 **/
-	@ApiModelProperty(value = "If present and set to true, this signals that the constraint applies not only to the same VIM connection, but also to the same infrastructure resource group. ")
+	@Schema(description = "If present and set to true, this signals that the constraint applies not only to the same VIM connection, but also to the same infrastructure resource group. ")
 
 	public Boolean isSameResourceGroup() {
 		return sameResourceGroup;
@@ -90,7 +90,7 @@ public class VimConstraint {
 	 * 
 	 * @return resource
 	 **/
-	@ApiModelProperty(required = true, value = "References to resources in the constraint rule. The NFVO shall ensure that all resources in this list are managed through the same VIM connection. If \"sameResourceGroup\" is set to true, the NFVO shall further ensure that all resources in this list are part of the same infrastructure resource group in that VIM connection. ")
+	@Schema(required = true, description = "References to resources in the constraint rule. The NFVO shall ensure that all resources in this list are managed through the same VIM connection. If \"sameResourceGroup\" is set to true, the NFVO shall further ensure that all resources in this list are part of the same infrastructure resource group in that VIM connection. ")
 	@NotNull
 
 	@Valid

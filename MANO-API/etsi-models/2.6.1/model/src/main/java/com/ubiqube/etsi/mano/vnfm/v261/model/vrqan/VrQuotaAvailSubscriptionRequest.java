@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthentication;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription request related to notifications related to the availability of the virtualised resources quotas.
  */
-@ApiModel(description = "This type represents a subscription request related to notifications related to the availability of the virtualised resources quotas. ")
+@Schema(description = "This type represents a subscription request related to notifications related to the availability of the virtualised resources quotas. ")
 @Validated
 
 public class VrQuotaAvailSubscriptionRequest {
@@ -55,7 +55,7 @@ public class VrQuotaAvailSubscriptionRequest {
 	 *
 	 * @return filter
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public VrQuotaAvailNotificationsFilter getFilter() {
@@ -76,7 +76,7 @@ public class VrQuotaAvailSubscriptionRequest {
 	 *
 	 * @return callbackUri
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getCallbackUri() {
@@ -97,7 +97,7 @@ public class VrQuotaAvailSubscriptionRequest {
 	 *
 	 * @return authentication
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public SubscriptionAuthentication getAuthentication() {

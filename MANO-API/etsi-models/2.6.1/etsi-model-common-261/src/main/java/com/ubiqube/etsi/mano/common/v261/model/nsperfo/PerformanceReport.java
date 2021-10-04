@@ -27,15 +27,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type defines the format of a performance report provided by the VNFM to
  * the EM as a result of collecting performance information as part of a PM job.
  * The type shall comply with the provisions defined in table 6.5.2.10-1.
  */
-@ApiModel(description = "This type defines the format of a performance report provided by the VNFM to the EM as a result of collecting performance information as part of a PM job. The type shall comply with the provisions defined in table 6.5.2.10-1. ")
+@Schema(description = "This type defines the format of a performance report provided by the VNFM to the EM as a result of collecting performance information as part of a PM job. The type shall comply with the provisions defined in table 6.5.2.10-1. ")
 @Validated
 public class PerformanceReport {
 	@JsonProperty("entries")
@@ -62,7 +62,7 @@ public class PerformanceReport {
 	 *
 	 * @return entries
 	 **/
-	@ApiModelProperty(value = "List of performance information entries. Each performance report entry is for a given metric of a given object (i.e. VNF instance), but can include multiple collected values. ")
+	@Schema(description = "List of performance information entries. Each performance report entry is for a given metric of a given object (i.e. VNF instance), but can include multiple collected values. ")
 
 	@Valid
 

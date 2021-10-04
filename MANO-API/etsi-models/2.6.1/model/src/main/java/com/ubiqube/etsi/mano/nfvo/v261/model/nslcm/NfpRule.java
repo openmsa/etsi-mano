@@ -29,8 +29,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * The NfpRule data type is an expression of the conditions that shall be met in
@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiModelProperty;
  * condition are matched by those in the packet. It shall comply with the
  * provisions defined in Table 6.5.3.40-1.
  */
-@ApiModel(description = "The NfpRule data type is an expression of the conditions that shall be met in order for the NFP to be applicable to the packet. The condition acts as a flow classifier and it is met only if all the values expressed in the condition are matched by those in the packet. It shall comply with the provisions defined in Table 6.5.3.40-1. ")
+@Schema(description = "The NfpRule data type is an expression of the conditions that shall be met in order for the NFP to be applicable to the packet. The condition acts as a flow classifier and it is met only if all the values expressed in the condition are matched by those in the packet. It shall comply with the provisions defined in Table 6.5.3.40-1. ")
 @Validated
 
 
@@ -157,7 +157,7 @@ public class NfpRule {
 	 * 
 	 * @return etherDestinationAddress
 	 **/
-	@ApiModelProperty(value = "Indicates a destination Mac address. ")
+	@Schema(description = "Indicates a destination Mac address. ")
 
 	public String getEtherDestinationAddress() {
 		return etherDestinationAddress;
@@ -177,7 +177,7 @@ public class NfpRule {
 	 * 
 	 * @return etherSourceAddress
 	 **/
-	@ApiModelProperty(value = "Indicates a source Mac address. ")
+	@Schema(description = "Indicates a source Mac address. ")
 
 	public String getEtherSourceAddress() {
 		return etherSourceAddress;
@@ -197,7 +197,7 @@ public class NfpRule {
 	 * 
 	 * @return etherType
 	 **/
-	@ApiModelProperty(value = "Human readable description for the VNFFG. ")
+	@Schema(description = "Human readable description for the VNFFG. ")
 
 	public EtherTypeEnum getEtherType() {
 		return etherType;
@@ -226,7 +226,7 @@ public class NfpRule {
 	 * 
 	 * @return vlanTag
 	 **/
-	@ApiModelProperty(value = "Indicates a VLAN identifier in an IEEE 802.1Q-2018 tag [6] Multiple tags can be included for QinQ stacking. See note. ")
+	@Schema(description = "Indicates a VLAN identifier in an IEEE 802.1Q-2018 tag [6] Multiple tags can be included for QinQ stacking. See note. ")
 
 	public List<String> getVlanTag() {
 		return vlanTag;
@@ -250,7 +250,7 @@ public class NfpRule {
 	 * 
 	 * @return protocol
 	 **/
-	@ApiModelProperty(value = "Indicates the L4 protocol, For IPv4 [7] this corresponds to the field called \"Protocol\" to identify the next level protocol. For IPv6 [28] this corresponds to the field is called the \"Next Header\" field. Permitted values: Any keyword defined in the IANA protocol registry [1], e.g.: TCP UDP ICMP ")
+	@Schema(description = "Indicates the L4 protocol, For IPv4 [7] this corresponds to the field called \"Protocol\" to identify the next level protocol. For IPv6 [28] this corresponds to the field is called the \"Next Header\" field. Permitted values: Any keyword defined in the IANA protocol registry [1], e.g.: TCP UDP ICMP ")
 
 	public ProtocolEnum getProtocol() {
 		return protocol;
@@ -273,7 +273,7 @@ public class NfpRule {
 	 * 
 	 * @return dscp
 	 **/
-	@ApiModelProperty(value = "For IPv4 [7] a string of \"0\" and \"1\" digits that corresponds to the 6-bit Differentiated Services Code Point (DSCP) field of the IP header. For IPv6 [28] a string of \"0\" and \"1\" digits that corresponds to the 6 differentiated services bits of the traffic class header field ")
+	@Schema(description = "For IPv4 [7] a string of \"0\" and \"1\" digits that corresponds to the 6-bit Differentiated Services Code Point (DSCP) field of the IP header. For IPv6 [28] a string of \"0\" and \"1\" digits that corresponds to the 6 differentiated services bits of the traffic class header field ")
 
 	public String getDscp() {
 		return dscp;
@@ -293,7 +293,7 @@ public class NfpRule {
 	 * 
 	 * @return sourcePortRange
 	 **/
-	@ApiModelProperty(value = "Indicates a range of source ports ")
+	@Schema(description = "Indicates a range of source ports ")
 
 	@Valid
 
@@ -315,7 +315,7 @@ public class NfpRule {
 	 * 
 	 * @return destinationPortRange
 	 **/
-	@ApiModelProperty(value = "Indicates a range of destination ports. ")
+	@Schema(description = "Indicates a range of destination ports. ")
 
 	@Valid
 
@@ -337,7 +337,7 @@ public class NfpRule {
 	 * 
 	 * @return sourceIpAddressPrefix
 	 **/
-	@ApiModelProperty(value = "Indicates the source IP address range in CIDR format. ")
+	@Schema(description = "Indicates the source IP address range in CIDR format. ")
 
 	public String getSourceIpAddressPrefix() {
 		return sourceIpAddressPrefix;
@@ -357,7 +357,7 @@ public class NfpRule {
 	 * 
 	 * @return destinationIpAddressPrefix
 	 **/
-	@ApiModelProperty(value = "Indicates the destination IP address range in CIDR format. ")
+	@Schema(description = "Indicates the destination IP address range in CIDR format. ")
 
 	public String getDestinationIpAddressPrefix() {
 		return destinationIpAddressPrefix;
@@ -385,7 +385,7 @@ public class NfpRule {
 	 * 
 	 * @return extendedCriteria
 	 **/
-	@ApiModelProperty(value = "Indicates values of specific bits in a frame. ")
+	@Schema(description = "Indicates values of specific bits in a frame. ")
 
 	@Valid
 

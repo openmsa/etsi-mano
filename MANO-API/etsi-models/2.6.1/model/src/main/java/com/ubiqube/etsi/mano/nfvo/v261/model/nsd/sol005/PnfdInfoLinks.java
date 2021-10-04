@@ -27,13 +27,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Links to resources related to this resource.
  */
-@ApiModel(description = "Links to resources related to this resource. ")
+@Schema(description = "Links to resources related to this resource. ")
 @Validated
 
 
@@ -54,7 +54,7 @@ public class PnfdInfoLinks {
 	 *
 	 * @return self
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -77,7 +77,7 @@ public class PnfdInfoLinks {
 	 *
 	 * @return pnfdContent
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

@@ -28,8 +28,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription filter related to notifications about NS
@@ -41,7 +41,7 @@ import io.swagger.annotations.ApiModelProperty;
  * matches (logical \&quot;or\&quot; between the values of one filter
  * attribute)..
  */
-@ApiModel(description = "This type represents a subscription filter related to notifications about NS faults.  It shall comply with the provisions defined in Table 8.5.3.2-1. At a particular nesting level in the filter structure, the following applies:  All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes).  If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute).. ")
+@Schema(description = "This type represents a subscription filter related to notifications about NS faults.  It shall comply with the provisions defined in Table 8.5.3.2-1. At a particular nesting level in the filter structure, the following applies:  All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes).  If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute).. ")
 @Validated
 public class FmNotificationsFilter {
 	@JsonProperty("nsInstanceSubscriptionFilter")
@@ -110,7 +110,7 @@ public class FmNotificationsFilter {
 	 *
 	 * @return nsInstanceSubscriptionFilter
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public NsInstanceSubscriptionFilter getNsInstanceSubscriptionFilter() {
@@ -140,7 +140,7 @@ public class FmNotificationsFilter {
 	 *
 	 * @return notificationTypes
 	 **/
-	@ApiModelProperty(value = "Match particular notification types. Permitted values: - AlarmNotification - AlarmClearedNotification - AlarmListRebuiltNotification. ")
+	@Schema(description = "Match particular notification types. Permitted values: - AlarmNotification - AlarmClearedNotification - AlarmListRebuiltNotification. ")
 
 	public List<NotificationTypesEnum> getNotificationTypes() {
 		return notificationTypes;
@@ -169,7 +169,7 @@ public class FmNotificationsFilter {
 	 *
 	 * @return faultyResourceTypes
 	 **/
-	@ApiModelProperty(value = "Match alarms related to NSs with a faulty resource type listed in this attribute. ")
+	@Schema(description = "Match alarms related to NSs with a faulty resource type listed in this attribute. ")
 	@Valid
 	public List<FaultyResourceType> getFaultyResourceTypes() {
 		return faultyResourceTypes;
@@ -197,7 +197,7 @@ public class FmNotificationsFilter {
 	 *
 	 * @return perceivedSeverities
 	 **/
-	@ApiModelProperty(value = "Match VNF alarms with a perceived severity listed in this attribute. ")
+	@Schema(description = "Match VNF alarms with a perceived severity listed in this attribute. ")
 	@Valid
 	public List<PerceivedSeverityType> getPerceivedSeverities() {
 		return perceivedSeverities;
@@ -225,7 +225,7 @@ public class FmNotificationsFilter {
 	 *
 	 * @return eventTypes
 	 **/
-	@ApiModelProperty(value = "Match VNF alarms related to NSs with an event type listed  in this attribute. ")
+	@Schema(description = "Match VNF alarms related to NSs with an event type listed  in this attribute. ")
 	@Valid
 	public List<EventType> getEventTypes() {
 		return eventTypes;
@@ -253,7 +253,7 @@ public class FmNotificationsFilter {
 	 *
 	 * @return probableCauses
 	 **/
-	@ApiModelProperty(value = "Match VNF alarms with a probable cause listed in this attribute. ")
+	@Schema(description = "Match VNF alarms with a probable cause listed in this attribute. ")
 
 	public List<String> getProbableCauses() {
 		return probableCauses;

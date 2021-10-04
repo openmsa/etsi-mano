@@ -38,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * IpOverEthernetAddressInfoIpAddresses
@@ -101,7 +101,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 * @return type
 	 **/
 	@JsonProperty("type")
-	@ApiModelProperty(required = true, value = "The type of the IP addresses. Permitted values: IPV4, IPV6. ")
+	@Schema(required = true, description = "The type of the IP addresses. Permitted values: IPV4, IPV6. ")
 	@NotNull
 	public TypeEnum getType() {
 		return type;
@@ -125,13 +125,12 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	}
 
 	/**
-	 * Fixed addresses assigned (from the subnet defined by \&quot;subnetId\&quot;
-	 * if provided).
+	 * Fixed addresses assigned (from the subnet defined by \&quot;subnetId\&quot; if provided).
 	 *
 	 * @return addresses
 	 **/
 	@JsonProperty("addresses")
-	@ApiModelProperty(value = "Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). ")
+	@Schema(description = "Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). ")
 	public List<String> getAddresses() {
 		return addresses;
 	}
@@ -146,15 +145,12 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	}
 
 	/**
-	 * Indicates whether this set of addresses was assigned dynamically (true) or
-	 * based on address information provided as input from the API consumer (false).
-	 * Shall be present if \&quot;addresses\&quot; is present and shall be absent
-	 * otherwise.
+	 * Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \&quot;addresses\&quot; is present and shall be absent otherwise.
 	 *
 	 * @return isDynamic
 	 **/
 	@JsonProperty("isDynamic")
-	@ApiModelProperty(value = "Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise. ")
+	@Schema(description = "Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise. ")
 	public Boolean isIsDynamic() {
 		return isDynamic;
 	}
@@ -174,7 +170,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 * @return addressRange
 	 **/
 	@JsonProperty("addressRange")
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 	public IpOverEthernetAddressInfoAddressRange getAddressRange() {
 		return addressRange;
 	}
@@ -189,13 +185,12 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	}
 
 	/**
-	 * Subnet defined by the identifier of the subnet resource in the VIM. In case
-	 * this attribute is present, IP addresses are bound to that subnet.
+	 * Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet.
 	 *
 	 * @return subnetId
 	 **/
 	@JsonProperty("subnetId")
-	@ApiModelProperty(value = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet. ")
+	@Schema(description = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet. ")
 	public String getSubnetId() {
 		return subnetId;
 	}
@@ -219,8 +214,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

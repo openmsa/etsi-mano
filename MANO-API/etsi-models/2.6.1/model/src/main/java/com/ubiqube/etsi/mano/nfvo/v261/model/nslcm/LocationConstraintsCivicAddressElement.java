@@ -25,13 +25,12 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * LocationConstraintsCivicAddressElement
  */
 @Validated
-
 
 public class LocationConstraintsCivicAddressElement {
 	@JsonProperty("caType")
@@ -46,12 +45,11 @@ public class LocationConstraintsCivicAddressElement {
 	}
 
 	/**
-	 * Describe the content type of caValue. The value of caType shall comply with
-	 * Section 3.4 of IETF RFC 4776 [13].
-	 * 
+	 * Describe the content type of caValue. The value of caType shall comply with Section 3.4 of IETF RFC 4776 [13].
+	 *
 	 * @return caType
 	 **/
-	@ApiModelProperty(required = true, value = "Describe the content type of caValue. The value of caType shall comply with Section 3.4 of IETF RFC 4776 [13]. ")
+	@Schema(required = true, description = "Describe the content type of caValue. The value of caType shall comply with Section 3.4 of IETF RFC 4776 [13]. ")
 	@NotNull
 
 	public Integer getCaType() {
@@ -68,12 +66,11 @@ public class LocationConstraintsCivicAddressElement {
 	}
 
 	/**
-	 * Content of civic address element corresponding to the caType. The format
-	 * caValue shall comply with Section 3.4 of IETF RFC 4776 [13].
-	 * 
+	 * Content of civic address element corresponding to the caType. The format caValue shall comply with Section 3.4 of IETF RFC 4776 [13].
+	 *
 	 * @return caValue
 	 **/
-	@ApiModelProperty(required = true, value = "Content of civic address element corresponding to the caType. The format caValue shall comply with Section 3.4 of IETF RFC 4776 [13]. ")
+	@Schema(required = true, description = "Content of civic address element corresponding to the caType. The format caValue shall comply with Section 3.4 of IETF RFC 4776 [13]. ")
 	@NotNull
 
 	public String getCaValue() {
@@ -114,8 +111,7 @@ public class LocationConstraintsCivicAddressElement {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

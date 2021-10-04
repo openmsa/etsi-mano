@@ -25,13 +25,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Information about available reports collected by this PM job.
  */
-@ApiModel(description = "Information about available reports collected by this PM job. ")
+@Schema(description = "Information about available reports collected by this PM job. ")
 @Validated
 
 
@@ -58,7 +58,7 @@ public class PmJobReports {
 	 * 
 	 * @return href
 	 **/
-	@ApiModelProperty(required = true, value = "The Uri where the report can be obtained. ")
+	@Schema(required = true, description = "The Uri where the report can be obtained. ")
 	@NotNull
 
 	public String getHref() {
@@ -79,7 +79,7 @@ public class PmJobReports {
 	 * 
 	 * @return readyTime
 	 **/
-	@ApiModelProperty(required = true, value = "The time when the report was made available. ")
+	@Schema(required = true, description = "The time when the report was made available. ")
 	@NotNull
 
 	public String getReadyTime() {
@@ -100,7 +100,7 @@ public class PmJobReports {
 	 * 
 	 * @return expiryTime
 	 **/
-	@ApiModelProperty(value = "The time when the report will expire. ")
+	@Schema(description = "The time when the report will expire. ")
 
 	public String getExpiryTime() {
 		return expiryTime;
@@ -120,7 +120,7 @@ public class PmJobReports {
 	 * 
 	 * @return fileSize
 	 **/
-	@ApiModelProperty(value = "The size of the report file in bytes, if known. ")
+	@Schema(description = "The size of the report file in bytes, if known. ")
 
 	public Integer getFileSize() {
 		return fileSize;

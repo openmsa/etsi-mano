@@ -30,8 +30,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type describes the information invoked by the NFVO to change the
@@ -45,7 +45,7 @@ import io.swagger.annotations.ApiModelProperty;
  * another one with the modified configuration. This type shall comply with the
  * provisions defined in Table 6.5.3.33-1.
  */
-@ApiModel(description = "This type describes the information invoked by the NFVO to change the external VNF connectivity information maintained by the VNFM. The types of changes that this operation supports are: 1) Disconnect the external CPs that are connected to a particular external VL, and connect them to a different external VL. 2) Change the connectivity parameters of the existing external CPs, including changing addresses. NOTE: Depending on the capabilities of the underlying VIM resources, certain changes (e.g. modifying the IP address assignment) might not be supported without deleting the resource and creating another one with the modified configuration. This type shall comply with the provisions defined in Table 6.5.3.33-1. ")
+@Schema(description = "This type describes the information invoked by the NFVO to change the external VNF connectivity information maintained by the VNFM. The types of changes that this operation supports are: 1) Disconnect the external CPs that are connected to a particular external VL, and connect them to a different external VL. 2) Change the connectivity parameters of the existing external CPs, including changing addresses. NOTE: Depending on the capabilities of the underlying VIM resources, certain changes (e.g. modifying the IP address assignment) might not be supported without deleting the resource and creating another one with the modified configuration. This type shall comply with the provisions defined in Table 6.5.3.33-1. ")
 @Validated
 
 
@@ -70,7 +70,7 @@ public class ChangeExtVnfConnectivityData {
 	 *
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF instance. ")
+	@Schema(required = true, description = "Identifier of the VNF instance. ")
 	@NotNull
 
 	public String getVnfInstanceId() {
@@ -96,7 +96,7 @@ public class ChangeExtVnfConnectivityData {
 	 *
 	 * @return extVirtualLink
 	 **/
-	@ApiModelProperty(required = true, value = "Information about external VLs to change (e.g. connect the VNF to). ")
+	@Schema(required = true, description = "Information about external VLs to change (e.g. connect the VNF to). ")
 	@NotNull
 
 	@Valid
@@ -120,7 +120,7 @@ public class ChangeExtVnfConnectivityData {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional parameters passed by the OSS as input to the external connectivity change process, specific to the VNF instance being changed. ")
+	@Schema(description = "Additional parameters passed by the OSS as input to the external connectivity change process, specific to the VNF instance being changed. ")
 
 	@Valid
 

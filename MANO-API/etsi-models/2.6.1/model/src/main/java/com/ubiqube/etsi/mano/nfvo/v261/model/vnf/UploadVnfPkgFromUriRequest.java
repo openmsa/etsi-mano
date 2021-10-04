@@ -19,14 +19,14 @@ package com.ubiqube.etsi.mano.nfvo.v261.model.vnf;
 
 import org.springframework.validation.annotation.Validated;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * \&quot;The payload body contains the address information based on which the NFVO can obtain the content of the VNF package\&quot;
  */
-@ApiModel(description = "\"The payload body contains the address information based on which the NFVO can obtain the content of the VNF package\" ")
+@Schema(description = "\"The payload body contains the address information based on which the NFVO can obtain the content of the VNF package\" ")
 @Validated
 @Setter
 @Getter

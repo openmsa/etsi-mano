@@ -26,15 +26,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * User-defined data for the PNF descriptor resource to be created. It shall be
  * present when the user defined data is set for the individual PNF descriptor
  * resource to be created.
  */
-@ApiModel(description = "User-defined data for the PNF descriptor resource to be created. It shall be present when the user defined data is set for the individual PNF descriptor resource to be created. ")
+@Schema(description = "User-defined data for the PNF descriptor resource to be created. It shall be present when the user defined data is set for the individual PNF descriptor resource to be created. ")
 @Validated
 
 
@@ -52,7 +52,7 @@ public class CreatePnfdInfoRequest {
 	 *
 	 * @return userDefinedData
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 

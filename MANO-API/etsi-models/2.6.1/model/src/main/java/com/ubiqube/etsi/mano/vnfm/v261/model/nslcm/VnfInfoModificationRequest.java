@@ -38,8 +38,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents attribute modifications for an \&quot;Individual VNF
@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiModelProperty;
  * data type. The \&quot;VnfInfoModificationRequest\&quot; data type shall
  * comply with the provisions defined in table 5.5.2.12-1.
  */
-@ApiModel(description = "This type represents attribute modifications for an \"Individual VNF instance\" resource, i.e. modifications to a resource representation based on the \"VnfInstance\" data type. The attributes of \"VnfInstance\" that can be modified according to the provisions in clause 5.5.2.2 are included in the \"VnfInfoModificationRequest\" data type. The \"VnfInfoModificationRequest\" data type shall comply with the provisions defined in table 5.5.2.12-1. ")
+@Schema(description = "This type represents attribute modifications for an \"Individual VNF instance\" resource, i.e. modifications to a resource representation based on the \"VnfInstance\" data type. The attributes of \"VnfInstance\" that can be modified according to the provisions in clause 5.5.2.2 are included in the \"VnfInfoModificationRequest\" data type. The \"VnfInfoModificationRequest\" data type shall comply with the provisions defined in table 5.5.2.12-1. ")
 @Validated
 public class VnfInfoModificationRequest {
 	@JsonProperty("vnfInstanceName")
@@ -85,7 +85,7 @@ public class VnfInfoModificationRequest {
 	 *
 	 * @return vnfInstanceName
 	 **/
-	@ApiModelProperty(value = "New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or \"null\" to remove the attribute.       ")
+	@Schema(description = "New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or \"null\" to remove the attribute.       ")
 	public String getVnfInstanceName() {
 		return vnfInstanceName;
 	}
@@ -105,7 +105,7 @@ public class VnfInfoModificationRequest {
 	 *
 	 * @return vnfInstanceDescription
 	 **/
-	@ApiModelProperty(value = "New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or \"null\" to remove the attribute.   ")
+	@Schema(description = "New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or \"null\" to remove the attribute.   ")
 	public String getVnfInstanceDescription() {
 		return vnfInstanceDescription;
 	}
@@ -126,7 +126,7 @@ public class VnfInfoModificationRequest {
 	 * @return vnfPkgId
 	 **/
 	@JsonProperty("vnfPkgId")
-	@ApiModelProperty(value = "New value of the \"vnfPkgId\" attribute in \"VnfInstance\". The value \"null\" is not permitted.   ")
+	@Schema(description = "New value of the \"vnfPkgId\" attribute in \"VnfInstance\". The value \"null\" is not permitted.   ")
 	public String getVnfPkgId() {
 		return vnfPkgId;
 	}
@@ -148,7 +148,7 @@ public class VnfInfoModificationRequest {
 	 * @return vnfConfigurableProperties
 	 **/
 	@JsonProperty("vnfConfigurableProperties")
-	@ApiModelProperty(value = "Modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
+	@Schema(description = "Modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
 	public Map<String, String> getVnfConfigurableProperties() {
 		return vnfConfigurableProperties;
 	}
@@ -170,7 +170,7 @@ public class VnfInfoModificationRequest {
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
-	@ApiModelProperty(value = "Modifications of the \"metadata\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
+	@Schema(description = "Modifications of the \"metadata\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
 	public Map<String, String> getMetadata() {
 		return metadata;
 	}
@@ -192,7 +192,7 @@ public class VnfInfoModificationRequest {
 	 * @return extensions
 	 **/
 	@JsonProperty("extensions")
-	@ApiModelProperty(value = "Modifications of the \"extensions\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
+	@Schema(description = "Modifications of the \"extensions\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396). ")
 	public Map<String, String> getExtensions() {
 		return extensions;
 	}
@@ -221,7 +221,7 @@ public class VnfInfoModificationRequest {
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
-	@ApiModelProperty(value = "New content of certain entries in the \"vimConnectionInfo\" attribute array in \"VnfInstance\", as defined below this table. ")
+	@Schema(description = "New content of certain entries in the \"vimConnectionInfo\" attribute array in \"VnfInstance\", as defined below this table. ")
 	public List<VimConnectionInfo> getVimConnectionInfo() {
 		return vimConnectionInfo;
 	}

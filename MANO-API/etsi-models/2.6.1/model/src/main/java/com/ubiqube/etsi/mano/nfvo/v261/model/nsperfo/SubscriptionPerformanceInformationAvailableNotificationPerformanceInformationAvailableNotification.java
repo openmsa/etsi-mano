@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -28,40 +28,40 @@ import java.util.Date;
 /**
   * This notification informs the receiver that performance information is available. 
  **/
-@ApiModel(description="This notification informs the receiver that performance information is available. ")
+@Schema(description="This notification informs the receiver that performance information is available. ")
 public class SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification  {
   
-  @ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
+  @Schema(required = true, description = "An identifier with the intention of being globally unique. ")
  /**
    * An identifier with the intention of being globally unique. 
   **/
   private String id = null;
 
-  @ApiModelProperty(required = true, value = "Discriminator for the different notification types. Shall be set to \"PerformanceInformationAvailableNotification\" for this notification type. ")
+  @Schema(required = true, description = "Discriminator for the different notification types. Shall be set to \"PerformanceInformationAvailableNotification\" for this notification type. ")
  /**
    * Discriminator for the different notification types. Shall be set to \"PerformanceInformationAvailableNotification\" for this notification type. 
   **/
   private String notificationType = null;
 
-  @ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
+  @Schema(required = true, description = "An identifier with the intention of being globally unique. ")
  /**
    * An identifier with the intention of being globally unique. 
   **/
   private String subscriptionId = null;
 
-  @ApiModelProperty(required = true, value = "Date-time stamp.  Representation: String formatted according to IETF RFC 3339. ")
+  @Schema(required = true, description = "Date-time stamp.  Representation: String formatted according to IETF RFC 3339. ")
  /**
    * Date-time stamp.  Representation: String formatted according to IETF RFC 3339. 
   **/
   private Date timeStamp = null;
 
-  @ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
+  @Schema(required = true, description = "An identifier with the intention of being globally unique. ")
  /**
    * An identifier with the intention of being globally unique. 
   **/
   private String objectInstanceId = null;
 
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotificationLinks links = null;
  /**

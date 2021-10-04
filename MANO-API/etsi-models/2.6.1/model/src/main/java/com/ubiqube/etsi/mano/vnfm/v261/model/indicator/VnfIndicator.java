@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a VNF indicator value.
  */
-@ApiModel(description = "This type represents a VNF indicator value. ")
+@Schema(description = "This type represents a VNF indicator value. ")
 @Validated
 
 
@@ -62,7 +62,7 @@ public class VnfIndicator {
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this VNF indicator. ")
+	@Schema(required = true, description = "Identifier of this VNF indicator. ")
 	@NotNull
 
 	public String getId() {
@@ -84,7 +84,7 @@ public class VnfIndicator {
 	 * 
 	 * @return name
 	 **/
-	@ApiModelProperty(value = "Human readable name of the indicator. Shall be present if defined in the VNFD. ")
+	@Schema(description = "Human readable name of the indicator. Shall be present if defined in the VNFD. ")
 
 	public String getName() {
 		return name;
@@ -106,7 +106,7 @@ public class VnfIndicator {
 	 * 
 	 * @return value
 	 **/
-	@ApiModelProperty(required = true, value = "Provides the value of the indicator. The value format is defined in the VNFD. ETSI GS NFV-SOL 001 specifies the structure and format of the  VNFD based on TOSCA specifications. ")
+	@Schema(required = true, description = "Provides the value of the indicator. The value format is defined in the VNFD. ETSI GS NFV-SOL 001 specifies the structure and format of the  VNFD based on TOSCA specifications. ")
 	@NotNull
 
 	public Object getValue() {
@@ -128,7 +128,7 @@ public class VnfIndicator {
 	 * 
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the \"Individual VNF instance\" which provides the indicator value. ")
+	@Schema(required = true, description = "Identifier of the \"Individual VNF instance\" which provides the indicator value. ")
 	@NotNull
 
 	public String getVnfInstanceId() {
@@ -149,7 +149,7 @@ public class VnfIndicator {
 	 * 
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

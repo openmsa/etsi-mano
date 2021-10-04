@@ -28,8 +28,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type specifies existing VNF instances to be moved from one NS instance
@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiModelProperty;
  * instance is specified in this data type (referred to targetNsInstanceId). It
  * shall comply with the provisions defined in Table 6.5.3.35-1.
  */
-@ApiModel(description = "This type specifies existing VNF instances to be moved from one NS instance (source) to another NS instance (destination). The NS instance defined in the Update NS operation indicates the source NS instance and the destination NS instance is specified in this data type (referred to targetNsInstanceId). It shall comply with the provisions defined in Table 6.5.3.35-1. ")
+@Schema(description = "This type specifies existing VNF instances to be moved from one NS instance (source) to another NS instance (destination). The NS instance defined in the Update NS operation indicates the source NS instance and the destination NS instance is specified in this data type (referred to targetNsInstanceId). It shall comply with the provisions defined in Table 6.5.3.35-1. ")
 @Validated
 
 
@@ -60,7 +60,7 @@ public class MoveVnfInstanceData {
 	 * 
 	 * @return targetNsInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Specify the target NS instance where the VNF instances are moved to. ")
+	@Schema(required = true, description = "Specify the target NS instance where the VNF instances are moved to. ")
 	@NotNull
 
 	public String getTargetNsInstanceId() {
@@ -89,7 +89,7 @@ public class MoveVnfInstanceData {
 	 * 
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(value = "Specify the VNF instance that is moved. ")
+	@Schema(description = "Specify the VNF instance that is moved. ")
 
 	public List<String> getVnfInstanceId() {
 		return vnfInstanceId;

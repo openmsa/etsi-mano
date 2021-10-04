@@ -37,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * ScaleVnfRequest
@@ -45,10 +45,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class ScaleVnfRequest {
 	/**
-	 * Indicates the type of the scale operation requested. Permitted values: *
-	 * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity *
-	 * SCALE_IN: removing VNFC instances from the VNF in order to release unused
-	 * capacity.
+	 * Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity * SCALE_IN: removing VNFC instances from the VNF in order to release unused capacity.
 	 */
 	public enum TypeEnum {
 		OUT("SCALE_OUT"),
@@ -96,15 +93,12 @@ public class ScaleVnfRequest {
 	}
 
 	/**
-	 * Indicates the type of the scale operation requested. Permitted values: *
-	 * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity *
-	 * SCALE_IN: removing VNFC instances from the VNF in order to release unused
-	 * capacity.
+	 * Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity * SCALE_IN: removing VNFC instances from the VNF in order to release unused capacity.
 	 *
 	 * @return type
 	 **/
 	@JsonProperty("type")
-	@ApiModelProperty(required = true, value = "Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase   capacity * SCALE_IN: removing VNFC instances from the VNF in order to release   unused capacity. ")
+	@Schema(required = true, description = "Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase   capacity * SCALE_IN: removing VNFC instances from the VNF in order to release   unused capacity. ")
 	@NotNull
 	public TypeEnum getType() {
 		return type;
@@ -125,7 +119,7 @@ public class ScaleVnfRequest {
 	 * @return aspectId
 	 **/
 	@JsonProperty("aspectId")
-	@ApiModelProperty(required = true, value = "Identifier of the scaling aspect. ")
+	@Schema(required = true, description = "Identifier of the scaling aspect. ")
 	@NotNull
 	public String getAspectId() {
 		return aspectId;
@@ -141,13 +135,12 @@ public class ScaleVnfRequest {
 	}
 
 	/**
-	 * Number of scaling steps to be executed as part of this Scale VNF operation.
-	 * It shall be a positive number and the default value shall be 1.
+	 * Number of scaling steps to be executed as part of this Scale VNF operation. It shall be a positive number and the default value shall be 1.
 	 *
 	 * @return numberOfSteps
 	 **/
 	@JsonProperty("numberOfSteps")
-	@ApiModelProperty(value = "Number of scaling steps to be executed as part of this Scale VNF operation. It shall be a positive number and the default value shall be 1. ")
+	@Schema(description = "Number of scaling steps to be executed as part of this Scale VNF operation. It shall be a positive number and the default value shall be 1. ")
 	public Integer getNumberOfSteps() {
 		return numberOfSteps;
 	}
@@ -162,14 +155,12 @@ public class ScaleVnfRequest {
 	}
 
 	/**
-	 * Additional parameters passed by the NFVO as input to the scaling process,
-	 * specific to the VNF being scaled, as declared in the VNFD as part of
-	 * \&quot;ScaleVnfOpConfig\&quot;.
+	 * Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \&quot;ScaleVnfOpConfig\&quot;.
 	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfOpConfig\". ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfOpConfig\". ")
 	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
@@ -192,8 +183,7 @@ public class ScaleVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

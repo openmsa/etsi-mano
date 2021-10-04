@@ -28,13 +28,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Information on the VNFFG(s) of the NS instance.
  */
-@ApiModel(description = "Information on the VNFFG(s) of the NS instance. ")
+@Schema(description = "Information on the VNFFG(s) of the NS instance. ")
 @Validated
 
 
@@ -71,7 +71,7 @@ public class VnffgInfo {
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this VNFFG instance. ")
+	@Schema(required = true, description = "Identifier of this VNFFG instance. ")
 	@NotNull
 
 	public String getId() {
@@ -92,7 +92,7 @@ public class VnffgInfo {
 	 * 
 	 * @return vnffgdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNFFGD in the NSD. ")
+	@Schema(required = true, description = "Identifier of the VNFFGD in the NSD. ")
 	@NotNull
 
 	public String getVnffgdId() {
@@ -118,7 +118,7 @@ public class VnffgInfo {
 	 * 
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier(s) of the constituent VNF instance(s) of this VNFFG instance. ")
+	@Schema(required = true, description = "Identifier(s) of the constituent VNF instance(s) of this VNFFG instance. ")
 	@NotNull
 
 	public List<String> getVnfInstanceId() {
@@ -147,7 +147,7 @@ public class VnffgInfo {
 	 * 
 	 * @return pnfdInfoId
 	 **/
-	@ApiModelProperty(value = "Identifier(s) of the constituent PNF instance(s) of this VNFFG instance. ")
+	@Schema(description = "Identifier(s) of the constituent PNF instance(s) of this VNFFG instance. ")
 
 	public List<String> getPnfdInfoId() {
 		return pnfdInfoId;
@@ -175,7 +175,7 @@ public class VnffgInfo {
 	 * 
 	 * @return nsVirtualLinkInfoId
 	 **/
-	@ApiModelProperty(value = "Identifier(s) of the constituent VL instance(s) of this VNFFG instance. ")
+	@Schema(description = "Identifier(s) of the constituent VL instance(s) of this VNFFG instance. ")
 
 	public List<String> getNsVirtualLinkInfoId() {
 		return nsVirtualLinkInfoId;
@@ -204,7 +204,7 @@ public class VnffgInfo {
 	 * 
 	 * @return nsCpHandle
 	 **/
-	@ApiModelProperty(value = "Identifiers of the CP instances attached to the constituent VNFs and PNFs or the SAP instances of the VNFFG. See note. ")
+	@Schema(description = "Identifiers of the CP instances attached to the constituent VNFs and PNFs or the SAP instances of the VNFFG. See note. ")
 
 	@Valid
 

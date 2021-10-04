@@ -26,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * CreateVnfRequest
@@ -56,7 +56,7 @@ public class CreateVnfRequest {
 	 *
 	 * @return vnfdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier that identifies the VNFD which defines the VNF instance to be created. ")
+	@Schema(required = true, description = "Identifier that identifies the VNFD which defines the VNF instance to be created. ")
 	@NotNull
 
 	public String getVnfdId() {
@@ -77,7 +77,7 @@ public class CreateVnfRequest {
 	 *
 	 * @return vnfInstanceName
 	 **/
-	@ApiModelProperty(value = "Human-readable name of the VNF instance to be created. ")
+	@Schema(description = "Human-readable name of the VNF instance to be created. ")
 
 	public String getVnfInstanceName() {
 		return vnfInstanceName;
@@ -97,7 +97,7 @@ public class CreateVnfRequest {
 	 *
 	 * @return vnfInstanceDescription
 	 **/
-	@ApiModelProperty(value = "Human-readable description of the VNF instance to be created. ")
+	@Schema(description = "Human-readable description of the VNF instance to be created. ")
 
 	public String getVnfInstanceDescription() {
 		return vnfInstanceDescription;
@@ -117,7 +117,7 @@ public class CreateVnfRequest {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "If present, this attribute provides values for the \"metadata\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If a “metadata” entry in this CreateVnfRequest data structure has a corresponding default value declared in the VNFD, the value in the “metadata” entry in the CreateVnfRequest structure takes precedence. ")
+	@Schema(description = "If present, this attribute provides values for the \"metadata\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If a “metadata” entry in this CreateVnfRequest data structure has a corresponding default value declared in the VNFD, the value in the “metadata” entry in the CreateVnfRequest structure takes precedence. ")
 
 	@Valid
 

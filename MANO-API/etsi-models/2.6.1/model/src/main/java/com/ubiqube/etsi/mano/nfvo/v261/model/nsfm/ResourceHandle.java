@@ -24,15 +24,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information that allows addressing a virtualised
  * resource that is used by a VNF instance or by an NS instance. Information
  * about the resource is available from the VIM.
  */
-@ApiModel(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance or by an NS instance. Information about the resource is available from the VIM. ")
+@Schema(description = "This type represents the information that allows addressing a virtualised resource that is used by a VNF instance or by an NS instance. Information about the resource is available from the VIM. ")
 @Validated
 public class ResourceHandle {
 	@JsonProperty("vimId")
@@ -57,7 +57,7 @@ public class ResourceHandle {
 	 *
 	 * @return vimId
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getVimId() {
 		return vimId;
@@ -77,7 +77,7 @@ public class ResourceHandle {
 	 *
 	 * @return resourceProviderId
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getResourceProviderId() {
 		return resourceProviderId;
@@ -97,7 +97,7 @@ public class ResourceHandle {
 	 *
 	 * @return resourceId
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getResourceId() {
@@ -121,7 +121,7 @@ public class ResourceHandle {
 	 *
 	 * @return vimLevelResourceType
 	 **/
-	@ApiModelProperty(value = "Type of the resource in the scope of the VIM or the resource provider. The value set of the \"vimLevelResourceType\" attribute is within the scope of the VIM or the resource provider and can be used as information that complements the ResourceHandle. ")
+	@Schema(description = "Type of the resource in the scope of the VIM or the resource provider. The value set of the \"vimLevelResourceType\" attribute is within the scope of the VIM or the resource provider and can be used as information that complements the ResourceHandle. ")
 
 	public String getVimLevelResourceType() {
 		return vimLevelResourceType;

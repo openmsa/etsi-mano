@@ -27,13 +27,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type describes the protocol layer(s) that a CP uses together with protocol-related information, like addresses.
  */
-@ApiModel(description = "This type describes the protocol layer(s) that a CP uses together with protocol-related information, like addresses. ")
+@Schema(description = "This type describes the protocol layer(s) that a CP uses together with protocol-related information, like addresses. ")
 @Validated
 
 public class CpProtocolInfo {
@@ -82,7 +82,7 @@ public class CpProtocolInfo {
 	 *
 	 * @return layerProtocol
 	 **/
-	@ApiModelProperty(required = true, value = "The identifier of layer(s) and protocol(s) associated to the network address information. Permitted values: IP_OVER_ETHERNET This attribute allows to signal the addition of further types of layer and protocol in future versions of the present document in a backwards-compatible way. In the current version of the present document, only IP over Ethernet is supported. ")
+	@Schema(required = true, description = "The identifier of layer(s) and protocol(s) associated to the network address information. Permitted values: IP_OVER_ETHERNET This attribute allows to signal the addition of further types of layer and protocol in future versions of the present document in a backwards-compatible way. In the current version of the present document, only IP over Ethernet is supported. ")
 	@NotNull
 
 	public LayerProtocolEnum getLayerProtocol() {
@@ -103,7 +103,7 @@ public class CpProtocolInfo {
 	 *
 	 * @return ipOverEthernet
 	 **/
-	@ApiModelProperty(value = "IP addresses over Ethernet to assign to the extCP instance. Shall be present if layerProtocol is equal to \" IP_OVER_ETHERNET\", and shall be absent otherwise. ")
+	@Schema(description = "IP addresses over Ethernet to assign to the extCP instance. Shall be present if layerProtocol is equal to \" IP_OVER_ETHERNET\", and shall be absent otherwise. ")
 
 	@Valid
 

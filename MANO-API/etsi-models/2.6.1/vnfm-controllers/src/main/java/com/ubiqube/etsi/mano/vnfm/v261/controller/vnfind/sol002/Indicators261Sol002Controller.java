@@ -33,7 +33,6 @@ import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol002.VnfLcm261Sol002A
 import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicator;
 import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicatorLinks;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-12-11T19:19:34.580+01:00")
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>

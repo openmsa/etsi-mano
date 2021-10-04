@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Links to resources related to this notification.
  */
-@ApiModel(description = "Links to resources related to this notification. ")
+@Schema(description = "Links to resources related to this notification. ")
 @Validated
 
 public class AlarmClearedNotificationLinks {
@@ -52,7 +52,7 @@ public class AlarmClearedNotificationLinks {
 	 *
 	 * @return subscription
 	 **/
-	@ApiModelProperty(required = true, value = "Link to the related subscription. ")
+	@Schema(required = true, description = "Link to the related subscription. ")
 	@NotNull
 
 	@Valid
@@ -75,7 +75,7 @@ public class AlarmClearedNotificationLinks {
 	 *
 	 * @return alarm
 	 **/
-	@ApiModelProperty(required = true, value = "Link to the resource that represents the related alarm. ")
+	@Schema(required = true, description = "Link to the resource that represents the related alarm. ")
 	@NotNull
 
 	@Valid

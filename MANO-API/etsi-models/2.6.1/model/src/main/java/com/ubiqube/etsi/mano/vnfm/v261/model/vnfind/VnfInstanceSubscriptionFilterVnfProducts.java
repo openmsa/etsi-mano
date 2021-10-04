@@ -20,8 +20,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.vnfm.v261.model.vnfind.VnfInstanceSubscriptionFilterVersions;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +50,7 @@ public class VnfInstanceSubscriptionFilterVnfProducts   {
    * Name of the VNF product to match. 
    * @return vnfProductName
   **/
-  @ApiModelProperty(required = true, value = "Name of the VNF product to match. ")
+  @Schema(required = true, description = "Name of the VNF product to match. ")
   @NotNull
 
 
@@ -79,7 +79,7 @@ public class VnfInstanceSubscriptionFilterVnfProducts   {
    * If present, match VNF instances that belong to VNF products with certain versions and a certain product name, from one particular provider. 
    * @return versions
   **/
-  @ApiModelProperty(value = "If present, match VNF instances that belong to VNF products with certain versions and a certain product name, from one particular provider. ")
+  @Schema(description = "If present, match VNF instances that belong to VNF products with certain versions and a certain product name, from one particular provider. ")
 
   @Valid
 

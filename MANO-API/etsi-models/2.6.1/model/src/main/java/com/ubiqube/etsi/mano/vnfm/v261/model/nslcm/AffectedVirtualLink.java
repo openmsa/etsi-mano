@@ -38,14 +38,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information about added, deleted, modified and temporary
  * VLs.
  */
-@ApiModel(description = "This type provides information about added, deleted, modified and temporary VLs. ")
+@Schema(description = "This type provides information about added, deleted, modified and temporary VLs. ")
 
 public class AffectedVirtualLink {
 	@JsonProperty("id")
@@ -118,7 +118,7 @@ public class AffectedVirtualLink {
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of the virtual link instance, identifying the applicable \"vnfVirtualLinkResourceInfo\" entry in the \"VnfInstance\" data type. ")
+	@Schema(required = true, description = "Identifier of the virtual link instance, identifying the applicable \"vnfVirtualLinkResourceInfo\" entry in the \"VnfInstance\" data type. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -139,7 +139,7 @@ public class AffectedVirtualLink {
 	 * @return virtualLinkDescId
 	 **/
 	@JsonProperty("virtualLinkDescId")
-	@ApiModelProperty(required = true, value = "Identifier of the related VLD in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the related VLD in the VNFD. ")
 	@NotNull
 	public String getVirtualLinkDescId() {
 		return virtualLinkDescId;
@@ -163,7 +163,7 @@ public class AffectedVirtualLink {
 	 * @return changeType
 	 **/
 	@JsonProperty("changeType")
-	@ApiModelProperty(required = true, value = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. ")
+	@Schema(required = true, description = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. ")
 	@NotNull
 	public ChangeTypeEnum getChangeType() {
 		return changeType;
@@ -186,7 +186,7 @@ public class AffectedVirtualLink {
 	 * @return networkResource
 	 **/
 	@JsonProperty("networkResource")
-	@ApiModelProperty(required = true, value = "Reference to the VirtualNetwork resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. ")
+	@Schema(required = true, description = "Reference to the VirtualNetwork resource. Detailed information is (for new and modified resources) or has been (for removed resources) available from the VIM. ")
 	@NotNull
 	public ResourceHandle getNetworkResource() {
 		return networkResource;
@@ -209,7 +209,7 @@ public class AffectedVirtualLink {
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
-	@ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfVirtualLinkResourceInfo structure. ")
+	@Schema(description = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VnfVirtualLinkResourceInfo structure. ")
 	public Map<String, String> getMetadata() {
 		return metadata;
 	}

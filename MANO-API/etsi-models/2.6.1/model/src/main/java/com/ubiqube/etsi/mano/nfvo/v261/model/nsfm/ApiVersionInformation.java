@@ -27,13 +27,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents API version information.
  */
-@ApiModel(description = "This type represents API version information. ")
+@Schema(description = "This type represents API version information. ")
 @Validated
 public class ApiVersionInformation {
 	@JsonProperty("uriPrefix")
@@ -54,7 +54,7 @@ public class ApiVersionInformation {
 	 *
 	 * @return uriPrefix
 	 **/
-	@ApiModelProperty(required = true, value = "Specifies the URI prefix for the API, in the following form {apiRoot}/{apiName}/{apiMajorVersion}/. ")
+	@Schema(required = true, description = "Specifies the URI prefix for the API, in the following form {apiRoot}/{apiName}/{apiMajorVersion}/. ")
 	@NotNull
 
 	public String getUriPrefix() {
@@ -80,7 +80,7 @@ public class ApiVersionInformation {
 	 *
 	 * @return apiVersions
 	 **/
-	@ApiModelProperty(required = true, value = "Version(s) supported for the API signalled by the uriPrefix attribute. ")
+	@Schema(required = true, description = "Version(s) supported for the API signalled by the uriPrefix attribute. ")
 	@NotNull
 	@Valid
 	public List<ApiVersionInformationApiVersions> getApiVersions() {

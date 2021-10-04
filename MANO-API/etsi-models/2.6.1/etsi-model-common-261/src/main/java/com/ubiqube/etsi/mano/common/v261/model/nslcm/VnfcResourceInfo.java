@@ -30,14 +30,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the information on virtualised compute and storage
  * resources used by a VNFC in a VNF instance.
  */
-@ApiModel(description = "This type represents the information on virtualised compute and storage resources used by a VNFC in a VNF instance. ")
+@Schema(description = "This type represents the information on virtualised compute and storage resources used by a VNFC in a VNF instance. ")
 @Validated
 public class VnfcResourceInfo {
 	@JsonProperty("id")
@@ -73,7 +73,7 @@ public class VnfcResourceInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this VnfcResourceInfo instance. ")
+	@Schema(required = true, description = "Identifier of this VnfcResourceInfo instance. ")
 	@NotNull
 
 	public String getId() {
@@ -94,7 +94,7 @@ public class VnfcResourceInfo {
 	 *
 	 * @return vduId
 	 **/
-	@ApiModelProperty(required = true, value = "Reference to the applicable VDU in the VNFD. ")
+	@Schema(required = true, description = "Reference to the applicable VDU in the VNFD. ")
 	@NotNull
 
 	public String getVduId() {
@@ -115,7 +115,7 @@ public class VnfcResourceInfo {
 	 *
 	 * @return computeResource
 	 **/
-	@ApiModelProperty(required = true, value = "Reference to the VirtualCompute resource. ")
+	@Schema(required = true, description = "Reference to the VirtualCompute resource. ")
 	@NotNull
 
 	@Valid
@@ -147,7 +147,7 @@ public class VnfcResourceInfo {
 	 *
 	 * @return storageResourceIds
 	 **/
-	@ApiModelProperty(value = "References to the VirtualStorage resources. The value refers to a VirtualStorageResourceInfo item in the VnfInstance. ")
+	@Schema(description = "References to the VirtualStorage resources. The value refers to a VirtualStorageResourceInfo item in the VnfInstance. ")
 
 	public List<String> getStorageResourceIds() {
 		return storageResourceIds;
@@ -168,7 +168,7 @@ public class VnfcResourceInfo {
 	 *
 	 * @return reservationId
 	 **/
-	@ApiModelProperty(value = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
+	@Schema(description = "The reservation identifier applicable to the resource. It shall be present when an applicable reservation exists. ")
 
 	public String getReservationId() {
 		return reservationId;
@@ -198,7 +198,7 @@ public class VnfcResourceInfo {
 	 *
 	 * @return vnfcCpInfo
 	 **/
-	@ApiModelProperty(value = "CPs of the VNFC instance. Shall be present when that particular CP of the VNFC instance is associated to an external CP of the VNF instance. May be present otherwise. ")
+	@Schema(description = "CPs of the VNFC instance. Shall be present when that particular CP of the VNFC instance is associated to an external CP of the VNF instance. May be present otherwise. ")
 
 	@Valid
 
@@ -220,7 +220,7 @@ public class VnfcResourceInfo {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "Metadata about this resource. ")
+	@Schema(description = "Metadata about this resource. ")
 
 	@Valid
 

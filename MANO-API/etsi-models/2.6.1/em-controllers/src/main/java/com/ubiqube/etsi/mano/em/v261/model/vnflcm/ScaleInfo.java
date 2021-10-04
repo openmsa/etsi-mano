@@ -24,7 +24,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * ScaleInfo
@@ -48,7 +48,7 @@ public class ScaleInfo {
 	 *
 	 * @return aspectId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the scaling aspect. ")
+	@Schema(required = true, description = "Identifier of the scaling aspect. ")
 	@NotNull
 
 	public String getAspectId() {
@@ -69,7 +69,7 @@ public class ScaleInfo {
 	 *
 	 * @return scaleLevel
 	 **/
-	@ApiModelProperty(required = true, value = "Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD. ")
+	@Schema(required = true, description = "Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD. ")
 	@NotNull
 
 	public Integer getScaleLevel() {

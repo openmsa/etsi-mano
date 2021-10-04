@@ -37,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * TerminateVnfRequest
@@ -45,14 +45,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class TerminateVnfRequest {
 	/**
-	 * Indicates whether forceful or graceful termination is requested. Permitted
-	 * values: * FORCEFUL: The VNFM will shut down the VNF and release the resources
-	 * immediately after accepting the request. * GRACEFUL: The VNFM will first
-	 * arrange to take the VNF out of service after accepting the request. Once the
-	 * operation of taking the VNF out of service finishes (irrespective of whether
-	 * it has succeeded or failed) or once the timer value specified in the
-	 * \&quot;gracefulTerminationTimeout\&quot; attribute expires, the VNFM will
-	 * shut down the VNF and release the resources.
+	 * Indicates whether forceful or graceful termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the resources immediately after accepting the request. * GRACEFUL: The VNFM will first arrange to take the VNF out of service after accepting the request. Once the operation of taking the VNF out of service finishes (irrespective of whether it has succeeded or failed) or once the timer value specified in the \&quot;gracefulTerminationTimeout\&quot;
+	 * attribute expires, the VNFM will shut down the VNF and release the resources.
 	 */
 	public enum TerminationTypeEnum {
 		FORCEFUL("FORCEFUL"),
@@ -97,19 +91,13 @@ public class TerminateVnfRequest {
 	}
 
 	/**
-	 * Indicates whether forceful or graceful termination is requested. Permitted
-	 * values: * FORCEFUL: The VNFM will shut down the VNF and release the resources
-	 * immediately after accepting the request. * GRACEFUL: The VNFM will first
-	 * arrange to take the VNF out of service after accepting the request. Once the
-	 * operation of taking the VNF out of service finishes (irrespective of whether
-	 * it has succeeded or failed) or once the timer value specified in the
-	 * \&quot;gracefulTerminationTimeout\&quot; attribute expires, the VNFM will
-	 * shut down the VNF and release the resources.
+	 * Indicates whether forceful or graceful termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the resources immediately after accepting the request. * GRACEFUL: The VNFM will first arrange to take the VNF out of service after accepting the request. Once the operation of taking the VNF out of service finishes (irrespective of whether it has succeeded or failed) or once the timer value specified in the \&quot;gracefulTerminationTimeout\&quot;
+	 * attribute expires, the VNFM will shut down the VNF and release the resources.
 	 *
 	 * @return terminationType
 	 **/
 	@JsonProperty("terminationType")
-	@ApiModelProperty(required = true, value = "Indicates whether forceful or graceful termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the   resources immediately after accepting the request. * GRACEFUL: The VNFM will first arrange to take the VNF out of service after accepting the request. Once the operation of taking the VNF out of service finishes (irrespective of whether it has succeeded or failed) or once the timer value specified in the \"gracefulTerminationTimeout\" attribute expires, the VNFM will shut down the VNF and release the resources. ")
+	@Schema(required = true, description = "Indicates whether forceful or graceful termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the   resources immediately after accepting the request. * GRACEFUL: The VNFM will first arrange to take the VNF out of service after accepting the request. Once the operation of taking the VNF out of service finishes (irrespective of whether it has succeeded or failed) or once the timer value specified in the \"gracefulTerminationTimeout\" attribute expires, the VNFM will shut down the VNF and release the resources. ")
 	@NotNull
 	public TerminationTypeEnum getTerminationType() {
 		return terminationType;
@@ -125,18 +113,12 @@ public class TerminateVnfRequest {
 	}
 
 	/**
-	 * This attribute is only applicable in case of graceful termination. It defines
-	 * the time to wait for the VNF to be taken out of service before shutting down
-	 * the VNF and releasing the resources. The unit is seconds. If not given and
-	 * the \&quot;terminationType\&quot; attribute is set to \&quot;GRACEFUL\&quot;,
-	 * it is expected that the VNFM waits for the successful taking out of service
-	 * of the VNF, no matter how long it takes, before shutting down the VNF and
-	 * releasing the resources.
+	 * This attribute is only applicable in case of graceful termination. It defines the time to wait for the VNF to be taken out of service before shutting down the VNF and releasing the resources. The unit is seconds. If not given and the \&quot;terminationType\&quot; attribute is set to \&quot;GRACEFUL\&quot;, it is expected that the VNFM waits for the successful taking out of service of the VNF, no matter how long it takes, before shutting down the VNF and releasing the resources.
 	 *
 	 * @return gracefulTerminationTimeout
 	 **/
 	@JsonProperty("gracefulTerminationTimeout")
-	@ApiModelProperty(value = "This attribute is only applicable in case of graceful termination.  It defines the time to wait for the VNF to be taken out of service before shutting down the VNF and releasing the resources. The unit is seconds. If not given and the \"terminationType\" attribute is set to \"GRACEFUL\", it is expected that the VNFM waits for the successful taking out of service of the VNF, no matter how long it takes, before shutting down the VNF and releasing the resources. ")
+	@Schema(description = "This attribute is only applicable in case of graceful termination.  It defines the time to wait for the VNF to be taken out of service before shutting down the VNF and releasing the resources. The unit is seconds. If not given and the \"terminationType\" attribute is set to \"GRACEFUL\", it is expected that the VNFM waits for the successful taking out of service of the VNF, no matter how long it takes, before shutting down the VNF and releasing the resources. ")
 	public Integer getGracefulTerminationTimeout() {
 		return gracefulTerminationTimeout;
 	}
@@ -151,14 +133,12 @@ public class TerminateVnfRequest {
 	}
 
 	/**
-	 * Additional parameters passed by the NFVO as input to the termination process,
-	 * specific to the VNF being terminated, as declared in the VNFD as part of
-	 * \&quot;TerminateVnfOpConfig\&quot;.
+	 * Additional parameters passed by the NFVO as input to the termination process, specific to the VNF being terminated, as declared in the VNFD as part of \&quot;TerminateVnfOpConfig\&quot;.
 	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
-	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the termination process, specific to the VNF being terminated, as declared in the VNFD as part of \"TerminateVnfOpConfig\". ")
+	@Schema(description = "Additional parameters passed by the NFVO as input to the termination process, specific to the VNF being terminated, as declared in the VNFD as part of \"TerminateVnfOpConfig\". ")
 	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
@@ -180,8 +160,7 @@ public class TerminateVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

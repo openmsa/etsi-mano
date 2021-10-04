@@ -29,7 +29,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * VnfPkgInfo
@@ -90,7 +90,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF package. This identifier is allocated by the NFVO. ")
+	@Schema(required = true, description = "Identifier of the VNF package. This identifier is allocated by the NFVO. ")
 	@NotNull
 
 	public String getId() {
@@ -107,14 +107,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * This identifier, which is managed by the VNF provider, identifies the VNF
-	 * package and the VNFD in a globally unique way. It is copied from the VNFD of
-	 * the on boarded VNF package. It shall be present after the VNF package content
-	 * has been on-boarded and absent otherwise.
+	 * This identifier, which is managed by the VNF provider, identifies the VNF package and the VNFD in a globally unique way. It is copied from the VNFD of the on boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfdId
 	 **/
-	@ApiModelProperty(value = "This identifier, which is managed by the VNF provider, identifies the VNF package and the VNFD in a globally unique way. It is copied from the VNFD of the on boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+	@Schema(description = "This identifier, which is managed by the VNF provider, identifies the VNF package and the VNFD in a globally unique way. It is copied from the VNFD of the on boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfdId() {
 		return vnfdId;
@@ -130,13 +127,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Provider of the VNF package and the VNFD. This information is copied from the
-	 * VNFD. It shall be present after the VNF package content has been on-boarded
-	 * and absent otherwise.
+	 * Provider of the VNF package and the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfProvider
 	 **/
-	@ApiModelProperty(value = "Provider of the VNF package and the VNFD. This information is copied from the VNFD.  It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+	@Schema(description = "Provider of the VNF package and the VNFD. This information is copied from the VNFD.  It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfProvider() {
 		return vnfProvider;
@@ -152,13 +147,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This
-	 * information is copied from the VNFD. It shall be present after the VNF
-	 * package content has been on-boarded and absent otherwise.
+	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfProductName
 	 **/
-	@ApiModelProperty(value = "Name to identify the VNF product.Invariant for the VNF product lifetime.  This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+	@Schema(description = "Name to identify the VNF product.Invariant for the VNF product lifetime.  This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfProductName() {
 		return vnfProductName;
@@ -174,14 +167,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Software version of the VNF. This is changed when there is any change to the
-	 * software included in the VNF package. This information is copied from the
-	 * VNFD. It shall be present after the VNF package content has been on-boarded
-	 * and absent otherwise.
+	 * Software version of the VNF. This is changed when there is any change to the software included in the VNF package. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfSoftwareVersion
 	 **/
-	@ApiModelProperty(value = "Software version of the VNF. This is changed when there is any change to the software included in the VNF package. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+	@Schema(description = "Software version of the VNF. This is changed when there is any change to the software included in the VNF package. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfSoftwareVersion() {
 		return vnfSoftwareVersion;
@@ -197,13 +187,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * The version of the VNFD. This information is copied from the VNFD. It shall
-	 * be present after the VNF package content has been on-boarded and absent
-	 * otherwise.
+	 * The version of the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfdVersion
 	 **/
-	@ApiModelProperty(value = "The version of the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+	@Schema(description = "The version of the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfdVersion() {
 		return vnfdVersion;
@@ -219,12 +207,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Checksum of the on-boarded VNF package. It shall be present after the VNF
-	 * package content has been on-boarded and absent otherwise.
+	 * Checksum of the on-boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise.
 	 *
 	 * @return checksum
 	 **/
-	@ApiModelProperty(value = "Checksum of the on-boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
+	@Schema(description = "Checksum of the on-boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	@Valid
 
@@ -250,14 +237,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts that are software images. This
-	 * attribute shall not be present before the VNF package content is on-boarded.
-	 * Otherwise, this attribute shall be present unless it has been requested to be
-	 * excluded per attribute selector.
+	 * Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector.
 	 *
 	 * @return softwareImages
 	 **/
-	@ApiModelProperty(value = "Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector. ")
+	@Schema(description = "Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector. ")
 
 	@Valid
 
@@ -283,14 +267,11 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts contained in the VNF package that are
-	 * not software images. This attribute shall not be present before the VNF
-	 * package content is on-boarded. Otherwise, this attribute shall be present if
-	 * the VNF package contains additional artifacts.
+	 * Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts.
 	 *
 	 * @return additionalArtifacts
 	 **/
-	@ApiModelProperty(value = "Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts. ")
+	@Schema(description = "Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts. ")
 
 	@Valid
 
@@ -312,7 +293,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return onboardingState
 	 **/
-	@ApiModelProperty(required = true, value = "On-boarding state of the VNF package. ")
+	@Schema(required = true, description = "On-boarding state of the VNF package. ")
 	@NotNull
 
 	@Valid
@@ -335,7 +316,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return operationalState
 	 **/
-	@ApiModelProperty(required = true, value = "Operational state of the VNF package. ")
+	@Schema(required = true, description = "Operational state of the VNF package. ")
 	@NotNull
 
 	@Valid
@@ -358,7 +339,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return usageState
 	 **/
-	@ApiModelProperty(required = true, value = "Usage state of the VNF package. ")
+	@Schema(required = true, description = "Usage state of the VNF package. ")
 	@NotNull
 
 	@Valid
@@ -381,7 +362,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return userDefinedData
 	 **/
-	@ApiModelProperty(value = "Usage state of the VNF package. ")
+	@Schema(description = "Usage state of the VNF package. ")
 
 	@Valid
 
@@ -403,7 +384,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -469,8 +450,7 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

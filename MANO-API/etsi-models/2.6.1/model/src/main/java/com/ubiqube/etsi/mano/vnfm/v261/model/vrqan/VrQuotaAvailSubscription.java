@@ -25,13 +25,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription related to notifications related to the availability of the virtualised resources quotas.
  */
-@ApiModel(description = "This type represents a subscription related to notifications related to the availability of the virtualised resources quotas. ")
+@Schema(description = "This type represents a subscription related to notifications related to the availability of the virtualised resources quotas. ")
 @Validated
 
 public class VrQuotaAvailSubscription {
@@ -57,7 +57,7 @@ public class VrQuotaAvailSubscription {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getId() {
@@ -78,7 +78,7 @@ public class VrQuotaAvailSubscription {
 	 *
 	 * @return filter
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public VrQuotaAvailNotificationsFilter getFilter() {
@@ -99,7 +99,7 @@ public class VrQuotaAvailSubscription {
 	 *
 	 * @return callbackUri
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	public String getCallbackUri() {
@@ -120,7 +120,7 @@ public class VrQuotaAvailSubscription {
 	 *
 	 * @return _links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

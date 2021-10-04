@@ -22,15 +22,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Parameters for authentication/authorization using BASIC. Shall be present if
  * authType is \&quot;BASIC\&quot; and the contained information has not been
  * provisioned out of band. Shall be absent otherwise.
  */
-@ApiModel(description = "Parameters for authentication/authorization using BASIC. Shall be present if authType is \"BASIC\" and the contained information has not been provisioned out of band. Shall be absent otherwise. ")
+@Schema(description = "Parameters for authentication/authorization using BASIC. Shall be present if authType is \"BASIC\" and the contained information has not been provisioned out of band. Shall be absent otherwise. ")
 @Validated
 public class SubscriptionAuthenticationParamsBasic {
 	@JsonProperty("userName")
@@ -50,7 +50,7 @@ public class SubscriptionAuthenticationParamsBasic {
 	 *
 	 * @return userName
 	 **/
-	@ApiModelProperty(value = "Username to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. ")
+	@Schema(description = "Username to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. ")
 
 	public String getUserName() {
 		return userName;
@@ -71,7 +71,7 @@ public class SubscriptionAuthenticationParamsBasic {
 	 *
 	 * @return password
 	 **/
-	@ApiModelProperty(value = "Password to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. ")
+	@Schema(description = "Password to be used in HTTP Basic authentication. Shall be present if it has not been provisioned out of band. ")
 
 	public String getPassword() {
 		return password;

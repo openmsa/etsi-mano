@@ -30,8 +30,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationStateType;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription filter related to notifications about NS
@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiModelProperty;
  * values in the array matches (logical \&quot;or\&quot; between the values of
  * one filter attribute).
  */
-@ApiModel(description = "This type represents a subscription filter related to notifications about  NS lifecycle changes. It shall comply with the provisions defined in Table 6.5.3.8-1. At a particular nesting level in the filter structure, the following applies:  All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes).  If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
+@Schema(description = "This type represents a subscription filter related to notifications about  NS lifecycle changes. It shall comply with the provisions defined in Table 6.5.3.8-1. At a particular nesting level in the filter structure, the following applies:  All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes).  If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
 @Validated
 
 
@@ -120,7 +120,7 @@ public class LifecycleChangeNotificationsFilter {
 	 *
 	 * @return nsInstanceSubscriptionFilter
 	 **/
-	@ApiModelProperty(value = "Filter criteria to select NS instances about which to notify. ")
+	@Schema(description = "Filter criteria to select NS instances about which to notify. ")
 
 	@Valid
 
@@ -152,7 +152,7 @@ public class LifecycleChangeNotificationsFilter {
 	 *
 	 * @return notificationTypes
 	 **/
-	@ApiModelProperty(value = "Match particular notification types. Permitted values: - NsLcmOperationOccurenceNotification - NsIdentifierCreationNotification - NsIdentifierDeletionNotification - NsChangeNotification ")
+	@Schema(description = "Match particular notification types. Permitted values: - NsLcmOperationOccurenceNotification - NsIdentifierCreationNotification - NsIdentifierDeletionNotification - NsChangeNotification ")
 
 	public List<NotificationTypesEnum> getNotificationTypes() {
 		return notificationTypes;
@@ -183,7 +183,7 @@ public class LifecycleChangeNotificationsFilter {
 	 *
 	 * @return operationTypes
 	 **/
-	@ApiModelProperty(value = "Match particular NS lifecycle operation types for the notification of type NsLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
+	@Schema(description = "Match particular NS lifecycle operation types for the notification of type NsLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
 
 	@Valid
 
@@ -216,7 +216,7 @@ public class LifecycleChangeNotificationsFilter {
 	 *
 	 * @return operationStates
 	 **/
-	@ApiModelProperty(value = "Match particular LCM operation state values as reported in notifications of type NsLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
+	@Schema(description = "Match particular LCM operation state values as reported in notifications of type NsLcmOperationOccurrenceNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsLcmOperationOccurrenceNotification\", and shall be absent otherwise. ")
 
 	@Valid
 
@@ -248,7 +248,7 @@ public class LifecycleChangeNotificationsFilter {
 	 *
 	 * @return nsComponentTypes
 	 **/
-	@ApiModelProperty(value = "Match particular NS component types for the notification of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChang. ")
+	@Schema(description = "Match particular NS component types for the notification of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChang. ")
 
 	@Valid
 
@@ -280,7 +280,7 @@ public class LifecycleChangeNotificationsFilter {
 	 *
 	 * @return lcmOpNameImpactingNsComponent
 	 **/
-	@ApiModelProperty(value = "Match particular LCM operation names for the notification of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChangeNotification\", and shall be absent otherwise. ")
+	@Schema(description = "Match particular LCM operation names for the notification of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChangeNotification\", and shall be absent otherwise. ")
 
 	@Valid
 
@@ -313,7 +313,7 @@ public class LifecycleChangeNotificationsFilter {
 	 *
 	 * @return lcmOpOccStatusImpactingNsComponent
 	 **/
-	@ApiModelProperty(value = "Match particular LCM operation status values as reported in notifications of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChangeNotification\", and shall be absent otherwise. ")
+	@Schema(description = "Match particular LCM operation status values as reported in notifications of type NsChangeNotification. May be present if the \"notificationTypes\" attribute contains the value \"NsChangeNotification\", and shall be absent otherwise. ")
 
 	@Valid
 

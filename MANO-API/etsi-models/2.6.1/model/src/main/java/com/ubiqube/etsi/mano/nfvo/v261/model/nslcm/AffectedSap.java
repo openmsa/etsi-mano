@@ -27,14 +27,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information about added, deleted and modified SAP of a NS.
  * It shall comply with the provisions in Table 6.5.3.7-1.
  */
-@ApiModel(description = "This type provides information about added, deleted and modified SAP of a NS. It shall comply with the provisions in Table 6.5.3.7-1. ")
+@Schema(description = "This type provides information about added, deleted and modified SAP of a NS. It shall comply with the provisions in Table 6.5.3.7-1. ")
 @Validated
 
 
@@ -132,7 +132,7 @@ public class AffectedSap {
 	 * 
 	 * @return sapInstanceId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the nested NS instance. ")
+	@Schema(required = true, description = "Identifier of the nested NS instance. ")
 	@NotNull
 
 	public String getSapInstanceId() {
@@ -153,7 +153,7 @@ public class AffectedSap {
 	 * 
 	 * @return sapdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NSD of the nested NS instance. ")
+	@Schema(required = true, description = "Identifier of the NSD of the nested NS instance. ")
 	@NotNull
 
 	public String getSapdId() {
@@ -174,7 +174,7 @@ public class AffectedSap {
 	 * 
 	 * @return sapName
 	 **/
-	@ApiModelProperty(value = "Human readable name for the SAP. ")
+	@Schema(description = "Human readable name for the SAP. ")
 
 	public String getSapName() {
 		return sapName;
@@ -195,7 +195,7 @@ public class AffectedSap {
 	 * 
 	 * @return changeType
 	 **/
-	@ApiModelProperty(value = "Signals the type of lifecycle change. Permitted values: - ADD - REMOVE - MODIFY ")
+	@Schema(description = "Signals the type of lifecycle change. Permitted values: - ADD - REMOVE - MODIFY ")
 
 	public ChangeTypeEnum getChangeType() {
 		return changeType;
@@ -216,7 +216,7 @@ public class AffectedSap {
 	 * 
 	 * @return changeResult
 	 **/
-	@ApiModelProperty(value = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
+	@Schema(description = "Signals the result of change identified by the \"changeType\" attribute. Permitted values: - COMPLETED - ROLLED_BACK - FAILED ")
 
 	public ChangeResultEnum getChangeResult() {
 		return changeResult;

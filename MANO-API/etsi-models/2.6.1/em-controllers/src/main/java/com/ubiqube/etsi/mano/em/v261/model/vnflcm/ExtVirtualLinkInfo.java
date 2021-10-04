@@ -27,7 +27,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * ExtVirtualLinkInfo
@@ -55,7 +55,7 @@ public class ExtVirtualLinkInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the external VL and the related external VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
+	@Schema(required = true, description = "Identifier of the external VL and the related external VL information instance. The identifier is assigned by the NFV-MANO entity that manages this VL instance. ")
 	@NotNull
 
 	public String getId() {
@@ -76,7 +76,7 @@ public class ExtVirtualLinkInfo {
 	 *
 	 * @return resourceHandle
 	 **/
-	@ApiModelProperty(required = true, value = "Reference to the resource realizing this VL. ")
+	@Schema(required = true, description = "Reference to the resource realizing this VL. ")
 	@NotNull
 
 	@Valid
@@ -107,7 +107,7 @@ public class ExtVirtualLinkInfo {
 	 *
 	 * @return extLinkPorts
 	 **/
-	@ApiModelProperty(value = "Link ports of this VL. ")
+	@Schema(description = "Link ports of this VL. ")
 
 	@Valid
 

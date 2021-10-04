@@ -34,13 +34,13 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Links to resources related to this resource.
  */
-@ApiModel(description = "Links to resources related to this resource. ")
+@Schema(description = "Links to resources related to this resource. ")
 
 public class LccnSubscriptionLinks {
 	@JsonProperty("self")
@@ -57,7 +57,7 @@ public class LccnSubscriptionLinks {
 	 * @return self
 	 **/
 	@JsonProperty("self")
-	@ApiModelProperty(required = true, value = "URI of this resource. ")
+	@Schema(required = true, description = "URI of this resource. ")
 	@NotNull
 	public Link getSelf() {
 		return self;

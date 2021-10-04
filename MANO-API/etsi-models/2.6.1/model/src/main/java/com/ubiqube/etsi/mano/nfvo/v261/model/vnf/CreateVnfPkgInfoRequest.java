@@ -26,14 +26,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * IndividualVNF package resource creation parameters, as defined in clause
  * 9.5.2.2.
  */
-@ApiModel(description = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2.       ")
+@Schema(description = "IndividualVNF package resource creation parameters, as defined in clause 9.5.2.2.       ")
 @Validated
 
 
@@ -51,7 +51,7 @@ public class CreateVnfPkgInfoRequest {
 	 *
 	 * @return userDefinedData
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 

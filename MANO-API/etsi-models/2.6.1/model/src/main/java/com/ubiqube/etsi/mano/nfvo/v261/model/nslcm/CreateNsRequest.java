@@ -25,13 +25,12 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * CreateNsRequest
  */
 @Validated
-
 
 public class CreateNsRequest {
 	@JsonProperty("nsdId")
@@ -53,7 +52,7 @@ public class CreateNsRequest {
 	 *
 	 * @return nsdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NSD that defines the NS instance to be created. ")
+	@Schema(required = true, description = "Identifier of the NSD that defines the NS instance to be created. ")
 	public String getNsdId() {
 		return nsdId;
 	}
@@ -72,7 +71,7 @@ public class CreateNsRequest {
 	 *
 	 * @return nsName
 	 **/
-	@ApiModelProperty(required = true, value = "Human-readable name of the NS instance to be created. ")
+	@Schema(required = true, description = "Human-readable name of the NS instance to be created. ")
 	@NotNull
 
 	public String getNsName() {
@@ -93,7 +92,7 @@ public class CreateNsRequest {
 	 *
 	 * @return nsDescription
 	 **/
-	@ApiModelProperty(required = true, value = "Human-readable description of the NS instance to be created. ")
+	@Schema(required = true, description = "Human-readable description of the NS instance to be created. ")
 	@NotNull
 
 	public String getNsDescription() {
@@ -136,8 +135,7 @@ public class CreateNsRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

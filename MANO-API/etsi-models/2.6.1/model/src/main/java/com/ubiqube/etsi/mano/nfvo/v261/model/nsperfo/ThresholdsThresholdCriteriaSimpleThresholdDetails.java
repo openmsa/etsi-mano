@@ -18,24 +18,24 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.constraints.NotNull;
 
 /**
   * Details of a simple threshold. Shall be present if thresholdType=\"SIMPLE\". 
  **/
-@ApiModel(description="Details of a simple threshold. Shall be present if thresholdType=\"SIMPLE\". ")
+@Schema(description="Details of a simple threshold. Shall be present if thresholdType=\"SIMPLE\". ")
 public class ThresholdsThresholdCriteriaSimpleThresholdDetails  {
   
-  @ApiModelProperty(required = true, value = "The threshold value. Shall be represented as a floating point number.                ")
+  @Schema(required = true, description = "The threshold value. Shall be represented as a floating point number.                ")
  /**
    * The threshold value. Shall be represented as a floating point number.                
   **/
   private Integer thresholdValue = null;
 
-  @ApiModelProperty(required = true, value = "The hysteresis of the threshold. Shall be represented as a non-negative floating point number. A notification with crossing direction \"UP\" will be generated if the measured value reaches or exceeds \"thresholdValue\" + \"hysteresis\". A notification with crossing direction \"DOWN\" will be generated if the measured value reaches or undercuts \"thresholdValue\" - \"hysteresis\". The hysteresis is defined to prevent storms of threshold crossing notifications. When processing a request to create a threshold, implementations should enforce a suitable minimum value for this attribute (e.g. override the value or reject the request). ")
+  @Schema(required = true, description = "The hysteresis of the threshold. Shall be represented as a non-negative floating point number. A notification with crossing direction \"UP\" will be generated if the measured value reaches or exceeds \"thresholdValue\" + \"hysteresis\". A notification with crossing direction \"DOWN\" will be generated if the measured value reaches or undercuts \"thresholdValue\" - \"hysteresis\". The hysteresis is defined to prevent storms of threshold crossing notifications. When processing a request to create a threshold, implementations should enforce a suitable minimum value for this attribute (e.g. override the value or reject the request). ")
  /**
    * The hysteresis of the threshold. Shall be represented as a non-negative floating point number. A notification with crossing direction \"UP\" will be generated if the measured value reaches or exceeds \"thresholdValue\" + \"hysteresis\". A notification with crossing direction \"DOWN\" will be generated if the measured value reaches or undercuts \"thresholdValue\" - \"hysteresis\". The hysteresis is defined to prevent storms of threshold crossing notifications. When processing a request to create a threshold, implementations should enforce a suitable minimum value for this attribute (e.g. override the value or reject the request). 
   **/

@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.PerformanceInformationAvailableNotification;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo.ThresholdCrossedNotification;
 
-import io.swagger.annotations.Api;
-
 /**
  * SOL005 - NS Performance Management Interface
  *
@@ -32,7 +30,6 @@ import io.swagger.annotations.Api;
  *
  */
 @RestController
-@Api(value = "/")
 public class NsPmNotification261Sol005Controller implements NsPmNotification261Sol005Api {
 
 	/**

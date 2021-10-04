@@ -28,15 +28,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type specifies an PNF to be added to the NS instance and the PNF Profile
  * to use for this PNF. It shall comply with the provisions defined in Table
  * 6.5.3.14-1.
  */
-@ApiModel(description = "This type specifies an PNF to be added to the NS instance and the PNF Profile to use for this PNF. It shall comply with the provisions defined in Table 6.5.3.14-1. ")
+@Schema(description = "This type specifies an PNF to be added to the NS instance and the PNF Profile to use for this PNF. It shall comply with the provisions defined in Table 6.5.3.14-1. ")
 @Validated
 
 
@@ -67,7 +67,7 @@ public class AddPnfData {
 	 * 
 	 * @return pnfId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the PNF. This identifier is allocated by the OSS/BSS. ")
+	@Schema(required = true, description = "Identifier of the PNF. This identifier is allocated by the OSS/BSS. ")
 	@NotNull
 
 	public String getPnfId() {
@@ -88,7 +88,7 @@ public class AddPnfData {
 	 * 
 	 * @return pnfName
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the PNF ")
+	@Schema(required = true, description = "Name of the PNF ")
 	@NotNull
 
 	public String getPnfName() {
@@ -109,7 +109,7 @@ public class AddPnfData {
 	 * 
 	 * @return pnfdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the PNFD on which the PNF is based. ")
+	@Schema(required = true, description = "Identifier of the PNFD on which the PNF is based. ")
 	@NotNull
 
 	public String getPnfdId() {
@@ -130,7 +130,7 @@ public class AddPnfData {
 	 * 
 	 * @return pnfProfileId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of related PnfProfile in the NSD on which the PNF is based. ")
+	@Schema(required = true, description = "Identifier of related PnfProfile in the NSD on which the PNF is based. ")
 	@NotNull
 
 	public String getPnfProfileId() {
@@ -159,7 +159,7 @@ public class AddPnfData {
 	 * 
 	 * @return cpData
 	 **/
-	@ApiModelProperty(value = "Address assigned for the PNF external CP(s). ")
+	@Schema(description = "Address assigned for the PNF external CP(s). ")
 
 	@Valid
 

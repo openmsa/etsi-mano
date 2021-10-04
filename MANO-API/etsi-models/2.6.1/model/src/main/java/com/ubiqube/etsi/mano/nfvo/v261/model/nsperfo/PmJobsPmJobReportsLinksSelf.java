@@ -18,18 +18,18 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.constraints.NotNull;
 
 /**
   * This type represents a link to a resource. 
  **/
-@ApiModel(description="This type represents a link to a resource. ")
+@Schema(description="This type represents a link to a resource. ")
 public class PmJobsPmJobReportsLinksSelf  {
   
-  @ApiModelProperty(required = true, value = "URI of the referenced resource. ")
+  @Schema(required = true, description = "URI of the referenced resource. ")
  /**
    * URI of the referenced resource. 
   **/

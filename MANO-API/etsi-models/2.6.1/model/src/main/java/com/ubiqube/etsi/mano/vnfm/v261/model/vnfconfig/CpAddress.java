@@ -24,8 +24,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents configuration parameters of a CP instance address. *
@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiModelProperty;
  * be present. * NOTE 2: At least one of \&quot;macAddress\&quot; and
  * \&quot;ipAddress\&quot; shall be present.
  */
-@ApiModel(description = "This type represents configuration parameters of a CP instance address.    *  NOTE 1: Either \"address\" or \"useDynamicAddress\" shall be present.    *  NOTE 2: At least one of \"macAddress\" and \"ipAddress\" shall be present. ")
+@Schema(description = "This type represents configuration parameters of a CP instance address.    *  NOTE 1: Either \"address\" or \"useDynamicAddress\" shall be present.    *  NOTE 2: At least one of \"macAddress\" and \"ipAddress\" shall be present. ")
 @Validated
 public class CpAddress {
 	@JsonProperty("address")
@@ -55,7 +55,7 @@ public class CpAddress {
 	 *
 	 * @return address
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -78,7 +78,7 @@ public class CpAddress {
 	 *
 	 * @return useDynamicAddress
 	 **/
-	@ApiModelProperty(value = "Set to true if an address shall be assigned dynamically. Otherwise set to false. The default value shall be false. See NOTE 1. ")
+	@Schema(description = "Set to true if an address shall be assigned dynamically. Otherwise set to false. The default value shall be false. See NOTE 1. ")
 
 	public Boolean isUseDynamicAddress() {
 		return useDynamicAddress;
@@ -99,7 +99,7 @@ public class CpAddress {
 	 *
 	 * @return port
 	 **/
-	@ApiModelProperty(value = "The port assigned to the CP instance (e.g. IP port number, Ethernet port number, etc.). ")
+	@Schema(description = "The port assigned to the CP instance (e.g. IP port number, Ethernet port number, etc.). ")
 
 	public Integer getPort() {
 		return port;

@@ -26,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * ApiVersionInformationApiVersions
@@ -48,12 +48,11 @@ public class ApiVersionInformationApiVersions {
 	}
 
 	/**
-	 * Identifies a supported version. The value of the version attribute shall be a
-	 * version identifier as specified in clause 4.6.1.
+	 * Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1.
 	 *
 	 * @return version
 	 **/
-	@ApiModelProperty(required = true, value = "Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1. ")
+	@Schema(required = true, description = "Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1. ")
 	@NotNull
 
 	public String getVersion() {
@@ -74,7 +73,7 @@ public class ApiVersionInformationApiVersions {
 	 *
 	 * @return isDeprecated
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public Boolean getIsDeprecated() {
 		return isDeprecated;
@@ -94,7 +93,7 @@ public class ApiVersionInformationApiVersions {
 	 *
 	 * @return retirementDate
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 	public OffsetDateTime getRetirementDate() {
@@ -137,8 +136,7 @@ public class ApiVersionInformationApiVersions {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

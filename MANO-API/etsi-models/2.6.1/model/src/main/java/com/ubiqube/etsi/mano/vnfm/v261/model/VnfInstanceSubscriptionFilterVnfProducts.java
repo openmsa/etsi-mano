@@ -28,13 +28,12 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * VnfInstanceSubscriptionFilterVnfProducts
  */
 @Validated
-
 
 public class VnfInstanceSubscriptionFilterVnfProducts {
 	@JsonProperty("vnfProductName")
@@ -51,10 +50,10 @@ public class VnfInstanceSubscriptionFilterVnfProducts {
 
 	/**
 	 * Name of the VNF product to match.
-	 * 
+	 *
 	 * @return vnfProductName
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the VNF product to match. ")
+	@Schema(required = true, description = "Name of the VNF product to match. ")
 	@NotNull
 
 	public String getVnfProductName() {
@@ -79,12 +78,11 @@ public class VnfInstanceSubscriptionFilterVnfProducts {
 	}
 
 	/**
-	 * If present, match VNF instances that belong to VNF products with certain
-	 * versions and a certain product name, from one particular provider.
-	 * 
+	 * If present, match VNF instances that belong to VNF products with certain versions and a certain product name, from one particular provider.
+	 *
 	 * @return versions
 	 **/
-	@ApiModelProperty(value = "If present, match VNF instances that belong to VNF products with certain versions and a certain product name, from one particular provider. ")
+	@Schema(description = "If present, match VNF instances that belong to VNF products with certain versions and a certain product name, from one particular provider. ")
 
 	@Valid
 
@@ -126,8 +124,7 @@ public class VnfInstanceSubscriptionFilterVnfProducts {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

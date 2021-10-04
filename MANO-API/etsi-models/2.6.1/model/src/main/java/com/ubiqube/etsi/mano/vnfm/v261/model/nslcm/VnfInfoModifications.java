@@ -41,8 +41,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents attribute modifications that were performed on an
@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiModelProperty;
  * attributes of the \&quot;VnfInstance\&quot; data structure that were modified
  * implicitly e.g. when modifying the referenced VNF package.
  */
-@ApiModel(description = "This type represents attribute modifications that were performed on an \"Individual VNF instance\" resource. The attributes that can be included consist of those requested to be modified explicitly in the \"VnfInfoModificationRequest\" data structure, and additional attributes of the \"VnfInstance\" data structure that were modified implicitly e.g. when modifying the referenced VNF package. ")
+@Schema(description = "This type represents attribute modifications that were performed on an \"Individual VNF instance\" resource. The attributes that can be included consist of those requested to be modified explicitly in the \"VnfInfoModificationRequest\" data structure, and additional attributes of the \"VnfInstance\" data structure that were modified implicitly e.g. when modifying the referenced VNF package. ")
 @Validated
 public class VnfInfoModifications {
 	@JsonProperty("vnfInstanceName")
@@ -102,7 +102,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return vnfInstanceName
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfInstanceName\" attribute in \"VnfInstance\". ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfInstanceName\" attribute in \"VnfInstance\". ")
 	public String getVnfInstanceName() {
 		return vnfInstanceName;
 	}
@@ -122,7 +122,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return vnfInstanceDescription
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfInstanceDescription\" attribute in \"VnfInstance\". ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfInstanceDescription\" attribute in \"VnfInstance\". ")
 	public String getVnfInstanceDescription() {
 		return vnfInstanceDescription;
 	}
@@ -142,7 +142,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return vnfConfigurableProperties
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". ")
 	@Valid
 	public Map<String, String> getVnfConfigurableProperties() {
 		return vnfConfigurableProperties;
@@ -163,7 +163,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"metadata\" attribute in \"VnfInstance\". ")
+	@Schema(description = "If present, this attribute signals modifications of the \"metadata\" attribute in \"VnfInstance\". ")
 	@Valid
 	public Map<String, String> getMetadata() {
 		return metadata;
@@ -184,7 +184,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return extensions
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"extensions\" attribute in \"VnfInstance\". ")
+	@Schema(description = "If present, this attribute signals modifications of the \"extensions\" attribute in \"VnfInstance\". ")
 	@Valid
 	public Map<String, String> getExtensions() {
 		return extensions;
@@ -214,7 +214,7 @@ public class VnfInfoModifications {
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
-	@ApiModelProperty(value = "If present, this attribute signals modifications of certain entries in the \"vimConnectionInfo\" attribute array in \"VnfInstance\". ")
+	@Schema(description = "If present, this attribute signals modifications of certain entries in the \"vimConnectionInfo\" attribute array in \"VnfInstance\". ")
 	public List<VimConnectionInfo> getVimConnectionInfo() {
 		return vimConnectionInfo;
 	}
@@ -235,7 +235,7 @@ public class VnfInfoModifications {
 	 * @return vnfPkgId
 	 **/
 	@JsonProperty("vnfPkgId")
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfPkgId\" attribute in \"VnfInstance\". ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfPkgId\" attribute in \"VnfInstance\". ")
 	public String getVnfPkgId() {
 		return vnfPkgId;
 	}
@@ -259,7 +259,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return vnfdId
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfdId\" attribute in \"VnfInstance\". ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfdId\" attribute in \"VnfInstance\". ")
 	public String getVnfdId() {
 		return vnfdId;
 	}
@@ -283,7 +283,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return vnfProvider
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfProvider\" attribute in \"VnfInstance\". If present, this attribute (which depends on the value of the \"vnfPkgId\" attribute) was modified implicitly following a request to modify the \"vnfPkgId\" attribute, by copying the value of this attribute from the VNFD in the VNF Package identified by the \"vnfPkgId” attribute. ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfProvider\" attribute in \"VnfInstance\". If present, this attribute (which depends on the value of the \"vnfPkgId\" attribute) was modified implicitly following a request to modify the \"vnfPkgId\" attribute, by copying the value of this attribute from the VNFD in the VNF Package identified by the \"vnfPkgId” attribute. ")
 	public String getVnfProvider() {
 		return vnfProvider;
 	}
@@ -307,7 +307,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return vnfProductName
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfProductName\" attribute in \"VnfInstance\". If present, this attribute (which depends on the value of the \"vnfPkgId\" attribute) was modified implicitly following a request to modify the \"vnfPkgId\" attribute, by copying the value of this attribute from the VNFD in the VNF Package identified by the \"vnfPkgId” attribute. ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfProductName\" attribute in \"VnfInstance\". If present, this attribute (which depends on the value of the \"vnfPkgId\" attribute) was modified implicitly following a request to modify the \"vnfPkgId\" attribute, by copying the value of this attribute from the VNFD in the VNF Package identified by the \"vnfPkgId” attribute. ")
 	public String getVnfProductName() {
 		return vnfProductName;
 	}
@@ -327,7 +327,7 @@ public class VnfInfoModifications {
 	 *
 	 * @return vnfSoftwareVersion
 	 **/
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfSoftwareVersion\" attribute in \"VnfInstance\".  ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfSoftwareVersion\" attribute in \"VnfInstance\".  ")
 	public String getVnfSoftwareVersion() {
 		return vnfSoftwareVersion;
 	}
@@ -352,7 +352,7 @@ public class VnfInfoModifications {
 	 * @return vnfdVersion
 	 **/
 	@JsonProperty("vnfdVersion")
-	@ApiModelProperty(value = "If present, this attribute signals modifications of the \"vnfdVersion\" attribute in \"VnfInstance\". If present, this attribute (which depends on the value of the \"vnfPkgId\" attribute) was modified implicitly following a request to modify the \"vnfPkgId\" attribute, by copying the value of this attribute from the VNFD in the VNF Package identified by the \"vnfPkgId” attribute. ")
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfdVersion\" attribute in \"VnfInstance\". If present, this attribute (which depends on the value of the \"vnfPkgId\" attribute) was modified implicitly following a request to modify the \"vnfPkgId\" attribute, by copying the value of this attribute from the VNFD in the VNF Package identified by the \"vnfPkgId” attribute. ")
 	public String getVnfdVersion() {
 		return vnfdVersion;
 	}

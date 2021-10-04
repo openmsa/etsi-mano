@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -29,34 +29,34 @@ import java.util.List;
 /**
   * This type represents collection criteria for PM jobs.  It shall comply with the provisions defined in Table 7.5.3.3-1. 
  **/
-@ApiModel(description="This type represents collection criteria for PM jobs.  It shall comply with the provisions defined in Table 7.5.3.3-1. ")
+@Schema(description="This type represents collection criteria for PM jobs.  It shall comply with the provisions defined in Table 7.5.3.3-1. ")
 public class PmJobsPmJobCriteria  {
   
-  @ApiModelProperty(value = "This defines the types of performance metrics for the specified object instances. At least one of the two attributes (performance metric or group) shall be present. ")
+  @Schema(description = "This defines the types of performance metrics for the specified object instances. At least one of the two attributes (performance metric or group) shall be present. ")
  /**
    * This defines the types of performance metrics for the specified object instances. At least one of the two attributes (performance metric or group) shall be present. 
   **/
   private List<String> performanceMetric = null;
 
-  @ApiModelProperty(value = "Group of performance metrics. A metric group is a pre-defined list of metrics, known to the producer that it can decompose to individual metrics. At least one of the two attributes (performance metric or group) shall be present. ")
+  @Schema(description = "Group of performance metrics. A metric group is a pre-defined list of metrics, known to the producer that it can decompose to individual metrics. At least one of the two attributes (performance metric or group) shall be present. ")
  /**
    * Group of performance metrics. A metric group is a pre-defined list of metrics, known to the producer that it can decompose to individual metrics. At least one of the two attributes (performance metric or group) shall be present. 
   **/
   private List<String> performanceMetricGroup = null;
 
-  @ApiModelProperty(required = true, value = "Specifies the periodicity at which the producer will collect performance information. The unit shall be seconds. At the end of each reportingPeriod, the producer will inform the consumer about availability of the performance data collected for each completed collection period during this reportingPeriod. The reportingPeriod should be equal to or a multiple of the collectionPeriod. In the latter case, the performance data for the collection periods within one reporting period are reported together.     In particular when choosing short collection and reporting periods, the number of PM jobs that can be supported depends on the capability of the producing entity. ")
+  @Schema(required = true, description = "Specifies the periodicity at which the producer will collect performance information. The unit shall be seconds. At the end of each reportingPeriod, the producer will inform the consumer about availability of the performance data collected for each completed collection period during this reportingPeriod. The reportingPeriod should be equal to or a multiple of the collectionPeriod. In the latter case, the performance data for the collection periods within one reporting period are reported together.     In particular when choosing short collection and reporting periods, the number of PM jobs that can be supported depends on the capability of the producing entity. ")
  /**
    * Specifies the periodicity at which the producer will collect performance information. The unit shall be seconds. At the end of each reportingPeriod, the producer will inform the consumer about availability of the performance data collected for each completed collection period during this reportingPeriod. The reportingPeriod should be equal to or a multiple of the collectionPeriod. In the latter case, the performance data for the collection periods within one reporting period are reported together.     In particular when choosing short collection and reporting periods, the number of PM jobs that can be supported depends on the capability of the producing entity. 
   **/
   private Integer collectionPeriod = null;
 
-  @ApiModelProperty(required = true, value = "Specifies the periodicity at which the producer will report to the consumer. about performance information. The unit shall be seconds. At the end of each reportingPeriod, the producer will inform the consumer about availability of the performance data collected for each completed collection period during this reportingPeriod. The reportingPeriod should be equal to or a multiple of the collectionPeriod. In the latter case, the performance data for the collection periods within one reporting period are reported together.     In particular when choosing short collection and reporting periods, the number of PM jobs that can be supported depends on the capability of the producing entity.           ")
+  @Schema(required = true, description = "Specifies the periodicity at which the producer will report to the consumer. about performance information. The unit shall be seconds. At the end of each reportingPeriod, the producer will inform the consumer about availability of the performance data collected for each completed collection period during this reportingPeriod. The reportingPeriod should be equal to or a multiple of the collectionPeriod. In the latter case, the performance data for the collection periods within one reporting period are reported together.     In particular when choosing short collection and reporting periods, the number of PM jobs that can be supported depends on the capability of the producing entity.           ")
  /**
    * Specifies the periodicity at which the producer will report to the consumer. about performance information. The unit shall be seconds. At the end of each reportingPeriod, the producer will inform the consumer about availability of the performance data collected for each completed collection period during this reportingPeriod. The reportingPeriod should be equal to or a multiple of the collectionPeriod. In the latter case, the performance data for the collection periods within one reporting period are reported together.     In particular when choosing short collection and reporting periods, the number of PM jobs that can be supported depends on the capability of the producing entity.           
   **/
   private Integer reportingPeriod = null;
 
-  @ApiModelProperty(value = "Date-time stamp.  Representation: String formatted according to IETF RFC 3339. ")
+  @Schema(description = "Date-time stamp.  Representation: String formatted according to IETF RFC 3339. ")
  /**
    * Date-time stamp.  Representation: String formatted according to IETF RFC 3339. 
   **/

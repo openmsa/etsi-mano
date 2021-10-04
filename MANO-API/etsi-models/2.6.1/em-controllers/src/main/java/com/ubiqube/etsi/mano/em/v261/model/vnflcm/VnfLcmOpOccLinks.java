@@ -26,13 +26,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Links to resources related to this resource.
  */
-@ApiModel(description = "Links to resources related to this resource. ")
+@Schema(description = "Links to resources related to this resource. ")
 @Validated
 public class VnfLcmOpOccLinks {
 	@JsonProperty("self")
@@ -66,7 +66,7 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return self
 	 **/
-	@ApiModelProperty(required = true, value = "URI of this resource. ")
+	@Schema(required = true, description = "URI of this resource. ")
 	@NotNull
 	@Valid
 	public Link getSelf() {
@@ -87,7 +87,7 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return vnfInstance
 	 **/
-	@ApiModelProperty(required = true, value = "Link to the VNF instance that the operation applies to. ")
+	@Schema(required = true, description = "Link to the VNF instance that the operation applies to. ")
 	@NotNull
 	@Valid
 	public Link getVnfInstance() {
@@ -108,7 +108,7 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return grant
 	 **/
-	@ApiModelProperty(value = "Link to the grant for this operation, if one exists. ")
+	@Schema(description = "Link to the grant for this operation, if one exists. ")
 	@Valid
 	public Link getGrant() {
 		return grant;
@@ -129,7 +129,7 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return cancel
 	 **/
-	@ApiModelProperty(value = "Link to the task resource that represents the \"cancel\" operation for this VNF LCM operation occurrence, if cancelling is currently allowed. ")
+	@Schema(description = "Link to the task resource that represents the \"cancel\" operation for this VNF LCM operation occurrence, if cancelling is currently allowed. ")
 	@Valid
 	public Link getCancel() {
 		return cancel;
@@ -150,7 +150,7 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return retry
 	 **/
-	@ApiModelProperty(value = "Link to the task resource that represents the \"retry\" operation for this VNF LCM operation occurrence, if retrying is currently allowed. ")
+	@Schema(description = "Link to the task resource that represents the \"retry\" operation for this VNF LCM operation occurrence, if retrying is currently allowed. ")
 	@Valid
 	public Link getRetry() {
 		return retry;
@@ -171,7 +171,7 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return rollback
 	 **/
-	@ApiModelProperty(value = "Link to the task resource that represents the \"rollback\" operation for this VNF LCM operation occurrence, if rolling back is currently allowed. ")
+	@Schema(description = "Link to the task resource that represents the \"rollback\" operation for this VNF LCM operation occurrence, if rolling back is currently allowed. ")
 	@Valid
 	public Link getRollback() {
 		return rollback;
@@ -192,7 +192,7 @@ public class VnfLcmOpOccLinks {
 	 *
 	 * @return fail
 	 **/
-	@ApiModelProperty(value = "Link to the task resource that represents the \"fail\" operation for this VNF LCM operation occurrence, if declaring as failed is currently allowed. ")
+	@Schema(description = "Link to the task resource that represents the \"fail\" operation for this VNF LCM operation occurrence, if declaring as failed is currently allowed. ")
 	@Valid
 	public Link getFail() {
 		return fail;

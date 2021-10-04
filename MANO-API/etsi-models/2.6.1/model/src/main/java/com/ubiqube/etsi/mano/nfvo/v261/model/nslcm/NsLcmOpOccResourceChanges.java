@@ -27,15 +27,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This attribute contains information about the cumulative changes to
  * virtualised resources that were performed so far by the LCM operation since
  * its start, if applicable
  */
-@ApiModel(description = "This attribute contains information about the cumulative changes to virtualised resources that were performed so far by the LCM operation since its start, if applicable ")
+@Schema(description = "This attribute contains information about the cumulative changes to virtualised resources that were performed so far by the LCM operation since its start, if applicable ")
 @Validated
 
 
@@ -84,7 +84,7 @@ public class NsLcmOpOccResourceChanges {
 	 *
 	 * @return affectedVnfs
 	 **/
-	@ApiModelProperty(value = "Information about the VNF instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
+	@Schema(description = "Information about the VNF instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
 
 	@Valid
 
@@ -116,7 +116,7 @@ public class NsLcmOpOccResourceChanges {
 	 *
 	 * @return affectedPnfs
 	 **/
-	@ApiModelProperty(value = "Information about the PNF instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
+	@Schema(description = "Information about the PNF instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
 
 	@Valid
 
@@ -148,7 +148,7 @@ public class NsLcmOpOccResourceChanges {
 	 *
 	 * @return affectedVls
 	 **/
-	@ApiModelProperty(value = "Information about the VL instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
+	@Schema(description = "Information about the VL instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. ")
 
 	@Valid
 
@@ -180,7 +180,7 @@ public class NsLcmOpOccResourceChanges {
 	 *
 	 * @return affectedVnffgs
 	 **/
-	@ApiModelProperty(value = "Information about the VNFFG instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note ")
+	@Schema(description = "Information about the VNFFG instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note ")
 
 	@Valid
 
@@ -212,7 +212,7 @@ public class NsLcmOpOccResourceChanges {
 	 *
 	 * @return affectedNss
 	 **/
-	@ApiModelProperty(value = "Information about the nested NS instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note. ")
+	@Schema(description = "Information about the nested NS instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note. ")
 
 	@Valid
 
@@ -244,7 +244,7 @@ public class NsLcmOpOccResourceChanges {
 	 *
 	 * @return affectedSaps
 	 **/
-	@ApiModelProperty(value = "Information about the nested NS instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note. ")
+	@Schema(description = "Information about the nested NS instances that were affected during the lifecycle operation, if this notification represents the result of a lifecycle operation. See note. ")
 
 	@Valid
 

@@ -29,14 +29,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information of an existing or proposed resource used by
  * the VNF.
  */
-@ApiModel(description = "This type provides information of an existing or proposed resource used by the VNF. ")
+@Schema(description = "This type provides information of an existing or proposed resource used by the VNF. ")
 @Validated
 
 
@@ -103,7 +103,7 @@ public class ResourceDefinition {
 	 * 
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this \"ResourceDefinition\" structure, unique at least within the scope of the \"GrantRequest\" structure. ")
+	@Schema(required = true, description = "Identifier of this \"ResourceDefinition\" structure, unique at least within the scope of the \"GrantRequest\" structure. ")
 	@NotNull
 
 	public String getId() {
@@ -125,7 +125,7 @@ public class ResourceDefinition {
 	 * 
 	 * @return type
 	 **/
-	@ApiModelProperty(required = true, value = "Type of the resource definition referenced. Permitted values: * COMPUTE * VL * STORAGE * LINKPORT ")
+	@Schema(required = true, description = "Type of the resource definition referenced. Permitted values: * COMPUTE * VL * STORAGE * LINKPORT ")
 	@NotNull
 
 	public TypeEnum getType() {
@@ -147,7 +147,7 @@ public class ResourceDefinition {
 	 * 
 	 * @return vduId
 	 **/
-	@ApiModelProperty(value = "Reference to the related VDU in the VNFD applicable to this resource. Shall only be present if a VDU is applicable to this resource. ")
+	@Schema(description = "Reference to the related VDU in the VNFD applicable to this resource. Shall only be present if a VDU is applicable to this resource. ")
 
 	public String getVduId() {
 		return vduId;
@@ -168,7 +168,7 @@ public class ResourceDefinition {
 	 * 
 	 * @return resourceTemplateId
 	 **/
-	@ApiModelProperty(value = "Reference to a resource template (VnfVirtualLinkDesc, VirtualComputeDesc, VnfExtCpd, VirtualStorageDesc) in the VNFD. ")
+	@Schema(description = "Reference to a resource template (VnfVirtualLinkDesc, VirtualComputeDesc, VnfExtCpd, VirtualStorageDesc) in the VNFD. ")
 
 	public String getResourceTemplateId() {
 		return resourceTemplateId;
@@ -189,7 +189,7 @@ public class ResourceDefinition {
 	 * 
 	 * @return resource
 	 **/
-	@ApiModelProperty(value = "Resource information for an existing resource. Shall be present for resources that are planned to be deleted or modified. Shall be absent otherwise. ")
+	@Schema(description = "Resource information for an existing resource. Shall be present for resources that are planned to be deleted or modified. Shall be absent otherwise. ")
 
 	@Valid
 

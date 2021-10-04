@@ -187,4 +187,5 @@ public final class NsInstances261Sol005Controller implements NsInstances261Sol00
 	private static String getSelfLink(final NsInstance nsdInfo) {
 		return linkTo(methodOn(NsInstances261Sol005Api.class).nsInstancesNsInstanceIdHealPost(nsdInfo.getId(), null)).withSelfRel().getHref();
 	}
+
 }

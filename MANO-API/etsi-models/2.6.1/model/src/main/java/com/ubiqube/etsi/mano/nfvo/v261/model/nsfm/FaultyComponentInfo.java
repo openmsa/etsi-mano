@@ -22,14 +22,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the faulty component that has a negative impact on an
  * NS. It shall comply with the provisions defined in Table 8.5.3.4-1.
  */
-@ApiModel(description = "This type represents the faulty component that has a negative impact on an NS.  It shall comply with the provisions defined in Table 8.5.3.4-1. ")
+@Schema(description = "This type represents the faulty component that has a negative impact on an NS.  It shall comply with the provisions defined in Table 8.5.3.4-1. ")
 @Validated
 public class FaultyComponentInfo {
 	@JsonProperty("faultyNestedNsInstanceId")
@@ -51,7 +51,7 @@ public class FaultyComponentInfo {
 	 *
 	 * @return faultyNestedNsInstanceId
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getFaultyNestedNsInstanceId() {
 		return faultyNestedNsInstanceId;
@@ -71,7 +71,7 @@ public class FaultyComponentInfo {
 	 *
 	 * @return faultyResourceType
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getFaultyResourceType() {
 		return faultyResourceType;
@@ -91,7 +91,7 @@ public class FaultyComponentInfo {
 	 *
 	 * @return faultyNsVirtualLinkInstanceId
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getFaultyNsVirtualLinkInstanceId() {
 		return faultyNsVirtualLinkInstanceId;

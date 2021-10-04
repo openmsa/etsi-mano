@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnffm.sol002;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -54,7 +53,7 @@ public class FaultMngtSubscriptions261Sol002Controller implements FaultmngtSubsc
 	}
 
 	@Override
-	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) throws URISyntaxException {
+	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) {
 		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, FaultMngtSubscriptions261Sol002Controller::makeLinks, FaultMngtSubscriptions261Sol002Controller::makeSelf);
 	}
 

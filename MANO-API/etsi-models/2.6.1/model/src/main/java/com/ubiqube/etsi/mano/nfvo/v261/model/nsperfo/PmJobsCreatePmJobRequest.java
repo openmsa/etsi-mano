@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -29,16 +29,16 @@ import java.util.List;
 /**
   * This type represents a request to create a PM job.  It shall comply with the provisions defined in Table 7.5.2.6-1. 
  **/
-@ApiModel(description="This type represents a request to create a PM job.  It shall comply with the provisions defined in Table 7.5.2.6-1. ")
+@Schema(description="This type represents a request to create a PM job.  It shall comply with the provisions defined in Table 7.5.2.6-1. ")
 public class PmJobsCreatePmJobRequest  {
   
-  @ApiModelProperty(required = true, value = "Identifiers of the NS instances for which performance information is requested to be collected. ")
+  @Schema(required = true, description = "Identifiers of the NS instances for which performance information is requested to be collected. ")
  /**
    * Identifiers of the NS instances for which performance information is requested to be collected. 
   **/
   private List<String> objectInstanceIds = new ArrayList<String>();
 
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private PmJobsPmJobCriteria criteria = null;
  /**

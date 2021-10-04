@@ -28,15 +28,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an artifact other than a software image which is
  * contained in a VNF package. It shall comply with provisions defined in Table
  * 9.5.3.3-1.
  */
-@ApiModel(description = "This type represents an artifact other than a software image which is contained in a VNF package.  It shall comply with provisions defined in Table 9.5.3.3-1. ")
+@Schema(description = "This type represents an artifact other than a software image which is contained in a VNF package.  It shall comply with provisions defined in Table 9.5.3.3-1. ")
 @Validated
 public class VnfPackageArtifactInfo {
 	@JsonProperty("artifactPath")
@@ -61,7 +61,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return artifactPath
 	 **/
-	@ApiModelProperty(required = true, value = "Path in the VNF package, which identifies the artifact and also allows to access a copy of the artifact. The value of this attribute shall start with the name of the first segment in the path, i.e. it shall not be prefixed by path separator characters such as \".\" and \"/\". EXAMPLE: foo/bar/run.sh ")
+	@Schema(required = true, description = "Path in the VNF package, which identifies the artifact and also allows to access a copy of the artifact. The value of this attribute shall start with the name of the first segment in the path, i.e. it shall not be prefixed by path separator characters such as \".\" and \"/\". EXAMPLE: foo/bar/run.sh ")
 	@NotNull
 
 	public String getArtifactPath() {
@@ -82,7 +82,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return checksum
 	 **/
-	@ApiModelProperty(required = true, value = "Checksum of the artifact file. ")
+	@Schema(required = true, description = "Checksum of the artifact file. ")
 	@NotNull
 
 	@Valid
@@ -106,7 +106,7 @@ public class VnfPackageArtifactInfo {
 	 *
 	 * @return metadata
 	 **/
-	@ApiModelProperty(value = "The metadata of the artifact that are available in the VNF package, such as Content type, size, creation date, etc. ")
+	@Schema(description = "The metadata of the artifact that are available in the VNF package, such as Content type, size, creation date, etc. ")
 
 	@Valid
 

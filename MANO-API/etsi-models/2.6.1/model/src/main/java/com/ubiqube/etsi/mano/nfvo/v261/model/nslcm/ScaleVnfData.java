@@ -28,14 +28,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents defines the information to scale a VNF instance to a
  * given level, or to scale a VNF instance by steps.
  */
-@ApiModel(description = "This type represents defines the information to scale a VNF instance  to a given level, or to scale a VNF instance by steps. ")
+@Schema(description = "This type represents defines the information to scale a VNF instance  to a given level, or to scale a VNF instance by steps. ")
 @Validated
 
 
@@ -100,7 +100,7 @@ public class ScaleVnfData {
 	 * 
 	 * @return vnfInstanceid
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF instance being scaled. ")
+	@Schema(required = true, description = "Identifier of the VNF instance being scaled. ")
 	@NotNull
 
 	public String getVnfInstanceid() {
@@ -124,7 +124,7 @@ public class ScaleVnfData {
 	 * 
 	 * @return scaleVnfType
 	 **/
-	@ApiModelProperty(required = true, value = "Type of the scale VNF operation requested. Allowed values are: - SCALE_OUT - SCALE_IN - SCALE_TO_INSTANTIATION_LEVEL - SCALE_TO_SCALE_LEVEL(S) The set of types actually supported depends on the capabilities of the VNF being managed. ")
+	@Schema(required = true, description = "Type of the scale VNF operation requested. Allowed values are: - SCALE_OUT - SCALE_IN - SCALE_TO_INSTANTIATION_LEVEL - SCALE_TO_SCALE_LEVEL(S) The set of types actually supported depends on the capabilities of the VNF being managed. ")
 	@NotNull
 
 	public ScaleVnfTypeEnum getScaleVnfType() {
@@ -145,7 +145,7 @@ public class ScaleVnfData {
 	 * 
 	 * @return scaleToLevelData
 	 **/
-	@ApiModelProperty(value = "The information used for scaling to a given level. ")
+	@Schema(description = "The information used for scaling to a given level. ")
 
 	@Valid
 
@@ -167,7 +167,7 @@ public class ScaleVnfData {
 	 * 
 	 * @return scaleByStepData
 	 **/
-	@ApiModelProperty(value = "The information used for scaling by steps. ")
+	@Schema(description = "The information used for scaling by steps. ")
 
 	@Valid
 

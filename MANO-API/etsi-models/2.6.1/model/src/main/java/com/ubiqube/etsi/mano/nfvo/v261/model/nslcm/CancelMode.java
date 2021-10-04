@@ -27,15 +27,15 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.CancelModeType;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a parameter to select the mode of canceling an ongoing
  * NS LCM operation occurrence. It shall comply with the provisions defined in
  * Table 6.5.2.16-1.
  */
-@ApiModel(description = "This type represents a parameter to select the mode of canceling an ongoing NS LCM operation occurrence.  It shall comply with the provisions defined in Table 6.5.2.16-1. ")
+@Schema(description = "This type represents a parameter to select the mode of canceling an ongoing NS LCM operation occurrence.  It shall comply with the provisions defined in Table 6.5.2.16-1. ")
 @Validated
 
 
@@ -53,7 +53,7 @@ public class CancelMode {
 	 * 
 	 * @return cancelMode
 	 **/
-	@ApiModelProperty(required = true, value = "Cancellation mode to apply. ")
+	@Schema(required = true, description = "Cancellation mode to apply. ")
 	@NotNull
 
 	@Valid

@@ -27,8 +27,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents attribute modifications for an \&quot;Individual
@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiModelProperty;
  * that can be modified are included in the \&quot;AlarmModifications\&quot;
  * data type.
  */
-@ApiModel(description = "This type represents attribute modifications for an \"Individual alarm\" resource, i.e. modifications to a resource representation based on the \"Alarm\" data type. The attributes of \"Alarm\" that can be modified are included in the \"AlarmModifications\" data type. ")
+@Schema(description = "This type represents attribute modifications for an \"Individual alarm\" resource, i.e. modifications to a resource representation based on the \"Alarm\" data type. The attributes of \"Alarm\" that can be modified are included in the \"AlarmModifications\" data type. ")
 @Validated
 
 
@@ -86,7 +86,7 @@ public class AlarmModifications {
 	 *
 	 * @return ackState
 	 **/
-	@ApiModelProperty(required = true, value = "New value of the \"ackState\" attribute in \"Alarm\". Permitted values: * ACKNOWLEDGED ")
+	@Schema(required = true, description = "New value of the \"ackState\" attribute in \"Alarm\". Permitted values: * ACKNOWLEDGED ")
 	@NotNull
 
 	public AckStateEnum getAckState() {

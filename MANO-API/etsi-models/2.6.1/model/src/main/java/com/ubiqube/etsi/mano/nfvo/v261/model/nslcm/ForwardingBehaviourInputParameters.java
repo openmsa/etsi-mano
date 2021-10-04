@@ -29,14 +29,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents provides input parameters to configure the forwarding
  * behaviour. It shall comply with the provisions defined in Table 6.5.3.73-1.
  */
-@ApiModel(description = "This type represents provides input parameters to configure the forwarding behaviour.  It shall comply with the provisions defined in Table 6.5.3.73-1. ")
+@Schema(description = "This type represents provides input parameters to configure the forwarding behaviour.  It shall comply with the provisions defined in Table 6.5.3.73-1. ")
 @Validated
 
 
@@ -103,7 +103,7 @@ public class ForwardingBehaviourInputParameters {
 	 * 
 	 * @return algortihmName
 	 **/
-	@ApiModelProperty(value = "May be included if forwarding behaviour is equal to LB. Shall not be included otherwise. Permitted values: * ROUND_ROBIN * LEAST_CONNECTION * LEAST_TRAFFIC * LEAST_RESPONSE_TIME * CHAINED_FAILOVER * SOURCE_IP_HASH * SOURCE_MAC_HASH ")
+	@Schema(description = "May be included if forwarding behaviour is equal to LB. Shall not be included otherwise. Permitted values: * ROUND_ROBIN * LEAST_CONNECTION * LEAST_TRAFFIC * LEAST_RESPONSE_TIME * CHAINED_FAILOVER * SOURCE_IP_HASH * SOURCE_MAC_HASH ")
 
 	public AlgortihmNameEnum getAlgortihmName() {
 		return algortihmName;
@@ -134,7 +134,7 @@ public class ForwardingBehaviourInputParameters {
 	 * 
 	 * @return algorithmWeights
 	 **/
-	@ApiModelProperty(value = "Percentage of messages sent to a CP instance. May be included if applicable to  the algorithm. If applicable to the algorithm but not provided, default values determined by  the VIM or NFVI are expected to be used. Weight applies to the CP instances in the order they have been created. ")
+	@Schema(description = "Percentage of messages sent to a CP instance. May be included if applicable to  the algorithm. If applicable to the algorithm but not provided, default values determined by  the VIM or NFVI are expected to be used. Weight applies to the CP instances in the order they have been created. ")
 
 	public List<Integer> getAlgorithmWeights() {
 		return algorithmWeights;

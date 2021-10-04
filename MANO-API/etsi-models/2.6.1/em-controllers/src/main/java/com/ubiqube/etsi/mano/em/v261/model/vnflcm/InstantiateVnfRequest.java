@@ -28,7 +28,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * InstantiateVnfRequest
@@ -69,7 +69,7 @@ public class InstantiateVnfRequest {
 	 *
 	 * @return flavourId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the VNF deployment flavour to be instantiated. ")
+	@Schema(required = true, description = "Identifier of the VNF deployment flavour to be instantiated. ")
 	@NotNull
 
 	public String getFlavourId() {
@@ -90,7 +90,7 @@ public class InstantiateVnfRequest {
 	 *
 	 * @return instantiationLevelId
 	 **/
-	@ApiModelProperty(value = "Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
+	@Schema(description = "Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
 
 	public String getInstantiationLevelId() {
 		return instantiationLevelId;
@@ -118,7 +118,7 @@ public class InstantiateVnfRequest {
 	 *
 	 * @return extVirtualLinks
 	 **/
-	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
+	@Schema(description = "Information about external VLs to connect the VNF to. ")
 
 	@Valid
 
@@ -148,7 +148,7 @@ public class InstantiateVnfRequest {
 	 *
 	 * @return extManagedVirtualLinks
 	 **/
-	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
+	@Schema(description = "Information about external VLs to connect the VNF to. ")
 
 	@Valid
 
@@ -170,7 +170,7 @@ public class InstantiateVnfRequest {
 	 *
 	 * @return localizationLanguage
 	 **/
-	@ApiModelProperty(value = "Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. ")
+	@Schema(description = "Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. ")
 
 	public String getLocalizationLanguage() {
 		return localizationLanguage;
@@ -190,7 +190,7 @@ public class InstantiateVnfRequest {
 	 *
 	 * @return additionalParams
 	 **/
-	@ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \"InstantiateVnfOpConfig\". ")
+	@Schema(description = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \"InstantiateVnfOpConfig\". ")
 
 	@Valid
 
@@ -212,7 +212,7 @@ public class InstantiateVnfRequest {
 	 *
 	 * @return extensions
 	 **/
-	@ApiModelProperty(value = "If present, this attribute provides values for the \"extensions\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure. ")
+	@Schema(description = "If present, this attribute provides values for the \"extensions\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure. ")
 
 	@Valid
 

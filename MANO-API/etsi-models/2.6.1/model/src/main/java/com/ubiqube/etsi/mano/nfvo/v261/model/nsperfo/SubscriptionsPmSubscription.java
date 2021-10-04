@@ -18,8 +18,8 @@
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -27,26 +27,26 @@ import javax.validation.constraints.NotNull;
 /**
   * This type represents a subscription. 
  **/
-@ApiModel(description="This type represents a subscription. ")
+@Schema(description="This type represents a subscription. ")
 public class SubscriptionsPmSubscription  {
   
-  @ApiModelProperty(required = true, value = "An identifier with the intention of being globally unique. ")
+  @Schema(required = true, description = "An identifier with the intention of being globally unique. ")
  /**
    * An identifier with the intention of being globally unique. 
   **/
   private String id = null;
 
-  @ApiModelProperty(value = "")
+  @Schema(description = "")
   @Valid
   private SubscriptionsPmSubscriptionFilter filter = null;
 
-  @ApiModelProperty(required = true, value = "String formatted according to IETF RFC 3986. ")
+  @Schema(required = true, description = "String formatted according to IETF RFC 3986. ")
  /**
    * String formatted according to IETF RFC 3986. 
   **/
   private String callbackUri = null;
 
-  @ApiModelProperty(required = true, value = "")
+  @Schema(required = true, description = "")
   @Valid
   private SubscriptionsPmSubscriptionLinks links = null;
  /**

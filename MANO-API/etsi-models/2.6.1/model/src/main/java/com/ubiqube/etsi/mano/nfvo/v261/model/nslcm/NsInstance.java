@@ -31,13 +31,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.InstantiationStateEnum;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a response for Query NS operation. It shall comply with the provisions defined in Table 6.5.2.10-1.
  */
-@ApiModel(description = "This type represents a response for Query NS operation.  It shall comply with the provisions defined in Table 6.5.2.10-1. ")
+@Schema(description = "This type represents a response for Query NS operation.  It shall comply with the provisions defined in Table 6.5.2.10-1. ")
 @Validated
 
 public class NsInstance {
@@ -111,7 +111,7 @@ public class NsInstance {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NS instance. ")
+	@Schema(required = true, description = "Identifier of the NS instance. ")
 	@NotNull
 
 	public String getId() {
@@ -132,7 +132,7 @@ public class NsInstance {
 	 *
 	 * @return nsInstanceName
 	 **/
-	@ApiModelProperty(required = true, value = "Human readable name of the NS instance. ")
+	@Schema(required = true, description = "Human readable name of the NS instance. ")
 	@NotNull
 
 	public String getNsInstanceName() {
@@ -153,7 +153,7 @@ public class NsInstance {
 	 *
 	 * @return nsInstanceDescription
 	 **/
-	@ApiModelProperty(required = true, value = "Human readable description of the NS instance. ")
+	@Schema(required = true, description = "Human readable description of the NS instance. ")
 	@NotNull
 
 	public String getNsInstanceDescription() {
@@ -174,7 +174,7 @@ public class NsInstance {
 	 *
 	 * @return nsdId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NSD on which the NS instance is based. ")
+	@Schema(required = true, description = "Identifier of the NSD on which the NS instance is based. ")
 	@NotNull
 
 	public String getNsdId() {
@@ -195,7 +195,7 @@ public class NsInstance {
 	 *
 	 * @return nsdInfoId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NSD information object on which the NS instance is based. This identifier has been allocated by the NFVO. ")
+	@Schema(required = true, description = "Identifier of the NSD information object on which the NS instance is based. This identifier has been allocated by the NFVO. ")
 	@NotNull
 
 	public UUID getNsdInfoId() {
@@ -216,7 +216,7 @@ public class NsInstance {
 	 *
 	 * @return flavourId
 	 **/
-	@ApiModelProperty(value = "Identifier of the NS deployment flavor applied to the NS instance. This attribute shall be present if the nsState attribute value is INSTANTIATED. ")
+	@Schema(description = "Identifier of the NS deployment flavor applied to the NS instance. This attribute shall be present if the nsState attribute value is INSTANTIATED. ")
 
 	public String getFlavourId() {
 		return flavourId;
@@ -244,7 +244,7 @@ public class NsInstance {
 	 *
 	 * @return vnfInstance
 	 **/
-	@ApiModelProperty(value = "Information on constituent VNF(s) of the NS instance. ")
+	@Schema(description = "Information on constituent VNF(s) of the NS instance. ")
 
 	@Valid
 
@@ -274,7 +274,7 @@ public class NsInstance {
 	 *
 	 * @return pnfInfo
 	 **/
-	@ApiModelProperty(value = "Information on the PNF(s) that are part of the NS instance. ")
+	@Schema(description = "Information on the PNF(s) that are part of the NS instance. ")
 
 	@Valid
 
@@ -304,7 +304,7 @@ public class NsInstance {
 	 *
 	 * @return virtualLinkInfo
 	 **/
-	@ApiModelProperty(value = "Information on the VL(s) of the NS instance. This attribute shall be present if the nsState attribute value is INSTANTIATED and if the NS instance has specified connectivity. ")
+	@Schema(description = "Information on the VL(s) of the NS instance. This attribute shall be present if the nsState attribute value is INSTANTIATED and if the NS instance has specified connectivity. ")
 
 	@Valid
 
@@ -334,7 +334,7 @@ public class NsInstance {
 	 *
 	 * @return vnffgInfo
 	 **/
-	@ApiModelProperty(value = "Information on the VNFFG(s) of the NS instance. ")
+	@Schema(description = "Information on the VNFFG(s) of the NS instance. ")
 
 	@Valid
 
@@ -364,7 +364,7 @@ public class NsInstance {
 	 *
 	 * @return sapInfo
 	 **/
-	@ApiModelProperty(value = "Information on the SAP(s) of the NS instance. ")
+	@Schema(description = "Information on the SAP(s) of the NS instance. ")
 
 	@Valid
 
@@ -394,7 +394,7 @@ public class NsInstance {
 	 *
 	 * @return nestedNsInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of the nested NS(s) of the NS instance. ")
+	@Schema(description = "Identifier of the nested NS(s) of the NS instance. ")
 
 	public List<UUID> getNestedNsInstanceId() {
 		return nestedNsInstanceId;
@@ -414,7 +414,7 @@ public class NsInstance {
 	 *
 	 * @return nsState
 	 **/
-	@ApiModelProperty(required = true, value = "The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS instance is terminated or not instantiated. INSTANTIATED: The NS instance is instantiated. ")
+	@Schema(required = true, description = "The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS instance is terminated or not instantiated. INSTANTIATED: The NS instance is instantiated. ")
 	@NotNull
 
 	public InstantiationStateEnum getNsState() {
@@ -443,7 +443,7 @@ public class NsInstance {
 	 *
 	 * @return monitoringParameter
 	 **/
-	@ApiModelProperty(value = "Performance metrics tracked by the NFVO (e.g. for auto-scaling purposes) as identified by the NS designer in the NSD. ")
+	@Schema(description = "Performance metrics tracked by the NFVO (e.g. for auto-scaling purposes) as identified by the NS designer in the NSD. ")
 
 	@Valid
 
@@ -473,7 +473,7 @@ public class NsInstance {
 	 *
 	 * @return nsScaleStatus
 	 **/
-	@ApiModelProperty(value = "Status of each NS scaling aspect declared in the applicable DF, how \"big\" the NS instance has been scaled w.r.t. that aspect. This attribute shall be present if the nsState attribute value is INSTANTIATED. ")
+	@Schema(description = "Status of each NS scaling aspect declared in the applicable DF, how \"big\" the NS instance has been scaled w.r.t. that aspect. This attribute shall be present if the nsState attribute value is INSTANTIATED. ")
 
 	@Valid
 
@@ -503,7 +503,7 @@ public class NsInstance {
 	 *
 	 * @return additionalAffinityOrAntiAffinityRule
 	 **/
-	@ApiModelProperty(value = "Information on the additional affinity or anti-affinity rule from NS instantiation operation. Shall not conflict with rules already specified in the NSD. ")
+	@Schema(description = "Information on the additional affinity or anti-affinity rule from NS instantiation operation. Shall not conflict with rules already specified in the NSD. ")
 
 	@Valid
 
@@ -525,7 +525,7 @@ public class NsInstance {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 

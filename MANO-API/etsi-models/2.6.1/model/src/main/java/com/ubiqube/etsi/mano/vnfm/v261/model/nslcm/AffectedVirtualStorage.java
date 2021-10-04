@@ -37,14 +37,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.ResourceHandle;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ChangeTypeEnum;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type provides information about added, deleted, modified and temporary
  * virtual storage resources.
  */
-@ApiModel(description = "This type provides information about added, deleted, modified and temporary virtual storage resources. ")
+@Schema(description = "This type provides information about added, deleted, modified and temporary virtual storage resources. ")
 
 public class AffectedVirtualStorage {
 	@JsonProperty("id")
@@ -75,7 +75,7 @@ public class AffectedVirtualStorage {
 	 * @return id
 	 **/
 	@JsonProperty("id")
-	@ApiModelProperty(required = true, value = "Identifier of the storage instance, identifying the applicable \"virtualStorageResourceInfo\" entry in the \"VnfInstance\" data type. ")
+	@Schema(required = true, description = "Identifier of the storage instance, identifying the applicable \"virtualStorageResourceInfo\" entry in the \"VnfInstance\" data type. ")
 	@NotNull
 	public String getId() {
 		return id;
@@ -96,7 +96,7 @@ public class AffectedVirtualStorage {
 	 * @return virtualStorageDescId
 	 **/
 	@JsonProperty("virtualStorageDescId")
-	@ApiModelProperty(required = true, value = "Identifier of the related VirtualStorage descriptor in the VNFD. ")
+	@Schema(required = true, description = "Identifier of the related VirtualStorage descriptor in the VNFD. ")
 	@NotNull
 	public String getVirtualStorageDescId() {
 		return virtualStorageDescId;
@@ -119,7 +119,7 @@ public class AffectedVirtualStorage {
 	 * @return changeType
 	 **/
 	@JsonProperty("changeType")
-	@ApiModelProperty(required = true, value = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. ")
+	@Schema(required = true, description = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY For a temporary resource, an AffectedVirtualStorage structure exists as long as the temporary resource exists. ")
 	@NotNull
 	public ChangeTypeEnum getChangeType() {
 		return changeType;
@@ -142,7 +142,7 @@ public class AffectedVirtualStorage {
 	 * @return storageResource
 	 **/
 	@JsonProperty("storageResource")
-	@ApiModelProperty(required = true, value = "Reference to the VirtualStorage resource. Detailed information is  (for new and modified resources) or has been (for removed resources) available from the VIM. ")
+	@Schema(required = true, description = "Reference to the VirtualStorage resource. Detailed information is  (for new and modified resources) or has been (for removed resources) available from the VIM. ")
 	@NotNull
 	public ResourceHandle getStorageResource() {
 		return storageResource;
@@ -165,7 +165,7 @@ public class AffectedVirtualStorage {
 	 * @return metadata
 	 **/
 	@JsonProperty("metadata")
-	@ApiModelProperty(value = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VirtualStorageResourceInfo structure. ")
+	@Schema(description = "Metadata about this resource. The content of this attribute shall be a copy of the content of the \"metadata\" attribute of the VirtualStorageResourceInfo structure. ")
 	public Map<String, String> getMetadata() {
 		return metadata;
 	}

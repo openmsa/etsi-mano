@@ -31,13 +31,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a request for the scale NS operation.
  */
-@ApiModel(description = "This type represents a request for the scale NS operation. ")
+@Schema(description = "This type represents a request for the scale NS operation. ")
 @Validated
 
 
@@ -98,7 +98,7 @@ public class ScaleNsRequest {
 	 * 
 	 * @return scaleType
 	 **/
-	@ApiModelProperty(required = true, value = "Indicates the type of scaling to be performed. Possible values: - SCALE_NS - SCALE_VNF ")
+	@Schema(required = true, description = "Indicates the type of scaling to be performed. Possible values: - SCALE_NS - SCALE_VNF ")
 	@NotNull
 
 	public ScaleTypeEnum getScaleType() {
@@ -120,7 +120,7 @@ public class ScaleNsRequest {
 	 * 
 	 * @return scaleNsData
 	 **/
-	@ApiModelProperty(value = "The necessary information to scale the referenced NS instance. It shall be present when scaleType = SCALE_NS. ")
+	@Schema(description = "The necessary information to scale the referenced NS instance. It shall be present when scaleType = SCALE_NS. ")
 
 	@Valid
 
@@ -151,7 +151,7 @@ public class ScaleNsRequest {
 	 * 
 	 * @return scaleVnfData
 	 **/
-	@ApiModelProperty(value = "The necessary information to scale the referenced NS instance. It shall be present when scaleType = SCALE_VNF. ")
+	@Schema(description = "The necessary information to scale the referenced NS instance. It shall be present when scaleType = SCALE_VNF. ")
 
 	@Valid
 
@@ -175,7 +175,7 @@ public class ScaleNsRequest {
 	 * 
 	 * @return scaleTime
 	 **/
-	@ApiModelProperty(value = "Timestamp indicating the scale time of the NS, i.e. the NS will be scaled at this timestamp. Cardinality \"0\" indicates the NS scaling takes place immediately\". ")
+	@Schema(description = "Timestamp indicating the scale time of the NS, i.e. the NS will be scaled at this timestamp. Cardinality \"0\" indicates the NS scaling takes place immediately\". ")
 
 	@Valid
 

@@ -30,13 +30,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents information about a network address that has been assigned. It shall comply with the provisions defined in Table 6.5.3.18-1.
  */
-@ApiModel(description = "This type represents information about a network address that has been assigned. It shall comply with the provisions defined in Table 6.5.3.18-1. ")
+@Schema(description = "This type represents information about a network address that has been assigned. It shall comply with the provisions defined in Table 6.5.3.18-1. ")
 @Validated
 public class IpOverEthernetAddressInfo {
 	@JsonProperty("macAddress")
@@ -102,7 +102,7 @@ public class IpOverEthernetAddressInfo {
 	 *
 	 * @return macAddress
 	 **/
-	@ApiModelProperty(required = true, value = "Assigned MAC address. ")
+	@Schema(required = true, description = "Assigned MAC address. ")
 	@NotNull
 
 	public String getMacAddress() {
@@ -128,7 +128,7 @@ public class IpOverEthernetAddressInfo {
 	 *
 	 * @return ipAddresses
 	 **/
-	@ApiModelProperty(required = true, value = "Addresses assigned to the CP instance. Each entry represents IP addresses assigned by fixed or dynamic IP address assignment per subnet. ")
+	@Schema(required = true, description = "Addresses assigned to the CP instance. Each entry represents IP addresses assigned by fixed or dynamic IP address assignment per subnet. ")
 	@NotNull
 
 	@Valid
@@ -151,7 +151,7 @@ public class IpOverEthernetAddressInfo {
 	 *
 	 * @return type
 	 **/
-	@ApiModelProperty(value = "The type of the IP addresses ")
+	@Schema(description = "The type of the IP addresses ")
 
 	public TypeEnum getType() {
 		return type;
@@ -171,7 +171,7 @@ public class IpOverEthernetAddressInfo {
 	 *
 	 * @return addresses
 	 **/
-	@ApiModelProperty(required = true, value = "Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). See note. ")
+	@Schema(required = true, description = "Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). See note. ")
 	@NotNull
 
 	public String getAddresses() {
@@ -192,7 +192,7 @@ public class IpOverEthernetAddressInfo {
 	 *
 	 * @return isDynamic
 	 **/
-	@ApiModelProperty(value = "Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise. ")
+	@Schema(description = "Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise. ")
 
 	public Boolean isIsDynamic() {
 		return isDynamic;
@@ -212,7 +212,7 @@ public class IpOverEthernetAddressInfo {
 	 *
 	 * @return addressRange
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid
@@ -241,7 +241,7 @@ public class IpOverEthernetAddressInfo {
 	 *
 	 * @return subnetId
 	 **/
-	@ApiModelProperty(required = true, value = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet. ")
+	@Schema(required = true, description = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet. ")
 	@NotNull
 
 	public String getSubnetId() {

@@ -28,13 +28,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents network protocol data.
  */
-@ApiModel(description = "This type represents network protocol data. ")
+@Schema(description = "This type represents network protocol data. ")
 @Validated
 public class CpProtocolData {
 	/**
@@ -88,7 +88,7 @@ public class CpProtocolData {
 	 *
 	 * @return layerProtocol
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of layer(s) and protocol(s). This attribute allows to signal the addition of further types of layer and protocol in future versions of the present document in a backwards-compatible way. In the current version of the present document, only IP over Ethernet is supported. ")
+	@Schema(required = true, description = "Identifier of layer(s) and protocol(s). This attribute allows to signal the addition of further types of layer and protocol in future versions of the present document in a backwards-compatible way. In the current version of the present document, only IP over Ethernet is supported. ")
 	@NotNull
 
 	public LayerProtocolEnum getLayerProtocol() {
@@ -111,7 +111,7 @@ public class CpProtocolData {
 	 *
 	 * @return ipOverEthernet
 	 **/
-	@ApiModelProperty(value = "Network address data for IP over Ethernet to assign to the extCP instance. Shall be present if layerProtocol is equal to \"IP_OVER_ETHERNET\", and shall be absent otherwise. ")
+	@Schema(description = "Network address data for IP over Ethernet to assign to the extCP instance. Shall be present if layerProtocol is equal to \"IP_OVER_ETHERNET\", and shall be absent otherwise. ")
 
 	@Valid
 

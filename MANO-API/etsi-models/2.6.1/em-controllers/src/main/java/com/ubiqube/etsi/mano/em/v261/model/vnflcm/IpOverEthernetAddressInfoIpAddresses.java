@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * IpOverEthernetAddressInfoIpAddresses
@@ -94,7 +94,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 *
 	 * @return type
 	 **/
-	@ApiModelProperty(required = true, value = "The type of the IP addresses. Permitted values: IPV4, IPV6. ")
+	@Schema(required = true, description = "The type of the IP addresses. Permitted values: IPV4, IPV6. ")
 	@NotNull
 
 	public TypeEnum getType() {
@@ -123,7 +123,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 *
 	 * @return addresses
 	 **/
-	@ApiModelProperty(value = "Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). Exactly one of \"addresses\" or \"addressRange\" shall be present. ")
+	@Schema(description = "Fixed addresses assigned (from the subnet defined by \"subnetId\" if provided). Exactly one of \"addresses\" or \"addressRange\" shall be present. ")
 
 	public List<String> getAddresses() {
 		return addresses;
@@ -143,7 +143,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 *
 	 * @return isDynamic
 	 **/
-	@ApiModelProperty(value = "Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise. ")
+	@Schema(description = "Indicates whether this set of addresses was assigned dynamically (true) or based on address information provided as input from the API consumer (false). Shall be present if \"addresses\" is present and shall be absent otherwise. ")
 
 	public Boolean isIsDynamic() {
 		return isDynamic;
@@ -163,7 +163,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 *
 	 * @return addressRange
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -185,7 +185,7 @@ public class IpOverEthernetAddressInfoIpAddresses {
 	 *
 	 * @return subnetId
 	 **/
-	@ApiModelProperty(value = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet. ")
+	@Schema(description = "Subnet defined by the identifier of the subnet resource in the VIM. In case this attribute is present, IP addresses are bound to that subnet. ")
 
 	public String getSubnetId() {
 		return subnetId;

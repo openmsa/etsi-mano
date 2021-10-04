@@ -25,13 +25,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents information about a link port of an external VL, i.e. a port providing connectivity for the VNF to an NS VL.
  */
-@ApiModel(description = "This type represents information about a link port of an external VL, i.e. a port providing connectivity for the VNF to an NS VL. ")
+@Schema(description = "This type represents information about a link port of an external VL, i.e. a port providing connectivity for the VNF to an NS VL. ")
 @Validated
 
 public class ExtLinkPortInfo {
@@ -54,7 +54,7 @@ public class ExtLinkPortInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this link port as provided by the entity that has created the link port. ")
+	@Schema(required = true, description = "Identifier of this link port as provided by the entity that has created the link port. ")
 	@NotNull
 
 	public String getId() {
@@ -75,7 +75,7 @@ public class ExtLinkPortInfo {
 	 *
 	 * @return resourceHandle
 	 **/
-	@ApiModelProperty(required = true, value = "Reference to the virtualised resource realizing this link port. ")
+	@Schema(required = true, description = "Reference to the virtualised resource realizing this link port. ")
 	@NotNull
 
 	@Valid
@@ -98,7 +98,7 @@ public class ExtLinkPortInfo {
 	 *
 	 * @return cpInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of the external CP of the VNF connected to this link port. There shall be at most one link port associated with any external connection point instance. The value refers to an \"extCpInfo\" item in the VnfInstance. ")
+	@Schema(description = "Identifier of the external CP of the VNF connected to this link port. There shall be at most one link port associated with any external connection point instance. The value refers to an \"extCpInfo\" item in the VnfInstance. ")
 
 	public String getCpInstanceId() {
 		return cpInstanceId;

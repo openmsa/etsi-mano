@@ -25,13 +25,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a link to a resource using an absolute URI.
  */
-@ApiModel(description = "This type represents a link to a resource using an absolute URI. ")
+@Schema(description = "This type represents a link to a resource using an absolute URI. ")
 @Validated
 public class Link {
 	@JsonProperty("href")
@@ -48,7 +48,7 @@ public class Link {
 	 *
 	 * @return href
 	 **/
-	@ApiModelProperty(required = true, value = "URI of another resource referenced from a resource. Shall be an absolute URI (i.e. a UTI that contains {apiRoot}). ")
+	@Schema(required = true, description = "URI of another resource referenced from a resource. Shall be an absolute URI (i.e. a UTI that contains {apiRoot}). ")
 	@NotNull
 
 	public String getHref() {

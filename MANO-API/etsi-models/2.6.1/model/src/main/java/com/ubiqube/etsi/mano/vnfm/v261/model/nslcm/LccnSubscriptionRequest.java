@@ -34,14 +34,14 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthentication;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription request related to notifications about
  * VNF lifecycle changes.
  */
-@ApiModel(description = "This type represents a subscription request related to notifications about VNF lifecycle changes. ")
+@Schema(description = "This type represents a subscription request related to notifications about VNF lifecycle changes. ")
 
 public class LccnSubscriptionRequest {
 	@JsonProperty("filter")
@@ -66,7 +66,7 @@ public class LccnSubscriptionRequest {
 	 * @return filter
 	 **/
 	@JsonProperty("filter")
-	@ApiModelProperty(value = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
+	@Schema(description = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
 	public LifecycleChangeNotificationsFilter getFilter() {
 		return filter;
 	}
@@ -86,7 +86,7 @@ public class LccnSubscriptionRequest {
 	 * @return callbackUri
 	 **/
 	@JsonProperty("callbackUri")
-	@ApiModelProperty(required = true, value = "The URI of the endpoint to send the notification to. ")
+	@Schema(required = true, description = "The URI of the endpoint to send the notification to. ")
 	@NotNull
 	public String getCallbackUri() {
 		return callbackUri;
@@ -110,7 +110,7 @@ public class LccnSubscriptionRequest {
 	 * @return authentication
 	 **/
 	@JsonProperty("authentication")
-	@ApiModelProperty(value = "Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 4.5.3.4. This attribute shall only be present if the subscriber requires authorization of notifications. ")
+	@Schema(description = "Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 4.5.3.4. This attribute shall only be present if the subscriber requires authorization of notifications. ")
 	public SubscriptionAuthentication getAuthentication() {
 		return authentication;
 	}

@@ -22,16 +22,16 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * The VNF creation parameters.
  **/
-@ApiModel(description = "The VNF creation parameters.             ")
+@Schema(description = "The VNF creation parameters.             ")
 public class CreatePmJobRequest {
 
-	@ApiModelProperty(required = true)
+	@Schema(required = true)
 	@Valid
 	private PmJobsCreatePmJobRequest createPmJobRequest = null;
 

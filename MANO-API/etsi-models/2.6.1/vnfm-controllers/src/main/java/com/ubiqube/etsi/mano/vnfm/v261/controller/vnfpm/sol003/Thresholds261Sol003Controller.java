@@ -20,8 +20,6 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpm.sol003;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URISyntaxException;
-
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -43,7 +41,7 @@ public class Thresholds261Sol003Controller implements Thresholds261Sol003Api {
 	}
 
 	@Override
-	public ResponseEntity<Threshold> thresholdsPost(@Valid final CreateThresholdRequest createThresholdRequest) throws URISyntaxException {
+	public ResponseEntity<Threshold> thresholdsPost(@Valid final CreateThresholdRequest createThresholdRequest) {
 		return vnfmThresholdFrontController.thresholdsCreate(createThresholdRequest, Threshold.class, Thresholds261Sol003Controller::makeLinks, Thresholds261Sol003Controller::getSelfLink);
 	}
 

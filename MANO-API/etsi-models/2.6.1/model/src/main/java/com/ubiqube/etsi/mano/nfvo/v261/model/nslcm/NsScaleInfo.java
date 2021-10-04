@@ -25,14 +25,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents the target NS Scale level for each NS scaling aspect of
  * the current deployment flavor.
  */
-@ApiModel(description = "This type represents the target NS Scale level for each NS scaling aspect of the current deployment flavor. ")
+@Schema(description = "This type represents the target NS Scale level for each NS scaling aspect of the current deployment flavor. ")
 @Validated
 
 
@@ -53,7 +53,7 @@ public class NsScaleInfo {
 	 * 
 	 * @return nsScalingAspectId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NS scaling aspect. ")
+	@Schema(required = true, description = "Identifier of the NS scaling aspect. ")
 	@NotNull
 
 	public String getNsScalingAspectId() {
@@ -74,7 +74,7 @@ public class NsScaleInfo {
 	 * 
 	 * @return nsScaleLevelId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the NS scale level. ")
+	@Schema(required = true, description = "Identifier of the NS scale level. ")
 	@NotNull
 
 	public String getNsScaleLevelId() {

@@ -23,14 +23,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an identifier of the CP or SAP instance. It shall comply
  * with the provisions defined in Table 6.5.3.56-1.
  */
-@ApiModel(description = "This type represents an identifier of the CP or SAP instance.  It shall comply with the provisions defined in Table 6.5.3.56-1. ")
+@Schema(description = "This type represents an identifier of the CP or SAP instance.  It shall comply with the provisions defined in Table 6.5.3.56-1. ")
 @Validated
 
 
@@ -64,7 +64,7 @@ public class NsCpHandle {
 	 * 
 	 * @return vnfInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of the VNF instance associated to the CP instance. This attribute shall be present if the CP instance is VNF external CP. ")
+	@Schema(description = "Identifier of the VNF instance associated to the CP instance. This attribute shall be present if the CP instance is VNF external CP. ")
 
 	public String getVnfInstanceId() {
 		return vnfInstanceId;
@@ -86,7 +86,7 @@ public class NsCpHandle {
 	 * 
 	 * @return vnfExtCpInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of the VNF external CP instance in the scope of the VNF instance. This attribute shall be present if the CP instance is VNF external CP. See notes 1 and 4. ")
+	@Schema(description = "Identifier of the VNF external CP instance in the scope of the VNF instance. This attribute shall be present if the CP instance is VNF external CP. See notes 1 and 4. ")
 
 	public String getVnfExtCpInstanceId() {
 		return vnfExtCpInstanceId;
@@ -107,7 +107,7 @@ public class NsCpHandle {
 	 * 
 	 * @return pnfInfoId
 	 **/
-	@ApiModelProperty(value = "Identifier of the PNF instance associated to the CP instance. This attribute shall be present if the CP instance is PNF external CP. See notes 2 and 4.           ")
+	@Schema(description = "Identifier of the PNF instance associated to the CP instance. This attribute shall be present if the CP instance is PNF external CP. See notes 2 and 4.           ")
 
 	public String getPnfInfoId() {
 		return pnfInfoId;
@@ -129,7 +129,7 @@ public class NsCpHandle {
 	 * 
 	 * @return pnfExtCpInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of the PNF external CP instance in the scope of the PNF. This attribute shall be present if the CP instance is PNF external CP. See notes 2 and 4. ")
+	@Schema(description = "Identifier of the PNF external CP instance in the scope of the PNF. This attribute shall be present if the CP instance is PNF external CP. See notes 2 and 4. ")
 
 	public String getPnfExtCpInstanceId() {
 		return pnfExtCpInstanceId;
@@ -150,7 +150,7 @@ public class NsCpHandle {
 	 * 
 	 * @return nsInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of the NS instance associated to the SAP instance. This attribute shall be present if the CP instance is NS SAP. See notes 3 and 4.            ")
+	@Schema(description = "Identifier of the NS instance associated to the SAP instance. This attribute shall be present if the CP instance is NS SAP. See notes 3 and 4.            ")
 
 	public String getNsInstanceId() {
 		return nsInstanceId;
@@ -171,7 +171,7 @@ public class NsCpHandle {
 	 * 
 	 * @return nsSapInstanceId
 	 **/
-	@ApiModelProperty(value = "Identifier of the SAP instance in the scope of the NS instance. This attribute shall be present if the CP instance is NS SAP. See notes 3 and 4.            ")
+	@Schema(description = "Identifier of the SAP instance in the scope of the NS instance. This attribute shall be present if the CP instance is NS SAP. See notes 3 and 4.            ")
 
 	public String getNsSapInstanceId() {
 		return nsSapInstanceId;

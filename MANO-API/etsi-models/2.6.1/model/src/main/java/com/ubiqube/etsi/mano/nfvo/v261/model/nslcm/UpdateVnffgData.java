@@ -28,14 +28,14 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type specifies the parameters used for the update of an existing VNFFG
  * instance. It shall comply with the provisions defined in Table 6.5.3.37-1.
  */
-@ApiModel(description = "This type specifies the parameters used for the update of an existing VNFFG instance. It shall comply with the provisions defined in Table 6.5.3.37-1. ")
+@Schema(description = "This type specifies the parameters used for the update of an existing VNFFG instance. It shall comply with the provisions defined in Table 6.5.3.37-1. ")
 @Validated
 
 
@@ -61,7 +61,7 @@ public class UpdateVnffgData {
 	 * 
 	 * @return vnffgInfoId
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of an existing VNFFG to be updated for the NS Instance. ")
+	@Schema(required = true, description = "Identifier of an existing VNFFG to be updated for the NS Instance. ")
 	@NotNull
 
 	public String getVnffgInfoId() {
@@ -93,7 +93,7 @@ public class UpdateVnffgData {
 	 * 
 	 * @return nfp
 	 **/
-	@ApiModelProperty(value = "Indicate the desired new NFP(s) for a given VNFFG after the operations of addition/removal of NS components (e.g. VNFs, VLs, etc.) have been completed, or indicate the updated or newly created NFP classification and selection rule which applied to an existing NFP. ")
+	@Schema(description = "Indicate the desired new NFP(s) for a given VNFFG after the operations of addition/removal of NS components (e.g. VNFs, VLs, etc.) have been completed, or indicate the updated or newly created NFP classification and selection rule which applied to an existing NFP. ")
 
 	@Valid
 
@@ -123,7 +123,7 @@ public class UpdateVnffgData {
 	 * 
 	 * @return nfpInfoId
 	 **/
-	@ApiModelProperty(value = "Identifier(s) of the NFP to be deleted from a given VNFFG. ")
+	@Schema(description = "Identifier(s) of the NFP to be deleted from a given VNFFG. ")
 
 	public List<String> getNfpInfoId() {
 		return nfpInfoId;

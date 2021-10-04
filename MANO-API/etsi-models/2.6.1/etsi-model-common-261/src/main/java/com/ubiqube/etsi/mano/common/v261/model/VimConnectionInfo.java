@@ -27,8 +27,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents parameters to connect to a VIM for managing the
@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiModelProperty;
  * configured into the VNFM by means outside the scope of the present document,
  * and bound to the identifier of that VIM.
  */
-@ApiModel(description = "This type represents parameters to connect to a VIM for managing the resources of a VNF instance. This structure is used to convey VIM-related parameters over the Or-Vnfm interface. Additional parameters for a VIM may be configured into the VNFM by means outside the scope of the present document, and bound to the identifier of that VIM. ")
+@Schema(description = "This type represents parameters to connect to a VIM for managing the resources of a VNF instance. This structure is used to convey VIM-related parameters over the Or-Vnfm interface. Additional parameters for a VIM may be configured into the VNFM by means outside the scope of the present document, and bound to the identifier of that VIM. ")
 @Validated
 public class VimConnectionInfo {
 	@JsonProperty("id")
@@ -68,7 +68,7 @@ public class VimConnectionInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "The identifier of the VIM Connection. This identifier is managed by the NFVO. ")
+	@Schema(required = true, description = "The identifier of the VIM Connection. This identifier is managed by the NFVO. ")
 	@NotNull
 
 	public String getId() {
@@ -92,7 +92,7 @@ public class VimConnectionInfo {
 	 *
 	 * @return vimId
 	 **/
-	@ApiModelProperty(value = "The identifier of the VIM instance. This identifier is managed by the NFVO. Shall be present to address additional information about the VIM if such information has been configured into the VNFM by means outside the scope of the present document, and should be absent otherwise. ")
+	@Schema(description = "The identifier of the VIM instance. This identifier is managed by the NFVO. Shall be present to address additional information about the VIM if such information has been configured into the VNFM by means outside the scope of the present document, and should be absent otherwise. ")
 
 	public String getVimId() {
 		return vimId;
@@ -118,7 +118,7 @@ public class VimConnectionInfo {
 	 *
 	 * @return vimType
 	 **/
-	@ApiModelProperty(required = true, value = "Discriminator for the different types of the VIM information. The value of this attribute determines the structure of the \"interfaceInfo\" and \"accessInfo\" attributes, based on the type of the VIM. The set of permitted values is expected to change over time as new types or versions of VIMs become available. The ETSI NFV registry of VIM-related information provides access to information about VimConnectionInfo definitions for various VIM types. The structure of the registry is defined in Annex C of SOL003. ")
+	@Schema(required = true, description = "Discriminator for the different types of the VIM information. The value of this attribute determines the structure of the \"interfaceInfo\" and \"accessInfo\" attributes, based on the type of the VIM. The set of permitted values is expected to change over time as new types or versions of VIMs become available. The ETSI NFV registry of VIM-related information provides access to information about VimConnectionInfo definitions for various VIM types. The structure of the registry is defined in Annex C of SOL003. ")
 	@NotNull
 
 	public String getVimType() {
@@ -142,7 +142,7 @@ public class VimConnectionInfo {
 	 *
 	 * @return interfaceInfo
 	 **/
-	@ApiModelProperty(value = "Information about the interface or interfaces to the VIM, if applicable, such as the URI of an interface endpoint to communicate with the VIM. The applicable keys are dependent on the content of vimType. Alternatively, such information may have been configured into the VNFM and bound to the vimId. ")
+	@Schema(description = "Information about the interface or interfaces to the VIM, if applicable, such as the URI of an interface endpoint to communicate with the VIM. The applicable keys are dependent on the content of vimType. Alternatively, such information may have been configured into the VNFM and bound to the vimId. ")
 
 	@Valid
 
@@ -172,7 +172,7 @@ public class VimConnectionInfo {
 	 *
 	 * @return accessInfo
 	 **/
-	@ApiModelProperty(value = "Authentication credentials for accessing the VIM, and other access-related information such as tenants or infrastructure resource groups (see note). The applicable keys are dependent on the content of vimType. If the VimConnectionInfo structure is part of an HTTP response payload body, sensitive attributes that are children of this attributes (such as passwords) shall not be included. If the VimConnectionInfo structure is part of an HTTP request payload body, sensitive attributes that are children of this attribute (such as passwords) shall be present if they have not been provisioned out of band. ")
+	@Schema(description = "Authentication credentials for accessing the VIM, and other access-related information such as tenants or infrastructure resource groups (see note). The applicable keys are dependent on the content of vimType. If the VimConnectionInfo structure is part of an HTTP response payload body, sensitive attributes that are children of this attributes (such as passwords) shall not be included. If the VimConnectionInfo structure is part of an HTTP request payload body, sensitive attributes that are children of this attribute (such as passwords) shall be present if they have not been provisioned out of band. ")
 
 	@Valid
 
@@ -196,7 +196,7 @@ public class VimConnectionInfo {
 	 *
 	 * @return extra
 	 **/
-	@ApiModelProperty(value = "VIM type specific additional information. The applicable structure, and whether or not this attribute is available, is dependent on the content of vimType. ")
+	@Schema(description = "VIM type specific additional information. The applicable structure, and whether or not this attribute is available, is dependent on the content of vimType. ")
 
 	@Valid
 

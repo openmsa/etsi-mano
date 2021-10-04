@@ -31,14 +31,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents an artifact contained in a VNF package which represents
  * a software image.
  */
-@ApiModel(description = "This type represents an artifact contained in a VNF package which represents a software image.   ")
+@Schema(description = "This type represents an artifact contained in a VNF package which represents a software image.   ")
 @Validated
 public class VnfPackageSoftwareImageInfo {
 	@JsonProperty("id")
@@ -191,7 +191,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the algorithm used to generate the checksum, as defined in ETSI GS NFV-SOL 004 [5]. For example, SHA-256, SHA-512. ")
+	@Schema(required = true, description = "Name of the algorithm used to generate the checksum, as defined in ETSI GS NFV-SOL 004 [5]. For example, SHA-256, SHA-512. ")
 	@NotNull
 
 	public String getId() {
@@ -212,7 +212,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return name
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the software image. ")
+	@Schema(required = true, description = "Name of the software image. ")
 	@NotNull
 
 	public String getName() {
@@ -233,7 +233,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return provider
 	 **/
-	@ApiModelProperty(required = true, value = "Provider of the software image. ")
+	@Schema(required = true, description = "Provider of the software image. ")
 	@NotNull
 
 	public String getProvider() {
@@ -254,7 +254,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return version
 	 **/
-	@ApiModelProperty(required = true, value = "Version of the software image. ")
+	@Schema(required = true, description = "Version of the software image. ")
 	@NotNull
 
 	public String getVersion() {
@@ -275,7 +275,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return checksum
 	 **/
-	@ApiModelProperty(required = true, value = "Checksum of the software image file. ")
+	@Schema(required = true, description = "Checksum of the software image file. ")
 	@NotNull
 
 	@Valid
@@ -303,7 +303,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return containerFormat
 	 **/
-	@ApiModelProperty(required = true, value = "Container format indicates whether the software image is in a file format that also contains meta-data about the actual software. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ram disk image format - BARE: the image does not have a container or meta-data envelope - DOCKER: docker container format - OVA: OVF package in a tar file - OVF: OVF container format ")
+	@Schema(required = true, description = "Container format indicates whether the software image is in a file format that also contains meta-data about the actual software. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ram disk image format - BARE: the image does not have a container or meta-data envelope - DOCKER: docker container format - OVA: OVF package in a tar file - OVF: OVF container format ")
 	@NotNull
 
 	public ContainerFormatEnum getContainerFormat() {
@@ -331,7 +331,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return diskFormat
 	 **/
-	@ApiModelProperty(required = true, value = "Disk format of a software image is the format of the underlying disk image. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ramdisk image format - ISO: an archive format for the data contents of an optical disc, such as CD-ROM - QCOW2: a common disk image format, which can expand dynamically and supports copy on write - RAW: an unstructured disk image format - VDI: a common disk image format - VHD: a common disk image format - VHDX: enhanced version of VHD format - VMDK: a common disk image format ")
+	@Schema(required = true, description = "Disk format of a software image is the format of the underlying disk image. Permitted values: - AKI: a kernel image format - AMI: a machine image format - ARI: a ramdisk image format - ISO: an archive format for the data contents of an optical disc, such as CD-ROM - QCOW2: a common disk image format, which can expand dynamically and supports copy on write - RAW: an unstructured disk image format - VDI: a common disk image format - VHD: a common disk image format - VHDX: enhanced version of VHD format - VMDK: a common disk image format ")
 	@NotNull
 
 	public DiskFormatEnum getDiskFormat() {
@@ -352,7 +352,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return createdAt
 	 **/
-	@ApiModelProperty(required = true, value = "Time when this software image was created. ")
+	@Schema(required = true, description = "Time when this software image was created. ")
 	@NotNull
 
 	@Valid
@@ -375,7 +375,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return minDisk
 	 **/
-	@ApiModelProperty(required = true, value = "The minimal disk for this software image in bytes. ")
+	@Schema(required = true, description = "The minimal disk for this software image in bytes. ")
 	@NotNull
 
 	@Min(0)
@@ -397,7 +397,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return minRam
 	 **/
-	@ApiModelProperty(required = true, value = "The minimal RAM for this software image in bytes. ")
+	@Schema(required = true, description = "The minimal RAM for this software image in bytes. ")
 	@NotNull
 
 	@Min(0)
@@ -419,7 +419,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return size
 	 **/
-	@ApiModelProperty(required = true, value = "Size of this software image in bytes. ")
+	@Schema(required = true, description = "Size of this software image in bytes. ")
 	@NotNull
 
 	@Min(0)
@@ -441,7 +441,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return userMetadata
 	 **/
-	@ApiModelProperty(value = "User-defined data. ")
+	@Schema(description = "User-defined data. ")
 
 	@Valid
 
@@ -464,7 +464,7 @@ public class VnfPackageSoftwareImageInfo {
 	 *
 	 * @return imagePath
 	 **/
-	@ApiModelProperty(required = true, value = "Path in the VNF package, which identifies the image artifact and also allows to access a copy of the image artifact. ")
+	@Schema(required = true, description = "Path in the VNF package, which identifies the image artifact and also allows to access a copy of the image artifact. ")
 	@NotNull
 
 	public String getImagePath() {

@@ -28,13 +28,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a response for the query PNFD operation.
  */
-@ApiModel(description = "This type represents a response for the query PNFD operation. ")
+@Schema(description = "This type represents a response for the query PNFD operation. ")
 @Validated
 
 
@@ -83,7 +83,7 @@ public class PnfdInfo {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of the on-boarded individual PNF descriptor resource. This identifier is allocated by the NFVO. ")
+	@Schema(required = true, description = "Identifier of the on-boarded individual PNF descriptor resource. This identifier is allocated by the NFVO. ")
 	@NotNull
 
 	public String getId() {
@@ -106,7 +106,7 @@ public class PnfdInfo {
 	 *
 	 * @return pnfdId
 	 **/
-	@ApiModelProperty(value = "This identifier, which is managed by the PNFD designer, identifies the PNFD in a globally unique way. It is copied from the PNFD content and shall be present after the PNFD content is on-boarded. ")
+	@Schema(description = "This identifier, which is managed by the PNFD designer, identifies the PNFD in a globally unique way. It is copied from the PNFD content and shall be present after the PNFD content is on-boarded. ")
 
 	public String getPnfdId() {
 		return pnfdId;
@@ -127,7 +127,7 @@ public class PnfdInfo {
 	 *
 	 * @return pnfdName
 	 **/
-	@ApiModelProperty(value = "Name of the on-boarded PNFD. This information is copied from the PNFD content and shall be present after the PNFD content is on-boarded. ")
+	@Schema(description = "Name of the on-boarded PNFD. This information is copied from the PNFD content and shall be present after the PNFD content is on-boarded. ")
 
 	public String getPnfdName() {
 		return pnfdName;
@@ -147,7 +147,7 @@ public class PnfdInfo {
 	 *
 	 * @return pnfdersion
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	public String getPnfdersion() {
 		return pnfdersion;
@@ -168,7 +168,7 @@ public class PnfdInfo {
 	 *
 	 * @return pnfdProvider
 	 **/
-	@ApiModelProperty(value = "Provider of the on-boarded PNFD. This information is copied from the PNFD content and shall be present after the PNFD content is on-boarded. ")
+	@Schema(description = "Provider of the on-boarded PNFD. This information is copied from the PNFD content and shall be present after the PNFD content is on-boarded. ")
 
 	public String getPnfdProvider() {
 		return pnfdProvider;
@@ -189,7 +189,7 @@ public class PnfdInfo {
 	 *
 	 * @return pnfdInvariantId
 	 **/
-	@ApiModelProperty(value = "Identifies a PNFD in a version independent manner. This attribute is invariant across versions of PNFD. ")
+	@Schema(description = "Identifies a PNFD in a version independent manner. This attribute is invariant across versions of PNFD. ")
 
 	public String getPnfdInvariantId() {
 		return pnfdInvariantId;
@@ -209,7 +209,7 @@ public class PnfdInfo {
 	 *
 	 * @return pnfdOnboardingState
 	 **/
-	@ApiModelProperty(required = true, value = "On-boarding state of the individual PNF descriptor resource. ")
+	@Schema(required = true, description = "On-boarding state of the individual PNF descriptor resource. ")
 	@NotNull
 
 	@Valid
@@ -235,7 +235,7 @@ public class PnfdInfo {
 	 *
 	 * @return onboardingFailureDetails
 	 **/
-	@ApiModelProperty(value = "Failure details of current on-boarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. It shall be present when the pnfdOnboardingState attribute is CREATED and the uploading or processing fails in the NFVO. ")
+	@Schema(description = "Failure details of current on-boarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. It shall be present when the pnfdOnboardingState attribute is CREATED and the uploading or processing fails in the NFVO. ")
 
 	@Valid
 
@@ -257,7 +257,7 @@ public class PnfdInfo {
 	 *
 	 * @return pnfdUsageState
 	 **/
-	@ApiModelProperty(required = true, value = "Usage state of the individual PNF descriptor resource. ")
+	@Schema(required = true, description = "Usage state of the individual PNF descriptor resource. ")
 	@NotNull
 
 	@Valid
@@ -281,7 +281,7 @@ public class PnfdInfo {
 	 *
 	 * @return userDefinedData
 	 **/
-	@ApiModelProperty(value = "User defined data for the individual PNF descriptor resource. This attribute can be modified with the PATCH method. ")
+	@Schema(description = "User defined data for the individual PNF descriptor resource. This attribute can be modified with the PATCH method. ")
 
 	@Valid
 
@@ -303,7 +303,7 @@ public class PnfdInfo {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@Schema(required = true, description = "")
 	@NotNull
 
 	@Valid

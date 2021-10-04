@@ -28,13 +28,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a PM job.
  */
-@ApiModel(description = "This type represents a PM job. ")
+@Schema(description = "This type represents a PM job. ")
 @Validated
 
 public class PmJob {
@@ -64,7 +64,7 @@ public class PmJob {
 	 *
 	 * @return id
 	 **/
-	@ApiModelProperty(required = true, value = "Identifier of this PM job. ")
+	@Schema(required = true, description = "Identifier of this PM job. ")
 	@NotNull
 
 	public String getId() {
@@ -90,7 +90,7 @@ public class PmJob {
 	 *
 	 * @return objectInstanceIds
 	 **/
-	@ApiModelProperty(required = true, value = "Identifiers of the VNF instances for which performance information is collected. ")
+	@Schema(required = true, description = "Identifiers of the VNF instances for which performance information is collected. ")
 	@NotNull
 
 	public List<String> getObjectInstanceIds() {
@@ -111,7 +111,7 @@ public class PmJob {
 	 *
 	 * @return criteria
 	 **/
-	@ApiModelProperty(required = true, value = "Criteria of the collection of performance information. ")
+	@Schema(required = true, description = "Criteria of the collection of performance information. ")
 	@NotNull
 
 	@Valid
@@ -134,7 +134,7 @@ public class PmJob {
 	 *
 	 * @return reports
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 
@@ -156,7 +156,7 @@ public class PmJob {
 	 *
 	 * @return links
 	 **/
-	@ApiModelProperty(value = "")
+	@Schema(description = "")
 
 	@Valid
 

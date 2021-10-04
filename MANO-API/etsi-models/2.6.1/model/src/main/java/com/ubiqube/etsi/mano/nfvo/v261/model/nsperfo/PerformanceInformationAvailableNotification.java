@@ -17,54 +17,54 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261.model.nsperfo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
-
 import javax.validation.Valid;
 
-public class PerformanceInformationAvailableNotification  {
-  
-  @ApiModelProperty(value = "")
-  @Valid
-  private SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification performanceInformationAvailableNotification = null;
- /**
-   * Get performanceInformationAvailableNotification
-   * @return performanceInformationAvailableNotification
-  **/
-  @JsonProperty("PerformanceInformationAvailableNotification")
-  public SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification getPerformanceInformationAvailableNotification() {
-    return performanceInformationAvailableNotification;
-  }
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-  public void setPerformanceInformationAvailableNotification(SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification performanceInformationAvailableNotification) {
-    this.performanceInformationAvailableNotification = performanceInformationAvailableNotification;
-  }
+import io.swagger.v3.oas.annotations.media.Schema;
 
-  public PerformanceInformationAvailableNotification performanceInformationAvailableNotification(SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification performanceInformationAvailableNotification) {
-    this.performanceInformationAvailableNotification = performanceInformationAvailableNotification;
-    return this;
-  }
+public class PerformanceInformationAvailableNotification {
 
+	@Schema(description = "")
+	@Valid
+	private SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification performanceInformationAvailableNotification = null;
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class PerformanceInformationAvailableNotification {\n");
-    
-    sb.append("    performanceInformationAvailableNotification: ").append(toIndentedString(performanceInformationAvailableNotification)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	/**
+	 * Get performanceInformationAvailableNotification
+	 *
+	 * @return performanceInformationAvailableNotification
+	 **/
+	@JsonProperty("PerformanceInformationAvailableNotification")
+	public SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification getPerformanceInformationAvailableNotification() {
+		return performanceInformationAvailableNotification;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private static String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	public void setPerformanceInformationAvailableNotification(final SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification performanceInformationAvailableNotification) {
+		this.performanceInformationAvailableNotification = performanceInformationAvailableNotification;
+	}
+
+	public PerformanceInformationAvailableNotification performanceInformationAvailableNotification(final SubscriptionPerformanceInformationAvailableNotificationPerformanceInformationAvailableNotification performanceInformationAvailableNotification) {
+		this.performanceInformationAvailableNotification = performanceInformationAvailableNotification;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class PerformanceInformationAvailableNotification {\n");
+
+		sb.append("    performanceInformationAvailableNotification: ").append(toIndentedString(performanceInformationAvailableNotification)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 */
+	private static String toIndentedString(final Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

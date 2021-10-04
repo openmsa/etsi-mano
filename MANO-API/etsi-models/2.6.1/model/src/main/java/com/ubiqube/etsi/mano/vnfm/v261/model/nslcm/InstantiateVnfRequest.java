@@ -41,7 +41,7 @@ import com.ubiqube.etsi.mano.common.v261.model.VimConnectionInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkData;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * InstantiateVnfRequest
@@ -83,7 +83,7 @@ public class InstantiateVnfRequest {
 	 * @return flavourId
 	 **/
 	@JsonProperty("flavourId")
-	@ApiModelProperty(required = true, value = "Identifier of the VNF deployment flavour to be instantiated. ")
+	@Schema(required = true, description = "Identifier of the VNF deployment flavour to be instantiated. ")
 	@NotNull
 	public String getFlavourId() {
 		return flavourId;
@@ -99,14 +99,12 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Identifier of the instantiation level of the deployment flavour to be
-	 * instantiated. If not present, the default instantiation level as declared in
-	 * the VNFD is instantiated.
+	 * Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated.
 	 *
 	 * @return instantiationLevelId
 	 **/
 	@JsonProperty("instantiationLevelId")
-	@ApiModelProperty(value = "Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
+	@Schema(description = "Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
 	public String getInstantiationLevelId() {
 		return instantiationLevelId;
 	}
@@ -134,7 +132,7 @@ public class InstantiateVnfRequest {
 	 * @return extVirtualLinks
 	 **/
 	@JsonProperty("extVirtualLinks")
-	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
+	@Schema(description = "Information about external VLs to connect the VNF to. ")
 	public List<ExtVirtualLinkData> getExtVirtualLinks() {
 		return extVirtualLinks;
 	}
@@ -162,7 +160,7 @@ public class InstantiateVnfRequest {
 	 * @return extManagedVirtualLinks
 	 **/
 	@JsonProperty("extManagedVirtualLinks")
-	@ApiModelProperty(value = "Information about internal VLs that are managed by the NFVO. ")
+	@Schema(description = "Information about internal VLs that are managed by the NFVO. ")
 	public List<ExtManagedVirtualLinkData> getExtManagedVirtualLinks() {
 		return extManagedVirtualLinks;
 	}
@@ -185,15 +183,12 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Information about VIM connections to be used for managing the resources for
-	 * the VNF instance, or refer to external / externally-managed virtual links.
-	 * This attribute shall only be supported and may be present if VNF-related
-	 * resource management in direct mode is applicable.
+	 * Information about VIM connections to be used for managing the resources for the VNF instance, or refer to external / externally-managed virtual links. This attribute shall only be supported and may be present if VNF-related resource management in direct mode is applicable.
 	 *
 	 * @return vimConnectionInfo
 	 **/
 	@JsonProperty("vimConnectionInfo")
-	@ApiModelProperty(value = "Information about VIM connections to be used for managing the resources for the VNF instance, or refer to external / externally-managed virtual links. This attribute shall only be supported and may be present if VNF-related resource management in direct mode is applicable. ")
+	@Schema(description = "Information about VIM connections to be used for managing the resources for the VNF instance, or refer to external / externally-managed virtual links. This attribute shall only be supported and may be present if VNF-related resource management in direct mode is applicable. ")
 	public List<VimConnectionInfo> getVimConnectionInfo() {
 		return vimConnectionInfo;
 	}
@@ -208,13 +203,12 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Localization language of the VNF to be instantiated. The value shall comply
-	 * with the format defined in IETF RFC 5646.
+	 * Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646.
 	 *
 	 * @return localizationLanguage
 	 **/
 	@JsonProperty("localizationLanguage")
-	@ApiModelProperty(value = "Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. ")
+	@Schema(description = "Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. ")
 	public String getLocalizationLanguage() {
 		return localizationLanguage;
 	}
@@ -229,14 +223,12 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Additional input parameters for the instantiation process, specific to the
-	 * VNF being instantiated, as declared in the VNFD as part of
-	 * \&quot;InstantiateVnfOpConfig\&quot;.
+	 * Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \&quot;InstantiateVnfOpConfig\&quot;.
 	 *
 	 * @return additionalParams
 	 **/
 	@JsonProperty("additionalParams")
-	@ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of  \"InstantiateVnfOpConfig\". ")
+	@Schema(description = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of  \"InstantiateVnfOpConfig\". ")
 	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
@@ -262,8 +254,7 @@ public class InstantiateVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

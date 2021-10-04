@@ -26,8 +26,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkInfo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * Information about the changed VNF instance information, including VNF
@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiModelProperty;
  * attribute is present, either the \&quot;changedVnfInfo\&quot; attribute or
  * the \&quot;changedExtConnectivity\&quot; attribute or both shall be present.
  */
-@ApiModel(description = "Information about the changed VNF instance information, including VNF configurable properties,if applicable. When the \"changedInfo\" attribute is present,  either the \"changedVnfInfo\" attribute or the \"changedExtConnectivity\" attribute or both shall be present. ")
+@Schema(description = "Information about the changed VNF instance information, including VNF configurable properties,if applicable. When the \"changedInfo\" attribute is present,  either the \"changedVnfInfo\" attribute or the \"changedExtConnectivity\" attribute or both shall be present. ")
 @Validated
 
 
@@ -57,7 +57,7 @@ public class AffectedVnfChangedInfo {
 	 *
 	 * @return changedVnfInfo
 	 **/
-	@ApiModelProperty(value = "Information about the changed VNF instance information, including configurable properties,  if applicable. ")
+	@Schema(description = "Information about the changed VNF instance information, including configurable properties,  if applicable. ")
 
 	@Valid
 
@@ -79,7 +79,7 @@ public class AffectedVnfChangedInfo {
 	 *
 	 * @return changedExtConnectivity
 	 **/
-	@ApiModelProperty(value = "Information about changed external connectivity, if applicable. ")
+	@Schema(description = "Information about changed external connectivity, if applicable. ")
 
 	@Valid
 

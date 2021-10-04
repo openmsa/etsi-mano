@@ -28,7 +28,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
@@ -72,7 +71,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, @RequestHeader(value = "Range", required = false) final String range) {
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request, final String range) {
 		return vnfPackageFrontController.getArtifact(request, getSafeUUID(vnfPkgId), range, null);
 	}
 

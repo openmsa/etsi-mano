@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * CreateVnfRequest
@@ -49,29 +49,28 @@ public class CreateVnfRequest {
 	@JsonProperty("vnfInstanceDescription")
 	private String vnfInstanceDescription = null;
 
-	public CreateVnfRequest vnfdId(@Nonnull String _vnfdId) {
+	public CreateVnfRequest vnfdId(@Nonnull final String _vnfdId) {
 		this.vnfdId = _vnfdId;
 		return this;
 	}
 
 	/**
-	 * Identifier that identifies the VNFD which defines the VNF instance to be
-	 * created.
+	 * Identifier that identifies the VNFD which defines the VNF instance to be created.
 	 *
 	 * @return vnfdId
 	 **/
 	@JsonProperty("vnfdId")
-	@ApiModelProperty(required = true, value = "Identifier that identifies the VNFD which defines the VNF instance to be created. ")
+	@Schema(required = true, description = "Identifier that identifies the VNFD which defines the VNF instance to be created. ")
 	@Nonnull
 	public String getVnfdId() {
 		return vnfdId;
 	}
 
-	public void setVnfdId(String vnfdId) {
+	public void setVnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
 	}
 
-	public CreateVnfRequest vnfInstanceName(String vnfInstanceName) {
+	public CreateVnfRequest vnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 		return this;
 	}
@@ -82,16 +81,16 @@ public class CreateVnfRequest {
 	 * @return vnfInstanceName
 	 **/
 	@JsonProperty("vnfInstanceName")
-	@ApiModelProperty(value = "Human-readable name of the VNF instance to be created. ")
+	@Schema(description = "Human-readable name of the VNF instance to be created. ")
 	public String getVnfInstanceName() {
 		return vnfInstanceName;
 	}
 
-	public void setVnfInstanceName(String vnfInstanceName) {
+	public void setVnfInstanceName(final String vnfInstanceName) {
 		this.vnfInstanceName = vnfInstanceName;
 	}
 
-	public CreateVnfRequest vnfInstanceDescription(String vnfInstanceDescription) {
+	public CreateVnfRequest vnfInstanceDescription(final String vnfInstanceDescription) {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 		return this;
 	}
@@ -102,12 +101,12 @@ public class CreateVnfRequest {
 	 * @return vnfInstanceDescription
 	 **/
 	@JsonProperty("vnfInstanceDescription")
-	@ApiModelProperty(value = "Human-readable description of the VNF instance to be created. ")
+	@Schema(description = "Human-readable description of the VNF instance to be created. ")
 	public String getVnfInstanceDescription() {
 		return vnfInstanceDescription;
 	}
 
-	public void setVnfInstanceDescription(String vnfInstanceDescription) {
+	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 	}
 
@@ -124,10 +123,9 @@ public class CreateVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
 	 */
-	private String toIndentedString(java.lang.Object o) {
+	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

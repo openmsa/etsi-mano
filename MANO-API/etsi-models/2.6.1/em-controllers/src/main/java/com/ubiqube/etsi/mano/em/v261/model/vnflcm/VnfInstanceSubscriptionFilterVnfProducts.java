@@ -27,7 +27,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * VnfInstanceSubscriptionFilterVnfProducts
@@ -52,7 +52,7 @@ public class VnfInstanceSubscriptionFilterVnfProducts {
 	 *
 	 * @return vnfProductName
 	 **/
-	@ApiModelProperty(required = true, value = "Name of the VNF product to match. ")
+	@Schema(required = true, description = "Name of the VNF product to match. ")
 	@NotNull
 
 	public String getVnfProductName() {
@@ -81,7 +81,7 @@ public class VnfInstanceSubscriptionFilterVnfProducts {
 	 *
 	 * @return versions
 	 **/
-	@ApiModelProperty(value = "If present, match VNF instances that belong to VNF products with certain versions and a certain product name, from one particular provider. ")
+	@Schema(description = "If present, match VNF instances that belong to VNF products with certain versions and a certain product name, from one particular provider. ")
 
 	@Valid
 

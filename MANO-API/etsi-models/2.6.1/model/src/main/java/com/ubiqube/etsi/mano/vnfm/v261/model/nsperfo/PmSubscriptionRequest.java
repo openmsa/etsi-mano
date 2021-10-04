@@ -27,13 +27,13 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthentication;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * This type represents a subscription request.
  */
-@ApiModel(description = "This type represents a subscription request. ")
+@Schema(description = "This type represents a subscription request. ")
 @Validated
 
 
@@ -59,7 +59,7 @@ public class PmSubscriptionRequest {
 	 *
 	 * @return filter
 	 **/
-	@ApiModelProperty(value = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
+	@Schema(description = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
 
 	@Valid
 
@@ -81,7 +81,7 @@ public class PmSubscriptionRequest {
 	 *
 	 * @return callbackUri
 	 **/
-	@ApiModelProperty(required = true, value = "The URI of the endpoint to send the notification to. ")
+	@Schema(required = true, description = "The URI of the endpoint to send the notification to. ")
 	@NotNull
 
 	public String getCallbackUri() {
@@ -105,7 +105,7 @@ public class PmSubscriptionRequest {
 	 *
 	 * @return authentication
 	 **/
-	@ApiModelProperty(value = "Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 8.3.4 of ETSI GS NFV-SOL 013. This attribute shall only be present if the subscriber requires authorization of notifications. ")
+	@Schema(description = "Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 8.3.4 of ETSI GS NFV-SOL 013. This attribute shall only be present if the subscriber requires authorization of notifications. ")
 
 	@Valid
 
