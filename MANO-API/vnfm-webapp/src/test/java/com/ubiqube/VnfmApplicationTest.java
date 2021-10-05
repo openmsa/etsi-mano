@@ -14,28 +14,31 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.ubiqube;
 
-package com.ubiqube.etsi.mano;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.jms.annotation.EnableJms;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+
+import com.ubiqube.etsi.mano.VnfmApplication;
 
 import ma.glasnost.orika.OrikaSystemProperties;
 import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 
-@SpringBootApplication
-@EnableScheduling
-@EnableJms
-public class Application extends SpringBootServletInitializer {
-
-	public static void main(final String[] args) {
+@SpringBootTest
+@ContextConfiguration(classes = { VnfmApplication.class })
+public class VnfmApplicationTest {
+	static {
 		System.setProperty(OrikaSystemProperties.COMPILER_STRATEGY, EclipseJdtCompilerStrategy.class.getName());
 		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES, "true");
 		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/okika");
-		SpringApplication.run(Application.class, args);
 	}
 
+	@SuppressWarnings("static-method")
+	@Test
+	void contextLoads() {
+		assertTrue(true);
+	}
 }
