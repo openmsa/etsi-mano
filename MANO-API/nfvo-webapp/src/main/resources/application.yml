@@ -31,6 +31,22 @@ management:
     git:
       mode: full
 
+mano:
+  election:
+    script-path: /tmp/etsi-mano/election/groovy
+  nfvo:
+    vnfm:
+      password: nfv
+      url: http://vnfm:8080/ubi-etsi-mano/sol003
+      username: nfvo
+  repository:
+    phys-root: /tmp/etsi-mano/repository
+  vnfm:
+    nfvo:
+      password: vnfm
+      url: http://nfvo:8110/ubi-etsi-mano/sol005
+      username: vnfm
+
 server:
   error:
     whitelabel:
@@ -57,7 +73,13 @@ spring:
         username: admin
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:~/etsi-mano.h2;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+    url: jdbc:h2:file:~/etsi-mano.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
+    username: sa
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
     default-property-inclusion: NON_NULL
@@ -66,18 +88,23 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
       indent-output: true
+      write-empty-json-arrays: false
   jmx:
     enabled: true
   jpa:
+    hibernate:
+      ddl-auto: update
     open-in-view: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
         search:
           backend:
             directory:
               root: /tmp/etsi-mano/indexes
+            type: lucene
   liquibase:
-    enabled: true
+    enabled: false
   mvc:
     log-request-details: true
   output:
@@ -98,8 +125,8 @@ spring:
             instanceId: AUTO
           threadPool:
             threadCount: 10
-springfox:
-  documentation:
-    swagger:
-      v2:
-        path: /api-docs
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+

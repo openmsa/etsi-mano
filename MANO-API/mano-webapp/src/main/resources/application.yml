@@ -22,6 +22,7 @@ logging:
               ConditionEvaluationReportLoggingListener: INFO
         jms: INFO
         web: INFO
+
 management:
   endpoint:
     health:
@@ -125,8 +126,3 @@ spring:
       max-file-size: 1024MB
       max-request-size: 1024MB
 
-springfox:
-  documentation:
-    swagger:
-      v2:
-        path: /api-docs
