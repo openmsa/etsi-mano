@@ -16,22 +16,9 @@
  */
 package com.ubiqube.etsi.mec.mepm.v211.controller;
 
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-
-import org.springframework.beans.factory.annotation.Value;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.paths.DefaultPathProvider;
-import springfox.documentation.spring.web.paths.Paths;
-import springfox.documentation.spring.web.plugins.Docket;
 
 /**
  *
@@ -40,43 +27,14 @@ import springfox.documentation.spring.web.plugins.Docket;
  */
 @Configuration
 public class SwaggerConfigurationMepm211 {
-	@Value("${server.servlet.contextPath}")
-	private String contextPath;
 
-	public static ApiInfo apiInfo() {
-		return new ApiInfoBuilder()
-				.title("ETSI MEC MEPM API")
-				.description("ETSI MEC API")
-				.license("ETSI Forge copyright notice")
-				.licenseUrl("https://forge.etsi.org/etsi-forge-copyright-notice.txt")
-				.termsOfServiceUrl("")
-				.version("2.1.1-impl:etsi.org:ETSI_NFV_OpenAPI:1")
-				.contact(new Contact("", "", ""))
-				.build();
-	}
-
+	@SuppressWarnings("static-method")
 	@Bean
-	public Docket mepm211Docklet() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.pathProvider(new CustomPathProvider())
-				.groupName("mec-mepm-2.1.1")
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.ubiqube.etsi.mec.mepm.v211"))
-				.build()
-				.directModelSubstitute(LocalDate.class, java.sql.Date.class)
-				.directModelSubstitute(OffsetDateTime.class, java.util.Date.class)
-				.apiInfo(apiInfo());
-	}
-
-	public class CustomPathProvider extends DefaultPathProvider {
-		@Override
-		public String getOperationPath(final String op) {
-			String operationPath = op;
-			if (operationPath.startsWith(contextPath)) {
-				operationPath = operationPath.substring(contextPath.length());
-			}
-			return Paths.removeAdjacentForwardSlashes(UriComponentsBuilder.newInstance().replacePath(operationPath).build().toString());
-		}
+	public GroupedOpenApi customImplementationMepm211() {
+		return GroupedOpenApi.builder()
+				.group("mec-mepm-2.1.1")
+				.packagesToScan("com.ubiqube.etsi.mec.mepm.v211")
+				.build();
 	}
 
 }
