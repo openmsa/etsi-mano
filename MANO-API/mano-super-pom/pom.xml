@@ -33,7 +33,6 @@
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<com.ubiqube.hibernate-search.version>5.11.9.Final</com.ubiqube.hibernate-search.version>
 		<com.ubiqube.hibernate-search6.version>6.0.6.Final</com.ubiqube.hibernate-search6.version>
-		<com.ubiqube.springfox-swagger.version>3.0.0-SNAPSHOT</com.ubiqube.springfox-swagger.version>
 		<com.ubiqube.openstack4j.version>3.11-SNAPSHOT</com.ubiqube.openstack4j.version>
 		<com.ubiqube.swagger3>2.1.10</com.ubiqube.swagger3>
 		<com.ubiqube.mockito.version>3.11.2</com.ubiqube.mockito.version>
