@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mec.mepm.service.graph;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
@@ -26,10 +25,13 @@ import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
+import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.nodes.NodeConnectivity;
 import com.ubiqube.etsi.mano.service.event.Workflow;
@@ -44,7 +46,7 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
  *
  */
 @Service
-public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport> {
+public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport, AppTask> {
 	private final AppPlanner planner;
 
 	private final AppPlanExecutor executor;
@@ -58,10 +60,11 @@ public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport> {
 	}
 
 	@Override
-	public void setWorkflowBlueprint(final AppPkg bundle, final AppBlueprint blueprint, final Set<ScaleInfo> scaling) {
+	public PreExecutionGraph<AppTask> setWorkflowBlueprint(final AppPkg bundle, final AppBlueprint blueprint) {
 		final WfConfiguration wfc = new WfConfiguration(planContributors);
 		final List<NodeConnectivity> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
-		planner.doPlan(bundle, blueprint, scaling, conns);
+		planner.doPlan(bundle, blueprint, null, conns);
+		return null;
 	}
 
 	@Override
@@ -78,6 +81,18 @@ public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport> {
 		GraphTools.exportGraph(graph, "app-del.dot");
 		final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> removeResults = executor.execDelete(graph, () -> new UowTaskDeleteProvider<>((AppParameters) params));
 		return new AppReport(removeResults);
+	}
+
+	@Override
+	public OrchExecutionResults execute(final PreExecutionGraph<VnfTask> plan, final AppBlueprint parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void refresh(final PreExecutionGraph<AppTask> prePlan, final Blueprint<AppTask, ?> localPlan) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

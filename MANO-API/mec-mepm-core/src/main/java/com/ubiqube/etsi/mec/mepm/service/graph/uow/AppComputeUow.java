@@ -57,7 +57,7 @@ public class AppComputeUow extends AppAbstractUnitOfWork {
 				.map(VnfLinkPort::getVirtualLink)
 				.map(x -> params.getContext().get(x))
 				.collect(Collectors.toList());
-		return params.getVim().createCompute(params.getVimConnectionInformation(), task.getAlias(), task.getFlavorId(), task.getImageId(), networks, storages, vnfCompute.getBootData());
+		return params.getVim().createCompute(params.getVimConnectionInformation(), task.getAlias(), task.getFlavorId(), task.getImageId(), networks, storages, vnfCompute.getCloudInit());
 	}
 
 	@Override
