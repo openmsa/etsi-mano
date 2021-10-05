@@ -34,10 +34,10 @@
 		<com.ubiqube.hibernate-search.version>5.11.9.Final</com.ubiqube.hibernate-search.version>
 		<com.ubiqube.hibernate-search6.version>6.0.6.Final</com.ubiqube.hibernate-search6.version>
 		<com.ubiqube.openstack4j.version>3.11-SNAPSHOT</com.ubiqube.openstack4j.version>
-		<com.ubiqube.swagger3>2.1.10</com.ubiqube.swagger3>
+		<com.ubiqube.swagger3>2.1.11</com.ubiqube.swagger3>
 		<com.ubiqube.mockito.version>3.11.2</com.ubiqube.mockito.version>
 		<com.ubiqube.elasticsearch.version>7.13.2</com.ubiqube.elasticsearch.version>
-		<com.ubiqube.springdoc.version>1.5.10</com.ubiqube.springdoc.version>
+		<com.ubiqube.springdoc.version>1.5.11</com.ubiqube.springdoc.version>
 	</properties>
 	<build>
 		<plugins>
@@ -250,7 +250,7 @@
 			<dependency>
 				<groupId>io.swagger</groupId>
 				<artifactId>swagger-annotations</artifactId>
-				<version>1.6.2</version>
+				<version>1.6.3</version>
 			</dependency>
 			<dependency>
 				<groupId>net.rakugakibox.spring.boot</groupId>
@@ -270,7 +270,7 @@
 			<dependency>
 				<groupId>com.github.dexecutor</groupId>
 				<artifactId>dexecutor-core</artifactId>
-				<version>2.1.1</version>
+				<version>2.1.4</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jgrapht</groupId>
@@ -306,7 +306,7 @@
 			<dependency>
 				<groupId>org.codehaus.groovy</groupId>
 				<artifactId>groovy-all</artifactId>
-				<version>3.0.7</version>
+				<version>3.0.9</version>
 				<type>pom</type>
 				<exclusions>
 					<exclusion>
@@ -322,7 +322,7 @@
 			<dependency>
 				<groupId>org.jgrapht</groupId>
 				<artifactId>jgrapht-core</artifactId>
-				<version>1.5.0</version>
+				<version>1.5.1</version>
 			</dependency>
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>
@@ -332,7 +332,7 @@
 			<dependency>
 				<groupId>com.tngtech.archunit</groupId>
 				<artifactId>archunit-junit5</artifactId>
-				<version>0.19.0</version>
+				<version>0.21.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
