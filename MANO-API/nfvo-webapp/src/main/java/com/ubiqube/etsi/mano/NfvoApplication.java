@@ -27,13 +27,13 @@ import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 
 @SpringBootApplication
 @EnableJms
-public class Application extends SpringBootServletInitializer {
+public class NfvoApplication extends SpringBootServletInitializer {
 
 	public static void main(final String[] args) {
 		System.setProperty(OrikaSystemProperties.COMPILER_STRATEGY, EclipseJdtCompilerStrategy.class.getName());
 		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES, "true");
 		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/okika");
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(NfvoApplication.class, args);
 	}
 
 }
