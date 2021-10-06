@@ -1,4 +1,13 @@
 debug: true
+keycloak:
+  realm: mano-realm
+  auth-server-url: http://10.31.1.245:8110/auth
+  ssl-required: external
+  resource: mano-nfvo
+  credentials:
+    secret: 99373315-d8d2-495d-a45d-73aa8cfcd580
+  use-resource-role-mappings: true
+  bearer-only: true
 
 logging:
   level:
