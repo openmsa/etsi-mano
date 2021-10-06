@@ -135,8 +135,13 @@ spring:
             instanceId: AUTO
           threadPool:
             threadCount: 10
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://10.31.1.245:8110/auth/realms/mano-realm
+          jwk-set-uri: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/certs
   servlet:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
-
