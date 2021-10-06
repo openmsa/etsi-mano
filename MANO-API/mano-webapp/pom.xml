@@ -190,11 +190,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
-			<artifactId>etsi-nfvo-261-controllers</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-vnfm-261-controllers</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
@@ -205,24 +200,28 @@
 		</dependency>
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
-			<artifactId>etsi-nfvo-271-controllers</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-vnfm-281-controllers</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ubiqube.mano</groupId>
-			<artifactId>etsi-nfvo-281-controllers</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		 <dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-vnfm-331-controllers</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>etsi-nfvo-261-controllers</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>etsi-nfvo-271-controllers</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>etsi-nfvo-281-controllers</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
@@ -285,10 +284,12 @@
 			<artifactId>jgrapht-ext</artifactId>
 			<version>1.5.1</version>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
+-->
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>
 			<artifactId>orika-eclipse-tools</artifactId>
