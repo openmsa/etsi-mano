@@ -17,16 +17,12 @@
 package com.ubiqube.etsi.mano.vnfm.service.rest;
 import java.util.Optional;
 
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.config.properties.NfvoConnectionProperties;
-import com.ubiqube.etsi.mano.config.properties.NfvoConnectionProperties.Basic;
-import com.ubiqube.etsi.mano.config.properties.NfvoConnectionProperties.Oauth2;
 import com.ubiqube.etsi.mano.service.rest.AbstractRest;
 
 /**
@@ -42,24 +38,10 @@ public class NfvoRestImpl extends AbstractRest {
 
 	public NfvoRestImpl(final NfvoConnectionProperties props) {
 		url = props.getUrl();
-		if (null != props.getOauth2()) {
-			final Oauth2 oauth = props.getOauth2();
-			final var resource = new ResourceOwnerPasswordResourceDetails();
-			resource.setClientId(oauth.getClientId());
-			resource.setClientSecret(oauth.getClientSecret());
-			resource.setAccessTokenUri(oauth.getOauthUrl());
-			resource.setUsername(oauth.getUsername());
-			resource.setPassword(oauth.getPassword());
-			final var oauth2 = new OAuth2RestTemplate(resource);
-			setRestTemplate(oauth2);
-		}
-		if (props.getBasic() != null) {
-			final Basic basic = props.getBasic();
-			final String user = basic.getUsername();
-			if (null != user) {
-				final String password = Optional.of(basic.getPassword()).orElse("");
-				auth.add("Authorization", authBasic(user, password));
-			}
+		final String user = props.getUsername();
+		if (null != user) {
+			final String password = Optional.of(props.getPassword()).orElse("");
+			auth.add("Authorization", authBasic(user, password));
 		}
 		Assert.notNull(url, "nfvo.url is not declared in property file.");
 	}

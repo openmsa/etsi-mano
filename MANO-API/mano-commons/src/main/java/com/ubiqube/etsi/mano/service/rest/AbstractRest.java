@@ -31,13 +31,17 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public abstract class AbstractRest implements NfvoRest {
-	private final RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 
 	public AbstractRest() {
 		restTemplate = new RestTemplate();
 	}
 
 	protected abstract String getUrl();
+
+	protected void setRestTemplate(final RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
 	@Override
 	public final <T> T get(final URI uri, final Class<T> clazz) {
@@ -94,9 +98,8 @@ public abstract class AbstractRest implements NfvoRest {
 	}
 
 	private final HttpHeaders getHttpHeaders() {
-		final HttpHeaders httpHeaders = new HttpHeaders();
 		final MultiValueMap<String, String> auth = getAutorization();
-		httpHeaders.addAll(auth);
+		final HttpHeaders httpHeaders = new HttpHeaders(auth);
 		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		httpHeaders.add("Version", "2.6.1");

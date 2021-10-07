@@ -20,7 +20,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Connection parameters to the NFVO instance.
@@ -28,6 +30,8 @@ import lombok.NoArgsConstructor;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Configuration
@@ -38,48 +42,41 @@ public class NfvoConnectionProperties {
 	 */
 	private String url;
 	/**
-	 * NFVO user name.
-	 */
-	private String username;
-	/**
-	 * NFVO password.
-	 */
-	private String password;
-	/**
 	 * NFVO protocol version IE: 2.6.1
 	 */
 	private String version;
+	/**
+	 * Basic connection information.
+	 */
+	private Basic basic;
+	/**
+	 * OAuth2 informations.
+	 */
+	private Oauth2 oauth2;
 
-	public String getUrl() {
-		return url;
+	@Getter
+	@Setter
+	public static class Basic {
+		/**
+		 * VNFM User name.
+		 */
+		private String username;
+		/**
+		 * VNFM password.
+		 */
+		private String password;
+
 	}
 
-	public void setUrl(final String url) {
-		this.url = url;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(final String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(final String password) {
-		this.password = password;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(final String version) {
-		this.version = version;
+	@Getter
+	@Setter
+	public static class Oauth2 {
+		private String oauthUrl;
+		private String grantType;
+		private String clientId;
+		private String clientSecret;
+		private String username;
+		private String password;
 	}
 
 }

@@ -49,8 +49,8 @@ mano:
       basic:
         password: nfv
         username: nfvo
-      Oauth2:
-        OauthUrl:
+      oauth2:
+        oauthUrl:
         grantType:
         clientId:
         clientSecret:
@@ -60,9 +60,10 @@ mano:
     phys-root: /tmp/etsi-mano/repository
   vnfm:
     nfvo:
-      password: vnfm
       url: http://nfvo:8110/ubi-etsi-mano/sol005
-      username: vnfm
+      basic:
+        username: vnfm
+        password: vnfm
 
 server:
   error:
