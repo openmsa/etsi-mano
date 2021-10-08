@@ -27,6 +27,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -80,6 +81,11 @@ public abstract class AbstractRest implements NfvoRest {
 		final HttpEntity<Object> request = new HttpEntity<>(getHttpHeaders());
 		final ResponseEntity<T> resp = restTemplate.exchange(uri, HttpMethod.GET, request, params);
 		return resp.getBody();
+	}
+
+	@Override
+	public <T> T get(final URI uri, final ResponseExtractor<T> responseExtractor) {
+		return restTemplate.execute(uri, HttpMethod.GET, null, responseExtractor);
 	}
 
 	@Override

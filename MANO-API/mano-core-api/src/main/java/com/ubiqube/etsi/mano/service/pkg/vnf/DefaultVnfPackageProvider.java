@@ -14,38 +14,36 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class DefaultVnfPackageProvider implements PackageDescriptor<VnfPackageReader> {
 
-import lombok.Getter;
-import lombok.Setter;
+	@Override
+	public ExecutionGraph getBlueprint() {
+		return null;
+	}
 
-@Setter
-@Getter
-@Entity
-public class VnfPackageOnboardingNotification {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Override
+	public String getProviderName() {
+		return "default";
+	}
 
-	private UUID id = null;
+	@Override
+	public boolean isProcessable(final byte[] data) {
+		return false;
+	}
 
-	private String nfvoId;
-
-	private String notificationType = null;
-
-	private String subscriptionId = null;
-
-	private OffsetDateTime timeStamp = null;
-
-	private String vnfPkgId = null;
-
-	private String vnfdId = null;
+	@Override
+	public VnfPackageReader getNewReaderInstance(final byte[] data) {
+		return null;
+	}
 
 }

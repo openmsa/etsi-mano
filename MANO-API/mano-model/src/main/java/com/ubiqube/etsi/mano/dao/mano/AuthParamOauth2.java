@@ -14,19 +14,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.pkg.vnf;
+package com.ubiqube.etsi.mano.dao.mano;
 
-import javax.annotation.Nullable;
+import javax.persistence.Embeddable;
 
-import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-public interface VnfPackageManager {
-	@Nullable
-	PackageDescriptor<VnfPackageReader> getProviderFor(byte[] data);
+@Setter
+@Getter
+@Embeddable
+public class AuthParamOauth2 {
+	private String clientId;
+	private String clientSecret;
+	private String tokenEndpoint;
+	private String o2Username;
+	private String o2Password;
+
 }

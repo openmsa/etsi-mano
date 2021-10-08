@@ -45,7 +45,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamBasic;
-import com.ubiqube.etsi.mano.dao.mano.AuthParamOath2;
+import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
 import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -134,7 +134,7 @@ public class NotificationsImpl implements Notifications {
 		return new HttpClientContext();
 	}
 
-	private static @NotNull HttpClientContext createOAuth2Context(final AuthParamOath2 authParamOath2, final HttpHost _targetHost) {
+	private static @NotNull HttpClientContext createOAuth2Context(final AuthParamOauth2 authParamOath2, final HttpHost _targetHost) {
 		return new HttpClientContext();
 	}
 

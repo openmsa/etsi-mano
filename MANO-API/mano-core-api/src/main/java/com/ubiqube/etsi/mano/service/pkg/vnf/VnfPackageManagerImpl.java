@@ -14,13 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.pkg.vnf;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -28,27 +30,28 @@ import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
  *
  */
 @Service
-public class VnfDefaultRegistryHandler implements PackageDescriptor<VnfPackageReader> {
+public class VnfPackageManagerImpl implements VnfPackageManager {
 
-	@Override
-	public boolean isProcessable(final byte[] data) {
-		return false;
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPackageManagerImpl.class);
+
+	private final List<PackageDescriptor<VnfPackageReader>> providers;
+
+	public VnfPackageManagerImpl(final List<PackageDescriptor<VnfPackageReader>> _providers) {
+		providers = _providers;
 	}
 
 	@Override
-	public String getProviderName() {
-		return "UBI-DEFAULT";
-	}
+	public PackageDescriptor<VnfPackageReader> getProviderFor(final byte[] data) {
 
-	@Override
-	public VnfPackageReader getNewReaderInstance(final byte[] data) {
-		return new DefaultVnfPackageReader();
-	}
-
-	@Override
-	public ExecutionGraph getBlueprint() {
-		// TODO Auto-generated method stub
-		return null;
+		for (final PackageDescriptor<VnfPackageReader> provider : providers) {
+			LOG.info("Testing {} for package support.", provider.getProviderName());
+			if (provider.isProcessable(data)) {
+				LOG.info("Using {} for package.", provider.getProviderName());
+				return provider;
+			}
+		}
+		LOG.info("No package support, using default.");
+		return new DefaultVnfPackageProvider();
 	}
 
 }

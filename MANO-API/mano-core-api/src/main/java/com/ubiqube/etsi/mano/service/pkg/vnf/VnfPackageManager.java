@@ -14,38 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import javax.annotation.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter
-@Getter
-@Entity
-public class VnfPackageOnboardingNotification {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-
-	private UUID id = null;
-
-	private String nfvoId;
-
-	private String notificationType = null;
-
-	private String subscriptionId = null;
-
-	private OffsetDateTime timeStamp = null;
-
-	private String vnfPkgId = null;
-
-	private String vnfdId = null;
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface VnfPackageManager {
+	@Nullable
+	PackageDescriptor<VnfPackageReader> getProviderFor(byte[] data);
 }

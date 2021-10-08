@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.pkg.vnf;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -64,7 +64,6 @@ import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduLevel;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -298,15 +297,17 @@ public class VnfPackageOnboardingImpl {
 		if (version != null) {
 			part++;
 		}
-		if (part == 0) {
+		switch (part) {
+		case 0:
 			return Optional.empty();
-		}
-		if (part == 1) {
+		case 1:
 			return vnfPackageService.findByDescriptorId(descriptorId);
-		} else if (part == 2) {
+		case 2:
 			return vnfPackageService.findByDescriptorIdAndSoftwareVersion(descriptorId, version);
-		} else if (part == 3) {
+		case 3:
 			return vnfPackageService.findByDescriptorIdFlavorIdVnfdVersion(descriptorId, flavor, version);
+		default:
+			break;
 		}
 		throw new GenericException("Unknown version " + part);
 	}

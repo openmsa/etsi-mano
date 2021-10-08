@@ -14,38 +14,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.vnfm.fc.vnf;
 
-import javax.persistence.Embeddable;
+import org.springframework.http.ResponseEntity;
 
-@Embeddable
-public class AuthParamOath2 {
-	private String clientId = null;
-	private String clientPassword = null;
-	private String tokenEndpoint = null;
+public interface VnfNotificationFrontController {
 
-	public String getClientId() {
-		return clientId;
-	}
+	ResponseEntity<Void> check();
 
-	public void setClientId(final String clientId) {
-		this.clientId = clientId;
-	}
-
-	public String getClientPassword() {
-		return clientPassword;
-	}
-
-	public void setClientPassword(final String clientPassword) {
-		this.clientPassword = clientPassword;
-	}
-
-	public String getTokenEndpoint() {
-		return tokenEndpoint;
-	}
-
-	public void setTokenEndpoint(final String tokenEndpoint) {
-		this.tokenEndpoint = tokenEndpoint;
-	}
+	ResponseEntity<Void> onNotification(Object body, String version);
 
 }

@@ -192,6 +192,8 @@ public class VnfPackage implements PackageBase, Auditable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfIndicators> vnfIndicators;
+	// Original vnf package id in NFVO.
+	private String nfvoId;
 
 	@Version
 	private long version;

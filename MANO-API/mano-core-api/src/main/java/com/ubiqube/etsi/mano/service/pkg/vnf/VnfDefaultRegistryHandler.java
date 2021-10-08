@@ -14,7 +14,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.pkg.vnf;
+package com.ubiqube.etsi.mano.service.pkg.vnf;
+
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
@@ -25,26 +27,26 @@ import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class DefaultVnfPackageProvider implements PackageDescriptor<VnfPackageReader> {
+@Service
+public class VnfDefaultRegistryHandler implements PackageDescriptor<VnfPackageReader> {
 
 	@Override
-	public ExecutionGraph getBlueprint() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getProviderName() {
-		return "default";
-	}
-
-	@Override
-	public boolean isProcessable(byte[] data) {
+	public boolean isProcessable(final byte[] data) {
 		return false;
 	}
 
 	@Override
-	public VnfPackageReader getNewReaderInstance(byte[] data) {
+	public String getProviderName() {
+		return "UBI-DEFAULT";
+	}
+
+	@Override
+	public VnfPackageReader getNewReaderInstance(final byte[] data) {
+		return new DefaultVnfPackageReader();
+	}
+
+	@Override
+	public ExecutionGraph getBlueprint() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -21,6 +21,7 @@ import java.net.URI;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -46,4 +47,5 @@ public interface VnfmRest {
 
 	MultiValueMap<String, String> getAutorization();
 
+	<T> T get(final URI uri, final ResponseExtractor<T> responseExtractor);
 }

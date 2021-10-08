@@ -34,7 +34,7 @@ public class AuthentificationInformations {
 	private AuthType authType;
 
 	private AuthParamBasic authParamBasic;
-	private AuthParamOath2 authParamOath2;
+	private AuthParamOauth2 authParamOath2;
 
 	public AuthType getAuthType() {
 		return authType;
@@ -52,11 +52,11 @@ public class AuthentificationInformations {
 		this.authParamBasic = authParamBasic;
 	}
 
-	public AuthParamOath2 getAuthParamOath2() {
+	public AuthParamOauth2 getAuthParamOath2() {
 		return authParamOath2;
 	}
 
-	public void setAuthParamOath2(final AuthParamOath2 authParamOath2) {
+	public void setAuthParamOath2(final AuthParamOauth2 authParamOath2) {
 		this.authParamOath2 = authParamOath2;
 	}
 
