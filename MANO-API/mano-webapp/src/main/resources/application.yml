@@ -19,8 +19,8 @@ logging:
         orika: INFO
     org:
       apache:
-        http:
-          wire: INFO
+        activemq:
+          audit: WARN
       hibernate:
         SQL: INFO
       openstack4j: INFO
@@ -30,6 +30,7 @@ logging:
             logging:
               ConditionEvaluationReportLoggingListener: INFO
         jms: INFO
+        security: INFO
         web: INFO
 
 management:
@@ -45,6 +46,8 @@ management:
       mode: full
 
 mano:
+  frontend-url: http://172.22.33.1:8090/
+  swagger-o-auth2: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/token
   election:
     script-path: /tmp/etsi-mano/election/groovy
   nfvo:
@@ -130,6 +133,12 @@ spring:
             instanceId: AUTO
           threadPool:
             threadCount: 10
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://172.22.33.1:8090/auth/realms/mano-realm
+          jwk-set-uri: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/certs
   servlet:
     multipart:
       max-file-size: 1024MB

@@ -1,11 +1,11 @@
 debug: true
 keycloak:
   realm: mano-realm
-  auth-server-url: http://172.22.33.1:8090/auth
+  auth-server-url: http://10.31.1.245:8090/auth/
   ssl-required: external
   resource: mano-nfvo
   credentials:
-    secret: 99373315-d8d2-495d-a45d-73aa8cfcd580
+    secret: ed9aeb6d-3ea5-4392-bb22-835603cf3dfc
   use-resource-role-mappings: true
   bearer-only: true
 
@@ -18,6 +18,9 @@ logging:
       glasnost:
         orika: INFO
     org:
+      apache:
+        activemq:
+          audit: WARN
       hibernate:
         SQL: INFO
       openstack4j: INFO
@@ -27,7 +30,7 @@ logging:
             logging:
               ConditionEvaluationReportLoggingListener: INFO
         jms: INFO
-        security: DEBUG
+        security: INFO
         web: INFO
 
 management:
@@ -44,6 +47,7 @@ management:
 
 mano:
   frontend-url: http://172.22.33.1:8090/
+  swagger-o-auth2: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/token
   election:
     script-path: /tmp/etsi-mano/election/groovy
   repository:
@@ -53,13 +57,13 @@ mano:
       url: http://bad/
   vnfm:
     nfvo:
+      version: "2.6.1"
       oauth2:
-        client-id: ecmadmin
-        client-secret: CloudAdmin123
-        grant-type: client_credentials
-        oauth-url:  https://172.22.18.21/ecm_service/oauth2/access_token
-      url: http://172.22.18.21/
-
+        oauthUrl: http://10.31.1.245:8090/auth/realms/mano-realm/protocol/openid-connect/token
+        grantType: client_credentials
+        clientId: mano-vnfm
+        clientSecret: 50e312ab-9f12-481e-b6a8-c23e0de21628
+      url: http://10.31.1.29:8100/ubi-etsi-mano/sol005
 
 server:
   error:
@@ -144,7 +148,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://172.22.33.1:8090/auth/realms/mano-realm
-          jwk-set-uri: http://172.22.33.1:8090/auth/realms/mano-realm/protocol/openid-connect/certs
+          jwk-set-uri: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/certs
   servlet:
     multipart:
       max-file-size: 1024MB

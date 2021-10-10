@@ -13,6 +13,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.VnfmGateway;
 import com.ubiqube.etsi.mano.service.rest.NfvoRest;
+import com.ubiqube.etsi.mano.vnfm.service.rest.NfvoRestImpl;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -22,7 +23,7 @@ public class VnfmVersionManager {
 	private final NfvoRest vnfmRest;
 	private final MapperFacade mapper;
 
-	public VnfmVersionManager(final List<VnfmGateway> vnfmGateway, final NfvoRest vnfmRest, final MapperFacade mapper) {
+	public VnfmVersionManager(final List<VnfmGateway> vnfmGateway, final NfvoRestImpl vnfmRest, final MapperFacade mapper) {
 		super();
 		this.vnfmGateway = vnfmGateway;
 		this.vnfmRest = vnfmRest;
