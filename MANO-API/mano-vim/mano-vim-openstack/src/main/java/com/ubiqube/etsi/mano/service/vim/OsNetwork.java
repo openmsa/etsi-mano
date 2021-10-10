@@ -138,9 +138,10 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	}
 
 	@Override
-	public String createPort(final String name, final String networkId, final String deviceId) {
+	public String createPort(final String name, final String networkId, final String deviceId, final String macAddress) {
 		final Port port = Builders.port()
 				.networkId(networkId)
+				.macAddress(macAddress)
 				.name(name)
 				.deviceId(deviceId)
 				.build();
