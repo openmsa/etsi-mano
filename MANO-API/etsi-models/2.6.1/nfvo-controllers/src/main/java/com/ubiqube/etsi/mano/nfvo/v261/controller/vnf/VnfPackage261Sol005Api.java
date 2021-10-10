@@ -179,7 +179,10 @@ public interface VnfPackage261Sol005Api {
 	/**
 	 * Update information about an individual VNF package.
 	 *
-	 * \&quot;The PATCH method updates the information of a VNF package.\&quot; \&quot;This method shall follow the provisions specified in the Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes.\&quot;
+	 * \&quot;The PATCH method updates the information of a VNF package.\&quot;
+	 * \&quot;This method shall follow the provisions specified in the Tables
+	 * 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response
+	 * data structures, and response codes.\&quot;
 	 *
 	 */
 	@Operation(summary = "Update information about an individual VNF package.", description = "\"The PATCH method updates the information of a VNF package.\" \"This method shall follow the provisions specified in the  Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes.\" ", tags = {})
@@ -205,7 +208,9 @@ public interface VnfPackage261Sol005Api {
 	/**
 	 * Upload a VNF package by providing the content of the VNF package.
 	 *
-	 * The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes.
+	 * The PUT method uploads the content of a VNF package. This method shall follow
+	 * the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI
+	 * query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Operation(summary = "Upload a VNF package by providing the content of the VNF package.", description = "The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the  Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
@@ -220,15 +225,19 @@ public interface VnfPackage261Sol005Api {
 			@ApiResponse(responseCode = "409", description = "409 CONFLICT ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@PutMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "multipart/form-data" })
-	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(@Nonnull @Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema(allowableValues = { "application/zip" })) @RequestHeader(value = "Accept", required = true) String accept,
+	@PutMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json", "applicaion/zip" })
+	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId,
+			@Nonnull @Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema(allowableValues = { "application/zip" })) @RequestHeader(value = "Accept", required = true) String accept,
 			@RequestParam("file") MultipartFile file);
 
 	/**
 	 * Upload a VNF package by providing the address information of the VNF package.
 	 *
-	 * The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes.
+	 * The POST method provides the information for the NFVO to get the content of a
+	 * VNF package. This method shall follow the provisions specified in the Tables
+	 * 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response
+	 * data structures, and response codes.
 	 *
 	 */
 	@Operation(summary = "Upload a VNF package by providing the address information of the VNF package.", description = "The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the  Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes.         ", tags = {})
