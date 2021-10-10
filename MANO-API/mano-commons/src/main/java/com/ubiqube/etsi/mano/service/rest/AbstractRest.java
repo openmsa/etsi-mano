@@ -85,7 +85,7 @@ public abstract class AbstractRest implements NfvoRest {
 
 	@Override
 	public <T> T get(final URI uri, final ResponseExtractor<T> responseExtractor) {
-		return restTemplate.execute(uri, HttpMethod.GET, null, responseExtractor);
+		return restTemplate.execute(uri, HttpMethod.GET, request -> request.getHeaders().add("Content-Type", "application/json"), responseExtractor);
 	}
 
 	@Override
