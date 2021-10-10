@@ -29,4 +29,6 @@ import lombok.Setter;
 public class ManoProperties {
 
 	private String frontendUrl;
+
+	private String swaggerOAuth2;
 }

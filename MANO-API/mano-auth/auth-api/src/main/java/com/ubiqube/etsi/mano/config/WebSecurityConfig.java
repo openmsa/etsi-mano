@@ -46,9 +46,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(final HttpSecurity http) throws Exception {
 		http.headers().frameOptions().sameOrigin();
 		final ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry res = http.authorizeRequests()
-				.antMatchers("/openApi*").permitAll()
+				.antMatchers("/").permitAll()
+				.antMatchers("/error").permitAll()
 				.antMatchers("/download/**").permitAll()
 				.antMatchers("/actuator/**").permitAll()
+				.antMatchers("/swagger-ui.html").permitAll()
+				.antMatchers("/swagger-ui/**").permitAll()
+				.antMatchers("/api-docs/**").permitAll()
+				.antMatchers("/v3/**").permitAll()
 				.anyRequest().authenticated();
 		secutiryConfig.configure(res);
 	}

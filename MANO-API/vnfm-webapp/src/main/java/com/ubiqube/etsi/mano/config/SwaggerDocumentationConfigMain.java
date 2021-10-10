@@ -21,19 +21,26 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.ubiqube.etsi.mano.config.properties.ManoProperties;
+
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.OAuthFlow;
+import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class SwaggerDocumentationConfigMain {
 	@SuppressWarnings("static-method")
 	@Bean
-	public OpenAPI OpenApiMain() {
+	public OpenAPI OpenApiMain(final ManoProperties oauth2Params) {
+		final OAuthFlow clientCredential = new OAuthFlow().authorizationUrl(oauth2Params.getSwaggerOAuth2())
+				.tokenUrl(oauth2Params.getSwaggerOAuth2());
+		final OAuthFlows flows = new OAuthFlows().clientCredentials(clientCredential);
 		return new OpenAPI()
-				.components(new Components().addSecuritySchemes("basicScheme", new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
+				.components(new Components().addSecuritySchemes("bearerAuth", new SecurityScheme().type(SecurityScheme.Type.OAUTH2).scheme("bearer").bearerFormat("JWT").flows(flows)))
 				.info(new Info().title("ETSI Main API")
 						.description("ETSI MANO API")
 						.license(new License().name("ETSI Forge copyright notice").url("https://forge.etsi.org/etsi-forge-copyright-notice.txt"))
