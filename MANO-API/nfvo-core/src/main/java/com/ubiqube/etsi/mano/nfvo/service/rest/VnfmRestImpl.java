@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.rest;
+package com.ubiqube.etsi.mano.nfvo.service.rest;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -40,6 +40,8 @@ import com.ubiqube.etsi.mano.config.properties.VnfmConnectionProperties;
 import com.ubiqube.etsi.mano.config.properties.VnfmConnectionProperties.Basic;
 import com.ubiqube.etsi.mano.config.properties.VnfmConnectionProperties.Oauth2;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.service.rest.AbstractRest;
+import com.ubiqube.etsi.mano.service.rest.VnfmRest;
 
 /**
  * Rest Calls from NFVO to VFNM.
@@ -91,7 +93,7 @@ public class VnfmRestImpl extends AbstractRest implements VnfmRest {
 			}
 	};
 
-	private void disableSsl(final OAuth2RestTemplate oauth2) {
+	private static void disableSsl(final OAuth2RestTemplate oauth2) {
 		try {
 			final SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(null, UNQUESTIONING_TRUST_MANAGER, null);
@@ -102,7 +104,7 @@ public class VnfmRestImpl extends AbstractRest implements VnfmRest {
 		}
 	}
 
-	private OAuth2ProtectedResourceDetails getResourceDetails(final Oauth2 oauth) {
+	private static OAuth2ProtectedResourceDetails getResourceDetails(final Oauth2 oauth) {
 		if ("passsword".equals(oauth.getGrantType())) {
 			final var resource = new ResourceOwnerPasswordResourceDetails();
 			resource.setClientId(oauth.getClientId());
