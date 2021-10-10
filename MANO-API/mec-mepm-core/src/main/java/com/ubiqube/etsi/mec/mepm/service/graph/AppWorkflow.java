@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mec.mepm.service.graph;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
 import org.springframework.stereotype.Service;
@@ -62,7 +61,7 @@ public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport, Ap
 	@Override
 	public PreExecutionGraph<AppTask> setWorkflowBlueprint(final AppPkg bundle, final AppBlueprint blueprint) {
 		final WfConfiguration wfc = new WfConfiguration(planContributors);
-		final List<NodeConnectivity> conns = wfc.getConfigurationGraph().edgeSet().stream().collect(Collectors.toList());
+		final List<NodeConnectivity> conns = wfc.getConfigurationGraph().edgeSet().stream().toList();
 		planner.doPlan(bundle, blueprint, null, conns);
 		return null;
 	}
