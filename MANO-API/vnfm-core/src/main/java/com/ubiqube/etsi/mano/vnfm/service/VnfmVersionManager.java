@@ -12,17 +12,17 @@ import org.springframework.util.StreamUtils;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.VnfmGateway;
-import com.ubiqube.etsi.mano.service.rest.VnfmRest;
+import com.ubiqube.etsi.mano.service.rest.NfvoRest;
 
 import ma.glasnost.orika.MapperFacade;
 
 @Service
 public class VnfmVersionManager {
 	private final List<VnfmGateway> vnfmGateway;
-	private final VnfmRest vnfmRest;
+	private final NfvoRest vnfmRest;
 	private final MapperFacade mapper;
 
-	public VnfmVersionManager(final List<VnfmGateway> vnfmGateway, final VnfmRest vnfmRest, final MapperFacade mapper) {
+	public VnfmVersionManager(final List<VnfmGateway> vnfmGateway, final NfvoRest vnfmRest, final MapperFacade mapper) {
 		super();
 		this.vnfmGateway = vnfmGateway;
 		this.vnfmRest = vnfmRest;
@@ -36,7 +36,7 @@ public class VnfmVersionManager {
 		final Class<?> clazz = vnfmGateway.get(0).getVnfPackageClass();
 		final Map<String, Object> uriVariables = Map.of("id", pkgId);
 		final URI uri = vnfmRest.uriBuilder()
-				.pathSegment("/vnf_packages/{id}/package_content")
+				.pathSegment("vnfpkgm/v1/vnf_packages/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();
 		final Object res = vnfmRest.get(uri, clazz);
@@ -46,7 +46,7 @@ public class VnfmVersionManager {
 	public void getPackageContent(final String pkgId, final Path file) {
 		final Map<String, Object> uriVariables = Map.of("id", pkgId);
 		final URI uri = vnfmRest.uriBuilder()
-				.pathSegment("/vnf_packages/{id}/package_content")
+				.pathSegment("vnfpkgm/v1/vnf_packages/{id}/package_content")
 				.buildAndExpand(uriVariables)
 				.toUri();
 		vnfmRest.get(uri, clientHttpResponse -> StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(file.toFile())));
