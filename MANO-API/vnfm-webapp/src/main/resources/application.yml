@@ -1,7 +1,7 @@
 debug: true
 keycloak:
   realm: mano-realm
-  auth-server-url: http://10.31.1.245:8110/auth
+  auth-server-url: http://172.22.33.1:8090/auth
   ssl-required: external
   resource: mano-nfvo
   credentials:
@@ -27,6 +27,7 @@ logging:
             logging:
               ConditionEvaluationReportLoggingListener: INFO
         jms: INFO
+        security: DEBUG
         web: INFO
 
 management:
@@ -42,26 +43,29 @@ management:
       mode: full
 
 mano:
+  frontend-url: http://172.22.33.1:8090/
   election:
     script-path: /tmp/etsi-mano/election/groovy
-  nfvo:
-    vnfm:
-      password: nfv
-      url: http://vnfm:8080/ubi-etsi-mano/sol003
-      username: nfvo
   repository:
     phys-root: /tmp/etsi-mano/repository
+  nfvo:
+    vnfm:
+      url: http://bad/
   vnfm:
     nfvo:
-      password: vnfm
-      url: http://nfvo:8110/ubi-etsi-mano/sol005
-      username: vnfm
+      oauth2:
+        client-id: ecmadmin
+        client-secret: CloudAdmin123
+        grant-type: client_credentials
+        oauth-url:  https://172.22.18.21/ecm_service/oauth2/access_token
+      url: http://172.22.18.21/
+
 
 server:
   error:
     whitelabel:
       enabled: false
-  port: 8090
+  port: 8091
   servlet:
     contextPath: /ubi-etsi-mano
 
@@ -83,7 +87,7 @@ spring:
         username: admin
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:file:~/etsi-mano.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
+    url: jdbc:h2:file:~/etsi-mano-vnfm.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
     username: sa
   h2:
     console:
@@ -139,8 +143,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://10.31.1.245:8110/auth/realms/mano-realm
-          jwk-set-uri: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/certs
+          issuer-uri: http://172.22.33.1:8090/auth/realms/mano-realm
+          jwk-set-uri: http://172.22.33.1:8090/auth/realms/mano-realm/protocol/openid-connect/certs
   servlet:
     multipart:
       max-file-size: 1024MB

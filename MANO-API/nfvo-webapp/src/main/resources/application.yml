@@ -91,7 +91,7 @@ spring:
         username: admin
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:file:~/etsi-mano.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
+    url: jdbc:h2:file:~/etsi-mano-nfvo.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
     username: sa
   h2:
     console:
