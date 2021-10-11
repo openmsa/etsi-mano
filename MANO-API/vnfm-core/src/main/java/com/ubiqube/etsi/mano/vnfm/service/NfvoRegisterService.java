@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ import com.ubiqube.etsi.mano.service.NfvoService;
 @Service
 @ConditionalOnMissingBean(NfvoService.class)
 public class NfvoRegisterService implements CommandLineRunner {
+
+	private static final Logger LOG = LoggerFactory.getLogger(NfvoRegisterService.class);
+
 	private final VnfmVersionManager versionManager;
 
 	public NfvoRegisterService(final VnfmVersionManager versionManager) {
@@ -40,6 +45,10 @@ public class NfvoRegisterService implements CommandLineRunner {
 		final Subscription subscription = new Subscription();
 		subscription.setApi(ApiTypesEnum.SOL003);
 		subscription.setSubscriptionType(SubscriptionType.NSDVNF);
-		versionManager.subscribe(subscription);
+		try {
+			versionManager.subscribe(subscription);
+		} catch (final RuntimeException e) {
+			LOG.warn("Unable to register with NFVO.", e);
+		}
 	}
 }
