@@ -17,7 +17,6 @@
 
 package com.ubiqube.etsi.mano.nfvo.v261;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +24,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.common.v261.VnfSubscriptionFactory;
-import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
-import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
@@ -37,6 +35,7 @@ import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.services.Sol003Linkable;
 import com.ubiqube.etsi.mano.nfvo.v261.services.Sol005Linkable;
 import com.ubiqube.etsi.mano.service.VersionService;
 import com.ubiqube.etsi.mano.service.rest.VnfmRest;
@@ -51,6 +50,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
 import ma.glasnost.orika.MapperFacade;
 
+@Service
 public class Nfvo261VersionService implements VersionService {
 
 	private final VnfmRest vnfmRest;
@@ -73,14 +73,14 @@ public class Nfvo261VersionService implements VersionService {
 
 	@Override
 	public Object createNotificationVnfPackageOnboardingNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		final VnfPackageOnboardingNotification obj = VnfSubscriptionFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, null, null);
+		final var obj = VnfSubscriptionFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId, null, new Sol003Linkable());
 		obj.setLinks(new Sol005Linkable().createVnfPackageOnboardingNotificationLinks(vnfPkgId, subscriptionId));
 		return obj;
 	}
 
 	@Override
 	public Object createVnfPackageChangeNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		final VnfPackageChangeNotification obj = VnfSubscriptionFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId, null, null);
+		final var obj = VnfSubscriptionFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId, null, new Sol003Linkable());
 		obj.setLinks(new Sol005Linkable().createNotificationLink(vnfPkgId, subscriptionId));
 		return obj;
 	}
@@ -89,17 +89,17 @@ public class Nfvo261VersionService implements VersionService {
 	public VnfBlueprint vnfLcmOpOccsGet(final UUID vnfdId) {
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", vnfdId);
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_lcm_op_occs/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();
-		final VnfLcmOpOcc res = vnfmRest.get(uri, VnfLcmOpOcc.class);
+		final var res = vnfmRest.get(uri, VnfLcmOpOcc.class);
 		return mapper.map(res, VnfBlueprint.class);
 	}
 
 	@Override
 	public List<VnfInstance> vnfInstanceGet(final MultiValueMap<String, String> params) {
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_instances")
 				.queryParams(params)
 				.build()
@@ -112,24 +112,24 @@ public class Nfvo261VersionService implements VersionService {
 
 	@Override
 	public VnfInstance vnfInstancePost(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
-		final CreateVnfRequest req = new CreateVnfRequest();
+		final var req = new CreateVnfRequest();
 		req.setVnfdId(vnfdId);
 		req.setVnfInstanceDescription(vnfInstanceDescription);
 		req.setVnfInstanceName(vnfInstanceName);
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_instances")
 				.build()
 				.toUri();
-		final com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance res = vnfmRest.post(uri, req, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
+		final var res = vnfmRest.post(uri, req, com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance.class);
 		return mapper.map(res, VnfInstance.class);
 	}
 
 	@Override
 	public VnfBlueprint vnfInstanceOperate(final UUID uuid, final VnfOperateRequest operateVnfRequest) {
-		final OperateVnfRequest operateRequest = mapper.map(operateVnfRequest, OperateVnfRequest.class);
+		final var operateRequest = mapper.map(operateVnfRequest, OperateVnfRequest.class);
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", uuid);
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_instances/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();
@@ -140,10 +140,10 @@ public class Nfvo261VersionService implements VersionService {
 
 	@Override
 	public VnfBlueprint vnfInstanceScale(final UUID uuid, final VnfScaleRequest scaleVnfRequest) {
-		final ScaleVnfRequest scaleRequest = mapper.map(scaleVnfRequest, ScaleVnfRequest.class);
+		final var scaleRequest = mapper.map(scaleVnfRequest, ScaleVnfRequest.class);
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", uuid);
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_instances/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();
@@ -153,10 +153,10 @@ public class Nfvo261VersionService implements VersionService {
 
 	@Override
 	public VnfBlueprint vnfInstanceScaleToLevel(final UUID uuid, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
-		final ScaleVnfToLevelRequest scaleRequest = mapper.map(scaleVnfToLevelRequest, ScaleVnfToLevelRequest.class);
+		final var scaleRequest = mapper.map(scaleVnfToLevelRequest, ScaleVnfToLevelRequest.class);
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", uuid);
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_instances/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();
@@ -166,12 +166,12 @@ public class Nfvo261VersionService implements VersionService {
 
 	@Override
 	public VnfBlueprint vnfInstanceTerminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
-		final TerminateVnfRequest terminateVnfRequest = new TerminateVnfRequest();
+		final var terminateVnfRequest = new TerminateVnfRequest();
 		terminateVnfRequest.setGracefulTerminationTimeout(gracefulTerminationTimeout);
 		terminateVnfRequest.setTerminationType(TerminationTypeEnum.valueOf(terminationType.toString()));
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", vnfInstanceId);
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_instances/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();
@@ -181,10 +181,10 @@ public class Nfvo261VersionService implements VersionService {
 
 	@Override
 	public VnfBlueprint vnfInstanceInstantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
-		final InstantiateVnfRequest request = mapper.map(instantiateVnfRequest, InstantiateVnfRequest.class);
+		final var request = mapper.map(instantiateVnfRequest, InstantiateVnfRequest.class);
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", vnfInstanceId);
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_instances/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();
@@ -196,7 +196,7 @@ public class Nfvo261VersionService implements VersionService {
 	public void vnfInstanceDelete(final UUID vnfInstanceId) {
 		final Map<String, Object> uriVariables = new HashMap<>();
 		uriVariables.put("id", vnfInstanceId);
-		final URI uri = vnfmRest.uriBuilder()
+		final var uri = vnfmRest.uriBuilder()
 				.pathSegment("vnflcm/v1/vnf_instances/{id}")
 				.buildAndExpand(uriVariables)
 				.toUri();

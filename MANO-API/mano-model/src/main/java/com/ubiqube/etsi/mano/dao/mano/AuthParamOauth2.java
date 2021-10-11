@@ -30,5 +30,5 @@ public class AuthParamOauth2 {
 	private String tokenEndpoint;
 	private String o2Username;
 	private String o2Password;
-
+	private OAuth2GrantType grantType;
 }

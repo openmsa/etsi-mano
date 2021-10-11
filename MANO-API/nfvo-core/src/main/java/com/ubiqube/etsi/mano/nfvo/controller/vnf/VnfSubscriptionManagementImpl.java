@@ -60,7 +60,7 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 
 		final Subscription subscriptionsRepository = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
-		final AuthentificationInformations auth = subscriptionsRepository.getAuthentificationInformations();
+		final AuthentificationInformations auth = subscriptionsRepository.getAuthentication();
 		final String callbackUri = subscriptionsRepository.getCallbackUri();
 		// There is a version, problem.
 		notifications.doNotification(notificationsMessage, callbackUri, auth);
@@ -70,7 +70,7 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage) {
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 		final Subscription subscription = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
-		final AuthentificationInformations auth = subscription.getAuthentificationInformations();
+		final AuthentificationInformations auth = subscription.getAuthentication();
 		final String cbUrl = subscription.getCallbackUri();
 		// Version problem.
 		notifications.doNotification(notificationsMessage, cbUrl, auth);

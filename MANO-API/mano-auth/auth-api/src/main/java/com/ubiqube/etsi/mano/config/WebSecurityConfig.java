@@ -21,7 +21,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -45,9 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http.headers().frameOptions().sameOrigin();
-		final ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry res = http.authorizeRequests()
+		final var res = http.authorizeRequests()
 				.antMatchers("/").permitAll()
 				.antMatchers("/error").permitAll()
+				.antMatchers("/h2-console/**").permitAll()
 				.antMatchers("/download/**").permitAll()
 				.antMatchers("/actuator/**").permitAll()
 				.antMatchers("/swagger-ui.html").permitAll()

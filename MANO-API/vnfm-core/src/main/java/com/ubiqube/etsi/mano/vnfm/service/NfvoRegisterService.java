@@ -47,7 +47,7 @@ public class NfvoRegisterService {
 		oauth2.setTokenEndpoint(env.getProperty("keycloak.auth-server-url"));
 		auth.setAuthParamOath2(oauth2);
 		auth.setAuthType(AuthType.OAUTH2_CLIENT_CREDENTIALS);
-		subscription.setAuthentificationInformations(auth);
+		subscription.setAuthentication(auth);
 		subscription.setCallbackUri(manoProperties.getFrontendUrl() + "ubi-etsi-mano/sol003/vnfpkgm/v1/notification/onboarding");
 		subscription.setSubscriptionType(SubscriptionType.NSDVNF);
 	}

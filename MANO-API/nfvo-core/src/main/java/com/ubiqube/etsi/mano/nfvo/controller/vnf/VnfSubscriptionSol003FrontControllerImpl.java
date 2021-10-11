@@ -65,7 +65,7 @@ public class VnfSubscriptionSol003FrontControllerImpl implements VnfSubscription
 	public <U> ResponseEntity<U> create(final Object subscriptionsPostQuery, final Class<U> clazz, final Consumer<U> makeLinks) {
 		Subscription subscription = mapper.map(subscriptionsPostQuery, Subscription.class);
 		// Check subscription.
-		notifications.check(subscription.getAuthentificationInformations(), subscription.getCallbackUri());
+		notifications.check(subscription.getAuthentication(), subscription.getCallbackUri());
 		subscription = vnfSubscriptionManagement.subscriptionsPost(subscription, ApiTypesEnum.SOL005);
 		final U pkgmSubscription = mapper.map(subscription, clazz);
 		makeLinks.accept(pkgmSubscription);

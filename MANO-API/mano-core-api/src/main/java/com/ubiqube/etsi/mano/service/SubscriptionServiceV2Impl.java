@@ -63,7 +63,7 @@ public class SubscriptionServiceV2Impl implements SubscriptionServiceV2 {
 	@Override
 	public <U> U create(final Object subscriptionRequest, final Class<U> clazz, final Consumer<U> setLink, final SubscriptionType type) {
 		Subscription subscription = mapper.map(subscriptionRequest, Subscription.class);
-		notifications.check(subscription.getAuthentificationInformations(), subscription.getCallbackUri());
+		notifications.check(subscription.getAuthentication(), subscription.getCallbackUri());
 		subscription = subscriptionService.save(subscription, type);
 		final U pkgmSubscription = mapper.map(subscription, clazz);
 		setLink.accept(pkgmSubscription);
