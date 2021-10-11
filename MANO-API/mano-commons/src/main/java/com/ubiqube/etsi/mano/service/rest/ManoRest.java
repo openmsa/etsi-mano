@@ -35,14 +35,14 @@ public class ManoRest extends AbstractRest {
 		if (authParams == null) {
 			return;
 		}
-		if (AuthType.OAUTH2_CLIENT_CREDENTIALS == authParams.getAuthType()) {
+		if (AuthType.OAUTH2_CLIENT_CREDENTIALS == authParams.getAuthType().get(0)) {
 			final var oauth = authParams.getAuthParamOath2();
 			final var resource = getResourceDetails(oauth);
 			final var oauth2 = new OAuth2RestTemplate(resource);
 			disableSsl(oauth2);
 			setRestTemplate(oauth2);
 		}
-		if (AuthType.BASIC == authParams.getAuthType()) {
+		if (AuthType.BASIC == authParams.getAuthType().get(0)) {
 			final var basic = authParams.getAuthParamBasic();
 			final var user = basic.getUserName();
 			if (null != user) {

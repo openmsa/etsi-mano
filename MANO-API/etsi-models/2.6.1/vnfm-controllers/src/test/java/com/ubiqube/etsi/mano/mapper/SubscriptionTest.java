@@ -95,7 +95,7 @@ public class SubscriptionTest {
 		authParamBasic.setPassword("pass");
 		authentificationInformations.setAuthParamBasic(authParamBasic);
 
-		subsDb.setAuthentificationInformations(authentificationInformations);
+		subsDb.setAuthentication(authentificationInformations);
 		final UUID uuid = UUID.randomUUID();
 		subsDb.setId(uuid);
 		final SubscriptionQuery subscriptionQuery = new SubscriptionQuery();

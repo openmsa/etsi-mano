@@ -16,48 +16,32 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.List;
+
+import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 @Embeddable
 public class AuthentificationInformations {
 	@Enumerated(EnumType.STRING)
 	@FullTextField
-	private AuthType authType;
+	@ElementCollection
+	private List<AuthType> authType;
 
 	private AuthParamBasic authParamBasic;
 	private AuthParamOauth2 authParamOath2;
-
-	public AuthType getAuthType() {
-		return authType;
-	}
-
-	public void setAuthType(final AuthType authType) {
-		this.authType = authType;
-	}
-
-	public AuthParamBasic getAuthParamBasic() {
-		return authParamBasic;
-	}
-
-	public void setAuthParamBasic(final AuthParamBasic authParamBasic) {
-		this.authParamBasic = authParamBasic;
-	}
-
-	public AuthParamOauth2 getAuthParamOath2() {
-		return authParamOath2;
-	}
-
-	public void setAuthParamOath2(final AuthParamOauth2 authParamOath2) {
-		this.authParamOath2 = authParamOath2;
-	}
-
 }
