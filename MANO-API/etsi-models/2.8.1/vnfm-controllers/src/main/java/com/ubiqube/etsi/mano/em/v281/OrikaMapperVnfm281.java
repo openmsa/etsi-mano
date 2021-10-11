@@ -20,6 +20,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
+import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
@@ -39,6 +41,8 @@ import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.em.v281.model.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.em.v281.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.GrantRequest;
@@ -72,6 +76,11 @@ import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.ConverterFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Component
 public class OrikaMapperVnfm281 implements OrikaMapperFactoryConfigurer {
 
@@ -279,6 +288,14 @@ public class OrikaMapperVnfm281 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(LccnSubscription.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(SubscriptionAuthentication.class, AuthentificationInformations.class)
+				// .fieldMap("authType[0]", "authType").converter("filterConverter").add()
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(SubscriptionAuthenticationParamsOauth2ClientCredentials.class, AuthParamOauth2.class)
+				.field("clientPassword", "clientSecret")
 				.byDefault()
 				.register();
 		/*
