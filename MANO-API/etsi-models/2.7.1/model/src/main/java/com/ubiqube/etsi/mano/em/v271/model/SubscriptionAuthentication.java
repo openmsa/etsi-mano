@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.model.v271.sol003.vnf;
+package com.ubiqube.etsi.mano.em.v271.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,6 @@ import io.swagger.annotations.ApiModelProperty;
  * SubscriptionAuthentication
  */
 @Validated
-@javax.annotation.processing.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-06-24T10:38:36.740+02:00")
 
 public class SubscriptionAuthentication {
 	/**
@@ -164,7 +163,7 @@ public class SubscriptionAuthentication {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final SubscriptionAuthentication subscriptionAuthentication = (SubscriptionAuthentication) o;

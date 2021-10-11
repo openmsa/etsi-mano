@@ -18,104 +18,108 @@
 package com.ubiqube.etsi.mano.model.v271.sol005.nsperfo;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.em.v271.model.SubscriptionAuthentication;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
- * This type represents modifications to a threshold. It shall comply with the provisions defined in Table 7.5.2.11-1. 
+ * This type represents modifications to a threshold. It shall comply with the
+ * provisions defined in Table 7.5.2.11-1.
  */
 @ApiModel(description = "This type represents modifications to a threshold. It shall comply with the provisions defined in Table 7.5.2.11-1. ")
 @Validated
-public class ThresholdModifications   {
-  @JsonProperty("callbackUri")
-  private String callbackUri = null;
+public class ThresholdModifications {
+	@JsonProperty("callbackUri")
+	private String callbackUri = null;
 
-  @JsonProperty("authentication")
-  private SubscriptionAuthentication authentication = null;
+	@JsonProperty("authentication")
+	private SubscriptionAuthentication authentication = null;
 
-  public ThresholdModifications callbackUri(String callbackUri) {
-    this.callbackUri = callbackUri;
-    return this;
-  }
+	public ThresholdModifications callbackUri(final String callbackUri) {
+		this.callbackUri = callbackUri;
+		return this;
+	}
 
-  /**
-   * Get callbackUri
-   * @return callbackUri
-  **/
-  @ApiModelProperty(value = "")
-  
-    public String getCallbackUri() {
-    return callbackUri;
-  }
+	/**
+	 * Get callbackUri
+	 *
+	 * @return callbackUri
+	 **/
+	@ApiModelProperty(value = "")
 
-  public void setCallbackUri(String callbackUri) {
-    this.callbackUri = callbackUri;
-  }
+	public String getCallbackUri() {
+		return callbackUri;
+	}
 
-  public ThresholdModifications authentication(SubscriptionAuthentication authentication) {
-    this.authentication = authentication;
-    return this;
-  }
+	public void setCallbackUri(final String callbackUri) {
+		this.callbackUri = callbackUri;
+	}
 
-  /**
-   * Get authentication
-   * @return authentication
-  **/
-  @ApiModelProperty(value = "")
-  
-    @Valid
-    public SubscriptionAuthentication getAuthentication() {
-    return authentication;
-  }
+	public ThresholdModifications authentication(final SubscriptionAuthentication authentication) {
+		this.authentication = authentication;
+		return this;
+	}
 
-  public void setAuthentication(SubscriptionAuthentication authentication) {
-    this.authentication = authentication;
-  }
+	/**
+	 * Get authentication
+	 *
+	 * @return authentication
+	 **/
+	@ApiModelProperty(value = "")
 
+	@Valid
+	public SubscriptionAuthentication getAuthentication() {
+		return authentication;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ThresholdModifications thresholdModifications = (ThresholdModifications) o;
-    return Objects.equals(this.callbackUri, thresholdModifications.callbackUri) &&
-        Objects.equals(this.authentication, thresholdModifications.authentication);
-  }
+	public void setAuthentication(final SubscriptionAuthentication authentication) {
+		this.authentication = authentication;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(callbackUri, authentication);
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final ThresholdModifications thresholdModifications = (ThresholdModifications) o;
+		return Objects.equals(this.callbackUri, thresholdModifications.callbackUri) &&
+				Objects.equals(this.authentication, thresholdModifications.authentication);
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ThresholdModifications {\n");
-    
-    sb.append("    callbackUri: ").append(toIndentedString(callbackUri)).append("\n");
-    sb.append("    authentication: ").append(toIndentedString(authentication)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(callbackUri, authentication);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class ThresholdModifications {\n");
+
+		sb.append("    callbackUri: ").append(toIndentedString(callbackUri)).append("\n");
+		sb.append("    authentication: ").append(toIndentedString(authentication)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

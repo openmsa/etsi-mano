@@ -17,136 +17,144 @@
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LifecycleChangeNotificationsFilter;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.em.v271.model.SubscriptionAuthentication;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
- * This type represents a subscription request related to notifications about VNF lifecycle changes. 
+ * This type represents a subscription request related to notifications about
+ * VNF lifecycle changes.
  */
 @ApiModel(description = "This type represents a subscription request related to notifications about VNF lifecycle changes. ")
 @Validated
 
-public class LccnSubscriptionRequest   {
-  @JsonProperty("filter")
-  private LifecycleChangeNotificationsFilter filter = null;
+public class LccnSubscriptionRequest {
+	@JsonProperty("filter")
+	private LifecycleChangeNotificationsFilter filter = null;
 
-  @JsonProperty("callbackUri")
-  private String callbackUri = null;
+	@JsonProperty("callbackUri")
+	private String callbackUri = null;
 
-  @JsonProperty("authentication")
-  private SubscriptionAuthentication authentication = null;
+	@JsonProperty("authentication")
+	private SubscriptionAuthentication authentication = null;
 
-  public LccnSubscriptionRequest filter(LifecycleChangeNotificationsFilter filter) {
-    this.filter = filter;
-    return this;
-  }
+	public LccnSubscriptionRequest filter(final LifecycleChangeNotificationsFilter filter) {
+		this.filter = filter;
+		return this;
+	}
 
-  /**
-   * Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. 
-   * @return filter
-  **/
-  @ApiModelProperty(value = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
+	/**
+	 * Filter settings for this subscription, to define the subset of all
+	 * notifications this subscription relates to. A particular notification is sent
+	 * to the subscriber if the filter matches, or if there is no filter.
+	 *
+	 * @return filter
+	 **/
+	@ApiModelProperty(value = "Filter settings for this subscription, to define the subset of all notifications this subscription relates to. A particular notification is sent to the subscriber if the filter matches, or if there is no filter. ")
 
-  @Valid
+	@Valid
 
-  public LifecycleChangeNotificationsFilter getFilter() {
-    return filter;
-  }
+	public LifecycleChangeNotificationsFilter getFilter() {
+		return filter;
+	}
 
-  public void setFilter(LifecycleChangeNotificationsFilter filter) {
-    this.filter = filter;
-  }
+	public void setFilter(final LifecycleChangeNotificationsFilter filter) {
+		this.filter = filter;
+	}
 
-  public LccnSubscriptionRequest callbackUri(String callbackUri) {
-    this.callbackUri = callbackUri;
-    return this;
-  }
+	public LccnSubscriptionRequest callbackUri(final String callbackUri) {
+		this.callbackUri = callbackUri;
+		return this;
+	}
 
-  /**
-   * The URI of the endpoint to send the notification to. 
-   * @return callbackUri
-  **/
-  @ApiModelProperty(required = true, value = "The URI of the endpoint to send the notification to. ")
-  @NotNull
+	/**
+	 * The URI of the endpoint to send the notification to.
+	 *
+	 * @return callbackUri
+	 **/
+	@ApiModelProperty(required = true, value = "The URI of the endpoint to send the notification to. ")
+	@NotNull
 
+	public String getCallbackUri() {
+		return callbackUri;
+	}
 
-  public String getCallbackUri() {
-    return callbackUri;
-  }
+	public void setCallbackUri(final String callbackUri) {
+		this.callbackUri = callbackUri;
+	}
 
-  public void setCallbackUri(String callbackUri) {
-    this.callbackUri = callbackUri;
-  }
+	public LccnSubscriptionRequest authentication(final SubscriptionAuthentication authentication) {
+		this.authentication = authentication;
+		return this;
+	}
 
-  public LccnSubscriptionRequest authentication(SubscriptionAuthentication authentication) {
-    this.authentication = authentication;
-    return this;
-  }
+	/**
+	 * Authentication parameters to configure the use of Authorization when sending
+	 * notifications corresponding to this subscription, as defined in clause 8.3.4
+	 * of ETSI GS NFV-SOL 013. This attribute shall only be present if the
+	 * subscriber requires authorization of notifications.
+	 *
+	 * @return authentication
+	 **/
+	@ApiModelProperty(value = "Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 8.3.4 of ETSI GS NFV-SOL 013. This attribute shall only be present if the subscriber requires authorization of notifications. ")
 
-  /**
-   * Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 8.3.4 of ETSI GS NFV-SOL 013. This attribute shall only be present if the subscriber requires authorization of notifications. 
-   * @return authentication
-  **/
-  @ApiModelProperty(value = "Authentication parameters to configure the use of Authorization when sending notifications corresponding to this subscription, as defined in clause 8.3.4 of ETSI GS NFV-SOL 013. This attribute shall only be present if the subscriber requires authorization of notifications. ")
+	@Valid
 
-  @Valid
+	public SubscriptionAuthentication getAuthentication() {
+		return authentication;
+	}
 
-  public SubscriptionAuthentication getAuthentication() {
-    return authentication;
-  }
+	public void setAuthentication(final SubscriptionAuthentication authentication) {
+		this.authentication = authentication;
+	}
 
-  public void setAuthentication(SubscriptionAuthentication authentication) {
-    this.authentication = authentication;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final LccnSubscriptionRequest lccnSubscriptionRequest = (LccnSubscriptionRequest) o;
+		return Objects.equals(this.filter, lccnSubscriptionRequest.filter) &&
+				Objects.equals(this.callbackUri, lccnSubscriptionRequest.callbackUri) &&
+				Objects.equals(this.authentication, lccnSubscriptionRequest.authentication);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(filter, callbackUri, authentication);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    LccnSubscriptionRequest lccnSubscriptionRequest = (LccnSubscriptionRequest) o;
-    return Objects.equals(this.filter, lccnSubscriptionRequest.filter) &&
-        Objects.equals(this.callbackUri, lccnSubscriptionRequest.callbackUri) &&
-        Objects.equals(this.authentication, lccnSubscriptionRequest.authentication);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class LccnSubscriptionRequest {\n");
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(filter, callbackUri, authentication);
-  }
+		sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
+		sb.append("    callbackUri: ").append(toIndentedString(callbackUri)).append("\n");
+		sb.append("    authentication: ").append(toIndentedString(authentication)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class LccnSubscriptionRequest {\n");
-    
-    sb.append("    filter: ").append(toIndentedString(filter)).append("\n");
-    sb.append("    callbackUri: ").append(toIndentedString(callbackUri)).append("\n");
-    sb.append("    authentication: ").append(toIndentedString(authentication)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-
