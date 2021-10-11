@@ -19,6 +19,8 @@ logging:
         orika: INFO
     org:
       apache:
+        http:
+          wire: DEBUG
         activemq:
           audit: WARN
       hibernate:
@@ -46,7 +48,7 @@ management:
       mode: full
 
 mano:
-  frontend-url: http://172.22.33.1:8090/
+  frontend-url: http://172.22.33.1:8090/ubi-etsi-mano/sol003
   swagger-o-auth2: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/token
   election:
     script-path: /tmp/etsi-mano/election/groovy
@@ -63,13 +65,13 @@ mano:
         grantType: client_credentials
         clientId: mano-vnfm
         clientSecret: 50e312ab-9f12-481e-b6a8-c23e0de21628
-      url: http://10.31.1.29:8100/ubi-etsi-mano/sol005
+      url: http://10.31.1.29:8100/ubi-etsi-mano/sol003
 
 server:
   error:
     whitelabel:
       enabled: false
-  port: 8091
+  port: 8090
   servlet:
     contextPath: /ubi-etsi-mano
 

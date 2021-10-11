@@ -72,7 +72,7 @@ public class VnfmVersionManager {
 		final AuthParamOauth2 oauth2 = new AuthParamOauth2();
 		oauth2.setClientId(env.getProperty("keycloak.resource"));
 		oauth2.setClientSecret(env.getProperty("keycloak.credentials.secret"));
-		oauth2.setTokenEndpoint(env.getProperty("keycloak.auth-server-url"));
+		oauth2.setTokenEndpoint(env.getProperty("mano.swagger-o-auth2"));
 		auth.setAuthParamOath2(oauth2);
 		auth.setAuthType(List.of(AuthType.OAUTH2_CLIENT_CREDENTIALS));
 		subscription.setAuthentication(auth);

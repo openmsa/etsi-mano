@@ -22,6 +22,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkInfo;
@@ -33,6 +34,7 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
@@ -276,6 +278,10 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(SubscriptionAuthentication.class, AuthentificationInformations.class)
 				// .fieldMap("authType[0]", "authType").converter("filterConverter").add()
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(SubscriptionAuthenticationParamsOauth2ClientCredentials.class, AuthParamOauth2.class)
+				.field("clientPassword", "clientSecret")
 				.byDefault()
 				.register();
 		/*
