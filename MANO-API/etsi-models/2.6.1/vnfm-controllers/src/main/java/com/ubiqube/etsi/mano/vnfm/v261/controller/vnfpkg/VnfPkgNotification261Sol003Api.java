@@ -43,7 +43,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RequestMapping("/sol003/vnfpkgm/v1/notification/")
 @RolesAllowed({ "ROLE_NFVO" })
-public interface VnfPkgNotification261Api {
+public interface VnfPkgNotification261Sol003Api {
 
 	@Operation(summary = "", description = "The GET method allows the server to test the notification endpoint that is provided by the client e.g. during subscription. This method shall follow the provisions specified in the tables 10.4.9.3.2-1 and 10.4.9.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {

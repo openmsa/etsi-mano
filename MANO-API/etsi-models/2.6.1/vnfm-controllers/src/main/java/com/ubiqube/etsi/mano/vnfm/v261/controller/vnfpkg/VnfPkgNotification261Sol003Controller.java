@@ -28,10 +28,10 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotificat
 import com.ubiqube.etsi.mano.vnfm.fc.vnf.VnfNotificationFrontController;
 
 @RestController
-public class VnfPkgNotification261Controller implements VnfPkgNotification261Api {
+public class VnfPkgNotification261Sol003Controller implements VnfPkgNotification261Sol003Api {
 	private final VnfNotificationFrontController fc;
 
-	public VnfPkgNotification261Controller(final VnfNotificationFrontController fc) {
+	public VnfPkgNotification261Sol003Controller(final VnfNotificationFrontController fc) {
 		super();
 		this.fc = fc;
 	}
