@@ -51,7 +51,9 @@ public class NfvoRestImpl extends AbstractRest {
 			final Oauth2 oauth = props.getOauth2();
 			final OAuth2ProtectedResourceDetails resource = getResourceDetails(oauth);
 			final var oauth2 = new OAuth2RestTemplate(resource);
-			disableSsl(oauth2);
+			oauth2.setRequestFactory(getNoSslRequestFactory());
+			final AccessTokenProvider atp = new ClientCredentialsAccessTokenProviderNoSsl();
+			oauth2.setAccessTokenProvider(atp);
 			setRestTemplate(oauth2);
 		}
 		if (props.getBasic() != null) {
@@ -65,9 +67,8 @@ public class NfvoRestImpl extends AbstractRest {
 		Assert.notNull(url, "nfvo.url is not declared in property file.");
 	}
 
-	private void disableSsl(final OAuth2RestTemplate oauth2) {
+	private HttpComponentsClientHttpRequestFactory getNoSslRequestFactory() {
 		final TrustStrategy acceptingTrustStrategy = (final X509Certificate[] chain, final String authType) -> true;
-
 		SSLContext sslContext;
 		try {
 			sslContext = org.apache.http.ssl.SSLContexts.custom()
@@ -76,17 +77,13 @@ public class NfvoRestImpl extends AbstractRest {
 		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
 			throw new GenericException(e);
 		}
-
 		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
-
 		final CloseableHttpClient httpClient = HttpClients.custom()
 				.setSSLSocketFactory(csf)
 				.build();
-
 		final HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-
 		requestFactory.setHttpClient(httpClient);
-		oauth2.setRequestFactory(requestFactory);
+		return requestFactory;
 	}
 
 	private static OAuth2ProtectedResourceDetails getResourceDetails(final Oauth2 oauth) {
