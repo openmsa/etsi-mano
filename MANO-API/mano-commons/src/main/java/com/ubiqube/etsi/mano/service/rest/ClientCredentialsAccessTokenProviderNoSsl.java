@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.vnfm.service.rest;
+package com.ubiqube.etsi.mano.service.rest;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;

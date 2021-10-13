@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.security.KeyManagementException;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Optional;
@@ -10,8 +11,15 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.TrustStrategy;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.security.oauth2.client.token.AccessTokenProvider;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.common.AuthenticationScheme;
@@ -39,7 +47,10 @@ public class ManoRest extends AbstractRest {
 			final var oauth = authParams.getAuthParamOath2();
 			final var resource = getResourceDetails(oauth);
 			final var oauth2 = new OAuth2RestTemplate(resource);
-			disableSsl(oauth2);
+			oauth2.setRequestFactory(getNoSslRequestFactory());
+			final AccessTokenProvider atp = new ClientCredentialsAccessTokenProviderNoSsl();
+			oauth2.setAccessTokenProvider(atp);
+			// disableSsl(oauth2);
 			setRestTemplate(oauth2);
 		}
 		if (AuthType.BASIC == authParams.getAuthType().get(0)) {
@@ -51,6 +62,25 @@ public class ManoRest extends AbstractRest {
 			}
 		}
 		Assert.notNull(url, "url connot be null.");
+	}
+
+	private HttpComponentsClientHttpRequestFactory getNoSslRequestFactory() {
+		final TrustStrategy acceptingTrustStrategy = (final X509Certificate[] chain, final String authType) -> true;
+		SSLContext sslContext;
+		try {
+			sslContext = org.apache.http.ssl.SSLContexts.custom()
+					.loadTrustMaterial(null, acceptingTrustStrategy)
+					.build();
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+			throw new GenericException(e);
+		}
+		final SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+		final CloseableHttpClient httpClient = HttpClients.custom()
+				.setSSLSocketFactory(csf)
+				.build();
+		final HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		requestFactory.setHttpClient(httpClient);
+		return requestFactory;
 	}
 
 	private static final TrustManager[] UNQUESTIONING_TRUST_MANAGER = {
