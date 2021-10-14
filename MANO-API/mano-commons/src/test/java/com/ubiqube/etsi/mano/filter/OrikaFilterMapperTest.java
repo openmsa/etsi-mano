@@ -46,9 +46,9 @@ public class OrikaFilterMapperTest {
 		converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());
 		mapperFactory.classMap(PkgmSubscriptionRequest.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
-				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
-				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
-				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.field("authentication.paramsBasic", "authentication.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentication.authParamOath2")
+				.field("authentication.authType", "authentication.authType")
 				.byDefault()
 				.register();
 		final MapperFacade mapper = mapperFactory.getMapperFacade();
