@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,18 +41,23 @@ import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.SubscriptionQuery;
 import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 public class SubscriptionTest {
 	private final DefaultMapperFactory mapperFactory;
+	private final PodamFactoryImpl podam;
 
 	public SubscriptionTest() {
 		final OrikaMapperVnfm261 orikaConfiguration = new OrikaMapperVnfm261();
 		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaConfiguration.configure(mapperFactory);
+		podam = new PodamFactoryImpl();
+		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
 	}
 
 	@Test
@@ -109,5 +115,14 @@ public class SubscriptionTest {
 		subsDb.setFilters(subscriptionFilter);
 		final PkgmSubscription subsJson = mapper.map(subsDb, PkgmSubscription.class);
 		assertNotNull(subsJson.getId());
+	}
+
+	@Test
+	void testEnumMapping() throws Exception {
+		final MapperFacade mapper = mapperFactory.getMapperFacade();
+		final LccnSubscriptionRequest pojo = podam.manufacturePojo(LccnSubscriptionRequest.class);
+		final Subscription res = mapper.map(pojo, Subscription.class);
+		mapper.map(res, LccnSubscriptionRequest.class);
+		assertTrue(true);
 	}
 }

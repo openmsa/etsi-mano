@@ -17,13 +17,17 @@
 package com.ubiqube.etsi.mano.mapper;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.TypeConverter;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.expression.spel.support.StandardTypeConverter;
 
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 
@@ -66,7 +70,7 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 
 		final SpelParserConfiguration config = new SpelParserConfiguration(true, true); // auto create objects if null
 		final ExpressionParser parser = new SpelExpressionParser(config);
-		final StandardEvaluationContext modelContext = new StandardEvaluationContext(ret);
+		final StandardEvaluationContext modelContext = getModelContext(ret);
 		LOG.debug("Setting on entity type: {}", ret.getClass());
 		source.forEach(x -> {
 			LOG.debug(" - Setting: {}", x.getAttribute());
@@ -75,13 +79,21 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 		return ret;
 	}
 
+	private static StandardEvaluationContext getModelContext(final Object ret) {
+		final StandardEvaluationContext modelContext = new StandardEvaluationContext(ret);
+		final DefaultConversionService conversionService = new DefaultConversionService();
+		conversionService.addConverterFactory(new ManoLenientStringToEnum());
+		final TypeConverter typeConverter = new StandardTypeConverter(conversionService);
+		modelContext.setTypeConverter(typeConverter);
+		return modelContext;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = (prime * result) + ((beanWalker == null) ? 0 : beanWalker.hashCode());
-		result = (prime * result) + ((mapper == null) ? 0 : mapper.hashCode());
-		return result;
+		result = prime * result + (beanWalker == null ? 0 : beanWalker.hashCode());
+		return prime * result + (mapper == null ? 0 : mapper.hashCode());
 	}
 
 	@Override
@@ -96,21 +108,12 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 			return false;
 		}
 		final OrikaFilterMapper other = (OrikaFilterMapper) obj;
-		if (beanWalker == null) {
-			if (other.beanWalker != null) {
-				return false;
-			}
-		} else if (!beanWalker.equals(other.beanWalker)) {
+		if (!Objects.equals(beanWalker, other.beanWalker)) {
 			return false;
 		}
-		if (mapper == null) {
-			if (other.mapper != null) {
-				return false;
-			}
-		} else if (!mapper.equals(other.mapper)) {
+		if (!Objects.equals(mapper, other.mapper)) {
 			return false;
 		}
 		return true;
 	}
-
 }
