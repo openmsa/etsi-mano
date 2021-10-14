@@ -1,4 +1,4 @@
-package com.ubiqube.etsi.mano.nfvo.controller;
+package com.ubiqube.etsi.mano.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
