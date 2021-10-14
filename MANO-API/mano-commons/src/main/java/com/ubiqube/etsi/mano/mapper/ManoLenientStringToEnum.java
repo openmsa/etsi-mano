@@ -3,6 +3,8 @@ package com.ubiqube.etsi.mano.mapper;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.lang.Nullable;
@@ -10,6 +12,8 @@ import org.springframework.util.Assert;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ManoLenientStringToEnum implements ConverterFactory<String, Enum> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ManoLenientStringToEnum.class);
 
 	@Override
 	public <T extends Enum> Converter<String, T> getConverter(final Class<T> targetType) {
@@ -43,6 +47,7 @@ public class ManoLenientStringToEnum implements ConverterFactory<String, Enum> {
 			try {
 				return (T) Enum.valueOf(this.enumType, source);
 			} catch (final Exception ex) {
+				LOG.trace("Enum problem", ex);
 				return findEnum(source);
 			}
 		}
@@ -58,7 +63,7 @@ public class ManoLenientStringToEnum implements ConverterFactory<String, Enum> {
 			throw new IllegalArgumentException("No enum constant " + this.enumType.getCanonicalName() + "." + value);
 		}
 
-		private String getCanonicalName(final String name) {
+		private static String getCanonicalName(final String name) {
 			final StringBuilder canonicalName = new StringBuilder(name.length());
 			name.chars().filter(Character::isLetterOrDigit).map(Character::toLowerCase)
 					.forEach(c -> canonicalName.append((char) c));

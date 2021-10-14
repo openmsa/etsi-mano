@@ -52,7 +52,7 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 	}
 
 	@Override
-	public List<FilterAttributes> convertTo(final Object source, final Type<List<FilterAttributes>> _destinationType, final MappingContext mappingContext) {
+	public List<FilterAttributes> convertTo(final Object source, final Type<List<FilterAttributes>> destinationTypeIn, final MappingContext mappingContext) {
 		LOG.info("A to B");
 		final CollectNonNullListener beanListener = new CollectNonNullListener();
 		beanWalker.walk(source, beanListener);
@@ -62,10 +62,10 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 	}
 
 	@Override
-	public Object convertFrom(final List<FilterAttributes> source, final Type<Object> _destinationType, final MappingContext mappingContext) {
+	public Object convertFrom(final List<FilterAttributes> source, final Type<Object> destinationTypeIn, final MappingContext mappingContext) {
 		LOG.info("B to A => ");
 		// Create an empty object.
-		final DefaultConstructorObjectFactory<Object> objectFactory = new DefaultConstructorObjectFactory<>(_destinationType.getRawType());
+		final DefaultConstructorObjectFactory<Object> objectFactory = new DefaultConstructorObjectFactory<>(destinationTypeIn.getRawType());
 		final Object ret = objectFactory.create(source, mappingContext);
 
 		final SpelParserConfiguration config = new SpelParserConfiguration(true, true); // auto create objects if null
