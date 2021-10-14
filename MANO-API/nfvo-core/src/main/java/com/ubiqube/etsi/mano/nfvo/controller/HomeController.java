@@ -31,6 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.nfvo.service.SystemService;
 import com.ubiqube.etsi.mano.nfvo.service.TemporaryDownloadService;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
@@ -40,12 +41,14 @@ public class HomeController {
 	private final VimConnectionInformationJpa vciJpa;
 	private final TemporaryDownloadService temporaryDownloadService;
 	private final VimManager vimManager;
+	private final SystemService systemService;
 
 	public HomeController(final VimConnectionInformationJpa _vciJpa, final TemporaryDownloadService _temporaryDownloadService,
-			final VimManager _vimManager) {
+			final VimManager _vimManager, final SystemService systemService) {
 		vciJpa = _vciJpa;
 		temporaryDownloadService = _temporaryDownloadService;
 		vimManager = _vimManager;
+		this.systemService = systemService;
 	}
 
 	@SuppressWarnings("static-method")
@@ -65,6 +68,7 @@ public class HomeController {
 		if (null == body.getVimId()) {
 			throw new GenericException("'vimId' cannot be [null].");
 		}
+		systemService.registerVim(body);
 		final VimConnectionInformation vci = vciJpa.save(body);
 		vimManager.rebuildCache();
 		return ResponseEntity.ok(vci);
