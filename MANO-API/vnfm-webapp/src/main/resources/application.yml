@@ -33,7 +33,8 @@ logging:
               ConditionEvaluationReportLoggingListener: INFO
         jms: INFO
         security: INFO
-        web: INFO
+        web:
+          filter: DEBUG
 
 management:
   endpoint:
