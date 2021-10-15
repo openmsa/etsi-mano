@@ -63,5 +63,6 @@ public class JmsEventManager implements EventManager {
 	@Override
 	public void sendAction(final ActionType actionType, final UUID objectId) {
 		final ActionMessage msg = new ActionMessage(actionType, objectId, new HashMap<>());
+		jmsTemplate.convertAndSend("system.actions.common", msg);
 	}
 }

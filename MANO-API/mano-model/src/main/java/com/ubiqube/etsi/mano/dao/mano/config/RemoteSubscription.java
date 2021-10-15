@@ -12,7 +12,10 @@ import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -23,6 +26,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RemoteSubscription {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

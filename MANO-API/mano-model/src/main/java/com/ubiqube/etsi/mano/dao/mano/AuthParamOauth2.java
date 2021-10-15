@@ -21,11 +21,17 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class AuthParamOauth2 {
 	private String clientId;

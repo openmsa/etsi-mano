@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.service.VnfmGateway;
+import com.ubiqube.etsi.mano.service.HttpGateway;
 
 @Service
-public class VnfmGateway261 implements VnfmGateway {
+public class VnfmGateway261 implements HttpGateway {
 
 	@Override
 	public Class<?> getVnfPackageClass() {

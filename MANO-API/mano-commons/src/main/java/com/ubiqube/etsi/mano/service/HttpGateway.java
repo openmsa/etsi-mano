@@ -1,6 +1,11 @@
 package com.ubiqube.etsi.mano.service;
 
-public interface VnfmGateway {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface HttpGateway {
 
 	Class<?> getVnfPackageClass();
 

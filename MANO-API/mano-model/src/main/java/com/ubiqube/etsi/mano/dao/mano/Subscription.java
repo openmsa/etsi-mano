@@ -37,7 +37,10 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -48,6 +51,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Indexed
 public class Subscription implements BaseEntity {
 	@Id

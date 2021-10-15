@@ -1,0 +1,184 @@
+package com.ubiqube.etsi.mano.service.rest;
+
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Optional;
+
+import javax.net.ssl.SSLException;
+
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.reactive.ClientHttpConnector;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.endpoint.WebClientReactiveClientCredentialsTokenResponseClient;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultReactiveOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.security.oauth2.client.web.server.UnAuthenticatedServerOAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.Builder;
+import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
+import com.ubiqube.etsi.mano.exception.GenericException;
+
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class FluxRest {
+	private WebClient webClient;
+	private final String rootUrl;
+
+	public FluxRest(final Servers server) {
+		this.rootUrl = server.getUrl();
+		createWebClient(server);
+	}
+
+	private void createWebClient(final Servers server) {
+		final Builder wcb = WebClient.builder();
+		createAuthPart(wcb, server.getAuthentification());
+		server.getAuthentification();
+		if (server.isIgnoreSsl()) {
+			wcb.clientConnector(new ReactorClientHttpConnector(getHttpClient()));
+		}
+		wcb.baseUrl(rootUrl);
+		webClient = wcb.build();
+	}
+
+	private static void createAuthPart(final Builder wcb, final AuthentificationInformations auth) {
+		Optional.ofNullable(auth.getAuthParamBasic()).ifPresent(x -> wcb.filter(ExchangeFilterFunctions.basicAuthentication(x.getUserName(), x.getPassword())));
+		Optional.ofNullable(auth.getAuthParamOath2()).ifPresent(x -> {
+			final DefaultReactiveOAuth2AuthorizedClientManager authorizedClientManager = new DefaultReactiveOAuth2AuthorizedClientManager(
+					getRegistration(x.getTokenEndpoint(), x.getClientId(), x.getClientSecret(), "openid"),
+					new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
+			if (x.getO2IgnoreSsl()) {
+				authorizedClientManager.setAuthorizedClientProvider(getAuthorizedClientProvider());
+			}
+			final ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2 = new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
+			wcb.filter(oauth2);
+		});
+	}
+
+	private static ReactiveOAuth2AuthorizedClientProvider getAuthorizedClientProvider() {
+		final ClientHttpConnector httpConnector = new ReactorClientHttpConnector(getHttpClient());
+		final WebClientReactiveClientCredentialsTokenResponseClient accessTokenResponseClient = new WebClientReactiveClientCredentialsTokenResponseClient();
+		accessTokenResponseClient.setWebClient(WebClient.builder().clientConnector(httpConnector).build());
+		return ReactiveOAuth2AuthorizedClientProviderBuilder
+				.builder()
+				.clientCredentials(c -> {
+					c.accessTokenResponseClient(accessTokenResponseClient);
+				}).build();
+	}
+
+	private static HttpClient getHttpClient() {
+		SslContext context;
+		try {
+			context = SslContextBuilder.forClient()
+					.trustManager(InsecureTrustManagerFactory.INSTANCE)
+					.build();
+		} catch (final SSLException e) {
+			throw new GenericException(e);
+		}
+		return HttpClient.create().secure(t -> t.sslContext(context));
+	}
+
+	private static ReactiveClientRegistrationRepository getRegistration(final String tokenUri, final String clientId, final String clientSecret, final String scope) {
+		final ClientRegistration registration = ClientRegistration
+				.withRegistrationId("my-platform")
+				.tokenUri(tokenUri)
+				.clientId(clientId)
+				.clientSecret(clientSecret)
+				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+				.scope(scope)
+				.build();
+		return new InMemoryReactiveClientRegistrationRepository(registration);
+	}
+
+	public final <T> T get(final URI uri, final Class<T> clazz) {
+		return call(uri, HttpMethod.GET, clazz);
+	}
+
+	public final <T> T post(final URI uri, final Class<T> clazz) {
+		return call(uri, HttpMethod.POST, clazz);
+	}
+
+	public final <T> T post(final URI uri, final Object body, final Class<T> clazz) {
+		return call(uri, HttpMethod.POST, body, clazz);
+	}
+
+	public final <T> T delete(final URI uri, final Class<T> clazz) {
+		return call(uri, HttpMethod.DELETE, clazz);
+	}
+
+	public final <T> T call(final URI uri, final HttpMethod method, final Class<T> clazz) {
+		return _call(uri, method, null, clazz);
+	}
+
+	public final <T> T call(final URI uri, final HttpMethod method, final Object body, final Class<T> clazz) {
+		return _call(uri, method, body, clazz);
+	}
+
+	public <T> T get(final URI uri, final ParameterizedTypeReference<T> myBean) {
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.GET, null)
+				.retrieve()
+				.toEntity(myBean);
+		return getBlockingResult(resp);
+	}
+
+	public UriComponentsBuilder uriBuilder() {
+		return UriComponentsBuilder.fromHttpUrl(rootUrl);
+	}
+
+	public void download(final URI uri, final Path path) {
+		final Flux<DataBuffer> dataBufferFlux = webClient.get().uri(uri).accept(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL)
+				.retrieve().bodyToFlux(DataBuffer.class);
+		DataBufferUtils.write(dataBufferFlux, path, StandardOpenOption.CREATE).block();
+	}
+
+	private RequestHeadersSpec<?> makeBaseQuery(final URI uri, final HttpMethod method, final Object requestObject) {
+		return webClient
+				.method(method)
+				.uri(uri)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.bodyValue(requestObject);
+	}
+
+	private final <T> T _call(final URI uri, final HttpMethod method, final Object requestObject, final Class<T> clazz) {
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, method, requestObject)
+				.retrieve()
+				.toEntity(clazz);
+		return getBlockingResult(resp);
+	}
+
+	private static <T> T getBlockingResult(final Mono<ResponseEntity<T>> resp) {
+		final ResponseEntity<T> resp2 = resp.block();
+		if (null == resp2) {
+			return null;
+		}
+		return resp2.getBody();
+	}
+
+}

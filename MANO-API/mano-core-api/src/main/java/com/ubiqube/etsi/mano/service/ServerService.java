@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -31,6 +32,7 @@ public class ServerService {
 	}
 
 	public Servers createServer(final Servers servers) {
+		servers.setServerStatus(PlanStatusType.NOT_STARTED);
 		final Servers server = serversJpa.save(servers);
 		eventManager.sendAction(ActionType.REGISTER_NFVO, server.getId());
 		return server;
