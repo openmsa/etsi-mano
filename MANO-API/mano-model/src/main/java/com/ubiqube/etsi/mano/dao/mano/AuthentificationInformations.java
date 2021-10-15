@@ -47,6 +47,6 @@ public class AuthentificationInformations {
 	private AuthParamOauth2 authParamOath2;
 
 	@Lob
-	private String oAuthTlsCert;
+	private String authTlsCert;
 
 }

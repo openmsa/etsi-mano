@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Lob;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +33,9 @@ public class AuthParamOauth2 {
 	private String tokenEndpoint;
 	private String o2Username;
 	private String o2Password;
-	private boolean o2IgnoreSsl;
+	private Boolean o2IgnoreSsl;
 	@Enumerated(EnumType.STRING)
 	private OAuth2GrantType grantType;
+	@Lob
+	private String o2AuthTlsCert;
 }

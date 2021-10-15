@@ -123,4 +123,10 @@ public class QuartzEventManager implements EventManager {
 
 	}
 
+	@Override
+	public void sendAction(final ActionType actionType, final UUID objectId) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

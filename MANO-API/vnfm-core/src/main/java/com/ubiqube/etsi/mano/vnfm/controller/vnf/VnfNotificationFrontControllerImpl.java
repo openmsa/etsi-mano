@@ -17,13 +17,16 @@
 package com.ubiqube.etsi.mano.vnfm.controller.vnf;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
+import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.vnfm.fc.vnf.VnfNotificationFrontController;
@@ -31,19 +34,27 @@ import com.ubiqube.etsi.mano.vnfm.jpa.VnfPackageOnboardingNotificationJpa;
 
 import ma.glasnost.orika.MapperFacade;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfNotificationFrontControllerImpl.class);
+	private final SubscriptionJpa subscriptionJpa;
 	private final VnfPackageOnboardingNotificationJpa vnfPackageOnboardingNotificationJpa;
 	private final EventManager eventManager;
 	private final MapperFacade mapper;
 
-	public VnfNotificationFrontControllerImpl(final EventManager eventManager, final MapperFacade mapper, final VnfPackageOnboardingNotificationJpa vnfPackageOnboardingNotificationJpa) {
+	public VnfNotificationFrontControllerImpl(final EventManager eventManager, final MapperFacade mapper, final VnfPackageOnboardingNotificationJpa vnfPackageOnboardingNotificationJpa,
+			final SubscriptionJpa subscriptionJpa) {
 		super();
 		this.eventManager = eventManager;
 		this.mapper = mapper;
 		this.vnfPackageOnboardingNotificationJpa = vnfPackageOnboardingNotificationJpa;
+		this.subscriptionJpa = subscriptionJpa;
 	}
 
 	@Override
@@ -54,6 +65,11 @@ public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontC
 	@Override
 	public ResponseEntity<Void> onNotification(final Object body, final String version) {
 		final VnfPackageOnboardingNotification event = mapper.map(body, VnfPackageOnboardingNotification.class);
+		final Optional<Subscription> subscription = subscriptionJpa.findById(event.getId());
+		if (subscription.isEmpty()) {
+			LOG.warn("Unable to find event {} in database.", event.getId());
+			return ResponseEntity.notFound().build();
+		}
 		final VnfPackageOnboardingNotification newEvent = vnfPackageOnboardingNotificationJpa.save(event);
 		LOG.info("Event received: {} => Id: {}", newEvent.getNfvoId(), newEvent.getId());
 		eventManager.sendActionVnfm(ActionType.VNF_PKG_ONBOARD_DOWNLOAD, newEvent.getId(), new HashMap<>());
