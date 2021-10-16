@@ -83,17 +83,17 @@ public class CommonActionController {
 		final List<RemoteSubscription> remoteSubscription = server.getRemoteSubscriptions();
 		if (!isSubscribe(SubscriptionType.NSDVNF, remoteSubscription)) {
 			final Subscription subscription = vnfPackageSubscribe(rest);
-			final RemoteSubscription remote = reMap(subscription);
+			final RemoteSubscription remote = reMap(subscription, server);
 			remoteSubscription.add(remote);
 			server = serversJpa.save(server);
 		}
 		return server;
 	}
 
-	private static RemoteSubscription reMap(final Subscription subscription) {
+	private static RemoteSubscription reMap(final Subscription subscription, final Servers server) {
 		return RemoteSubscription.builder()
 				.remoteSubscriptionId(subscription.getId().toString())
-				.subscriptionType(subscription.getSubscriptionType())
+				.subscriptionType(server.getSubscriptionType())
 				.build();
 	}
 

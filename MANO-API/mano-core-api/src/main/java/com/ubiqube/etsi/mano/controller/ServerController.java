@@ -44,7 +44,7 @@ public class ServerController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> scanContainer(@Valid @RequestBody final Servers servers) {
+	public ResponseEntity<Void> createServer(@Valid @RequestBody final Servers servers) {
 		final Servers newServer = serverService.createServer(servers);
 		final URI location = linkTo(methodOn(ServerController.class).findById(newServer.getId())).withSelfRel().toUri();
 		return ResponseEntity.accepted().location(location).build();

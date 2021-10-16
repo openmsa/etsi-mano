@@ -4,6 +4,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.net.ssl.SSLException;
 
@@ -24,7 +25,6 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
-import org.springframework.security.oauth2.client.web.server.UnAuthenticatedServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -50,37 +50,34 @@ import reactor.netty.http.client.HttpClient;
  *
  */
 public class FluxRest {
-	private WebClient webClient;
+	private final WebClient webClient;
 	private final String rootUrl;
+	private final String id = UUID.randomUUID().toString();
 
 	public FluxRest(final Servers server) {
 		this.rootUrl = server.getUrl();
-		createWebClient(server);
+		webClient = createWebClient(server);
 	}
 
-	private void createWebClient(final Servers server) {
+	private WebClient createWebClient(final Servers server) {
 		final Builder wcb = WebClient.builder();
 		createAuthPart(wcb, server.getAuthentification());
 		if (server.isIgnoreSsl()) {
 			wcb.clientConnector(new ReactorClientHttpConnector(getHttpClient()));
 		}
 		wcb.baseUrl(rootUrl);
-		webClient = wcb.build();
+		return wcb.build();
 	}
 
-	private static void createAuthPart(final Builder wcb, final AuthentificationInformations auth) {
+	private void createAuthPart(final Builder wcb, final AuthentificationInformations auth) {
 		Optional.ofNullable(auth.getAuthParamBasic()).ifPresent(x -> wcb.filter(ExchangeFilterFunctions.basicAuthentication(x.getUserName(), x.getPassword())));
 		Optional.ofNullable(auth.getAuthParamOath2()).ifPresent(x -> {
 			final AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(
 					getRegistration(x.getTokenEndpoint(), x.getClientId(), x.getClientSecret(), "openid"),
 					new InMemoryReactiveOAuth2AuthorizedClientService(getRegistration(x.getTokenEndpoint(), x.getClientId(), x.getClientSecret(), "openid")));
-			if (x.getO2IgnoreSsl()) {
-				authorizedClientManager.setAuthorizedClientProvider(getAuthorizedClientProvider());
-			}
+			Optional.ofNullable(x.getO2IgnoreSsl()).filter(Boolean::booleanValue).ifPresent(y -> authorizedClientManager.setAuthorizedClientProvider(getAuthorizedClientProvider()));
 			final ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2 = new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
-			final ServerOAuth2AuthorizedClientExchangeFilterFunction oauth3 = new ServerOAuth2AuthorizedClientExchangeFilterFunction(getRegistration("http://10.31.1.245/auth/realms/mano-realm/protocol/openid-connect/token", "mano-nfvo", "ed9aeb6d-3ea5-4392-bb22-835603cf3dfc", "openid"),
-					new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
-			oauth2.setDefaultClientRegistrationId("my-platform");
+			oauth2.setDefaultClientRegistrationId(id);
 			wcb.filter(oauth2);
 		});
 	}
@@ -91,9 +88,7 @@ public class FluxRest {
 		accessTokenResponseClient.setWebClient(WebClient.builder().clientConnector(httpConnector).build());
 		return ReactiveOAuth2AuthorizedClientProviderBuilder
 				.builder()
-				.clientCredentials(c -> {
-					c.accessTokenResponseClient(accessTokenResponseClient);
-				}).build();
+				.clientCredentials(c -> c.accessTokenResponseClient(accessTokenResponseClient)).build();
 	}
 
 	private static HttpClient getHttpClient() {
@@ -108,9 +103,9 @@ public class FluxRest {
 		return HttpClient.create().secure(t -> t.sslContext(context));
 	}
 
-	private static ReactiveClientRegistrationRepository getRegistration(final String tokenUri, final String clientId, final String clientSecret, final String scope) {
+	private ReactiveClientRegistrationRepository getRegistration(final String tokenUri, final String clientId, final String clientSecret, final String scope) {
 		final ClientRegistration registration = ClientRegistration
-				.withRegistrationId("my-platform")
+				.withRegistrationId(id)
 				.tokenUri(tokenUri)
 				.clientId(clientId)
 				.clientSecret(clientSecret)

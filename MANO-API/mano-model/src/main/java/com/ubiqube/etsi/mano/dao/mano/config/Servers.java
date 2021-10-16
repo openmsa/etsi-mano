@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 
 import lombok.AllArgsConstructor;
@@ -52,6 +53,10 @@ public class Servers {
 	private String tlsCert;
 
 	private String version;
+
+	@Enumerated(EnumType.STRING)
+	// XXX only on DB@NotNull
+	private SubscriptionType subscriptionType;
 
 	@Enumerated(EnumType.STRING)
 	private PlanStatusType serverStatus;
