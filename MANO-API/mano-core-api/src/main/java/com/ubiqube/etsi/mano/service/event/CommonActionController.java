@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
@@ -19,9 +21,11 @@ import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
 import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.config.RemoteSubscription;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 import com.ubiqube.etsi.mano.service.rest.FluxRest;
@@ -35,6 +39,9 @@ import ma.glasnost.orika.MapperFacade;
  */
 @Service
 public class CommonActionController {
+
+	private static final Logger LOG = LoggerFactory.getLogger(CommonActionController.class);
+
 	private final ServersJpa serversJpa;
 	private final Environment env;
 	private final List<HttpGateway> httpGateway;
@@ -56,6 +63,21 @@ public class CommonActionController {
 	}
 
 	public Object registerNfvo(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
+		final Servers server = serversJpa.findById(objectId).orElseThrow();
+		try {
+			final Servers res = registerNfvoEx(objectId, parameters);
+			res.setFailureDetails(null);
+			res.setServerStatus(PlanStatusType.SUCCESS);
+			return serversJpa.save(res);
+		} catch (final RuntimeException e) {
+			LOG.error("", e);
+			server.setFailureDetails(new FailureDetails(500, e.getMessage()));
+			server.setServerStatus(PlanStatusType.FAILED);
+			return serversJpa.save(server);
+		}
+	}
+
+	public Servers registerNfvoEx(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
 		Servers server = serversJpa.findById(objectId).orElseThrow();
 		final FluxRest rest = new FluxRest(server);
 		final List<RemoteSubscription> remoteSubscription = server.getRemoteSubscriptions();

@@ -16,39 +16,44 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
-import com.ubiqube.etsi.mano.dao.mano.Subscription;
-import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
 import com.ubiqube.etsi.mano.service.NfvoService;
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.EventManager;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 @ConditionalOnMissingBean(NfvoService.class)
+@Transactional
 public class NfvoRegisterService implements CommandLineRunner {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NfvoRegisterService.class);
+	private final EventManager eventManager;
+	private final ServersJpa serversJpa;
 
-	private final VnfmVersionManager versionManager;
-
-	public NfvoRegisterService(final VnfmVersionManager versionManager) {
+	public NfvoRegisterService(final EventManager eventManager, final ServersJpa serversJpa) {
 		super();
-		this.versionManager = versionManager;
+		this.eventManager = eventManager;
+		this.serversJpa = serversJpa;
 	}
 
 	@Override
 	public void run(final String... args) throws Exception {
-		final Subscription subscription = new Subscription();
-		subscription.setApi(ApiTypesEnum.SOL003);
-		subscription.setSubscriptionType(SubscriptionType.NSDVNF);
-		try {
-			versionManager.subscribe(subscription);
-		} catch (final RuntimeException e) {
-			LOG.warn("Unable to register with NFVO.", e);
-		}
+		final List<Servers> servers = serversJpa.findByServerStatusIn(Arrays.asList(PlanStatusType.FAILED));
+		servers.forEach(x -> eventManager.sendAction(ActionType.REGISTER_NFVO, x.getId()));
 	}
 }

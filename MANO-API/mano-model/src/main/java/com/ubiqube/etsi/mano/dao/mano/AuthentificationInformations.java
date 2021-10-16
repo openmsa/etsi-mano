@@ -26,7 +26,10 @@ import javax.persistence.Lob;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -37,6 +40,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthentificationInformations {
 	@Enumerated(EnumType.STRING)
 	@FullTextField

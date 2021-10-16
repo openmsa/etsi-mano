@@ -15,19 +15,21 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.security.oauth2.client.AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.InMemoryReactiveOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProvider;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.endpoint.WebClientReactiveClientCredentialsTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.DefaultReactiveOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.oauth2.client.web.server.UnAuthenticatedServerOAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
+import org.springframework.web.reactive.function.client.WebClient.RequestBodySpec;
 import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -59,7 +61,6 @@ public class FluxRest {
 	private void createWebClient(final Servers server) {
 		final Builder wcb = WebClient.builder();
 		createAuthPart(wcb, server.getAuthentification());
-		server.getAuthentification();
 		if (server.isIgnoreSsl()) {
 			wcb.clientConnector(new ReactorClientHttpConnector(getHttpClient()));
 		}
@@ -70,13 +71,16 @@ public class FluxRest {
 	private static void createAuthPart(final Builder wcb, final AuthentificationInformations auth) {
 		Optional.ofNullable(auth.getAuthParamBasic()).ifPresent(x -> wcb.filter(ExchangeFilterFunctions.basicAuthentication(x.getUserName(), x.getPassword())));
 		Optional.ofNullable(auth.getAuthParamOath2()).ifPresent(x -> {
-			final DefaultReactiveOAuth2AuthorizedClientManager authorizedClientManager = new DefaultReactiveOAuth2AuthorizedClientManager(
+			final AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(
 					getRegistration(x.getTokenEndpoint(), x.getClientId(), x.getClientSecret(), "openid"),
-					new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
+					new InMemoryReactiveOAuth2AuthorizedClientService(getRegistration(x.getTokenEndpoint(), x.getClientId(), x.getClientSecret(), "openid")));
 			if (x.getO2IgnoreSsl()) {
 				authorizedClientManager.setAuthorizedClientProvider(getAuthorizedClientProvider());
 			}
 			final ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2 = new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
+			final ServerOAuth2AuthorizedClientExchangeFilterFunction oauth3 = new ServerOAuth2AuthorizedClientExchangeFilterFunction(getRegistration("http://10.31.1.245/auth/realms/mano-realm/protocol/openid-connect/token", "mano-nfvo", "ed9aeb6d-3ea5-4392-bb22-835603cf3dfc", "openid"),
+					new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
+			oauth2.setDefaultClientRegistrationId("my-platform");
 			wcb.filter(oauth2);
 		});
 	}
@@ -158,16 +162,19 @@ public class FluxRest {
 	}
 
 	private RequestHeadersSpec<?> makeBaseQuery(final URI uri, final HttpMethod method, final Object requestObject) {
-		return webClient
+		final RequestHeadersSpec<?> wc = webClient
 				.method(method)
 				.uri(uri)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.bodyValue(requestObject);
+				.contentType(MediaType.APPLICATION_JSON);
+		if (null != requestObject) {
+			((RequestBodySpec) wc).bodyValue(requestObject);
+		}
+		return wc;
 	}
 
 	private final <T> T _call(final URI uri, final HttpMethod method, final Object requestObject, final Class<T> clazz) {
 		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, method, requestObject)
+				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.toEntity(clazz);
 		return getBlockingResult(resp);
