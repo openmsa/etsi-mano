@@ -1,6 +1,8 @@
 package com.ubiqube.etsi.mano.dao.mano.config;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -15,6 +17,7 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
+import com.ubiqube.etsi.mano.dao.mano.common.ApiVersion;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
@@ -65,4 +68,14 @@ public class Servers {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<RemoteSubscription> remoteSubscriptions;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ApiVersion> versions;
+
+	public void addVersion(final ApiVersion version2) {
+		if (null == versions) {
+			versions = new HashSet<>();
+		}
+		versions.add(version2);
+	}
 }
