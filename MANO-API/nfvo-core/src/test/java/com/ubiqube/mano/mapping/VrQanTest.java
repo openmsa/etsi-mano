@@ -22,18 +22,11 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.junit.jupiter.api.Test;
-
 import com.ubiqube.etsi.mano.dao.mano.vrqan.VrQan;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 
 public class VrQanTest {
-
-	@Test
-	void testName() throws Exception {
-		// compare(pr, vrqan);
-	}
 
 	private static void compare(final ResourceQuota pr, final VrQan vrqan) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		final BeanInfo cls = Introspector.getBeanInfo(VrQan.class);
