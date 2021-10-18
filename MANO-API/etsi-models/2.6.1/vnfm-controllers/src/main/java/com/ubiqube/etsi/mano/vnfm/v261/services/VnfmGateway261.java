@@ -16,12 +16,21 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.services;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequestLinks;
 import com.ubiqube.etsi.mano.service.HttpGateway;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Api;
+import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Controller;
 
 @Service
 public class VnfmGateway261 implements HttpGateway {
@@ -41,4 +50,31 @@ public class VnfmGateway261 implements HttpGateway {
 		return PkgmSubscriptionRequest.class;
 	}
 
+	@Override
+	public Class<?> getGrantRequest() {
+		return GrantRequest.class;
+	}
+
+	@Override
+	public Class<?> getGrantResponse() {
+		return Grant.class;
+	}
+
+	@Override
+	public void makeGrantLinks(final Object manoGrant) {
+		if (manoGrant instanceof final GrantRequest grant) {
+			makeLinks(grant);
+		}
+	}
+
+	private static void makeLinks(final GrantRequest manoGrant) {
+		final GrantRequestLinks links = new GrantRequestLinks();
+		Link link = new Link();
+		link.setHref(VnfLcm261Sol003Controller.getSelfLink(manoGrant.getVnfInstanceId()));
+		links.setVnfInstance(link);
+
+		link = new Link();
+		link.setHref(linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdGet(manoGrant.getVnfLcmOpOccId())).withSelfRel().getHref());
+		links.setVnfLcmOpOcc(link);
+	}
 }

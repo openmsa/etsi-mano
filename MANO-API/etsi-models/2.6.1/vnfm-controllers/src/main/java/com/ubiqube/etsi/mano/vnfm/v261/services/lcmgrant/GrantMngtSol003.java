@@ -36,7 +36,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
@@ -59,7 +58,7 @@ import ma.glasnost.orika.MapperFacade;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
+@Deprecated
 public class GrantMngtSol003 implements GrantManagement {
 	private final static Pattern UUID_REGEXP = Pattern.compile("(?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})$");
 	private final NfvoRest nfvoRest;
@@ -81,7 +80,7 @@ public class GrantMngtSol003 implements GrantManagement {
 		final HttpEntity<Object> request = new HttpEntity<>(getHttpHeaders());
 		final ResponseEntity<Grant> resp = nfvoRest.getRestTemplate().exchange(uri, HttpMethod.GET, request, Grant.class);
 		GrantResponse grants = new GrantResponse();
-		if ((resp.getStatusCodeValue() == 202)) {
+		if (resp.getStatusCodeValue() == 202) {
 			grants.setId(grantId);
 			grants.setAvailable(Boolean.FALSE);
 		} else {
@@ -102,7 +101,7 @@ public class GrantMngtSol003 implements GrantManagement {
 		final HttpEntity<Object> request = new HttpEntity<>(manoGrant, getHttpHeaders());
 		final ResponseEntity<Grant> resp = nfvoRest.getRestTemplate().exchange(uri, HttpMethod.POST, request, Grant.class);
 		final GrantResponse grants = new GrantResponse();
-		if ((resp.getStatusCodeValue() == 201)) {
+		if (resp.getStatusCodeValue() == 201) {
 			final Optional<List<String>> loc = Optional.ofNullable(resp.getHeaders().get("Location"));
 			if (loc.isPresent()) {
 				final Matcher m = UUID_REGEXP.matcher(loc.get().get(0));

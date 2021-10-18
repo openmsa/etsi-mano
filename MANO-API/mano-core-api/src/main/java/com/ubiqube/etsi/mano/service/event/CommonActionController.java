@@ -1,6 +1,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,12 +22,15 @@ import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
 import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.common.ApiVersion;
+import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.config.RemoteSubscription;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
+import com.ubiqube.etsi.mano.model.ApiVersionInformation;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 import com.ubiqube.etsi.mano.service.rest.FluxRest;
 
@@ -85,9 +89,30 @@ public class CommonActionController {
 			final Subscription subscription = vnfPackageSubscribe(rest);
 			final RemoteSubscription remote = reMap(subscription, server);
 			remoteSubscription.add(remote);
+			extractEndpoint(server);
 			server = serversJpa.save(server);
 		}
 		return server;
+	}
+
+	private void extractEndpoint(final Servers server) {
+		final String prefix = convert(server.getSubscriptionType());
+		final List<ApiVersionType> arr = getEnum(prefix);
+		for (final ApiVersionType element : arr) {
+			final ApiVersion version = getVersion(server, element);
+			server.addVersion(version);
+		}
+	}
+
+	private static String convert(final SubscriptionType subscriptionType) {
+		switch (subscriptionType) {
+		case VNF:
+			return "SOL_003";
+		case NSD:
+			return "SOL_005";
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + subscriptionType);
+		}
 	}
 
 	private static RemoteSubscription reMap(final Subscription subscription, final Servers server) {
@@ -146,4 +171,19 @@ public class CommonActionController {
 		}
 		return auth;
 	}
+
+	static List<ApiVersionType> getEnum(final String prefix) {
+		final ApiVersionType[] arr = ApiVersionType.values();
+		return Arrays.stream(arr).filter(x -> x.name().startsWith(prefix)).toList();
+	}
+
+	private ApiVersion getVersion(final Servers server, final ApiVersionType type) {
+		final Map<String, Object> uriVariables = Map.of("module", type.toString());
+		final FluxRest rest = new FluxRest(server);
+		final UriComponents uri = rest.uriBuilder().pathSegment("{module}/api_versions")
+				.buildAndExpand(uriVariables);
+		final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class);
+		return mapper.map(res, ApiVersion.class);
+	}
+
 }

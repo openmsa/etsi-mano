@@ -115,8 +115,25 @@ public class FluxRest {
 		return new InMemoryReactiveClientRegistrationRepository(registration);
 	}
 
+	public final <T> ResponseEntity<T> getWithReturn(final URI uri, final Class<T> clazz) {
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.GET, null)
+				.accept(MediaType.APPLICATION_JSON)
+				.retrieve()
+				.toEntity(clazz);
+		return resp.block();
+	}
+
 	public final <T> T get(final URI uri, final Class<T> clazz) {
 		return call(uri, HttpMethod.GET, clazz);
+	}
+
+	public final <T> ResponseEntity<T> postWithReturn(final URI uri, final Object body, final Class<T> clazz) {
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.POST, body)
+				.accept(MediaType.APPLICATION_JSON)
+				.retrieve()
+				.toEntity(clazz);
+		return resp.block();
+
 	}
 
 	public final <T> T post(final URI uri, final Class<T> clazz) {

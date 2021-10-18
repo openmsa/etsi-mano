@@ -12,4 +12,10 @@ public interface HttpGateway {
 	Class<?> getVnfPackageSubscriptionClass();
 
 	Class<?> getPkgmSubscriptionRequest();
+
+	Class<?> getGrantRequest();
+
+	Class<?> getGrantResponse();
+
+	void makeGrantLinks(Object manoGrant);
 }
