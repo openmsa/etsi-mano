@@ -42,7 +42,7 @@ public class VnfmGrantManagementImpl implements GrantManagement {
 	public GrantResponse get(final UUID grantId) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final Map<String, Object> uriVariables = Map.of("grantId", grantId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL003_GRANT, uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_GRANT, "grants/{grantId}", uriVariables);
 		final HttpGateway httpGateway = server.httpGateway();
 		final ResponseEntity<?> resp = server.rest().getWithReturn(uri, httpGateway.getGrantResponse());
 		GrantResponse grants = new GrantResponse();
@@ -58,7 +58,7 @@ public class VnfmGrantManagementImpl implements GrantManagement {
 	@Override
 	public GrantResponse post(final GrantInterface grant) {
 		final ServerAdapter server = serverService.findNearestServer();
-		final URI uri = server.getUriFor(ApiVersionType.SOL003_GRANT, Map.of());
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_GRANT, "grants/", Map.of());
 		final Object manoGrant = mapper.map(grant, server.httpGateway().getGrantRequest());
 		server.httpGateway().makeGrantLinks(manoGrant);
 		final ResponseEntity<?> resp = server.rest().postWithReturn(uri, manoGrant, server.httpGateway().getGrantResponse());

@@ -19,18 +19,32 @@ package com.ubiqube.etsi.mano.vnfm.v261.services;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.List;
+
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequestLinks;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Api;
 import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Controller;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
 @Service
 public class VnfmGateway261 implements HttpGateway {
@@ -76,5 +90,84 @@ public class VnfmGateway261 implements HttpGateway {
 		link = new Link();
 		link.setHref(linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdGet(manoGrant.getVnfLcmOpOccId())).withSelfRel().getHref());
 		links.setVnfLcmOpOcc(link);
+	}
+
+	@Override
+	public String getUrlFor(final ApiVersionType type) {
+		switch (type) {
+		case SOL003_VNFFM:
+			return "vnffm/v1/";
+		case SOL003_VNFIND:
+			return "vnfind/v1/";
+		case SOL003_VNFPM:
+			return "vnfpm/v1/";
+		case SOL003_VNFSNAPSHOTPKGM:
+			return "vnfsnapshotpkgm/v1/";
+		case SOL003_VNFLCM:
+			return "vnflcm/v1/";
+		case SOL003_VRQAN:
+			return "vrqan/v1/";
+		case SOL003_GRANT:
+			return "grant/v1/";
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + type);
+		}
+	}
+
+	@Override
+	public Class<?> getVnfInstanceClass() {
+		return VnfInstance.class;
+	}
+
+	@Override
+	public ParameterizedTypeReference<List<?>> getVnfInstanceListParam() {
+		final ParameterizedTypeReference<List<VnfInstance>> res = new ParameterizedTypeReference<>() {
+			// Nothing.
+		};
+		return (ParameterizedTypeReference<List<?>>) (Object) res;
+	}
+
+	@Override
+	public Object createVnfInstanceRequest(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
+		final var req = new CreateVnfRequest();
+		req.setVnfdId(vnfdId);
+		req.setVnfInstanceDescription(vnfInstanceDescription);
+		req.setVnfInstanceName(vnfInstanceName);
+		return req;
+	}
+
+	@Override
+	public Class<?> getVnfInstanceInstantiateRequestClass() {
+		return InstantiateVnfRequest.class;
+	}
+
+	@Override
+	public Class<?> getVnfLcmOpOccs() {
+		return NsLcmOpOcc.class;
+	}
+
+	@Override
+	public Object createVnfInstanceTerminate(final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
+		return TerminateVnfRequest.class;
+	}
+
+	@Override
+	public Class<?> getVnfInstanceScaleToLevelRequest() {
+		return ScaleVnfToLevelRequest.class;
+	}
+
+	@Override
+	public Class<?> getVnfInstanceScaleRequest() {
+		return ScaleVnfRequest.class;
+	}
+
+	@Override
+	public Class<?> getVnfInstanceOperateRequest() {
+		return OperateVnfRequest.class;
+	}
+
+	@Override
+	public Class<?> getVnfInstanceChangeExtConnRequest() {
+		return ChangeExtVnfConnectivityRequest.class;
 	}
 }

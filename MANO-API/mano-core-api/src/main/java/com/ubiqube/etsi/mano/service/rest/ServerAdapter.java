@@ -7,6 +7,11 @@ import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class ServerAdapter {
 
 	private final HttpGateway httpGateway;
@@ -24,18 +29,13 @@ public class ServerAdapter {
 		return server;
 	}
 
-	public String getBaseUri(final ApiVersionType sol003Grant) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public HttpGateway httpGateway() {
 		return httpGateway;
 	}
 
-	public URI getUriFor(final ApiVersionType type, final Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+	public URI getUriFor(final ApiVersionType type, final String urlPart, final Map<String, Object> params) {
+		final String url = httpGateway.getUrlFor(type) + urlPart;
+		return rest.uriBuilder().pathSegment(url).buildAndExpand(params).toUri();
 	}
 
 	public FluxRest rest() {
