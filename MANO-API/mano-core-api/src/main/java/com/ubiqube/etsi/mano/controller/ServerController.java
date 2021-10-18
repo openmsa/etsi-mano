@@ -1,3 +1,19 @@
+/**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.ubiqube.etsi.mano.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -24,8 +40,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.dao.mano.config.ServerDto;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.service.ServerService;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -37,14 +56,17 @@ import com.ubiqube.etsi.mano.service.ServerService;
 @RequestMapping("/admin/server")
 public class ServerController {
 	private final ServerService serverService;
+	private final MapperFacade mapper;
 
-	public ServerController(final ServerService serverService) {
+	public ServerController(final ServerService serverService, final MapperFacade mapper) {
 		super();
 		this.serverService = serverService;
+		this.mapper = mapper;
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> createServer(@Valid @RequestBody final Servers servers) {
+	public ResponseEntity<Void> createServer(@Valid @RequestBody final ServerDto serversDto) {
+		final Servers servers = mapper.map(serversDto, Servers.class);
 		final Servers newServer = serverService.createServer(servers);
 		final URI location = linkTo(methodOn(ServerController.class).findById(newServer.getId())).withSelfRel().toUri();
 		return ResponseEntity.accepted().location(location).build();

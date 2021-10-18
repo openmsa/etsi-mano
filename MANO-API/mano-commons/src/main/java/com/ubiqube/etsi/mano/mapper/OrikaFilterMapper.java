@@ -67,8 +67,8 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 		// Create an empty object.
 		final DefaultConstructorObjectFactory<Object> objectFactory = new DefaultConstructorObjectFactory<>(destinationTypeIn.getRawType());
 		final Object ret = objectFactory.create(source, mappingContext);
-
-		final SpelParserConfiguration config = new SpelParserConfiguration(true, true); // auto create objects if null
+		// Auto create objects if null.
+		final SpelParserConfiguration config = new SpelParserConfiguration(true, true);
 		final ExpressionParser parser = new SpelExpressionParser(config);
 		final StandardEvaluationContext modelContext = getModelContext(ret);
 		LOG.debug("Setting on entity type: {}", ret.getClass());
@@ -91,9 +91,8 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + (beanWalker == null ? 0 : beanWalker.hashCode());
-		return prime * result + (mapper == null ? 0 : mapper.hashCode());
+		final int result = super.hashCode();
+		return prime * result + Objects.hash(beanWalker, mapper);
 	}
 
 	@Override
@@ -108,12 +107,7 @@ public class OrikaFilterMapper extends BidirectionalConverter<Object, List<Filte
 			return false;
 		}
 		final OrikaFilterMapper other = (OrikaFilterMapper) obj;
-		if (!Objects.equals(beanWalker, other.beanWalker)) {
-			return false;
-		}
-		if (!Objects.equals(mapper, other.mapper)) {
-			return false;
-		}
-		return true;
+		return Objects.equals(beanWalker, other.beanWalker) && Objects.equals(mapper, other.mapper);
 	}
+
 }

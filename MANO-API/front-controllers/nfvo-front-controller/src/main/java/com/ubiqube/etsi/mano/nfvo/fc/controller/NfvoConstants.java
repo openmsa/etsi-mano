@@ -34,7 +34,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-public class NfvoConstants {
+public final class NfvoConstants {
 
 	private NfvoConstants() {
 		// Nothing.

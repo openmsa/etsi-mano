@@ -2,24 +2,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>nfvo-front-controller</artifactId>
-	<packaging>jar</packaging>
-	<name>nfvo-front-controller</name>
-	<url>http://maven.apache.org</url>
 	<parent>
 		<groupId>com.ubiqube.mano</groupId>
 		<artifactId>etsi-front-controllers-aggregator</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<repositories>
-		<repository>
-			<id>nexus</id>
-			<url>http://nexus2.ubiqube.com:8081/repository/maven-public/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+	<artifactId>nfvo-front-controller</artifactId>
+	<packaging>jar</packaging>
+	<name>nfvo-front-controller</name>
+	<url>http://maven.apache.org</url>
 	<dependencies>
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -124,6 +115,14 @@
 			<version>2.4.4</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>	
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<url>http://nexus2.ubiqube.com:8081/repository/maven-public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
