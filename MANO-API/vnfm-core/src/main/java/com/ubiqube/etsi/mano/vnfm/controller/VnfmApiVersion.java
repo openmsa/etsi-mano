@@ -22,8 +22,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,14 +74,14 @@ public class VnfmApiVersion {
 			}
 			final Object obj = applicationContext.getBean(x);
 			final RequestMapping req = AnnotationUtils.findAnnotation(obj.getClass(), RequestMapping.class);
-			if ((null != req) && (req.headers() != null)) {
+			if (null != req && req.headers() != null) {
 				final List<String> version = getVersion(req.headers());
-				if ((version != null) && (req.value().length > 0)) {
+				if (version != null && req.value().length > 0) {
 					final String part = findMatch(req.value()[0]);
 					if (null == part) {
 						LOG.warn("Ignoring controller: {}", x);
 					} else {
-						version.forEach(y -> res.put(part + y, new Endpoint(part.replace("/", ""), y)));
+						version.forEach(y -> res.put(part + y, new Endpoint(part, y)));
 					}
 				}
 			}
@@ -85,13 +91,23 @@ public class VnfmApiVersion {
 	}
 
 	private static String findMatch(final String url) {
-		final Set<String> mutableSet = new HashSet<>(Arrays.asList("/vnfpkgm/", "/grant/", "/vnfpm/", "/vnflcm/", "/vnfind/", "/vnffm/", "/vrgan/", "/nsd/", "/nsfm/", "/nslcm/", "/nspm/", "/vnfpkgm/"));
+		final Set<String> mutableSet = new HashSet<>(Arrays.asList("/vnfpkgm/", "/grant/", "/vnfpm/", "/vnflcm/", "/vnfind/", "/vnffm/", "/vrqan/", "/nsd/", "/nsfm/", "/nslcm/", "/nspm/", "/vnfconfig/", "/vnfsnapshotpkgm/", "/nfvpolicy/"));
 		for (final String string : mutableSet) {
 			if (url.contains(string)) {
-				return string;
+				return getFragment(url, string);
 			}
 		}
 		return null;
+	}
+
+	private static String getFragment(final String url, final String string) {
+		final String regexp = string.replace("/", "\\/");
+		final Pattern p = Pattern.compile("(" + regexp + "v[0-9])");
+		final Matcher m = p.matcher(url);
+		if (m.find()) {
+			return m.group(0);
+		}
+		return string;
 	}
 
 	private static List<String> getVersion(final String[] headers) {
@@ -123,21 +139,30 @@ public class VnfmApiVersion {
 
 	}
 
-	@GetMapping(value = "/{module}/v1/api_versions", produces = { "application/json" }, consumes = { "application/json" })
-	public ResponseEntity<ApiVersionInformation> apiMajorVersionsV1Get(@PathVariable("module") final String module) {
-		return handleQuery(module, "v1");
+	@GetMapping(value = "/{module}/v{v:\\d+}/api_versions", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<ApiVersionInformation> apiMajorVersionsV1Get(@PathVariable("module") final String module, final HttpServletRequest request) {
+		return handleQuery(module, request.getRequestURI());
 	}
 
 	@GetMapping(value = "/{module}/api_versions", produces = { "application/json" }, consumes = { "application/json" })
-	public ResponseEntity<ApiVersionInformation> apiMajorVersionsGet(@PathVariable("module") final String module) {
-		return handleQuery(module, "");
+	public ResponseEntity<ApiVersionInformation> apiMajorVersionsGet(@PathVariable("module") final String module, final HttpServletRequest request) {
+		return handleQuery(module, request.getRequestURI());
 	}
 
-	private ResponseEntity<ApiVersionInformation> handleQuery(final String module, final String subVersion) {
+	private ResponseEntity<ApiVersionInformation> handleQuery(final String module, final String url) {
 		final ApiVersionInformation apiVersion = new ApiVersionInformation();
-		apiVersion.setUriPrefix("/sol003/" + module + "/" + subVersion);
+		final String frag = getFragment(url, module);
+		String key = null;
+		if (module.equals(frag)) {
+			final Optional<Entry<String, List<String>>> optApi = dedupe.entrySet().stream().filter(x -> x.getKey().startsWith("/" + module + "/")).findFirst();
+			optApi.ifPresent(x -> apiVersion.setUriPrefix(x.getKey()));
+			key = apiVersion.getUriPrefix();
+		} else {
+			apiVersion.setUriPrefix(frag);
+			key = frag;
+		}
 
-		final List<String> versions = dedupe.get(module);
+		final List<String> versions = dedupe.get(key);
 		if (null == versions) {
 			return ResponseEntity.noContent().build();
 		}
