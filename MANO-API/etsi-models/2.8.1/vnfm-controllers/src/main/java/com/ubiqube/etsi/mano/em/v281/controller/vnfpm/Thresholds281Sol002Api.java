@@ -52,6 +52,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "thresholds", description = "the thresholds API")
+@RequestMapping(value = "/sol002/vnfpm/v1", headers = "Version=2.8.1")
 @RolesAllowed({ "ROLE_EM" })
 public interface Thresholds281Sol002Api {
 
