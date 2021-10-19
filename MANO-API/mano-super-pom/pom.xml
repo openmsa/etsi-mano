@@ -32,7 +32,7 @@
 	<properties> 
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<com.ubiqube.hibernate-search.version>5.11.9.Final</com.ubiqube.hibernate-search.version>
-		<com.ubiqube.hibernate-search6.version>6.0.6.Final</com.ubiqube.hibernate-search6.version>
+		<com.ubiqube.hibernate-search6.version>6.0.7.Final</com.ubiqube.hibernate-search6.version>
 		<com.ubiqube.openstack4j.version>3.11-SNAPSHOT</com.ubiqube.openstack4j.version>
 		<com.ubiqube.swagger3>2.1.11</com.ubiqube.swagger3>
 		<com.ubiqube.mockito.version>3.11.2</com.ubiqube.mockito.version>
@@ -162,6 +162,11 @@
 					<forkCount>0</forkCount>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -219,6 +224,11 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-search-elasticsearch</artifactId>
+				<version>${com.ubiqube.hibernate-search.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-search-backend-lucene</artifactId>
 				<version>${com.ubiqube.hibernate-search.version}</version>
 			</dependency>
 			<dependency>
