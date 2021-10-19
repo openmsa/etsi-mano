@@ -79,4 +79,8 @@ public class ServerService {
 		final Servers server = lst.get(0);
 		return new ServerAdapter(httpGateway, server);
 	}
+
+	public void retryById(final UUID id) {
+		eventManager.sendAction(ActionType.REGISTER_NFVO, id);
+	}
 }

@@ -90,6 +90,12 @@ public class ServerController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@GetMapping("/{id}/retry")
+	public ResponseEntity<Void> retryById(@PathVariable final UUID id) {
+		serverService.retryById(id);
+		return ResponseEntity.noContent().build();
+	}
+
 	private static List<Link> makeLinks(final Servers server) {
 		final List<Link> ret = new ArrayList<>();
 		ret.add(linkTo(methodOn(ServerController.class).findById(server.getId())).withRel("account"));
