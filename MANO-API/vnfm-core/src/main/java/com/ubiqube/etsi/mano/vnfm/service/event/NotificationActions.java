@@ -75,7 +75,7 @@ public class NotificationActions {
 		vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(localPackage.getId().toString());
 	}
 
-	private VnfPackage getPackage(final VnfPackage vnfPkg) {
+	private static VnfPackage getPackage(final VnfPackage vnfPkg) {
 		final VnfPackage localPackage = new VnfPackage();
 		localPackage.setNfvoId(vnfPkg.getId().toString());
 		localPackage.setUserDefinedData(vnfPkg.getUserDefinedData());

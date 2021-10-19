@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -63,4 +64,14 @@ public interface HttpGateway {
 	Class<?> getVnfInstanceOperateRequest();
 
 	Class<?> getVnfInstanceChangeExtConnRequest();
+
+	Object createVnfPackageChangeNotification(UUID subscriptionId, UUID vnfPkgId);
+
+	Object createNotificationVnfPackageOnboardingNotification(UUID idsubscriptionId, UUID vnfPkgId);
+
+	Object createNotificationVnfIdentifierCreationNotification(UUID subscriptionId, UUID vnfInstanceId);
+
+	Object createNotificationVnfIdentifierDeletionNotification(UUID subscriptionId, UUID vnfInstanceId);
+
+	Object createNotificationVnfLcmOperationOccurrenceNotification(UUID subscriptionId, UUID vnfLcmOpOccsId);
 }

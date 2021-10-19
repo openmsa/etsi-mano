@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service;
 
-import java.io.FileOutputStream;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
@@ -25,8 +24,6 @@ import java.util.UUID;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
-import org.springframework.web.util.UriComponents;
 
 import com.ubiqube.etsi.mano.config.properties.ManoProperties;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
@@ -36,65 +33,61 @@ import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.service.HttpGateway;
-import com.ubiqube.etsi.mano.service.rest.NfvoRest;
-import com.ubiqube.etsi.mano.vnfm.service.rest.NfvoRestImpl;
+import com.ubiqube.etsi.mano.service.ServerService;
+import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 import ma.glasnost.orika.MapperFacade;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class VnfmVersionManager {
-	private final List<HttpGateway> httpGateway;
-	private final NfvoRest vnfmRest;
 	private final MapperFacade mapper;
 	private final Environment env;
 	private final ManoProperties manoProperties;
+	private final ServerService serverService;
 
-	public VnfmVersionManager(final List<HttpGateway> vnfmGateway, final NfvoRestImpl vnfmRest, final MapperFacade mapper, final Environment env, final ManoProperties manoProperties) {
+	public VnfmVersionManager(final MapperFacade mapper, final Environment env, final ManoProperties manoProperties, final ServerService serverService) {
 		super();
-		this.httpGateway = vnfmGateway;
-		this.vnfmRest = vnfmRest;
 		this.mapper = mapper;
 		this.env = env;
 		this.manoProperties = manoProperties;
-		if (vnfmGateway.isEmpty()) {
-			throw new GenericException("No HTTP gateway found. At leat onr gateway is needed.");
-		}
+		this.serverService = serverService;
 	}
 
 	public VnfPackage findVnfPkgById(final String pkgId) {
-		final Class<?> clazz = httpGateway.get(0).getVnfPackageClass();
+		final ServerAdapter server = serverService.findNearestServer();
+		final Class<?> clazz = server.httpGateway().getVnfPackageClass();
 		final Map<String, Object> uriVariables = Map.of("id", pkgId);
-		final URI uri = vnfmRest.uriBuilder()
-				.pathSegment("vnfpkgm/v1/vnf_packages/{id}")
-				.buildAndExpand(uriVariables)
-				.toUri();
-		final Object res = vnfmRest.get(uri, clazz);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFPKGM, "/vnf_packages/{id}", uriVariables);
+		final Object res = server.rest().get(uri, clazz);
 		return mapper.map(res, VnfPackage.class);
 	}
 
 	public void getPackageContent(final String pkgId, final Path file) {
+		final ServerAdapter server = serverService.findNearestServer();
 		final Map<String, Object> uriVariables = Map.of("id", pkgId);
-		final URI uri = vnfmRest.uriBuilder()
-				.pathSegment("vnfpkgm/v1/vnf_packages/{id}/package_content")
-				.buildAndExpand(uriVariables)
-				.toUri();
-		vnfmRest.get(uri, clientHttpResponse -> StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(file.toFile())));
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFPKGM, "/vnf_packages/{id}/package_content", uriVariables);
+		server.rest().download(uri, file);
 	}
 
 	public Subscription subscribe(final Subscription subscription) {
+		final ServerAdapter server = serverService.findNearestServer();
 		subscription.setApi(ApiTypesEnum.SOL003);
 		final AuthentificationInformations auth = createAuthInformation();
 		subscription.setAuthentication(auth);
 		subscription.setCallbackUri(manoProperties.getFrontendUrl() + "/vnfpkgm/v1/notification/onboarding");
 		subscription.setSubscriptionType(SubscriptionType.NSDVNF);
-		final UriComponents uri = vnfmRest.uriBuilder().pathSegment("vnfpkgm/v1/subscriptions").build();
-		final Class<?> clazz = httpGateway.get(0).getVnfPackageSubscriptionClass();
-		final Class<?> clazzWire = httpGateway.get(0).getPkgmSubscriptionRequest();
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFPKGM, "/subscriptions", Map.of());
+		final Class<?> clazz = server.httpGateway().getVnfPackageSubscriptionClass();
+		final Class<?> clazzWire = server.httpGateway().getPkgmSubscriptionRequest();
 		final Object wire = mapper.map(subscription, clazzWire);
-		final Object res = vnfmRest.post(uri.toUri(), wire, clazz);
+		final Object res = server.rest().post(uri, wire, clazz);
 		return mapper.map(res, Subscription.class);
 	}
 

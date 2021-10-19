@@ -14,17 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v261.services;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+package com.ubiqube.etsi.mano.nfvo.v261.services;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
@@ -33,11 +31,10 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequestLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.service.HttpGateway;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Api;
-import com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm.sol003.VnfLcm261Sol003Controller;
+import com.ubiqube.etsi.mano.service.NfvoFactory;
+import com.ubiqube.etsi.mano.service.VnfmFactory;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.InstantiateVnfRequest;
@@ -46,8 +43,21 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class VnfmGateway261 implements HttpGateway {
+
+	private final NfvoFactory nfvoFactory;
+	private final VnfmFactory vnfmFactory;
+
+	public VnfmGateway261(final ObjectProvider<VnfmFactory> vnfmFactory, final ObjectProvider<NfvoFactory> nfvoFactory) {
+		this.vnfmFactory = vnfmFactory.getIfAvailable();
+		this.nfvoFactory = nfvoFactory.getIfAvailable();
+	}
 
 	@Override
 	public Class<?> getVnfPackageClass() {
@@ -77,19 +87,8 @@ public class VnfmGateway261 implements HttpGateway {
 	@Override
 	public void makeGrantLinks(final Object manoGrant) {
 		if (manoGrant instanceof final GrantRequest grant) {
-			makeLinks(grant);
+			vnfmFactory.makeGrantRequestLink(grant);
 		}
-	}
-
-	private static void makeLinks(final GrantRequest manoGrant) {
-		final GrantRequestLinks links = new GrantRequestLinks();
-		Link link = new Link();
-		link.setHref(VnfLcm261Sol003Controller.getSelfLink(manoGrant.getVnfInstanceId()));
-		links.setVnfInstance(link);
-
-		link = new Link();
-		link.setHref(linkTo(methodOn(VnfLcm261Sol003Api.class).vnfInstancesVnfInstanceIdGet(manoGrant.getVnfLcmOpOccId())).withSelfRel().getHref());
-		links.setVnfLcmOpOcc(link);
 	}
 
 	@Override
@@ -169,5 +168,33 @@ public class VnfmGateway261 implements HttpGateway {
 	@Override
 	public Class<?> getVnfInstanceChangeExtConnRequest() {
 		return ChangeExtVnfConnectivityRequest.class;
+	}
+
+	@Override
+	public Object createVnfPackageChangeNotification(final UUID subscriptionId, final UUID vnfPkgId) {
+		return nfvoFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId);
+	}
+
+	@Override
+	public Object createNotificationVnfPackageOnboardingNotification(final UUID subscriptionId, final UUID vnfPkgId) {
+		return nfvoFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId);
+	}
+
+	@Override
+	public Object createNotificationVnfIdentifierCreationNotification(final UUID subscriptionId, final UUID vnfPkgId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object createNotificationVnfIdentifierDeletionNotification(final UUID subscriptionId, final UUID vnfPkgId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object createNotificationVnfLcmOperationOccurrenceNotification(final UUID subscriptionId, final UUID vnfPkgId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

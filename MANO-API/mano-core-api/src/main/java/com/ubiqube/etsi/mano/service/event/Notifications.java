@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
+import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 /**
  * This class handle the notification callback.
@@ -50,8 +51,10 @@ public interface Notifications {
 	 * @param _uri The complete URL.
 	 * @param auth Auth parameters.
 	 */
-	void doNotification(final Object obj, final String _uri, final AuthentificationInformations auth);
+	void doNotification(final Object obj, final String _uri, final ServerAdapter server);
 
-	void check(final AuthentificationInformations auth, final String _uri);
+	void check(ServerAdapter server, final String _uri);
+
+	void check(AuthentificationInformations authentication, String callbackUri);
 
 }

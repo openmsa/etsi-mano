@@ -20,15 +20,17 @@ import java.net.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResponseExtractor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.service.rest.ManoRest;
+import com.ubiqube.etsi.mano.service.rest.FluxRest;
+import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 @Service
 public class NotificationsImpl implements Notifications {
@@ -49,7 +51,7 @@ public class NotificationsImpl implements Notifications {
 	 * @param auth Auth parameters.
 	 */
 	@Override
-	public void doNotification(final Object obj, final String _uri, final AuthentificationInformations auth) {
+	public void doNotification(final Object obj, final String _uri, final ServerAdapter server) {
 		String content;
 		try {
 			content = mapper.writeValueAsString(obj);
@@ -57,23 +59,35 @@ public class NotificationsImpl implements Notifications {
 			throw new GenericException(e);
 		}
 
-		sendRequest(content, auth, _uri);
+		sendRequest(content, server, _uri);
 	}
 
-	private static void sendRequest(final String _content, final AuthentificationInformations auth, final String _uri) {
-		final var rest = new ManoRest(_uri, auth);
+	private static void sendRequest(final String _content, final ServerAdapter server, final String _uri) {
+		final var rest = server.rest();
 		rest.post(URI.create(_uri), _content, Void.class);
 	}
 
 	@Override
-	public void check(final AuthentificationInformations auth, final String _uri) {
-		final var rest = new ManoRest(_uri, auth);
-		final var status = rest.get(URI.create(_uri), (ResponseExtractor<Integer>) ClientHttpResponse::getRawStatusCode);
-		if (status != 204) {
+	public void check(final ServerAdapter server, final String _uri) {
+		final var rest = server.rest();
+		doRealCheck(rest, _uri);
+	}
+
+	private static void doRealCheck(final FluxRest rest, final String _uri) {
+		final ResponseEntity<Void> status = rest.getWithReturn(URI.create(_uri), Void.class);
+		if (status.getStatusCode() != HttpStatus.NO_CONTENT) {
 			LOG.error("Status response must be 204 by was: {} <=> {}", status, _uri);
 			throw new GenericException("HttpClient got an error: " + status + ", must be 204");
 		}
+	}
 
+	@Override
+	public void check(final AuthentificationInformations authentication, final String callbackUri) {
+		final Servers server = new Servers();
+		server.setAuthentification(authentication);
+		server.setUrl(callbackUri);
+		final FluxRest rest = new FluxRest(server);
+		doRealCheck(rest, callbackUri);
 	}
 
 }

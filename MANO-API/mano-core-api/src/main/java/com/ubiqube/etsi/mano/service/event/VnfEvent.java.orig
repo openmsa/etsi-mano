@@ -28,7 +28,6 @@ import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.service.SubscriptionService;
 import com.ubiqube.etsi.mano.service.VersionManager;
-import com.ubiqube.etsi.mano.service.VersionService;
 
 /**
  *
@@ -59,18 +58,18 @@ public class VnfEvent {
 	}
 
 	private void sendNotification(final UUID vnfPkgId, final Subscription subscription, final String event) {
-		final VersionService subscrService = versionManager.getSubscriptionService(event);
+		final var subscrService = versionManager.getSubscriptionService(event);
 		Object object;
 		if ("VnfPackageChangeNotification".equals(event)) {
 			object = subscrService.createVnfPackageChangeNotification(subscription.getId(), vnfPkgId);
-		} else if ("".equals(event)) {
+		} else if ("VnfPackageOnboardingNotification".equals(event)) {
 			object = subscrService.createNotificationVnfPackageOnboardingNotification(subscription.getId(), vnfPkgId);
 		} else {
 			LOG.warn("Unknown event received: {}", event);
 			return;
 		}
-		final String callbackUri = subscription.getCallbackUri();
-		final AuthentificationInformations auth = subscription.getAuthentificationInformations();
+		final var callbackUri = subscription.getCallbackUri();
+		final AuthentificationInformations auth = subscription.getAuthentication();
 		notifications.doNotification(object, callbackUri, auth);
 	}
 
