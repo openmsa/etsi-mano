@@ -5,6 +5,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  *
  */
 @RequestMapping("/sol003/vnfpkgm/v1/notification/")
+@RolesAllowed({ "ROLE_VNFM" })
 public interface VnfLcmOperationOccurrenceNotification261Sol003Api {
 
 	@Operation(summary = "", description = "The GET method allows the server to test the notification endpoint that is provided by the client, e.g. during subscription. This method shall follow the provisions specified in the tables 5.4.20.3.2-1 and 5.4.20.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})

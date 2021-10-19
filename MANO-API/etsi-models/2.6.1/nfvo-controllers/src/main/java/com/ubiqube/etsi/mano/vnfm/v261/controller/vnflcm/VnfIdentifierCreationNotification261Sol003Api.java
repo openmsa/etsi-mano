@@ -5,6 +5,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnflcm;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@RolesAllowed({ "ROLE_VNFM" })
 @RequestMapping("/sol003/vnfpkgm/v1/notification/")
 public interface VnfIdentifierCreationNotification261Sol003Api {
 
