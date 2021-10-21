@@ -86,6 +86,9 @@ public class FluxRest {
 	}
 
 	private void createAuthPart(final Builder wcb, final AuthentificationInformations auth) {
+		if (auth == null) {
+			return;
+		}
 		Optional.ofNullable(auth.getAuthParamBasic()).ifPresent(x -> wcb.filter(ExchangeFilterFunctions.basicAuthentication(x.getUserName(), x.getPassword())));
 		Optional.ofNullable(auth.getAuthParamOath2()).ifPresent(x -> {
 			final AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(

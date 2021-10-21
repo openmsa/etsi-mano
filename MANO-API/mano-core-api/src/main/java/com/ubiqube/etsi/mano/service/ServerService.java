@@ -25,9 +25,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -71,7 +71,8 @@ public class ServerService {
 	public ServerAdapter findNearestServer() {
 		final List<Servers> lst = serversJpa.findByServerStatusIn(List.of(PlanStatusType.SUCCESS));
 		if (lst.isEmpty()) {
-			throw new GenericException("Unable to find a remote server.");
+			LOG.warn("Unable to find a remote server.");
+			return new ServerAdapter(httpGateway, new Servers());
 		}
 		if (lst.size() > 1) {
 			LOG.warn("More than one server exist, picking the first one.");
@@ -82,5 +83,13 @@ public class ServerService {
 
 	public void retryById(final UUID id) {
 		eventManager.sendAction(ActionType.REGISTER_NFVO, id);
+	}
+
+	public ServerAdapter buildServerAdapter(final Subscription subscription) {
+		final Servers server = Servers.builder()
+				.authentification(subscription.getAuthentication())
+				.url(subscription.getCallbackUri())
+				.build();
+		return new ServerAdapter(httpGateway, server);
 	}
 }

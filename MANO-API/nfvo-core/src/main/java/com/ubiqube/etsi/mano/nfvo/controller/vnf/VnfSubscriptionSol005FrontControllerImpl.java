@@ -51,10 +51,10 @@ public class VnfSubscriptionSol005FrontControllerImpl implements VnfSubscription
 
 	private final ServerService serverService;
 
-	public VnfSubscriptionSol005FrontControllerImpl(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final Notifications _notifications, final ServerService serverService) {
-		vnfSubscriptionManagement = _vnfSubscriptionManagement;
-		mapper = _mapper;
-		notifications = _notifications;
+	public VnfSubscriptionSol005FrontControllerImpl(final VnfSubscriptionManagement vnfSubscriptionManagement, final MapperFacade mapper, final Notifications notifications, final ServerService serverService) {
+		this.vnfSubscriptionManagement = vnfSubscriptionManagement;
+		this.mapper = mapper;
+		this.notifications = notifications;
 		this.serverService = serverService;
 	}
 
@@ -70,7 +70,7 @@ public class VnfSubscriptionSol005FrontControllerImpl implements VnfSubscription
 	public <U> ResponseEntity<U> create(final Object subscriptionsPostQuery, final Class<U> clazz, final Consumer<U> makeLinks) {
 		Subscription subscription = mapper.map(subscriptionsPostQuery, Subscription.class);
 		// Check subscription.
-		final ServerAdapter server = serverService.findNearestServer();
+		final ServerAdapter server = serverService.buildServerAdapter(subscription);
 		notifications.check(server, subscription.getCallbackUri());
 		subscription = vnfSubscriptionManagement.subscriptionsPost(subscription, ApiTypesEnum.SOL005);
 		final U pkgmSubscription = mapper.map(subscription, clazz);
