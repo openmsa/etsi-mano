@@ -58,7 +58,7 @@ public class VnfEvent {
 	}
 
 	private void sendNotification(final UUID vnfPkgId, final Subscription subscription, final String event) {
-		final ServerAdapter server = serverService.findNearestServer();
+		final ServerAdapter server = serverService.buildServerAdapter(subscription);
 		final HttpGateway httpGateway = server.httpGateway();
 		Object object;
 		if ("VnfPackageChangeNotification".equals(event)) {

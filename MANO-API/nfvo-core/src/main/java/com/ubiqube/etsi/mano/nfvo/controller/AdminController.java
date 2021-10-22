@@ -32,6 +32,8 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.nfvo.service.SystemService;
+import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
@@ -44,13 +46,15 @@ public class AdminController {
 	private final MapperFacade mapper;
 	private final VimManager vimManager;
 	private final SystemService systemService;
+	private final EventManager eventManager;
 
-	public AdminController(final VimConnectionInformationJpa vciJpa, final MapperFacade mapper, final VimManager vimManager, final SystemService systemService) {
+	public AdminController(final VimConnectionInformationJpa vciJpa, final MapperFacade mapper, final VimManager vimManager, final SystemService systemService, final EventManager eventManager) {
 		super();
 		this.vciJpa = vciJpa;
 		this.mapper = mapper;
 		this.vimManager = vimManager;
 		this.systemService = systemService;
+		this.eventManager = eventManager;
 	}
 
 	@PostMapping(value = "/vim/register")
@@ -83,4 +87,9 @@ public class AdminController {
 		return ResponseEntity.ok(vci);
 	}
 
+	@GetMapping(value = "/event/{event}/{id}")
+	public ResponseEntity<Void> sendEvent(@PathVariable("event") final NotificationEvent event, @PathVariable("id") final UUID id) {
+		eventManager.sendNotification(event, id);
+		return ResponseEntity.accepted().build();
+	}
 }
