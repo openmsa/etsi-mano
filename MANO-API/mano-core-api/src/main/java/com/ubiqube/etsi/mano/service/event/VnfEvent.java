@@ -76,7 +76,11 @@ public class VnfEvent {
 			return;
 		}
 		final var callbackUri = subscription.getCallbackUri();
-		notifications.doNotification(object, callbackUri, server);
+		try {
+			notifications.doNotification(object, callbackUri, server);
+		} catch (final RuntimeException e) {
+			LOG.error("Could not send notification.", e);
+		}
 	}
 
 }
