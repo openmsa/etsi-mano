@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -54,7 +55,7 @@ public class ServerService {
 	}
 
 	public Servers findById(final UUID id) {
-		return serversJpa.findById(id).orElseThrow();
+		return serversJpa.findById(id).orElseThrow(() -> new GenericException("Could not find server id " + id));
 	}
 
 	public Servers createServer(final Servers servers) {
