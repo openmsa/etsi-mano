@@ -36,6 +36,7 @@ import com.ubiqube.etsi.mano.vnfm.fc.vnffm.FaultMngtSubscriptionsFrontController
  *
  */
 @Service
+@Deprecated
 public class FaultMngtSubscriptionsFrontControllerImpl implements FaultMngtSubscriptionsFrontController {
 	private final SubscriptionServiceV2 subscriptionService;
 

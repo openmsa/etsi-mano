@@ -28,7 +28,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
-import com.ubiqube.etsi.mano.vnfm.fc.vnffm.FaultMngtSubscriptionsFrontController;
+import com.ubiqube.etsi.mano.controller.SubscriptionFrontController;
+import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
@@ -40,31 +41,31 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscriptionRequest;
  */
 @RestController
 public class FaultMngtSubscriptions261Sol002Controller implements FaultmngtSubscriptions261Sol002Api {
-	private final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController;
+	private final SubscriptionFrontController faultMngtSubscriptionsFrontController;
 
-	public FaultMngtSubscriptions261Sol002Controller(final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController) {
+	public FaultMngtSubscriptions261Sol002Controller(final SubscriptionFrontController faultMngtSubscriptionsFrontController) {
 		super();
 		this.faultMngtSubscriptionsFrontController = faultMngtSubscriptionsFrontController;
 	}
 
 	@Override
 	public ResponseEntity<List<FmSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		return faultMngtSubscriptionsFrontController.search(requestParams, FmSubscription.class, FaultMngtSubscriptions261Sol002Controller::makeLinks);
+		return faultMngtSubscriptionsFrontController.search(requestParams, FmSubscription.class, FaultMngtSubscriptions261Sol002Controller::makeLinks, SubscriptionType.VNFFM);
 	}
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsPost(@Valid final FmSubscriptionRequest fmSubscriptionRequest) {
-		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, FaultMngtSubscriptions261Sol002Controller::makeLinks, FaultMngtSubscriptions261Sol002Controller::makeSelf);
+		return faultMngtSubscriptionsFrontController.create(fmSubscriptionRequest, FmSubscription.class, FaultMngtSubscriptions261Sol002Controller::makeLinks, FaultMngtSubscriptions261Sol002Controller::makeSelf, SubscriptionType.VNFFM);
 	}
 
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		return faultMngtSubscriptionsFrontController.delete(subscriptionId);
+		return faultMngtSubscriptionsFrontController.deleteById(subscriptionId, SubscriptionType.VNFFM);
 	}
 
 	@Override
 	public ResponseEntity<FmSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		return faultMngtSubscriptionsFrontController.findById(subscriptionId, FmSubscription.class, FaultMngtSubscriptions261Sol002Controller::makeLinks);
+		return faultMngtSubscriptionsFrontController.findById(subscriptionId, FmSubscription.class, FaultMngtSubscriptions261Sol002Controller::makeLinks, SubscriptionType.VNFFM);
 	}
 
 	private static void makeLinks(final FmSubscription subscription) {

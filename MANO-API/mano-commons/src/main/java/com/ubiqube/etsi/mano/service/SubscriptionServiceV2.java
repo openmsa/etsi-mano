@@ -22,13 +22,16 @@ import java.util.function.Consumer;
 
 import org.springframework.util.MultiValueMap;
 
+import com.ubiqube.etsi.mano.controller.SubscriptionFrontController;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ * @deprecated Use {@link SubscriptionFrontController}
  */
+@Deprecated
 public interface SubscriptionServiceV2 {
 
 	<U> List<U> query(MultiValueMap<String, String> requestParams, Class<U> clazz, Consumer<U> setLink, SubscriptionType subscriptionType);
