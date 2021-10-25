@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
-import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
+import com.ubiqube.etsi.mano.dao.mano.config.RemoteSubscription;
+import com.ubiqube.etsi.mano.jpa.RemoteSubscriptionJpa;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.vnfm.fc.vnf.VnfNotificationFrontController;
@@ -43,18 +43,18 @@ import ma.glasnost.orika.MapperFacade;
 public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfNotificationFrontControllerImpl.class);
-	private final SubscriptionJpa subscriptionJpa;
 	private final VnfPackageOnboardingNotificationJpa vnfPackageOnboardingNotificationJpa;
 	private final EventManager eventManager;
 	private final MapperFacade mapper;
+	private final RemoteSubscriptionJpa remoteSubscriptionJpa;
 
 	public VnfNotificationFrontControllerImpl(final EventManager eventManager, final MapperFacade mapper, final VnfPackageOnboardingNotificationJpa vnfPackageOnboardingNotificationJpa,
-			final SubscriptionJpa subscriptionJpa) {
+			final RemoteSubscriptionJpa remoteSubscriptionJpa) {
 		super();
 		this.eventManager = eventManager;
 		this.mapper = mapper;
 		this.vnfPackageOnboardingNotificationJpa = vnfPackageOnboardingNotificationJpa;
-		this.subscriptionJpa = subscriptionJpa;
+		this.remoteSubscriptionJpa = remoteSubscriptionJpa;
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontC
 	@Override
 	public ResponseEntity<Void> onNotification(final Object body, final String version) {
 		final VnfPackageOnboardingNotification event = mapper.map(body, VnfPackageOnboardingNotification.class);
-		final Optional<Subscription> subscription = subscriptionJpa.findById(event.getId());
+		final Optional<RemoteSubscription> subscription = remoteSubscriptionJpa.findByRemoteSubscriptionId(event.getId().toString());
 		if (subscription.isEmpty()) {
 			LOG.warn("Unable to find event {} in database.", event.getId());
 			return ResponseEntity.notFound().build();
