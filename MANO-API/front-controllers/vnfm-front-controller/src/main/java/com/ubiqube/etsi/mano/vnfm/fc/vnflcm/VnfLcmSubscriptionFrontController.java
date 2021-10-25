@@ -31,7 +31,6 @@
 package com.ubiqube.etsi.mano.vnfm.fc.vnflcm;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -40,12 +39,12 @@ import org.springframework.util.MultiValueMap;
 
 public interface VnfLcmSubscriptionFrontController {
 
-	<U> ResponseEntity<U> findById(UUID id, Class<U> clazz, Consumer<U> setLink);
+	<U> ResponseEntity<U> findById(String id, Class<U> clazz, Consumer<U> setLink);
 
 	<U> ResponseEntity<List<U>> search(MultiValueMap<String, String> requestParams, String nextpageOpaqueMarker, Class<U> clazz, Consumer<U> setLink);
 
 	<U> ResponseEntity<U> create(Object body, Class<U> clazz, Consumer<U> makeLinks, Function<U, String> setLink);
 
-	ResponseEntity<Void> deleteById(UUID id);
+	ResponseEntity<Void> deleteById(String id);
 
 }
