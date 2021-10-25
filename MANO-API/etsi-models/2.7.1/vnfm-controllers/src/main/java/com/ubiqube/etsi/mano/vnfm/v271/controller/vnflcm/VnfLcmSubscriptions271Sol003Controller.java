@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v271.controller.vnflcm;
 
-import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -60,12 +59,12 @@ public class VnfLcmSubscriptions271Sol003Controller implements VnfLcmSubscriptio
 
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		return frontController.deleteById(getSafeUUID(subscriptionId));
+		return frontController.deleteById(subscriptionId);
 	}
 
 	@Override
 	public ResponseEntity<LccnSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		return frontController.findById(getSafeUUID(subscriptionId), LccnSubscription.class, VnfLcmSubscriptions271Sol003Controller::makeLinks);
+		return frontController.findById(subscriptionId, LccnSubscription.class, VnfLcmSubscriptions271Sol003Controller::makeLinks);
 	}
 
 	private static String getSelfLink(final LccnSubscription subscription) {

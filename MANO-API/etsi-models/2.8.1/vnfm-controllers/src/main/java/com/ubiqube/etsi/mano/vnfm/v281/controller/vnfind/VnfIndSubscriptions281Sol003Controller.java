@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vnfind;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -25,8 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.controller.SubscriptionFrontController;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.Link;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorSubscription;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorSubscriptionLinks;
@@ -39,24 +38,26 @@ import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorSubscriptionRequ
  */
 @RestController
 public class VnfIndSubscriptions281Sol003Controller implements VnfIndSubscriptions281Sol003Api {
-	private final SubscriptionServiceV2 subscriptionService;
+	private final SubscriptionFrontController subscriptionService;
 
-	public VnfIndSubscriptions281Sol003Controller(final SubscriptionServiceV2 subscriptionService) {
+	public VnfIndSubscriptions281Sol003Controller(final SubscriptionFrontController subscriptionService) {
 		super();
 		this.subscriptionService = subscriptionService;
 	}
 
 	@Override
 	public ResponseEntity<List<VnfIndicatorSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, @Valid final String nextpageOpaqueMarker) {
-		final List<VnfIndicatorSubscription> ret = subscriptionService.query(requestParams, VnfIndicatorSubscription.class, VnfIndSubscriptions281Sol003Controller::makeLinks, SubscriptionType.VNFIND);
-		return ResponseEntity.ok(ret);
+		return subscriptionService.search(requestParams, VnfIndicatorSubscription.class, VnfIndSubscriptions281Sol003Controller::makeLinks, SubscriptionType.VNFIND);
 	}
 
 	@Override
 	public ResponseEntity<VnfIndicatorSubscription> subscriptionsPost(@Valid final VnfIndicatorSubscriptionRequest vnfIndicatorSubscriptionRequest) {
-		final VnfIndicatorSubscription res = subscriptionService.create(vnfIndicatorSubscriptionRequest, VnfIndicatorSubscription.class, VnfIndSubscriptions281Sol003Controller::makeLinks, SubscriptionType.VNFPM);
-		final URI location = URI.create(res.getLinks().getSelf().getHref());
-		return ResponseEntity.created(location).body(res);
+		return subscriptionService.create(vnfIndicatorSubscriptionRequest, VnfIndicatorSubscription.class, VnfIndSubscriptions281Sol003Controller::makeLinks, VnfIndSubscriptions281Sol003Controller::makeSelf, SubscriptionType.VNFPM);
+	}
+
+	private static String makeSelf(final VnfIndicatorSubscription subscription) {
+		// linkTo(methodOn(VnfIndSubscriptions281Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
+		return "";
 	}
 
 	private static void makeLinks(final VnfIndicatorSubscription subscription) {
