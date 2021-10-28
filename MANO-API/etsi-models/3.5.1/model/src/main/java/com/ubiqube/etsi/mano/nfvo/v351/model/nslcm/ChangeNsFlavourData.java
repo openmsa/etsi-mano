@@ -1,0 +1,104 @@
+package com.ubiqube.etsi.mano.nfvo.v351.model.nslcm;
+
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+/**
+ * This type specifies an existing NS instance for which the DF needs to be changed. This specifies the new DF, the instantiationLevel of the new DF that may be used and the additional parameters as input for the flavour change. It shall comply with the provisions defined in Table 6.5.3.39-1. 
+ */
+@Schema(description = "This type specifies an existing NS instance for which the DF needs to be changed. This specifies the new DF, the instantiationLevel of the new DF that may be used and the additional parameters as input for the flavour change. It shall comply with the provisions defined in Table 6.5.3.39-1. ")
+@Validated
+
+
+public class ChangeNsFlavourData   {
+  @JsonProperty("newNsFlavourId")
+  private String newNsFlavourId = null;
+
+  @JsonProperty("instantiationLevelId")
+  private String instantiationLevelId = null;
+
+  public ChangeNsFlavourData newNsFlavourId(String newNsFlavourId) {
+    this.newNsFlavourId = newNsFlavourId;
+    return this;
+  }
+
+  /**
+   * Get newNsFlavourId
+   * @return newNsFlavourId
+   **/
+  @Schema(required = true, description = "")
+      @NotNull
+
+    public String getNewNsFlavourId() {
+    return newNsFlavourId;
+  }
+
+  public void setNewNsFlavourId(String newNsFlavourId) {
+    this.newNsFlavourId = newNsFlavourId;
+  }
+
+  public ChangeNsFlavourData instantiationLevelId(String instantiationLevelId) {
+    this.instantiationLevelId = instantiationLevelId;
+    return this;
+  }
+
+  /**
+   * Get instantiationLevelId
+   * @return instantiationLevelId
+   **/
+  @Schema(description = "")
+  
+    public String getInstantiationLevelId() {
+    return instantiationLevelId;
+  }
+
+  public void setInstantiationLevelId(String instantiationLevelId) {
+    this.instantiationLevelId = instantiationLevelId;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ChangeNsFlavourData changeNsFlavourData = (ChangeNsFlavourData) o;
+    return Objects.equals(this.newNsFlavourId, changeNsFlavourData.newNsFlavourId) &&
+        Objects.equals(this.instantiationLevelId, changeNsFlavourData.instantiationLevelId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(newNsFlavourId, instantiationLevelId);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ChangeNsFlavourData {\n");
+    
+    sb.append("    newNsFlavourId: ").append(toIndentedString(newNsFlavourId)).append("\n");
+    sb.append("    instantiationLevelId: ").append(toIndentedString(instantiationLevelId)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}
