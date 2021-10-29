@@ -48,7 +48,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping(value = "/sol002/vnfind/v1/subscriptions", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol002/vnfind/v1/subscriptions", headers = { "Version=1.3.1" })
 @RolesAllowed({ "ROLE_EM" })
 public interface VnfIndSubscriptions331Sol002Api {
 

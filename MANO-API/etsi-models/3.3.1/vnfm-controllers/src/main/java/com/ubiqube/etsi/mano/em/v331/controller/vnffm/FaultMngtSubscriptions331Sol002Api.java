@@ -47,7 +47,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping(value = "/sol002/vnffm/v1", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol002/vnffm/v1", headers = { "Version=1.3.0" })
 @RolesAllowed({ "ROLE_EM" })
 public interface FaultMngtSubscriptions331Sol002Api {
 	@Operation(summary = "", description = "The client can use this method to retrieve the list of active subscriptions for VNF alarms subscribed by the client. It can be used e.g. for resynchronization after error situations. ", tags = {})

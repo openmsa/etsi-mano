@@ -48,7 +48,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RolesAllowed({ "ROLE_EM" })
-@RequestMapping(value = "/sol002/vnffm/v1", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol002/vnffm/v2", headers = { "Version=2.1.0" })
 public interface Thresholds331Sol002Api {
 
 	@Operation(summary = "", description = "The client can use this method to query information about thresholds. ", tags = {})

@@ -50,7 +50,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol003/vnfind/v1", headers = "Version=3.3.1")
+@RequestMapping(value = "/sol003/vnfind/v1", headers = "Version=1.3.1")
 @RolesAllowed({ "ROLE_NFVO" })
 public interface Indicators331Sol003Api {
 

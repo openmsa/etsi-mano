@@ -52,7 +52,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol003/vnfpm/v1", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol003/vnfpm/v2", headers = { "Version=2.1.0" })
 @RolesAllowed({ "ROLE_NFVO" })
 public interface Thresholds331Sol003Api {
 	@Operation(summary = "", description = "Query Threshold. The API consumer can use this method to query information about thresholds. This method shall follow the provisions specified in the tables 6.4.5.3.2-1 and 6.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
