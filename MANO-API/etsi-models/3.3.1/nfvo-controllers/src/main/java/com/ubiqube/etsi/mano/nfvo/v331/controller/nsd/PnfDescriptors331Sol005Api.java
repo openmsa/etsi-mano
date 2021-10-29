@@ -49,7 +49,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping(value = "/sol005/nsd/v1", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol005/nsd/v2", headers = { "Version=2.1.0" })
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface PnfDescriptors331Sol005Api {
 

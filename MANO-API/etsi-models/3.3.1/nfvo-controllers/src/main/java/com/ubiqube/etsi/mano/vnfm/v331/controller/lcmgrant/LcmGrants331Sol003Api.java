@@ -47,7 +47,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol003/grant/v1/grants", headers = { "Version=3.3.1.1" })
+@RequestMapping(value = "/sol003/grant/v1/grants", headers = { "Version=1.4.0" })
 @RolesAllowed({ "ROLE_VNFM" })
 public interface LcmGrants331Sol003Api {
 

@@ -48,7 +48,7 @@ import io.swagger.annotations.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=2.1.0" })
 @RolesAllowed({ "ROLE_OSSBSS" })
 @Api(value = "subscriptions", description = "the subscriptions API")
 public interface VnfSubscriptions331Sol005Api {
