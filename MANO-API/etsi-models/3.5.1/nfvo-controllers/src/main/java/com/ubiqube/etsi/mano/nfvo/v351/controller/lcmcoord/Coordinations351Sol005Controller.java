@@ -1,31 +1,37 @@
 package com.ubiqube.etsi.mano.nfvo.v351.controller.lcmcoord;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
+import com.ubiqube.etsi.mano.nfvo.v351.model.lcmcoord.LcmCoord;
+import com.ubiqube.etsi.mano.nfvo.v351.model.lcmcoord.LcmCoordRequest;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
-public class Coordinations351Sol005Controller implements CoordinationsApi {
+public class Coordinations351Sol005Controller implements Coordinations351Sol005Api {
 
-    private final ObjectMapper objectMapper;
+	@Override
+	public ResponseEntity<Void> coordinationsCancelPost(@Valid final LcmCoord clmCoord) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    private final HttpServletRequest request;
+	@Override
+	public ResponseEntity<LcmCoord> coordinationsCoordinationIdGet(final String coordinationId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public Coordinations351Sol005Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
-
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
-
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<LcmCoord> coordinationsPost(@Valid final LcmCoordRequest body) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
