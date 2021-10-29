@@ -16,32 +16,27 @@
  */
 package com.ubiqube.etsi.mano.em.v331.controller.vnfconfig;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.VnfConfigModifications;
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.VnfConfiguration;
 
 @RestController
 public class Configuration331Sol002Controller implements Configuration331Sol002Api {
 
-    private final ObjectMapper objectMapper;
+	@Override
+	public ResponseEntity<VnfConfiguration> configurationGet() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    private final HttpServletRequest request;
-
-    @org.springframework.beans.factory.annotation.Autowired
-    public Configuration331Sol002Controller(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
-
-    @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        return Optional.ofNullable(objectMapper);
-    }
-
-    @Override
-    public Optional<HttpServletRequest> getRequest() {
-        return Optional.ofNullable(request);
-    }
+	@Override
+	public ResponseEntity<VnfConfigModifications> configurationPatch(@Valid final VnfConfigModifications body) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
