@@ -12,7 +12,7 @@ import com.ubiqube.etsi.mano.controller.EtsiImplementation;
  *
  */
 @Service
-public class Vnfm351Implementation implements EtsiImplementation {
+public class Nfvo351Implementation implements EtsiImplementation {
 
 	@Override
 	public String getVersion() {
