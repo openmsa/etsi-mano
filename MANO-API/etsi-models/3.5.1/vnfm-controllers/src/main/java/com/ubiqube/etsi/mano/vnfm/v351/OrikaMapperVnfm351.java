@@ -69,11 +69,7 @@ public class OrikaMapperVnfm351 implements OrikaMapperFactoryConfigurer {
 	public void configure(final MapperFactory orikaMapperFactory) {
 		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.VnfInstance.class, VnfInstance.class)
 				.field("instantiatedVnfInfo.extVirtualLinkInfo", "instantiatedVnfInfo.extVirtualLinkInfo")
-				.field("metadata{key}", "metadata{key}")
-				.field("metadata{value}", "metadata{value}")
 				.field("vimConnectionInfo{value}", "vimConnectionInfo")
-				.field("extensions{key}", "extensions{key}")
-				.field("extensions{value}", "extensions{value}")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfInstanceInstantiatedVnfInfo.class, BlueprintParameters.class)
