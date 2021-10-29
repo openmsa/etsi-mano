@@ -1,11 +1,12 @@
-package com.ubiqube.etsi.mano.em.v351.model.vnffm;
+package com.ubiqube.etsi.mano.em.v351.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v351.model.vnffm.SubscriptionAuthenticationParamsBasic;
-import com.ubiqube.etsi.mano.em.v351.model.vnffm.SubscriptionAuthenticationParamsOauth2ClientCredentials;
+import com.ubiqube.etsi.mano.em.v351.model.SubscriptionAuthenticationParamsBasic;
+import com.ubiqube.etsi.mano.em.v351.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;

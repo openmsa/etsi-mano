@@ -3,8 +3,9 @@ package com.ubiqube.etsi.mano.em.v351.model.vnffm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.ubiqube.etsi.mano.em.v351.model.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.em.v351.model.vnffm.FmNotificationsFilter;
-import com.ubiqube.etsi.mano.em.v351.model.vnffm.SubscriptionAuthentication;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
