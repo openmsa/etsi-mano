@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoord;
 import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoordRequest;
+import com.ubiqube.etsi.mano.vnfm.fc.lcmcoord.CoordinationFrontController;
 
 /**
  *
@@ -31,23 +32,26 @@ import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoordRequest;
  */
 @RestController
 public class Coordinations351Sol002Controller implements Coordinations351Sol002Api {
+	private final CoordinationFrontController coordinationFrontController;
+
+	public Coordinations351Sol002Controller(final CoordinationFrontController coordinationFrontController) {
+		super();
+		this.coordinationFrontController = coordinationFrontController;
+	}
 
 	@Override
 	public ResponseEntity<Void> coordinationsCoordinationIdCancelPost(final String coordinationId) {
-		// TODO Auto-generated method stub
-		return null;
+		return coordinationFrontController.cancel(coordinationId);
 	}
 
 	@Override
 	public ResponseEntity<LcmCoord> coordinationsCoordinationIdGet(final String coordinationId) {
-		// TODO Auto-generated method stub
-		return null;
+		return coordinationFrontController.findById(coordinationId, LcmCoord.class);
 	}
 
 	@Override
 	public ResponseEntity<LcmCoord> coordinationsPost(@Valid final LcmCoordRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return coordinationFrontController.create(body, LcmCoord.class);
 	}
 
 }
