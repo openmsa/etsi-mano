@@ -54,7 +54,7 @@ public interface NsPmNotification261Sol005Api {
 	 * The GET method allows the server to test the notification endpoint that is provided by the client, e.g. during subscription. This method shall follow the provisions specified in the Tables 7.4.9.3.2-1 and 7.4.9.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
-	@GetMapping(value = "/URI_is_provided_by_the_client_when_creating_the_subscription-ThresholdCrossedNotification", consumes = { "application/json" }, produces = { "application/json" })
+	@GetMapping(value = "/URI_is_provided_by_the_client_when_creating_the_subscription-ThresholdCrossedNotification",  produces = { "application/json" })
 	void uRIIsProvidedByTheClientWhenCreatingTheSubscriptionThresholdCrossedNotificationGet(@RequestHeader("Accept") String accept);
 
 	/**

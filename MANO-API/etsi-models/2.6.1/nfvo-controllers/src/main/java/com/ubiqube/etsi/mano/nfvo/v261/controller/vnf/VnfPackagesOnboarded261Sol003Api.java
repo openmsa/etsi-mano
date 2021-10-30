@@ -56,7 +56,7 @@ public interface VnfPackagesOnboarded261Sol003Api {
 	@Operation(summary = "Create a new individual VNF package resource.", description = "The POST method creates a new individual VNF package resource. ", tags = {})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "201", description = "201 Created             An individual VNF package resource has been created successfully. The response body shall contain a representation of the new individual VNF package resource, as defined in clause 9.5.2.4. The HTTP response shall include a \"Location\" HTTP header that contains the resource URI of the individual VNF package resource. ", content = @Content(schema = @Schema(implementation = VnfPkgInfo.class))) })
-	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(produces = { "application/json" })
 	ResponseEntity<String> onboardedVnfPackagesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams,
 			@Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 

@@ -80,7 +80,7 @@ public interface NsdNotifications261Sol005Api {
 	 * This resource represents a notification endpoint. The server can use this resource to send notifications to a subscribed client, which has provided the URI of this resource during the subscription process. The GET method allows the server to test the notification endpoint that is provided by the client, e.g. during subscription. This method shall follow the provisions specified in the Table 5.4.10.3.2-2 for URI query parameters, request and response data structures, and response codes.
 	 *
 	 */
-	@GetMapping(value = "/URI_is_provided_by_the_client_when_creating_the_subscription-PnfdDeletionNotification", consumes = { "application/json" }, produces = { "application/json" })
+	@GetMapping(value = "/URI_is_provided_by_the_client_when_creating_the_subscription-PnfdDeletionNotification",  produces = { "application/json" })
 	void pnfdDeletionNotificationGet(@RequestHeader("Accept") String accept);
 
 	/**
