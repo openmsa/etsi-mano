@@ -40,7 +40,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.factory.TestFactory;
 import com.ubiqube.etsi.mano.vnfm.v261.OrikaMapperVnfm261;
 
 import ma.glasnost.orika.MapperFacade;
@@ -77,7 +76,7 @@ public class VnfPackageTest {
 		vnf.setAdditionalArtifacts(list);
 		vnf.setChecksum(checksum);
 		final Set<SoftwareImage> softwareImages = new HashSet<>();
-		softwareImages.add(TestFactory.createVnfPackagesVnfPkgInfoSoftwareImages());
+		// softwareImages.add(TestFactory.createVnfPackagesVnfPkgInfoSoftwareImages());
 
 		final VnfPackage vnfDao = mapper.map(vnf, VnfPackage.class);
 		System.out.println("" + vnfDao);
