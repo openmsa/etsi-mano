@@ -30,7 +30,7 @@ import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoordRequest;
  *
  */
 @RestController
-public class CoordinationsApiController implements Coordinations351Sol002Api {
+public class Coordinations351Sol002Controller implements Coordinations351Sol002Api {
 
 	@Override
 	public ResponseEntity<Void> coordinationsCoordinationIdCancelPost(final String coordinationId) {

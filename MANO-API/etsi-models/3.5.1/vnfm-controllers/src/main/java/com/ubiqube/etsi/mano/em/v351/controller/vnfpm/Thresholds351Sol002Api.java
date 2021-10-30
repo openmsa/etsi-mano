@@ -21,6 +21,7 @@
  */
 package com.ubiqube.etsi.mano.em.v351.controller.vnfpm;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@RolesAllowed({ "ROLE_EM" })
+@RequestMapping(value = "/sol002/vnffm/v2", headers = { "Version=1.3.0" })
 public interface Thresholds351Sol002Api {
 
 	@Operation(summary = "", description = "The API cosumer can use this method to query information about thresholds. See clause 6.4.5.3.2. ", tags = {})
