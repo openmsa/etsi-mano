@@ -49,4 +49,16 @@ public class IndicatorsFrontControllerImpl implements IndicatorsFrontController 
 		return null;
 	}
 
+	@Override
+	public ResponseEntity<Void> delete(final String subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <U> ResponseEntity<U> findById(final String subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
