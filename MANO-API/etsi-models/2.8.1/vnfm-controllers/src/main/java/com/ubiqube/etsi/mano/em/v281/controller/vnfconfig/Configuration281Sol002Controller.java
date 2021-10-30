@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.VnfConfigModifications;
 import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.VnfConfiguration;
+import com.ubiqube.etsi.mano.vnfm.fc.vnfconfig.VnfConfigurationFrontController;
 
 /**
  *
@@ -31,17 +32,16 @@ import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.VnfConfiguration;
  */
 @RestController
 public class Configuration281Sol002Controller implements Configuration281Sol002Api {
+	private VnfConfigurationFrontController vnfConfigurationFrontController;
 
 	@Override
 	public ResponseEntity<VnfConfiguration> configurationGet() {
-		// TODO Auto-generated method stub
-		return null;
+		return vnfConfigurationFrontController.find();
 	}
 
 	@Override
-	public ResponseEntity<VnfConfigModifications> configurationPatch(@Valid final VnfConfigModifications configModifications) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<VnfConfigModifications> configurationPatch(@Valid final VnfConfigModifications body) {
+		return vnfConfigurationFrontController.modify(body);
 	}
 
 }

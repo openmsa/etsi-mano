@@ -23,20 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.VnfConfigModifications;
 import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.VnfConfiguration;
+import com.ubiqube.etsi.mano.vnfm.fc.vnfconfig.VnfConfigurationFrontController;
 
 @RestController
 public class Configuration331Sol002Controller implements Configuration331Sol002Api {
+	private VnfConfigurationFrontController vnfConfigurationFrontController;
 
 	@Override
 	public ResponseEntity<VnfConfiguration> configurationGet() {
-		// TODO Auto-generated method stub
-		return null;
+		return vnfConfigurationFrontController.find();
 	}
 
 	@Override
 	public ResponseEntity<VnfConfigModifications> configurationPatch(@Valid final VnfConfigModifications body) {
-		// TODO Auto-generated method stub
-		return null;
+		return vnfConfigurationFrontController.modify(body);
 	}
 
 }
