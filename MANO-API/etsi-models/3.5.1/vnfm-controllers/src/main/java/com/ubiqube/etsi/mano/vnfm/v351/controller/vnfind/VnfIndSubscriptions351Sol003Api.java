@@ -27,6 +27,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -69,7 +70,7 @@ public interface VnfIndSubscriptions351Sol003Api {
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails2.class))) })
 	@RequestMapping(value = "/subscriptions", produces = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<List<VnfIndicatorSubscription>> subscriptionsGet(
-			@Parameter(in = ParameterIn.QUERY, description = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The API consumer may supply this parameter. All attribute names that appear in the FmSubscription and in data types referenced from it shall be supported by the NFV-MANO functional entity in the filter expression. ", schema = @Schema()) @Valid @RequestParam(value = "filter", required = false) final String filter,
+			@Parameter(in = ParameterIn.QUERY, description = "Attribute-based filtering expression according to clause 5.2 of ETSI GS NFV-SOL 013. The VNFM shall support receiving this parameter as part of the URI query string. The API consumer may supply this parameter. All attribute names that appear in the FmSubscription and in data types referenced from it shall be supported by the NFV-MANO functional entity in the filter expression. ", schema = @Schema()) @Valid @RequestParam(value = "filter", required = false) final MultiValueMap<String, String> requestParams,
 			@Parameter(in = ParameterIn.QUERY, description = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the entity supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for this resource. ", schema = @Schema()) @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
 	@Operation(summary = "", description = "The POST method creates a new subscription. See clause 8.4.5.3.1. ", tags = {})
@@ -87,7 +88,7 @@ public interface VnfIndSubscriptions351Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails2.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails2.class))) })
 	@RequestMapping(value = "/subscriptions", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.POST)
-	ResponseEntity<List<VnfIndicatorSubscription>> subscriptionsPost(
+	ResponseEntity<VnfIndicatorSubscription> subscriptionsPost(
 			@Parameter(in = ParameterIn.DEFAULT, description = "Details of the subscription to be created.", required = true, schema = @Schema()) @Valid @RequestBody VnfIndicatorSubscriptionRequest body);
 
 }
