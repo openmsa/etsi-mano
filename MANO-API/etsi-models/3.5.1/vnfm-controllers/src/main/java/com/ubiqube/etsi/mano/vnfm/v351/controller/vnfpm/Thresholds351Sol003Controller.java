@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import javax.validation.Valid;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,12 @@ import com.ubiqube.etsi.mano.vnfm.v351.model.vnfpm.Threshold;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnfpm.ThresholdLinks;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnfpm.ThresholdModifications;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@ConditionalOnMissingClass("com.ubiqube.etsi.mano.vnfm.v331.controller.vnfpm.Thresholds331Sol003Api")
 @RestController
 public class Thresholds351Sol003Controller implements Thresholds351Sol003Api {
 

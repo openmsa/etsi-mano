@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,12 @@ import com.ubiqube.etsi.mano.vnfm.v351.model.vnfpm.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnfpm.PmJobLinks;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnfpm.PmJobModifications;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@ConditionalOnMissingClass("com.ubiqube.etsi.mano.vnfm.v331.controller.vnfpm.PmJobs331Sol003Api")
 @RestController
 public class PmJobs351Sol003Controller implements PmJobs351Sol003Api {
 	private final VnfmPmGenericFrontController vnfmPmGenericFrontController;

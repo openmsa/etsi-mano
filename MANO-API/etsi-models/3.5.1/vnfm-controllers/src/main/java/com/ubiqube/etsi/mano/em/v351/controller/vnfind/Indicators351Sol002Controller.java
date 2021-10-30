@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,7 @@ import com.ubiqube.etsi.mano.vnfm.v351.controller.vnflcm.VnfInstances351Sol003Ap
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@ConditionalOnMissingClass("com.ubiqube.etsi.mano.em.v331.controller.vnfind.Indicators331Sol002Api")
 @RestController
 public class Indicators351Sol002Controller implements Indicators351Sol002Api {
 	private final IndicatorsFrontController indicatorsFrontController;

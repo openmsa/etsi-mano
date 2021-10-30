@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ import com.ubiqube.etsi.mano.vnfm.fc.vnffm.FaultMngtSubscriptionsFrontController
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@ConditionalOnMissingClass("com.ubiqube.etsi.mano.em.v331.controller.vnffm.FaultMngtSubscriptions331Sol002Api")
 @RestController
 public class AlarmsSubscriptions351Sol002Controller implements AlarmsSubscriptions351Sol002Api {
 	private final FaultMngtSubscriptionsFrontController faultMngtSubscriptionsFrontController;
