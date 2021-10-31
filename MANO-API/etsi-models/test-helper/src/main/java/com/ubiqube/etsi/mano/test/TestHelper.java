@@ -38,7 +38,11 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
+import com.ubiqube.etsi.mano.mapper.UuidConverter;
+
 import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
@@ -54,7 +58,9 @@ public class TestHelper {
 	public TestHelper(final OrikaMapperFactoryConfigurer orikaMapperFactoryConfigurer) {
 		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaMapperFactoryConfigurer.configure(mapperFactory);
-
+		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
+		converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());
+		converterFactory.registerConverter(new UuidConverter());
 		podam = new PodamFactoryImpl();
 		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
 		complex.add(String.class);
@@ -89,8 +95,7 @@ public class TestHelper {
 				LOG.warn("  - {} is null", methodDescriptor.getName());
 				continue;
 			}
-			if (src instanceof List) {
-				final List sl = (List) src;
+			if (src instanceof final List sl) {
 				final List dl = (List) dst;
 				assertNotNull(dl, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
 				assertEquals(sl.size(), dl.size(), "List are not equals " + methodDescriptor.getName() + prettyStack(stack));
@@ -147,8 +152,7 @@ public class TestHelper {
 				LOG.warn("  - {} is null", methodDescriptor.getName());
 				continue;
 			}
-			if (r instanceof List) {
-				final List l = (List) r;
+			if (r instanceof final List l) {
 				for (final Object obj : l) {
 					if (isComplex(obj)) {
 						LOG.warn("  + Looping: {}", r.getClass());
