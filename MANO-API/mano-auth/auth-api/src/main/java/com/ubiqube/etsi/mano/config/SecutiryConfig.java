@@ -20,8 +20,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
+import com.ubiqube.etsi.mano.config.properties.ManoProperties;
+
+import io.swagger.v3.oas.models.security.SecurityScheme;
+
 /**
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
@@ -30,8 +34,12 @@ public interface SecutiryConfig {
 	default void configure(final AuthenticationManagerBuilder _auth) throws Exception {
 		// Nothing.
 	}
-	
+
 	default void configure(final ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry http) throws Exception {
 		// Nothing.
+	}
+
+	default SecurityScheme getSwaggerSecurityScheme(final ManoProperties oauth2Params) {
+		return null;
 	}
 }
