@@ -21,6 +21,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.config.properties.ManoProperties;
+
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 
@@ -55,7 +57,7 @@ public class BasicAuth implements SecutiryConfig {
 	}
 
 	@Override
-	public SecurityScheme getSwaggerSecurityScheme() {
+	public SecurityScheme getSwaggerSecurityScheme(final ManoProperties oauth2Params) {
 		return new SecurityScheme().type(Type.HTTP).scheme("basic");
 	}
 

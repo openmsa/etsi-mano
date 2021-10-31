@@ -29,8 +29,6 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.security.OAuthFlow;
-import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
@@ -43,12 +41,8 @@ public class SwaggerDocumentationConfigMain {
 		this.secutiryConfig = secutiryConfig;
 	}
 
-	@SuppressWarnings("static-method")
 	@Bean
 	public OpenAPI OpenApiMain(final ManoProperties oauth2Params) {
-		final OAuthFlow clientCredential = new OAuthFlow().authorizationUrl(oauth2Params.getSwaggerOAuth2())
-				.tokenUrl(oauth2Params.getSwaggerOAuth2());
-		final OAuthFlows flows = new OAuthFlows().clientCredentials(clientCredential);
 		final OpenAPI openApi = new OpenAPI();
 		final SecurityScheme sec = secutiryConfig.getSwaggerSecurityScheme(oauth2Params);
 		if (null != sec) {
