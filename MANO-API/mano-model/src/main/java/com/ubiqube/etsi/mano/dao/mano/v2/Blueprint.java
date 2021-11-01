@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 import javax.persistence.ManyToOne;
@@ -52,7 +52,7 @@ public interface Blueprint<U extends Task, V extends Instance> extends BaseEntit
 
 	OperationStatusType getOperationStatus();
 
-	void setStateEnteredTime(Date date);
+	void setStateEnteredTime(OffsetDateTime date);
 
 	// Below VimBluePrint
 	void setVimConnections(Set<VimConnectionInformation> vimConnections);

@@ -16,13 +16,14 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +40,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -46,11 +48,16 @@ import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
@@ -73,6 +80,9 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	@IndexedEmbedded
 	private NsdInstance nsInstance;
 
+	@Enumerated(EnumType.STRING)
+	private CancelModeTypeEnum cancelMode;
+
 	public NsdInstance getNsInstance() {
 		return nsInstance;
 	}
@@ -82,30 +92,14 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	}
 
 	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	@Override
-	public Set<NsTask> getTasks() {
-		return tasks;
+	public void addVimConnection(final VimConnectionInformation vimConnection) {
+		//
 	}
 
 	@Override
 	public void addTask(final NsTask task) {
-		if (null == tasks) {
-			tasks = new HashSet<>();
-		}
-		tasks.add(task);
-	}
+		// TODO Auto-generated method stub
 
-	@Override
-	public void setTasks(final Set<NsTask> _tasks) {
-		tasks = _tasks;
 	}
 
 	@Override
@@ -152,12 +146,8 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 
 	@Override
 	public NsdInstance getInstance() {
-		return nsInstance;
-	}
-
-	@Override
-	public void addVimConnection(final VimConnectionInformation vimConnection) {
-		//
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

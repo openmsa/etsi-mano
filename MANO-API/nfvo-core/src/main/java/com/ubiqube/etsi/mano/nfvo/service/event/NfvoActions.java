@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.event;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -101,7 +101,7 @@ public class NfvoActions {
 			lcmOpOccs.setOperationStatus(OperationStatusType.FAILED);
 			nsInstanceRepository.save(nsInstance);
 			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
-			lcmOpOccs.setStateEnteredTime(new Date());
+			lcmOpOccs.setStateEnteredTime(OffsetDateTime.now());
 			nsBlueprintService.save(lcmOpOccs);
 			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 		}
@@ -138,7 +138,7 @@ public class NfvoActions {
 			// We can't save here, we must do an atomic update.
 			nsBlueprint.setOperationStatus(OperationStatusType.FAILED);
 			nsBlueprint.setError(new FailureDetails(500L, e.getMessage()));
-			nsBlueprint.setStateEnteredTime(new Date());
+			nsBlueprint.setStateEnteredTime(OffsetDateTime.now());
 			nsBlueprintService.save(nsBlueprint);
 			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 		}
@@ -184,7 +184,7 @@ public class NfvoActions {
 		} else {
 			blueprint.setOperationStatus(OperationStatusType.FAILED);
 		}
-		blueprint.setStateEnteredTime(new Date());
+		blueprint.setStateEnteredTime(OffsetDateTime.now());
 	}
 
 	private void setLiveStatus(final NsBlueprint blueprint, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {
