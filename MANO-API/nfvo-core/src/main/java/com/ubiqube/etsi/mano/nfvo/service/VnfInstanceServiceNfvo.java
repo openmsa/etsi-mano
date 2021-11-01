@@ -18,12 +18,14 @@ package com.ubiqube.etsi.mano.nfvo.service;
 
 import java.util.UUID;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
+import com.ubiqube.etsi.mano.service.VnfmService;
 
 /**
  *
@@ -31,7 +33,7 @@ import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
  *
  */
 @Service
-//@ConditionalOnMissingBean(VnfInstanceGatewayService.class)
+@ConditionalOnMissingBean(VnfmService.class)
 public class VnfInstanceServiceNfvo implements VnfInstanceGatewayService {
 
 	private final VnfInstanceJpa vnfInstanceJpa;
