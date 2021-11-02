@@ -77,6 +77,7 @@ public class TestHelper {
 		final Object avcDb = mapper.map(avc, db);
 		final Object res = mapper.map(avcDb, json);
 		final Deque<String> stack = new ArrayDeque<>();
+		deepSort(avc, res);
 		assertFullEqual(avc, res, ignore, stack);
 	}
 
@@ -99,8 +100,8 @@ public class TestHelper {
 				final List dl = (List) dst;
 				assertNotNull(dl, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
 				assertEquals(sl.size(), dl.size(), "List are not equals " + methodDescriptor.getName() + prettyStack(stack));
-				Collections.sort(sl, Comparator.comparing(Object::toString));
-				Collections.sort(dl, Comparator.comparing(Object::toString));
+				// Collections.sort(sl, Comparator.comparing(Object::toString));
+				// Collections.sort(dl, Comparator.comparing(Object::toString));
 				for (int i = 0; i < sl.size(); i++) {
 					final Object so = sl.get(i);
 					final Object dobj = dl.get(i);
@@ -181,4 +182,30 @@ public class TestHelper {
 		return !complex.contains(r.getClass());
 	}
 
+	private void deepSort(final Object orig, final Object tgt) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		final BeanInfo beanInfo = Introspector.getBeanInfo(orig.getClass());
+		final MethodDescriptor[] m = beanInfo.getMethodDescriptors();
+		for (final MethodDescriptor methodDescriptor : m) {
+			if (!methodDescriptor.getName().startsWith("get") || "getClass".equals(methodDescriptor.getName())) {
+				continue;
+			}
+			LOG.debug(" + {}", methodDescriptor.getName());
+			final Object src = methodDescriptor.getMethod().invoke(orig);
+			final Object dst = methodDescriptor.getMethod().invoke(tgt);
+			if (null == src) {
+				LOG.warn("  - {} is null", methodDescriptor.getName());
+				continue;
+			}
+			if (src instanceof final List sl) {
+				final List dl = (List) dst;
+				for (int i = 0; i < sl.size(); i++) {
+					final Object els = sl.get(i);
+					final Object eld = dl.get(i);
+					deepSort(els, eld);
+				}
+				Collections.sort(sl, Comparator.comparing(Object::toString));
+				Collections.sort(dl, Comparator.comparing(Object::toString));
+			}
+		}
+	}
 }
