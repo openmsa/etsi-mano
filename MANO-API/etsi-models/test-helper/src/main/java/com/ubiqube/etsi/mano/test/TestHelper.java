@@ -38,6 +38,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 
@@ -61,6 +62,7 @@ public class TestHelper {
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
 		converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());
 		converterFactory.registerConverter(new UuidConverter());
+		converterFactory.registerConverter(new OffsetDateTimeToDateConverter());
 		podam = new PodamFactoryImpl();
 		podam.getStrategy().addOrReplaceTypeManufacturer(String.class, new UUIDManufacturer());
 		complex.add(String.class);
@@ -85,94 +87,54 @@ public class TestHelper {
 		final BeanInfo beanInfo = Introspector.getBeanInfo(orig.getClass());
 		final MethodDescriptor[] m = beanInfo.getMethodDescriptors();
 		for (final MethodDescriptor methodDescriptor : m) {
-			if (!methodDescriptor.getName().startsWith("get") || "getClass".equals(methodDescriptor.getName()) || ignore.contains(methodDescriptor.getName())) {
+			final String methodName = methodDescriptor.getName();
+			if (!methodName.startsWith("get") || "getClass".equals(methodName) || ignore.contains(methodName)) {
 				continue;
 			}
-			LOG.debug(" + {}", methodDescriptor.getName());
-			stack.push(methodDescriptor.getName());
+			LOG.debug(" + {}", methodName);
+			stack.push(methodName);
 			final Object src = methodDescriptor.getMethod().invoke(orig);
 			final Object dst = methodDescriptor.getMethod().invoke(tgt);
 			if (null == src) {
-				LOG.warn("  - {} is null", methodDescriptor.getName());
+				LOG.warn("  - {} is null", methodName);
 				continue;
 			}
-			if (src instanceof final List sl) {
-				final List dl = (List) dst;
-				assertNotNull(dl, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
-				assertEquals(sl.size(), dl.size(), "List are not equals " + methodDescriptor.getName() + prettyStack(stack));
-				// Collections.sort(sl, Comparator.comparing(Object::toString));
-				// Collections.sort(dl, Comparator.comparing(Object::toString));
-				for (int i = 0; i < sl.size(); i++) {
-					final Object so = sl.get(i);
-					final Object dobj = dl.get(i);
-					stack.push("[" + i + "]");
-					if (isComplex(so)) {
-						LOG.warn("  + Looping: {}", src.getClass());
-						assertFullEqual(so, dobj, ignore, stack);
-					} else {
-						assertEquals(so, dobj, "List in " + methodDescriptor.getName() + ": is not equal at " + i + prettyStack(stack));
-					}
-					stack.pop();
-				}
-				stack.pop();
-				continue;
-			}
-			if (src instanceof Map) {
-				stack.pop();
-				continue;
-			}
-			if (src instanceof Set) {
-				stack.pop();
-				continue;
-			}
-			if (isComplex(src)) {
+			if (src instanceof final List<?> sl) {
+				final List<?> dl = (List<?>) dst;
+				assertNotNull(dl, "Target element is null for field: " + methodName + prettyStack(stack));
+				assertEquals(sl.size(), dl.size(), "List are not equals " + methodName + prettyStack(stack));
+				handleList(sl, dl, ignore, stack, methodName);
+			} else if (src instanceof Map) {
+				LOG.warn("Map not supported, skipping {}", methodName);
+			} else if (src instanceof Set) {
+				LOG.warn("Set not supported, skipping {}", methodName);
+			} else if (isComplex(src)) {
 				LOG.warn("  + Looping: {}", src.getClass());
-				assertNotNull(dst, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
+				assertNotNull(dst, "Target element is null for field: " + methodName + prettyStack(stack));
 				assertFullEqual(src, dst, ignore, stack);
 			} else {
-				assertEquals(src, dst, "Field " + methodDescriptor.getName() + ": must be equals." + prettyStack(stack));
+				assertEquals(src, dst, "Field " + methodName + ": must be equals." + prettyStack(stack));
 			}
 			stack.pop();
 		}
 	}
 
-	private String prettyStack(final Deque<String> stack) {
-		return "\n" + stack.toString();
+	private void handleList(final List<?> sl, final List<?> dl, final Set<String> ignore, final Deque<String> stack, final String methodName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
+		for (int i = 0; i < sl.size(); i++) {
+			final Object so = sl.get(i);
+			final Object dobj = dl.get(i);
+			stack.push("[" + i + "]");
+			if (isComplex(so)) {
+				assertFullEqual(so, dobj, ignore, stack);
+			} else {
+				assertEquals(so, dobj, "List in " + methodName + ": is not equal at " + i + prettyStack(stack));
+			}
+			stack.pop();
+		}
 	}
 
-	private void checknull(final Object avcDb) throws IntrospectionException, IllegalArgumentException, InvocationTargetException, IllegalAccessException {
-		final BeanInfo beanInfo = Introspector.getBeanInfo(avcDb.getClass());
-		final MethodDescriptor[] m = beanInfo.getMethodDescriptors();
-		for (final MethodDescriptor methodDescriptor : m) {
-			if (!methodDescriptor.getName().startsWith("get") || "getClass".equals(methodDescriptor.getName())) {
-				continue;
-			}
-			LOG.debug(" + {}", methodDescriptor.getName());
-			final Object r = methodDescriptor.getMethod().invoke(avcDb, null);
-			if (null == r) {
-				LOG.warn("  - {} is null", methodDescriptor.getName());
-				continue;
-			}
-			if (r instanceof final List l) {
-				for (final Object obj : l) {
-					if (isComplex(obj)) {
-						LOG.warn("  + Looping: {}", r.getClass());
-						checknull(obj);
-					}
-				}
-				continue;
-			}
-			if (r instanceof Map) {
-				continue;
-			}
-			if (r instanceof Set) {
-				continue;
-			}
-			if (isComplex(r)) {
-				LOG.warn("  + Looping: {}", r.getClass());
-				checknull(r);
-			}
-		}
+	private static String prettyStack(final Deque<String> stack) {
+		return "\n" + stack.toString();
 	}
 
 	private boolean isComplex(final Object r) {
@@ -186,22 +148,31 @@ public class TestHelper {
 		final BeanInfo beanInfo = Introspector.getBeanInfo(orig.getClass());
 		final MethodDescriptor[] m = beanInfo.getMethodDescriptors();
 		for (final MethodDescriptor methodDescriptor : m) {
-			if (!methodDescriptor.getName().startsWith("get") || "getClass".equals(methodDescriptor.getName())) {
+			final String methodName = methodDescriptor.getName();
+			if (!methodName.startsWith("get") || "getClass".equals(methodName)) {
 				continue;
 			}
-			LOG.debug(" + {}", methodDescriptor.getName());
+			LOG.debug(" + {}", methodName);
+			if ("getBytes".equals(methodName)) {
+				LOG.warn("");
+			}
 			final Object src = methodDescriptor.getMethod().invoke(orig);
 			final Object dst = methodDescriptor.getMethod().invoke(tgt);
 			if (null == src) {
-				LOG.warn("  - {} is null", methodDescriptor.getName());
+				LOG.warn("  - {} is null", methodName);
 				continue;
 			}
-			if (src instanceof final List sl) {
-				final List dl = (List) dst;
+			if (src instanceof final List<?> sl) {
+				final List<?> dl = (List<?>) dst;
+				if (null == dl) {
+					continue;
+				}
 				for (int i = 0; i < sl.size(); i++) {
 					final Object els = sl.get(i);
 					final Object eld = dl.get(i);
-					deepSort(els, eld);
+					if (isComplex(els)) {
+						deepSort(els, eld);
+					}
 				}
 				Collections.sort(sl, Comparator.comparing(Object::toString));
 				Collections.sort(dl, Comparator.comparing(Object::toString));
