@@ -18,10 +18,12 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -50,6 +52,9 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.RejectedLcmCoordination;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.VnfLcmCoordination;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.VnfPkgChange;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -111,7 +116,17 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ChangeExtVnfConnRequest changeExtVnfConnRequest;
-
+	// 3.3.1
+	private String vnfSnapshotInfoId;
+	// 3.3.1
+	private VnfPkgChange modificationsTriggeredByVnfPkgChange;
+	// 3.5.1
+	private Set<VnfLcmCoordination> lcmCoordinations;
+	// 3.5.1
+	private Set<RejectedLcmCoordination> rejectedLcmCoordinations;
+	// 3.5.1
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> warnings;
 	@Override
 	public void addTask(final VnfTask task) {
 		if (null == tasks) {

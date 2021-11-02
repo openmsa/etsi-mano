@@ -199,7 +199,7 @@ public class OrikaMapperVnfm331 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfBlueprint.class)
 				.field("vnfInstanceId", "vnfInstance.id")
-				.field("resourceChanges", "tasks")
+				// .field("resourceChanges", "tasks")
 				.field("grantId", "grantsRequestId")
 				.field("operationState", "operationStatus")
 				.field("isAutomaticInvocation", "automaticInvocation")
