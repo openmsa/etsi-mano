@@ -17,8 +17,9 @@
 
 package com.ubiqube.etsi.mano.model.v271.sol005.nslcm;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -46,16 +47,16 @@ public class NsLcmOpOcc {
 	private NsLcmOperationStateType operationState = null;
 
 	@JsonProperty("statusEnteredTime")
-	private LocalDateTime statusEnteredTime = null;
+	private OffsetDateTime statusEnteredTime = null;
 
 	@JsonProperty("nsInstanceId")
-	private String nsInstanceId = null;
+	private UUID nsInstanceId = null;
 
 	@JsonProperty("lcmOperationType")
 	private NsLcmOpType lcmOperationType = null;
 
 	@JsonProperty("startTime")
-	private LocalDateTime startTime = null;
+	private OffsetDateTime startTime = null;
 
 	@JsonProperty("isAutomaticInvocation")
 	private Boolean isAutomaticInvocation = null;
@@ -166,7 +167,7 @@ public class NsLcmOpOcc {
 		this.operationState = operationState;
 	}
 
-	public NsLcmOpOcc statusEnteredTime(final LocalDateTime statusEnteredTime) {
+	public NsLcmOpOcc statusEnteredTime(final OffsetDateTime statusEnteredTime) {
 		this.statusEnteredTime = statusEnteredTime;
 		return this;
 	}
@@ -180,15 +181,15 @@ public class NsLcmOpOcc {
 	@NotNull
 
 	@Valid
-	public LocalDateTime getStatusEnteredTime() {
+	public OffsetDateTime getStatusEnteredTime() {
 		return statusEnteredTime;
 	}
 
-	public void setStatusEnteredTime(final LocalDateTime statusEnteredTime) {
+	public void setStatusEnteredTime(final OffsetDateTime statusEnteredTime) {
 		this.statusEnteredTime = statusEnteredTime;
 	}
 
-	public NsLcmOpOcc nsInstanceId(final String nsInstanceId) {
+	public NsLcmOpOcc nsInstanceId(final UUID nsInstanceId) {
 		this.nsInstanceId = nsInstanceId;
 		return this;
 	}
@@ -201,11 +202,11 @@ public class NsLcmOpOcc {
 	@ApiModelProperty(required = true, value = "")
 	@NotNull
 
-	public String getNsInstanceId() {
+	public UUID getNsInstanceId() {
 		return nsInstanceId;
 	}
 
-	public void setNsInstanceId(final String nsInstanceId) {
+	public void setNsInstanceId(final UUID nsInstanceId) {
 		this.nsInstanceId = nsInstanceId;
 	}
 
@@ -231,7 +232,7 @@ public class NsLcmOpOcc {
 		this.lcmOperationType = lcmOperationType;
 	}
 
-	public NsLcmOpOcc startTime(final LocalDateTime startTime) {
+	public NsLcmOpOcc startTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 		return this;
 	}
@@ -245,11 +246,11 @@ public class NsLcmOpOcc {
 	@NotNull
 
 	@Valid
-	public LocalDateTime getStartTime() {
+	public OffsetDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(final LocalDateTime startTime) {
+	public void setStartTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -418,7 +419,7 @@ public class NsLcmOpOcc {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final NsLcmOpOcc nsLcmOpOcc = (NsLcmOpOcc) o;

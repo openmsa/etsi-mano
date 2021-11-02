@@ -91,7 +91,7 @@ public class NsLcmOpOccs271Sol005Controller implements NsLcmOpOccs271Sol005Api {
 		nsLcmOpOccLinks.setContinue(_continue);
 
 		final Link nsInstance = new Link();
-		nsInstance.setHref(linkTo(methodOn(NsInstances271Sol005Api.class).nsInstancesNsInstanceIdGet(nsLcmOpOccs.getNsInstanceId())).withSelfRel().getHref());
+		nsInstance.setHref(linkTo(methodOn(NsInstances271Sol005Api.class).nsInstancesNsInstanceIdGet(nsLcmOpOccs.getNsInstanceId().toString())).withSelfRel().getHref());
 		nsLcmOpOccLinks.setNsInstance(nsInstance);
 
 		final Link retry = new Link();

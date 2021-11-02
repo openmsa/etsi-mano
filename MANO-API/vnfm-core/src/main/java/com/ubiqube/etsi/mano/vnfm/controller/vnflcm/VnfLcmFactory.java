@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.vnfm.controller.vnflcm;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -76,7 +75,7 @@ public class VnfLcmFactory {
 		vnfInstance.setId(vnfInstanceId);
 		vnfLcmOpOcc.setVnfInstance(vnfInstance);
 		vnfLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
-		vnfLcmOpOcc.setStartTime(new Date());
+		vnfLcmOpOcc.setStartTime(OffsetDateTime.now());
 		vnfLcmOpOcc.setOperationStatus(OperationStatusType.STARTING);
 		final BlueprintParameters parameters = new BlueprintParameters();
 		parameters.setState(OperationalStateType.STOPPED);
@@ -90,7 +89,7 @@ public class VnfLcmFactory {
 		final VnfInstance vnfInstance = new VnfInstance();
 		vnfInstance.setId(vnfInstanceId);
 		blueprint.setVnfInstance(vnfInstance);
-		blueprint.setStartTime(new Date());
+		blueprint.setStartTime(OffsetDateTime.now());
 		blueprint.setStateEnteredTime(OffsetDateTime.now());
 		blueprint.setOperationStatus(OperationStatusType.NOT_STARTED);
 		final BlueprintParameters parameters = new BlueprintParameters();
