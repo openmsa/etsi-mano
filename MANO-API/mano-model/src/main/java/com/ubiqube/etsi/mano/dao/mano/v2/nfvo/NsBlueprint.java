@@ -22,8 +22,6 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,7 +38,6 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
-import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -79,9 +76,6 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	@ManyToOne
 	@IndexedEmbedded
 	private NsdInstance nsInstance;
-
-	@Enumerated(EnumType.STRING)
-	private CancelModeTypeEnum cancelMode;
 
 	public NsdInstance getNsInstance() {
 		return nsInstance;

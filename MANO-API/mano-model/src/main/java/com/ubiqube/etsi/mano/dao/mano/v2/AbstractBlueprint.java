@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Embedded;
@@ -27,6 +26,7 @@ import javax.persistence.MappedSuperclass;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.Auditable;
+import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 
@@ -40,7 +40,7 @@ public abstract class AbstractBlueprint<U extends Task, V extends Instance> impl
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private Date startTime;
+	private OffsetDateTime startTime;
 
 	@Embedded
 	private FailureDetails error;
@@ -56,10 +56,12 @@ public abstract class AbstractBlueprint<U extends Task, V extends Instance> impl
 	@Enumerated(EnumType.STRING)
 	private OperationStatusType operationStatus;
 
-	private final boolean automaticInvocation = false;
+	private boolean automaticInvocation;
 
-	private final boolean cancelPending = false;
+	private boolean cancelPending;
 
 	public abstract void setTasks(final Set<U> tasks);
 
+	@Enumerated(EnumType.STRING)
+	private CancelModeTypeEnum cancelMode;
 }
