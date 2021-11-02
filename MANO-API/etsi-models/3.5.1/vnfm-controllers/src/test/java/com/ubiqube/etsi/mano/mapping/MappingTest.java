@@ -40,6 +40,8 @@ public class MappingTest extends TestHelper {
 		final Set<String> ignore = new HashSet<>();
 		ignore.add("getLinks");
 		ignore.add("getExtLinkPortId");
+		ignore.add("getExtManagedVirtualLinkInfo");
+		ignore.add("getInstantiatedVnfInfo");
 		doTest(VnfInstance.class, com.ubiqube.etsi.mano.dao.mano.VnfInstance.class, ignore);
 	}
 

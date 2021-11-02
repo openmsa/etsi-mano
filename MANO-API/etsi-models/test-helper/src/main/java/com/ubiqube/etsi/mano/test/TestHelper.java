@@ -113,6 +113,9 @@ public class TestHelper {
 				assertNotNull(dst, "Target element is null for field: " + methodName + prettyStack(stack));
 				assertFullEqual(src, dst, ignore, stack);
 			} else {
+				if (methodName.equals("getResourceProviderId")) {
+					LOG.debug("Heelo");
+				}
 				assertEquals(src, dst, "Field " + methodName + ": must be equals." + prettyStack(stack));
 			}
 			stack.pop();
@@ -152,11 +155,11 @@ public class TestHelper {
 			if (!methodName.startsWith("get") || "getClass".equals(methodName)) {
 				continue;
 			}
-			LOG.debug(" + {}", methodName);
-			if ("getBytes".equals(methodName)) {
-				LOG.warn("");
-			}
+			LOG.debug(" + {} on {}", methodName, orig.getClass());
 			final Object src = methodDescriptor.getMethod().invoke(orig);
+			if (null == tgt) {
+				continue;
+			}
 			final Object dst = methodDescriptor.getMethod().invoke(tgt);
 			if (null == src) {
 				LOG.warn("  - {} is null", methodName);
@@ -176,6 +179,14 @@ public class TestHelper {
 				}
 				Collections.sort(sl, Comparator.comparing(Object::toString));
 				Collections.sort(dl, Comparator.comparing(Object::toString));
+			} else if (src instanceof Map) {
+				LOG.warn("Map not supported, skipping {}", methodName);
+			} else if (src instanceof Set) {
+				LOG.warn("Set not supported, skipping {}", methodName);
+			} else if (isComplex(src)) {
+				deepSort(src, dst);
+			} else {
+				// Nothing.
 			}
 		}
 	}
