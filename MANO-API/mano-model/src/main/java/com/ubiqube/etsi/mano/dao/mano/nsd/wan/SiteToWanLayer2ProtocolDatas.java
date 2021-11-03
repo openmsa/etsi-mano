@@ -18,6 +18,8 @@ package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Embeddable;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +30,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Embeddable
 public class SiteToWanLayer2ProtocolDatas {
 	private Layer2ConnectionInformation layer2ConnectionInfo;
 

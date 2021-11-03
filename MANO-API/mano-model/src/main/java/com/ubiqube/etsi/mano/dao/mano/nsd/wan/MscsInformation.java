@@ -17,7 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -60,10 +60,10 @@ public class MscsInformation {
 	private MscsLayerProtocolType mscsLayerProtocol;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<MscsInfoSiteAccessProtectionScheme> siteAccessProtectionSchemes;
+	private Set<MscsInfoSiteAccessProtectionScheme> siteAccessProtectionSchemes;
 
 	private BigDecimal mtuMscs;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<MscsEndpointInformation> mscsEndpoints;
+	private Set<MscsEndpointInformation> mscsEndpoints;
 
 }

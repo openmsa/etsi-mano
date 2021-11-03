@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -26,6 +26,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,10 +43,10 @@ public class WanConnectionProtocolInformation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
-
+	@OneToOne
 	private MscsInformation mscsInfo;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<ConnectivityServiceEndpointInformation> connectivityServiceEndpoints;
+	private Set<ConnectivityServiceEndpointInformation> connectivityServiceEndpoints;
 
 }

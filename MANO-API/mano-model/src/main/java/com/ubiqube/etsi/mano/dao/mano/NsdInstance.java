@@ -89,7 +89,7 @@ public class NsdInstance extends Instance {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private List<VnfInstanceData> vnfInstanceData;
+	private Set<VnfInstanceData> vnfInstanceData;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
@@ -107,11 +107,10 @@ public class NsdInstance extends Instance {
 	private Set<ParamsForVnf> additionalParamsForVnf;
 	// 3.3.1
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn
 	private Set<WanConnectionInformation> wanConnectionInfo;
 	// 3.3.1
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> vnfSnapshotInfoIds;
+	private Set<String> vnfSnapshotInfoIds;
 	// 3.5.1
 	private BigDecimal priority;
 

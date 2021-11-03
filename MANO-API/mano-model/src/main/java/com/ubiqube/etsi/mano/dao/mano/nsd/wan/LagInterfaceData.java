@@ -16,9 +16,9 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
@@ -37,7 +37,7 @@ import lombok.Setter;
 @Embeddable
 public class LagInterfaceData {
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> aggregatedEndpoints = new ArrayList<>();
+	private Set<String> aggregatedEndpoints = new HashSet<>();
 
 	private Boolean lacpActivation;
 

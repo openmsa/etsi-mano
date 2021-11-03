@@ -16,9 +16,10 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
 
 import com.ubiqube.etsi.mano.dao.mano.alarm.ResourceHandle;
@@ -33,9 +34,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Embeddable
 public class ForwardingConfig {
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<ResourceHandle> networkResources;
+	private Set<ResourceHandle> networkResources;
 
 	private VnSegmentIds vnSegmentIds;
 
