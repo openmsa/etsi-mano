@@ -81,7 +81,7 @@ public class NsInstance {
 
 	@JsonProperty("nestedNsInstanceId")
 	@Valid
-	private List<String> nestedNsInstanceId = null;
+	private List<UUID> nestedNsInstanceId = null;
 
 	/**
 	 * The state of the NS instance. Permitted values: NOT_INSTANTIATED: The NS
@@ -414,12 +414,12 @@ public class NsInstance {
 		this.sapInfo = sapInfo;
 	}
 
-	public NsInstance nestedNsInstanceId(final List<String> nestedNsInstanceId) {
+	public NsInstance nestedNsInstanceId(final List<UUID> nestedNsInstanceId) {
 		this.nestedNsInstanceId = nestedNsInstanceId;
 		return this;
 	}
 
-	public NsInstance addNestedNsInstanceIdItem(final String nestedNsInstanceIdItem) {
+	public NsInstance addNestedNsInstanceIdItem(final UUID nestedNsInstanceIdItem) {
 		if (this.nestedNsInstanceId == null) {
 			this.nestedNsInstanceId = new ArrayList<>();
 		}
@@ -434,11 +434,11 @@ public class NsInstance {
 	 **/
 	@ApiModelProperty(value = "Identifier of the nested NS(s) of the NS instance. ")
 
-	public List<String> getNestedNsInstanceId() {
+	public List<UUID> getNestedNsInstanceId() {
 		return nestedNsInstanceId;
 	}
 
-	public void setNestedNsInstanceId(final List<String> nestedNsInstanceId) {
+	public void setNestedNsInstanceId(final List<UUID> nestedNsInstanceId) {
 		this.nestedNsInstanceId = nestedNsInstanceId;
 	}
 

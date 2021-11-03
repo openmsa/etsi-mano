@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 
 import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.OrikaSystemProperties;
 import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
@@ -57,6 +58,9 @@ public class TestHelper {
 	private final Set<Class<?>> complex = new HashSet<>();
 
 	public TestHelper(final OrikaMapperFactoryConfigurer orikaMapperFactoryConfigurer) {
+		System.setProperty(OrikaSystemProperties.COMPILER_STRATEGY, EclipseJdtCompilerStrategy.class.getName());
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES, "true");
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/orika-test");
 		mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		orikaMapperFactoryConfigurer.configure(mapperFactory);
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
