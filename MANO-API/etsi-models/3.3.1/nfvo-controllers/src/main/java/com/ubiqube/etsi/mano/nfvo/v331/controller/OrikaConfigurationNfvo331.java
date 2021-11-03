@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v331.controller;
 
+import org.springframework.stereotype.Service;
+
 import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
@@ -65,6 +67,7 @@ import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class OrikaConfigurationNfvo331 implements OrikaMapperFactoryConfigurer {
 
 	@Override
