@@ -34,7 +34,7 @@ public class ArchMainTest {
 	@ArchTest
 	public static final ArchRule ensure_interface_name = classes()
 			.that().resideInAPackage("..v*.controller..").and().areInterfaces()
-			.should().haveNameMatching(".*[0-9]{3}Sol00[1-6]Api");
+			.should().haveNameMatching(".*[0-9]{3}Sol0[0-1][1-6]Api");
 
 	@ArchTest
 	public static final ArchRule ensure_interface_annotations = classes()
@@ -44,7 +44,7 @@ public class ArchMainTest {
 	@ArchTest
 	public static final ArchRule ensure_controller_name = classes()
 			.that().resideInAPackage("..v*.controller..").and().areNotInterfaces()
-			.should().haveNameMatching(".*[0-9]{3}Sol00[1-6]Controller");
+			.should().haveNameMatching(".*[0-9]{3}Sol0[0-1][1-6]Controller");
 
 	@ArchTest
 	public static final ArchRule ensure_rest_controller = classes()
