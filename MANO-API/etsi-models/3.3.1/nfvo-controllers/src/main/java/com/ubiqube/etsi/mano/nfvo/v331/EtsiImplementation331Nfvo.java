@@ -14,21 +14,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.v331.controller;
+package com.ubiqube.etsi.mano.nfvo.v331;
 
-import org.springdoc.core.GroupedOpenApi;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import java.time.OffsetDateTime;
 
-@Configuration
-public class NfvoSwaggerDocConfig331 {
-	@SuppressWarnings("static-method")
-	@Bean
-	public GroupedOpenApi customImplementationNfvo331() {
-		return GroupedOpenApi.builder()
-				.group("nfvo-etsi-mano-3.3.1")
-				.packagesToScan("com.ubiqube.etsi.mano.nfvo.v331")
-				.build();
+import com.ubiqube.etsi.mano.controller.EtsiImplementation;
+
+public class EtsiImplementation331Nfvo implements EtsiImplementation {
+
+	@Override
+	public String getVersion() {
+		return "3.3.1";
+	}
+
+	@Override
+	public boolean isDeprecated() {
+		return false;
+	}
+
+	@Override
+	public OffsetDateTime getRetirementDate() {
+		return null;
 	}
 
 }

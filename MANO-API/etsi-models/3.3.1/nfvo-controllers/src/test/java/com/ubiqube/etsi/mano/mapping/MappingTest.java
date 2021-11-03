@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
-import com.ubiqube.etsi.mano.nfvo.v331.controller.OrikaConfigurationNfvo331;
+import com.ubiqube.etsi.mano.nfvo.v331.OrikaConfigurationNfvo331;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsLcmOpOcc;

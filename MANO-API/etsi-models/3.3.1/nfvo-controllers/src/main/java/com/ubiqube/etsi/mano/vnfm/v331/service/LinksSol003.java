@@ -14,11 +14,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v331.controller.vnf;
+package com.ubiqube.etsi.mano.vnfm.v331.service;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.ubiqube.etsi.mano.vnfm.v331.controller.vnf.VnfPackages331Sol003Api;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.Link;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.VnfPkgInfoLinks;
