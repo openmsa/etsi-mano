@@ -176,7 +176,8 @@ public class VnfPackage implements PackageBase, Auditable {
 	private Set<NsdPackageVnfPackage> nsdPackages;
 
 	// 2.7.1
-	private String vnfmInfo;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> vnfmInfo;
 	// 2.8.1
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> vnfmInfo281;
