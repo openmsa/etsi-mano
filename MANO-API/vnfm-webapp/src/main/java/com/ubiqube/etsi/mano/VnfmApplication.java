@@ -34,7 +34,7 @@ public class VnfmApplication extends SpringBootServletInitializer {
 	public static void main(final String[] args) {
 		System.setProperty(OrikaSystemProperties.COMPILER_STRATEGY, EclipseJdtCompilerStrategy.class.getName());
 		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES, "true");
-		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/okika");
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/orika-vnfm");
 		SpringApplication.run(VnfmApplication.class, args);
 	}
 
