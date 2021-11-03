@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -136,9 +135,10 @@ public class NsdPackage implements BaseEntity, Auditable {
 	private Set<NsdInstance> nsInstance;
 	// 2.7.1
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<NsArchiveArtifactInfo> artifacts;
+	private Set<NsArchiveArtifactInfo> artifacts;
 	// 2.7.1
 	private String signingCertificate;
 	// 2.7.1
+	@Enumerated(EnumType.STRING)
 	private ArchiveSecurityOptionEnumType archiveSecurityOption;
 }

@@ -121,8 +121,10 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	// 3.3.1
 	private VnfPkgChange modificationsTriggeredByVnfPkgChange;
 	// 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<VnfLcmCoordination> lcmCoordinations;
 	// 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<RejectedLcmCoordination> rejectedLcmCoordinations;
 	// 3.5.1
 	@ElementCollection(fetch = FetchType.EAGER)

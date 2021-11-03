@@ -1,5 +1,6 @@
 package com.ubiqube.etsi.mano.dao.mano.nfvo;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,7 +23,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class NsArchiveArtifactInfo {
+public class NsArchiveArtifactInfo implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -32,6 +36,6 @@ public class NsArchiveArtifactInfo {
 	private PkgChecksum checksum;
 
 	@ElementCollection
-	private Map<String, Object> metadata;
+	private Map<String, String> metadata;
 
 }
