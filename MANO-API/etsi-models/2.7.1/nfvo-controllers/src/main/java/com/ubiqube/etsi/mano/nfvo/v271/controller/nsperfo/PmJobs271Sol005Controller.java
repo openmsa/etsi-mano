@@ -26,14 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
-public class PmJobsApiControllerNfvo implements PmJobsApiNfvo {
+public class PmJobs271Sol005Controller implements PmJobs271Sol005Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public PmJobsApiControllerNfvo(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public PmJobs271Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}

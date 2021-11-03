@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v271.services.Linkable;
+import com.ubiqube.etsi.mano.nfvo.v271.services.Sol003Linkable;
 
 /**
  *

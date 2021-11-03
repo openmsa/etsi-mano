@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
+package com.ubiqube.etsi.mano.nfvo.v271.services;
 
 import javax.annotation.Nonnull;
 

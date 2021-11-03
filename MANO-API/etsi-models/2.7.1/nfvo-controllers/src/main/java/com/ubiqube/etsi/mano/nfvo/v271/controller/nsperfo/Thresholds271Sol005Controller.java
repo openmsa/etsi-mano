@@ -31,14 +31,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 @RestController
-public class ThresholdsApiControllerNfvo implements ThresholdsApiNfvo {
+public class Thresholds271Sol005Controller implements Thresholds271Sol005Api {
 
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
 
 	@org.springframework.beans.factory.annotation.Autowired
-	public ThresholdsApiControllerNfvo(final ObjectMapper objectMapper, final HttpServletRequest request) {
+	public Thresholds271Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
 		this.objectMapper = objectMapper;
 		this.request = request;
 	}
