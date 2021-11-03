@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -44,6 +45,8 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.RejectedLcmCoordination;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.VnfLcmCoordination;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -76,6 +79,15 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	@ManyToOne
 	@IndexedEmbedded
 	private NsdInstance nsInstance;
+	// 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<VnfLcmCoordination> lcmCoordinations;
+	// 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<RejectedLcmCoordination> rejectedLcmCoordinations;
+	// 3.5.1
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> warnings;
 
 	public NsdInstance getNsInstance() {
 		return nsInstance;

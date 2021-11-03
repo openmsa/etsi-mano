@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -43,7 +44,7 @@ public class NsdInfo implements AnyOfNsdInfo {
 	private String id = null;
 
 	@JsonProperty("nsdId")
-	private String nsdId = null;
+	private UUID nsdId = null;
 
 	@JsonProperty("nsdName")
 	private String nsdName = null;
@@ -59,15 +60,15 @@ public class NsdInfo implements AnyOfNsdInfo {
 
 	@JsonProperty("vnfPkgIds")
 	@Valid
-	private List<String> vnfPkgIds = null;
+	private List<UUID> vnfPkgIds = null;
 
 	@JsonProperty("pnfdInfoIds")
 	@Valid
-	private List<String> pnfdInfoIds = null;
+	private List<UUID> pnfdInfoIds = null;
 
 	@JsonProperty("nestedNsdInfoIds")
 	@Valid
-	private List<String> nestedNsdInfoIds = null;
+	private List<UUID> nestedNsdInfoIds = null;
 
 	/**
 	 * Signals the security option used by the NSD archive as defined in clause 5.1
@@ -151,7 +152,7 @@ public class NsdInfo implements AnyOfNsdInfo {
 		this.id = id;
 	}
 
-	public NsdInfo nsdId(final String nsdId) {
+	public NsdInfo nsdId(final UUID nsdId) {
 		this.nsdId = nsdId;
 		return this;
 	}
@@ -163,11 +164,11 @@ public class NsdInfo implements AnyOfNsdInfo {
 	 **/
 	@Schema(description = "")
 
-	public String getNsdId() {
+	public UUID getNsdId() {
 		return nsdId;
 	}
 
-	public void setNsdId(final String nsdId) {
+	public void setNsdId(final UUID nsdId) {
 		this.nsdId = nsdId;
 	}
 
@@ -253,12 +254,12 @@ public class NsdInfo implements AnyOfNsdInfo {
 		this.nsdInvariantId = nsdInvariantId;
 	}
 
-	public NsdInfo vnfPkgIds(final List<String> vnfPkgIds) {
+	public NsdInfo vnfPkgIds(final List<UUID> vnfPkgIds) {
 		this.vnfPkgIds = vnfPkgIds;
 		return this;
 	}
 
-	public NsdInfo addVnfPkgIdsItem(final String vnfPkgIdsItem) {
+	public NsdInfo addVnfPkgIdsItem(final UUID vnfPkgIdsItem) {
 		if (this.vnfPkgIds == null) {
 			this.vnfPkgIds = new ArrayList<>();
 		}
@@ -274,20 +275,20 @@ public class NsdInfo implements AnyOfNsdInfo {
 	 **/
 	@Schema(description = "Identifies the VNF package for the VNFD referenced by the on-boarded NS descriptor resource. See note 1. ")
 
-	public List<String> getVnfPkgIds() {
+	public List<UUID> getVnfPkgIds() {
 		return vnfPkgIds;
 	}
 
-	public void setVnfPkgIds(final List<String> vnfPkgIds) {
+	public void setVnfPkgIds(final List<UUID> vnfPkgIds) {
 		this.vnfPkgIds = vnfPkgIds;
 	}
 
-	public NsdInfo pnfdInfoIds(final List<String> pnfdInfoIds) {
+	public NsdInfo pnfdInfoIds(final List<UUID> pnfdInfoIds) {
 		this.pnfdInfoIds = pnfdInfoIds;
 		return this;
 	}
 
-	public NsdInfo addPnfdInfoIdsItem(final String pnfdInfoIdsItem) {
+	public NsdInfo addPnfdInfoIdsItem(final UUID pnfdInfoIdsItem) {
 		if (this.pnfdInfoIds == null) {
 			this.pnfdInfoIds = new ArrayList<>();
 		}
@@ -303,20 +304,20 @@ public class NsdInfo implements AnyOfNsdInfo {
 	 **/
 	@Schema(description = "Identifies the PnfdInfo element for the PNFD referenced by the on-boarded NS descriptor resource. ")
 
-	public List<String> getPnfdInfoIds() {
+	public List<UUID> getPnfdInfoIds() {
 		return pnfdInfoIds;
 	}
 
-	public void setPnfdInfoIds(final List<String> pnfdInfoIds) {
+	public void setPnfdInfoIds(final List<UUID> pnfdInfoIds) {
 		this.pnfdInfoIds = pnfdInfoIds;
 	}
 
-	public NsdInfo nestedNsdInfoIds(final List<String> nestedNsdInfoIds) {
+	public NsdInfo nestedNsdInfoIds(final List<UUID> nestedNsdInfoIds) {
 		this.nestedNsdInfoIds = nestedNsdInfoIds;
 		return this;
 	}
 
-	public NsdInfo addNestedNsdInfoIdsItem(final String nestedNsdInfoIdsItem) {
+	public NsdInfo addNestedNsdInfoIdsItem(final UUID nestedNsdInfoIdsItem) {
 		if (this.nestedNsdInfoIds == null) {
 			this.nestedNsdInfoIds = new ArrayList<>();
 		}
@@ -332,11 +333,11 @@ public class NsdInfo implements AnyOfNsdInfo {
 	 **/
 	@Schema(description = "Identifies the NsdInfo element for the nested NSD referenced by the on-boarded NS descriptor resource. See note 1. ")
 
-	public List<String> getNestedNsdInfoIds() {
+	public List<UUID> getNestedNsdInfoIds() {
 		return nestedNsdInfoIds;
 	}
 
-	public void setNestedNsdInfoIds(final List<String> nestedNsdInfoIds) {
+	public void setNestedNsdInfoIds(final List<UUID> nestedNsdInfoIds) {
 		this.nestedNsdInfoIds = nestedNsdInfoIds;
 	}
 
