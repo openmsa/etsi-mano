@@ -13,10 +13,6 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
 	<repositories>
 		<repository>
 			<id>nexus</id>
