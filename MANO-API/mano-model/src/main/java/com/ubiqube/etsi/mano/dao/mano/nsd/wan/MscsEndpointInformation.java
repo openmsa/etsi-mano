@@ -14,16 +14,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
+package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.ubiqube.etsi.mano.dao.mano.nsd.wan.type.DirectionalityType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,19 +39,17 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
 @Getter
+@Setter
 @Entity
-public class LocationConstraints {
+public class MscsEndpointInformation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String countryCode;
-
-	@ElementCollection
-	private Set<LocConstCivicAddrElmnt> civicAddressElement;
-
-	private String area;
-
+	private String mscsEndpointId;
+	@Enumerated(EnumType.STRING)
+	private DirectionalityType directionality;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<String> connectivityServiceEndpoinId = new ArrayList<>();
 }

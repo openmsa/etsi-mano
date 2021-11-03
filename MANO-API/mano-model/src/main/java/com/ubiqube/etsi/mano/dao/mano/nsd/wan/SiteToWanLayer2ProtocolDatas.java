@@ -14,16 +14,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
+package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.Set;
-import java.util.UUID;
-
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.math.BigDecimal;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,19 +26,15 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
 @Getter
-@Entity
-public class LocationConstraints {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+@Setter
+public class SiteToWanLayer2ProtocolDatas {
+	private Layer2ConnectionInformation layer2ConnectionInfo;
 
-	private String countryCode;
+	private BigDecimal mtuL2;
 
-	@ElementCollection
-	private Set<LocConstCivicAddrElmnt> civicAddressElement;
+	private VirtualRoutingAndForwarding virtualRoutingAndForwarding;
 
-	private String area;
+	private ForwardingConfig forwardingConfig;
 
 }

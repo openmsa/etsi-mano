@@ -14,16 +14,18 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
+package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.ElementCollection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,19 +35,17 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
 @Getter
+@Setter
 @Entity
-public class LocationConstraints {
+public class WanConnectionProtocolInformation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String countryCode;
+	private MscsInformation mscsInfo;
 
-	@ElementCollection
-	private Set<LocConstCivicAddrElmnt> civicAddressElement;
-
-	private String area;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<ConnectivityServiceEndpointInformation> connectivityServiceEndpoints;
 
 }

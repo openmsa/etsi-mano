@@ -14,16 +14,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
+package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.Set;
-import java.util.UUID;
-
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,19 +26,12 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
 @Getter
-@Entity
-public class LocationConstraints {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+@Setter
+@Embeddable
+public class VnSegmentIds {
+	private String vnSegmentIdValue;
 
-	private String countryCode;
-
-	@ElementCollection
-	private Set<LocConstCivicAddrElmnt> civicAddressElement;
-
-	private String area;
+	private String vnSegmentIdUpperRange;
 
 }

@@ -14,16 +14,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
+package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+import com.ubiqube.etsi.mano.dao.mano.nsd.wan.type.ProtectionSchemeType;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.LocationConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,16 +40,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class LocationConstraints {
+public class MscsInfoSiteAccessProtectionScheme {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
-
-	private String countryCode;
-
-	@ElementCollection
-	private Set<LocConstCivicAddrElmnt> civicAddressElement;
-
-	private String area;
-
+	@OneToOne
+	private LocationConstraints locationConstraints;
+	@Enumerated(EnumType.STRING)
+	private ProtectionSchemeType protectionScheme;
 }

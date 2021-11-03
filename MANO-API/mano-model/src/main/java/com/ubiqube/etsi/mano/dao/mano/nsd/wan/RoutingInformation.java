@@ -14,16 +14,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
+package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
-import java.util.Set;
-import java.util.UUID;
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.ubiqube.etsi.mano.dao.mano.IpType;
+import com.ubiqube.etsi.mano.dao.mano.nsd.wan.type.RoutingProtocolType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,19 +31,21 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
 @Getter
-@Entity
-public class LocationConstraints {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+@Setter
+@Embeddable
+public class RoutingInformation {
+	@Enumerated(EnumType.STRING)
+	private RoutingProtocolType routingProtocol;
 
-	private String countryCode;
+	private StaticRouting staticRouting;
+	@Enumerated(EnumType.STRING)
+	private IpType routingAddressFamily;
 
-	@ElementCollection
-	private Set<LocConstCivicAddrElmnt> civicAddressElement;
+	private OspfRouting ospfRouting;
 
-	private String area;
+	private BgpRouting bgpRouting;
+
+	private RouteMapDistribution routeMapsDistribution;
 
 }

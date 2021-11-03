@@ -14,38 +14,42 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
+package com.ubiqube.etsi.mano.dao.mano.nsd.wan.type;
 
-import java.util.Set;
-import java.util.UUID;
-
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Setter
-@Getter
-@Entity
-public class LocationConstraints {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+public enum DirectionalityType {
+	INBOUND("INBOUND"),
 
-	private String countryCode;
+	OUTBOUND("OUTBOUND"),
 
-	@ElementCollection
-	private Set<LocConstCivicAddrElmnt> civicAddressElement;
+	BOTH("BOTH");
 
-	private String area;
+	private String value;
 
+	DirectionalityType(final String value) {
+		this.value = value;
+	}
+
+	@Override
+	@JsonValue
+	public String toString() {
+		return String.valueOf(value);
+	}
+
+	@JsonCreator
+	public static DirectionalityType fromValue(final String text) {
+		for (final DirectionalityType b : DirectionalityType.values()) {
+			if (String.valueOf(b.value).equals(text)) {
+				return b;
+			}
+		}
+		return null;
+	}
 }

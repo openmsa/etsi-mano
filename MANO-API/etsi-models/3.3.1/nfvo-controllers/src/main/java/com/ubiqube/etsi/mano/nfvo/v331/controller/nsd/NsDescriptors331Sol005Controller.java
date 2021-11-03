@@ -99,7 +99,7 @@ public class NsDescriptors331Sol005Controller implements NsDescriptors331Sol005A
 	}
 
 	private static void makeLinks(@Nonnull final NsdInfo nsdInfo) {
-		final String id = nsdInfo.getId();
+		final String id = nsdInfo.getId().toString();
 		final NsdInfoLinks ret = new NsdInfoLinks();
 		final Link nsdSelf = new Link();
 		final String _self = makeSelfLink(nsdInfo);
@@ -115,7 +115,7 @@ public class NsDescriptors331Sol005Controller implements NsDescriptors331Sol005A
 	}
 
 	private static String makeSelfLink(final NsdInfo nsdInfo) {
-		return linkTo(methodOn(NsDescriptors331Sol005Api.class).nsDescriptorsNsdInfoIdGet(nsdInfo.getId())).withSelfRel().getHref();
+		return linkTo(methodOn(NsDescriptors331Sol005Api.class).nsDescriptorsNsdInfoIdGet(nsdInfo.getId().toString())).withSelfRel().getHref();
 	}
 
 }
