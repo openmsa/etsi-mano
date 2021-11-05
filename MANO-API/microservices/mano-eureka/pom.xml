@@ -28,7 +28,6 @@
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-spring-boot-starter</artifactId>
-			<version>14.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.keycloak</groupId>
@@ -39,7 +38,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
@@ -47,7 +45,6 @@
 		<dependency>
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-client</artifactId>
-			<version>2.4.3</version>
 		</dependency>
 		<dependency>
 			<groupId>de.codecentric</groupId>
