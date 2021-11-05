@@ -384,6 +384,16 @@
 				<artifactId>guava</artifactId>
 				<version>31.0.1-jre</version>
 			</dependency>
+			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-spring-boot-starter</artifactId>
+				<version>15.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-starter-client</artifactId>
+				<version>2.4.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>
