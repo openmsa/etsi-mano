@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.controller;
+package com.ubiqube.etsi.mano.controller;
 
 import java.util.Map;
 import java.util.UUID;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
-import com.ubiqube.etsi.mano.nfvo.service.SystemService;
+import com.ubiqube.etsi.mano.service.SystemService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.vim.Vim;
