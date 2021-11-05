@@ -48,7 +48,7 @@ public class VrQanService {
 	private static final Logger LOG = LoggerFactory.getLogger(VrQanService.class);
 
 	private final VimManager vimManager;
-	private final ExecutorService es = Executors.newFixedThreadPool(5);
+	private final ExecutorService es;
 	private final VrQanJpa vrQanJpa;
 	private final EventManager em;
 
@@ -57,33 +57,32 @@ public class VrQanService {
 		this.vimManager = vimManager;
 		this.vrQanJpa = vrQanJpa;
 		this.em = em;
+		this.es = Executors.newFixedThreadPool(5);
 	}
 
 	@Scheduled(fixedDelay = 60_000)
 	public void run() {
 		final Iterable<VimConnectionInformation> l = vimManager.findAllVimconnections();
-		StreamSupport.stream(l.spliterator(), false).forEach(x -> {
-			es.submit(() -> {
-				try {
-					final Vim vim = vimManager.getVimById(x.getId());
-					final ResourceQuota pr = vim.getQuota(x);
-					final Optional<VrQan> ovrqan = vrQanJpa.findByVimId(x.getId());
-					final VrQan vrqan = ovrqan.orElseGet(() -> {
-						final VrQan vq = new VrQan(x.getId());
-						return vrQanJpa.save(vq);
-					});
-					final VrQan diff = compare(pr, vrqan);
-					if (diff.haveValue()) {
-						LOG.info("Send notification for vim: {} with diff {}", x.getId(), diff);
-						copy(pr, vrqan);
-						vrQanJpa.save(vrqan);
-						em.sendNotification(NotificationEvent.VRQAN, x.getId());
-					}
-				} catch (final RuntimeException e) {
-					LOG.error("", e);
+		StreamSupport.stream(l.spliterator(), false).forEach(x -> es.submit(() -> {
+			try {
+				final Vim vim = vimManager.getVimById(x.getId());
+				final ResourceQuota pr = vim.getQuota(x);
+				final Optional<VrQan> ovrqan = vrQanJpa.findByVimId(x.getId());
+				final VrQan vrqan = ovrqan.orElseGet(() -> {
+					final VrQan vq = new VrQan(x.getId());
+					return vrQanJpa.save(vq);
+				});
+				final VrQan diff = compare(pr, vrqan);
+				if (diff.haveValue()) {
+					LOG.info("Send notification for vim: {} with diff {}", x.getId(), diff);
+					copy(pr, vrqan);
+					vrQanJpa.save(vrqan);
+					em.sendNotification(NotificationEvent.VRQAN, x.getId());
 				}
-			});
-		});
+			} catch (final RuntimeException e) {
+				LOG.error("", e);
+			}
+		}));
 	}
 
 	@PreDestroy

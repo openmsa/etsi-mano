@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.factory;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import javax.annotation.Nonnull;
 
@@ -37,8 +37,8 @@ public final class LcmFactory {
 		nsLcmOpOccsNsLcmOpOcc.setNsInstance(nsInstance);
 		nsLcmOpOccsNsLcmOpOcc.setOperation(lcmOperationType);
 		nsLcmOpOccsNsLcmOpOcc.setOperationStatus(OperationStatusType.PROCESSING);
-		nsLcmOpOccsNsLcmOpOcc.setStartTime(new Date());
-		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(new Date());
+		nsLcmOpOccsNsLcmOpOcc.setStartTime(OffsetDateTime.now());
+		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
 		return nsLcmOpOccsNsLcmOpOcc;
 	}
 

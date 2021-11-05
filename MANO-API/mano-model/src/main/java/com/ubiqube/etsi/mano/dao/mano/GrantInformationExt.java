@@ -55,6 +55,9 @@ public class GrantInformationExt implements BaseEntity, Serializable {
 	// 3.3.1
 	private String vnfdId;
 
+	// 3.5.1
+	private String secondaryResourceTemplateId;
+
 	private String resourceTemplateId;
 
 	private String resourceDefinitionId;
@@ -94,7 +97,8 @@ public class GrantInformationExt implements BaseEntity, Serializable {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

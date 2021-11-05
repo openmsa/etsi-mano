@@ -1,4 +1,13 @@
 debug: true
+keycloak:
+  realm: mano-realm
+  auth-server-url: http://10.31.1.245:8090/auth/
+  ssl-required: external
+  resource: mano-nfvo
+  credentials:
+    secret: ed9aeb6d-3ea5-4392-bb22-835603cf3dfc
+  use-resource-role-mappings: true
+  bearer-only: true
 
 logging:
   level:
@@ -9,6 +18,11 @@ logging:
       glasnost:
         orika: INFO
     org:
+      apache:
+        http:
+          wire: DEBUG
+        activemq:
+          audit: WARN
       hibernate:
         SQL: INFO
       openstack4j: INFO
@@ -18,7 +32,9 @@ logging:
             logging:
               ConditionEvaluationReportLoggingListener: INFO
         jms: INFO
-        web: INFO
+        security: INFO
+        web:
+          filter: DEBUG
 
 management:
   endpoint:
@@ -33,20 +49,24 @@ management:
       mode: full
 
 mano:
+  frontend-url: http://172.22.33.1:8090/ubi-etsi-mano/sol003
+  swagger-o-auth2: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/token
   election:
     script-path: /tmp/etsi-mano/election/groovy
-  nfvo:
-    vnfm:
-      password: nfv
-      url: http://vnfm:8080/ubi-etsi-mano/sol003
-      username: nfvo
   repository:
     phys-root: /tmp/etsi-mano/repository
+  nfvo:
+    vnfm:
+      url: http://bad/
   vnfm:
     nfvo:
-      password: vnfm
-      url: http://nfvo:8110/ubi-etsi-mano/sol005
-      username: vnfm
+      version: "2.6.1"
+      oauth2:
+        oauthUrl: http://10.31.1.245:8090/auth/realms/mano-realm/protocol/openid-connect/token
+        grantType: client_credentials
+        clientId: mano-vnfm
+        clientSecret: 50e312ab-9f12-481e-b6a8-c23e0de21628
+      url: http://10.31.1.29:8100/ubi-etsi-mano/sol003
 
 server:
   error:
@@ -74,7 +94,13 @@ spring:
         username: admin
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:~/etsi-mano.h2;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+    url: jdbc:h2:file:~/etsi-mano-vnfm.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
+    username: sa
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
     default-property-inclusion: NON_NULL
@@ -120,8 +146,13 @@ spring:
             instanceId: AUTO
           threadPool:
             threadCount: 10
-springfox:
-  documentation:
-    swagger:
-      v2:
-        path: /api-docs
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://172.22.33.1:8090/auth/realms/mano-realm
+          jwk-set-uri: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/certs
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB

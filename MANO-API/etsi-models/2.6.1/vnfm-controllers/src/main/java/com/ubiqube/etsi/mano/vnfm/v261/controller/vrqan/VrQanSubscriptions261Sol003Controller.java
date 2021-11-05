@@ -19,10 +19,8 @@ package com.ubiqube.etsi.mano.vnfm.v261.controller.vrqan;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -31,8 +29,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.Link;
+import com.ubiqube.etsi.mano.controller.SubscriptionFrontController;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
 import com.ubiqube.etsi.mano.vnfm.v261.model.vrqan.VrQuotaAvailSubscription;
 import com.ubiqube.etsi.mano.vnfm.v261.model.vrqan.VrQuotaAvailSubscriptionLinks;
 import com.ubiqube.etsi.mano.vnfm.v261.model.vrqan.VrQuotaAvailSubscriptionRequest;
@@ -44,36 +42,35 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.vrqan.VrQuotaAvailSubscriptionReque
  */
 @RestController
 public class VrQanSubscriptions261Sol003Controller implements VrQanSubscriptions261Sol003Api {
-	private final SubscriptionServiceV2 subscriptionService;
+	private final SubscriptionFrontController subscriptionService;
 
-	public VrQanSubscriptions261Sol003Controller(final SubscriptionServiceV2 subscriptionService) {
+	public VrQanSubscriptions261Sol003Controller(final SubscriptionFrontController subscriptionService) {
 		super();
 		this.subscriptionService = subscriptionService;
 	}
 
 	@Override
 	public ResponseEntity<List<VrQuotaAvailSubscription>> subscriptionsGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {
-		final List<VrQuotaAvailSubscription> ret = subscriptionService.query(requestParams, VrQuotaAvailSubscription.class, VrQanSubscriptions261Sol003Controller::makeLinks, SubscriptionType.VRQAN);
-		return ResponseEntity.ok(ret);
+		return subscriptionService.search(requestParams, VrQuotaAvailSubscription.class, VrQanSubscriptions261Sol003Controller::makeLinks, SubscriptionType.VRQAN);
 	}
 
 	@Override
 	public ResponseEntity<VrQuotaAvailSubscription> subscriptionsPost(@Valid final VrQuotaAvailSubscriptionRequest vrQuotaAvailSubscriptionRequest) throws URISyntaxException {
-		final VrQuotaAvailSubscription res = subscriptionService.create(vrQuotaAvailSubscriptionRequest, VrQuotaAvailSubscription.class, VrQanSubscriptions261Sol003Controller::makeLinks, SubscriptionType.VRQAN);
-		final URI location = new URI(res.getLinks().getSelf().getHref());
-		return ResponseEntity.created(location).body(res);
+		return subscriptionService.create(vrQuotaAvailSubscriptionRequest, VrQuotaAvailSubscription.class, VrQanSubscriptions261Sol003Controller::makeLinks, VrQanSubscriptions261Sol003Controller::makeSelf, SubscriptionType.VRQAN);
 	}
 
 	@Override
 	public ResponseEntity<Void> subscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		subscriptionService.deleteById(UUID.fromString(subscriptionId), SubscriptionType.VRQAN);
-		return ResponseEntity.noContent().build();
+		return subscriptionService.deleteById(subscriptionId, SubscriptionType.VRQAN);
 	}
 
 	@Override
 	public ResponseEntity<VrQuotaAvailSubscription> subscriptionsSubscriptionIdGet(final String subscriptionId) {
-		final VrQuotaAvailSubscription res = subscriptionService.findById(UUID.fromString(subscriptionId), VrQuotaAvailSubscription.class, VrQanSubscriptions261Sol003Controller::makeLinks, SubscriptionType.VRQAN);
-		return ResponseEntity.ok(res);
+		return subscriptionService.findById(subscriptionId, VrQuotaAvailSubscription.class, VrQanSubscriptions261Sol003Controller::makeLinks, SubscriptionType.VRQAN);
+	}
+
+	private static String makeSelf(final VrQuotaAvailSubscription subscription) {
+		return linkTo(methodOn(VrQanSubscriptions261Sol003Api.class).subscriptionsSubscriptionIdGet(subscription.getId())).withSelfRel().getHref();
 	}
 
 	private static void makeLinks(final VrQuotaAvailSubscription subscription) {

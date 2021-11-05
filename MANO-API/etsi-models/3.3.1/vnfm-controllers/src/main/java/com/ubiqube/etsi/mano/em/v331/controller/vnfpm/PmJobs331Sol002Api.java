@@ -55,7 +55,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol002/vnffm/v1", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol002/vnffm/v2", headers = { "Version=2.1.0" })
 @RolesAllowed({ "ROLE_EM" })
 public interface PmJobs331Sol002Api {
 

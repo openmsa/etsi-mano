@@ -24,6 +24,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.controller.nfvici;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@RequestMapping(value = "/sol005/nfvici/v1", headers = { "Version=1.0.0" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NfviCapacityInfos331Sol005Api {
 
 	@Operation(summary = "Query NFVI capacity information", description = "The API consumer can use this method to retrieve information about NFVI capacity information. ", tags = {})

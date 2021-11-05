@@ -62,7 +62,7 @@ public interface VnfPackage261Sol005Api {
 	@Operation(summary = "Create a new individual VNF package resource.", description = "The POST method creates a new individual VNF package resource. ", tags = {})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "201", description = "201 Created             An individual VNF package resource has been created successfully. The response body shall contain a representation of the new individual VNF package resource, as defined in clause 9.5.2.4. The HTTP response shall include a \"Location\" HTTP header that contains the resource URI of the individual VNF package resource. ", content = @Content(schema = @Schema(implementation = VnfPkgInfo.class))) })
-	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(produces = { "application/json" })
 	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	@Operation(summary = "Fetch individual VNF package artifact.", description = "The GET method fetches the content of an artifact within a VNF package. This method shall follow the provisions specified in the Tables 9.4.7.3.2-1 and 9.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
@@ -79,7 +79,7 @@ public interface VnfPackage261Sol005Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip" })
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId,
 			HttpServletRequest request,
 			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) String acceptt,
@@ -97,7 +97,7 @@ public interface VnfPackage261Sol005Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@GetMapping(value = "/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}", produces = { "application/json" })
 	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(
 			@Nonnull @Parameter(in = ParameterIn.PATH, description = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId,
 			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) String accept);
@@ -116,7 +116,7 @@ public interface VnfPackage261Sol005Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json", "application/zip", "application/text" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json", "application/zip", "application/text" })
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(
 			@Nonnull @Parameter(in = ParameterIn.PATH, description = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId,
 			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) String accept,
@@ -173,13 +173,16 @@ public interface VnfPackage261Sol005Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@DeleteMapping(value = "/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" })
+	@DeleteMapping(value = "/{vnfPkgId}", produces = { "application/json" })
 	ResponseEntity<Void> vnfPackagesVnfPkgIdDelete(@Nonnull @Parameter(in = ParameterIn.PATH, description = "Identifier of the VNF package. The identifier is allocated by the NFVO.   ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId);
 
 	/**
 	 * Update information about an individual VNF package.
 	 *
-	 * \&quot;The PATCH method updates the information of a VNF package.\&quot; \&quot;This method shall follow the provisions specified in the Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes.\&quot;
+	 * \&quot;The PATCH method updates the information of a VNF package.\&quot;
+	 * \&quot;This method shall follow the provisions specified in the Tables
+	 * 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response
+	 * data structures, and response codes.\&quot;
 	 *
 	 */
 	@Operation(summary = "Update information about an individual VNF package.", description = "\"The PATCH method updates the information of a VNF package.\" \"This method shall follow the provisions specified in the  Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes.\" ", tags = {})
@@ -205,7 +208,9 @@ public interface VnfPackage261Sol005Api {
 	/**
 	 * Upload a VNF package by providing the content of the VNF package.
 	 *
-	 * The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes.
+	 * The PUT method uploads the content of a VNF package. This method shall follow
+	 * the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI
+	 * query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Operation(summary = "Upload a VNF package by providing the content of the VNF package.", description = "The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the  Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
@@ -220,15 +225,19 @@ public interface VnfPackage261Sol005Api {
 			@ApiResponse(responseCode = "409", description = "409 CONFLICT ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@PutMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "multipart/form-data" })
-	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(@Nonnull @Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema(allowableValues = { "application/zip" })) @RequestHeader(value = "Accept", required = true) String accept,
+	@PutMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json", "applicaion/zip" })
+	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId,
+			@Nonnull @Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema(allowableValues = { "application/zip" })) @RequestHeader(value = "Accept", required = true) String accept,
 			@RequestParam("file") MultipartFile file);
 
 	/**
 	 * Upload a VNF package by providing the address information of the VNF package.
 	 *
-	 * The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes.
+	 * The POST method provides the information for the NFVO to get the content of a
+	 * VNF package. This method shall follow the provisions specified in the Tables
+	 * 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response
+	 * data structures, and response codes.
 	 *
 	 */
 	@Operation(summary = "Upload a VNF package by providing the address information of the VNF package.", description = "The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the  Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes.         ", tags = {})

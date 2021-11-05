@@ -52,6 +52,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "thresholds", description = "the thresholds API")
+@RequestMapping(value = "/sol002/vnfpm/v1", headers = "Version=2.8.1")
 @RolesAllowed({ "ROLE_EM" })
 public interface Thresholds281Sol002Api {
 
@@ -70,7 +71,7 @@ public interface Thresholds281Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails2.class) })
-	@RequestMapping(value = "/thresholds", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/thresholds", produces = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<String> thresholdsGet(@ApiParam(value = "All query parameters. ", required = true) @Nonnull @RequestParam MultiValueMap<String, String> requestParams,
 			@ApiParam(value = "Marker to obtain the next page of a paged response. Shall be supported by the VNFM if the VNFM supports alternative 2 (paging) according to clause 5.4.2.1 of ETSI GS NFV-SOL 013 for  this resource. ") @Valid @RequestParam(value = "nextpage_opaque_marker", required = false) final String nextpageOpaqueMarker);
 
@@ -107,7 +108,7 @@ public interface Thresholds281Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails2.class) })
-	@RequestMapping(value = "/thresholds/{thresholdId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.DELETE)
+	@RequestMapping(value = "/thresholds/{thresholdId}", produces = { "application/json" }, method = RequestMethod.DELETE)
 	ResponseEntity<Void> thresholdsThresholdIdDelete(@ApiParam(value = "Identifier of the threshold. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new threshold resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("thresholdId") final String thresholdId);
 
 	@ApiOperation(value = "", nickname = "thresholdsThresholdIdGet", notes = "The API consumer can use this method for reading an individual threshold. ", response = Threshold.class, tags = {})
@@ -125,7 +126,7 @@ public interface Thresholds281Sol002Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails2.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails2.class) })
-	@RequestMapping(value = "/thresholds/{thresholdId}", produces = { "application/json" }, consumes = { "application/json" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/thresholds/{thresholdId}", produces = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<Threshold> thresholdsThresholdIdGet(@ApiParam(value = "Identifier of the threshold. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new threshold resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("thresholdId") final String thresholdId);
 
 	@ApiOperation(value = "", nickname = "thresholdsThresholdIdPatch", notes = "This method allows to modify an \"Individual threshold\" resource. This method shall follow the provisions specified in the tables 6.4.6.3.4-1 and 6.4.6.3.4-2 for URI query parameters, request and response data structures, and response codes. ", response = ThresholdModifications.class, tags = {})

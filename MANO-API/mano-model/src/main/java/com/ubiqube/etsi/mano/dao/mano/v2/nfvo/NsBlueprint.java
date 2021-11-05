@@ -16,11 +16,11 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -45,12 +45,19 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.AbstractBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.RejectedLcmCoordination;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.VnfLcmCoordination;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
@@ -72,6 +79,15 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	@ManyToOne
 	@IndexedEmbedded
 	private NsdInstance nsInstance;
+	// 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<VnfLcmCoordination> lcmCoordinations;
+	// 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<RejectedLcmCoordination> rejectedLcmCoordinations;
+	// 3.5.1
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> warnings;
 
 	public NsdInstance getNsInstance() {
 		return nsInstance;
@@ -82,30 +98,14 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	}
 
 	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	@Override
-	public Set<NsTask> getTasks() {
-		return tasks;
+	public void addVimConnection(final VimConnectionInformation vimConnection) {
+		//
 	}
 
 	@Override
 	public void addTask(final NsTask task) {
-		if (null == tasks) {
-			tasks = new HashSet<>();
-		}
-		tasks.add(task);
-	}
+		// TODO Auto-generated method stub
 
-	@Override
-	public void setTasks(final Set<NsTask> _tasks) {
-		tasks = _tasks;
 	}
 
 	@Override
@@ -152,12 +152,8 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 
 	@Override
 	public NsdInstance getInstance() {
-		return nsInstance;
-	}
-
-	@Override
-	public void addVimConnection(final VimConnectionInformation vimConnection) {
-		//
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

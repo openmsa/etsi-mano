@@ -1,23 +1,38 @@
 debug: true
+keycloak:
+  realm: mano-realm
+  auth-server-url: https://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/token
+  ssl-required: external
+  resource: mano-vnfm
+  credentials:
+    secret: 50e312ab-9f12-481e-b6a8-c23e0de21628
+  use-resource-role-mappings: true
+  bearer-only: true
 
 logging:
   level:
     com:
       ubiqube:
-        etsi:
-          mano: DEBUG
+        etsi: DEBUG
     org:
+      apache:
+        http:
+          wire: DEBUG
+        activemq:
+          audit: WARN
       hibernate:
         SQL: INFO
-      openstack4j: DEBUG
+      keycloak: DEBUG
+      openstack4j: INFO
       springframework:
+        security: DEBUG
         boot:
           autoconfigure:
             logging:
-              ConditionEvaluationReportLoggingListener: DEBUG
+              ConditionEvaluationReportLoggingListener: INFO
         jms: INFO
-        security: DEBUG
-        web: INFO
+        web:
+          filter: DEBUG
 
 management:
   endpoint:
@@ -30,6 +45,29 @@ management:
   info:
     git:
       mode: full
+
+mano:
+  election:
+    script-path: /tmp/etsi-mano/election/groovy
+  nfvo:
+    vnfm:
+      url: http://vnfm.mano.ubiqube.com/ubi-etsi-mano/sol003
+      version: "2.6.1"
+      oauth2:
+        oauthUrl: https://auth.mano.ubiqube.com/auth/
+        grantType: client_credentials
+        clientId: mano-nfvo
+        clientSecret: ed9aeb6d-3ea5-4392-bb22-835603cf3dfc
+        username: nfvo-ericsson2021
+        password: ubi_plugtests2021
+  repository:
+    phys-root: /tmp/etsi-mano/repository
+  vnfm:
+    nfvo:
+      url: http://nfvo.mano.ubiqube.com/ubi-etsi-mano/sol005
+      basic:
+        username: vnfm
+        password: vnfm
 
 server:
   error:
@@ -57,7 +95,13 @@ spring:
         username: admin
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:~/etsi-mano.h2;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+    url: jdbc:h2:file:~/etsi-mano-nfvo.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
+    username: sa
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
     default-property-inclusion: NON_NULL
@@ -66,18 +110,23 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
       indent-output: true
+      write-empty-json-arrays: false
   jmx:
     enabled: true
   jpa:
+    hibernate:
+      ddl-auto: update
     open-in-view: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
         search:
           backend:
             directory:
               root: /tmp/etsi-mano/indexes
+            type: lucene
   liquibase:
-    enabled: true
+    enabled: false
   mvc:
     log-request-details: true
   output:
@@ -98,8 +147,14 @@ spring:
             instanceId: AUTO
           threadPool:
             threadCount: 10
-springfox:
-  documentation:
-    swagger:
-      v2:
-        path: /api-docs
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://auth.mano.ubiqube.com/auth/realms/mano-realm
+          jwk-set-uri: https://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/certs
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+

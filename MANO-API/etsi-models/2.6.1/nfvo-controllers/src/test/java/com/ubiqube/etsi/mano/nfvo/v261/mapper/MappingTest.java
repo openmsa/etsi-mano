@@ -80,6 +80,7 @@ public class MappingTest extends TestHelper {
 		ignore.add("getAdditionalAffinityOrAntiAffinityRule");
 		ignore.add("getMonitoringParameter");
 		ignore.add("getNsScaleStatus");
+		ignore.add("getFlavourId");
 		doTest(NsInstance.class, NsdInstance.class, ignore);
 	}
 }

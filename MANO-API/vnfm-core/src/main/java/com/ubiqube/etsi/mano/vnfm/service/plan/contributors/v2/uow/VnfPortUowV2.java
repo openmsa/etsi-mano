@@ -45,7 +45,7 @@ public class VnfPortUowV2 extends AbstractUowV2<ExternalCpTask> {
 		final com.ubiqube.etsi.mano.dao.mano.VnfExtCp extCp = getTask().getParameters().getVnfExtCp();
 		final String computeId = context.get(Compute.class, extCp.getInternalVirtualLink());
 		final String extNetwork = context.get(Network.class, extCp.getExternalVirtualLink());
-		return vim.network(vimConnectionInformation).createPort(extCp.getToscaName(), extNetwork, computeId);
+		return vim.network(vimConnectionInformation).createPort(extCp.getToscaName(), extNetwork, computeId, null);
 	}
 
 	@Override

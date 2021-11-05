@@ -45,7 +45,7 @@ public interface Network {
 	@Nonnull
 	Map<String, String> getPublicNetworks();
 
-	String createPort(final String name, final String networkId, final String deviceId);
+	String createPort(final String name, final String networkId, final String deviceId, String macAddress);
 
 	void deletePort(final String uuid);
 }

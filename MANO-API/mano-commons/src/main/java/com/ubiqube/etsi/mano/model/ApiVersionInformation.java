@@ -49,7 +49,8 @@ public class ApiVersionInformation {
 	}
 
 	/**
-	 * Specifies the URI prefix for the API, in the following form {apiRoot}/{apiName}/{apiMajorVersion}/.
+	 * Specifies the URI prefix for the API, in the following form
+	 * {apiRoot}/{apiName}/{apiMajorVersion}/.
 	 *
 	 * @return uriPrefix
 	 **/
@@ -97,7 +98,7 @@ public class ApiVersionInformation {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final ApiVersionInformation apiVersionInformation = (ApiVersionInformation) o;
@@ -122,9 +123,10 @@ public class ApiVersionInformation {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

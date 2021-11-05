@@ -55,7 +55,10 @@ public class NsInstances271Sol005Controller implements NsInstances271Sol005Api {
 	/**
 	 * Query multiple NS instances.
 	 *
-	 * Query NS Instances. The GET method queries information about multiple NS instances. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.2.3.2-1 and 6.4.2.3.2-2.
+	 * Query NS Instances. The GET method queries information about multiple NS
+	 * instances. This method shall support the URI query parameters, request and
+	 * response data structures, and response codes, as specified in the Tables
+	 * 6.4.2.3.2-1 and 6.4.2.3.2-2.
 	 *
 	 */
 	@Override
@@ -77,7 +80,8 @@ public class NsInstances271Sol005Controller implements NsInstances271Sol005Api {
 	/**
 	 * Read an individual NS instance resource.
 	 *
-	 * The GET method retrieves information about a NS instance by reading an individual NS instance resource.
+	 * The GET method retrieves information about a NS instance by reading an
+	 * individual NS instance resource.
 	 *
 	 */
 	@Override
@@ -88,7 +92,10 @@ public class NsInstances271Sol005Controller implements NsInstances271Sol005Api {
 	/**
 	 * Heal a NS instance.
 	 *
-	 * The POST method requests to heal a NS instance resource. This method shall follow the provisions specified in the Tables 6.4.7.3.1-1 and 6.4.7.3.1-2 for URI query parameters, request and response data structures, and response codes.
+	 * The POST method requests to heal a NS instance resource. This method shall
+	 * follow the provisions specified in the Tables 6.4.7.3.1-1 and 6.4.7.3.1-2 for
+	 * URI query parameters, request and response data structures, and response
+	 * codes.
 	 *
 	 */
 	@Override
@@ -121,7 +128,12 @@ public class NsInstances271Sol005Controller implements NsInstances271Sol005Api {
 	/**
 	 * Terminate a NS instance.
 	 *
-	 * Terminate NS task. The POST method terminates a NS instance. This method can only be used with a NS instance in the INSTANTIATED state. Terminating a NS instance does not delete the NS instance identifier, but rather transitions the NS into the NOT_INSTANTIATED state. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 6.4.8.3.1-1 and 6.8.8.3.1-2.
+	 * Terminate NS task. The POST method terminates a NS instance. This method can
+	 * only be used with a NS instance in the INSTANTIATED state. Terminating a NS
+	 * instance does not delete the NS instance identifier, but rather transitions
+	 * the NS into the NOT_INSTANTIATED state. This method shall support the URI
+	 * query parameters, request and response data structures, and response codes,
+	 * as specified in the Tables 6.4.8.3.1-1 and 6.8.8.3.1-2.
 	 *
 	 */
 	@Override
@@ -152,7 +164,7 @@ public class NsInstances271Sol005Controller implements NsInstances271Sol005Api {
 	}
 
 	private static void makeLinks(@Nonnull final NsInstance nsdInfo) {
-		final String id = nsdInfo.getId();
+		final String id = nsdInfo.getId().toString();
 		final NsInstanceLinks nsInstanceLinks = new NsInstanceLinks();
 		final Link heal = new Link();
 		heal.setHref(linkTo(methodOn(NsInstances271Sol005Api.class).nsInstancesNsInstanceIdHealPost(id, null)).withSelfRel().getHref());
@@ -185,7 +197,7 @@ public class NsInstances271Sol005Controller implements NsInstances271Sol005Api {
 	}
 
 	private static String getSelfLink(final NsInstance nsdInfo) {
-		return linkTo(methodOn(NsInstances271Sol005Api.class).nsInstancesNsInstanceIdHealPost(nsdInfo.getId(), null)).withSelfRel().getHref();
+		return linkTo(methodOn(NsInstances271Sol005Api.class).nsInstancesNsInstanceIdHealPost(nsdInfo.getId().toString(), null)).withSelfRel().getHref();
 	}
 
 }

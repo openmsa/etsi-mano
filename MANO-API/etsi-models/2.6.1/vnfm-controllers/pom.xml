@@ -125,6 +125,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>27.0.1-jre</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>vnfm-front-controller</artifactId>
 			<version>0.0.1-SNAPSHOT</version>

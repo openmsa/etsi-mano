@@ -75,12 +75,14 @@
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4-runtime</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>mano-commons</artifactId>
@@ -92,8 +94,9 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>mano-pkg-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ma.glasnost.orika</groupId>
@@ -152,10 +155,6 @@
 			<artifactId>jgrapht-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 		</dependency>
@@ -201,6 +200,14 @@
 			<artifactId>groovy</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor.netty</groupId>
+			<artifactId>reactor-netty</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-model-261</artifactId>
 			<version>1.0-SNAPSHOT</version>
@@ -219,6 +226,16 @@
 		<dependency>
 			<groupId>uk.co.jemos.podam</groupId>
 			<artifactId>podam</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-eclipse-tools</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

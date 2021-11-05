@@ -74,7 +74,7 @@ public interface VnfPackage261Sol003Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(produces = { "application/json" })
 	ResponseEntity<String> vnfPackagesGet(@Nonnull @RequestParam MultiValueMap<String, String> requestParams);
 
 	/**
@@ -97,7 +97,7 @@ public interface VnfPackage261Sol003Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip", "*/*" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}/artifacts/**", produces = { "application/json", "application/zip", "*/*" })
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(
 			@Nonnull @PathVariable("vnfPkgId") String vnfPkgId,
 			@Nonnull HttpServletRequest request,
@@ -121,7 +121,7 @@ public interface VnfPackage261Sol003Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@GetMapping(value = "/{vnfPkgId}", produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}", produces = { "application/json" })
 	ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdGet(@Nonnull @Parameter(in = ParameterIn.PATH, description = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId);
 
 	/**
@@ -146,7 +146,7 @@ public interface VnfPackage261Sol003Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json", "application/zip", "application/text" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json", "application/zip", "application/text" })
 	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(
 			@Nonnull @PathVariable("vnfPkgId") String vnfPkgId,
 			@Nullable @RequestHeader(value = "Range", required = false) String range);
@@ -173,7 +173,7 @@ public interface VnfPackage261Sol003Api {
 			@ApiResponse(responseCode = "416", description = "416 RANGE NOT SATISFIABLE ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "500", description = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
-	@GetMapping(value = "/{vnfPkgId}/vnfd", produces = { "text/plain", "application/json", "application/octet-stream", "application/zip" }, consumes = { "application/json" })
+	@GetMapping(value = "/{vnfPkgId}/vnfd", produces = { "text/plain", "application/json", "application/octet-stream", "application/zip" })
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull @PathVariable("vnfPkgId") String vnfPkgId, final String accept);
 
 }

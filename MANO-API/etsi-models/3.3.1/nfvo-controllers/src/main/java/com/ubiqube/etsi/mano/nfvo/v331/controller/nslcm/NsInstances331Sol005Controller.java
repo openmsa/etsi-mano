@@ -45,7 +45,12 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.UpdateNsRequest;
  */
 @RestController
 public class NsInstances331Sol005Controller implements NsInstances331Sol005Api {
-	private NsInstanceGenericFrontController nsInstanceGenericFrontController;
+	private final NsInstanceGenericFrontController nsInstanceGenericFrontController;
+
+	public NsInstances331Sol005Controller(final NsInstanceGenericFrontController nsInstanceGenericFrontController) {
+		super();
+		this.nsInstanceGenericFrontController = nsInstanceGenericFrontController;
+	}
 
 	@Override
 	public ResponseEntity<String> nsInstancesGet(final MultiValueMap<String, String> requestParams, final String nextpageOpaqueMarker) {

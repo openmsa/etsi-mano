@@ -17,5 +17,5 @@
 package com.ubiqube.etsi.mano.service;
 
 public interface NfvoService {
-
+	// Nothing.
 }

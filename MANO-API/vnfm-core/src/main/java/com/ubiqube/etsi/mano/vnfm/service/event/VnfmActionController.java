@@ -33,10 +33,12 @@ public class VnfmActionController {
 	private static final Logger LOG = LoggerFactory.getLogger(VnfmActionController.class);
 
 	private final VnfmActions vnfmActions;
+	private final NotificationActions notificationActions;
 
-	public VnfmActionController(final VnfmActions vnfmActions) {
+	public VnfmActionController(final VnfmActions vnfmActions, final NotificationActions notificationActions) {
 		super();
 		this.vnfmActions = vnfmActions;
+		this.notificationActions = notificationActions;
 	}
 
 	public void dispatch(final ActionType eventType, @NotNull final UUID objectId, final Map<String, Object> parameters) {
@@ -55,6 +57,9 @@ public class VnfmActionController {
 			break;
 		case VNF_CHANGE_CONN:
 			vnfmActions.vnfChangeVnfConn(objectId);
+			break;
+		case VNF_PKG_ONBOARD_DOWNLOAD:
+			notificationActions.onPkgOnbarding(objectId);
 			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);

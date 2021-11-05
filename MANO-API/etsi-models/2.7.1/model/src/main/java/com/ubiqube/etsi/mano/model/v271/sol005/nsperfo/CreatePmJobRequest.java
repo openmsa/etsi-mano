@@ -17,224 +17,240 @@
 
 package com.ubiqube.etsi.mano.model.v271.sol005.nsperfo;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.PmJobCriteria;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.SubscriptionAuthentication;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v271.model.SubscriptionAuthentication;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents a request to create a PM job.  It shall comply with the provisions defined in Table 7.5.2.6-1. 
+ * This type represents a request to create a PM job. It shall comply with the
+ * provisions defined in Table 7.5.2.6-1.
  */
 @ApiModel(description = "This type represents a request to create a PM job.  It shall comply with the provisions defined in Table 7.5.2.6-1. ")
 @Validated
-public class CreatePmJobRequest   {
-  @JsonProperty("objectType")
-  private String objectType = null;
+public class CreatePmJobRequest {
+	@JsonProperty("objectType")
+	private String objectType = null;
 
-  @JsonProperty("objectInstanceIds")
-  @Valid
-  private List<String> objectInstanceIds = new ArrayList<>();
+	@JsonProperty("objectInstanceIds")
+	@Valid
+	private List<String> objectInstanceIds = new ArrayList<>();
 
-  @JsonProperty("subObjectInstanceIds")
-  @Valid
-  private List<String> subObjectInstanceIds = null;
+	@JsonProperty("subObjectInstanceIds")
+	@Valid
+	private List<String> subObjectInstanceIds = null;
 
-  @JsonProperty("criteria")
-  private PmJobCriteria criteria = null;
+	@JsonProperty("criteria")
+	private PmJobCriteria criteria = null;
 
-  @JsonProperty("callbackUri")
-  private String callbackUri = null;
+	@JsonProperty("callbackUri")
+	private String callbackUri = null;
 
-  @JsonProperty("authentication")
-  private SubscriptionAuthentication authentication = null;
+	@JsonProperty("authentication")
+	private SubscriptionAuthentication authentication = null;
 
-  public CreatePmJobRequest objectType(String objectType) {
-    this.objectType = objectType;
-    return this;
-  }
+	public CreatePmJobRequest objectType(final String objectType) {
+		this.objectType = objectType;
+		return this;
+	}
 
-  /**
-   * Get objectType
-   * @return objectType
-  **/
-  @ApiModelProperty(required = true, value = "")
-      @NotNull
+	/**
+	 * Get objectType
+	 *
+	 * @return objectType
+	 **/
+	@ApiModelProperty(required = true, value = "")
+	@NotNull
 
-    public String getObjectType() {
-    return objectType;
-  }
+	public String getObjectType() {
+		return objectType;
+	}
 
-  public void setObjectType(String objectType) {
-    this.objectType = objectType;
-  }
+	public void setObjectType(final String objectType) {
+		this.objectType = objectType;
+	}
 
-  public CreatePmJobRequest objectInstanceIds(List<String> objectInstanceIds) {
-    this.objectInstanceIds = objectInstanceIds;
-    return this;
-  }
+	public CreatePmJobRequest objectInstanceIds(final List<String> objectInstanceIds) {
+		this.objectInstanceIds = objectInstanceIds;
+		return this;
+	}
 
-  public CreatePmJobRequest addObjectInstanceIdsItem(String objectInstanceIdsItem) {
-    this.objectInstanceIds.add(objectInstanceIdsItem);
-    return this;
-  }
+	public CreatePmJobRequest addObjectInstanceIdsItem(final String objectInstanceIdsItem) {
+		this.objectInstanceIds.add(objectInstanceIdsItem);
+		return this;
+	}
 
-  /**
-   * Identifiers of the NS instances for which performance information is requested to be collected. 
-   * @return objectInstanceIds
-  **/
-  @ApiModelProperty(required = true, value = "Identifiers of the NS instances for which performance information is requested to be collected. ")
-      @NotNull
+	/**
+	 * Identifiers of the NS instances for which performance information is
+	 * requested to be collected.
+	 *
+	 * @return objectInstanceIds
+	 **/
+	@ApiModelProperty(required = true, value = "Identifiers of the NS instances for which performance information is requested to be collected. ")
+	@NotNull
 
-    public List<String> getObjectInstanceIds() {
-    return objectInstanceIds;
-  }
+	public List<String> getObjectInstanceIds() {
+		return objectInstanceIds;
+	}
 
-  public void setObjectInstanceIds(List<String> objectInstanceIds) {
-    this.objectInstanceIds = objectInstanceIds;
-  }
+	public void setObjectInstanceIds(final List<String> objectInstanceIds) {
+		this.objectInstanceIds = objectInstanceIds;
+	}
 
-  public CreatePmJobRequest subObjectInstanceIds(List<String> subObjectInstanceIds) {
-    this.subObjectInstanceIds = subObjectInstanceIds;
-    return this;
-  }
+	public CreatePmJobRequest subObjectInstanceIds(final List<String> subObjectInstanceIds) {
+		this.subObjectInstanceIds = subObjectInstanceIds;
+		return this;
+	}
 
-  public CreatePmJobRequest addSubObjectInstanceIdsItem(String subObjectInstanceIdsItem) {
-    if (this.subObjectInstanceIds == null) {
-      this.subObjectInstanceIds = new ArrayList<>();
-    }
-    this.subObjectInstanceIds.add(subObjectInstanceIdsItem);
-    return this;
-  }
+	public CreatePmJobRequest addSubObjectInstanceIdsItem(final String subObjectInstanceIdsItem) {
+		if (this.subObjectInstanceIds == null) {
+			this.subObjectInstanceIds = new ArrayList<>();
+		}
+		this.subObjectInstanceIds.add(subObjectInstanceIdsItem);
+		return this;
+	}
 
-  /**
-   * Identifiers of the sub-object instances of the measured object instance for which performance information is requested to be collected. May be present if a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 for the related measured object type. If this attribute is present, the cardinality of the \"objectInstanceIds\" attribute shall be 1. If this attribute is absent and a sub-object is defined in clause 6.2 of ETSI GS NFV IFA 027  for the related measured object type, measurements will be taken for all sub-object instances of the measured object instance. 
-   * @return subObjectInstanceIds
-  **/
-  @ApiModelProperty(value = "Identifiers of the sub-object instances of the measured object instance for which performance information is requested to be collected. May be present if a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 for the related measured object type. If this attribute is present, the cardinality of the \"objectInstanceIds\" attribute shall be 1. If this attribute is absent and a sub-object is defined in clause 6.2 of ETSI GS NFV IFA 027  for the related measured object type, measurements will be taken for all sub-object instances of the measured object instance. ")
-  
-    public List<String> getSubObjectInstanceIds() {
-    return subObjectInstanceIds;
-  }
+	/**
+	 * Identifiers of the sub-object instances of the measured object instance for
+	 * which performance information is requested to be collected. May be present if
+	 * a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 for the related
+	 * measured object type. If this attribute is present, the cardinality of the
+	 * \"objectInstanceIds\" attribute shall be 1. If this attribute is absent and a
+	 * sub-object is defined in clause 6.2 of ETSI GS NFV IFA 027 for the related
+	 * measured object type, measurements will be taken for all sub-object instances
+	 * of the measured object instance.
+	 *
+	 * @return subObjectInstanceIds
+	 **/
+	@ApiModelProperty(value = "Identifiers of the sub-object instances of the measured object instance for which performance information is requested to be collected. May be present if a sub-object is defined in clause 6.2 of ETSI GS NFV-IFA 027 for the related measured object type. If this attribute is present, the cardinality of the \"objectInstanceIds\" attribute shall be 1. If this attribute is absent and a sub-object is defined in clause 6.2 of ETSI GS NFV IFA 027  for the related measured object type, measurements will be taken for all sub-object instances of the measured object instance. ")
 
-  public void setSubObjectInstanceIds(List<String> subObjectInstanceIds) {
-    this.subObjectInstanceIds = subObjectInstanceIds;
-  }
+	public List<String> getSubObjectInstanceIds() {
+		return subObjectInstanceIds;
+	}
 
-  public CreatePmJobRequest criteria(PmJobCriteria criteria) {
-    this.criteria = criteria;
-    return this;
-  }
+	public void setSubObjectInstanceIds(final List<String> subObjectInstanceIds) {
+		this.subObjectInstanceIds = subObjectInstanceIds;
+	}
 
-  /**
-   * Get criteria
-   * @return criteria
-  **/
-  @ApiModelProperty(required = true, value = "")
-      @NotNull
+	public CreatePmJobRequest criteria(final PmJobCriteria criteria) {
+		this.criteria = criteria;
+		return this;
+	}
 
-    @Valid
-    public PmJobCriteria getCriteria() {
-    return criteria;
-  }
+	/**
+	 * Get criteria
+	 *
+	 * @return criteria
+	 **/
+	@ApiModelProperty(required = true, value = "")
+	@NotNull
 
-  public void setCriteria(PmJobCriteria criteria) {
-    this.criteria = criteria;
-  }
+	@Valid
+	public PmJobCriteria getCriteria() {
+		return criteria;
+	}
 
-  public CreatePmJobRequest callbackUri(String callbackUri) {
-    this.callbackUri = callbackUri;
-    return this;
-  }
+	public void setCriteria(final PmJobCriteria criteria) {
+		this.criteria = criteria;
+	}
 
-  /**
-   * Get callbackUri
-   * @return callbackUri
-  **/
-  @ApiModelProperty(required = true, value = "")
-      @NotNull
+	public CreatePmJobRequest callbackUri(final String callbackUri) {
+		this.callbackUri = callbackUri;
+		return this;
+	}
 
-    public String getCallbackUri() {
-    return callbackUri;
-  }
+	/**
+	 * Get callbackUri
+	 *
+	 * @return callbackUri
+	 **/
+	@ApiModelProperty(required = true, value = "")
+	@NotNull
 
-  public void setCallbackUri(String callbackUri) {
-    this.callbackUri = callbackUri;
-  }
+	public String getCallbackUri() {
+		return callbackUri;
+	}
 
-  public CreatePmJobRequest authentication(SubscriptionAuthentication authentication) {
-    this.authentication = authentication;
-    return this;
-  }
+	public void setCallbackUri(final String callbackUri) {
+		this.callbackUri = callbackUri;
+	}
 
-  /**
-   * Get authentication
-   * @return authentication
-  **/
-  @ApiModelProperty(value = "")
-  
-    @Valid
-    public SubscriptionAuthentication getAuthentication() {
-    return authentication;
-  }
+	public CreatePmJobRequest authentication(final SubscriptionAuthentication authentication) {
+		this.authentication = authentication;
+		return this;
+	}
 
-  public void setAuthentication(SubscriptionAuthentication authentication) {
-    this.authentication = authentication;
-  }
+	/**
+	 * Get authentication
+	 *
+	 * @return authentication
+	 **/
+	@ApiModelProperty(value = "")
 
+	@Valid
+	public SubscriptionAuthentication getAuthentication() {
+		return authentication;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CreatePmJobRequest createPmJobRequest = (CreatePmJobRequest) o;
-    return Objects.equals(this.objectType, createPmJobRequest.objectType) &&
-        Objects.equals(this.objectInstanceIds, createPmJobRequest.objectInstanceIds) &&
-        Objects.equals(this.subObjectInstanceIds, createPmJobRequest.subObjectInstanceIds) &&
-        Objects.equals(this.criteria, createPmJobRequest.criteria) &&
-        Objects.equals(this.callbackUri, createPmJobRequest.callbackUri) &&
-        Objects.equals(this.authentication, createPmJobRequest.authentication);
-  }
+	public void setAuthentication(final SubscriptionAuthentication authentication) {
+		this.authentication = authentication;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(objectType, objectInstanceIds, subObjectInstanceIds, criteria, callbackUri, authentication);
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final CreatePmJobRequest createPmJobRequest = (CreatePmJobRequest) o;
+		return Objects.equals(this.objectType, createPmJobRequest.objectType) &&
+				Objects.equals(this.objectInstanceIds, createPmJobRequest.objectInstanceIds) &&
+				Objects.equals(this.subObjectInstanceIds, createPmJobRequest.subObjectInstanceIds) &&
+				Objects.equals(this.criteria, createPmJobRequest.criteria) &&
+				Objects.equals(this.callbackUri, createPmJobRequest.callbackUri) &&
+				Objects.equals(this.authentication, createPmJobRequest.authentication);
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class CreatePmJobRequest {\n");
-    
-    sb.append("    objectType: ").append(toIndentedString(objectType)).append("\n");
-    sb.append("    objectInstanceIds: ").append(toIndentedString(objectInstanceIds)).append("\n");
-    sb.append("    subObjectInstanceIds: ").append(toIndentedString(subObjectInstanceIds)).append("\n");
-    sb.append("    criteria: ").append(toIndentedString(criteria)).append("\n");
-    sb.append("    callbackUri: ").append(toIndentedString(callbackUri)).append("\n");
-    sb.append("    authentication: ").append(toIndentedString(authentication)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(objectType, objectInstanceIds, subObjectInstanceIds, criteria, callbackUri, authentication);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class CreatePmJobRequest {\n");
+
+		sb.append("    objectType: ").append(toIndentedString(objectType)).append("\n");
+		sb.append("    objectInstanceIds: ").append(toIndentedString(objectInstanceIds)).append("\n");
+		sb.append("    subObjectInstanceIds: ").append(toIndentedString(subObjectInstanceIds)).append("\n");
+		sb.append("    criteria: ").append(toIndentedString(criteria)).append("\n");
+		sb.append("    callbackUri: ").append(toIndentedString(callbackUri)).append("\n");
+		sb.append("    authentication: ").append(toIndentedString(authentication)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

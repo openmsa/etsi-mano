@@ -16,9 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.controller.vnfind;
 
-import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -26,8 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
+import com.ubiqube.etsi.mano.controller.SubscriptionFrontController;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.SubscriptionServiceV2;
 import com.ubiqube.etsi.mano.vnfm.fc.vnfind.VnfIndSubscriptionsFrontController;
 
 /**
@@ -37,36 +35,31 @@ import com.ubiqube.etsi.mano.vnfm.fc.vnfind.VnfIndSubscriptionsFrontController;
  */
 @Service
 public class VnfIndSubscriptionsFrontControllerImpl implements VnfIndSubscriptionsFrontController {
-	private final SubscriptionServiceV2 subscriptionService;
+	private final SubscriptionFrontController subscriptionService;
 
-	public VnfIndSubscriptionsFrontControllerImpl(final SubscriptionServiceV2 subscriptionService) {
+	public VnfIndSubscriptionsFrontControllerImpl(final SubscriptionFrontController subscriptionService) {
 		super();
 		this.subscriptionService = subscriptionService;
 	}
 
 	@Override
 	public <U> ResponseEntity<List<U>> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final Consumer<U> makeLink) {
-		final List<U> ret = subscriptionService.query(requestParams, clazz, makeLink, SubscriptionType.VNFIND);
-		return ResponseEntity.ok(ret);
+		return subscriptionService.search(requestParams, clazz, makeLink, SubscriptionType.VNFIND);
 	}
 
 	@Override
 	public <U> ResponseEntity<U> create(final Object vnfIndicatorSubscriptionRequest, final Class<U> clazz, final Consumer<U> makeLink, final Function<U, String> getSelfLink) {
-		final U res = subscriptionService.create(vnfIndicatorSubscriptionRequest, clazz, makeLink, SubscriptionType.VNFPM);
-		final String link = getSelfLink.apply(res);
-		return ResponseEntity.created(URI.create(link)).body(res);
+		return subscriptionService.create(vnfIndicatorSubscriptionRequest, clazz, makeLink, getSelfLink, SubscriptionType.VNFPM);
 	}
 
 	@Override
 	public ResponseEntity<Void> delete(final String subscriptionId) {
-		subscriptionService.deleteById(UUID.fromString(subscriptionId), SubscriptionType.VNFPM);
-		return ResponseEntity.noContent().build();
+		return subscriptionService.deleteById(subscriptionId, SubscriptionType.VNFPM);
 	}
 
 	@Override
 	public <U> ResponseEntity<U> findById(final String subscriptionId, final Class<U> clazz, final Consumer<U> makeLink) {
-		final U res = subscriptionService.findById(UUID.fromString(subscriptionId), clazz, makeLink, SubscriptionType.ALARM);
-		return ResponseEntity.ok(res);
+		return subscriptionService.findById(subscriptionId, clazz, makeLink, SubscriptionType.ALARM);
 	}
 
 }

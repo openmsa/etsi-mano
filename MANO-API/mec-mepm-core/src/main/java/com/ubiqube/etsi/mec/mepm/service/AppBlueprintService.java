@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mec.mepm.service;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -55,7 +55,7 @@ public class AppBlueprintService {
 
 	public AppBlueprint updateState(final AppBlueprint localPlan, final OperationStatusType processing) {
 		localPlan.setOperationStatus(processing);
-		localPlan.setStateEnteredTime(new Date());
+		localPlan.setStateEnteredTime(OffsetDateTime.now());
 		return appBluePrintJpa.save(localPlan);
 	}
 

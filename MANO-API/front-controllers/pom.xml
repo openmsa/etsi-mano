@@ -10,8 +10,8 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<artifactId>etsi-front-controllers-aggregator</artifactId>
-	<description>Build document for ETSI-MANO model 2.6.1</description>
 	<packaging>pom</packaging>
+	<description>Build document for ETSI-MANO model 2.6.1</description>
 	<modules>
 		<module>nfvo-front-controller</module>
 		<module>vnfm-front-controller</module>

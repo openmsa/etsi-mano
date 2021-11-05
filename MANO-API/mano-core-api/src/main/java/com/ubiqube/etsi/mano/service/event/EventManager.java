@@ -38,7 +38,7 @@ public interface EventManager {
 	void sendNotification(@Nonnull NotificationEvent notificationEvent, @Nonnull UUID objectId);
 
 	/**
-	 * Create an asynchronous task.
+	 * Create an asynchronous task VNFM oriented.
 	 *
 	 * @param actionType The type of the action.
 	 * @param objectId   The object Id.
@@ -46,7 +46,22 @@ public interface EventManager {
 	 */
 	void sendActionVnfm(@Nonnull ActionType actionType, @Nonnull UUID objectId, @Nonnull Map<String, Object> parameters);
 
+	/**
+	 * Create an asynchronous task NFVO oriented.
+	 *
+	 * @param actionType The type of the action.
+	 * @param objectId   The object Id.
+	 * @param parameters Additional parameters if any.
+	 */
 	void sendActionNfvo(@Nonnull ActionType actionType, @Nonnull UUID objectId, @Nonnull Map<String, Object> parameters);
+
+	/**
+	 * Create an asynchronous task, inside the application.
+	 *
+	 * @param actionType The type of the action.
+	 * @param objectId   The object Id.
+	 */
+	void sendAction(@Nonnull ActionType actionType, @Nonnull UUID objectId);
 
 	/**
 	 * Send an asynchronous grant message.

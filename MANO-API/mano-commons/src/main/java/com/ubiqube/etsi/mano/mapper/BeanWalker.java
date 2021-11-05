@@ -75,7 +75,7 @@ public class BeanWalker {
 		}
 	}
 
-	private boolean isInternal(final PropertyDescriptor propertyDescriptor) {
+	private static boolean isInternal(final PropertyDescriptor propertyDescriptor) {
 		return "class".equals(propertyDescriptor.getName())
 				|| "declaringClass".equals(propertyDescriptor.getName())
 				|| "java.lang.ClassLoader".equals(propertyDescriptor.getName());
@@ -108,7 +108,7 @@ public class BeanWalker {
 	private static void handleMap(final Object source, final String name, final Method readMethod, final BeanListener beanListener) throws IllegalAccessException, InvocationTargetException {
 		final Map map = (Map) readMethod.invoke(source);
 		beanListener.startMap(name);
-		final Set<Entry> entries = map.entrySet();
+		final Set<Entry<?, ?>> entries = map.entrySet();
 		for (final Entry entry : entries) {
 			beanListener.mapStartEntry((String) entry.getKey());
 			beanListener.addProperty(entry.getValue());
@@ -158,10 +158,12 @@ public class BeanWalker {
 		final String name = propertyType.getName();
 		if (simpleTypes.contains(name)) {
 			return false;
-		} else if ("java.lang.Object".equals(name)) {
+		}
+		if ("java.lang.Object".equals(name)) {
 			LOG.warn("Could not handle {}, considering as a simple type.", name);
 			return false;
-		} else if (propertyType.isEnum()) {
+		}
+		if (propertyType.isEnum()) {
 			return false;
 		}
 		LOG.debug("Complex: {}", propertyType.getName());

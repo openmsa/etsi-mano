@@ -38,7 +38,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.vrqan.AlarmNotification;
 @RolesAllowed({ "ROLE_NFVO" })
 public interface VrQanNotification261Sol003Api {
 
-	@GetMapping(produces = { "application/json" }, consumes = { "application/json" })
+	@GetMapping(produces = { "application/json" })
 	default ResponseEntity<Void> defaultVrQanNotificationUrl() {
 		return ResponseEntity.noContent().build();
 	}

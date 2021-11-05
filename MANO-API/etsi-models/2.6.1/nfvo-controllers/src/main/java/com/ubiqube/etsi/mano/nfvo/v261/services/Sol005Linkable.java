@@ -76,7 +76,7 @@ public class Sol005Linkable implements Linkable {
 				linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgId.toString(), "")).withSelfRel().getHref());
 		vnfPackageOnboardingNotificationLinks.setVnfPackage(vnfPackage);
 
-		return null;
+		return vnfPackageOnboardingNotificationLinks;
 	}
 
 	private static Link createVnfPackagesVnfPkgInfoLinksSelf(final String _href) {

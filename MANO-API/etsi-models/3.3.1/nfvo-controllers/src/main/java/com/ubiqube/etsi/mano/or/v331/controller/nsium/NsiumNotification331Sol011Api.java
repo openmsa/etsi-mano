@@ -21,6 +21,7 @@
  */
 package com.ubiqube.etsi.mano.or.v331.controller.nsium;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@RolesAllowed("ROLE_NFVO")
+@RequestMapping("sol005/nsiun/v1")
 public interface NsiumNotification331Sol011Api {
 
 	@Operation(summary = "", description = "The GET method allows the server to test the notification endpoint that is provided  by the client, e.g., during the subscription process. ", tags = {})

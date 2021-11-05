@@ -18,10 +18,12 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -50,7 +52,20 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.RejectedLcmCoordination;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.VnfLcmCoordination;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.VnfPkgChange;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
@@ -73,14 +88,14 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	@Valid
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-	private Set<VimConnectionInformation> vimConnections = null;
+	private Set<VimConnectionInformation> vimConnections;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
-	private Set<ZoneInfoEntity> zones = null;
+	private Set<ZoneInfoEntity> zones;
 
 	@Valid
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<BlueZoneGroupInformation> zoneGroups = null;
+	private Set<BlueZoneGroupInformation> zoneGroups;
 
 	@FullTextField
 	private String grantsRequestId;
@@ -101,83 +116,19 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ChangeExtVnfConnRequest changeExtVnfConnRequest;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public VnfInstance getVnfInstance() {
-		return vnfInstance;
-	}
-
-	public void setVnfInstance(final VnfInstance vnfInstance) {
-		this.vnfInstance = vnfInstance;
-	}
-
-	public String getGrantsRequestId() {
-		return grantsRequestId;
-	}
-
-	@Override
-	public void setGrantsRequestId(final String grantsRequestId) {
-		this.grantsRequestId = grantsRequestId;
-	}
-
-	@Override
-	public Set<VimConnectionInformation> getVimConnections() {
-		return vimConnections;
-	}
-
-	@Override
-	public void setVimConnections(final Set<VimConnectionInformation> vimConnections) {
-		this.vimConnections = vimConnections;
-	}
-
-	public Set<ZoneInfoEntity> getZones() {
-		return zones;
-	}
-
-	@Override
-	public void setZones(final Set<ZoneInfoEntity> zones) {
-		this.zones = zones;
-	}
-
-	public Set<BlueZoneGroupInformation> getZoneGroups() {
-		return zoneGroups;
-	}
-
-	@Override
-	public void setZoneGroups(final Set<BlueZoneGroupInformation> zoneGroups) {
-		this.zoneGroups = zoneGroups;
-	}
-
-	@Override
-	public BlueprintParameters getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(final BlueprintParameters parameters) {
-		this.parameters = parameters;
-	}
-
-	public OperateChanges getOperateChanges() {
-		return operateChanges;
-	}
-
-	public void setOperateChanges(final OperateChanges operateChanges) {
-		this.operateChanges = operateChanges;
-	}
-
-	@Override
-	public Set<VnfTask> getTasks() {
-		return tasks;
-	}
-
+	// 3.3.1
+	private String vnfSnapshotInfoId;
+	// 3.3.1
+	private VnfPkgChange modificationsTriggeredByVnfPkgChange;
+	// 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<VnfLcmCoordination> lcmCoordinations;
+	// 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<RejectedLcmCoordination> rejectedLcmCoordinations;
+	// 3.5.1
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> warnings;
 	@Override
 	public void addTask(final VnfTask task) {
 		if (null == tasks) {
@@ -187,38 +138,8 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	}
 
 	@Override
-	public void setTasks(final Set<VnfTask> _tasks) {
-		tasks = _tasks;
-	}
-
-	public Set<ExtManagedVirtualLinkDataEntity> getExtManagedVirtualLinks() {
-		return extManagedVirtualLinks;
-	}
-
-	@Override
-	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
-		this.extManagedVirtualLinks = extManagedVirtualLinks;
-	}
-
-	@Override
 	public VnfInstance getInstance() {
 		return vnfInstance;
-	}
-
-	public Set<ExtVirtualLinkDataEntity> getExtVirtualLinks() {
-		return extVirtualLinks;
-	}
-
-	public void setExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
-		this.extVirtualLinks = extVirtualLinks;
-	}
-
-	public ChangeExtVnfConnRequest getChangeExtVnfConnRequest() {
-		return changeExtVnfConnRequest;
-	}
-
-	public void setChangeExtVnfConnRequest(final ChangeExtVnfConnRequest changeExtVnfConnRequest) {
-		this.changeExtVnfConnRequest = changeExtVnfConnRequest;
 	}
 
 	@Override

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.event.jms;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -57,5 +58,11 @@ public class JmsEventManager implements EventManager {
 	public void sendGrant(final UUID objectId, final Map<String, Object> parameters) {
 		final GrantMessage msg = new GrantMessage(objectId, parameters);
 		jmsTemplate.convertAndSend("system.actions.grants", msg);
+	}
+
+	@Override
+	public void sendAction(final ActionType actionType, final UUID objectId) {
+		final ActionMessage msg = new ActionMessage(actionType, objectId, new HashMap<>());
+		jmsTemplate.convertAndSend("system.actions.common", msg);
 	}
 }

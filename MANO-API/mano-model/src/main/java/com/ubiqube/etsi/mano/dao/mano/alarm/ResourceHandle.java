@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.alarm;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Embeddable;
@@ -24,7 +25,9 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class ResourceHandle {
+public class ResourceHandle implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Identifier of the VIM connection to manage the resource. This attribute shall only be supported and present if VNF-related resource management in direct mode is applicable.
 	 * NOTE: he information about the VIM connection referenced by the VIM connection id is known to the VNFM. Moreover, the identifier of the VIM connection provides scope to the resourceId.

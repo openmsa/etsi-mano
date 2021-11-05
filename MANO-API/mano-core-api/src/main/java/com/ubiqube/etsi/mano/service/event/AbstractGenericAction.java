@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.event;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -152,7 +152,7 @@ public abstract class AbstractGenericAction {
 		} else {
 			blueprint.setOperationStatus(OperationStatusType.FAILED);
 		}
-		blueprint.setStateEnteredTime(new Date());
+		blueprint.setStateEnteredTime(OffsetDateTime.now());
 	}
 
 	public final void terminate(@Nonnull final UUID blueprintId) {
@@ -199,7 +199,7 @@ public abstract class AbstractGenericAction {
 		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintOrig.getId());
 		blueprint.setOperationStatus(OperationStatusType.FAILED);
 		blueprint.setError(new FailureDetails(500L, e.getMessage()));
-		blueprint.setStateEnteredTime(new Date());
+		blueprint.setStateEnteredTime(OffsetDateTime.now());
 		orchestrationAdapter.save(blueprint);
 		instance.setLockedBy(null);
 		orchestrationAdapter.save(instance);

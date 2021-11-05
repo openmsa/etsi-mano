@@ -16,13 +16,17 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v331.controller.nsperfo;
 
-import java.util.Optional;
+import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.PerformanceReport;
+import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.PmJob;
+import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.PmJobModifications;
 
 /**
  *
@@ -32,24 +36,40 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 public class PmJobs331Sol005Controller implements PmJobs331Sol005Api {
 
-	private final ObjectMapper objectMapper;
-
-	private final HttpServletRequest request;
-
-	@org.springframework.beans.factory.annotation.Autowired
-	public PmJobs331Sol005Controller(final ObjectMapper objectMapper, final HttpServletRequest request) {
-		this.objectMapper = objectMapper;
-		this.request = request;
+	@Override
+	public ResponseEntity<List<PmJob>> pmJobsGet(@Valid final String filter, @Valid final String allFields, @Valid final String fields, @Valid final String excludeFields, @Valid final String excludeDefault, @Valid final String nextpageOpaqueMarker) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Optional<ObjectMapper> getObjectMapper() {
-		return Optional.ofNullable(objectMapper);
+	public ResponseEntity<Void> pmJobsPmJobIdDelete(final String pmJobId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public Optional<HttpServletRequest> getRequest() {
-		return Optional.ofNullable(request);
+	public ResponseEntity<PmJob> pmJobsPmJobIdGet(final String pmJobId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<PmJobModifications> pmJobsPmJobIdPatch(final String pmJobId, @Valid final PmJobModifications body) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<PerformanceReport> pmJobsPmJobIdReportsReportIdGet(final String pmJobId, final String reportId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<PmJob> pmJobsPost(@Valid final CreatePmJobRequest body) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

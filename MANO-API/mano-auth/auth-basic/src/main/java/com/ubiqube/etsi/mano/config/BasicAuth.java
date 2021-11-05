@@ -21,8 +21,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.config.properties.ManoProperties;
+
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.Type;
+
 /**
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
@@ -49,6 +54,11 @@ public class BasicAuth implements SecutiryConfig {
 	public void configure(final ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry http) throws Exception {
 		http.and().httpBasic().authenticationEntryPoint(http403EntryPoint)
 				.and().csrf().disable();
+	}
+
+	@Override
+	public SecurityScheme getSwaggerSecurityScheme(final ManoProperties oauth2Params) {
+		return new SecurityScheme().type(Type.HTTP).scheme("basic");
 	}
 
 }

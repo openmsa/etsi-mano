@@ -27,17 +27,22 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public abstract class AbstractRest implements NfvoRest {
-	private final RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 
 	public AbstractRest() {
 		restTemplate = new RestTemplate();
 	}
 
 	protected abstract String getUrl();
+
+	protected void setRestTemplate(final RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
 	@Override
 	public final <T> T get(final URI uri, final Class<T> clazz) {
@@ -79,6 +84,11 @@ public abstract class AbstractRest implements NfvoRest {
 	}
 
 	@Override
+	public <T> T get(final URI uri, final ResponseExtractor<T> responseExtractor) {
+		return restTemplate.execute(uri, HttpMethod.GET, request -> request.getHeaders().add("Content-Type", "application/json"), responseExtractor);
+	}
+
+	@Override
 	public final UriComponentsBuilder uriBuilder() {
 		return UriComponentsBuilder.fromHttpUrl(getUrl());
 	}
@@ -94,9 +104,8 @@ public abstract class AbstractRest implements NfvoRest {
 	}
 
 	private final HttpHeaders getHttpHeaders() {
-		final HttpHeaders httpHeaders = new HttpHeaders();
 		final MultiValueMap<String, String> auth = getAutorization();
-		httpHeaders.addAll(auth);
+		final HttpHeaders httpHeaders = new HttpHeaders(auth);
 		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		httpHeaders.add("Version", "2.6.1");

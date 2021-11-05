@@ -37,12 +37,23 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Indexed
 public class Subscription implements BaseEntity {
 	@Id
@@ -56,7 +67,7 @@ public class Subscription implements BaseEntity {
 	@FullTextField
 	private ApiTypesEnum api;
 
-	private AuthentificationInformations authentificationInformations;
+	private AuthentificationInformations authentication;
 
 	private String callbackUri;
 
@@ -68,54 +79,5 @@ public class Subscription implements BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
 	private List<FilterAttributes> filters;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public AuthentificationInformations getAuthentificationInformations() {
-		return authentificationInformations;
-	}
-
-	public void setAuthentificationInformations(final AuthentificationInformations authentificationInformations) {
-		this.authentificationInformations = authentificationInformations;
-	}
-
-	public ApiTypesEnum getApi() {
-		return api;
-	}
-
-	public void setApi(final ApiTypesEnum api) {
-		this.api = api;
-	}
-
-	public String getCallbackUri() {
-		return callbackUri;
-	}
-
-	public void setCallbackUri(final String callbackUri) {
-		this.callbackUri = callbackUri;
-	}
-
-	public List<FilterAttributes> getFilters() {
-		return filters;
-	}
-
-	public void setFilters(final List<FilterAttributes> filters) {
-		this.filters = filters;
-	}
-
-	public SubscriptionType getSubscriptionType() {
-		return subscriptionType;
-	}
-
-	public void setSubscriptionType(final SubscriptionType subscriptionType) {
-		this.subscriptionType = subscriptionType;
-	}
 
 }

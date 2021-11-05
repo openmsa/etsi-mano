@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.controller.nfvici;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@RequestMapping(value = "/sol005/nfvici/v1", headers = { "Version=1.0.0" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface NfvIciSubscriptions331Sol005Api {
 
 	@Operation(summary = "Query multiple subscriptions.", description = "The API consumer can use this method to query the list of active subscriptions to NFVI capacity information notifications subscribed by the API consumer. ", tags = {})

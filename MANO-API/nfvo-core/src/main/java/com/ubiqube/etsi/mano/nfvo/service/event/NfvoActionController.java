@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.nfvo.service.pkg.ns.NsPackageOnboardingImpl;
-import com.ubiqube.etsi.mano.nfvo.service.pkg.vnf.VnfPackageOnboardingImpl;
 import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageOnboardingImpl;
 
 @Service
 public class NfvoActionController {

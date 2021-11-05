@@ -25,6 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
+import com.ubiqube.etsi.mano.service.VnfmService;
 
 /**
  *
@@ -32,7 +33,7 @@ import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
  *
  */
 @Service
-@ConditionalOnMissingBean(VnfInstanceGatewayService.class)
+@ConditionalOnMissingBean(VnfmService.class)
 public class VnfInstanceServiceNfvo implements VnfInstanceGatewayService {
 
 	private final VnfInstanceJpa vnfInstanceJpa;

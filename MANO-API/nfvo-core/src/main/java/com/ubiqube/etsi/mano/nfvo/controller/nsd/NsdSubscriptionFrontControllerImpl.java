@@ -16,21 +16,17 @@
  */
 package com.ubiqube.etsi.mano.nfvo.controller.nsd;
 
-import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
+import com.ubiqube.etsi.mano.controller.SubscriptionFrontController;
 import com.ubiqube.etsi.mano.controller.nsd.NsdSubscriptionFrontController;
-import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.SubscriptionService;
-
-import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -40,72 +36,82 @@ import ma.glasnost.orika.MapperFacade;
 @Service
 public class NsdSubscriptionFrontControllerImpl implements NsdSubscriptionFrontController {
 
-	private final SubscriptionService subscriptionService;
+	private final SubscriptionFrontController subscriptionService;
 
-	private final MapperFacade mapper;
-
-	public NsdSubscriptionFrontControllerImpl(final SubscriptionService _subscriptionService, final MapperFacade _mapper) {
+	public NsdSubscriptionFrontControllerImpl(final SubscriptionFrontController _subscriptionService) {
 		subscriptionService = _subscriptionService;
-		mapper = _mapper;
 	}
 
 	/**
 	 * Query multiple subscriptions.
 	 *
-	 * The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall support the URI query parameters, request and response data structures, and response codes. This resource represents subscriptions. The client can use this resource to subscribe to notifications related to NSD management and to query its subscriptions.
+	 * The GET method queries the list of active subscriptions of the functional
+	 * block that invokes the method. It can be used e.g. for resynchronization
+	 * after error situations. This method shall support the URI query parameters,
+	 * request and response data structures, and response codes. This resource
+	 * represents subscriptions. The client can use this resource to subscribe to
+	 * notifications related to NSD management and to query its subscriptions.
 	 *
 	 */
 	@Override
-	public <U> ResponseEntity<List<U>> search(final String filter, final Class<U> clazz, final Consumer<U> makeLink) {
-		final List<Subscription> subs = subscriptionService.query(filter, SubscriptionType.NSD);
-		final List<U> pkgms = mapper.mapAsList(subs, clazz);
-		pkgms.stream()
-				.forEach(makeLink::accept);
-		return ResponseEntity.ok(pkgms);
+	public <U> ResponseEntity<List<U>> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final Consumer<U> makeLink) {
+		return subscriptionService.search(requestParams, clazz, makeLink, SubscriptionType.NSD);
 	}
 
 	/**
 	 * Subscribe to NSD and PNFD change notifications.
 	 *
-	 * The POST method creates a new subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Tables 5.4.8.3.1-1 and 5.4.8.3.1-2 of GS-NFV SOL 005. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow
-	 * creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \&quot;201 Created\&quot; response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \&quot;303 See Other\&quot; response code referencing the existing subscription resource with the same filter and callbackUri). This resource represents subscriptions. The client can use this resource to
-	 * subscribe to notifications related to NSD management and to query its subscriptions.
+	 * The POST method creates a new subscription. This method shall support the URI
+	 * query parameters, request and response data structures, and response codes,
+	 * as specified in the Tables 5.4.8.3.1-1 and 5.4.8.3.1-2 of GS-NFV SOL 005.
+	 * Creation of two subscription resources with the same callbackURI and the same
+	 * filter can result in performance degradation and will provide duplicates of
+	 * notifications to the OSS, and might make sense only in very rare use cases.
+	 * Consequently, the NFVO may either allow creating a subscription resource if
+	 * another subscription resource with the same filter and callbackUri already
+	 * exists (in which case it shall return the \&quot;201 Created\&quot; response
+	 * code), or may decide to not create a duplicate subscription resource (in
+	 * which case it shall return a \&quot;303 See Other\&quot; response code
+	 * referencing the existing subscription resource with the same filter and
+	 * callbackUri). This resource represents subscriptions. The client can use this
+	 * resource to subscribe to notifications related to NSD management and to query
+	 * its subscriptions.
 	 *
 	 */
 	@Override
 	public <U> ResponseEntity<U> create(final Object body, final Class<U> clazz, final Consumer<U> makeLink, final Function<U, String> getSelfLink) {
-		final Subscription subs = mapper.map(body, Subscription.class);
-		final Subscription res = subscriptionService.save(subs, SubscriptionType.NSD);
-		final U pkgm = mapper.map(res, clazz);
-		makeLink.accept(pkgm);
-		final String link = getSelfLink.apply(pkgm);
-		return ResponseEntity.created(URI.create(link)).body(pkgm);
+		return subscriptionService.create(body, clazz, makeLink, getSelfLink, SubscriptionType.NSD);
 	}
 
 	/**
 	 * Terminate Subscription
 	 *
-	 * This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The DELETE method terminates an individual subscription. This method shall support the URI query parameters, request and response data structures, and response codes, as specified in the Table 5.4.9.3.3-2.
+	 * This resource represents an individual subscription. It can be used by the
+	 * client to read and to terminate a subscription to notifications related to
+	 * NSD management. The DELETE method terminates an individual subscription. This
+	 * method shall support the URI query parameters, request and response data
+	 * structures, and response codes, as specified in the Table 5.4.9.3.3-2.
 	 *
 	 */
 	@Override
 	public ResponseEntity<Void> delete(final String subscriptionId) {
-		subscriptionService.delete(UUID.fromString(subscriptionId), SubscriptionType.NSD);
-		return ResponseEntity.noContent().build();
+		return subscriptionService.deleteById(subscriptionId, SubscriptionType.NSD);
 	}
 
 	/**
 	 * Read an individual subscription resource.
 	 *
-	 * This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management. The GET method retrieves information about a subscription by reading an individual subscription resource. This resource represents an individual subscription. It can be used by the client to read and to terminate a subscription to notifications related to NSD management.
+	 * This resource represents an individual subscription. It can be used by the
+	 * client to read and to terminate a subscription to notifications related to
+	 * NSD management. The GET method retrieves information about a subscription by
+	 * reading an individual subscription resource. This resource represents an
+	 * individual subscription. It can be used by the client to read and to
+	 * terminate a subscription to notifications related to NSD management.
 	 *
 	 */
 	@Override
 	public <U> ResponseEntity<U> findById(final String subscriptionId, final Class<U> clazz, final Consumer<U> makeLink) {
-		final Subscription res = subscriptionService.findById(UUID.fromString(subscriptionId), SubscriptionType.NSD);
-		final U pkgm = mapper.map(res, clazz);
-		makeLink.accept(pkgm);
-		return ResponseEntity.ok(pkgm);
+		return subscriptionService.findById(subscriptionId, clazz, makeLink, SubscriptionType.NSD);
 	}
 
 }

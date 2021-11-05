@@ -60,7 +60,7 @@ public class Nslcm331Sol005Controller implements Nslcm331Sol005Api {
 		nsLcmOpOccLinks.setContinue(_continue);
 
 		final Link nsInstance = new Link();
-		nsInstance.setHref(linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdGet(nsLcmOpOccs.getNsInstanceId())).withSelfRel().getHref());
+		nsInstance.setHref(linkTo(methodOn(NsInstances331Sol005Api.class).nsInstancesNsInstanceIdGet(nsLcmOpOccs.getNsInstanceId().toString())).withSelfRel().getHref());
 		nsLcmOpOccLinks.setNsInstance(nsInstance);
 
 		final Link retry = new Link();

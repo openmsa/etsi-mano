@@ -35,6 +35,11 @@ import com.ubiqube.etsi.mano.vnfm.v331.model.vnfpm.PmJob;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnfpm.PmJobLinks;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnfpm.PmJobModifications;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @RestController
 public class PmJobs331Sol003Controller implements PmJobs331Sol003Api {
 	private final VnfmPmGenericFrontController vnfmPmGenericFrontController;

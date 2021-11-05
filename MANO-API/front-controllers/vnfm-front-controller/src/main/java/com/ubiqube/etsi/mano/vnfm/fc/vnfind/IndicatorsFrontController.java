@@ -43,4 +43,8 @@ public interface IndicatorsFrontController {
 
 	<U> ResponseEntity<U> findByVnfInstanceIdAndIndicatorId(String vnfInstanceId, String indicatorId, Class<U> clazz, Consumer<U> makeLink);
 
+	ResponseEntity<Void> delete(String subscriptionId);
+
+	<U> ResponseEntity<U> findById(String subscriptionId);
+
 }

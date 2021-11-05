@@ -16,6 +16,9 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v281.controller.vnfind;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -23,7 +26,11 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.vnfm.fc.vnfind.IndicatorsFrontController;
+import com.ubiqube.etsi.mano.vnfm.v281.controller.vnflcm.VnfInstances281Sol003Api;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.Link;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicator;
+import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorLinks;
 import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorSubscription;
 
 /**
@@ -33,35 +40,50 @@ import com.ubiqube.etsi.mano.vnfm.v281.model.vnfind.VnfIndicatorSubscription;
  */
 @RestController
 public class Indicators281Sol003Controller implements Indicators281Sol003Api {
+	private final IndicatorsFrontController indicatorsFrontController;
+
+	public Indicators281Sol003Controller(final IndicatorsFrontController indicatorsFrontController) {
+		super();
+		this.indicatorsFrontController = indicatorsFrontController;
+	}
 
 	@Override
 	public ResponseEntity<List<VnfIndicator>> indicatorsGet(@Valid final String filter, @Valid final String nextpageOpaqueMarker) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResponseEntity<Void> indicatorsSubscriptionsSubscriptionIdDelete(final String subscriptionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResponseEntity<VnfIndicatorSubscription> indicatorsSubscriptionsSubscriptionIdGet(final String subscriptionId) {
-		// TODO Auto-generated method stub
-		return null;
+		return indicatorsFrontController.search(filter, nextpageOpaqueMarker, VnfIndicator.class, Indicators281Sol003Controller::makeLink);
 	}
 
 	@Override
 	public ResponseEntity<List<VnfIndicator>> indicatorsVnfInstanceIdGet(final String vnfInstanceId, @Valid final String filter, @Valid final String nextpageOpaqueMarker) {
-		// TODO Auto-generated method stub
-		return null;
+		return indicatorsFrontController.findByVnfInstanceId(vnfInstanceId, filter, nextpageOpaqueMarker, VnfIndicator.class, Indicators281Sol003Controller::makeLink);
 	}
 
 	@Override
-	public ResponseEntity<VnfIndicator> indicatorsVnfInstanceIdIndicatorIdGet(final String indicatorId, final String vnfInstanceId) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<VnfIndicator> indicatorsVnfInstanceIdIndicatorIdGet(final String vnfInstanceId, final String indicatorId) {
+		return indicatorsFrontController.findByVnfInstanceIdAndIndicatorId(vnfInstanceId, indicatorId, VnfIndicator.class, Indicators281Sol003Controller::makeLink);
+	}
+
+	@Override
+	public ResponseEntity<Void> indicatorsSubscriptionsSubscriptionIdDelete(final String subscriptionId) {
+		return indicatorsFrontController.delete(subscriptionId);
+	}
+
+	@Override
+	public ResponseEntity<VnfIndicatorSubscription> indicatorsSubscriptionsSubscriptionIdGet(final String subscriptionId) {
+		return indicatorsFrontController.findById(subscriptionId);
+	}
+
+	private static void makeLink(final VnfIndicator x) {
+		final VnfIndicatorLinks links = new VnfIndicatorLinks();
+		Link link = new Link();
+		link.setHref(linkTo(methodOn(Indicators281Sol003Api.class).indicatorsVnfInstanceIdIndicatorIdGet(x.getVnfInstanceId(), x.getId())).withSelfRel().getHref());
+		links.setSelf(link);
+
+		link = new Link();
+
+		link.setHref(linkTo(methodOn(VnfInstances281Sol003Api.class).vnfInstancesVnfInstanceIdGet(x.getVnfInstanceId())).withSelfRel().getHref());
+		links.setVnfInstance(link);
+
+		x.setLinks(links);
 	}
 
 }

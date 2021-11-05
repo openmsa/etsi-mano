@@ -20,6 +20,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
+import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
@@ -38,6 +40,8 @@ import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.em.v271.model.SubscriptionAuthentication;
+import com.ubiqube.etsi.mano.em.v271.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequest;
@@ -183,7 +187,7 @@ public class OrikaMapperVnfm271 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfBlueprint.class)
 				.field("vnfInstanceId", "vnfInstance.id")
-				.field("resourceChanges", "tasks")
+				// .field("resourceChanges", "tasks")
 				.field("grantId", "grantsRequestId")
 				.field("operationState", "operationStatus")
 				.field("isAutomaticInvocation", "automaticInvocation")
@@ -251,23 +255,23 @@ public class OrikaMapperVnfm271 implements OrikaMapperFactoryConfigurer {
 		 */
 		orikaMapperFactory.classMap(PkgmSubscriptionRequest.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
-				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
-				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
-				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.field("authentication.paramsBasic", "authentication.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentication.authParamOath2")
+				.field("authentication.authType", "authentication.authType")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(LccnSubscriptionRequest.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
-				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
-				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
-				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.field("authentication.paramsBasic", "authentication.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentication.authParamOath2")
+				.field("authentication.authType", "authentication.authType")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(FmSubscriptionRequest.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
-				.field("authentication.paramsBasic", "authentificationInformations.authParamBasic")
-				.field("authentication.paramsOauth2ClientCredentials", "authentificationInformations.authParamOath2")
-				.field("authentication.authType[0]", "authentificationInformations.authType")
+				.field("authentication.paramsBasic", "authentication.authParamBasic")
+				.field("authentication.paramsOauth2ClientCredentials", "authentication.authParamOath2")
+				.field("authentication.authType", "authentication.authType")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(FmSubscription.class, Subscription.class)
@@ -276,6 +280,14 @@ public class OrikaMapperVnfm271 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(LccnSubscription.class, Subscription.class)
 				.fieldMap("filter", "filters").converter("filterConverter").add()
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(SubscriptionAuthentication.class, AuthentificationInformations.class)
+				// .fieldMap("authType[0]", "authType").converter("filterConverter").add()
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(SubscriptionAuthenticationParamsOauth2ClientCredentials.class, AuthParamOauth2.class)
+				.field("clientPassword", "clientSecret")
 				.byDefault()
 				.register();
 		/*

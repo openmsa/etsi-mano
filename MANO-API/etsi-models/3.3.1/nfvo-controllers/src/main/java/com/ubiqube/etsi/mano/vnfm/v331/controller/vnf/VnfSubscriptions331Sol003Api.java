@@ -54,7 +54,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping("/sol003/vnfpkgm/v2/subscriptions")
+@RequestMapping(value = "/sol003/vnfpkgm/v2/subscriptions", headers = "Version=2.1.0")
 @RolesAllowed({ "ROLE_VNFM" })
 public interface VnfSubscriptions331Sol003Api {
 

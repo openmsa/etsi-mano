@@ -88,6 +88,37 @@ topology_template:
         # - external_virtual_link:
         # - internal_virtual_link: # Must be defined
 
+    nfp_position_element:
+      type: tosca.nodes.nfv.NfpPositionElement
+      capabilities:
+        forwarding: # tosca.capabilities.nfv.Forwarding
+      requirements:
+        - profile_element: forward_to
+
+
+    nfp_position:
+      type: tosca.nodes.nfv.NfpPosition
+      properties:
+        forwarding_behaviour: all
+      capabilities:
+        forwarding: # tosca.capabilities.nfv.Forwarding
+      requirements:
+        - element: # tosca.nodes.nfv.NfpPositionElement
+
+
+    nfp:
+      type: tosca.nodes.nfv.NFP
+      requirements:
+        - nfp_position: # tosca.nodes.nfv.NfpPosition
+
+    forwarding:
+      type: tosca.nodes.nfv.Forwarding
+      capabilities:
+        virtual_linkable: # tosca.capabilities.nfv.VirtualLinkable
+        forwarding: # tosca.capabilities.nfv.Forwarding
+      requirements:
+        - virtual_link:
+
 
 policies:
   affinity:
@@ -119,9 +150,34 @@ policies:
       - sap01
 
 
+  nfp_rule:
+    type: tosca.policies.nfv.NfpRule
+    properties:
+      ether_destination_address:
+      ether_source_address:
+      ether_type: ipv4
+      vlan_tag:
+        - srt
+        - str2
+      protocol:
+      dscp:
+      source_port_range: 0 - 22
+      source_ip_address_prefix:
+      destination_ip_address_prefix:
+      extended_criteria: # tosca.datatypes.nfv.Mask
+        - starting_point: 1
+          length: 7
+          value: string
+      targets: # tosca.nodes.nfv.NFP
 
 
-
-
+group_types:
+  vnfgg:
+    type: tosca.groups.nfv.VNFFG
+    properties:
+      description: descr
+    members:
+      - one
+      - two
 
 

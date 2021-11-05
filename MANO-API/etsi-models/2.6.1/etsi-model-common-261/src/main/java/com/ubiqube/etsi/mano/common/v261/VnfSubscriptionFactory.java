@@ -46,6 +46,7 @@ public class VnfSubscriptionFactory {
 	@Nonnull
 	public static VnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final UUID _subscriptionId, @Nonnull final UUID _vnfPkgId, final String _vnfdId, final Linkable links) {
 		final VnfPackageOnboardingNotification ret = new VnfPackageOnboardingNotification();
+		ret.setId(_subscriptionId.toString());
 		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setNotificationType("VnfPackageOnboardingNotification");
 		ret.setSubscriptionId(_subscriptionId.toString());

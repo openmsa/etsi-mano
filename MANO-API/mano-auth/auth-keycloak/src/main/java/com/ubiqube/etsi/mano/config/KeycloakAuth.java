@@ -24,6 +24,13 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.config.properties.ManoProperties;
+
+import io.swagger.v3.oas.models.security.OAuthFlow;
+import io.swagger.v3.oas.models.security.OAuthFlows;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
+
 @Service
 public class KeycloakAuth implements SecutiryConfig {
 
@@ -39,6 +46,20 @@ public class KeycloakAuth implements SecutiryConfig {
 		final JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
 		jwtConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
 		return jwtConverter;
+	}
+
+	@Override
+	public SecurityScheme getSwaggerSecurityScheme(final ManoProperties oauth2Params) {
+		final OAuthFlow clientCredential = new OAuthFlow().authorizationUrl(oauth2Params.getSwaggerOAuth2())
+				.tokenUrl(oauth2Params.getSwaggerOAuth2());
+		final OAuthFlows flows = new OAuthFlows().clientCredentials(clientCredential);
+		return new SecurityScheme()
+				.type(SecurityScheme.Type.OAUTH2)
+				.scheme("bearer")
+				.bearerFormat("JWT")
+				.in(In.HEADER)
+				.name("Authorization")
+				.flows(flows);
 	}
 
 }

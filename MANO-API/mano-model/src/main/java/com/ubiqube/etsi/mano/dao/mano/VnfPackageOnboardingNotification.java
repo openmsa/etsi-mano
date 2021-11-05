@@ -17,9 +17,26 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Entity
 public class VnfPackageOnboardingNotification {
-	private String id = null;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+
+	private UUID id = null;
+
+	private String nfvoId;
 
 	private String notificationType = null;
 
@@ -30,53 +47,5 @@ public class VnfPackageOnboardingNotification {
 	private String vnfPkgId = null;
 
 	private String vnfdId = null;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	public String getNotificationType() {
-		return notificationType;
-	}
-
-	public void setNotificationType(final String notificationType) {
-		this.notificationType = notificationType;
-	}
-
-	public String getSubscriptionId() {
-		return subscriptionId;
-	}
-
-	public void setSubscriptionId(final String subscriptionId) {
-		this.subscriptionId = subscriptionId;
-	}
-
-	public OffsetDateTime getTimeStamp() {
-		return timeStamp;
-	}
-
-	public void setTimeStamp(final OffsetDateTime timeStamp) {
-		this.timeStamp = timeStamp;
-	}
-
-	public String getVnfPkgId() {
-		return vnfPkgId;
-	}
-
-	public void setVnfPkgId(final String vnfPkgId) {
-		this.vnfPkgId = vnfPkgId;
-	}
-
-	public String getVnfdId() {
-		return vnfdId;
-	}
-
-	public void setVnfdId(final String vnfdId) {
-		this.vnfdId = vnfdId;
-	}
 
 }

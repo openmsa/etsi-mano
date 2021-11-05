@@ -30,18 +30,24 @@ import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.service.ServerService;
 import com.ubiqube.etsi.mano.service.SubscriptionService;
 import com.ubiqube.etsi.mano.service.event.Notifications;
+import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 @Service
 public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement {
 	private final Notifications notifications;
+
 	private final SubscriptionService subscriptionService;
 
-	public VnfSubscriptionManagementImpl(final Notifications _notifications, final SubscriptionService _subscriptionRepository) {
+	private final ServerService serverService;
+
+	public VnfSubscriptionManagementImpl(final Notifications _notifications, final SubscriptionService _subscriptionRepository, final ServerService serverService) {
 		super();
 		this.notifications = _notifications;
 		this.subscriptionService = _subscriptionRepository;
+		this.serverService = serverService;
 	}
 
 	@Override
@@ -60,20 +66,22 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 
 		final Subscription subscriptionsRepository = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
-		final AuthentificationInformations auth = subscriptionsRepository.getAuthentificationInformations();
+		final AuthentificationInformations auth = subscriptionsRepository.getAuthentication();
 		final String callbackUri = subscriptionsRepository.getCallbackUri();
+		final ServerAdapter server = serverService.findNearestServer();
 		// There is a version, problem.
-		notifications.doNotification(notificationsMessage, callbackUri, auth);
+		notifications.doNotification(notificationsMessage, callbackUri, server);
 	}
 
 	@Override
 	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage) {
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 		final Subscription subscription = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
-		final AuthentificationInformations auth = subscription.getAuthentificationInformations();
+		final AuthentificationInformations auth = subscription.getAuthentication();
 		final String cbUrl = subscription.getCallbackUri();
+		final ServerAdapter server = serverService.findNearestServer();
 		// Version problem.
-		notifications.doNotification(notificationsMessage, cbUrl, auth);
+		notifications.doNotification(notificationsMessage, cbUrl, server);
 	}
 
 	@Override

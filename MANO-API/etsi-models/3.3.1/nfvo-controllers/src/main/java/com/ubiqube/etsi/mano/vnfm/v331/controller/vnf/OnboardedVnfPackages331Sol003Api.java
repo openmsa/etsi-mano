@@ -56,7 +56,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping("/sol003/vnfpkgm/v2/onboarded_vnf_packages")
+@RequestMapping(value = "/sol003/vnfpkgm/v2/onboarded_vnf_packages", headers = "Version=2.1.0")
 @RolesAllowed({ "ROLE_VNFM" })
 public interface OnboardedVnfPackages331Sol003Api {
 	@Operation(summary = "", description = "Query VNF Package Info. The GET method queries the information of the VNF packages matching the filter. This method shall follow the provisions specified in the tables 10.4.2.3.2-1 and 10.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})

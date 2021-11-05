@@ -53,7 +53,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol003/vnfpm/v1", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol003/vnfpm/v2", headers = { "Version=2.1.0" })
 @RolesAllowed({ "ROLE_NFVO" })
 public interface PmJobs331Sol003Api {
 

@@ -23,6 +23,7 @@ package com.ubiqube.etsi.mano.nfvo.v331.controller.nfvici;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@RequestMapping(value = "/sol005/nfvici/v1", headers = { "Version=1.0.0" })
+@RolesAllowed({ "ROLE_OSSBSS" })
 public interface CapacityThresholds331Sol005Api {
 
 	@Operation(summary = "Delete an NFVI capacity threshold", description = "This method allows to delete an NFVI capacity threshold. As a result of successfully executing this method, the \"Individual capacity threshold\" resource shall not exist any longer. ", tags = {})

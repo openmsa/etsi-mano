@@ -176,7 +176,8 @@ public class VnfPackage implements PackageBase, Auditable {
 	private Set<NsdPackageVnfPackage> nsdPackages;
 
 	// 2.7.1
-	private String vnfmInfo;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> vnfmInfo;
 	// 2.8.1
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> vnfmInfo281;
@@ -192,6 +193,8 @@ public class VnfPackage implements PackageBase, Auditable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfIndicators> vnfIndicators;
+	// Original vnf package id in NFVO.
+	private String nfvoId;
 
 	@Version
 	private long version;

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mec.meo.event;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +25,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
@@ -67,6 +69,12 @@ public class MeoGrantAction extends AbstractGrantAction {
 	protected Set<VnfStorage> getVnfStorage(final UUID id) {
 		// XXX No storage in specs?
 		return new HashSet<>();
+	}
+
+	@Override
+	protected InputStream findImage(final SoftwareImage softwareImage, final String vnfdId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
