@@ -66,6 +66,7 @@ public class VnfPkgInfo {
 	private String vnfdVersion = null;
 
 	@JsonProperty("compatibleSpecificationVersions")
+	@Valid
 	private List<String> compatibleSpecificationVersions = null;
 
 	@JsonProperty("checksum")
@@ -270,12 +271,20 @@ public class VnfPkgInfo {
 		return this;
 	}
 
+	public VnfPkgInfo addCompatibleSpecificationVersionsItem(final String compatibleSpecificationVersionsItem) {
+		if (this.compatibleSpecificationVersions == null) {
+			this.compatibleSpecificationVersions = new ArrayList<>();
+		}
+		this.compatibleSpecificationVersions.add(compatibleSpecificationVersionsItem);
+		return this;
+	}
+
 	/**
 	 * Get compatibleSpecificationVersions
 	 *
 	 * @return compatibleSpecificationVersions
 	 **/
-	@Schema(description = "")
+	@Schema(description = "Indicates which versions of the ETSI GS NFV-SOL 004 specification the package complies to, as defined in the manifest of the package. Each entry shall be formatted as defined in clause 4.3.2 of ETSI GS NFV-SOL 004. ")
 
 	public List<String> getCompatibleSpecificationVersions() {
 		return compatibleSpecificationVersions;
