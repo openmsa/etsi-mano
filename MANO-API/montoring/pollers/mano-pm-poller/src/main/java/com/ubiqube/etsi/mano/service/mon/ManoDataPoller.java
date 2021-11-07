@@ -61,7 +61,7 @@ public class ManoDataPoller {
 		}
 	}
 
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 60_000)
 	public void run() {
 		final Iterable<PmJob> ite = pmJobsJpa.findAll();
 		LOG.debug("Polling data");
