@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
@@ -54,10 +53,14 @@ public class GnocchiSubTelemetry {
 	}
 
 	private static List<TelemetryMetricsResult> getMetrics(final UUID uuid, final String vnfcId, final List<Metric> collectedMetrics, final OSClientV3 os) {
-		final List<String> colls = collectedMetrics.stream().map(Metric::getName).collect(Collectors.toList());
+		final List<String> colls = collectedMetrics.stream().map(Metric::getName).toList();
 		final Resource instanceResources = os.telemetry().resources().instance(vnfcId);
-		final List<Entry<String, String>> colMeter = instanceResources.getMetrics().entrySet().stream().filter(x -> colls.contains(x.getKey())).collect(Collectors.toList());
-		return colMeter.stream().map(x -> map(x, vnfcId, uuid, os)).collect(Collectors.toList());
+		if (null == instanceResources) {
+			LOG.warn("Could not fetch resource {}", vnfcId);
+			return List.of();
+		}
+		final List<Entry<String, String>> colMeter = instanceResources.getMetrics().entrySet().stream().filter(x -> colls.contains(x.getKey())).toList();
+		return colMeter.stream().map(x -> map(x, vnfcId, uuid, os)).toList();
 	}
 
 	private static TelemetryMetricsResult map(final Entry<String, String> x, final String vnfInstanceId, final UUID id, final OSClientV3 os) {
