@@ -18,11 +18,7 @@ package com.ubiqube.etsi.mano.service.mon.model;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.UUID;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,34 +30,30 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-@Entity
-@IdClass(MonitoringId.class)
-public class MonitoringData implements Serializable {
+public class MonitoringId implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-	private UUID id;
-	@Id
 	private OffsetDateTime time;
-	private String masterJobId;
-	private Double value;
-	@Id
 	private String key;
-	private boolean status;
-	private String vnfInstanceId;
 
-	public MonitoringData() {
-		// Nothing.
+	@Override
+	public int hashCode() {
+		return Objects.hash(key, time);
 	}
 
-	public MonitoringData(final String key2, final String masterJobId2, final OffsetDateTime timestamp, final Double value2, final String vnfInstanceId2, final boolean status) {
-		this.id = UUID.randomUUID();
-		this.time = timestamp;
-		this.masterJobId = masterJobId2;
-		this.value = value2;
-		this.key = key2;
-		this.status = status;
-		this.vnfInstanceId = vnfInstanceId2;
-
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final MonitoringId other = (MonitoringId) obj;
+		return Objects.equals(key, other.key) && Objects.equals(time, other.time);
 	}
 
 }
