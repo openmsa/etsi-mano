@@ -31,8 +31,8 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
-import com.ubiqube.etsi.mano.nfvo.service.SystemService;
 import com.ubiqube.etsi.mano.nfvo.service.TemporaryDownloadService;
+import com.ubiqube.etsi.mano.service.SystemService;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 @Controller
