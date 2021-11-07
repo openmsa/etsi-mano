@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.io.IOUtils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -34,6 +32,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
 import com.ubiqube.parser.tosca.csar.CsarParser;
+
+import jakarta.validation.constraints.NotNull;
 
 public class ToscaParser {
 	Pattern zipMatcher = Pattern.compile("\\.(zip|csar)$");
