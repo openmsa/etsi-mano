@@ -16,42 +16,19 @@
  */
 package com.ubiqube.parser.tosca;
 
-import java.util.Map;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.ubiqube.parser.tosca.deserializer.ActivityDeserializer;
 
-// TODO rename activityDefinition
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- * @deprecated This file have been split between callActivity*
- */
-@Deprecated
-public class ActionDefinition {
-	private String delegate;
-	private String workflow;
-	Map<String, Object> inputs;
+import lombok.Getter;
+import lombok.Setter;
 
-	public String getDelegate() {
-		return delegate;
+@Getter
+@Setter
+@JsonDeserialize(using = ActivityDeserializer.class)
+public class ActivityListDefinition {
+	private Object activity;
+
+	public ActivityListDefinition(final Object activity) {
+		this.activity = activity;
 	}
-
-	public void setDelegate(final String delegate) {
-		this.delegate = delegate;
-	}
-
-	public String getWorkflow() {
-		return workflow;
-	}
-
-	public void setWorkflow(final String workflow) {
-		this.workflow = workflow;
-	}
-
-	public Map<String, Object> getInputs() {
-		return inputs;
-	}
-
-	public void setInputs(final Map<String, Object> inputs) {
-		this.inputs = inputs;
-	}
-
 }

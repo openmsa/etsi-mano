@@ -31,6 +31,7 @@ import tosca.nodes.nfv.VnfExtCp;
 import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.Compute;
 import tosca.policies.nfv.VduScalingAspectDeltas;
+import tosca.policies.nfv.VnfIndicator;
 
 public class UbiToscaTest {
 	private final Map<String, String> parameters = new HashMap<>();
@@ -48,6 +49,9 @@ public class UbiToscaTest {
 		final VnfVirtualLink elem = list.get(0);
 		assertEquals("leftVl01", elem.getInternalName());
 		assertEquals("192.168.0.100", elem.getVlProfile().getVirtualLinkProtocolData().get(0).getL3ProtocolData().getIpAllocationPools().get(0).getStartIpAddress());
+
+		final List<VnfIndicator> l2 = toscaApi.getObjects(root, parameters, VnfIndicator.class);
+		assertEquals(2, l2.size());
 	}
 
 	@Test
