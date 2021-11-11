@@ -160,19 +160,19 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData) {
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData, final List<String> securityGroup, final List<String> affinityRules) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final ServerCreateBuilder bs = Builders.server();
 		LOG.debug("Creating server flavor={}, image={}", flavorId, imageId);
 		bs.image(imageId);
 		bs.name(instanceName);
 		bs.flavor(flavorId);
-		if ((null != cloudInitData) && !cloudInitData.isEmpty()) {
+		if (null != cloudInitData && !cloudInitData.isEmpty()) {
 			bs.userData(Base64.getEncoder().encodeToString(cloudInitData.getBytes(Charset.defaultCharset())));
 		}
-		if (!networks.isEmpty()) {
-			bs.networks(networks);
-		}
+		bs.networks(networks);
+		bs.addSchedulerHint("group", affinityRules);
+		securityGroup.stream().forEach(bs::addSecurityGroup);
 		for (int i = 0; i < storages.size(); i++) {
 			final BlockDeviceMappingCreate blockDevice = Builders.blockDeviceMapping()
 					.uuid(storages.get(i))
@@ -188,12 +188,12 @@ public class OpenStackVim implements Vim {
 	@Override
 	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		LOG.debug("mem={} disk={}", (virtualMemorySize / MEGA), (disk / GIGA));
+		LOG.debug("mem={} disk={}", virtualMemorySize / MEGA, disk / GIGA);
 		final Optional<Flavor> matchingFlavor = os.compute().flavors().list()
 				.stream()
 				.filter(x -> x.getVcpus() == numVcpu)
-				.filter(x -> x.getRam() == (virtualMemorySize / MEGA))
-				.filter(x -> x.getDisk() == (disk / GIGA))
+				.filter(x -> x.getRam() == virtualMemorySize / MEGA)
+				.filter(x -> x.getDisk() == disk / GIGA)
 				.map(x -> (Flavor) x)
 				.findFirst();
 		// XXX We can't use name maybe use an UUID.
@@ -352,19 +352,26 @@ public class OpenStackVim implements Vim {
 	private VimCapability convertExtenstionToCaps(final Extension ext) {
 		if ("dns-integration".equals(ext.getAlias())) {
 			return VimCapability.HAVE_DNS;
-		} else if ("availability_zone".equals(ext.getAlias())) {
+		}
+		if ("availability_zone".equals(ext.getAlias())) {
 			return VimCapability.HAVE_AVAILABILITY_ZONE;
-		} else if ("bgp".equals(ext.getAlias())) {
+		}
+		if ("bgp".equals(ext.getAlias())) {
 			return VimCapability.HAVE_BGP;
-		} else if ("net-mtu".equals(ext.getAlias())) {
+		}
+		if ("net-mtu".equals(ext.getAlias())) {
 			return VimCapability.HAVE_NET_MTU;
-		} else if ("qos".equals(ext.getAlias())) {
+		}
+		if ("qos".equals(ext.getAlias())) {
 			return VimCapability.HAVE_QOS;
-		} else if ("router".equals(ext.getAlias())) {
+		}
+		if ("router".equals(ext.getAlias())) {
 			return VimCapability.HAVE_ROUTER;
-		} else if ("vlan-transparent".equals(ext.getAlias())) {
+		}
+		if ("vlan-transparent".equals(ext.getAlias())) {
 			return VimCapability.HAVE_VLAN_TRANSPARENT;
-		} else if ("extra_dhcp_opt".equals(ext.getAlias())) {
+		}
+		if ("extra_dhcp_opt".equals(ext.getAlias())) {
 			return VimCapability.HAVE_DHCP;
 		}
 		return null;

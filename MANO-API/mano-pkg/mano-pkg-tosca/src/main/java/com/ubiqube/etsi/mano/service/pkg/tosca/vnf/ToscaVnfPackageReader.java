@@ -28,8 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
@@ -50,8 +52,10 @@ import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.Compute;
 import tosca.nodes.nfv.vdu.VirtualBlockStorage;
 import tosca.nodes.nfv.vdu.VirtualObjectStorage;
+import tosca.policies.nfv.AntiAffinityRule;
 import tosca.policies.nfv.InstantiationLevels;
 import tosca.policies.nfv.ScalingAspects;
+import tosca.policies.nfv.SecurityGroupRule;
 import tosca.policies.nfv.VduInitialDelta;
 import tosca.policies.nfv.VduInstantiationLevels;
 import tosca.policies.nfv.VduScalingAspectDeltas;
@@ -143,7 +147,6 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.register();
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public ProviderData getProviderPadata() {
 		final List<ProviderData> vnfs = getListOf(VNF.class, ProviderData.class, new HashMap<>());
@@ -159,15 +162,12 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 		return getCsarFiles(AdditionalArtifact.class);
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Set<VnfCompute> getVnfComputeNodes(final Map<String, String> parameters) {
 		final Set<Compute> r = this.getSetOf(Compute.class, parameters);
 		return r.stream().map(x -> {
 			final VnfCompute o = getMapper().map(x, VnfCompute.class);
-			Optional.ofNullable(x.getArtifacts()).map(y -> y.get("sw_image")).ifPresent(y -> {
-				o.getSoftwareImage().setImagePath(y.getFile());
-			});
+			Optional.ofNullable(x.getArtifacts()).map(y -> y.get("sw_image")).ifPresent(y -> o.getSoftwareImage().setImagePath(y.getFile()));
 			return o;
 		}).collect(Collectors.toSet());
 	}
@@ -226,6 +226,21 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 	@Override
 	public List<com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
 		return getListOf(VduScalingAspectDeltas.class, com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas.class, parameters);
+	}
+
+	@Override
+	public Set<SecurityGroup> getSecurityGroup(final Map<String, String> userDefinedData) {
+		return getSetOf(SecurityGroupRule.class, SecurityGroup.class, userDefinedData);
+	}
+
+	@Override
+	public Set<AffinityRule> getAffinityRule(final Map<String, String> userDefinedData) {
+		final Set<AffinityRule> af = getSetOf(AffinityRule.class, AffinityRule.class, userDefinedData);
+		final Set<AffinityRule> anf = getSetOf(AntiAffinityRule.class, AffinityRule.class, userDefinedData);
+		anf.forEach(x -> x.setAnti(true));
+		final Set<AffinityRule> ret = new HashSet<>(af);
+		ret.addAll(anf);
+		return ret;
 	}
 
 }

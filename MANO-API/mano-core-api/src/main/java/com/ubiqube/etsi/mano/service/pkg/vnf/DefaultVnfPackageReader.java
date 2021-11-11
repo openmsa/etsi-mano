@@ -23,7 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -34,7 +36,6 @@ import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 
 public class DefaultVnfPackageReader implements VnfPackageReader {
 	@Override
@@ -109,6 +110,16 @@ public class DefaultVnfPackageReader implements VnfPackageReader {
 	@Override
 	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
 		return new ArrayList<>();
+	}
+
+	@Override
+	public Set<SecurityGroup> getSecurityGroup(final Map<String, String> userDefinedData) {
+		return new HashSet<>();
+	}
+
+	@Override
+	public Set<AffinityRule> getAffinityRule(final Map<String, String> userDefinedData) {
+		return new HashSet<>();
 	}
 
 }

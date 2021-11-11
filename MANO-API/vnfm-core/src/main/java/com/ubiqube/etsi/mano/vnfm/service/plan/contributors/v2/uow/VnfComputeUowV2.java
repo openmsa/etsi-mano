@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
@@ -51,12 +50,12 @@ public class VnfComputeUowV2 extends AbstractUowV2<ComputeTask> {
 		final List<String> storages = getTask().getParameters().getVnfCompute().getStorages().stream()
 				.map(x -> context.getParent(Storage.class, x + "-" + getTask().getAlias()))
 				.flatMap(List::stream)
-				.collect(Collectors.toList());
+				.toList();
 		final List<String> net = t.getVnfCompute().getNetworks().stream()
 				.map(x -> context.getParent(Network.class, x))
 				.flatMap(List::stream)
-				.collect(Collectors.toList());
-		return vim.createCompute(vimConnectionInformation, t.getAlias(), t.getFlavorId(), t.getImageId(), net, storages, t.getBootData());
+				.toList();
+		return vim.createCompute(vimConnectionInformation, t.getAlias(), t.getFlavorId(), t.getImageId(), net, storages, t.getBootData(), List.of(), List.of());
 	}
 
 	@Override

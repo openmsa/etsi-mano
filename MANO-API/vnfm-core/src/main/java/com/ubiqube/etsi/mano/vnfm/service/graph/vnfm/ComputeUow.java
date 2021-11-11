@@ -60,8 +60,8 @@ public class ComputeUow extends VnfAbstractUnitOfWork {
 				.filter(x -> x.getVirtualBinding().equals(vnfCompute.getToscaName()))
 				.map(VnfLinkPort::getVirtualLink)
 				.map(x -> params.getContext().get(x))
-				.collect(Collectors.toList());
-		return params.getVim().createCompute(params.getVimConnectionInformation(), task.getAlias(), task.getFlavorId(), task.getImageId(), networks, storages, vnfCompute.getCloudInit());
+				.toList();
+		return params.getVim().createCompute(params.getVimConnectionInformation(), task.getAlias(), task.getFlavorId(), task.getImageId(), networks, storages, vnfCompute.getCloudInit(), List.of(), List.of());
 	}
 
 	@Override
@@ -80,12 +80,12 @@ public class ComputeUow extends VnfAbstractUnitOfWork {
 		final List<WfDependency> ret = new ArrayList<>();
 		final List<WfDependency> storages = vnfCompute.getStorages().stream()
 				.map(x -> new WfDependency(Storage.class, x))
-				.collect(Collectors.toList());
+				.toList();
 		final List<WfDependency> networks = vnfLinkPort.stream()
 				.filter(x -> x.getVirtualBinding().equals(vnfCompute.getToscaName()))
 				.map(VnfLinkPort::getVirtualLink)
 				.map(x -> new WfDependency(Network.class, x))
-				.collect(Collectors.toList());
+				.toList();
 		ret.addAll(networks);
 		ret.addAll(storages);
 		return ret;

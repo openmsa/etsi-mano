@@ -50,7 +50,7 @@ public interface Vim {
 	@Nonnull
 	String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk);
 
-	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages, String cloudInitData);
+	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages, String cloudInitData, List<String> securityGroup, List<String> affinityRules);
 
 	void deleteCompute(VimConnectionInformation vimConnectionInformation, String resourceId);
 

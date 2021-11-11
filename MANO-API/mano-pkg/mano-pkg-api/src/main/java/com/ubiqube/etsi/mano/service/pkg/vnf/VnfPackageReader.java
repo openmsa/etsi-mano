@@ -23,7 +23,9 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -77,5 +79,9 @@ public interface VnfPackageReader {
 
 	@Nonnull
 	List<VduScalingAspectDeltas> getVduScalingAspectDeltas(Map<String, String> parameters);
+
+	Set<SecurityGroup> getSecurityGroup(Map<String, String> userDefinedData);
+
+	Set<AffinityRule> getAffinityRule(Map<String, String> userDefinedData);
 
 }

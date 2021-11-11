@@ -118,20 +118,27 @@ public class OpenStackTest {
 		// 1.17
 
 		/*
-		 * final RegionService regions = os.identity().regions(); final List<? extends Region> zl = regions.list(); zl.forEach(x -> System.out.println("" + x.getId()));
+		 * final RegionService regions = os.identity().regions(); final List<? extends
+		 * Region> zl = regions.list(); zl.forEach(x -> System.out.println("" +
+		 * x.getId()));
 		 */
 		/*
-		 * final List<? extends Domain> domains = os.identity().domains().list(); domains.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Domain> domains = os.identity().domains().list();
+		 * domains.forEach(x -> System.out.println("" + x.getName()));
 		 *
-		 * final List<? extends Flavor> flavors = os.compute().flavors().list(); flavors.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Flavor> flavors = os.compute().flavors().list();
+		 * flavors.forEach(x -> System.out.println("" + x.getName()));
 		 *
-		 * final List<? extends Image> images = os.compute().images().list(); images.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Image> images = os.compute().images().list();
+		 * images.forEach(x -> System.out.println("" + x.getName()));
 		 */
 		/*
-		 * final List<? extends Server> servers = os.compute().servers().list(); servers.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Server> servers = os.compute().servers().list();
+		 * servers.forEach(x -> System.out.println("" + x.getName()));
 		 */
 		/*
-		 * final Set<ServiceType> le = os.getSupportedServices(); System.out.println("" + le);
+		 * final Set<ServiceType> le = os.getSupportedServices(); System.out.println(""
+		 * + le);
 		 */
 		// createServer(os);
 
@@ -280,7 +287,7 @@ public class OpenStackTest {
 		vnfc.setName("vdu01");
 		final List<String> networks = new ArrayList<>();
 		final List<String> storages = new ArrayList<>();
-		final String lid = vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages, null);
+		final String lid = vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages, null, List.of(), List.of());
 		assertNotNull(lid);
 	}
 
