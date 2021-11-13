@@ -77,7 +77,7 @@ public class OsStorage implements Storage {
 				.filter(x -> x.getName().equals(img.getName()))
 				.findFirst();
 		if (image.isPresent()) {
-			final SwImage swImage = mapper.map(image.get(), SwImage.class);
+			final SwImage swImage = new SwImage(image.get().getId());
 			return Optional.of(swImage);
 		}
 		return Optional.empty();
@@ -137,14 +137,14 @@ public class OsStorage implements Storage {
 	}
 
 	private static void checkResult(final ActionResponse action) {
-		if (!action.isSuccess() && (action.getCode() != 404)) {
+		if (!action.isSuccess() && action.getCode() != 404) {
 			throw new VimException(action.getCode() + " " + action.getFault());
 		}
 	}
 
 	private static void waitForVolumeCompletion(final BlockVolumeService volumes, final Volume volume) {
 		Volume localVolume = volume;
-		while ((localVolume.getStatus() == org.openstack4j.model.storage.block.Volume.Status.CREATING) || (localVolume.getStatus() == org.openstack4j.model.storage.block.Volume.Status.DOWNLOADING)) {
+		while (localVolume.getStatus() == org.openstack4j.model.storage.block.Volume.Status.CREATING || localVolume.getStatus() == org.openstack4j.model.storage.block.Volume.Status.DOWNLOADING) {
 			LOG.info("Waiting for volume: {}", volume.getId());
 			try {
 				Thread.sleep(500);
