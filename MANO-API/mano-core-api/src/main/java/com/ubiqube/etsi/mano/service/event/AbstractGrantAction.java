@@ -162,7 +162,7 @@ public abstract class AbstractGrantAction {
 		final GrantVimAssetsEntity grantVimAssetsEntity = new GrantVimAssetsEntity();
 		grants.setVimAssets(grantVimAssetsEntity);
 		// XXX Push only needed ones. ( in case of terminate no need to push assets.)
-		final Runnable getSoftwareImages = () -> grantVimAssetsEntity.setSoftwareImages(getSoftwareImage(vimInfo, vim, grants));
+		final Runnable getSoftwareImages = () -> grantVimAssetsEntity.setSoftwareImages(getSoftwareImageSafe(vimInfo, vim, grants));
 		executorService.submit(getSoftwareImages);
 
 		final Runnable getComputeResourceFlavours = () -> {
@@ -232,6 +232,15 @@ public abstract class AbstractGrantAction {
 		return listVcrfe;
 	}
 
+	private Set<VimSoftwareImageEntity> getSoftwareImageSafe(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {
+		try {
+			return getSoftwareImage(vimInfo, vim, grants);
+		} catch (final RuntimeException e) {
+			LOG.error("getImage error", e);
+			throw e;
+		}
+	}
+
 	private Set<VimSoftwareImageEntity> getSoftwareImage(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {
 		final Set<VimSoftwareImageEntity> listVsie = new HashSet<>();
 		final Map<String, SwImage> cache = new HashMap<>();
@@ -241,12 +250,7 @@ public abstract class AbstractGrantAction {
 				// Get Vim or create vim resource via Or-Vi
 				final SwImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
 					final Optional<SwImage> newImg = vim.storage(vimInfo).getSwImageMatching(img);
-					try (final InputStream is = findImage(x.getSoftwareImage(), grants.getVnfdId())) {
-						// Use or-vi, Vim is not on the same server. Path is given in tosca file.
-						return newImg.orElseGet(() -> vim.storage(vimInfo).uploadSoftwareImage(is, img));
-					} catch (final IOException e) {
-						throw new GenericException(e);
-					}
+					return newImg.orElseGet(() -> uploadImage(vimInfo, vim, x, grants.getVnfdId()));
 				});
 				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
 			}
@@ -260,6 +264,16 @@ public abstract class AbstractGrantAction {
 			}
 		});
 		return listVsie;
+	}
+
+	private SwImage uploadImage(final VimConnectionInformation vimInfo, final Vim vim, final VnfCompute x, final String vnfdId) {
+		final SoftwareImage img = x.getSoftwareImage();
+		try (final InputStream is = findImage(x.getSoftwareImage(), vnfdId)) {
+			// Use or-vi, Vim is not on the same server. Path is given in tosca file.
+			return vim.storage(vimInfo).uploadSoftwareImage(is, img);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	protected abstract InputStream findImage(final SoftwareImage softwareImage, final String vnfdId);
