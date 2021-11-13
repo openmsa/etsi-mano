@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.Priority;
 
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -64,7 +66,9 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 
 	@Override
 	public List<VnfExtCpVt> vnfContribute(final Bundle bundle, final VnfBlueprint plan) {
-		if (plan.getOperation() == PlanOperationType.TERMINATE) {
+		if (plan.getOperation() == PlanOperationType.CHANGE_EXTERNAL_VNF_CONNECTIVITY) {
+			return changeExtCp(bundle, plan);
+		} else if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(plan.getVnfInstance(), ExternalCpTask.class.getSimpleName());
@@ -115,20 +119,37 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ExternalCpTask.class.getSimpleName());
 		final List ret = new ArrayList<>();
 		instances.stream().forEach(x -> {
-			final ExternalCpTask extCp = (ExternalCpTask) x.getTask();
-			if ((extCp.getPort() != null) && extCp.getPort()) {
-				final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
-				task.setType(ResourceTypeEnum.LINKPORT);
-				task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
-				task.setPort(true);
-				ret.add(new PortVt(task));
-			} else {
-				final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
-				task.setType(ResourceTypeEnum.LINKPORT);
-				task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
-				ret.add(new VnfExtCpVt(task));
-			}
+			ret.add(deleteVli(x));
 		});
+		return ret;
+	}
+
+	private static Object deleteVli(final VnfLiveInstance x) {
+		final ExternalCpTask extCp = (ExternalCpTask) x.getTask();
+		if ((extCp.getPort() != null) && extCp.getPort()) {
+			final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
+			task.setType(ResourceTypeEnum.LINKPORT);
+			task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
+			task.setPort(true);
+			return new PortVt(task);
+		}
+		final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
+		task.setType(ResourceTypeEnum.LINKPORT);
+		task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
+		return new VnfExtCpVt(task);
+	}
+
+	private List<VnfExtCpVt> changeExtCp(final Bundle bundle, final VnfBlueprint plan) {
+		final List<VnfExtCpVt> ret = new ArrayList<>();
+		final VnfInstance vnfInstance = plan.getInstance();
+		final Set<ExtVirtualLinkDataEntity> evl = plan.getChangeExtVnfConnRequest().getExtVirtualLinks();
+		evl.forEach(x -> {
+			x.getExtCps().forEach(y -> {
+				final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId());
+				deleteVli(vli.get(0));
+			});
+		});
+
 		return ret;
 	}
 
@@ -136,4 +157,5 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 	public Class<? extends Node> getNode() {
 		return VnfExtCp.class;
 	}
+
 }
