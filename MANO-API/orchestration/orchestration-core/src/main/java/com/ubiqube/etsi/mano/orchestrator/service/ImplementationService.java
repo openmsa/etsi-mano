@@ -51,7 +51,7 @@ public class ImplementationService {
 	public SystemBuilder getTaretSystem(final VirtualTask<?> virtualTask) {
 		final String connectionId = virtualTask.getVimConnectionId();
 		if (null == connectionId) {
-			throw new OrchestrationException("Unable to find VimId: " + virtualTask.getVimConnectionId());
+			throw new OrchestrationException("Unable to find VimId: " + virtualTask.getVimConnectionId() + ", for task: " + virtualTask.getName());
 		}
 		final SystemConnections vim = vimManager.findVimByVimIdAndProviderId(connectionId, virtualTask.getProviderId());
 		final System sys = systems.get(vim.getVimType());
