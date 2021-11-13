@@ -18,9 +18,11 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.AffinityRuleNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
 
@@ -32,8 +34,10 @@ public class VnfExtCpVt extends VnfVtBase<ExternalCpTask> {
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		final String ret = getParameters().getVnfExtCp().getInternalVirtualLink();
-		return Arrays.asList(new NamedDependency(Network.class, ret));
+		final List<NamedDependency> ret = getParameters().getVnfExtCp().getSecurityGroup().stream().map(x -> new NamedDependency(AffinityRuleNode.class, x)).collect(Collectors.toList());
+		final String ivl = getParameters().getVnfExtCp().getInternalVirtualLink();
+		ret.add(new NamedDependency(Network.class, ivl));
+		return ret;
 	}
 
 	@Override
