@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 
 /**
@@ -48,4 +49,8 @@ public interface Network {
 	String createPort(final String name, final String networkId, final String deviceId, String macAddress);
 
 	void deletePort(final String uuid);
+
+	String createSecurityRule(final SecurityGroup sg);
+
+	void deleteSecurityRule(String vimResourceId);
 }

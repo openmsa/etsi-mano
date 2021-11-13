@@ -57,6 +57,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.VimService;
@@ -171,7 +172,9 @@ public class OpenStackVim implements Vim {
 			bs.userData(Base64.getEncoder().encodeToString(cloudInitData.getBytes(Charset.defaultCharset())));
 		}
 		bs.networks(networks);
-		bs.addSchedulerHint("group", affinityRules);
+		if (!affinityRules.isEmpty()) {
+			bs.addSchedulerHint("group", affinityRules);
+		}
 		securityGroup.stream().forEach(bs::addSecurityGroup);
 		for (int i = 0; i < storages.size(); i++) {
 			final BlockDeviceMappingCreate blockDevice = Builders.blockDeviceMapping()
@@ -215,7 +218,7 @@ public class OpenStackVim implements Vim {
 		final List<? extends AvailabilityZone> list = os.compute().zones().list();
 		return list.stream().filter(x -> x.getZoneState().getAvailable())
 				.map(AvailabilityZone::getZoneName)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override
@@ -345,8 +348,15 @@ public class OpenStackVim implements Vim {
 			return list.stream()
 					.map(this::convertAgentToCaps)
 					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
+					.toList();
 		};
+	}
+
+	@Override
+	public String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(ar.getId().toString(), ar.getScope().toString());
+		return res.getId();
 	}
 
 	private VimCapability convertExtenstionToCaps(final Extension ext) {
@@ -422,6 +432,12 @@ public class OpenStackVim implements Vim {
 		ret.setVirtualCPU(stats.getVirtualCPU());
 		ret.setVirtualUsedCPU(stats.getVirtualUsedCPU());
 		return ret;
+	}
+
+	@Override
+	public void deleteServerGroup(final VimConnectionInformation vimConnectionInformation, final String vimResourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.compute().serverGroups().delete(getType());
 	}
 
 }

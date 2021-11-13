@@ -21,6 +21,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
@@ -72,4 +73,7 @@ public interface Vim {
 
 	void freeResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);
 
+	String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar);
+
+	void deleteServerGroup(VimConnectionInformation vimConnectionInformation, String vimResourceId);
 }

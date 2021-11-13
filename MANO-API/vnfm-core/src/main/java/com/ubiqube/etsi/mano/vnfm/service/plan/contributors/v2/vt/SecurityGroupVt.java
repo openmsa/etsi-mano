@@ -14,27 +14,39 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt;
 
-import javax.persistence.Entity;
+import java.util.Arrays;
+import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.ubiqube.etsi.mano.dao.mano.v2.vnfm.SecurityGroupTask;
+import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityGroupNode;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Entity
-@Getter
-@Setter
-public class AffinityRule extends PlacementGroup {
+public class SecurityGroupVt extends VnfVtBase<SecurityGroupTask> {
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+	public SecurityGroupVt(final SecurityGroupTask nt) {
+		super(nt);
+	}
 
-	private String scope;
+	@Override
+	public List<NamedDependency> getNameDependencies() {
+		return List.of();
+	}
 
-	private boolean isAnti;
+	@Override
+	public List<NamedDependency> getNamedProduced() {
+		return Arrays.asList(new NamedDependency(SecurityGroupNode.class, getParameters().getToscaName()));
+	}
+
+	@Override
+	public String getProviderId() {
+		return "SECURITY-GROUP";
+	}
+
 }

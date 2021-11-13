@@ -24,4 +24,6 @@ public interface VduNamingStrategy {
 	String nameVdu(VnfLcmOpOccs vnfLcmOpOccs, String name, int count);
 
 	String nameVdu(VnfBlueprint plan, String toscaName, int count);
+
+	String nameSingleResource(VnfBlueprint blueprint, String toscaName);
 }

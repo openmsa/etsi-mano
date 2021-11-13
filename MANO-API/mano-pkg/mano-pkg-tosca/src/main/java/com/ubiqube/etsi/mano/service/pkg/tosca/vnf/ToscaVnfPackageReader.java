@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
-import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
@@ -38,7 +37,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
+import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
@@ -52,6 +53,7 @@ import tosca.nodes.nfv.VnfVirtualLink;
 import tosca.nodes.nfv.vdu.Compute;
 import tosca.nodes.nfv.vdu.VirtualBlockStorage;
 import tosca.nodes.nfv.vdu.VirtualObjectStorage;
+import tosca.policies.nfv.AffinityRule;
 import tosca.policies.nfv.AntiAffinityRule;
 import tosca.policies.nfv.InstantiationLevels;
 import tosca.policies.nfv.ScalingAspects;
@@ -84,6 +86,7 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.field("vnfdId", "descriptorId")
 				.field("descriptorId", "descriptorId")
 				.field("flavorId", "flavourId")
+				.field("monitoringParameters{value}", "monitoringParameters")
 				.byDefault()
 				.register();
 		mapperFactory.classMap(ArtefactInformations.class, AdditionalArtifact.class)
@@ -142,6 +145,14 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 		mapperFactory.classMap(tosca.nodes.nfv.VnfExtCp.class, VnfExtCp.class)
 				.field("externalVirtualLinkReq", "externalVirtualLink")
 				.field("internalVirtualLinkReq", "internalVirtualLink")
+				.field("internalName", "toscaName")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(AffinityRule.class, com.ubiqube.etsi.mano.dao.mano.AffinityRule.class)
+				.field("internalName", "toscaName")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(SecurityGroupRule.class, SecurityGroup.class)
 				.field("internalName", "toscaName")
 				.byDefault()
 				.register();
@@ -229,18 +240,29 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 	}
 
 	@Override
-	public Set<SecurityGroup> getSecurityGroup(final Map<String, String> userDefinedData) {
-		return getSetOf(SecurityGroupRule.class, SecurityGroup.class, userDefinedData);
+	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userDefinedData) {
+		final List<SecurityGroupRule> sgr = getObjects(SecurityGroupRule.class, userDefinedData);
+		return sgr.stream().map(x -> new SecurityGroupAdapter(getMapper().map(x, SecurityGroup.class), x.getTargets())).collect(Collectors.toSet());
 	}
 
 	@Override
-	public Set<AffinityRule> getAffinityRule(final Map<String, String> userDefinedData) {
-		final Set<AffinityRule> af = getSetOf(AffinityRule.class, AffinityRule.class, userDefinedData);
-		final Set<AffinityRule> anf = getSetOf(AntiAffinityRule.class, AffinityRule.class, userDefinedData);
-		anf.forEach(x -> x.setAnti(true));
-		final Set<AffinityRule> ret = new HashSet<>(af);
-		ret.addAll(anf);
-		return ret;
+	public Set<AffinityRuleAdapater> getAffinityRules(final Map<String, String> userDefinedData) {
+		final Set<AffinityRuleAdapater> af = getSetOf(AffinityRule.class, userDefinedData).stream()
+				.map(x -> {
+					final com.ubiqube.etsi.mano.dao.mano.AffinityRule afDao = getMapper().map(x, com.ubiqube.etsi.mano.dao.mano.AffinityRule.class);
+					return AffinityRuleAdapater.of(afDao, x.getTargets());
+				})
+				.collect(Collectors.toSet());
+		final Set<AffinityRuleAdapater> anf = getSetOf(AntiAffinityRule.class, userDefinedData).stream()
+				.map(x -> {
+					final com.ubiqube.etsi.mano.dao.mano.AffinityRule afDao = getMapper().map(x, com.ubiqube.etsi.mano.dao.mano.AffinityRule.class);
+					afDao.setAnti(true);
+					return AffinityRuleAdapater.of(afDao, x.getTargets());
+				})
+				.collect(Collectors.toSet());
+		anf.forEach(x -> x.getAffinityRule().setAnti(true));
+		af.addAll(anf);
+		return af;
 	}
 
 }

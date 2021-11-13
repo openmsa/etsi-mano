@@ -14,9 +14,17 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.v2.vnfm;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
+
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,14 +35,13 @@ import lombok.Setter;
  *
  */
 @Entity
+@EntityListeners(AuditListener.class)
 @Getter
 @Setter
-public class AffinityRule extends PlacementGroup {
-
+public class SecurityGroupTask extends VnfTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private String scope;
-
-	private boolean isAnti;
+	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	private SecurityGroup securityGroup;
 }

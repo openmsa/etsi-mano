@@ -14,9 +14,11 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.service.pkg.bean;
 
-import javax.persistence.Entity;
+import java.util.List;
+
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,15 +28,16 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Entity
 @Getter
 @Setter
-public class AffinityRule extends PlacementGroup {
+public class AffinityRuleAdapater {
+	private AffinityRule affinityRule;
+	private List<String> targets;
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	private String scope;
-
-	private boolean isAnti;
+	public static AffinityRuleAdapater of(final AffinityRule affinityRule, final List<String> targets) {
+		final AffinityRuleAdapater aff = new AffinityRuleAdapater();
+		aff.setAffinityRule(affinityRule);
+		aff.setTargets(targets);
+		return aff;
+	}
 }

@@ -195,9 +195,9 @@ public class VnfPackage implements PackageBase, Auditable {
 	// Original vnf package id in NFVO.
 	private String nfvoId;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<SecurityGroup> securityGroups;
-
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<AffinityRule> affinityRules;
 	@Version
 	private long version;
