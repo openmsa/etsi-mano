@@ -11,9 +11,9 @@ topology_template:
     small_vnf:
       type: tosca.nodes.nfv.VNF
       properties:
-        descriptor_id: 5e84f394-4721-4122-a3e9-3ad3e74c7af2
+        descriptor_id: 8fb0f1fe-a3fe-4129-a55a-68d4110cf494
         provider: Ubiqube internal.
-        product_name: small_integration_test_aspect
+        product_name: sg_integration_test_aspect
         software_version: 1.0.0
         descriptor_version: 1.0.2
         flavour_id: flavor01
@@ -322,12 +322,13 @@ policies:
 
   affinity_01:
     type: tosca.policies.nfv.AffinityRule
-    targets: [ vdu01, vl01 ]
+    targets: [ webserver, vl01 ]
     properties:
       scope: nfvi_pop
 
   security:
     type: tosca.policies.nfv.SecurityGroupRule
+    targets: [webserver]
     properties:
       description: Descr.
       direction: ingress

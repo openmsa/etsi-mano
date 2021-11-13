@@ -716,6 +716,7 @@ policies:
       protocol: tcp
       port_range_min: 0
       port_range_max: 65535
+    targets: [ vdu01, vl01]
 
   supported_vnf_int:
     type: tosca.policies.nfv.SupportedVnfInterface
