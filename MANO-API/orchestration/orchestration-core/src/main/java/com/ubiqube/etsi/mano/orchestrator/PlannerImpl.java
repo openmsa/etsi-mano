@@ -77,10 +77,10 @@ public class PlannerImpl<U> implements Planner<U> {
 
 	@Override
 	public <V> PreExecutionGraph<V> makePlan(final Bundle bundle, final List<Class<? extends Node>> planConstituent, final U parameters) {
-		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
-		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gr = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
-		gf.addGraphListener(new VirtualTaskVertexListener());
-		gr.addGraphListener(new VirtualTaskVertexListener());
+		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> createGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
+		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> deleteGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
+		createGraph.addGraphListener(new VirtualTaskVertexListener());
+		deleteGraph.addGraphListener(new VirtualTaskVertexListener());
 		planConstituent.forEach(x -> {
 			final PlanContributor conts = contributors.get(x);
 			if (null == conts) {
@@ -90,24 +90,24 @@ public class PlannerImpl<U> implements Planner<U> {
 				tasks.forEach(y -> {
 					if (y.isDeleteTask()) {
 						LOG.debug("Deleting: {}", y);
-						gr.addVertex(y);
+						deleteGraph.addVertex(y);
 					} else {
 						LOG.debug("Adding: {}", y);
-						gf.addVertex(y);
+						createGraph.addVertex(y);
 					}
 				});
 			}
 		});
 		// Rebuild connectivity.
-		rebuildConnectivity(gf);
-		rebuildConnectivity(gr);
+		rebuildConnectivity(createGraph);
+		rebuildConnectivity(deleteGraph);
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Create graph:");
-			GraphTools.dumpVt(gf);
+			GraphTools.dumpVt(createGraph);
 			LOG.debug("Remove graph:");
-			GraphTools.dumpVt(gr);
+			GraphTools.dumpVt(deleteGraph);
 		}
-		return new PreExecutionGraphImpl(gf, gr);
+		return new PreExecutionGraphImpl(createGraph, deleteGraph);
 	}
 
 	private static void rebuildConnectivity(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf) {
