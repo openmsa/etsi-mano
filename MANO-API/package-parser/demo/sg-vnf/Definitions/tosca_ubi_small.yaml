@@ -322,13 +322,19 @@ policies:
 
   affinity_01:
     type: tosca.policies.nfv.AffinityRule
-    targets: [ webserver, vl01 ]
+    targets: [ webserver, leftVl01 ]
     properties:
       scope: nfvi_pop
 
+  anti_affinity_01:
+    type: tosca.policies.nfv.AntiAffinityRule
+    targets: [ webserver, leftVl01 ]
+    properties:
+      scope: zone
+
   security:
     type: tosca.policies.nfv.SecurityGroupRule
-    targets: [webserver]
+    targets: [webserver, ext01]
     properties:
       description: Descr.
       direction: ingress
