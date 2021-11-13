@@ -110,15 +110,15 @@ public class PlannerImpl<U> implements Planner<U> {
 		return new PreExecutionGraphImpl(createGraph, deleteGraph);
 	}
 
-	private static void rebuildConnectivity(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf) {
-		gf.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
-			final VirtualTask<?> dep = findDependency(y, gf);
+	private static void rebuildConnectivity(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> graph) {
+		graph.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
+			final VirtualTask<?> dep = findProducer(y, graph);
 			if (null == dep) {
-				LOG.info("Single: {} ", x);
-				gf.addVertex(x);
+				LOG.info("Single(dep): {} ", x);
+				graph.addVertex(x);
 			} else {
-				LOG.debug("Add edge : {} <-> {}", dep, x);
-				gf.addEdge(dep, x);
+				LOG.debug("Add edge(dep): {} <-> {}", dep, x);
+				graph.addEdge(dep, x);
 			}
 		}));
 	}
@@ -172,7 +172,7 @@ public class PlannerImpl<U> implements Planner<U> {
 		outgoingVertex.forEach(x -> incomingVertex.forEach(y -> g.addEdge(x, y)));
 	}
 
-	private static VirtualTask<?> findDependency(final NamedDependency namedDependency, final ListenableGraph<? extends VirtualTask<?>, VirtualTaskConnectivity> gf) {
+	private static VirtualTask<?> findProducer(final NamedDependency namedDependency, final ListenableGraph<? extends VirtualTask<?>, VirtualTaskConnectivity> gf) {
 		return gf.vertexSet().stream().filter(x -> x.getNamedProduced().stream()
 				.anyMatch(namedDependency::match))
 				.findAny()
