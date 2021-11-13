@@ -178,10 +178,10 @@ public class VnfPackageOnboardingImpl {
 	private void handleAffinity(final Set<AffinityRuleAdapater> ar, final VnfPackage vnfPackage) {
 		ar.forEach(x -> {
 			vnfPackage.getVnfCompute().stream()
-					.filter(y -> x.getTargets().contains(x.getAffinityRule().getToscaName()))
+					.filter(y -> x.getTargets().contains(y.getToscaName()))
 					.forEach(y -> y.addAffinity(x.getAffinityRule().getToscaName()));
 			vnfPackage.getVnfVl().stream()
-					.filter(y -> x.getTargets().contains(x.getAffinityRule().getToscaName()))
+					.filter(y -> x.getTargets().contains(y.getToscaName()))
 					.forEach(y -> y.addAffinity(x.getAffinityRule().getToscaName()));
 			// Placement group.
 		});

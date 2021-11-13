@@ -152,6 +152,10 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.field("internalName", "toscaName")
 				.byDefault()
 				.register();
+		mapperFactory.classMap(AntiAffinityRule.class, com.ubiqube.etsi.mano.dao.mano.AffinityRule.class)
+				.field("internalName", "toscaName")
+				.byDefault()
+				.register();
 		mapperFactory.classMap(SecurityGroupRule.class, SecurityGroup.class)
 				.field("internalName", "toscaName")
 				.byDefault()
