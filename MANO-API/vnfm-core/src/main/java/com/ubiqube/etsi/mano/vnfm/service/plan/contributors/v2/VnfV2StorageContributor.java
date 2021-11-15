@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 
@@ -137,7 +136,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 			task.setRemovedLiveInstance(x.getId());
 			task.setVnfStorage(((StorageTask) x.getTask()).getVnfStorage());
 			return new StorageVt(task);
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 	private static VnfStorage findVnfStorage(final Set<VnfStorage> vnfStorage, final String toscaName) {

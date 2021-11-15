@@ -72,12 +72,12 @@ public class AffinityRuleContributor extends AbstractContributorV2Base<AffinityR
 			if (i > 0) {
 				return;
 			}
-			final AffinityRuleTask sgt = createTask(AffinityRuleTask::new);
-			sgt.setAlias(vduNamingStrategy.nameSingleResource(blueprint, x.getToscaName()));
-			sgt.setType(ResourceTypeEnum.AFFINITY_RULE);
-			sgt.setToscaName(x.getToscaName());
-			sgt.setAffinityRule(x);
-			ret.add(new AffinityRuleVt(sgt));
+			final AffinityRuleTask task = createTask(AffinityRuleTask::new);
+			task.setAlias(vduNamingStrategy.nameSingleResource(blueprint, x.getToscaName()));
+			task.setType(ResourceTypeEnum.AFFINITY_RULE);
+			task.setToscaName(x.getToscaName());
+			task.setAffinityRule(x);
+			ret.add(new AffinityRuleVt(task));
 		});
 		return ret;
 	}
@@ -85,11 +85,11 @@ public class AffinityRuleContributor extends AbstractContributorV2Base<AffinityR
 	private List<AffinityRuleVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, AffinityRuleTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final AffinityRuleTask computeTask = createDeleteTask(AffinityRuleTask::new, x);
-			computeTask.setType(ResourceTypeEnum.AFFINITY_RULE);
-			computeTask.setRemovedLiveInstance(x.getId());
-			computeTask.setVimResourceId(x.getResourceId());
-			return new AffinityRuleVt(computeTask);
+			final AffinityRuleTask task = createDeleteTask(AffinityRuleTask::new, x);
+			task.setType(ResourceTypeEnum.AFFINITY_RULE);
+			task.setRemovedLiveInstance(x.getId());
+			task.setVimResourceId(x.getResourceId());
+			return new AffinityRuleVt(task);
 		}).toList();
 	}
 

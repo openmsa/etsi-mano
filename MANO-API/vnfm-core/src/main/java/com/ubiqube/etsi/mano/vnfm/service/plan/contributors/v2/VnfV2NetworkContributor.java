@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 
@@ -93,9 +92,9 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 			networkTask.setRemovedLiveInstance(x.getId());
 			networkTask.setVimResourceId(x.getResourceId());
 			networkTask.setVimConnectionId(x.getVimConnectionId());
-			networkTask.setVnfVl(((NetworkTask) (x.getTask())).getVnfVl());
+			networkTask.setVnfVl(((NetworkTask) x.getTask()).getVnfVl());
 			return new NetWorkVt(networkTask);
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 	@Override

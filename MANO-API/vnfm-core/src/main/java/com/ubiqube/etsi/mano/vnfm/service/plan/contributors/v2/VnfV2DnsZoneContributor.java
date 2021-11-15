@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 
@@ -73,7 +72,7 @@ public class VnfV2DnsZoneContributor extends AbstractContributorV2Base<DnsZoneTa
 			dnsZoneTask.setToscaName(NodeNaming.dnsZone());
 			dnsZoneTask.setType(ResourceTypeEnum.DNSZONE);
 			return new DnsZoneVT(dnsZoneTask);
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 	@Override

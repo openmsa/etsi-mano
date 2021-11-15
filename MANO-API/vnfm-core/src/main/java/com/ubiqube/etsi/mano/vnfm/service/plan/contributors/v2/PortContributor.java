@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -80,7 +79,7 @@ public class PortContributor extends AbstractContributorV2Base<ExternalCpTask, P
 			task.setType(ResourceTypeEnum.LINKPORT);
 			task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
 			return new PortVt(task);
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 	@Override

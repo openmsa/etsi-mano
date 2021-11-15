@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 
@@ -133,7 +132,7 @@ public class MonitoringContributor extends AbstractContributorV2Base<MonitoringT
 			task.setType(ResourceTypeEnum.MONITORING);
 			task.setRemovedLiveInstance(x.getId());
 			return new MonitoringVt(task);
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 }

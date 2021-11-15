@@ -72,12 +72,12 @@ public class SecurityGroupContributor extends AbstractContributorV2Base<Security
 			if (i > 0) {
 				return;
 			}
-			final SecurityGroupTask sgt = createTask(SecurityGroupTask::new);
-			sgt.setAlias(vduNamingStrategy.nameSingleResource(blueprint, x.getToscaName()));
-			sgt.setType(ResourceTypeEnum.SECURITY_GROUP);
-			sgt.setToscaName(x.getToscaName());
-			sgt.setSecurityGroup(x);
-			ret.add(new SecurityGroupVt(sgt));
+			final SecurityGroupTask task = createTask(SecurityGroupTask::new);
+			task.setAlias(vduNamingStrategy.nameSingleResource(blueprint, x.getToscaName()));
+			task.setType(ResourceTypeEnum.SECURITY_GROUP);
+			task.setToscaName(x.getToscaName());
+			task.setSecurityGroup(x);
+			ret.add(new SecurityGroupVt(task));
 		});
 		return ret;
 	}
@@ -85,11 +85,11 @@ public class SecurityGroupContributor extends AbstractContributorV2Base<Security
 	private List<SecurityGroupVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, SecurityGroupTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final SecurityGroupTask computeTask = createDeleteTask(SecurityGroupTask::new, x);
-			computeTask.setType(ResourceTypeEnum.SECURITY_GROUP);
-			computeTask.setRemovedLiveInstance(x.getId());
-			computeTask.setVimResourceId(x.getResourceId());
-			return new SecurityGroupVt(computeTask);
+			final SecurityGroupTask task = createDeleteTask(SecurityGroupTask::new, x);
+			task.setType(ResourceTypeEnum.SECURITY_GROUP);
+			task.setRemovedLiveInstance(x.getId());
+			task.setVimResourceId(x.getResourceId());
+			return new SecurityGroupVt(task);
 		}).toList();
 	}
 
