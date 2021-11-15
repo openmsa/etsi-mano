@@ -60,7 +60,7 @@ topology_template:
           file: cirros-0.5.2-x86_64-disk.img
       properties:
         sw_image_data:
-          name: fedora-34-cloud-init
+          name: cirros
           version: 1.0.0
           checksum:
             hash: 6b813aa46bb90b4da216a4d19376593fa3f4fc7e617f03a92b7fe11e9a3981cbe8f0959dbebe36225e5f53dc4492341a4863cac4ed1ee0909f3fc78ef9c3e869
@@ -322,13 +322,13 @@ policies:
 
   affinity_01:
     type: tosca.policies.nfv.AffinityRule
-    targets: [ webserver, leftVl01 ]
+    targets: [ webserver ]
     properties:
       scope: nfvi_pop
 
   anti_affinity_01:
     type: tosca.policies.nfv.AntiAffinityRule
-    targets: [ webserver, leftVl01 ]
+    targets: [ leftVl01 ]
     properties:
       scope: zone
 
