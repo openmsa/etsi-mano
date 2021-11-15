@@ -32,6 +32,10 @@ topology_template:
         software_version: 1.0.0
         descriptor_version: 1.0.1
         flavour_id: flavor01
+        monitoring_parameters: # list tosca.datatypes.nfv.VnfMonitoringParameter
+          mon01:
+            performance_metric: v_disk_usage_peak_vnf
+            collection_period: 1 m
       requirements:
         - virtual_link: public
 
