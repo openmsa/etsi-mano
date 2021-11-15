@@ -109,7 +109,7 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.byDefault()
 				.register();
 		mapperFactory.classMap(Compute.class, VnfCompute.class)
-				.exclude("monitoringParameters")
+				.field("monitoringParameters{value}", "monitoringParameters")
 				.field("swImageData", "softwareImage")
 				.field("internalName", "toscaName")
 				.field("virtualStorageReq", "storages")

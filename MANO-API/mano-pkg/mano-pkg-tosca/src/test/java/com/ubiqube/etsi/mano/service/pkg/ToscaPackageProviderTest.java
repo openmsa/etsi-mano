@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -37,13 +39,23 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.service.pkg.tosca.vnf.ToscaVnfPackageReader;
-import com.ubiqube.etsi.mano.test.TestTools;
+import com.ubiqube.etsi.mano.test.ZipUtil;
+import com.ubiqube.etsi.mano.test.ZipUtil.Entry;
+
+import ma.glasnost.orika.OrikaSystemProperties;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 
 public class ToscaPackageProviderTest {
 	private final ToscaVnfPackageReader tpp;
 
 	public ToscaPackageProviderTest() throws IOException {
-		final byte[] data = TestTools.readFile("/ubi-tosca.csar");
+		System.setProperty(OrikaSystemProperties.COMPILER_STRATEGY, EclipseJdtCompilerStrategy.class.getName());
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES, "true");
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/orika-test");
+		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/Definitions/etsi_nfv_sol001_vnfd_types.yaml", "Definitions/etsi_nfv_sol001_vnfd_types.yaml"),
+				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
+		final byte[] data = Files.readAllBytes(Path.of("/tmp/ubi-tosca.csar"));
 		tpp = new ToscaVnfPackageReader(data);
 	}
 
