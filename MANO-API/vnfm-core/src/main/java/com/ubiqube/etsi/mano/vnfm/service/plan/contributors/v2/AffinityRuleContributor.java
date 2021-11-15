@@ -22,7 +22,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
-import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -84,7 +83,7 @@ public class AffinityRuleContributor extends AbstractContributorV2Base<AffinityR
 	}
 
 	private List<AffinityRuleVt> doTerminatePlan(final VnfInstance vnfInstance) {
-		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, SecurityGroup.class.getSimpleName());
+		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, AffinityRuleTask.class.getSimpleName());
 		return instances.stream().map(x -> {
 			final AffinityRuleTask computeTask = createDeleteTask(AffinityRuleTask::new, x);
 			computeTask.setType(ResourceTypeEnum.AFFINITY_RULE);

@@ -45,8 +45,12 @@ public class SubNetworkVt extends VnfVtBase<SubNetworkTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "SUBNETWORK";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "NETWORK";
+	}
 }

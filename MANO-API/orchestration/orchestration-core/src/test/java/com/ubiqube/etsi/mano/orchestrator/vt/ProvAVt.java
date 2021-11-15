@@ -39,7 +39,7 @@ public class ProvAVt extends AbstractVirtualTask<TestParameters> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "PROVA";
 	}
 
@@ -77,4 +77,8 @@ public class ProvAVt extends AbstractVirtualTask<TestParameters> {
 		return null;
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "COMPUTE";
+	}
 }

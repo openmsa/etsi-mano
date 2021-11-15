@@ -41,8 +41,12 @@ public class DnsZoneVT extends VnfVtBase<DnsZoneTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "DNS-ZONE";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "DNS";
+	}
 }

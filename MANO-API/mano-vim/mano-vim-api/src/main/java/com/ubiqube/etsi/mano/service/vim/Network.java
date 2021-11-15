@@ -50,7 +50,11 @@ public interface Network {
 
 	void deletePort(final String uuid);
 
-	String createSecurityRule(final SecurityGroup sg);
+	String createSecurityRule(final SecurityGroup sg, String name);
 
 	void deleteSecurityRule(String vimResourceId);
+
+	String createSecurityGroup(String name);
+
+	void deleteSecurityGroup(String vimResourceId);
 }

@@ -37,24 +37,24 @@ import com.ubiqube.etsi.mano.service.sys.System;
  */
 @Service
 public class ImplementationService {
-	private final Map<String, System> systems;
+	private final Map<String, System<?>> systems;
 	private final SystemManager vimManager;
-	private final OrchestrationService orchestrationService;
+	private final OrchestrationService<?> orchestrationService;
 
-	public ImplementationService(final List<System> systems, final SystemManager vimManager, final OrchestrationService orchestrationService) {
+	public ImplementationService(final List<System<?>> systems, final SystemManager vimManager, final OrchestrationService<?> orchestrationService) {
 		super();
 		this.systems = systems.stream().collect(Collectors.toMap(System::getProviderId, Function.identity()));
 		this.vimManager = vimManager;
 		this.orchestrationService = orchestrationService;
 	}
 
-	public SystemBuilder getTaretSystem(final VirtualTask<?> virtualTask) {
+	public SystemBuilder getTargetSystem(final VirtualTask<?> virtualTask) {
 		final String connectionId = virtualTask.getVimConnectionId();
 		if (null == connectionId) {
 			throw new OrchestrationException("Unable to find VimId: " + virtualTask.getVimConnectionId() + ", for task: " + virtualTask.getName());
 		}
-		final SystemConnections vim = vimManager.findVimByVimIdAndProviderId(connectionId, virtualTask.getProviderId());
-		final System sys = systems.get(vim.getVimType());
+		final SystemConnections vim = vimManager.findVimByVimIdAndProviderId(connectionId, virtualTask.getVimProviderId());
+		final System sys = systems.get(virtualTask.getFactoryProviderId());
 		if (null == sys) {
 			throw new OrchestrationException("Unable to find system matching: " + vim.getVimType() + "/" + connectionId);
 		}

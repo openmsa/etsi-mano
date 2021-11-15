@@ -20,11 +20,14 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.vnfm.SecurityGroupTask;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.SecurityRuleTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.SecurityGroupUowV2;
+import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.SecurityRuleUowV2;
+import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.SecurityRuleVt;
 
 /**
  *
@@ -32,10 +35,10 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.SecurityGroup
  *
  */
 @Service
-public class SecurityRuleSystem extends AbstractVimSystem<SecurityGroupTask> {
+public class SecurityGroupSystem extends AbstractVimSystem<SecurityGroupTask> {
 	private final Vim vim;
 
-	public SecurityRuleSystem(final Vim vim) {
+	public SecurityGroupSystem(final Vim vim) {
 		super();
 		this.vim = vim;
 	}
@@ -47,7 +50,12 @@ public class SecurityRuleSystem extends AbstractVimSystem<SecurityGroupTask> {
 
 	@Override
 	SystemBuilder getImplementation(final OrchestrationService<SecurityGroupTask> orchestrationService, final VirtualTask<SecurityGroupTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
-		return orchestrationService.systemBuilderOf(new SecurityGroupUowV2(virtualTask, vim, vimConnectionInformation));
+		final SystemBuilder s = orchestrationService.createEmptySystemBuilder();
+		final SecurityGroupUowV2 src = new SecurityGroupUowV2(virtualTask, vim, vimConnectionInformation);
+		final SecurityRuleTask task = new SecurityRuleTask(virtualTask.getParameters().getAlias(), virtualTask.getParameters().getSecurityGroup(), virtualTask.getParameters().getToscaName());
+		final SecurityRuleUowV2 dst = new SecurityRuleUowV2(new SecurityRuleVt(task), vim, vimConnectionInformation);
+		s.add(src, dst);
+		return s;
 	}
 
 }

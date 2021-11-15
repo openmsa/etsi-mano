@@ -20,7 +20,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
@@ -42,6 +42,6 @@ public class SecurityGroupTask extends VnfTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private SecurityGroup securityGroup;
 }

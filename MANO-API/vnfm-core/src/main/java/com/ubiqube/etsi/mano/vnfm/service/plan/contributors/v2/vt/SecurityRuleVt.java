@@ -18,40 +18,41 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.SecurityRuleTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.AffinityRuleNode;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityGroupNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityRuleNode;
 
-public class VnfExtCpVt extends VnfVtBase<ExternalCpTask> {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class SecurityRuleVt extends VnfVtBase<SecurityRuleTask> {
 
-	public VnfExtCpVt(final ExternalCpTask nt) {
+	public SecurityRuleVt(final SecurityRuleTask nt) {
 		super(nt);
 	}
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		final List<NamedDependency> ret = getParameters().getVnfExtCp().getSecurityGroup().stream().map(x -> new NamedDependency(AffinityRuleNode.class, x)).collect(Collectors.toList());
-		final String ivl = getParameters().getVnfExtCp().getInternalVirtualLink();
-		ret.add(new NamedDependency(Network.class, ivl));
-		return ret;
+		return Arrays.asList(new NamedDependency(SecurityGroupNode.class, getParameters().getToscaName()));
 	}
 
 	@Override
 	public List<NamedDependency> getNamedProduced() {
-		return Arrays.asList(new NamedDependency(VnfExtCp.class, getParameters().getToscaName()));
+		return Arrays.asList(new NamedDependency(SecurityRuleNode.class, getParameters().getToscaName()));
 	}
 
 	@Override
 	public String getFactoryProviderId() {
-		return "VNFEXTCP";
+		return "SECURITY_RULE";
 	}
 
 	@Override
 	public String getVimProviderId() {
 		return "NETWORK";
 	}
+
 }

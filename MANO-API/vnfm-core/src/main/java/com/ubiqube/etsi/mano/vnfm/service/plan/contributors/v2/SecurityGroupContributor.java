@@ -22,7 +22,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
-import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -84,7 +83,7 @@ public class SecurityGroupContributor extends AbstractContributorV2Base<Security
 	}
 
 	private List<SecurityGroupVt> doTerminatePlan(final VnfInstance vnfInstance) {
-		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, SecurityGroup.class.getSimpleName());
+		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, SecurityGroupTask.class.getSimpleName());
 		return instances.stream().map(x -> {
 			final SecurityGroupTask computeTask = createDeleteTask(SecurityGroupTask::new, x);
 			computeTask.setType(ResourceTypeEnum.SECURITY_GROUP);

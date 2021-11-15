@@ -49,8 +49,12 @@ public class NetWorkVt extends VnfVtBase<NetworkTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "NETWORK";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "NETWORK";
+	}
 }

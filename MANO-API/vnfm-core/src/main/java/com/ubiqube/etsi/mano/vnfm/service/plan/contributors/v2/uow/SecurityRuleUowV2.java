@@ -17,9 +17,10 @@
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.vnfm.SecurityGroupTask;
+import com.ubiqube.etsi.mano.dao.mano.vnfm.SecurityRuleTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityGroupNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityRuleNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -28,13 +29,13 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class SecurityGroupUowV2 extends AbstractUowV2<SecurityGroupTask> {
+public class SecurityRuleUowV2 extends AbstractUowV2<SecurityRuleTask> {
 	private final Vim vim;
 	private final VimConnectionInformation vimConnectionInformation;
-	private final VirtualTask<SecurityGroupTask> task;
+	private final VirtualTask<SecurityRuleTask> task;
 
-	public SecurityGroupUowV2(final VirtualTask<SecurityGroupTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
-		super(task, SecurityGroupNode.class);
+	public SecurityRuleUowV2(final VirtualTask<SecurityRuleTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
+		super(task, SecurityRuleNode.class);
 		this.task = task;
 		this.vim = vim;
 		this.vimConnectionInformation = vimConnectionInformation;
@@ -42,12 +43,13 @@ public class SecurityGroupUowV2 extends AbstractUowV2<SecurityGroupTask> {
 
 	@Override
 	public String execute(final Context context) {
-		return vim.network(vimConnectionInformation).createSecurityGroup(task.getAlias());
+		final String sg = context.get(SecurityGroupNode.class, task.getParameters().getParentToscaName());
+		return vim.network(vimConnectionInformation).createSecurityRule(task.getParameters().getSecurityGroupRule(), sg);
 	}
 
 	@Override
 	public String rollback(final Context context) {
-		vim.network(vimConnectionInformation).deleteSecurityGroup(task.getParameters().getVimResourceId());
+		// vim.network(vimConnectionInformation).deleteSecurityRule(task.getParameters().getVimResourceId());
 		return null;
 	}
 

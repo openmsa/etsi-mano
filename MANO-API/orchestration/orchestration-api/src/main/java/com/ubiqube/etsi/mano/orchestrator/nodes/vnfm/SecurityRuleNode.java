@@ -14,41 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.vt;
+package com.ubiqube.etsi.mano.orchestrator.nodes.vnfm;
 
-import java.util.List;
-
-import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
-import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface VirtualTask<U> {
-
-	List<NamedDependency> getNameDependencies();
-
-	List<NamedDependency> getNamedProduced();
-
-	String getFactoryProviderId();
-
-	String getVimProviderId();
-
-	String getVimConnectionId();
-
-	U getParameters();
-
-	void setParameters(U u);
-
-	void setSystemBuilder(SystemBuilder db);
-
-	SystemBuilder getSystemBuilder();
-
-	boolean isDeleteTask();
-
-	String getName();
-
-	String getAlias();
+public class SecurityRuleNode implements Node {
+//
 }

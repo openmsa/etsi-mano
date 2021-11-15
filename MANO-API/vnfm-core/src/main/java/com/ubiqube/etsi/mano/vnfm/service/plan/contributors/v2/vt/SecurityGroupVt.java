@@ -45,8 +45,12 @@ public class SecurityGroupVt extends VnfVtBase<SecurityGroupTask> {
 	}
 
 	@Override
-	public String getProviderId() {
-		return "SECURITY-GROUP";
+	public String getFactoryProviderId() {
+		return "SECURITY_GROUP";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "NETWORK";
+	}
 }

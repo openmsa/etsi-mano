@@ -69,8 +69,12 @@ public class ComputeVt extends VnfVtBase<ComputeTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "COMPUTE";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "COMPUTE";
+	}
 }

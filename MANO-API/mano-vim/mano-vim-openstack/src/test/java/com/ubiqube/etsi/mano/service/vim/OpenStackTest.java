@@ -50,6 +50,7 @@ import org.openstack4j.model.identity.v3.Service;
 import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.RouterInterface;
+import org.openstack4j.model.network.SecurityGroupRule;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.telemetry.gnocchi.MetricCreate;
 import org.openstack4j.openstack.OSFactory;
@@ -63,6 +64,7 @@ import com.google.common.collect.ImmutableList;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
@@ -509,4 +511,35 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
+	@Test
+	void testServerGroup() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(UUID.randomUUID().toString(), "affinity");
+	}
+
+	@Test
+	void testSecurityGroup() throws Exception {
+		final SecurityGroup sg = new SecurityGroup();
+		sg.setDirection("ingress");
+		sg.setEtherType("ipv4");
+		sg.setPortRangeMin(22);
+		sg.setPortRangeMax(24);
+		sg.setProtocol("tcp");
+		sg.setToscaName("security");
+		final OSClientV3 os = getQueensConnection();
+		final SecurityGroupRule group = Builders.securityGroupRule()
+				.direction(sg.getDirection())
+				.ethertype(sg.getEtherType())
+				.portRangeMin(sg.getPortRangeMin())
+				.portRangeMax(sg.getPortRangeMax())
+				.protocol(sg.getProtocol())
+				.securityGroupId(sg.getToscaName())
+				.build();
+		// final SecurityGroupRule res = os.networking().securityrule().create(group);
+		final org.openstack4j.model.network.SecurityGroup securityGroup = Builders.securityGroup()
+				.name("security")
+				.build();
+		final org.openstack4j.model.network.SecurityGroup res = os.networking().securitygroup().create(securityGroup);
+		System.out.println("" + res.getId());
+	}
 }

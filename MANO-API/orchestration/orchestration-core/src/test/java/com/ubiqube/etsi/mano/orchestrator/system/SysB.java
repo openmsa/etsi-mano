@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitC;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.sys.System;
 
-public class SysB implements System {
+public class SysB implements System<Object> {
 
 	@Override
 	public String getProviderId() {

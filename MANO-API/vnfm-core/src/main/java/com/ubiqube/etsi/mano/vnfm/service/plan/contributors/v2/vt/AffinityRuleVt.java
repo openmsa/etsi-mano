@@ -45,8 +45,13 @@ public class AffinityRuleVt extends VnfVtBase<AffinityRuleTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "AFFINITY";
+	}
+
+	@Override
+	public String getVimProviderId() {
+		return "COMPUTE";
 	}
 
 }

@@ -157,14 +157,23 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	}
 
 	@Override
-	public String createSecurityRule(final SecurityGroup sg) {
+	public String createSecurityGroup(final String name) {
+		final org.openstack4j.model.network.SecurityGroup securityGroup = Builders.securityGroup()
+				.name(name)
+				.build();
+		final org.openstack4j.model.network.SecurityGroup res = os.networking().securitygroup().create(securityGroup);
+		return res.getId();
+	}
+
+	@Override
+	public String createSecurityRule(final SecurityGroup sg, final String name) {
 		final SecurityGroupRule group = Builders.securityGroupRule()
 				.direction(sg.getDirection())
 				.ethertype(sg.getEtherType())
 				.portRangeMin(sg.getPortRangeMin())
 				.portRangeMax(sg.getPortRangeMax())
 				.protocol(sg.getProtocol())
-				.securityGroupId(sg.getToscaName())
+				.securityGroupId(name)
 				.build();
 		final SecurityGroupRule res = os.networking().securityrule().create(group);
 		return res.getId();
@@ -173,6 +182,11 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	@Override
 	public void deleteSecurityRule(final String vimResourceId) {
 		os.networking().securityrule().delete(vimResourceId);
+	}
+
+	@Override
+	public void deleteSecurityGroup(final String vimResourceId) {
+		os.networking().securitygroup().delete(vimResourceId);
 	}
 
 	private static void checkResult(final ActionResponse action) {

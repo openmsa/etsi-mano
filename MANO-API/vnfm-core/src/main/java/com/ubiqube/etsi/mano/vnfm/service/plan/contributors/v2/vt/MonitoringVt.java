@@ -46,8 +46,12 @@ public class MonitoringVt extends VnfVtBase<MonitoringTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "MONITORING";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "MONITORING";
+	}
 }

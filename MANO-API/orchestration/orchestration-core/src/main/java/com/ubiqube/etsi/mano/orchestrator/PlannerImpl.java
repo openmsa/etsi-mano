@@ -141,7 +141,7 @@ public class PlannerImpl<U> implements Planner<U> {
 		ng.addGraphListener(new UnitOfWorkVertexListener());
 		// First resolve implementation.
 		gf.vertexSet().forEach(x -> {
-			final SystemBuilder db = implementationService.getTaretSystem(x);
+			final SystemBuilder db = implementationService.getTargetSystem(x);
 			x.setSystemBuilder(db);
 			db.getIncomingVertex().forEach(ng::addVertex);
 			db.getOutgoingVertex().forEach(ng::addVertex);
@@ -231,7 +231,7 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	public static <U extends UnitOfWork> void exportGraph(final ListenableGraph g, final String fileName) {
-		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getTask().getName().replace('-', '_') + "_" + RandomStringUtils.random(5, true, true));
+		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> "\"" + x.getTask().getName() + RandomStringUtils.random(5, true, true) + "\"");
 		try (final FileOutputStream out = new FileOutputStream(fileName)) {
 			exporter.exportGraph(g, out);
 		} catch (final IOException e) {

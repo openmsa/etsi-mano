@@ -355,7 +355,8 @@ public class OpenStackVim implements Vim {
 	@Override
 	public String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(ar.getId().toString(), ar.getScope());
+		final String affinity = ar.isAnti() ? "anti-affinity" : "affinity";
+		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(ar.getId().toString(), affinity);
 		return res.getId();
 	}
 
@@ -437,7 +438,7 @@ public class OpenStackVim implements Vim {
 	@Override
 	public void deleteServerGroup(final VimConnectionInformation vimConnectionInformation, final String vimResourceId) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		os.compute().serverGroups().delete(getType());
+		os.compute().serverGroups().delete(vimResourceId);
 	}
 
 }
