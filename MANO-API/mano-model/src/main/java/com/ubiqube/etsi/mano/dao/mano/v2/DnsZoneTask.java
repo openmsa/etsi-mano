@@ -16,7 +16,10 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 
@@ -28,6 +31,7 @@ public class DnsZoneTask extends VnfTask {
 
 	private String domainName;
 
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private VnfVl vnfVl;
 
 	public String getDomainName() {
