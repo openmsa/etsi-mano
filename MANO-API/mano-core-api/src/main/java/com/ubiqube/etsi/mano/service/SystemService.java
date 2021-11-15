@@ -78,6 +78,12 @@ public class SystemService {
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("STORAGE");
 		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("AFFINITY");
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("SECURITY-GROUP");
+		sys.add(sc);
 		return systemJpa.save(sys);
 	}
 }
