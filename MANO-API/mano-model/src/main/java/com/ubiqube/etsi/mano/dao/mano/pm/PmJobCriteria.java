@@ -26,9 +26,15 @@ import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class PmJobCriteria {
 	/**
@@ -51,7 +57,7 @@ public class PmJobCriteria {
 	 * Specifies the periodicity at which the API producer will collect performance information. The unit shall be seconds. See note 1 and note 2.
 	 */
 	@NotNull
-	private Integer collectionPeriod;
+	private Long collectionPeriod;
 
 	/**
 	 * Specifies the periodicity at which the API producer will report to the API consumer about performance information. The unit shall be seconds. See note 1 and note 2.
