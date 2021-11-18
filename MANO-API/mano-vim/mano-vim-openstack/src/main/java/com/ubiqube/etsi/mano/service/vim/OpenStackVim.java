@@ -173,7 +173,7 @@ public class OpenStackVim implements Vim {
 		}
 		bs.networks(networks);
 		if (!affinityRules.isEmpty()) {
-			bs.addSchedulerHint("group", affinityRules);
+			bs.addSchedulerHint("group", affinityRules.get(0));
 		}
 		securityGroup.stream().forEach(bs::addSecurityGroup);
 		for (int i = 0; i < storages.size(); i++) {
