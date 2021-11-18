@@ -85,10 +85,11 @@ public class MonitoringContributor extends AbstractContributorV2Base<MonitoringT
 			}
 			final MonitoringTask task = createTask(MonitoringTask::new);
 			task.setType(ResourceTypeEnum.MONITORING);
-			task.setToscaName(y + "-" + x.getAlias());
-			task.setAlias(y + "-" + x.getAlias());
+			task.setToscaName(x.getToscaName() + "-" + x.getAlias());
+			task.setAlias(x.getToscaName() + "-" + x.getAlias());
 			task.setParentAlias(x.getAlias());
 			task.setMonitoringParams(y);
+			task.setVnfCompute(x.getVnfCompute());
 			ret.add(new MonitoringVt(task));
 		});
 	}
@@ -110,6 +111,7 @@ public class MonitoringContributor extends AbstractContributorV2Base<MonitoringT
 			final MonitoringTask task = createDeleteTask(MonitoringTask::new, x);
 			task.setType(ResourceTypeEnum.MONITORING);
 			task.setRemovedLiveInstance(x.getId());
+			task.setVnfCompute(computeTask.getVnfCompute());
 			ret.add(new MonitoringVt(task));
 		});
 
@@ -131,6 +133,8 @@ public class MonitoringContributor extends AbstractContributorV2Base<MonitoringT
 			final MonitoringTask task = createDeleteTask(MonitoringTask::new, x);
 			task.setType(ResourceTypeEnum.MONITORING);
 			task.setRemovedLiveInstance(x.getId());
+			final MonitoringTask mt = (MonitoringTask) x.getTask();
+			task.setVnfCompute(mt.getVnfCompute());
 			return new MonitoringVt(task);
 		}).toList();
 	}

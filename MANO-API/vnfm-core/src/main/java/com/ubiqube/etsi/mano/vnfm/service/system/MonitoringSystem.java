@@ -42,12 +42,12 @@ public class MonitoringSystem extends AbstractVimSystem<MonitoringTask> {
 
 	@Override
 	public String getProviderId() {
-		return "MANO-MONITORING";
+		return "MONITORING";
 	}
 
 	@Override
 	SystemBuilder getImplementation(final OrchestrationService<MonitoringTask> orchestrationService, final VirtualTask<MonitoringTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
-		return orchestrationService.systemBuilderOf(new VnfMonitoringUow2(virtualTask, vnfMonitoringService));
+		return orchestrationService.systemBuilderOf(new VnfMonitoringUow2(virtualTask, vnfMonitoringService, vimConnectionInformation));
 	}
 
 }
