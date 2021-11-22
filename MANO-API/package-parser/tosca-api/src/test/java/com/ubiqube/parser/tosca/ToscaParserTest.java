@@ -18,6 +18,7 @@ package com.ubiqube.parser.tosca;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ToscaParserTest {
 
 	@Test
 	void testName() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/web_mysql_tosca.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 		final ToscaApi api = new ToscaApi();
@@ -45,49 +46,49 @@ public class ToscaParserTest {
 
 	@Test
 	void testName2() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/tosca-vnffgd-sample.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/tosca-vnffgd-sample.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 	}
 
 	@Test
 	void testName3() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/tacker_nfv_defs.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/tacker_nfv_defs.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 	}
 
 	@Test
 	void testName4() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/TOSCA_mec_definition_1_0_0.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/TOSCA_mec_definition_1_0_0.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 	}
 
 	@Test
 	void testName5() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/TOSCA_nfv_definition_1_0_0.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/TOSCA_nfv_definition_1_0_0.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 	}
 
 	@Test
 	void testName6() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/etsi_nfv_sol001_nsd_types.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/etsi_nfv_sol001_nsd_types.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 	}
 
 	@Test
 	void testName7() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/etsi_nfv_sol001_pnfd_types.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/etsi_nfv_sol001_pnfd_types.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 	}
 
 	@Test
 	void testName8() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 	}

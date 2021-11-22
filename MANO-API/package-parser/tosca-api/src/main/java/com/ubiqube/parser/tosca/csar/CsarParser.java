@@ -46,11 +46,11 @@ public class CsarParser {
 	private Properties props;
 	private VfsResolver resolver;
 
-	public CsarParser(final String filename) {
+	public CsarParser(final File filename) {
 		FileSystemManager fsManager;
 		try {
 			fsManager = VFS.getManager();
-			csar = fsManager.resolveFile(computeFilename(filename));
+			csar = fsManager.resolveFile(computeFilename(filename.toString()));
 			resolver = new VfsResolver();
 			props = getMetaFileContent(csar);
 

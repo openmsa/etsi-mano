@@ -16,29 +16,29 @@
  */
 package com.ubiqube.parser.tosca;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@NoArgsConstructor
+@Data
 public class Import {
+	@JsonProperty("file")
 	private String url;
 	private String name;
+	@JsonProperty("namespace_prefix")
+	private String namespacePrefix;
+	@JsonProperty("namespace_uri")
+	private String namespaceUri;
 
-	public Import(final String _name, final String _url) {
-		name = _name;
-		url = _url;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(final String url) {
+	public Import(final String name, final String url) {
+		this.name = name;
 		this.url = url;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
-	}
-
 }

@@ -18,6 +18,7 @@ package com.ubiqube.parser.tosca;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class UbiToscaTest {
 	void testUbiCsar() throws Exception {
 		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
-		final ToscaParser toscaParser = new ToscaParser("/tmp/ubi-tosca.csar");
+		final ToscaParser toscaParser = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = toscaParser.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 
@@ -58,7 +59,7 @@ public class UbiToscaTest {
 	void testUbiCsarCompute() throws Exception {
 		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
-		final ToscaParser toscaParser = new ToscaParser("/tmp/ubi-tosca.csar");
+		final ToscaParser toscaParser = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = toscaParser.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 

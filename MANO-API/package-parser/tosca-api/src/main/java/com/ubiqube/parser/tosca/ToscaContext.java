@@ -50,7 +50,6 @@ public class ToscaContext {
 	private Map<String, PolicyDefinition> policies = new HashMap<>();
 
 	public ToscaContext(final ToscaRoot root, final IResolver _resolver) {
-
 		artifacts = root.getArtifactTypes();
 		capabilities = root.getCapabilityTypes();
 		description = root.getDescription();
@@ -206,6 +205,9 @@ public class ToscaContext {
 			LOG.info("Resolving: {} -> {}", entry2.getKey(), entry2.getValue());
 			final Import value = entry2.getValue();
 			final String content = resolver.getContent(value.getUrl());
+			if (null == content) {
+				continue;
+			}
 			final ToscaParser main = new ToscaParser(content, resolver);
 			final ToscaContext context = main.getContext();
 
@@ -278,7 +280,7 @@ public class ToscaContext {
 		for (final Entry<String, ToscaClass> entry : entries) {
 			final ToscaClass clazz = entry.getValue();
 			final String derived = clazz.getDerivedFrom();
-			if ((null != derived) && !nodeType.containsKey(derived)) {
+			if (null != derived && !nodeType.containsKey(derived)) {
 				// Throw exception unresolvable external/.
 				LOG.warn("{} not a Node Type.", derived);
 			} else if (derived != null) {
@@ -313,7 +315,7 @@ public class ToscaContext {
 			final NodeTemplate nodeTmpl = entry.getValue();
 			final String type = nodeTmpl.getType();
 			final ToscaClassHolder tch = classHierarchy.get(type);
-			if ((null == tch) && !onClassPath(type)) {
+			if (null == tch && !onClassPath(type)) {
 				throw new ParseException("Unable to find implementation of: " + type + " in: " + entry.getKey());
 			}
 		}
@@ -352,7 +354,7 @@ public class ToscaContext {
 		if (null != root2.getCapabilityTypes()) {
 			capabilities.putAll(root2.getCapabilityTypes());
 		}
-		if ((null != root2.getImports())) {
+		if (null != root2.getImports()) {
 			if (null == imports) {
 				imports = root2.getImports();
 			} else {
@@ -368,7 +370,7 @@ public class ToscaContext {
 		if (null != root2.getRelationshipTypes()) {
 			relationship.putAll(root2.getRelationshipTypes());
 		}
-		if ((null != root2.getTopologyTemplate())) {
+		if (null != root2.getTopologyTemplate()) {
 			if (null == topologies) {
 				topologies = root2.getTopologyTemplate();
 			} else {

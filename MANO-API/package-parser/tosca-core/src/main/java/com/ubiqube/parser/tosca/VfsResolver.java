@@ -18,6 +18,8 @@ package com.ubiqube.parser.tosca;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +35,7 @@ public class VfsResolver extends Resolver {
 	private final FileSystemManager fsManager;
 	final Pattern urlMatcher = Pattern.compile("(?<!\\\\):");
 	private FileObject parent;
+	Set<String> imported = new LinkedHashSet<>();
 
 	public VfsResolver() {
 		try {
@@ -44,13 +47,15 @@ public class VfsResolver extends Resolver {
 
 	@Override
 	public String getContent(final String url) {
+		if (imported.contains(url)) {
+			return null;
+		}
+		imported.add(url);
 		LOG.info("Resolving: {} from: {}", url, parent.toString());
 		if (isUrl(url)) {
 			return super.getContent(url);
 		}
-		if (url.startsWith("/")) {
-			// Handle absolute content
-		} else {
+		if (!url.startsWith("/")) {
 			try {
 				final FileObject child = parent.resolveFile(url);
 				return child.getContent().getString(Charset.defaultCharset());

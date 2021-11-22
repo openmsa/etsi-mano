@@ -23,6 +23,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.MethodDescriptor;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -92,9 +93,15 @@ public class ToscaApiTest {
 		complex.add(Time.class);
 	}
 
+	@Test
+	void testGetFilesOpenTosca() throws Exception {
+		final ToscaParser toscaParser = new ToscaParser(new File("src/test/resources/msa-api_w1-wip1.csar"));
+		final ToscaContext root = toscaParser.getContext();
+	}
+
 	// @Test
 	void testName() throws Exception {
-		final ToscaParser tp = new ToscaParser("src/test/resources/web_mysql_tosca.yaml");
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/web_mysql_tosca.yaml"));
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<Compute> res = toscaApi.getObjects(root, parameters, Compute.class);
@@ -105,7 +112,7 @@ public class ToscaApiTest {
 	public void testUbiCsar() throws Exception {
 		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
-		final ToscaParser tp = new ToscaParser("/tmp/ubi-tosca.csar");
+		final ToscaParser tp = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = tp.getContext();
 		final ToscaApi toscaApi = new ToscaApi();
 		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.vdu.Compute.class);
