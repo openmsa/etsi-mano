@@ -58,7 +58,8 @@ public class ConstraintsDeserializer extends StdDeserializer<Constraint> {
 			// One of 3.5.2.1 Operator keynames
 			if ("greater_or_equal".equals(key)) {
 				return new GreaterOrEqual(entry.getValue());
-			} else if ("valid_values".equals(key)) {
+			}
+			if ("valid_values".equals(key)) {
 				return new ValidValues((ArrayNode) entry.getValue());
 			} else if ("min_length".equals(key)) {
 				return new MinLength(entry.getValue());
@@ -72,7 +73,7 @@ public class ConstraintsDeserializer extends StdDeserializer<Constraint> {
 				return new InRange((ArrayNode) entry.getValue());
 			} else if ("pattern".equals(key)) {
 				return new Pattern(entry.getValue());
-			} else if ("less_or_equal".equals(key)) {
+			} else if ("less_or_equal".equals(key) || "length".equals(key)) {
 				return new LessOrEqual(entry.getValue().asText());
 			} else {
 				throw new ParseException("Unknow Constraint: " + key);
