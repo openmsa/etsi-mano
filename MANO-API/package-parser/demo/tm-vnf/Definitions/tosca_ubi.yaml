@@ -242,7 +242,6 @@ topology_template:
                 ip_allocation_pools: # list tosca.datatypes.nfv.IpAllocationPool
                   - start_ip_address: 192.168.0.100
                     end_ip_address: 192.168.0.254
-              associated_layer_protocol: ipv4
           qos: # tosca.datatypes.nfv.Qos
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -265,7 +264,6 @@ topology_template:
           min_bitrate_requirements:
             root: 11
             leaf: 16
-          virtual_link_protocol_data:
           qos:
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -302,7 +300,6 @@ topology_template:
           min_bitrate_requirements:
             root: 11
             leaf: 16
-          virtual_link_protocol_data:
           qos:
             latency: 5 ms
             packet_delay_variation: 1 s
