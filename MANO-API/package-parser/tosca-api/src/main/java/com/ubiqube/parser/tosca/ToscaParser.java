@@ -40,7 +40,7 @@ public class ToscaParser {
 	private CsarParser csar = null;
 	private ToscaContext context;
 
-	public ToscaParser(final String filename) {
+	public ToscaParser(final File filename) {
 		final ObjectMapper mapper = getMapper();
 
 		IResolver resolver;
@@ -57,7 +57,7 @@ public class ToscaParser {
 			if (isZip(filename)) {
 				root2 = mapper.readValue(csar.getEntryDefinition(), ToscaRoot.class);
 			} else {
-				root2 = mapper.readValue(new File(filename), ToscaRoot.class);
+				root2 = mapper.readValue(filename, ToscaRoot.class);
 			}
 			context.addRoot(root2);
 			context.resolvImports();
@@ -69,7 +69,6 @@ public class ToscaParser {
 	}
 
 	public ToscaParser(final String content, final IResolver resolver) {
-
 		final ObjectMapper mapper = getMapper();
 		try {
 			final ToscaRoot root = mapper.readValue(content, ToscaRoot.class);
@@ -99,8 +98,8 @@ public class ToscaParser {
 		return mapper;
 	}
 
-	private boolean isZip(final String fileName) {
-		final Matcher res = zipMatcher.matcher(fileName);
+	private boolean isZip(final File fileName) {
+		final Matcher res = zipMatcher.matcher(fileName.toString());
 		return res.find();
 	}
 
