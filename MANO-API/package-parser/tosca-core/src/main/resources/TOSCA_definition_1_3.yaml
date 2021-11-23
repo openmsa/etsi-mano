@@ -526,7 +526,7 @@ node_types:
         type: string
       size:
         type: scalar-unit.size
-        default: 0 MB
+        #default: 0 MB
         constraints:
           - greater_or_equal: 0 MB
 
