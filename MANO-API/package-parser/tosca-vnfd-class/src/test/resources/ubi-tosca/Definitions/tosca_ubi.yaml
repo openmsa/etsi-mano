@@ -214,7 +214,7 @@ topology_template:
             virtual_cpu_clock: 3 GHz
             virtual_cpu_oversubscription_policy: plo
             vdu_cpu_requirements: # map string
-              read: openstack
+              availability_zone_type: dpdk
             virtual_cpu_pinning: # tosca.datatypes.nfv.VirtualCpuPinning
               virtual_cpu_pinning_policy: static
               virtual_cpu_pinning_rule:
