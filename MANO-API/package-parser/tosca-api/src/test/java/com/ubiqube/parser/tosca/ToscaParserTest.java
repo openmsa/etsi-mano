@@ -30,7 +30,7 @@ import com.ubiqube.parser.tosca.api.ToscaApi;
 
 public class ToscaParserTest {
 
-	@Test
+	/// TODO remote URL use some tosca 1.0 @Test
 	void testName() throws Exception {
 		final ToscaParser tp = new ToscaParser(new File("src/test/resources/web_mysql_tosca.yaml"));
 		final ToscaContext root = tp.getContext();
