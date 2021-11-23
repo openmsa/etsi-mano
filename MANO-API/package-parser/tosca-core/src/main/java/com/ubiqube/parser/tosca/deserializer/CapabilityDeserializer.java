@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -54,7 +53,7 @@ public class CapabilityDeserializer extends StdDeserializer<CapabilityDefinition
 	}
 
 	@Override
-	public CapabilityDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JacksonException {
+	public CapabilityDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final TreeNode value = p.getCodec().readTree(p);
 		if (value instanceof TextNode) {
 			final CapabilityDefinition cap = new CapabilityDefinition();

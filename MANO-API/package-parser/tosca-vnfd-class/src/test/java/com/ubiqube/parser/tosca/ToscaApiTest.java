@@ -149,6 +149,7 @@ public class ToscaApiTest {
 		testToscaClass(toscaApi, 1, root, parameters, SupportedVnfInterface.class);
 		testToscaClass(toscaApi, 1, root, parameters, AffinityRule.class);
 		testToscaClass(toscaApi, 1, root, parameters, VirtualLinkBitrateInitialDelta.class);
+		testToscaClass(toscaApi, 2, root, parameters, tosca.nodes.nfv.vdu.Compute.class);
 	}
 
 	private List<?> testToscaClass(final ToscaApi toscaApi, final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<?> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {

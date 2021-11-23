@@ -25,21 +25,19 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class VfsResolver extends Resolver {
 	private static final Logger LOG = LoggerFactory.getLogger(VfsResolver.class);
-	private final FileSystemManager fsManager;
 	final Pattern urlMatcher = Pattern.compile("(?<!\\\\):");
 	private FileObject parent;
 	Set<String> imported = new LinkedHashSet<>();
 
 	public VfsResolver() {
 		try {
-			fsManager = VFS.getManager();
+			VFS.getManager();
 		} catch (final FileSystemException e) {
 			throw new ParseException(e);
 		}

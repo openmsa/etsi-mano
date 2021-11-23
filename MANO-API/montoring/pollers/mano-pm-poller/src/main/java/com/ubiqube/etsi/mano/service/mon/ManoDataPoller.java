@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,7 @@ public class ManoDataPoller {
 	}
 
 	private BatchPollingJob map(final PmJob pmJob) {
-		final List<Metric> mettrics = pmJob.getCriteria().getPerformanceMetric().stream().map(this::map).collect(Collectors.toList());
+		final List<Metric> mettrics = pmJob.getCriteria().getPerformanceMetric().stream().map(this::map).toList();
 		return new BatchPollingJob(pmJob.getId(), pmJob.getObjectInstanceIds(), mettrics, pmJob.getVimConnectionInformation().getId());
 	}
 

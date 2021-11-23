@@ -197,7 +197,7 @@ public class OpenStackVim implements Vim {
 				.filter(x -> x.getVcpus() == numVcpu)
 				.filter(x -> x.getRam() == virtualMemorySize / MEGA)
 				.filter(x -> x.getDisk() == disk / GIGA)
-				.map(x -> (Flavor) x)
+				.map(Flavor.class::cast)
 				.findFirst();
 		// XXX We can't use name maybe use an UUID.
 		return matchingFlavor.orElseGet(() -> os.compute()
@@ -295,7 +295,6 @@ public class OpenStackVim implements Vim {
 	public List<VimCapability> getCaps(final VimConnectionInformation vimConnectionInformation) {
 		final ExecutorService tpe = Executors.newFixedThreadPool(5);
 		final CompletionService<List<VimCapability>> completionService = new ExecutorCompletionService<>(tpe);
-		final List<? extends Extension> exts;
 		completionService.submit(getExtensions(vimConnectionInformation));
 		completionService.submit(getAgents(vimConnectionInformation));
 		int received = 0;
