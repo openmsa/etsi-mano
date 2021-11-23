@@ -337,6 +337,9 @@ public class ToscaContext {
 			return parent;
 		}
 		final ToscaClass node = nodeType.get(derived);
+		if (null == node) {
+			throw new ParseException("Node " + derived + " cannot be found.");
+		}
 		LOG.debug("Building Tree Node {} ", derived);
 		final ToscaClassHolder tch = new ToscaClassHolder(derived, node);
 		classHierarchy.put(derived, tch);
