@@ -49,8 +49,15 @@ public class ImportDeserializer extends StdDeserializer<Imports> {
 		for (final JsonNode jsonNode : value) {
 			if (jsonNode.isObject()) {
 				final ObjectNode node = (ObjectNode) jsonNode;
-				final Import imprt = p.getCodec().treeToValue(node, Import.class);
-				imports.put(UUID.randomUUID().toString(), imprt);
+				if (1 == node.size()) {
+					final String key = node.fields().next().getKey();
+					final String val = node.fields().next().getValue().asText();
+					final Import imprt = new Import(key, val);
+					imports.put(key, imprt);
+				} else {
+					final Import imprt = p.getCodec().treeToValue(node, Import.class);
+					imports.put(UUID.randomUUID().toString(), imprt);
+				}
 			} else if (jsonNode.isTextual()) {
 				final String key = UUID.randomUUID().toString();
 				final Import imprt = new Import(key, jsonNode.asText());
