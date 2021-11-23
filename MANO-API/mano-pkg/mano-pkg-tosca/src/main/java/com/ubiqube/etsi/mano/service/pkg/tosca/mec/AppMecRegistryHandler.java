@@ -48,12 +48,12 @@ public class AppMecRegistryHandler implements PackageDescriptor<AppToscaProvider
 	public boolean isProcessable(final byte[] data) {
 		final ObjectMapper mapper = getMapper();
 		try {
-			if (((data.length <= 10) || ((data[0] != 'P') || (data[1] != 'K')))) {
+			if (data.length <= 10 || data[0] != 'P' || data[1] != 'K') {
 				LOG.debug("Not a Zip File.");
 				return false;
 			}
 			final File filename = PkgUtils.fetchData(data);
-			final CsarParser cp = new CsarParser(filename.toString());
+			final CsarParser cp = new CsarParser(filename);
 			final String ep = cp.getEntryDefinition();
 
 			final JsonNode tree = mapper.readTree(ep.getBytes());
