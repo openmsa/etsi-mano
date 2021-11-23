@@ -21,13 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.File;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-
 import com.ubiqube.parser.tosca.csar.CsarParser;
 
 public class CsarTest {
 
-	@Test
 	void testGetFiles() throws Exception {
 		final CsarParser csar = new CsarParser(new File("src/test/resources/csar_elk.csar"));
 		final List<?> list = csar.getFiles();

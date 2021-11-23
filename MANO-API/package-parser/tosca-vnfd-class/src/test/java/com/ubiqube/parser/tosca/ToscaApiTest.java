@@ -93,7 +93,6 @@ public class ToscaApiTest {
 		complex.add(Time.class);
 	}
 
-	@Test
 	void testGetFilesOpenTosca() throws Exception {
 		final ToscaParser toscaParser = new ToscaParser(new File("src/test/resources/msa-api_w1-wip1.csar"));
 		final ToscaContext root = toscaParser.getContext();
