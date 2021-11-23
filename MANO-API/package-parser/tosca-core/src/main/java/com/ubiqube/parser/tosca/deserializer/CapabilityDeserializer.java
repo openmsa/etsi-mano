@@ -58,17 +58,16 @@ public class CapabilityDeserializer extends StdDeserializer<CapabilityDefinition
 		final TreeNode value = p.getCodec().readTree(p);
 		if (value instanceof TextNode) {
 			final CapabilityDefinition cap = new CapabilityDefinition();
-			cap.setType(value.toString());
+			cap.setType(((TextNode) value).asText());
 			return cap;
 		}
-		// return p.getCodec().treeToValue(value, CapabilityDefinition.class);
 		final CapabilityDefinition caps = new CapabilityDefinition();
 		Optional.ofNullable(value.get("attributes")).map(x -> getTreeValue(p, x, new TypeReference<Map<String, ValueObject>>() {/**/
 		})).ifPresent(caps::setAttributes);
-		Optional.ofNullable(value.get("description")).map(TreeNode::toString).ifPresent(caps::setDescription);
+		Optional.ofNullable(value.get("description")).map(TextNode.class::cast).map(TextNode::asText).ifPresent(caps::setDescription);
 		Optional.ofNullable(value.get("occurrences")).map(x -> getTreeValue(p, x, Occurrences.class)).ifPresent(caps::setOccurrences);
 		Optional.ofNullable(value.get("properties")).map(x -> getTreeValue(p, x, ToscaProperties.class)).ifPresent(caps::setProperties);
-		Optional.ofNullable(value.get("type")).map(TreeNode::toString).ifPresent(caps::setType);
+		Optional.ofNullable(value.get("type")).map(TextNode.class::cast).map(TextNode::asText).ifPresent(caps::setType);
 		Optional.ofNullable(value.get("valid_source_types")).map(x -> getTreeValue(p, x, new TypeReference<List<String>>() {/**/
 		})).ifPresent(caps::setValid_source_types);
 		return caps;
