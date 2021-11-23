@@ -150,6 +150,9 @@ public class JavaGenerator {
 		if ("string".equals(val.getDerivedFrom())) {
 			return true;
 		}
+		if ("timestamp".equals(val.getDerivedFrom())) {
+			return true;
+		}
 		return false;
 	}
 
