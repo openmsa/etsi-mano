@@ -52,6 +52,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.ZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualCpu;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualMemory;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
@@ -218,9 +219,10 @@ public abstract class AbstractGrantAction {
 		final Map<String, VimComputeResourceFlavourEntity> cache = new HashMap<>();
 		getVnfCompute(id).forEach(x -> {
 			final VirtualCpu vCpu = x.getVirtualCpu();
-			final String key = vCpu.getNumVirtualCpu() + "-" + x.getVirtualMemorySize() + "-" + x.getDiskSize();
+			final VirtualMemory vMem = x.getVirtualMemory();
+			final String key = vCpu.getNumVirtualCpu() + "-" + vMem.getVirtualMemSize() + "-" + x.getDiskSize();
 			final VimComputeResourceFlavourEntity vcretmp = cache.computeIfAbsent(key, y -> {
-				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) vCpu.getNumVirtualCpu(), x.getVirtualMemorySize(), x.getDiskSize());
+				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) vCpu.getNumVirtualCpu(), vMem.getVirtualMemSize(), x.getDiskSize());
 				final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
 				vcrfe.setVimConnectionId(vimConnectionInformation.getVimId());
 				vcrfe.setResourceProviderId(vim.getType());

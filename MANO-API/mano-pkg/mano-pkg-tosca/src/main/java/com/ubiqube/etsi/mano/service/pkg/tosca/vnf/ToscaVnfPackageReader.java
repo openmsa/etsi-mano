@@ -116,7 +116,7 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.field("internalName", "toscaName")
 				.field("virtualStorageReq", "storages")
 				.field("virtualCompute.virtualCpu", "virtualCpu")
-				.field("virtualCompute.virtualMemory.virtualMemSize", "virtualMemorySize")
+				.field("virtualCompute.virtualMemory", "virtualMemory")
 				.field("virtualCompute.virtualLocalStorage[0].sizeOfStorage", "diskSize")
 				.field("bootData.contentOrFileData.content", "cloudInit")
 				.field("bootData.contentOrFileData.sourcePath", "sourcePath")

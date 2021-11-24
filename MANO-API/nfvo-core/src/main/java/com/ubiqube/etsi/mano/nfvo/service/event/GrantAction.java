@@ -148,7 +148,7 @@ public class GrantAction extends AbstractGrantAction {
 				final VnfCompute compute = findCompute(vnfPackage, grantInformationExt.getVduId());
 				disk += compute.getDiskSize();
 				vcpu += compute.getVirtualCpu().getNumVirtualCpu();
-				ram += compute.getVirtualMemorySize();
+				ram += compute.getVirtualMemory().getVirtualMemSize();
 			} else if (grantInformationExt.getType() == ResourceTypeEnum.STORAGE) {
 				// Cinder.
 			}

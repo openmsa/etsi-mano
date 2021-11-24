@@ -17,15 +17,11 @@
 package com.ubiqube.etsi.mano.dao.mano.pkg;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
-
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,25 +34,17 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class VirtualCpu implements Serializable {
+public class VirtualMemory implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private String virtualCpuOversubscriptionPolicy;
+	private Boolean numaEnabled;
 
-	@FullTextField
-	private String cpuArchitecture;
-
-	private Double virtualCpuClock;
+	private long virtualMemSize;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<String, String> vduCpuRequirements;
+	private Map<String, String> vduMemRequirements;
 
-	@GenericField
-	private long numVirtualCpu;
+	private String virtualMemOversubscriptionPolicy;
 
-	private String virtualCpuPinningPolicy;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> virtualCpuPinningRule;
 }

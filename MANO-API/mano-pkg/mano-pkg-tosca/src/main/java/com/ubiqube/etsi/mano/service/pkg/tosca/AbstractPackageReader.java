@@ -64,6 +64,7 @@ public abstract class AbstractPackageReader {
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new SizeConverter());
 		converterFactory.registerConverter(new TimeConverter());
+		converterFactory.registerConverter(new FrequencyConverter());
 		mapper = mapperFactory.getMapperFacade();
 	}
 
