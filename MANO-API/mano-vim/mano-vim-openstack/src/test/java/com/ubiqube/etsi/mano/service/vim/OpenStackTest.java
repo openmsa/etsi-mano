@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -274,7 +275,7 @@ public class OpenStackTest {
 		final int numVcpu = 1;
 		final long virtualMemorySize = 2 * 100000000L;
 		final long disk = 20 * 1000000000L;
-		final String lid = vim.getOrCreateFlavor(vimConnectionInformation, "Junit-flavor", numVcpu, virtualMemorySize, disk);
+		final String lid = vim.getOrCreateFlavor(vimConnectionInformation, "Junit-flavor", numVcpu, virtualMemorySize, disk, new HashMap<>());
 		assertNotNull(lid);
 	}
 
@@ -312,9 +313,18 @@ public class OpenStackTest {
 				.authenticate();
 	}
 
+	private static OSClientV3 getVictoriaConnection() {
+		final Identifier domainIdentifier = Identifier.byName("Default");
+		return OSFactory.builderV3()
+				.endpoint("http://os-victoria:5000/v3")
+				.credentials("admin", "cf83a3d4263b4be0", domainIdentifier)
+				.scopeToProject(Identifier.byId("29672f9f0e444a4bb0f8691195939d37"))
+				.authenticate();
+	}
+
 	@Test
-	static void testTrain() throws Exception {
-		final OSClientV3 os = getTrainConnection();
+	void testTrain() throws Exception {
+		final OSClientV3 os = getVictoriaConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
 		System.out.println("l=" + l.get());
@@ -325,7 +335,7 @@ public class OpenStackTest {
 	}
 
 	@Test
-	static void testQueens() throws Exception {
+	void testQueens() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
