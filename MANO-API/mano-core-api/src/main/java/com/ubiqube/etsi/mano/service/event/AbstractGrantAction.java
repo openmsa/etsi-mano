@@ -222,7 +222,7 @@ public abstract class AbstractGrantAction {
 			final VirtualMemory vMem = x.getVirtualMemory();
 			final String key = vCpu.getNumVirtualCpu() + "-" + vMem.getVirtualMemSize() + "-" + x.getDiskSize();
 			final VimComputeResourceFlavourEntity vcretmp = cache.computeIfAbsent(key, y -> {
-				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) vCpu.getNumVirtualCpu(), vMem.getVirtualMemSize(), x.getDiskSize());
+				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) vCpu.getNumVirtualCpu(), vMem.getVirtualMemSize(), x.getDiskSize(), vCpu.getVduCpuRequirements());
 				final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
 				vcrfe.setVimConnectionId(vimConnectionInformation.getVimId());
 				vcrfe.setResourceProviderId(vim.getType());

@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.vim;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
@@ -49,7 +50,7 @@ public interface Vim {
 	VimMonitoring getMonitoring(VimConnectionInformation vimConnectionInformation);
 
 	@Nonnull
-	String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk);
+	String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk, Map<String, String> flavorSpec);
 
 	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages, String cloudInitData, List<String> securityGroup, List<String> affinityRules);
 

@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
@@ -76,13 +78,14 @@ public class OpenStackVim implements Vim {
 
 	private static final ThreadLocal<Map<String, OSClientV3>> sessions = new ThreadLocal<>();
 
-	private final VimService vciJpa;
-
 	private final MapperFacade mapper;
 
+	private final Map<String, String> flavors;
+
 	public OpenStackVim(final VimService _vciJpa, final MapperFacade _mapper) {
-		vciJpa = _vciJpa;
-		mapper = _mapper;
+		this.mapper = _mapper;
+		this.flavors = Map.of("availability_zone_type", "...");
+
 		LOG.info("Booting Openstack VIM.\n" +
 				"   ___  ___   __   _____ __  __ \n" +
 				"  / _ \\/ __|__\\ \\ / /_ _|  \\/  |\n" +
@@ -189,18 +192,28 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk) {
+	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		LOG.debug("mem={} disk={}", virtualMemorySize / MEGA, disk / GIGA);
-		final Optional<Flavor> matchingFlavor = os.compute().flavors().list()
-				.stream()
+		LOG.debug("Flavor mem={} disk={}", virtualMemorySize / MEGA, disk / GIGA);
+		final List<Flavor> matchingFlavor = os.compute().flavors().list()
+				.parallelStream()
 				.filter(x -> x.getVcpus() == numVcpu)
 				.filter(x -> x.getRam() == virtualMemorySize / MEGA)
 				.filter(x -> x.getDisk() == disk / GIGA)
 				.map(Flavor.class::cast)
-				.findFirst();
-		// XXX We can't use name maybe use an UUID.
-		return matchingFlavor.orElseGet(() -> os.compute()
+				.filter(x -> {
+					final Map<String, String> specs = os.compute().flavors().listExtraSpecs(x.getId());
+					return isMatching(flavorSpec, specs);
+				})
+				.toList();
+		if (!matchingFlavor.isEmpty()) {
+			return matchingFlavor.get(0).getId();
+		}
+		return createFlavor(os, name, numVcpu, virtualMemorySize, disk, flavorSpec).getId();
+	}
+
+	private Flavor createFlavor(final OSClientV3 os, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
+		final Flavor flavor = os.compute()
 				.flavors()
 				.create(Builders.flavor()
 						.disk((int) (disk / GIGA))
@@ -208,8 +221,30 @@ public class OpenStackVim implements Vim {
 						.vcpus(numVcpu)
 						.isPublic(true)
 						.name(name)
-						.build()))
-				.getId();
+						.build());
+		if (flavorSpec.isEmpty()) {
+			return flavor;
+		}
+		final Map<String, String> newSpec = flavorSpec.entrySet().stream()
+				.map(x -> Map.entry(convert(x.getKey()), x.getValue()))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+		os.compute().flavors().createAndUpdateExtraSpecs(flavor.getId(), newSpec);
+		return flavor;
+	}
+
+	private boolean isMatching(final Map<String, String> flavorSpec, final Map<String, String> specs) {
+		final Set<Entry<String, String>> entries = flavorSpec.entrySet();
+		for (final Entry<String, String> entry : entries) {
+			final String osEntry = convert(entry.getKey());
+			if (specs.get(osEntry) == null) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private String convert(final String key) {
+		return flavors.get(key);
 	}
 
 	@Override
