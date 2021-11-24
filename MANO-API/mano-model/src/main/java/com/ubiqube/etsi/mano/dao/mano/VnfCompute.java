@@ -39,6 +39,8 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
+import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualCpu;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -80,14 +82,11 @@ public class VnfCompute implements ToscaEntity, Auditable {
 	private String sourcePath;
 	private String destinationPath;
 
+	@Embedded
+	private VirtualCpu virtualCpu = new VirtualCpu();
+
 	@GenericField
 	private long virtualMemorySize;
-
-	@FullTextField
-	private String cpuArchitecture;
-
-	@GenericField
-	private long numVcpu;
 
 	@GenericField
 	private long diskSize;
