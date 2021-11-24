@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,7 +37,10 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class LocationConstraints {
+public class LocationConstraints implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;

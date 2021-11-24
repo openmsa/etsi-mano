@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
@@ -35,7 +36,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class VxLanConfig {
+public class VxLanConfig implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private PeerModeType peerMode;
 
 	@ElementCollection(fetch = FetchType.EAGER)

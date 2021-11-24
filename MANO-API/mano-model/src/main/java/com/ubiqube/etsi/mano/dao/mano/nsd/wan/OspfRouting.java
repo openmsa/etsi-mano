@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 import lombok.Getter;
@@ -29,6 +31,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class OspfRouting {
+public class OspfRouting implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	private String areaId;
 }

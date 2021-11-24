@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -28,13 +29,17 @@ import lombok.Setter;
 
 /**
  * LocationConstraintsCivicAddressElement
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Getter
 @Setter
 @Entity
-public class LocConstCivicAddrElmnt {
+public class LocConstCivicAddrElmnt implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;

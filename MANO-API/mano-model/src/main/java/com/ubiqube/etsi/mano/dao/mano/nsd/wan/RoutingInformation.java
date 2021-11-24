@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -34,11 +36,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class RoutingInformation {
+public class RoutingInformation implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Enumerated(EnumType.STRING)
 	private RoutingProtocolType routingProtocol;
 
 	private StaticRouting staticRouting;
+
 	@Enumerated(EnumType.STRING)
 	private IpType routingAddressFamily;
 

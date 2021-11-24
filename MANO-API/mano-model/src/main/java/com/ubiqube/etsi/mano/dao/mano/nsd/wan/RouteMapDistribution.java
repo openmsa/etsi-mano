@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -38,7 +39,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class RouteMapDistribution {
+public class RouteMapDistribution implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Enumerated(EnumType.STRING)
 	private PolicyType policy;
 

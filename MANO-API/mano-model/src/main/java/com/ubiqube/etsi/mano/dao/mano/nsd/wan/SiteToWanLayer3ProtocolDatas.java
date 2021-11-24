@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -33,7 +34,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class SiteToWanLayer3ProtocolDatas {
+public class SiteToWanLayer3ProtocolDatas implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private LogicalInterfaceIpAddress logicalInterfaceIpAddress;
 
 	private RoutingInformation routingInfo;

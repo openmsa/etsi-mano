@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nfvo;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -31,7 +32,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class NsVnfInstance {
+public class NsVnfInstance implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
