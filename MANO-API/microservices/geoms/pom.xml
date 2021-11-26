@@ -12,20 +12,6 @@
 	<artifactId>geo-ms</artifactId>
 	<name>geo-ms</name>
 	<description>Demo project for Spring Boot</description>
-
-	<build>
-		<finalName>${artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -112,4 +98,17 @@
 			<artifactId>keycloak-spring-boot-starter</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<finalName>${artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>
