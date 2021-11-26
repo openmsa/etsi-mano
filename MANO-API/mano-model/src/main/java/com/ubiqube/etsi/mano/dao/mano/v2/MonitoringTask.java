@@ -52,7 +52,7 @@ public class MonitoringTask extends VnfTask {
 	private MonitoringParams monitoringParams;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	private VnfCompute VnfCompute;
+	private VnfCompute vnfCompute;
 
 	private String parentAlias;
 }

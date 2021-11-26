@@ -242,6 +242,7 @@ public abstract class AbstractGrantAction {
 		} catch (final RuntimeException e) {
 			LOG.error("getImage error", e);
 		}
+		return new HashSet<>();
 	}
 
 	private Set<VimSoftwareImageEntity> getSoftwareImage(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {

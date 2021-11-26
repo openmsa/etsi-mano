@@ -57,11 +57,11 @@ public class VimManager {
 
 	private final EntityManager entityManager;
 
-	public VimManager(final List<Vim> _vims, final VimConnectionInformationJpa _vimConnectionInformationJpa, final EntityManager _entityManager) {
-		vims = _vims;
-		vimAssociation = new HashMap<>();
-		vimConnectionInformationJpa = _vimConnectionInformationJpa;
-		entityManager = _entityManager;
+	public VimManager(final List<Vim> vims, final VimConnectionInformationJpa vimConnectionInformationJpa, final EntityManager entityManager) {
+		this.vims = vims;
+		this.vimAssociation = new HashMap<>();
+		this.vimConnectionInformationJpa = vimConnectionInformationJpa;
+		this.entityManager = entityManager;
 		init();
 	}
 
