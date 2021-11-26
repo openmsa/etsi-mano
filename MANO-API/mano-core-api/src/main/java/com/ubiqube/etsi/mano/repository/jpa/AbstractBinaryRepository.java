@@ -40,44 +40,44 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 
 	private final NamingStrategy namingStrategy;
 
-	protected AbstractBinaryRepository(final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy _namingStrategy) {
+	protected AbstractBinaryRepository(final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
 		super();
 		this.contentManager = contentManager;
 		this.jsonMapper = jsonMapper;
-		namingStrategy = _namingStrategy;
+		this.namingStrategy = namingStrategy;
 	}
 
-	protected void mkdir(final UUID _id) {
-		final Path path = namingStrategy.getRoot(getFrontClass(), _id);
+	protected void mkdir(final UUID id) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), id);
 		contentManager.mkdir(path);
 	}
 
 	@Override
-	public final void storeObject(final UUID _id, final String _filename, final Object _object) {
+	public final void storeObject(final UUID id, final String filename, final Object object) {
 		try {
-			final String str = jsonMapper.writeValueAsString(_object);
-			storeBinary(_id, _filename, new ByteArrayInputStream(str.getBytes(Charset.defaultCharset())));
+			final String str = jsonMapper.writeValueAsString(object);
+			storeBinary(id, filename, new ByteArrayInputStream(str.getBytes(Charset.defaultCharset())));
 		} catch (final JsonProcessingException e) {
 			throw new GenericException(e);
 		}
 	}
 
 	@Override
-	public final void storeBinary(final UUID _id, final String _filename, final InputStream _stream) {
-		final Path dir = namingStrategy.getRoot(getFrontClass(), _id);
+	public final void storeBinary(final UUID id, final String filename, final InputStream stream) {
+		final Path dir = namingStrategy.getRoot(getFrontClass(), id);
 		dir.toFile().mkdirs();
-		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
-		contentManager.store(path, _stream);
+		final Path path = namingStrategy.getRoot(getFrontClass(), id, filename);
+		contentManager.store(path, stream);
 	}
 
 	@Override
-	public final byte[] getBinary(final UUID _id, final String _filename) {
-		return getBinary(_id, _filename, 0, null);
+	public final byte[] getBinary(final UUID id, final String filename) {
+		return getBinary(id, filename, 0, null);
 	}
 
 	@Override
-	public final byte[] getBinary(final UUID _id, final String _filename, final int min, final Long max) {
-		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
+	public final byte[] getBinary(final UUID id, final String filename, final int min, final Long max) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), id, filename);
 		try (InputStream os = contentManager.load(path, min, max)) {
 			return StreamUtils.copyToByteArray(os);
 		} catch (final IOException e) {
@@ -86,14 +86,14 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public void delete(@NotNull final UUID _id, @NotNull final String _filename) {
-		final Path path = namingStrategy.getRoot(getFrontClass(), _id, _filename);
+	public void delete(@NotNull final UUID id, @NotNull final String filename) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), id, filename);
 		contentManager.delete(path);
 	}
 
 	@Override
-	public void delete(@NotNull final UUID _id) {
-		final Path path = namingStrategy.getRoot(getFrontClass(), _id);
+	public void delete(@NotNull final UUID id) {
+		final Path path = namingStrategy.getRoot(getFrontClass(), id);
 		contentManager.delete(path);
 	}
 

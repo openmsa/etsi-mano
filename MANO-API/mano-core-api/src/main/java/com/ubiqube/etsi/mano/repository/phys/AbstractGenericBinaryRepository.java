@@ -22,7 +22,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
@@ -49,11 +48,11 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	private final Low lowDriver;
 	private final NamingStrategy namingStrategy;
 
-	protected AbstractGenericBinaryRepository(final ObjectMapper _objectMapper, final JsonFilter _jsonFilter, final Low _lowDriver, final NamingStrategy _namingStrategy) {
-		objectMapper = _objectMapper;
-		jsonFilter = _jsonFilter;
-		lowDriver = _lowDriver;
-		namingStrategy = _namingStrategy;
+	protected AbstractGenericBinaryRepository(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low lowDriver, final NamingStrategy namingStrategy) {
+		this.objectMapper = objectMapper;
+		this.jsonFilter = jsonFilter;
+		this.lowDriver = lowDriver;
+		this.namingStrategy = namingStrategy;
 		init();
 	}
 
@@ -72,14 +71,14 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 		return listFilesInFolder.stream()
 				.map(this::rawGetObject)
 				.filter(x -> jsonFilter.apply(x, astBuilder))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override
-	public final T get(final UUID _id) {
-		Path path = namingStrategy.getRoot(getClazz(), _id);
+	public final T get(final UUID id) {
+		Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
-		path = namingStrategy.getRoot(getClazz(), _id, getFilename());
+		path = namingStrategy.getRoot(getClazz(), id, getFilename());
 		try {
 			final byte[] content = lowDriver.get(path.toString());
 			return objectMapper.readValue(content, getClazz());
@@ -89,8 +88,8 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	}
 
 	@Override
-	public final void delete(final UUID _id) {
-		final Path path = namingStrategy.getRoot(getClazz(), _id);
+	public final void delete(final UUID id) {
+		final Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
 		lowDriver.delete(path.toString());
 	}
@@ -105,12 +104,12 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	}
 
 	@Override
-	public final void storeObject(final UUID _id, final String _filename, final Object _object) {
-		Path path = namingStrategy.getRoot(getClazz(), _id);
+	public final void storeObject(final UUID id, final String filename, final Object object) {
+		Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
 		try {
-			final String content = objectMapper.writeValueAsString(_object);
-			path = namingStrategy.getRoot(getClazz(), _id, _filename);
+			final String content = objectMapper.writeValueAsString(object);
+			path = namingStrategy.getRoot(getClazz(), id, filename);
 			lowDriver.add(path.toString(), content.getBytes(Charset.defaultCharset()));
 		} catch (final IOException e) {
 			throw new GenericException(e);
@@ -118,26 +117,26 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	}
 
 	@Override
-	public final void storeBinary(final UUID _id, final String _filename, final InputStream _stream) {
-		Path path = namingStrategy.getRoot(getClazz(), _id);
+	public final void storeBinary(final UUID id, final String filename, final InputStream stream) {
+		Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
-		path = namingStrategy.getRoot(getClazz(), _id, _filename);
-		lowDriver.add(path.toString(), _stream);
+		path = namingStrategy.getRoot(getClazz(), id, filename);
+		lowDriver.add(path.toString(), stream);
 	}
 
 	@Override
-	public final byte[] getBinary(final UUID _id, final String _filename) {
-		Path path = namingStrategy.getRoot(getClazz(), _id);
+	public final byte[] getBinary(final UUID id, final String filename) {
+		Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
-		path = namingStrategy.getRoot(getClazz(), _id, _filename);
+		path = namingStrategy.getRoot(getClazz(), id, filename);
 		return lowDriver.get(path.toString());
 	}
 
 	@Override
-	public final byte[] getBinary(final UUID _id, final String _filename, final int min, final Long max) {
-		Path path = namingStrategy.getRoot(getClazz(), _id);
+	public final byte[] getBinary(final UUID id, final String filename, final int min, final Long max) {
+		Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
-		path = namingStrategy.getRoot(getClazz(), _id, _filename);
+		path = namingStrategy.getRoot(getClazz(), id, filename);
 		return lowDriver.get(path.toString(), min, max);
 	}
 
@@ -153,8 +152,8 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 		}
 	}
 
-	private T rawGetObject(final String _path) {
-		final byte[] bytes = lowDriver.get(_path);
+	private T rawGetObject(final String path) {
+		final byte[] bytes = lowDriver.get(path);
 		try {
 			return objectMapper.readValue(bytes, getClazz());
 		} catch (final IOException e) {
@@ -163,8 +162,8 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	}
 
 	@Override
-	public void delete(@NotNull final UUID _id, @NotNull final String _filename) {
-		final Path path = namingStrategy.getRoot(getClazz(), _id);
+	public void delete(@NotNull final UUID id, @NotNull final String filename) {
+		final Path path = namingStrategy.getRoot(getClazz(), id);
 		lowDriver.delete(path.toString());
 	}
 

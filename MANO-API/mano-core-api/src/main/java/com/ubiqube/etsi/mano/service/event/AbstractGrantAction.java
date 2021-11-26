@@ -241,7 +241,6 @@ public abstract class AbstractGrantAction {
 			return getSoftwareImage(vimInfo, vim, grants);
 		} catch (final RuntimeException e) {
 			LOG.error("getImage error", e);
-			throw e;
 		}
 	}
 

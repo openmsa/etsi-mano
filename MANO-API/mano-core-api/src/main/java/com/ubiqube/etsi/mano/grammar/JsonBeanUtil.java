@@ -73,20 +73,20 @@ public class JsonBeanUtil {
 		simpleTypes.add("java.time.OffsetDateTime");
 	}
 
-	public Map<String, JsonBeanProperty> getPropertiesFromClass(@Nonnull final Class<?> _object) {
-		Map<String, JsonBeanProperty> cached = CACHE.get(_object.getName());
+	public Map<String, JsonBeanProperty> getPropertiesFromClass(@Nonnull final Class<?> object) {
+		Map<String, JsonBeanProperty> cached = CACHE.get(object.getName());
 		if (cached != null) {
 			return cached;
 		}
 		Map<String, JsonBeanProperty> res;
-		res = buildCache(_object);
+		res = buildCache(object);
 		cached = rebuildProperties(res);
-		CACHE.put(_object.getName(), cached);
+		CACHE.put(object.getName(), cached);
 		return cached;
 	}
 
-	public Map<String, JsonBeanProperty> getProperties(@Nonnull final Object _object) {
-		return getPropertiesFromClass(_object.getClass());
+	public Map<String, JsonBeanProperty> getProperties(@Nonnull final Object object) {
+		return getPropertiesFromClass(object.getClass());
 	}
 
 	private Map<String, JsonBeanProperty> rebuildProperties(final Map<String, JsonBeanProperty> res) {

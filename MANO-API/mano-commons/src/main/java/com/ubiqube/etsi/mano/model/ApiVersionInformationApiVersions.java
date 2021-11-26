@@ -49,7 +49,8 @@ public class ApiVersionInformationApiVersions {
 	}
 
 	/**
-	 * Identifies a supported version. The value of the version attribute shall be a version identifier as specified in clause 4.6.1.
+	 * Identifies a supported version. The value of the version attribute shall be a
+	 * version identifier as specified in clause 4.6.1.
 	 *
 	 * @return version
 	 **/
@@ -64,13 +65,17 @@ public class ApiVersionInformationApiVersions {
 		this.version = version;
 	}
 
-	public ApiVersionInformationApiVersions isDeprecated(final Boolean _isDeprecated) {
-		this.isDeprecated = _isDeprecated;
+	public ApiVersionInformationApiVersions isDeprecated(final Boolean inIsDeprecated) {
+		this.isDeprecated = inIsDeprecated;
 		return this;
 	}
 
 	/**
-	 * If such information is available, this attribute indicates whether use of the version signaled by the version attribute is deprecated (true) or not (false). A deprecated version is still supported by the API producer but is recommended not to be used any longer. When a version is no longer supported, it does not appear in the response body.
+	 * If such information is available, this attribute indicates whether use of the
+	 * version signaled by the version attribute is deprecated (true) or not
+	 * (false). A deprecated version is still supported by the API producer but is
+	 * recommended not to be used any longer. When a version is no longer supported,
+	 * it does not appear in the response body.
 	 *
 	 * @return isDeprecated
 	 **/
@@ -84,13 +89,15 @@ public class ApiVersionInformationApiVersions {
 		this.isDeprecated = isDeprecated;
 	}
 
-	public ApiVersionInformationApiVersions retirementDate(final OffsetDateTime _retirementDate) {
-		this.retirementDate = _retirementDate;
+	public ApiVersionInformationApiVersions retirementDate(final OffsetDateTime inRetirementDate) {
+		this.retirementDate = inRetirementDate;
 		return this;
 	}
 
 	/**
-	 * The date and time after which the API version will no longer be supported. This attribute may be included if the value of the isDeprecated attribute is set to true and shall be absent otherwise.
+	 * The date and time after which the API version will no longer be supported.
+	 * This attribute may be included if the value of the isDeprecated attribute is
+	 * set to true and shall be absent otherwise.
 	 *
 	 * @return retirementDate
 	 **/
@@ -111,7 +118,7 @@ public class ApiVersionInformationApiVersions {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final ApiVersionInformationApiVersions apiVersionInformationApiVersions = (ApiVersionInformationApiVersions) o;
@@ -138,9 +145,10 @@ public class ApiVersionInformationApiVersions {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
-	private String toIndentedString(final java.lang.Object o) {
+	private static String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
 			return "null";
 		}

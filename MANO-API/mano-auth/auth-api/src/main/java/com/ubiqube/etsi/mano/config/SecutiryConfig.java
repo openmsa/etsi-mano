@@ -31,7 +31,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
  */
 public interface SecutiryConfig {
 
-	default void configure(final AuthenticationManagerBuilder _auth) throws Exception {
+	default void configure(final AuthenticationManagerBuilder auth) throws Exception {
 		// Nothing.
 	}
 

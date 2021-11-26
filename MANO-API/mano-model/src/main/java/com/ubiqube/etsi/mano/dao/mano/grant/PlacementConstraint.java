@@ -69,7 +69,9 @@ public class PlacementConstraint implements BaseEntity, Auditable {
 	private Boolean fallbackBestEffort = null;
 
 	/**
-	 * The scope of the placement constraint indicating the category of the \"place\" where the constraint applies. Permitted values: * NFVI_POP * ZONE * ZONE_GROUP * NFVI_NODE
+	 * The scope of the placement constraint indicating the category of the
+	 * \"place\" where the constraint applies. Permitted values: * NFVI_POP * ZONE *
+	 * ZONE_GROUP * NFVI_NODE
 	 */
 	public enum ScopeEnum {
 		NFVI_POP("NFVI_POP"),

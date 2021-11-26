@@ -43,7 +43,7 @@ public class ManoMsaProperties {
 	/**
 	 * @deprecated Only V2 is supported.
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	private String version;
 
 	public String getUrl() {
@@ -70,10 +70,20 @@ public class ManoMsaProperties {
 		this.password = password;
 	}
 
+	/**
+	 * @deprecated For removal.
+	 * @return
+	 */
+	@Deprecated(forRemoval = true)
 	public String getVersion() {
 		return version;
 	}
 
+	/**
+	 * @deprecated For removal.
+	 * @param version
+	 */
+	@Deprecated(forRemoval = true)
 	public void setVersion(final String version) {
 		this.version = version;
 	}

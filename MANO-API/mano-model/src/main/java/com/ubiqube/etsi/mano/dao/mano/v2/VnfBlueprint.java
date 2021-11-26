@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -129,6 +128,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	// 3.5.1
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> warnings;
+
 	@Override
 	public void addTask(final VnfTask task) {
 		if (null == tasks) {

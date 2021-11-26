@@ -64,7 +64,7 @@ public interface VnfPackageManagement {
 
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull UUID vnfPkgId, boolean includeSignature);
 
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull UUID _vnfPkgId, @Nullable String range);
+	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull UUID vnfPkgId, @Nullable String range);
 
 	ResponseEntity<Void> getPackageManifest(UUID vnfPkgId, String includeSignatures);
 

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.hateoas.RepresentationModel;
@@ -35,6 +36,28 @@ public class WebEntity<T extends RepresentationModel<? extends T>> extends Repre
 
 	public final void setId(final UUID id) {
 		this.id = id;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		final int result = super.hashCode();
+		return prime * result + Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final WebEntity<?> other = (WebEntity<?>) obj;
+		return Objects.equals(id, other.id);
 	}
 
 }

@@ -26,11 +26,11 @@ public class NotFoundException extends ResponseStatusException {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public NotFoundException(String _detail) {
-		super(HttpStatus.NOT_FOUND, _detail);
+	public NotFoundException(final String detail) {
+		super(HttpStatus.NOT_FOUND, detail);
 	}
 
-	public NotFoundException(String _detail, Throwable e) {
-		super(HttpStatus.NOT_FOUND, _detail, e);
+	public NotFoundException(final String detail, final Throwable e) {
+		super(HttpStatus.NOT_FOUND, detail, e);
 	}
 }

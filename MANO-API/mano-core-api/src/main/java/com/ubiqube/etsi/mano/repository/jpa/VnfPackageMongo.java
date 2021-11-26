@@ -19,10 +19,7 @@ package com.ubiqube.etsi.mano.repository.jpa;
 import java.nio.file.Path;
 import java.util.UUID;
 
-import javax.persistence.EntityManager;
-
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -35,13 +32,13 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
-public class VnfPackageDb extends AbstractDirectJpa<VnfPackage> implements VnfPackageRepository {
+//@Service
+public class VnfPackageMongo extends AbstractMongo<VnfPackage> implements VnfPackageRepository {
 
 	private final NamingStrategy namingStrategy;
 
-	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, contentManager, jsonMapper, namingStrategy);
+	protected VnfPackageMongo(final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy, final MongoTemplate mongoTemplate) {
+		super(contentManager, jsonMapper, namingStrategy, mongoTemplate);
 		this.namingStrategy = namingStrategy;
 	}
 

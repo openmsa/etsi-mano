@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.vnfm;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 import javax.persistence.Entity;
@@ -34,7 +35,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class RejectedLcmCoordination {
+public class RejectedLcmCoordination implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id;

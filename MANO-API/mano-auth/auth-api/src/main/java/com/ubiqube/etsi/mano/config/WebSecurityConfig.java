@@ -34,8 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(final AuthenticationManagerBuilder _auth) throws Exception {
-		secutiryConfig.configure(_auth);
+	protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+		secutiryConfig.configure(auth);
 	}
 
 	/**

@@ -36,15 +36,15 @@ public class BasicAuth implements SecutiryConfig {
 
 	private final Http403EntryPoint http403EntryPoint;
 
-	public BasicAuth(final Http403EntryPoint _http403EntryPoint) {
-		http403EntryPoint = _http403EntryPoint;
+	public BasicAuth(final Http403EntryPoint http403EntryPoint) {
+		this.http403EntryPoint = http403EntryPoint;
 	}
 
 	@Override
-	public void configure(final AuthenticationManagerBuilder _auth) throws Exception {
+	public void configure(final AuthenticationManagerBuilder auth) throws Exception {
 		final PassthroughUserProvider passthroughUserProvider = new PassthroughUserProvider();
-		_auth.eraseCredentials(false);
-		_auth.authenticationProvider(passthroughUserProvider);
+		auth.eraseCredentials(false);
+		auth.authenticationProvider(passthroughUserProvider);
 	}
 
 	/**

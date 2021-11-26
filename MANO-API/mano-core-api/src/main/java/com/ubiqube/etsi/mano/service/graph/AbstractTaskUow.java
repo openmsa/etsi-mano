@@ -38,7 +38,7 @@ public abstract class AbstractTaskUow<U extends com.ubiqube.etsi.mano.dao.mano.v
 
 	private final transient P params;
 
-	public AbstractTaskUow(final UnitOfWork<U, P> uaow, final P params, final boolean _create) {
+	protected AbstractTaskUow(final UnitOfWork<U, P> uaow, final P params, final boolean _create) {
 		super();
 		this.uaow = uaow;
 		this.params = params;

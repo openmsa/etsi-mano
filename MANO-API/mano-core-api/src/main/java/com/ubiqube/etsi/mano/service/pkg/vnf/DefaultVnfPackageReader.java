@@ -114,14 +114,12 @@ public class DefaultVnfPackageReader implements VnfPackageReader {
 
 	@Override
 	public Set<AffinityRuleAdapater> getAffinityRules(final Map<String, String> userDefinedData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 }

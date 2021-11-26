@@ -33,14 +33,14 @@ public interface Low {
 	 * @param _path The path.
 	 * @return True if path or filename exist.
 	 */
-	boolean exist(String _path);
+	boolean exist(String path);
 
 	/**
 	 * Create a directory.
 	 *
 	 * @param _path the path to the directory.
 	 */
-	void mkdir(String _path);
+	void mkdir(String path);
 
 	/**
 	 * Convenient method to add a file to the repository.
@@ -48,7 +48,7 @@ public interface Low {
 	 * @param _path    The path where the file will be created.
 	 * @param _content The content of the file.
 	 */
-	void add(String _path, byte[] _content);
+	void add(String path, byte[] content);
 
 	/**
 	 * Convenient method to add a file to the repository.
@@ -56,14 +56,14 @@ public interface Low {
 	 * @param _path   The path where the file will be created.
 	 * @param _stream The inputStream.
 	 */
-	void add(String _path, InputStream _stream);
+	void add(String path, InputStream stream);
 
 	/**
 	 * Delete a file in the repository.
 	 *
 	 * @param _path The path.
 	 */
-	void delete(String _path);
+	void delete(String path);
 
 	/**
 	 * Recursively search for file element.
@@ -72,7 +72,7 @@ public interface Low {
 	 * @param _pattern the end the file name, extension.
 	 * @return The list of matching files.
 	 */
-	List<String> find(String _path, String _pattern);
+	List<String> find(String path, String pattern);
 
 	/**
 	 * Is directory.
@@ -80,7 +80,7 @@ public interface Low {
 	 * @param _path The path.
 	 * @return True if path point on a directory.
 	 */
-	boolean isDirectory(String _path);
+	boolean isDirectory(String path);
 
 	/**
 	 * Retrieve a file from the repository.
@@ -90,7 +90,7 @@ public interface Low {
 	 * @param max  End offset.
 	 * @return The content of the file.
 	 */
-	byte[] get(String _path, int _min, Long _max);
+	byte[] get(String path, int min, Long max);
 
 	/**
 	 * Convenient method for retrieving a file.
@@ -98,5 +98,5 @@ public interface Low {
 	 * @param _pathThe filename.
 	 * @return The content of the file.
 	 */
-	byte[] get(String _path);
+	byte[] get(String path);
 }

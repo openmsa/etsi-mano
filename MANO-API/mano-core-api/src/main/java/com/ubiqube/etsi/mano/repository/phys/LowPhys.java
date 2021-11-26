@@ -25,7 +25,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
@@ -38,19 +37,19 @@ import com.ubiqube.etsi.mano.repository.Low;
 public class LowPhys implements Low {
 
 	@Override
-	public boolean exist(final String _path) {
-		return new File(_path).exists();
+	public boolean exist(final String path) {
+		return new File(path).exists();
 	}
 
 	@Override
-	public void mkdir(final String _path) {
-		new File(_path).mkdirs();
+	public void mkdir(final String path) {
+		new File(path).mkdirs();
 	}
 
 	@Override
-	public void add(final String _path, final byte[] _content) {
+	public void add(final String path, final byte[] content) {
 		try {
-			Files.write(Paths.get(_path), _content);
+			Files.write(Paths.get(path), content);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
@@ -58,43 +57,43 @@ public class LowPhys implements Low {
 	}
 
 	@Override
-	public void add(final String _path, final InputStream _stream) {
+	public void add(final String path, final InputStream stream) {
 		try {
-			Files.copy(_stream, Paths.get(_path), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(stream, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
 	}
 
 	@Override
-	public byte[] get(final String _path) {
+	public byte[] get(final String path) {
 		try {
-			return Files.readAllBytes(Paths.get(_path));
+			return Files.readAllBytes(Paths.get(path));
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
 	}
 
 	@Override
-	public void delete(final String _path) {
+	public void delete(final String path) {
 		boolean result;
 		try {
-			result = FileSystemUtils.deleteRecursively(Paths.get(_path));
+			result = FileSystemUtils.deleteRecursively(Paths.get(path));
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
 		if (!result) {
-			throw new GenericException("Unable to delete " + _path);
+			throw new GenericException("Unable to delete " + path);
 		}
 	}
 
 	@Override
-	public List<String> find(final String _path, final String _pattern) {
-		final Path path = Paths.get(_path);
+	public List<String> find(final String inPath, final String pattern) {
+		final Path path = Paths.get(inPath);
 		try (final Stream<Path> walk = Files.walk(path)) {
-			return walk.filter(x -> x.toString().endsWith(_pattern))
+			return walk.filter(x -> x.toString().endsWith(pattern))
 					.map(Path::toString)
-					.collect(Collectors.toList());
+					.toList();
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

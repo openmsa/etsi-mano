@@ -49,9 +49,9 @@ public abstract class AbstractGrantService implements VimResourceService {
 
 	private final ResourceAllocate nfvo;
 
-	protected AbstractGrantService(final MapperFacade _mapper, final ResourceAllocate _nfvo) {
-		mapper = _mapper;
-		nfvo = _nfvo;
+	protected AbstractGrantService(final MapperFacade mapper, final ResourceAllocate nfvo) {
+		this.mapper = mapper;
+		this.nfvo = nfvo;
 	}
 
 	// @Override
@@ -103,7 +103,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 
 	private static void mapVimAsset(final Set<VimTask> tasks, final GrantVimAssetsEntity vimAssets) {
 		tasks.stream()
-				.filter(x -> x instanceof ComputeTask)
+				.filter(ComputeTask.class::isInstance)
 				.filter(x -> x.getChangeType() != ChangeType.REMOVED)
 				.map(ComputeTask.class::cast)
 				.forEach(x -> {

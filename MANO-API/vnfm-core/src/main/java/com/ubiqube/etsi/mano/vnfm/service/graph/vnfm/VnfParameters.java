@@ -32,8 +32,8 @@ public class VnfParameters extends GenericExecParams {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 	private final VimConnectionInformation vimConnectionInformation;
-	private final Vim vim;
-	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+	private final transient Vim vim;
+	private final transient VnfLiveInstanceJpa vnfLiveInstanceJpa;
 	private final Map<String, String> context;
 
 	public VnfParameters(final VimConnectionInformation vimConnectionInformation, final Vim vim, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final Map<String, String> context, final String _vimResourceId) {

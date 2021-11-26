@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -69,7 +69,7 @@ public class GroovyElection implements VimElection {
 		final ExecutorService executor = Executors.newFixedThreadPool(5);
 		final CompletionService<VoteResponse> completionService = new ExecutorCompletionService<>(executor);
 		final List<Path> scripts = findScript();
-		final List<String> list = scripts.stream().map(Path::toString).collect(Collectors.toList());
+		final List<String> list = scripts.stream().map(Path::toString).toList();
 		final Iterable<VimConnectionInformation> ite = vimManager.findAllVimconnections();
 		int numberOfVim = 0;
 		for (final VimConnectionInformation vimConnectionInformation : ite) {
@@ -86,10 +86,14 @@ public class GroovyElection implements VimElection {
 					vims.add(result.getVimConnectionInformation());
 				}
 				received++;
-			} catch (final Exception e) {
+			} catch (final RuntimeException | ExecutionException e) {
 				LOG.error("", e);
 				executor.shutdownNow();
 				return null;
+			} catch (final InterruptedException e) {
+				LOG.error("", e);
+				executor.shutdownNow();
+				Thread.currentThread().interrupt();
 			}
 		}
 		executor.shutdown();
@@ -108,7 +112,7 @@ public class GroovyElection implements VimElection {
 		try (Stream<Path> stream = Files.walk(path)) {
 			return stream.filter(x -> x.toFile().isFile())
 					.filter(x -> x.getFileName().endsWith("elect"))
-					.collect(Collectors.toList());
+					.toList();
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}

@@ -42,10 +42,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	private final SubscriptionJpa subscriptionJpa;
 
-	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager _em) {
+	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager em) {
 		super();
 		this.subscriptionJpa = repository;
-		em = _em;
+		this.em = em;
 	}
 
 	@Override

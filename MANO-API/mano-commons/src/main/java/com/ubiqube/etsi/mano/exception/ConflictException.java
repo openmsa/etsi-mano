@@ -24,7 +24,7 @@ public class ConflictException extends ResponseStatusException {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public ConflictException(String _detail) {
-		super(HttpStatus.CONFLICT, _detail);
+	public ConflictException(final String detail) {
+		super(HttpStatus.CONFLICT, detail);
 	}
 }

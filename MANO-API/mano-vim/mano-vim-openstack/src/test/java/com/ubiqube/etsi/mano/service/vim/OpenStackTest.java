@@ -525,6 +525,7 @@ public class OpenStackTest {
 	void testServerGroup() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(UUID.randomUUID().toString(), "affinity");
+		assertNotNull(os);
 	}
 
 	@Test
@@ -551,5 +552,6 @@ public class OpenStackTest {
 				.build();
 		final org.openstack4j.model.network.SecurityGroup res = os.networking().securitygroup().create(securityGroup);
 		System.out.println("" + res.getId());
+		assertNotNull(os);
 	}
 }

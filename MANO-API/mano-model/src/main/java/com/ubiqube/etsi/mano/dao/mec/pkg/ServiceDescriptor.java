@@ -53,14 +53,14 @@ public class ServiceDescriptor implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String serName = null;
+	private String serName;
 
 	// Object.
-	private String serCategory = null;
+	private String serCategory;
 
-	private String version = null;
+	private String version;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private Set<TransportsSupported> transportsSupported = null;
+	private Set<TransportsSupported> transportsSupported;
 }

@@ -33,18 +33,18 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 @Service
 public class VnfPackagePhys extends AbstractGenericBinaryRepository<VnfPackage> implements VnfPackageRepository {
 
-	public VnfPackagePhys(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low low, final NamingStrategy _namingStrategy) {
-		super(objectMapper, jsonFilter, low, _namingStrategy);
+	public VnfPackagePhys(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low low, final NamingStrategy namingStrategy) {
+		super(objectMapper, jsonFilter, low, namingStrategy);
 	}
 
 	@Override
-	protected UUID setId(final VnfPackage _entity) {
-		final UUID id = _entity.getId();
+	protected UUID setId(final VnfPackage entity) {
+		final UUID id = entity.getId();
 		if (null == id) {
-			_entity.setId(UUID.randomUUID());
+			entity.setId(UUID.randomUUID());
 		}
 
-		return _entity.getId();
+		return entity.getId();
 	}
 
 	@Override

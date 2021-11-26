@@ -30,9 +30,9 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 public class WantedSerializer extends BeanSerializerModifier {
 	private final Set<String> list;
 
-	public WantedSerializer(final Set<String> _list) {
+	public WantedSerializer(final Set<String> inList) {
 		list = new HashSet<>();
-		for (final String string : _list) {
+		for (final String string : inList) {
 			final String[] part = string.split("\\.");
 			list.addAll(Arrays.asList(part));
 		}

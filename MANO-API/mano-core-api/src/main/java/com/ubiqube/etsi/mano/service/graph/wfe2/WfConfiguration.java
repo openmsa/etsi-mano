@@ -88,13 +88,11 @@ public class WfConfiguration {
 			// Link B <- me.
 			if (replacements.containsKey(x.getSource())) {
 				complexLink(g, replacements.get(x.getSource()), x.getTarget());
+			} else if (replacements.containsKey(x.getTarget())) {
+				complexLink(g, x.getSource(), replacements.get(x.getTarget()));
 			} else {
-				if (replacements.containsKey(x.getTarget())) {
-					complexLink(g, x.getSource(), replacements.get(x.getTarget()));
-				} else {
-					LOG.debug("Link: {} -> {}", x.getSource(), x.getTarget());
-					g.addEdge(x.getSource(), x.getTarget());
-				}
+				LOG.debug("Link: {} -> {}", x.getSource(), x.getTarget());
+				g.addEdge(x.getSource(), x.getTarget());
 			}
 		});
 		optimze(g);
@@ -165,7 +163,7 @@ public class WfConfiguration {
 		return edges.stream()
 				.filter(x -> have(nodes, x.getTarget().getProduce()))
 				.map(ConnectivityEdge::getTarget)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static boolean have(final List<ConnectivityEdge<Class<? extends Node>>> nodes, final List<WfProduce> l) {
@@ -178,7 +176,8 @@ public class WfConfiguration {
 	}
 
 	/**
-	 * The concept is an ending node is a node that doesn't appear in a source node. for example : A -> B -> C
+	 * The concept is an ending node is a node that doesn't appear in a source node.
+	 * for example : A -> B -> C
 	 *
 	 * @param repl A replace builder instance.
 	 * @return list of ending Nodes.

@@ -60,9 +60,9 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 
 	private final JsonBeanUtil jsonBeanUtil;
 
-	public ManoSearchResponseServiceImpl(final MapperFacade _mapper, final JsonBeanUtil _jsonBeanUtil) {
-		mapper = _mapper;
-		jsonBeanUtil = _jsonBeanUtil;
+	public ManoSearchResponseServiceImpl(final MapperFacade mapper, final JsonBeanUtil jsonBeanUtil) {
+		this.mapper = mapper;
+		this.jsonBeanUtil = jsonBeanUtil;
 		officialParameters = new HashSet<>(Arrays.asList("fields", "exclude_fields", "exclude_default", "filter", "all_fields"));
 	}
 
@@ -76,14 +76,14 @@ public class ManoSearchResponseServiceImpl implements ManoSearchResponseService 
 		final boolean allFields = params.containsKey("all_fields");
 		final List<U> vnfPkginfos = list.stream()
 				.map(x -> mapper.map(x, target))
-				.collect(Collectors.toList());
+				.toList();
 		vnfPkginfos.forEach(makeLink);
 
 		final Set<String> fieldsSet = getFields(fields, mandatoryFields);
 		checkAllFields(fieldsSet, clazz);
 
 		Set<String> excluded = getExcludedFields(excludeFields);
-		if (haveDefaultFields || (excluded.isEmpty() && fieldsSet.isEmpty() && !allFields)) {
+		if (haveDefaultFields || excluded.isEmpty() && fieldsSet.isEmpty() && !allFields) {
 			excluded = applyDefault(excludeDefaults);
 		}
 		final ObjectMapper mapperForQuery = MapperForView.getMapperForView(excluded, fieldsSet);

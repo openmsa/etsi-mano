@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +30,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
 
-public class VnfGrantsRequest implements GrantInterface, BaseEntity {
+public class VnfGrantsRequest implements GrantInterface, BaseEntity, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -259,8 +260,8 @@ public class VnfGrantsRequest implements GrantInterface, BaseEntity {
 		return vnfInstance;
 	}
 
-	public void setVnfInstance(final VnfInstance _vnfInstance) {
-		vnfInstance = _vnfInstance;
+	public void setVnfInstance(final VnfInstance vnfInstance) {
+		this.vnfInstance = vnfInstance;
 	}
 
 	public String getInstanceLink() {
