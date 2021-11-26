@@ -22,7 +22,6 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -94,7 +93,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 		final List<VnfInstanceDto> vnfInstance = vnfs.stream()
 				.map(x -> vnfInstancesService.findById(UUID.fromString(x.getResourceId())))
 				.map(x -> mapper.map(x, VnfInstanceDto.class))
-				.collect(Collectors.toList());
+				.toList();
 		dto.setVnfInstance(vnfInstance);
 		final List<NsLiveInstance> vls = nsLiveInstanceJpa.findByNsdInstanceAndClass(ret, NsVirtualLinkTask.class.getSimpleName());
 		final List<NsVirtualLinkInfoDto> vlsDto = vls.stream().map(x -> {
@@ -108,7 +107,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 			resourceHandle.add(r);
 			vlDto.setResourceHandle(resourceHandle);
 			return vlDto;
-		}).collect(Collectors.toList());
+		}).toList();
 		dto.setVirtualLinkInfo(vlsDto);
 		return dto;
 	}

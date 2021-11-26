@@ -3,11 +3,20 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>mano-super-pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath/>
+	</parent>
 	<artifactId>mano-orchestration-aggregator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>	
 	<name>mano-orchestration-aggregator</name>
 	<description>ETSI MANO Orchestration parent.</description>
-	<packaging>pom</packaging>
+	<modules>
+		<module>orchestration-api</module>
+		<module>orchestration-core</module>
+	</modules>
 	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
@@ -18,14 +27,4 @@
 			<url>http://nexus2.ubiqube.com:8081/repository/maven-releases/</url>
 		</repository>
 	</distributionManagement>
-	<parent>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/>
-	</parent>
-	<modules>
-		<module>orchestration-api</module>
-		<module>orchestration-core</module>
-	</modules>
 </project>
