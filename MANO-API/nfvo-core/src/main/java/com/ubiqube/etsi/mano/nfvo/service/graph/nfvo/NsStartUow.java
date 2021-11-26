@@ -48,7 +48,7 @@ public class NsStartUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public List<WfDependency> getDependencies() {
-		return null;
+		return List.of();
 	}
 
 	@Override

@@ -51,10 +51,11 @@ public class NsLcmSubscriptionsGenericFrontControllerImpl implements NsLcmSubscr
 
 	private final ServerService serverService;
 
-	public NsLcmSubscriptionsGenericFrontControllerImpl(final SubscriptionService _subscriptionService, final MapperFacade _mapper, final Notifications _notifications, final ServerService serverService) {
-		subscriptionService = _subscriptionService;
-		mapper = _mapper;
-		notifications = _notifications;
+	public NsLcmSubscriptionsGenericFrontControllerImpl(final SubscriptionService subscriptionService, final MapperFacade mapper, final Notifications notifications,
+			final ServerService serverService) {
+		this.subscriptionService = subscriptionService;
+		this.mapper = mapper;
+		this.notifications = notifications;
 		this.serverService = serverService;
 	}
 

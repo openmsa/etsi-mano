@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
-import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
@@ -43,10 +42,10 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 
 	private final ServerService serverService;
 
-	public VnfSubscriptionManagementImpl(final Notifications _notifications, final SubscriptionService _subscriptionRepository, final ServerService serverService) {
+	public VnfSubscriptionManagementImpl(final Notifications notifications, final SubscriptionService subscriptionRepository, final ServerService serverService) {
 		super();
-		this.notifications = _notifications;
-		this.subscriptionService = _subscriptionRepository;
+		this.notifications = notifications;
+		this.subscriptionService = subscriptionRepository;
 		this.serverService = serverService;
 	}
 
@@ -66,7 +65,6 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 
 		final Subscription subscriptionsRepository = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
-		final AuthentificationInformations auth = subscriptionsRepository.getAuthentication();
 		final String callbackUri = subscriptionsRepository.getCallbackUri();
 		final ServerAdapter server = serverService.findNearestServer();
 		// There is a version, problem.
@@ -77,7 +75,6 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	public void vnfPackageOnboardingNotificationPost(@Nonnull final VnfPackageOnboardingNotification notificationsMessage) {
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 		final Subscription subscription = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
-		final AuthentificationInformations auth = subscription.getAuthentication();
 		final String cbUrl = subscription.getCallbackUri();
 		final ServerAdapter server = serverService.findNearestServer();
 		// Version problem.
@@ -85,15 +82,15 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	}
 
 	@Override
-	public void subscriptionsSubscriptionIdDelete(final String _subscriptionId, final SubscriptionType type) {
-		final UUID subscriptionId = UUID.fromString(_subscriptionId);
+	public void subscriptionsSubscriptionIdDelete(final String subscriptionUuid, final SubscriptionType type) {
+		final UUID subscriptionId = UUID.fromString(subscriptionUuid);
 		subscriptionService.findById(subscriptionId, type);
 		subscriptionService.delete(subscriptionId, type);
 	}
 
 	@Override
-	public Subscription subscriptionsSubscriptionIdGet(final UUID _subscriptionId, final SubscriptionType type) {
-		return subscriptionService.findById(_subscriptionId, type);
+	public Subscription subscriptionsSubscriptionIdGet(final UUID subscriptionId, final SubscriptionType type) {
+		return subscriptionService.findById(subscriptionId, type);
 	}
 
 }

@@ -16,9 +16,13 @@
  */
 package com.ubiqube.etsi.mano.service.graph;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class GenericExecParams {
+public class GenericExecParams implements Serializable {
+
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	private Map<String, String> context;
 

@@ -42,22 +42,21 @@ public class TemporaryDownloadService {
 	private final NsdRepository nsdRepository;
 	private final VnfPackageRepository vnfRepository;
 
-	public TemporaryDownloadService(final TemporaryDownloadJpa _temporaryJpa, final NsdRepository _nsdRepository, final VnfPackageRepository _vnfRepository) {
-		temporaryJpa = _temporaryJpa;
-		nsdRepository = _nsdRepository;
-		vnfRepository = _vnfRepository;
+	public TemporaryDownloadService(final TemporaryDownloadJpa temporaryJpa, final NsdRepository nsdRepository, final VnfPackageRepository vnfRepository) {
+		this.temporaryJpa = temporaryJpa;
+		this.nsdRepository = nsdRepository;
+		this.vnfRepository = vnfRepository;
 	}
 
 	public TemporaryDownload exposeDocument(final ObjectType objectType, final UUID id) {
-		TemporaryDownload td = new TemporaryDownload();
+		final TemporaryDownload td = new TemporaryDownload();
 		td.setObjectId(id);
 		td.setObjectType(objectType);
 		final String str = generateEphemeralId();
 		td.setId(str);
 
 		td.setExpirationDate(Date.from(LocalDateTime.now().plusMinutes(25).atZone(ZoneId.systemDefault()).toInstant()));
-		td = temporaryJpa.save(td);
-		return td;
+		return temporaryJpa.save(td);
 	}
 
 	public byte[] getDocument(final String id) {
@@ -66,11 +65,11 @@ public class TemporaryDownloadService {
 		final String objectId = doc.getObjectId().toString();
 		if (doc.getObjectType() == ObjectType.NSD) {
 			return nsdRepository.getBinary(UUID.fromString(objectId), "nsd");
-		} else if (doc.getObjectType() == ObjectType.VNFD) {
-			return vnfRepository.getBinary(UUID.fromString(objectId), "vnfd");
-		} else {
-			throw new GenericException("Unknown objectType: " + doc.getObjectType());
 		}
+		if (doc.getObjectType() == ObjectType.VNFD) {
+			return vnfRepository.getBinary(UUID.fromString(objectId), "vnfd");
+		}
+		throw new GenericException("Unknown objectType: " + doc.getObjectType());
 	}
 
 	private static String generateEphemeralId() {

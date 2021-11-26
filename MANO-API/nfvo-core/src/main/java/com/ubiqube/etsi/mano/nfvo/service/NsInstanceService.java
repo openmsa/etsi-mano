@@ -52,13 +52,14 @@ public class NsInstanceService {
 
 	private final EntityManager em;
 
-	public NsInstanceService(final NsVirtualLinkJpa _nsVirtualLinkJpa, final NsdPackageJpa _nsdPackageJpa, final NsVnfPackageJpa _vnfPackageJpa, final NsdInstanceJpa _nsdInstanceJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa, final EntityManager _em) {
-		nsVirtualLinkJpa = _nsVirtualLinkJpa;
-		nsdPackageJpa = _nsdPackageJpa;
-		vnfPackageJpa = _vnfPackageJpa;
-		nsdInstanceJpa = _nsdInstanceJpa;
-		nsLiveInstanceJpa = _nsLiveInstanceJpa;
-		em = _em;
+	public NsInstanceService(final NsVirtualLinkJpa nsVirtualLinkJpa, final NsdPackageJpa nsdPackageJpa, final NsVnfPackageJpa vnfPackageJpa,
+			final NsdInstanceJpa nsdInstanceJpa, final NsLiveInstanceJpa nsLiveInstanceJpa, final EntityManager em) {
+		this.nsVirtualLinkJpa = nsVirtualLinkJpa;
+		this.nsdPackageJpa = nsdPackageJpa;
+		this.vnfPackageJpa = vnfPackageJpa;
+		this.nsdInstanceJpa = nsdInstanceJpa;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
+		this.em = em;
 	}
 
 	public int countLiveInstanceOfSap(final NsdInstance nsInstance, final UUID id) {

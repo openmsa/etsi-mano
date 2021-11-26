@@ -54,7 +54,7 @@ import ma.glasnost.orika.MapperFacade;
 public class NsInstanceGenericFrontControllerImpl implements NsInstanceGenericFrontController {
 	private static final String LOCATION = "Location";
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsInstanceGenericFrontController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NsInstanceGenericFrontControllerImpl.class);
 
 	private static final Set<String> NSI_SEARCH_MANDATORY_FIELDS = new HashSet<>(Arrays.asList("id", "nsInstanceDescription", "nsdId", "nsdInfoId", "nsState", "nsInstanceName"));
 
@@ -66,10 +66,11 @@ public class NsInstanceGenericFrontControllerImpl implements NsInstanceGenericFr
 
 	private final NsInstanceController nsLcmController;
 
-	public NsInstanceGenericFrontControllerImpl(final MapperFacade _mapper, final NsInstanceControllerService _nsInstanceControllerService, final NsInstanceController _nsLcmController) {
-		mapper = _mapper;
-		nsInstanceControllerService = _nsInstanceControllerService;
-		nsLcmController = _nsLcmController;
+	public NsInstanceGenericFrontControllerImpl(final MapperFacade mapper, final NsInstanceControllerService nsInstanceControllerService,
+			final NsInstanceController nsLcmController) {
+		this.mapper = mapper;
+		this.nsInstanceControllerService = nsInstanceControllerService;
+		this.nsLcmController = nsLcmController;
 		LOG.debug("Starting Ns Instance SOL005 Controller.");
 	}
 

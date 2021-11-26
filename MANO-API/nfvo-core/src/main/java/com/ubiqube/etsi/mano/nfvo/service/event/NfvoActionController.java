@@ -40,11 +40,11 @@ public class NfvoActionController {
 
 	private final VnfPackageOnboardingImpl vnfPackageOnboarding;
 
-	public NfvoActionController(final NfvoActions nfvoActions, final NsPackageOnboardingImpl nsPackagingManager, final VnfPackageOnboardingImpl _vnfPackageOnboarding) {
+	public NfvoActionController(final NfvoActions nfvoActions, final NsPackageOnboardingImpl nsPackagingManager, final VnfPackageOnboardingImpl vnfPackageOnboarding) {
 		super();
 		this.nfvoActions = nfvoActions;
 		this.nsPackagingManager = nsPackagingManager;
-		vnfPackageOnboarding = _vnfPackageOnboarding;
+		this.vnfPackageOnboarding = vnfPackageOnboarding;
 	}
 
 	public void dispatch(final ActionType eventType, @NotNull final UUID objectId, final Map<String, Object> parameters) {

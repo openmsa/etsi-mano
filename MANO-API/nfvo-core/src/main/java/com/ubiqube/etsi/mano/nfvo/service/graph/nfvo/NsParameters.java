@@ -23,13 +23,15 @@ import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public class NsParameters extends GenericExecParams {
-	private Vim vim;
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+	private transient Vim vim;
 	private VimConnectionInformation vimConnectionInformation;
 
-	public NsParameters(final Vim _vim, final VimConnectionInformation _vimConnectionInformation, final Map<String, String> context, final String vimResourceId) {
+	public NsParameters(final Vim vim, final VimConnectionInformation vimConnectionInformation, final Map<String, String> context, final String vimResourceId) {
 		super(context, vimResourceId);
-		vim = _vim;
-		vimConnectionInformation = _vimConnectionInformation;
+		this.vim = vim;
+		this.vimConnectionInformation = vimConnectionInformation;
 	}
 
 	public Vim getVim() {

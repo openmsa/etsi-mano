@@ -44,10 +44,10 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	private final EventManager eventManager;
 	private final VnfPackageRepository vnfPackageRepository;
 
-	public VnfPackageControllerImpl(final Patcher _patcher, final EventManager _eventManager, final VnfPackageService vnfPackageService,
+	public VnfPackageControllerImpl(final Patcher patcher, final EventManager eventManager, final VnfPackageService vnfPackageService,
 			final VnfPackageRepository vnfPackageRepository) {
-		patcher = _patcher;
-		eventManager = _eventManager;
+		this.patcher = patcher;
+		this.eventManager = eventManager;
 		this.vnfPackageService = vnfPackageService;
 		this.vnfPackageRepository = vnfPackageRepository;
 	}
@@ -69,7 +69,7 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	@Override
 	public VnfPackage vnfPackagesVnfPkgIdPatch(final UUID id, final String body, final String ifMatch) {
 		final VnfPackage vnfPackage = vnfPackageService.findById(id);
-		if ((ifMatch != null) && !ifMatch.equals(vnfPackage.getVersion() + "")) {
+		if (ifMatch != null && !ifMatch.equals(vnfPackage.getVersion() + "")) {
 			throw new PreConditionException(ifMatch + " does not match " + vnfPackage.getVersion());
 		}
 		patcher.patch(body, vnfPackage);

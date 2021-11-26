@@ -51,11 +51,11 @@ public class VnfSubscriptionSol003FrontControllerImpl implements VnfSubscription
 
 	private final ServerService serverService;
 
-	public VnfSubscriptionSol003FrontControllerImpl(final VnfSubscriptionManagement _vnfSubscriptionManagement, final MapperFacade _mapper, final Notifications _notifications,
+	public VnfSubscriptionSol003FrontControllerImpl(final VnfSubscriptionManagement vnfSubscriptionManagement, final MapperFacade mapper, final Notifications notifications,
 			final ServerService serverService) {
-		vnfSubscriptionManagement = _vnfSubscriptionManagement;
-		mapper = _mapper;
-		notifications = _notifications;
+		this.vnfSubscriptionManagement = vnfSubscriptionManagement;
+		this.mapper = mapper;
+		this.notifications = notifications;
 		this.serverService = serverService;
 	}
 

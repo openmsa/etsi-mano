@@ -29,12 +29,12 @@ public class NsInstanceFactory {
 	}
 
 	@Nonnull
-	public static VnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance _vnfInstance, final VnfPackage _vnfPkgInfo) {
+	public static VnfInstance createNsInstancesNsInstanceVnfInstance(final VnfInstance vnfInstance, final VnfPackage vnfPkgInfo) {
 		final VnfInstance nsInstancesNsInstanceVnfInstance = new VnfInstance();
-		nsInstancesNsInstanceVnfInstance.setId(_vnfInstance.getId());
+		nsInstancesNsInstanceVnfInstance.setId(vnfInstance.getId());
 		nsInstancesNsInstanceVnfInstance.setInstantiationState(InstantiationState.NOT_INSTANTIATED);
 		final VnfPackage vnfPackage = new VnfPackage();
-		vnfPackage.setId(_vnfPkgInfo.getId());
+		vnfPackage.setId(vnfPkgInfo.getId());
 		nsInstancesNsInstanceVnfInstance.setVnfPkg(vnfPackage);
 		return nsInstancesNsInstanceVnfInstance;
 	}

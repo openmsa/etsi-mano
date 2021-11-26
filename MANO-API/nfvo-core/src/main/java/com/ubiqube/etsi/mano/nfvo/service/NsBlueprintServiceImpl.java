@@ -47,10 +47,10 @@ public class NsBlueprintServiceImpl extends SearchableService implements NsBluep
 
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsBlueprintServiceImpl(final NsBlueprintJpa _nsBlueprintJpa, final NsLiveInstanceJpa _nsLiveInstanceJpa, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, NsBlueprint.class);
-		nsBlueprintJpa = _nsBlueprintJpa;
-		nsLiveInstanceJpa = _nsLiveInstanceJpa;
+	public NsBlueprintServiceImpl(final NsBlueprintJpa nsBlueprintJpa, final NsLiveInstanceJpa nsLiveInstanceJpa, final EntityManager em, final ManoSearchResponseService searchService) {
+		super(searchService, em, NsBlueprint.class);
+		this.nsBlueprintJpa = nsBlueprintJpa;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
 	@Override

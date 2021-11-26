@@ -38,8 +38,8 @@ public class VnfInstanceServiceNfvo implements VnfInstanceGatewayService {
 
 	private final VnfInstanceJpa vnfInstanceJpa;
 
-	public VnfInstanceServiceNfvo(final VnfInstanceJpa _vnfInstanceJpa) {
-		vnfInstanceJpa = _vnfInstanceJpa;
+	public VnfInstanceServiceNfvo(final VnfInstanceJpa vnfInstanceJpa) {
+		this.vnfInstanceJpa = vnfInstanceJpa;
 	}
 
 	@Override

@@ -29,6 +29,8 @@ import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
  *
  */
 public class VnfParameters extends GenericExecParams {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	private final VimConnectionInformation vimConnectionInformation;
 	private final Vim vim;
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;

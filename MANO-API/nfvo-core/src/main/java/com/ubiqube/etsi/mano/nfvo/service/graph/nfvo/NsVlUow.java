@@ -33,9 +33,9 @@ public class NsVlUow extends AbstractNsUnitOfWork {
 	private final NsVirtualLinkTask task;
 	private final VlProtocolData vlProtocolData;
 
-	public NsVlUow(final NsVirtualLinkTask _task) {
-		super(_task);
-		task = _task;
+	public NsVlUow(final NsVirtualLinkTask task) {
+		super(task);
+		this.task = task;
 		if (null != task.getNsVirtualLink()) {
 			vlProtocolData = task.getNsVirtualLink().getNsVlProfile().getVlProtocolData().iterator().next();
 		} else {

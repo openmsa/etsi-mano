@@ -65,13 +65,14 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 	private final MapperFacade mapper;
 	private final NsBlueprintService nsBlueprintService;
 
-	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final EventManager _eventManager, final MapperFacade _mapper, final NsBlueprintService _nsBlueprintService, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, NsdInstance.class);
+	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final EventManager eventManager,
+			final MapperFacade mapper, final NsBlueprintService nsBlueprintService, final EntityManager em, final ManoSearchResponseService searchService) {
+		super(searchService, em, NsdInstance.class);
 		this.nsdPackageService = nsdPackageService;
 		this.nsInstanceService = nsInstanceService;
-		eventManager = _eventManager;
-		mapper = _mapper;
-		nsBlueprintService = _nsBlueprintService;
+		this.eventManager = eventManager;
+		this.mapper = mapper;
+		this.nsBlueprintService = nsBlueprintService;
 	}
 
 	@Override

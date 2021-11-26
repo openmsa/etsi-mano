@@ -34,5 +34,5 @@ public interface NsdPackageJpa extends CrudRepository<NsdPackage, UUID> {
 			" 	where parent_id = ?1 ")
 	Set<NsdPackage> findByNestedNsdInfoIds_Parent(NsdPackage nsdPackage);
 
-	Optional<NsdPackage> findByNsdId(String _nsdId);
+	Optional<NsdPackage> findByNsdId(String nsdId);
 }

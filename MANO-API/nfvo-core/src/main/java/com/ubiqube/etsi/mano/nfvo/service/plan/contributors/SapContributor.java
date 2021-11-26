@@ -55,8 +55,8 @@ public class SapContributor extends AbstractNsContributor {
 	private final NsBlueprintService blueprintService;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public SapContributor(final NsBlueprintService _blueprintService, final NsdPackageService _nsdPackageService, NsLiveInstanceJpa nsLiveInstanceJpa) {
-		blueprintService = _blueprintService;
+	public SapContributor(final NsBlueprintService blueprintService, final NsdPackageService nsdPackageService, NsLiveInstanceJpa nsLiveInstanceJpa) {
+		this.blueprintService = blueprintService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
@@ -98,9 +98,7 @@ public class SapContributor extends AbstractNsContributor {
 		tasks.stream()
 				.filter(NsSapTask.class::isInstance)
 				.map(NsSapTask.class::cast)
-				.forEach(x -> {
-					ret.add(new SapUow(x));
-				});
+				.forEach(x -> ret.add(new SapUow(x)));
 		return ret;
 	}
 

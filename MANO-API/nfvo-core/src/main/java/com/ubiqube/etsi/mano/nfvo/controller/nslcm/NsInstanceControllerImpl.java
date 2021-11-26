@@ -56,10 +56,10 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 	private final NsdPackageJpa nsdPackageJpa;
 
-	public NsInstanceControllerImpl(final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
+	public NsInstanceControllerImpl(final NsInstanceService nsInstanceService, final NsBlueprintService lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
 			final MapperFacade mapper, final VnfInstanceGatewayService vnfInstancesService, final NsdPackageJpa nsdPackageJpa) {
-		nsInstanceService = _nsInstanceService;
-		blueprintService = _lcmOpOccsService;
+		this.nsInstanceService = nsInstanceService;
+		this.blueprintService = lcmOpOccsService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 		this.mapper = mapper;
 		this.vnfInstancesService = vnfInstancesService;
@@ -101,7 +101,6 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 
 			vlDto.setId(x.getId().toString());
 			vlDto.setNsVirtualLinkDescId(x.getNsTask().getToscaName());
-			// vlDto.setNsVirtualLinkProfileId(nsVirtualLinkProfileId);
 			final List<ResourceHandle> resourceHandle = new ArrayList<>();
 			final ResourceHandle r = mapper.map(x, ResourceHandle.class);
 			resourceHandle.add(r);

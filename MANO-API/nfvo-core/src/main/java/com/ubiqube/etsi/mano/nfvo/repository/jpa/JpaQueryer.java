@@ -46,10 +46,10 @@ public class JpaQueryer {
 		this.em = em;
 	}
 
-	public <U> Predicate getCriteria(final List<Node<U>> nodes, final Class<?> clazz, final Map<String, From<?, ?>> joins) {
+	public <U> Predicate getCriteria(final List<Node<U>> nodes, final Map<String, From<?, ?>> joins) {
 		final CriteriaBuilder cb = em.getCriteriaBuilder();
 		final List<Predicate> predicates = new ArrayList<>();
-		for (final Node node : nodes) {
+		for (final Node<U> node : nodes) {
 			final Optional<Predicate> res = applyOp(node.getName(), node.getOp(), node.getValue(), joins);
 			if (res.isPresent()) {
 				predicates.add(res.get());
@@ -66,32 +66,15 @@ public class JpaQueryer {
 		final Attr attr = getParent(name, joins);
 		Predicate pred = null;
 		final From<?, ?> p = attr.parent.orElse(joins.get("ROOT"));
-		switch (op) {
-		case EQ:
-			pred = cb.equal(p.get(attr.name), value);
-			break;
-		case NEQ:
-			pred = cb.notEqual(p.get(attr.name), value);
-			break;
-		case GT:
-			pred = cb.greaterThan(p.get(attr.name), value.toString());
-			break;
-		case GTE:
-			pred = cb.greaterThanOrEqualTo(p.get(attr.name), value.toString());
-			break;
-		case LT:
-			pred = cb.lessThan(p.get(attr.name), value.toString());
-			break;
-		case LTE:
-			pred = cb.lessThanOrEqualTo(p.get(attr.name), value.toString());
-			break;
-		case CONT:
-		case NCONT:
-		case IN:
-		case NIN:
-		default:
-			throw new GenericException("Unknown query Op: " + op);
-		}
+		pred = switch (op) {
+		case EQ -> cb.equal(p.get(attr.name), value);
+		case NEQ -> cb.notEqual(p.get(attr.name), value);
+		case GT -> cb.greaterThan(p.get(attr.name), value.toString());
+		case GTE -> cb.greaterThanOrEqualTo(p.get(attr.name), value.toString());
+		case LT -> cb.lessThan(p.get(attr.name), value.toString());
+		case LTE -> cb.lessThanOrEqualTo(p.get(attr.name), value.toString());
+		case CONT, NCONT, IN, NIN -> throw new GenericException("Unknown query Op: " + op);
+		};
 		return Optional.ofNullable(pred);
 	}
 
@@ -99,7 +82,7 @@ public class JpaQueryer {
 		final String[] arr = name.split("\\/");
 		final Attr attr = new Attr();
 		if (arr.length > 1) {
-			final String ro[] = new String[arr.length - 1];
+			final String[] ro = new String[arr.length - 1];
 			System.arraycopy(arr, 0, ro, 0, ro.length);
 			final String key = Arrays.asList(ro).stream().collect(Collectors.joining("."));
 			attr.parent = Optional.ofNullable(joins.get(key));

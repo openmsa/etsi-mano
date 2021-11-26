@@ -30,9 +30,9 @@ public class UowNsTaskDeleteProvider implements TaskProvider<UnitOfWork<NsTask, 
 
 	private final NsParameters params;
 
-	public UowNsTaskDeleteProvider(final NsParameters _params) {
+	public UowNsTaskDeleteProvider(final NsParameters params) {
 		super();
-		params = _params;
+		this.params = params;
 	}
 
 	@Override

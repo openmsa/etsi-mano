@@ -38,9 +38,9 @@ import com.ubiqube.etsi.mano.service.SearchableService;
 public class PnfdControllerImpl extends SearchableService implements PnfdController {
 	private final PnfdInfoRepository pnfdInfoRepository;
 
-	public PnfdControllerImpl(final PnfdInfoRepository _pnfdInfoRepository, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, PnfDescriptor.class);
-		pnfdInfoRepository = _pnfdInfoRepository;
+	public PnfdControllerImpl(final PnfdInfoRepository pnfdInfoRepository, final EntityManager em, final ManoSearchResponseService searchService) {
+		super(searchService, em, PnfDescriptor.class);
+		this.pnfdInfoRepository = pnfdInfoRepository;
 	}
 
 	@Override

@@ -17,18 +17,15 @@
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.vim.Vim;
 
 public abstract class AbstractNsTaskUow extends Task<UnitOfWork<NsTask, NsParameters>, String> {
 	/** Serial. */
@@ -42,7 +39,7 @@ public abstract class AbstractNsTaskUow extends Task<UnitOfWork<NsTask, NsParame
 
 	private NsParameters params;
 
-	public AbstractNsTaskUow(final UnitOfWork<NsTask, NsParameters> uaow, final boolean _create, final NsParameters params) {
+	protected AbstractNsTaskUow(final UnitOfWork<NsTask, NsParameters> uaow, final boolean _create, final NsParameters params) {
 		super();
 		this.uaow = uaow;
 		this.params = params;
@@ -83,20 +80,6 @@ public abstract class AbstractNsTaskUow extends Task<UnitOfWork<NsTask, NsParame
 			throw eRoot;
 		}
 		return null;
-	}
-
-	class Parameters {
-		public Parameters(final VimConnectionInformation _vimConnectionInformation, final Vim _vim, final Map<String, String> _context, final String _resourceId) {
-			vimConnectionInformationLocal = _vimConnectionInformation;
-			vimLocal = _vim;
-			contextLocal = _context;
-			resourceId = _resourceId;
-		}
-
-		private final VimConnectionInformation vimConnectionInformationLocal;
-		private final Vim vimLocal;
-		private final Map<String, String> contextLocal;
-		private final String resourceId;
 	}
 
 }

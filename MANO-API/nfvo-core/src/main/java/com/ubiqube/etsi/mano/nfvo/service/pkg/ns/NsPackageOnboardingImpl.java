@@ -63,14 +63,15 @@ public class NsPackageOnboardingImpl {
 
 	private final NsdPackageJpa nsdPackageJpa;
 
-	public NsPackageOnboardingImpl(final EventManager eventManager, final NsPackageManager packageManager, final MapperFacade _mapper, final NsdRepository _nsdRepository, final NsdPackageJpa _nsdPackageJpa, final VnfPackageService _vnfPackageService) {
+	public NsPackageOnboardingImpl(final EventManager eventManager, final NsPackageManager packageManager, final MapperFacade mapper, final NsdRepository nsdRepository,
+			final NsdPackageJpa nsdPackageJpa, final VnfPackageService vnfPackageService) {
 		super();
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
-		mapper = _mapper;
-		nsdRepository = _nsdRepository;
-		nsdPackageJpa = _nsdPackageJpa;
-		vnfPackageService = _vnfPackageService;
+		this.mapper = mapper;
+		this.nsdRepository = nsdRepository;
+		this.nsdPackageJpa = nsdPackageJpa;
+		this.vnfPackageService = vnfPackageService;
 	}
 
 	public void nsOnboarding(@NotNull final UUID objectId) {
@@ -142,9 +143,11 @@ public class NsPackageOnboardingImpl {
 		}
 		if (part == 1) {
 			return vnfPackageService.findByDescriptorId(descriptorId);
-		} else if (part == 2) {
+		}
+		if (part == 2) {
 			return vnfPackageService.findByDescriptorIdAndSoftwareVersion(descriptorId, version);
-		} else if (part == 3) {
+		}
+		if (part == 3) {
 			return vnfPackageService.findByDescriptorIdFlavorIdVnfdVersion(descriptorId, flavor, version);
 		}
 		throw new GenericException("Unknown version " + part);

@@ -33,8 +33,8 @@ public class IpamService {
 
 	private final NetworksJpa networksJpa;
 
-	public IpamService(final NetworksJpa _networksJpa) {
-		networksJpa = _networksJpa;
+	public IpamService(final NetworksJpa networksJpa) {
+		this.networksJpa = networksJpa;
 	}
 
 	@Transactional(TxType.NEVER)

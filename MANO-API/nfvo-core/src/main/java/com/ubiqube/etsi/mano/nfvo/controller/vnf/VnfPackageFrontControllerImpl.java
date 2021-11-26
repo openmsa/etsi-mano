@@ -59,11 +59,11 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 
 	private final MapperFacade mapper;
 
-	public VnfPackageFrontControllerImpl(final VnfPackageManagement vnfManagement, final VnfPackageController _vnfPackageController, final MapperFacade _mapper) {
+	public VnfPackageFrontControllerImpl(final VnfPackageManagement vnfManagement, final VnfPackageController vnfPackageController, final MapperFacade mapper) {
 		super();
 		this.vnfManagement = vnfManagement;
-		vnfPackageController = _vnfPackageController;
-		mapper = _mapper;
+		this.vnfPackageController = vnfPackageController;
+		this.mapper = mapper;
 	}
 
 	@Override

@@ -31,8 +31,8 @@ import com.ubiqube.etsi.mano.service.event.jms.GrantMessage;
 public class GrantListener {
 	private final GrantAction grantAction;
 
-	public GrantListener(final GrantAction _grantAction) {
-		grantAction = _grantAction;
+	public GrantListener(final GrantAction grantAction) {
+		this.grantAction = grantAction;
 	}
 
 	@JmsListener(destination = "system.actions.grants", concurrency = "5-10")
