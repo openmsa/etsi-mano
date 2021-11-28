@@ -209,7 +209,7 @@ public class WfConfiguration {
 	}
 
 	private static List<WfProduce> getAllOf(final List<WfProduce> deps, final Class<? extends Node> target) {
-		return deps.stream().filter(x -> x.getNode() == target).collect(Collectors.toList());
+		return deps.stream().filter(x -> x.getNode() == target).toList();
 	}
 
 	private <U extends Task, P> void connect(final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g, final Class<? extends Node> k, final List<UnitOfWork<U, P>> from, final List<UnitOfWork<U, P>> to, final List<DeferedConnection<U, P>> deferedConnetion) {

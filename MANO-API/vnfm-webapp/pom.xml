@@ -69,15 +69,16 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-client</artifactId>
-			<version>2.5.0</version>
+			<version>2.5.3</version>
 		</dependency>
+		 -->
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-spring-boot-starter</artifactId>
-			<version>15.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>net.rakugakibox.spring.boot</groupId>
@@ -143,6 +144,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>etsi-vnfm-351-controllers</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>etsi-sol012-341</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
@@ -189,6 +195,11 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>com.ubiqube.mano.service.mon.poller</groupId>
+			<artifactId>mano-pm-poller</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 		</dependency>
@@ -208,6 +219,16 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano.service.mon.serializer</groupId>
+			<artifactId>jpa-serializer</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano</groupId>
+			<artifactId>mano-grammar25</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

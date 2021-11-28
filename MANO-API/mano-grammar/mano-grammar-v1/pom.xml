@@ -8,12 +8,12 @@
 		<artifactId>mano-super-pom</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
+	</parent> 
 	<artifactId>mano-grammar-v1</artifactId>
 	<packaging>jar</packaging>
 	<name>mano-grammar-v1</name>
 	<properties>
-		<antlr4.version>4.9.2</antlr4.version>
+		<antlr4.version>4.9.3</antlr4.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
@@ -26,6 +26,17 @@
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>mano-grammar-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>

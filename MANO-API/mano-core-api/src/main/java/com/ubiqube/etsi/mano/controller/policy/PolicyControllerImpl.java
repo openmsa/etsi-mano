@@ -31,6 +31,7 @@ import org.springframework.util.MultiValueMap;
 import com.ubiqube.etsi.mano.dao.mano.policy.Policies;
 import com.ubiqube.etsi.mano.dao.mano.policy.PolicyVersion;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.policy.PoliciesJpa;
 import com.ubiqube.etsi.mano.jpa.policy.PolicyVersionJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
@@ -48,8 +49,8 @@ public class PolicyControllerImpl extends SearchableService implements PolicyCon
 	private final PolicyVersionJpa policyVersionJpa;
 
 	public PolicyControllerImpl(final ManoSearchResponseService searchService, final EntityManager em, final PoliciesJpa policiesJpa,
-			final PolicyVersionJpa policyVersionJpa) {
-		super(searchService, em, Policies.class);
+			final PolicyVersionJpa policyVersionJpa, final GrammarParser grammarParser) {
+		super(searchService, em, Policies.class, grammarParser);
 		this.policiesJpa = policiesJpa;
 		this.policyVersionJpa = policyVersionJpa;
 	}

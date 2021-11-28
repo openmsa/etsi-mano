@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
@@ -59,10 +60,13 @@ public class VnfLcmService {
 
 	private final VnfInstanceService vnfInstancesService;
 
-	public VnfLcmService(final VnfBlueprintJpa _planJpa, final EntityManager _em, final VnfInstanceService vnfInstancesService) {
-		planJpa = _planJpa;
-		em = _em;
+	private final GrammarParser grammarParser;
+
+	public VnfLcmService(final VnfBlueprintJpa planJpa, final EntityManager em, final VnfInstanceService vnfInstancesService, final GrammarParser grammarParser) {
+		this.planJpa = planJpa;
+		this.em = em;
 		this.vnfInstancesService = vnfInstancesService;
+		this.grammarParser = grammarParser;
 	}
 
 	@Nonnull
@@ -131,7 +135,7 @@ public class VnfLcmService {
 	}
 
 	public List<VnfBlueprint> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
+		final SearchQueryer sq = new SearchQueryer(em, grammarParser);
 		return sq.getCriteria(filter, VnfBlueprint.class);
 	}
 

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
@@ -32,8 +33,9 @@ import com.ubiqube.etsi.mano.repository.jpa.AbstractDirectJpa;
 @Service
 public class NsdPackageDb extends AbstractDirectJpa<NsdPackage> implements NsdRepository {
 
-	public NsdPackageDb(final EntityManager em, final NsdPackageJpa repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, contentManager, jsonMapper, namingStrategy);
+	public NsdPackageDb(final EntityManager em, final NsdPackageJpa repository, final ContentManager contentManager, final ObjectMapper jsonMapper,
+			final NamingStrategy namingStrategy, final GrammarParser grammarParser) {
+		super(em, repository, contentManager, jsonMapper, namingStrategy, grammarParser);
 	}
 
 	@Override

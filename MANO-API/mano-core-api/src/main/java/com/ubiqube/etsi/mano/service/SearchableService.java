@@ -27,7 +27,7 @@ import javax.persistence.EntityManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 
@@ -42,12 +42,14 @@ public class SearchableService {
 	private final EntityManager em;
 
 	private final Class<?> clazz;
+	private final GrammarParser grammarParser;
 
-	public SearchableService(final ManoSearchResponseService searchService, final EntityManager em, final Class<?> clazz) {
+	public SearchableService(final ManoSearchResponseService searchService, final EntityManager em, final Class<?> clazz, final GrammarParser grammarParser) {
 		super();
 		this.searchService = searchService;
 		this.em = em;
 		this.clazz = clazz;
+		this.grammarParser = grammarParser;
 	}
 
 	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink) {
@@ -57,9 +59,8 @@ public class SearchableService {
 	}
 
 	private List<?> queryDb(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		final List<Node<String>> nodes = astBuilder.getNodes();
+		final SearchQueryer sq = new SearchQueryer(em, grammarParser);
+		final List<Node<String>> nodes = grammarParser.parse(filter);
 		return sq.getCriteria((List<Node<?>>) (Object) nodes, clazz);
 	}
 

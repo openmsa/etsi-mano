@@ -24,15 +24,18 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.CrudRepositoryNg;
 
 public abstract class AbstractJpaOnly<U> implements CrudRepositoryNg<U> {
 	private final EntityManager em;
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
+	private final GrammarParser grammarParser;
 
-	protected AbstractJpaOnly(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository) {
+	protected AbstractJpaOnly(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final GrammarParser grammarParser) {
 		this.em = em;
 		this.repository = repository;
+		this.grammarParser = grammarParser;
 	}
 
 	@Override
@@ -55,7 +58,7 @@ public abstract class AbstractJpaOnly<U> implements CrudRepositoryNg<U> {
 
 	@Override
 	public @NotNull List<U> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
+		final SearchQueryer sq = new SearchQueryer(em, grammarParser);
 		return sq.getCriteria(filter, getFrontClass());
 	}
 

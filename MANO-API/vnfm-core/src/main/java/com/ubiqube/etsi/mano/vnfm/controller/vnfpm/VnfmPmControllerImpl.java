@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
@@ -38,9 +39,9 @@ import com.ubiqube.etsi.mano.service.SearchableService;
 public class VnfmPmControllerImpl extends SearchableService implements VnfmPmController {
 	private final PmJobsJpa pmJobsJpa;
 
-	public VnfmPmControllerImpl(final PmJobsJpa _pmJobsJpa, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, PmJob.class);
-		pmJobsJpa = _pmJobsJpa;
+	public VnfmPmControllerImpl(final PmJobsJpa pmJobsJpa, final EntityManager em, final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
+		super(searchService, em, PmJob.class, grammarParser);
+		this.pmJobsJpa = pmJobsJpa;
 	}
 
 	@Override

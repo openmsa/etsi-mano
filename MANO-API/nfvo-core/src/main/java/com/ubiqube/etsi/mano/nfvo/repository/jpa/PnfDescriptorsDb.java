@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
@@ -33,8 +34,9 @@ import com.ubiqube.etsi.mano.repository.jpa.AbstractDirectJpa;
 @Service
 public class PnfDescriptorsDb extends AbstractDirectJpa<PnfDescriptor> implements PnfdInfoRepository {
 
-	public PnfDescriptorsDb(final EntityManager em, final CrudRepository<PnfDescriptor, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, contentManager, jsonMapper, namingStrategy);
+	public PnfDescriptorsDb(final EntityManager em, final CrudRepository<PnfDescriptor, UUID> repository, final ContentManager contentManager,
+			final ObjectMapper jsonMapper, final NamingStrategy namingStrategy, final GrammarParser grammarParser) {
+		super(em, repository, contentManager, jsonMapper, namingStrategy, grammarParser);
 	}
 
 	@Override

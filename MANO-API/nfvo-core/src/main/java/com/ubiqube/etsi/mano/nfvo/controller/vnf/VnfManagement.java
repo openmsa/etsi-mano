@@ -42,6 +42,7 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
@@ -67,8 +68,8 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	private final MapperFacade mapper;
 
 	public VnfManagement(final VnfPackageRepository vnfPackageRepository, final MapperFacade mapper, final VnfPackageService vnfPackageService, final EntityManager em,
-			final ManoSearchResponseService searchService) {
-		super(searchService, em, VnfPackage.class);
+			final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
+		super(searchService, em, VnfPackage.class, grammarParser);
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.mapper = mapper;
 		this.vnfPackageService = vnfPackageService;

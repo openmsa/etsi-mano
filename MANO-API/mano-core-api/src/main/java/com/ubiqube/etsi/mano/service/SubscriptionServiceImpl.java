@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
@@ -42,17 +42,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	private final SubscriptionJpa subscriptionJpa;
 
-	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager em) {
+	private final GrammarParser grammarParser;
+
+	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager em, final GrammarParser grammarParser) {
 		super();
 		this.subscriptionJpa = repository;
 		this.em = em;
+		this.grammarParser = grammarParser;
 	}
 
 	@Override
 	public List<Subscription> query(final String filter, final SubscriptionType type) {
-		final SearchQueryer sq = new SearchQueryer(em);
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		final List<Node<Object>> nodes = (List<Node<Object>>) (Object) astBuilder.getNodes();
+		final SearchQueryer sq = new SearchQueryer(em, grammarParser);
+		final List<Node<Object>> nodes = grammarParser.parse(filter);
 		nodes.add(Node.of("subscriptionType", Operand.EQ, type.toString()));
 		return sq.getCriteria((List<Node<?>>) (Object) nodes, Subscription.class);
 	}

@@ -37,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -53,8 +54,9 @@ public class NsdControllerImpl extends SearchableService implements NsdControlle
 	private final Patcher patcher;
 	private final EventManager eventManager;
 
-	public NsdControllerImpl(final NsdRepository nsdRepository, final Patcher patcher, final EventManager eventManager, final EntityManager em, final ManoSearchResponseService searchService) {
-		super(searchService, em, NsdPackage.class);
+	public NsdControllerImpl(final NsdRepository nsdRepository, final Patcher patcher, final EventManager eventManager, final EntityManager em,
+			final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
+		super(searchService, em, NsdPackage.class, grammarParser);
 		this.nsdRepository = nsdRepository;
 		this.patcher = patcher;
 		this.eventManager = eventManager;

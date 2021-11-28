@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -40,8 +41,9 @@ public class VnfPackageDb extends AbstractDirectJpa<VnfPackage> implements VnfPa
 
 	private final NamingStrategy namingStrategy;
 
-	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, contentManager, jsonMapper, namingStrategy);
+	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper,
+			final NamingStrategy namingStrategy, final GrammarParser grammarParser) {
+		super(em, repository, contentManager, jsonMapper, namingStrategy, grammarParser);
 		this.namingStrategy = namingStrategy;
 	}
 

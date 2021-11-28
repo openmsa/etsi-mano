@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.CrudRepositoryNg;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
@@ -33,11 +34,14 @@ public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBi
 
 	private final EntityManager em;
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
+	private final GrammarParser grammarParser;
 
-	protected AbstractDirectJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+	protected AbstractDirectJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository,
+			final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy, final GrammarParser grammarParser) {
 		super(contentManager, jsonMapper, namingStrategy);
 		this.em = em;
 		this.repository = repository;
+		this.grammarParser = grammarParser;
 	}
 
 	@Override
@@ -64,7 +68,7 @@ public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBi
 
 	@Override
 	public final List<U> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
+		final SearchQueryer sq = new SearchQueryer(em, grammarParser);
 		return sq.getCriteria(filter, getFrontClass());
 	}
 

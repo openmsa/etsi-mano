@@ -31,6 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsVirtualLinkJpa;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsVnfPackageJpa;
@@ -52,14 +53,17 @@ public class NsInstanceService {
 
 	private final EntityManager em;
 
+	private final GrammarParser grammarParser;
+
 	public NsInstanceService(final NsVirtualLinkJpa nsVirtualLinkJpa, final NsdPackageJpa nsdPackageJpa, final NsVnfPackageJpa vnfPackageJpa,
-			final NsdInstanceJpa nsdInstanceJpa, final NsLiveInstanceJpa nsLiveInstanceJpa, final EntityManager em) {
+			final NsdInstanceJpa nsdInstanceJpa, final NsLiveInstanceJpa nsLiveInstanceJpa, final EntityManager em, final GrammarParser grammarParser) {
 		this.nsVirtualLinkJpa = nsVirtualLinkJpa;
 		this.nsdPackageJpa = nsdPackageJpa;
 		this.vnfPackageJpa = vnfPackageJpa;
 		this.nsdInstanceJpa = nsdInstanceJpa;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 		this.em = em;
+		this.grammarParser = grammarParser;
 	}
 
 	public int countLiveInstanceOfSap(final NsdInstance nsInstance, final UUID id) {
@@ -113,7 +117,7 @@ public class NsInstanceService {
 	}
 
 	public List<NsdInstance> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
+		final SearchQueryer sq = new SearchQueryer(em, grammarParser);
 		return sq.getCriteria(filter, NsdInstance.class);
 	}
 

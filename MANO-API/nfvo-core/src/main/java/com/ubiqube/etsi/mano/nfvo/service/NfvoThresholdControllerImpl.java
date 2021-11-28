@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.controller.nspm.NfvoThresholdController;
 import com.ubiqube.etsi.mano.dao.mano.pm.Threshold;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.ThresholdJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
@@ -39,8 +40,8 @@ public class NfvoThresholdControllerImpl extends SearchableService implements Nf
 
 	private final ThresholdJpa thresholdJpa;
 
-	public NfvoThresholdControllerImpl(final ManoSearchResponseService searchService, final EntityManager em, final ThresholdJpa thresholdJpa) {
-		super(searchService, em, Threshold.class);
+	public NfvoThresholdControllerImpl(final ManoSearchResponseService searchService, final EntityManager em, final ThresholdJpa thresholdJpa, final GrammarParser grammarParser) {
+		super(searchService, em, Threshold.class, grammarParser);
 		this.thresholdJpa = thresholdJpa;
 	}
 

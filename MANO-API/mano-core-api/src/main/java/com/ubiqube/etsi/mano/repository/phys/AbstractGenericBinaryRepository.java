@@ -29,8 +29,9 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
+import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
 import com.ubiqube.etsi.mano.repository.Low;
@@ -47,12 +48,15 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	private final JsonFilter jsonFilter;
 	private final Low lowDriver;
 	private final NamingStrategy namingStrategy;
+	private final GrammarParser grammarParser;
 
-	protected AbstractGenericBinaryRepository(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low lowDriver, final NamingStrategy namingStrategy) {
+	protected AbstractGenericBinaryRepository(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low lowDriver, final NamingStrategy namingStrategy,
+			final GrammarParser grammarParser) {
 		this.objectMapper = objectMapper;
 		this.jsonFilter = jsonFilter;
 		this.lowDriver = lowDriver;
 		this.namingStrategy = namingStrategy;
+		this.grammarParser = grammarParser;
 		init();
 	}
 
@@ -67,10 +71,10 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	public final List<T> query(final String filter) {
 		final Path dir = namingStrategy.getRoot(getClazz());
 		final List<String> listFilesInFolder = lowDriver.find(dir.toString(), getFilename());
-		final AstBuilder astBuilder = new AstBuilder(filter);
+		final List<Node<String>> nodes = grammarParser.parse(filter);
 		return listFilesInFolder.stream()
 				.map(this::rawGetObject)
-				.filter(x -> jsonFilter.apply(x, astBuilder))
+				.filter(x -> jsonFilter.apply(x, nodes))
 				.toList();
 	}
 

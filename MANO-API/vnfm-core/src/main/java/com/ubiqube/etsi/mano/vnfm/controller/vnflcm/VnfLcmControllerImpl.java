@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
@@ -42,9 +43,10 @@ public class VnfLcmControllerImpl extends SearchableService implements VnfLcmCon
 	private final VnfLcmService vnfLcmOpOccsRepository;
 	private final VnfInstanceJpa vnfInstanceJpa;
 
-	public VnfLcmControllerImpl(final VnfLcmService _vnfLcmOpOccsRepository, final EntityManager _em, final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa) {
-		super(searchService, _em, VnfBlueprint.class);
-		vnfLcmOpOccsRepository = _vnfLcmOpOccsRepository;
+	public VnfLcmControllerImpl(final VnfLcmService vnfLcmOpOccsRepository, final EntityManager em, final ManoSearchResponseService searchService,
+			final VnfInstanceJpa vnfInstanceJpa, final GrammarParser grammarParser) {
+		super(searchService, em, VnfBlueprint.class, grammarParser);
+		this.vnfLcmOpOccsRepository = vnfLcmOpOccsRepository;
 		this.vnfInstanceJpa = vnfInstanceJpa;
 	}
 

@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.nfvo.factory.PnfFactory;
 import com.ubiqube.etsi.mano.repository.PnfdInfoRepository;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
@@ -38,8 +39,8 @@ import com.ubiqube.etsi.mano.service.SearchableService;
 public class PnfdControllerImpl extends SearchableService implements PnfdController {
 	private final PnfdInfoRepository pnfdInfoRepository;
 
-	public PnfdControllerImpl(final PnfdInfoRepository pnfdInfoRepository, final EntityManager em, final ManoSearchResponseService searchService) {
-		super(searchService, em, PnfDescriptor.class);
+	public PnfdControllerImpl(final PnfdInfoRepository pnfdInfoRepository, final EntityManager em, final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
+		super(searchService, em, PnfDescriptor.class, grammarParser);
 		this.pnfdInfoRepository = pnfdInfoRepository;
 	}
 

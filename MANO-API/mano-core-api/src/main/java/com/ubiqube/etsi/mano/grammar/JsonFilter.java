@@ -53,12 +53,12 @@ public class JsonFilter {
 	 * @param _astBuilder An AST Builder.
 	 * @return
 	 */
-	public boolean apply(@Nonnull final Object _object, @Nonnull final AstBuilder _astBuilder) {
-		final Node<String> node = _astBuilder.getNodes().stream()
+	public boolean apply(@Nonnull final Object _object, @Nonnull final List<Node<String>> node) {
+		final Node<String> selectedNode = node.stream()
 				.filter(x -> !apply(_object, x))
 				.findFirst()
 				.orElse(null);
-		return (null != node) ? false : true;
+		return null == selectedNode;
 	}
 
 	private boolean apply(@Nonnull final Object _object, @Nonnull final Node<String> _node) {

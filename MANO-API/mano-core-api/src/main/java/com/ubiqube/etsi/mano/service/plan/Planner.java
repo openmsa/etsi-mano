@@ -44,7 +44,7 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 
 	private final List<? extends PlanContributor<P, B, U, PA>> planContributors;
 
-	public Planner(final List<? extends PlanContributor<P, B, U, PA>> contributor) {
+	protected Planner(final List<? extends PlanContributor<P, B, U, PA>> contributor) {
 		planContributors = contributor;
 	}
 
@@ -65,11 +65,9 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 				}
 			});
 			start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget(), scaling, connections, cache));
-		} else {
-			if (!cache.contains(clazz.getName())) {
-				contribute(bundle, blueprint, scaling, clazz);
-				cache.add(clazz.getName());
-			}
+		} else if (!cache.contains(clazz.getName())) {
+			contribute(bundle, blueprint, scaling, clazz);
+			cache.add(clazz.getName());
 		}
 	}
 
@@ -78,7 +76,7 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 		LOG.debug("Contributors for node {} = {}", node, contributors);
 		blueprint.getTasks().addAll(contributors.stream()
 				.flatMap(x -> x.contribute(bundle, blueprint, scaling).stream())
-				.collect(Collectors.toList()));
+				.toList());
 	}
 
 	private List<PlanContributor<P, B, U, PA>> getContributors(final Class<? extends Node> node) {
@@ -86,12 +84,12 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 	}
 
 	private static List<NodeConnectivity> findSourceNodesByType(final List<NodeConnectivity> connections, final Class<? extends Node> class1) {
-		return connections.stream().filter(x -> x.getSource() == class1).collect(Collectors.toList());
+		return connections.stream().filter(x -> x.getSource() == class1).toList();
 	}
 
 	public ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> convertToExecution(final B blueprint, final ChangeType changeType) {
 		final Set<U> tasks = blueprint.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
-		final List<UnitOfWork<U, PA>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).collect(Collectors.toList());
+		final List<UnitOfWork<U, PA>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).toList();
 		final WfConfiguration wfConfiguration = new WfConfiguration(planContributors);
 		wfConfiguration.getConfigurationGraph();
 		final ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> g = wfConfiguration.autoConnect(list);
