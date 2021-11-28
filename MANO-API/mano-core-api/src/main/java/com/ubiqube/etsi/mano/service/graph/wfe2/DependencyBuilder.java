@@ -35,8 +35,8 @@ public class DependencyBuilder {
 	private final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
 	private final Class<? extends Node> contributor;
 
-	public DependencyBuilder(final PlanContributor _contributor) {
-		contributor = _contributor.getContributionType();
+	public DependencyBuilder(final PlanContributor contributor) {
+		this.contributor = contributor.getContributionType();
 	}
 
 	public DependencyBuilder connectionFrom(final Class<? extends Node> class1) {

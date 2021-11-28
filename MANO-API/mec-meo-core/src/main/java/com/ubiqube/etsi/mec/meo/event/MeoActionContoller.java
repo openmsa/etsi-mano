@@ -40,8 +40,8 @@ public class MeoActionContoller {
 
 	private final AppPackageManager appPackageManager;
 
-	public MeoActionContoller(final AppPackageManager _appPackageManager) {
-		appPackageManager = _appPackageManager;
+	public MeoActionContoller(final AppPackageManager appPackageManager) {
+		this.appPackageManager = appPackageManager;
 	}
 
 	public void dispatch(@NotNull final ActionType actionType, @NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {

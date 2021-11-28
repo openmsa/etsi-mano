@@ -62,7 +62,6 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.service.VimService;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.mon.VimMonitoring;
 
@@ -82,8 +81,8 @@ public class OpenStackVim implements Vim {
 
 	private final Map<String, String> flavors;
 
-	public OpenStackVim(final VimService _vciJpa, final MapperFacade _mapper) {
-		this.mapper = _mapper;
+	public OpenStackVim(final MapperFacade mapper) {
+		this.mapper = mapper;
 		this.flavors = Map.of("availability_zone_type", "...");
 
 		LOG.info("Booting Openstack VIM.\n" +
@@ -284,7 +283,7 @@ public class OpenStackVim implements Vim {
 	public List<ServerGroup> getServerGroup(final VimConnectionInformation vimConnectionInformation) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		return os.compute().hostAggregates().list().stream().map(x -> new ServerGroup(x.getId(), x.getName(), x.getAvailabilityZone()))
-				.collect(Collectors.toList());
+				.toList();
 
 	}
 
@@ -371,7 +370,7 @@ public class OpenStackVim implements Vim {
 			return list.stream()
 					.map(this::convertExtenstionToCaps)
 					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
+					.toList();
 		};
 	}
 

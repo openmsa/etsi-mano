@@ -19,9 +19,6 @@ package com.ubiqube.etsi.mano.vnfm.service.graph.vnfm;
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ubiqube.etsi.mano.dao.mano.SubNetworkTask;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SubNetwork;
@@ -38,13 +35,11 @@ public class SubNetworkUow extends VnfAbstractUnitOfWork {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(SubNetworkUow.class);
-
 	private final SubNetworkTask task;
 
-	public SubNetworkUow(final SubNetworkTask _task) {
-		super(_task);
-		task = _task;
+	public SubNetworkUow(final SubNetworkTask task) {
+		super(task);
+		this.task = task;
 	}
 
 	@Override

@@ -14,28 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.service;
+package com.ubiqube.etsi.mano.repository;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
+import java.io.InputStream;
+import java.nio.file.Path;
 
-import org.springframework.stereotype.Service;
+public interface ContentManager {
 
-import com.ubiqube.etsi.mano.service.AbstractGrantService;
+	void store(Path _filename, InputStream _stream);
 
-import ma.glasnost.orika.MapperFacade;
+	InputStream load(Path _filename, int start, Long end);
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-// Not VNFM
-@Service
-@Transactional(TxType.NEVER)
-public class ManoGrantService extends AbstractGrantService {
+	void mkdir(Path _path);
 
-	public ManoGrantService(final MapperFacade mapper, final VnfResourceAllocate nfvo) {
-		super(mapper, nfvo);
-	}
+	void delete(Path _path);
+
 }

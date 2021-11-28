@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
 
@@ -57,7 +56,7 @@ public class SystemBuilderImpl implements SystemBuilder {
 
 	@Override
 	public List<UnitOfWorkConnectivity> getEdges() {
-		return g.edgeSet().stream().collect(Collectors.toList());
+		return g.edgeSet().stream().toList();
 	}
 
 	@Override
@@ -66,7 +65,7 @@ public class SystemBuilderImpl implements SystemBuilder {
 	}
 
 	public List<UnitOfWork<?>> getVertex() {
-		return g.vertexSet().stream().collect(Collectors.toList());
+		return g.vertexSet().stream().toList();
 	}
 
 	@Override
@@ -74,7 +73,7 @@ public class SystemBuilderImpl implements SystemBuilder {
 		if (null != single) {
 			return Arrays.asList(single);
 		}
-		return g.vertexSet().stream().filter(x -> g.incomingEdgesOf(x).isEmpty()).collect(Collectors.toList());
+		return g.vertexSet().stream().filter(x -> g.incomingEdgesOf(x).isEmpty()).toList();
 	}
 
 	@Override
@@ -82,7 +81,7 @@ public class SystemBuilderImpl implements SystemBuilder {
 		if (null != single) {
 			return Arrays.asList(single);
 		}
-		return g.vertexSet().stream().filter(x -> g.outgoingEdgesOf(x).isEmpty()).collect(Collectors.toList());
+		return g.vertexSet().stream().filter(x -> g.outgoingEdgesOf(x).isEmpty()).toList();
 	}
 
 	@Override

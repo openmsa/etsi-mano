@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -146,8 +147,7 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 
 	@Override
 	public Set<VimConnectionInformation> getVimConnections() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashSet<>();
 	}
 
 	@Override

@@ -38,7 +38,8 @@ public class ThresholdCrossedNotification {
 	private UUID id;
 
 	/**
-	 * Discriminator for the different notification types. Shall be set to "ThresholdCrossedNotification" for this notification type.
+	 * Discriminator for the different notification types. Shall be set to
+	 * "ThresholdCrossedNotification" for this notification type.
 	 */
 	private String notificationType;
 
@@ -53,38 +54,50 @@ public class ThresholdCrossedNotification {
 	private UUID thresholdId;
 
 	/**
-	 * An indication of whether the threshold was crossed in upward or downward direction.
+	 * An indication of whether the threshold was crossed in upward or downward
+	 * direction.
 	 */
-	private CrossingDirectionType CrossingDirection;
+	private CrossingDirectionType crossingDirection;
 
 	/**
-	 * Type of the measured object.  The applicable measured object type for a measurement is defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
+	 * Type of the measured object. The applicable measured object type for a
+	 * measurement is defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
 	 */
 	private String objectType;
 
 	/**
-	 * Identifier of the measured object instance as per clause 6.2 of ETSI GS NFV-IFA 027 [5].
+	 * Identifier of the measured object instance as per clause 6.2 of ETSI GS
+	 * NFV-IFA 027 [5].
 	 */
 	private UUID objectInstanceId;
 
 	/**
-	 * Identifier of the sub-object of the measured object to which the measurement applies. Shall be present if this is required in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured object type. See note.
+	 * Identifier of the sub-object of the measured object to which the measurement
+	 * applies. Shall be present if this is required in clause 6.2 of ETSI GS
+	 * NFV-IFA 027 [5] for the related measured object type. See note.
 	 */
 	@Null
 	private UUID subObjectInstanceId;
 
 	/**
-	 * Performance metric associated with the threshold. This attribute shall contain the related "Measurement Name" value as defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
+	 * Performance metric associated with the threshold. This attribute shall
+	 * contain the related "Measurement Name" value as defined in clause 7.2 of ETSI
+	 * GS NFV-IFA 027 [5].
 	 */
 	private String performanceMetric;
 
 	/**
-	 * Value of the metric that resulted in threshold crossing. The type of this attribute shall correspond to the related "Measurement Unit" as defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
+	 * Value of the metric that resulted in threshold crossing. The type of this
+	 * attribute shall correspond to the related "Measurement Unit" as defined in
+	 * clause 7.2 of ETSI GS NFV-IFA 027 [5].
 	 */
 	private Double performanceValue;
 
 	/**
-	 * Measurement context information related to the measured value. The set of applicable keys is defined per measurement in the related "Measurement Context" in clause 7.2 of ETSI GS NFV-IFA 027 [5]
+	 * Measurement context information related to the measured value. The set of
+	 * applicable keys is defined per measurement in the related "Measurement
+	 * Context" in clause 7.2 of ETSI GS NFV-IFA 027 [5]
+	 *
 	 * @See ETSI GS NFV-TST 008 [10]
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)

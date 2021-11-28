@@ -42,10 +42,10 @@ public class AppInstanceService {
 
 	private final AppLiveInstanceJpa apoAppLiveInstanceJpa;
 
-	public AppInstanceService(final AppInstanceJpa appInstanceJpa, final AppLiveInstanceJpa _apoAppLiveInstanceJpa) {
+	public AppInstanceService(final AppInstanceJpa appInstanceJpa, final AppLiveInstanceJpa apoAppLiveInstanceJpa) {
 		super();
 		this.appInstanceJpa = appInstanceJpa;
-		apoAppLiveInstanceJpa = _apoAppLiveInstanceJpa;
+		this.apoAppLiveInstanceJpa = apoAppLiveInstanceJpa;
 	}
 
 	public AppInstance findById(final UUID id) {

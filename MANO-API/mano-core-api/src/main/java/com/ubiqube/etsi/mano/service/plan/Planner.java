@@ -80,6 +80,7 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 	}
 
 	private List<PlanContributor<P, B, U, PA>> getContributors(final Class<? extends Node> node) {
+		// No toList.
 		return planContributors.stream().filter(x -> x.getContributionType() == node).collect(Collectors.toList());
 	}
 

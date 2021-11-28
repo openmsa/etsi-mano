@@ -27,7 +27,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,8 +58,8 @@ public class VnfmApiVersion {
 
 	private final ApplicationContext applicationContext;
 
-	public VnfmApiVersion(final ApplicationContext _applicationContext) {
-		applicationContext = _applicationContext;
+	public VnfmApiVersion(final ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
 		extractVersions();
 	}
 
@@ -166,7 +165,7 @@ public class VnfmApiVersion {
 		if (null == versions) {
 			return ResponseEntity.noContent().build();
 		}
-		final List<ApiVersionInformationApiVersions> list = versions.stream().map(x -> new ApiVersionInformationApiVersions().version(x).isDeprecated(Boolean.FALSE)).collect(Collectors.toList());
+		final List<ApiVersionInformationApiVersions> list = versions.stream().map(x -> new ApiVersionInformationApiVersions().version(x).isDeprecated(Boolean.FALSE)).toList();
 		apiVersion.setApiVersions(list);
 		return ResponseEntity.ok(apiVersion);
 	}

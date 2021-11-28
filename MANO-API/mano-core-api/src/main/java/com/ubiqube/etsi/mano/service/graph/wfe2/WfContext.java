@@ -30,9 +30,9 @@ public class WfContext<U extends Task, P> {
 	private final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g;
 	private final UnitOfWork<U, P> origin;
 
-	public WfContext(final UnitOfWork<U, P> _origin, final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> _g) {
-		origin = _origin;
-		g = _g;
+	public WfContext(final UnitOfWork<U, P> origin, final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g) {
+		this.origin = origin;
+		this.g = g;
 	}
 
 	public String getProducedValue(final Class<?> node) {

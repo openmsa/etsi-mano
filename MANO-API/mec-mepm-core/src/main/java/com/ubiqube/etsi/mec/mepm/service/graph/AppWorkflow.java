@@ -52,10 +52,10 @@ public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport, Ap
 
 	private final List<AbstractAppPlanContributor> planContributors;
 
-	public AppWorkflow(final AppPlanner planner, final AppPlanExecutor executor, final List<AbstractAppPlanContributor> _planContributors) {
+	public AppWorkflow(final AppPlanner planner, final AppPlanExecutor executor, final List<AbstractAppPlanContributor> planContributors) {
 		this.planner = planner;
 		this.executor = executor;
-		planContributors = new ArrayList<>(_planContributors);
+		this.planContributors = new ArrayList<>(planContributors);
 	}
 
 	@Override

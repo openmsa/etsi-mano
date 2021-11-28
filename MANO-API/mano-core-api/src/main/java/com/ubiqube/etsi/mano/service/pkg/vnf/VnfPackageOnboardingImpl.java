@@ -92,12 +92,13 @@ public class VnfPackageOnboardingImpl {
 
 	private final VnfPackageRepository vnfPackageRepository;
 
-	public VnfPackageOnboardingImpl(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final VnfPackageManager packageManager, final MapperFacade _mapper, final VnfPackageService _vnfPackageService) {
+	public VnfPackageOnboardingImpl(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final VnfPackageManager packageManager,
+			final MapperFacade mapper, final VnfPackageService vnfPackageService) {
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
-		mapper = _mapper;
-		vnfPackageService = _vnfPackageService;
+		this.mapper = mapper;
+		this.vnfPackageService = vnfPackageService;
 	}
 
 	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId) {

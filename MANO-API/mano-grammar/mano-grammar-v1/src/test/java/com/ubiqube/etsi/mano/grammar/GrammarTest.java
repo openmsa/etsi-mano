@@ -1,4 +1,20 @@
 /**
+ *     Copyright (C) 2019-2020 Ubiqube.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+/**
  * This copy of Woodstox XML processor is licensed under the
  * Apache (Software) License, version 2.0 ("the License").
  * See the License for details about distribution rights, and the
@@ -65,7 +81,7 @@ public class GrammarTest {
 	 * Multiple Operator separated by '&' and 2 simple values.
 	 */
 	@Test
-	public void testMultiOp() {
+	void testMultiOp() {
 		final List<Node<String>> nodes = grammarv1Service.parse("id.eq=string&vnfdVersion.gt=bad");
 		assertEquals(2, nodes.size());
 		assertNode(nodes.get(0), "id", Operand.EQ, "string");
@@ -76,7 +92,7 @@ public class GrammarTest {
 	 * Sub object attribute and simple values.
 	 */
 	@Test
-	public void testMultiAttr() {
+	void testMultiAttr() {
 		final List<Node<String>> nodes = grammarv1Service.parse("id.my.bean.eq=string&vnfdVersion.gt=bad");
 		assertEquals(2, nodes.size());
 		assertNode(nodes.get(0), "id.my.bean", Operand.EQ, "string");

@@ -28,9 +28,9 @@ public class ObjectStorageUow extends VnfAbstractUnitOfWork {
 
 	private final VnfStorage vnfStorage;
 
-	public ObjectStorageUow(final ObjectStorageTask objectStorageTask, final VnfStorage _vnfStorage) {
+	public ObjectStorageUow(final ObjectStorageTask objectStorageTask, final VnfStorage vnfStorage) {
 		super(objectStorageTask);
-		vnfStorage = _vnfStorage;
+		this.vnfStorage = vnfStorage;
 	}
 
 	/** Serial. */
@@ -59,8 +59,7 @@ public class ObjectStorageUow extends VnfAbstractUnitOfWork {
 
 	@Override
 	public List<WfProduce> getProduce() {
-		// TODO Auto-generated method stub
-		return null;
+		return List.of();
 	}
 
 }

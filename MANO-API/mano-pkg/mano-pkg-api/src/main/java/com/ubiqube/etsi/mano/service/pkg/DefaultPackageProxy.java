@@ -34,7 +34,7 @@ public class DefaultPackageProxy implements InvocationHandler {
 		if (retType.isInterface()) {
 			return handleInterface(retType);
 		}
-		LOG.info("" + retType);
+		LOG.info("{}", retType);
 		return null;
 	}
 
@@ -42,7 +42,7 @@ public class DefaultPackageProxy implements InvocationHandler {
 		if (retType.isAssignableFrom(Set.class)) {
 			return new HashSet<>();
 		}
-		throw new RuntimeException("Unknow interface type " + retType);
+		throw new ToscaException("Unknow interface type " + retType);
 	}
 
 }

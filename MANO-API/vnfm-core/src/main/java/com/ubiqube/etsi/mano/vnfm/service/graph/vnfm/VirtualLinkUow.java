@@ -39,11 +39,11 @@ public class VirtualLinkUow extends VnfAbstractUnitOfWork {
 
 	private final NetworkTask networkTask;
 
-	public VirtualLinkUow(final NetworkTask _networkTask, final VnfVl vnfVl) {
-		super(_networkTask);
-		name = _networkTask.getToscaName();
+	public VirtualLinkUow(final NetworkTask networkTask, final VnfVl vnfVl) {
+		super(networkTask);
+		name = networkTask.getToscaName();
 		vlProtocolData = vnfVl.getVlProfileEntity().getVirtualLinkProtocolData().iterator().next();
-		networkTask = _networkTask;
+		this.networkTask = networkTask;
 	}
 
 	public VlProtocolData getVlProtocolData() {

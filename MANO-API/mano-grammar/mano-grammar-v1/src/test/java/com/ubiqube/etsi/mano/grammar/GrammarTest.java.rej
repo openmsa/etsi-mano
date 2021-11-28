@@ -1,27 +1,11 @@
---- MANO-API/mano-core-api/src/test/java/com/ubiqube/etsi/mano/grammar/GrammarTest.java
+--- MANO-API/mano-grammar/mano-grammar-v1/src/test/java/com/ubiqube/etsi/mano/grammar/GrammarTest.java
 +++ MANO-API/mano-grammar/mano-grammar-v1/src/test/java/com/ubiqube/etsi/mano/grammar/GrammarTest.java
-@@ -19,20 +17,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
- import java.util.List;
- 
- import org.junit.jupiter.api.Test;
-+import org.mano.grammar.v1.Grammarv1Service;
+@@ -39,7 +55,7 @@ import org.mano.grammar.v1.Grammarv1Service;
  
  import com.ubiqube.etsi.mano.grammar.Node.Operand;
  
- public class GrammarTest {
-+	private final Grammarv1Service grammarv1Service = new Grammarv1Service();
+-public class GrammarTest {
++class GrammarTest {
+ 	private final Grammarv1Service grammarv1Service = new Grammarv1Service();
  
  	/**
- 	 * Simple value can be cinfused with STRING <=> AATTRIBUTES.
--	 *
--	 * @throws Exception
- 	 */
- 	@Test
--	void testSimpleValue() throws Exception {
--		final AstBuilder astBuilder = new AstBuilder("id.gt=aaa");
--		final List<Node<String>> nodes = astBuilder.getNodes();
-+	void testSimpleValue() {
-+		final List<Node<String>> nodes = grammarv1Service.parse("id.gt=aaa");
- 		assertEquals(1, nodes.size());
- 		assertNode(nodes.get(0), "id", Operand.GT, "aaa");
- 	}

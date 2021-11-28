@@ -138,7 +138,7 @@ public class AppVdu extends AbstractAppPlanContributor {
 		final AppInstance vnfInstance = instanceService.findById(plan.getAppInstance().getId());
 		final AppPkg appPackage = packageService.findById(vnfInstance.getAppPkg());
 		return tasks.stream()
-				.filter(x -> x instanceof AppComputeTask)
+				.filter(AppComputeTask.class::isInstance)
 				.map(AppComputeTask.class::cast)
 				.map(x -> {
 					final VnfCompute vnfCompute = appPackage.getVirtualComputeDescriptor();

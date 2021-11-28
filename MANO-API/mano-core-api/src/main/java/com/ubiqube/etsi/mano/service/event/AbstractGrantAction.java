@@ -77,10 +77,10 @@ public abstract class AbstractGrantAction {
 
 	private final VimElection vimElection;
 
-	protected AbstractGrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VimElection _vimElection) {
-		vimManager = _vimManager;
-		vimElection = _vimElection;
-		grantJpa = _grantJpa;
+	protected AbstractGrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection) {
+		this.vimManager = vimManager;
+		this.vimElection = vimElection;
+		this.grantJpa = grantJpa;
 	}
 
 	@Nonnull
@@ -349,7 +349,6 @@ public abstract class AbstractGrantAction {
 			final List<ServerGroup> sg = new ArrayList<>();
 			final ServerGroup serverGroup = new ServerGroup("1", "az", "az");
 			sg.add(serverGroup);
-			// final List<ServerGroup> sg = vim.getServerGroup(vimInfo);
 			final Set<String> sgList = sg.stream().map(ServerGroup::getId).collect(Collectors.toSet());
 			final ZoneGroupInformation zgi = new ZoneGroupInformation();
 			zgi.setZoneId(sgList);

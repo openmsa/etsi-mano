@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.jpa.AbstractDirectJpa;
@@ -32,8 +33,9 @@ import com.ubiqube.etsi.mano.repository.jpa.AbstractDirectJpa;
 @Service
 public class AppPackageRepository extends AbstractDirectJpa<AppPkg> {
 
-	public AppPackageRepository(final EntityManager em, final CrudRepository<AppPkg, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, repository, contentManager, jsonMapper, namingStrategy);
+	public AppPackageRepository(final EntityManager em, final CrudRepository<AppPkg, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper,
+			final NamingStrategy namingStrategy, final GrammarParser grammarParser) {
+		super(em, repository, contentManager, jsonMapper, namingStrategy, grammarParser);
 	}
 
 	@Override

@@ -84,14 +84,14 @@ public class Poc {
 
 	private final RestTemplate restTemplate;
 
-	public Poc(final OpenStackVim _osv, final VimConnectionInformationJpa _vimConnectionInformationJpa, final VnfPlanner _planner, final VnfBlueprintService _blueprintService, final RestTemplate restTemplate,
-			final AlarmsJpa _alarmsJpa) {
-		osv = _osv;
-		vimConnectionInformationJpa = _vimConnectionInformationJpa;
-		planner = _planner;
-		blueprintService = _blueprintService;
+	public Poc(final OpenStackVim osv, final VimConnectionInformationJpa vimConnectionInformationJpa, final VnfPlanner planner, final VnfBlueprintService blueprintService,
+			final RestTemplate restTemplate, final AlarmsJpa alarmsJpa) {
+		this.osv = osv;
+		this.vimConnectionInformationJpa = vimConnectionInformationJpa;
+		this.planner = planner;
+		this.blueprintService = blueprintService;
 		this.restTemplate = restTemplate;
-		alarmsJpa = _alarmsJpa;
+		this.alarmsJpa = alarmsJpa;
 	}
 
 	@GetMapping(value = "/test/{id}")

@@ -32,7 +32,7 @@ public abstract class VnfVtBase<U extends VnfTask> implements VirtualTask<U> {
 	private U nt;
 	private SystemBuilder db;
 
-	public VnfVtBase(final U nt) {
+	protected VnfVtBase(final U nt) {
 		this.nt = nt;
 	}
 

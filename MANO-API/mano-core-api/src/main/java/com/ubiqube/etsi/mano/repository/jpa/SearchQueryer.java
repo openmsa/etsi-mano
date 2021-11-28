@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.repository.jpa;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -67,7 +66,7 @@ public class SearchQueryer {
 	private static List<SearchPredicate> convertNodeList(final List<Node<?>> nodes, final SearchPredicateFactory pf) {
 		return nodes.stream()
 				.map(x -> applyOp(x.getName(), x.getOp(), x.getValue(), pf))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static SearchPredicate applyOp(final String name, final Operand op, final Object value, final SearchPredicateFactory pf) {

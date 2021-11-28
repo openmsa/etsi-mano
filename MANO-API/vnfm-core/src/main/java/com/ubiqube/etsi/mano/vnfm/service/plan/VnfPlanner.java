@@ -39,8 +39,8 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.AbstractVnfPlanContr
 @Service
 public class VnfPlanner extends Planner<VnfTask, VnfPackage, VnfParameters, Blueprint<VnfTask, VnfInstance>> {
 
-	public VnfPlanner(final List<AbstractVnfPlanContributor> _planContributors) {
-		super((List<? extends PlanContributor<VnfPackage, Blueprint<VnfTask, VnfInstance>, VnfTask, VnfParameters>>) ((Object)_planContributors));
+	public VnfPlanner(final List<AbstractVnfPlanContributor> planContributors) {
+		super((List<? extends PlanContributor<VnfPackage, Blueprint<VnfTask, VnfInstance>, VnfTask, VnfParameters>>) ((Object) planContributors));
 	}
 
 	@Override

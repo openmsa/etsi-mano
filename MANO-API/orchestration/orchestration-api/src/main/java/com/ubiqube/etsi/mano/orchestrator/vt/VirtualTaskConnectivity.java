@@ -25,9 +25,9 @@ public class VirtualTaskConnectivity {
 		// Nothing.
 	}
 
-	public VirtualTaskConnectivity(final VirtualTask<?> _source, final VirtualTask<?> _target) {
-		source = _source;
-		target = _target;
+	public VirtualTaskConnectivity(final VirtualTask<?> source, final VirtualTask<?> target) {
+		this.source = source;
+		this.target = target;
 	}
 
 	public VirtualTask<?> getSource() {

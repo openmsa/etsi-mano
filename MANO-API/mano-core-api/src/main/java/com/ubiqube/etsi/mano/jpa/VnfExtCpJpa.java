@@ -24,6 +24,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 
 public interface VnfExtCpJpa extends CrudRepository<VnfExtCp, UUID> {
 
-	// int countByVnfInstanceAndVduId(VnfInstance vnfInstance, UUID id);
+	// Noting.
 
 }

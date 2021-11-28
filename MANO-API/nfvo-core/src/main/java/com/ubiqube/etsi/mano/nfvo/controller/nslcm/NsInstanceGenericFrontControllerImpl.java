@@ -117,7 +117,7 @@ public class NsInstanceGenericFrontControllerImpl implements NsInstanceGenericFr
 	public <U> ResponseEntity<U> scale(final String nsInstanceId, final Object request, final Function<NsBlueprint, String> getSelfLink) {
 		final UUID nsInstanceUuid = UUID.fromString(nsInstanceId);
 		final NsScale nsInst = mapper.map(request, NsScale.class);
-		final NsBlueprint nsLcm = nsInstanceControllerService.heal(nsInstanceUuid, nsInst);
+		final NsBlueprint nsLcm = nsInstanceControllerService.scale(nsInstanceUuid, nsInst);
 		final String link = getSelfLink.apply(nsLcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}

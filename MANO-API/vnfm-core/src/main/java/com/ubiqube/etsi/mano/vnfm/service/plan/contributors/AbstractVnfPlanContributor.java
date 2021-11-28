@@ -26,9 +26,15 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.vnfm.service.graph.vnfm.VnfParameters;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public abstract class AbstractVnfPlanContributor implements PlanContributor<VnfPackage, VnfBlueprint, VnfTask, VnfParameters> {
 
-	protected static <U extends VnfTask> U createTask(final Supplier<U> newInstance) {
+	@SuppressWarnings("static-method")
+	protected <U extends VnfTask> U createTask(final Supplier<U> newInstance) {
 		final U task = newInstance.get();
 		task.setStartDate(LocalDateTime.now());
 		task.setStatus(PlanStatusType.NOT_STARTED);

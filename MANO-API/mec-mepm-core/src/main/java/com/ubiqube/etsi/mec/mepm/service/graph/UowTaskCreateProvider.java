@@ -38,9 +38,9 @@ public class UowTaskCreateProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.T
 
 	private final P params;
 
-	public UowTaskCreateProvider(final P _params) {
+	public UowTaskCreateProvider(final P params) {
 		super();
-		params = _params;
+		this.params = params;
 	}
 
 	@Override

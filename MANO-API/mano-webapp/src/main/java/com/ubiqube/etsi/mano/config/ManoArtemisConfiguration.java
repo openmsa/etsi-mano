@@ -37,8 +37,9 @@ public class ManoArtemisConfiguration {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ManoArtemisConfiguration.class);
 
+	@SuppressWarnings("static-method")
 	@Bean
-	public static MessageConverter jacksonJmsMessageConverter(final ObjectMapper mapper) {
+	public MessageConverter jacksonJmsMessageConverter(final ObjectMapper mapper) {
 		final MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
 		converter.setObjectMapper(mapper);
 		converter.setTargetType(MessageType.TEXT);
@@ -46,8 +47,9 @@ public class ManoArtemisConfiguration {
 		return converter;
 	}
 
+	@SuppressWarnings("static-method")
 	@Bean
-	public static JmsListenerContainerFactory<DefaultMessageListenerContainer> jmsListenerContainerFactory(final ConnectionFactory connectionFactory, final MessageConverter messageConverter) {
+	public JmsListenerContainerFactory<DefaultMessageListenerContainer> jmsListenerContainerFactory(final ConnectionFactory connectionFactory, final MessageConverter messageConverter) {
 		final DefaultJmsListenerContainerFactory jmsListenerContainerFactory = new DefaultJmsListenerContainerFactory();
 		jmsListenerContainerFactory.setConcurrency("5-10");
 		jmsListenerContainerFactory.setSessionTransacted(Boolean.FALSE);
@@ -56,8 +58,9 @@ public class ManoArtemisConfiguration {
 		return jmsListenerContainerFactory;
 	}
 
+	@SuppressWarnings("static-method")
 	@Bean
-	public static DefaultMessageListenerContainer defaultMessageListenerContainer(final ConnectionFactory connectionFactory) {
+	public DefaultMessageListenerContainer defaultMessageListenerContainer(final ConnectionFactory connectionFactory) {
 		LOG.warn("Using our instance of defaultMessageListenerContainer");
 		final DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
 		defaultMessageListenerContainer.setConnectionFactory(connectionFactory);

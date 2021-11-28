@@ -137,11 +137,11 @@ public class VnfCompute implements ToscaEntity, Auditable {
 		scalingAspectDeltas.add(scalingDelta);
 	}
 
-	public void addVduInstantiationLevel(final VduInstantiationLevel _vduInstantiationLevel) {
+	public void addVduInstantiationLevel(final VduInstantiationLevel vduInstantiationLevel) {
 		if (null == instantiationLevel) {
 			instantiationLevel = new LinkedHashSet<>();
 		}
-		instantiationLevel.add(_vduInstantiationLevel);
+		instantiationLevel.add(vduInstantiationLevel);
 	}
 
 	public void addSecurityGroups(final String securityGroupName) {

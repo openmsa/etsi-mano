@@ -25,9 +25,9 @@ public class UnitOfWorkConnectivity {
 		// Nothing.
 	}
 
-	public UnitOfWorkConnectivity(final UnitOfWork _source, final UnitOfWork _target) {
-		source = _source;
-		target = _target;
+	public UnitOfWorkConnectivity(final UnitOfWork source, final UnitOfWork target) {
+		this.source = source;
+		this.target = target;
 	}
 
 	public UnitOfWork getSource() {

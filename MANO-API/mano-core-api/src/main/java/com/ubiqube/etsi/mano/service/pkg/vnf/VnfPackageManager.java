@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.service.pkg.vnf;
 import javax.annotation.Nullable;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 
 /**
  *

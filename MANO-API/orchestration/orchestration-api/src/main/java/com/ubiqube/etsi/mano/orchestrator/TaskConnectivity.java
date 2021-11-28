@@ -25,9 +25,9 @@ public class TaskConnectivity {
 		// Nothing.
 	}
 
-	public TaskConnectivity(final Task _source, final Task _target) {
-		source = _source;
-		target = _target;
+	public TaskConnectivity(final Task source, final Task target) {
+		this.source = source;
+		this.target = target;
 	}
 
 	public Task getSource() {

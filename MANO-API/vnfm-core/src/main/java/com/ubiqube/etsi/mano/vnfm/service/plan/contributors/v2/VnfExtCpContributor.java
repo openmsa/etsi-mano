@@ -68,7 +68,8 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 	public List<VnfExtCpVt> vnfContribute(final Bundle bundle, final VnfBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.CHANGE_EXTERNAL_VNF_CONNECTIVITY) {
 			return changeExtCp(bundle, plan);
-		} else if (plan.getOperation() == PlanOperationType.TERMINATE) {
+		}
+		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(plan.getVnfInstance(), ExternalCpTask.class.getSimpleName());
@@ -118,15 +119,13 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 	private List doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ExternalCpTask.class.getSimpleName());
 		final List ret = new ArrayList<>();
-		instances.stream().forEach(x -> {
-			ret.add(deleteVli(x));
-		});
+		instances.stream().forEach(x -> ret.add(deleteVli(x)));
 		return ret;
 	}
 
 	private static Object deleteVli(final VnfLiveInstance x) {
 		final ExternalCpTask extCp = (ExternalCpTask) x.getTask();
-		if ((extCp.getPort() != null) && extCp.getPort()) {
+		if (extCp.getPort() != null && extCp.getPort()) {
 			final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
 			task.setType(ResourceTypeEnum.LINKPORT);
 			task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());
@@ -143,12 +142,10 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 		final List<VnfExtCpVt> ret = new ArrayList<>();
 		final VnfInstance vnfInstance = plan.getInstance();
 		final Set<ExtVirtualLinkDataEntity> evl = plan.getChangeExtVnfConnRequest().getExtVirtualLinks();
-		evl.forEach(x -> {
-			x.getExtCps().forEach(y -> {
-				final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId());
-				deleteVli(vli.get(0));
-			});
-		});
+		evl.forEach(x -> x.getExtCps().forEach(y -> {
+			final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId());
+			deleteVli(vli.get(0));
+		}));
 
 		return ret;
 	}

@@ -66,13 +66,13 @@ public class MepmActions extends AbstractGenericAction {
 
 	private final AppLiveInstanceJpa appLiveInstanceJpa;
 
-	protected MepmActions(final VimManager _vimManager, final AppWorkflow vnfWorkflow, final MeoGrantService vimResourceService, final AppOrchestrationAdapter orchestrationAdapter,
-			final AppInstanceService _instanceService, final AppBlueprintService _blueprintService, final AppLiveInstanceJpa _appLiveInstanceJpa) {
+	protected MepmActions(final VimManager vimManager, final AppWorkflow vnfWorkflow, final MeoGrantService vimResourceService, final AppOrchestrationAdapter orchestrationAdapter,
+			final AppInstanceService instanceService, final AppBlueprintService blueprintService, final AppLiveInstanceJpa appLiveInstanceJpa) {
 		super(vnfWorkflow, vimResourceService, orchestrationAdapter);
-		vimManager = _vimManager;
-		instanceService = _instanceService;
-		blueprintService = _blueprintService;
-		appLiveInstanceJpa = _appLiveInstanceJpa;
+		this.vimManager = vimManager;
+		this.instanceService = instanceService;
+		this.blueprintService = blueprintService;
+		this.appLiveInstanceJpa = appLiveInstanceJpa;
 	}
 
 	public void operate(@NotNull final UUID blueprintId) {

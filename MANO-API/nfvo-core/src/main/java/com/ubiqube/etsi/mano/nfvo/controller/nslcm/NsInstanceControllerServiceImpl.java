@@ -135,7 +135,7 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 	}
 
 	@Override
-	public NsBlueprint heal(final UUID nsInstanceUuid, final NsScale nsInst) {
+	public NsBlueprint scale(final UUID nsInstanceUuid, final NsScale nsInst) {
 		// TODO Auto-generated method stub
 		return null;
 	}

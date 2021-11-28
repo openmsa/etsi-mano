@@ -50,11 +50,11 @@ public class AppPackageMeoControllerImpl implements AppPackageMeoController {
 	private final AppPackageRepository appPackageRepository;
 	private final MeoEventManager eventManager;
 
-	public AppPackageMeoControllerImpl(final AppPkgJpa _appPkgJpa, final EntityManager _em, final AppPackageRepository _appPackageRepository, final MeoEventManager _eventManager) {
-		appPkgJpa = _appPkgJpa;
-		em = _em;
-		appPackageRepository = _appPackageRepository;
-		eventManager = _eventManager;
+	public AppPackageMeoControllerImpl(final AppPkgJpa appPkgJpa, final EntityManager em, final AppPackageRepository appPackageRepository, final MeoEventManager eventManager) {
+		this.appPkgJpa = appPkgJpa;
+		this.em = em;
+		this.appPackageRepository = appPackageRepository;
+		this.eventManager = eventManager;
 	}
 
 	@Override

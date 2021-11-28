@@ -29,8 +29,7 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
  *
  */
 public class CreateTaskProvider implements TaskProvider<UnitOfWork<?>, String> {
-
-	private static final Logger LOG = LoggerFactory.getLogger(DeleteTaskProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CreateTaskProvider.class);
 	private final Context context;
 	private final OrchExecutionListener listener;
 

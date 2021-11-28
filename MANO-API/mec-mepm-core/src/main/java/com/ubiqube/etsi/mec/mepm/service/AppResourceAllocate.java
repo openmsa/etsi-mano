@@ -37,8 +37,8 @@ public class AppResourceAllocate implements ResourceAllocate {
 
 	private final AppGrantManagement grantManagement;
 
-	public AppResourceAllocate(final AppGrantManagement _grantManagement) {
-		grantManagement = _grantManagement;
+	public AppResourceAllocate(final AppGrantManagement grantManagement) {
+		this.grantManagement = grantManagement;
 	}
 
 	@Override

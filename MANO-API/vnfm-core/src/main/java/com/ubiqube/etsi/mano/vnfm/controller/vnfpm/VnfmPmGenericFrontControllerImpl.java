@@ -106,7 +106,7 @@ public class VnfmPmGenericFrontControllerImpl implements VnfmPmGenericFrontContr
 		}
 		final String vimRef = vlis.get(0).getVimConnectionId();
 		vlis.forEach(x -> {
-			if (x.getVimConnectionId() != vimRef) {
+			if (x.getVimConnectionId().equals(vimRef)) {
 				throw new GenericException("");
 			}
 		});

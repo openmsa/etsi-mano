@@ -59,9 +59,9 @@ public class GroovyElection implements VimElection {
 	private final VimManager vimManager;
 	private final ManoElectionProperties properties;
 
-	public GroovyElection(final VimManager _vimManager, final ManoElectionProperties _properties) {
-		vimManager = _vimManager;
-		properties = _properties;
+	public GroovyElection(final VimManager vimManager, final ManoElectionProperties properties) {
+		this.vimManager = vimManager;
+		this.properties = properties;
 	}
 
 	@Override

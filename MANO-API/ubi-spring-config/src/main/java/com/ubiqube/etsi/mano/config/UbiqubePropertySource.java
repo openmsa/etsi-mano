@@ -31,6 +31,7 @@
 package com.ubiqube.etsi.mano.config;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.springframework.core.env.EnumerablePropertySource;
@@ -39,9 +40,9 @@ public class UbiqubePropertySource extends EnumerablePropertySource<Map<String, 
 
 	private final Properties props;
 
-	protected UbiqubePropertySource(final String name, final Properties _props) {
+	protected UbiqubePropertySource(final String name, final Properties props) {
 		super(name);
-		props = _props;
+		this.props = props;
 	}
 
 	@Override
@@ -50,16 +51,15 @@ public class UbiqubePropertySource extends EnumerablePropertySource<Map<String, 
 	}
 
 	@Override
-	public Object getProperty(final String _name) {
-		return props.get(_name);
+	public Object getProperty(final String name) {
+		return props.get(name);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
-		result = (prime * result) + ((props == null) ? 0 : props.hashCode());
-		return result;
+		final int result = super.hashCode();
+		return prime * result + (props == null ? 0 : props.hashCode());
 	}
 
 	@Override
@@ -74,11 +74,7 @@ public class UbiqubePropertySource extends EnumerablePropertySource<Map<String, 
 			return false;
 		}
 		final UbiqubePropertySource other = (UbiqubePropertySource) obj;
-		if (props == null) {
-			if (other.props != null) {
-				return false;
-			}
-		} else if (!props.equals(other.props)) {
+		if (!Objects.equals(props, other.props)) {
 			return false;
 		}
 		return true;

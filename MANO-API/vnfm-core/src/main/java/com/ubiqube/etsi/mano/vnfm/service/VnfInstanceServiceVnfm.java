@@ -62,7 +62,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		final VnfInstance inst = vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find VNF instance: " + id));
 		final BlueprintParameters vnfInfo = inst.getInstantiatedVnfInfo();
 		final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByVnfInstance(inst);
-		final List<VnfLiveInstance> computeVli = vli.stream().filter(x -> x.getTask() instanceof ComputeTask).collect(Collectors.toList());
+		final List<VnfLiveInstance> computeVli = vli.stream().filter(x -> x.getTask() instanceof ComputeTask).toList();
 		final Set<VnfcResourceInfoEntity> vnfcResourceInfo = computeVli.stream().map(x -> {
 			final VnfcResourceInfoEntity ret = mapper.map(x, VnfcResourceInfoEntity.class);
 			ret.setComputeResource(mapper.map(x.getTask(), VimResource.class));

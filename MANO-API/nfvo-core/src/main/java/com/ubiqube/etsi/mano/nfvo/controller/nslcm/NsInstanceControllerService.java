@@ -50,5 +50,5 @@ public interface NsInstanceControllerService {
 
 	NsBlueprint heal(UUID nsInstanceUuid, NsHeal nsHeal);
 
-	NsBlueprint heal(UUID nsInstanceUuid, NsScale nsInst);
+	NsBlueprint scale(UUID nsInstanceUuid, NsScale nsInst);
 }

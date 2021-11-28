@@ -36,8 +36,8 @@ import com.ubiqube.etsi.mec.meo.event.MeoGrantAction;
 public class MeoGrantListener {
 	private final MeoGrantAction meoGrantAction;
 
-	public MeoGrantListener(final MeoGrantAction _meoGrantAction) {
-		meoGrantAction = _meoGrantAction;
+	public MeoGrantListener(final MeoGrantAction meoGrantAction) {
+		this.meoGrantAction = meoGrantAction;
 	}
 
 	@JmsListener(destination = "system.actions.meo.grants", concurrency = "5-10")

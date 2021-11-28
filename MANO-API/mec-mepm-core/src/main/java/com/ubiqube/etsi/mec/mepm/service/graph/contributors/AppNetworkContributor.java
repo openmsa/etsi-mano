@@ -99,21 +99,21 @@ public class AppNetworkContributor extends AbstractAppPlanContributor {
 			networkTask.setType(ResourceTypeEnum.VL);
 			networkTask.setRemovedVnfLiveInstance(x.getId());
 			networkTask.setVimResourceId(x.getResourceId());
-			networkTask.setVnfVl(((AppNetworkTask) (x.getTask())).getVnfVl());
+			networkTask.setVnfVl(((AppNetworkTask) x.getTask()).getVnfVl());
 			return networkTask;
-		}).collect(Collectors.toList());
+		}).collect(Collectors.toList()); // No toList.
 	}
 
 	@Override
 	public List<UnitOfWork<AppTask, AppParameters>> convertTasksToExecNode(final Set<AppTask> tasks, final AppBlueprint blueprint) {
 		return tasks.stream()
-				.filter(x -> x instanceof AppNetworkTask)
+				.filter(AppNetworkTask.class::isInstance)
 				.map(AppNetworkTask.class::cast)
 				.map(x -> {
 					final VnfVl vnfVl = x.getVnfVl();
 					return new AppVirtualLinkUow(x, vnfVl);
 				})
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()); // No toList.
 	}
 
 	@Override

@@ -37,23 +37,24 @@ public class JsonWalker {
 
 	private final ObjectMapper mapper;
 
-	public JsonWalker(final ObjectMapper _mapper) {
-		mapper = _mapper;
+	public JsonWalker(final ObjectMapper mapper) {
+		this.mapper = mapper;
 	}
 
-	public void walk(final String _patchDocument, final BeanListener beanListener) {
+	public void walk(final String patchDocument, final BeanListener beanListener) {
 		try {
 			LOG.debug("JsonWalking ");
-			final JsonNode patch = mapper.readTree(_patchDocument);
+			final JsonNode patch = mapper.readTree(patchDocument);
 			walk(patch, beanListener);
-		} catch (final IOException _e) {
-			throw new GenericException(_e);
+		} catch (final IOException e) {
+			throw new GenericException(e);
 		}
 	}
 
-	public void walk(final JsonNode _patch, final BeanListener beanListener) {
+	@SuppressWarnings("static-method")
+	public void walk(final JsonNode patch, final BeanListener beanListener) {
 		try {
-			walkInner(_patch, beanListener);
+			walkInner(patch, beanListener);
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			throw new GenericException(e);
 		}

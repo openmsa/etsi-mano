@@ -34,10 +34,10 @@ public class StorageUow extends VnfAbstractUnitOfWork {
 
 	private final VnfStorage vnfStorage;
 
-	public StorageUow(final StorageTask _storageTask, final VnfStorage _vnfStorage) {
-		super(_storageTask);
-		vnfStorage = _vnfStorage;
-		storageTask = _storageTask;
+	public StorageUow(final StorageTask storageTask, final VnfStorage vnfStorage) {
+		super(storageTask);
+		this.vnfStorage = vnfStorage;
+		this.storageTask = storageTask;
 	}
 
 	@Override

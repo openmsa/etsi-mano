@@ -88,18 +88,18 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
-	public VnfInstanceLcmImpl(final VnfPackageRepository vnfPackageRepository, final EventManager _eventManager, final MapperFacade _mapper, final VnfLcmService _vnfLcmService,
-			final VnfInstanceService _vnfInstanceService, final VimManager _vimManager, final VnfBlueprintService _planService, final VnfPackageService _vnfPackageService,
+	public VnfInstanceLcmImpl(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final MapperFacade mapper, final VnfLcmService vnfLcmService,
+			final VnfInstanceService vnfInstanceService, final VimManager vimManager, final VnfBlueprintService planService, final VnfPackageService vnfPackageService,
 			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
-		eventManager = _eventManager;
-		mapper = _mapper;
-		vnfLcmService = _vnfLcmService;
-		vnfInstanceService = _vnfInstanceService;
-		vimManager = _vimManager;
-		planService = _planService;
-		vnfPackageService = _vnfPackageService;
+		this.eventManager = eventManager;
+		this.mapper = mapper;
+		this.vnfLcmService = vnfLcmService;
+		this.vnfInstanceService = vnfInstanceService;
+		this.vimManager = vimManager;
+		this.planService = planService;
+		this.vnfPackageService = vnfPackageService;
 		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 

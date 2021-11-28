@@ -39,6 +39,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppInstance;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.service.event.ActionType;
@@ -78,7 +79,11 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 
 	private final EntityManager entityManager;
 
-	public MepmInstanceControllerImpl(final AppInstanceService appInstanceService, final AppPackageRepository appPackageRepository, final MapperFacade mapper, final MepmEventManager eventManager, final AppLcmService appLcmService, final AppBlueprintService planService, final AppPackageService _appPackageService, final EntityManager _entityManager) {
+	private final GrammarParser grammarParser;
+
+	public MepmInstanceControllerImpl(final AppInstanceService appInstanceService, final AppPackageRepository appPackageRepository, final MapperFacade mapper,
+			final MepmEventManager eventManager, final AppLcmService appLcmService, final AppBlueprintService planService, final AppPackageService appPackageService,
+			final EntityManager entityManager, final GrammarParser grammarParser) {
 		super();
 		this.appInstanceService = appInstanceService;
 		this.appPackageRepository = appPackageRepository;
@@ -86,8 +91,9 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 		this.eventManager = eventManager;
 		this.appLcmService = appLcmService;
 		this.planService = planService;
-		appPackageService = _appPackageService;
-		entityManager = _entityManager;
+		this.appPackageService = appPackageService;
+		this.entityManager = entityManager;
+		this.grammarParser = grammarParser;
 	}
 
 	@Override
@@ -163,7 +169,6 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 		ensureIsEnabled(vnfPkg);
 
 		AppBlueprint blueprint = appLcmService.createIntatiateOpOcc(appInstance);
-		// mapper.map(instantiateVnfRequest, blueprint);
 		blueprint.setAppInstance(appInstance);
 		blueprint = planService.save(blueprint);
 		eventManager.sendActionMepm(ActionType.MEPM_INSTANTIATE, blueprint.getId(), new HashMap<>());
@@ -173,7 +178,7 @@ public class MepmInstanceControllerImpl implements MepmInstanceController {
 
 	@Override
 	public List<AppInstance> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(entityManager);
+		final SearchQueryer sq = new SearchQueryer(entityManager, grammarParser);
 		return sq.getCriteria(filter, AppInstance.class);
 	}
 

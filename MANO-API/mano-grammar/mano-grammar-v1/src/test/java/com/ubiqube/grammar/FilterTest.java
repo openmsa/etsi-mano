@@ -45,10 +45,10 @@ import com.mano.etsi.grammar.v1.EtsiLexer;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 
-public class FilterTest {
+class FilterTest {
 
 	@Test
-	public void treeTest() {
+	void treeTest() {
 		final ANTLRInputStream input = new ANTLRInputStream("weight.eq=100");
 		final EtsiLexer lexer = new EtsiLexer(input);
 

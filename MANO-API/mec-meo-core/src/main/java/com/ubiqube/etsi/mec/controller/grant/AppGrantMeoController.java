@@ -47,10 +47,10 @@ public class AppGrantMeoController implements AppGrantController {
 	private final MapperFacade mapper;
 	private final MeoEventManager eventManager;
 
-	public AppGrantMeoController(final GrantsResponseJpa _grantsJpa, final MapperFacade _mapper, final MeoEventManager _eventManager) {
-		grantsResponseJpa = _grantsJpa;
-		mapper = _mapper;
-		eventManager = _eventManager;
+	public AppGrantMeoController(final GrantsResponseJpa grantsJpa, final MapperFacade mapper, final MeoEventManager eventManager) {
+		this.grantsResponseJpa = grantsJpa;
+		this.mapper = mapper;
+		this.eventManager = eventManager;
 	}
 
 	@Override

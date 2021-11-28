@@ -37,6 +37,10 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 public class VnfLcmFactory {
 
+	private VnfLcmFactory() {
+		// Nothing.
+	}
+
 	// XXX Is it to be in LCM ?
 	@Nonnull
 	public static VnfInstance createVnfInstance(final String vnfInstanceName, final String vnfInstanceDescription, final VnfPackage vnfPkgInfo) {
@@ -57,7 +61,7 @@ public class VnfLcmFactory {
 				.map(x -> x.getScalingAspectDeltas().stream()
 						.map(VnfComputeAspectDelta::getAspectName)
 						.distinct()
-						.collect(Collectors.toList()))
+						.toList())
 				.flatMap(List::stream)
 				.distinct()
 				.map(x -> new ScaleInfo(x, Integer.valueOf(0)))

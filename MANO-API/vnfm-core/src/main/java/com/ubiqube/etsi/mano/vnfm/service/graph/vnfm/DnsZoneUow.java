@@ -31,9 +31,9 @@ public class DnsZoneUow extends VnfAbstractUnitOfWork {
 	private static final long serialVersionUID = 1L;
 	private final DnsZoneTask task;
 
-	public DnsZoneUow(final DnsZoneTask _task) {
-		super(_task);
-		task = _task;
+	public DnsZoneUow(final DnsZoneTask task) {
+		super(task);
+		this.task = task;
 	}
 
 	@Override

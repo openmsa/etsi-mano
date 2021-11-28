@@ -64,13 +64,14 @@ public class VnfLiveInstance implements BaseEntity, Auditable {
 		// Nothing.
 	}
 
-	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfTask _task, final VnfBlueprint _blueprint, final String _resourceId, final String vimConnectionId) {
+	public VnfLiveInstance(final VnfInstance vnfInstance, final String instantiationLevel, final VnfTask task, final VnfBlueprint blueprint, final String resourceId,
+			final String vimConnectionId) {
 		super();
 		this.vnfInstance = vnfInstance;
 		this.instantiationLevel = instantiationLevel;
-		this.blueprint = _blueprint;
-		this.task = _task;
-		this.resourceId = _resourceId;
+		this.blueprint = blueprint;
+		this.task = task;
+		this.resourceId = resourceId;
 		this.vimConnectionId = vimConnectionId;
 	}
 

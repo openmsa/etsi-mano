@@ -39,13 +39,12 @@ public class VnfResourceAllocate implements ResourceAllocate {
 
 	private final GrantManagement grantManagement;
 
-	public VnfResourceAllocate(final GrantManagement _grantManagement) {
-		grantManagement = _grantManagement;
+	public VnfResourceAllocate(final GrantManagement grantManagement) {
+		this.grantManagement = grantManagement;
 	}
 
 	@Override
 	public GrantResponse sendSyncGrantRequest(final GrantInterface req) {
-		// final GrantsRequest finalReq = mapper.map(req, GrantsRequest.class);
 		return sendAndWaitGrantRequest(req);
 	}
 

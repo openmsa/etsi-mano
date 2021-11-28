@@ -31,7 +31,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-public class OrikaFilterMapperTest {
+class OrikaFilterMapperTest {
 
 	private final PodamFactoryImpl podam;
 
@@ -40,7 +40,7 @@ public class OrikaFilterMapperTest {
 	}
 
 	@Test
-	void testName() throws Exception {
+	void testName() {
 		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().compilerStrategy(new EclipseJdtCompilerStrategy()).build();
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
 		converterFactory.registerConverter("filterConverter", new OrikaFilterMapper());

@@ -58,11 +58,12 @@ public class AppPackageManager {
 	private final MeoEventManager meoEventManager;
 	private final MapperFacade mapper;
 
-	public AppPackageManager(final AppPackageRepository _appPackageRepository, final AppPackagingManager _appPackagingManager, final MeoEventManagerImpl _meoEventManager, final MapperFacade _mapper) {
-		appPackageRepository = _appPackageRepository;
-		appPackagingManager = _appPackagingManager;
-		meoEventManager = _meoEventManager;
-		mapper = _mapper;
+	public AppPackageManager(final AppPackageRepository appPackageRepository, final AppPackagingManager appPackagingManager, final MeoEventManagerImpl meoEventManager,
+			final MapperFacade mapper) {
+		this.appPackageRepository = appPackageRepository;
+		this.appPackagingManager = appPackagingManager;
+		this.meoEventManager = meoEventManager;
+		this.mapper = mapper;
 	}
 
 	public void onboardApp(@NotNull final UUID objectId) {

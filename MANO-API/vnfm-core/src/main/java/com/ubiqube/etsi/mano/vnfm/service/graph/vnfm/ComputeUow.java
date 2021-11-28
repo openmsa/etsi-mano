@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -46,16 +45,16 @@ public class ComputeUow extends VnfAbstractUnitOfWork {
 
 	private final ComputeTask task;
 
-	public ComputeUow(final ComputeTask _computeTask, final VnfCompute _vnfCompute, final Set<VnfLinkPort> _linkPort) {
-		super(_computeTask);
-		vnfCompute = _vnfCompute;
-		vnfLinkPort = _linkPort.stream().collect(Collectors.toList());
-		task = _computeTask;
+	public ComputeUow(final ComputeTask computeTask, final VnfCompute vnfCompute, final Set<VnfLinkPort> linkPort) {
+		super(computeTask);
+		this.vnfCompute = vnfCompute;
+		this.vnfLinkPort = linkPort.stream().toList();
+		this.task = computeTask;
 	}
 
 	@Override
 	public String exec(final VnfParameters params) {
-		final List<String> storages = vnfCompute.getStorages().stream().map(x -> params.getContext().get(x)).collect(Collectors.toList());
+		final List<String> storages = vnfCompute.getStorages().stream().map(x -> params.getContext().get(x)).toList();
 		final List<String> networks = vnfLinkPort.stream()
 				.filter(x -> x.getVirtualBinding().equals(vnfCompute.getToscaName()))
 				.map(VnfLinkPort::getVirtualLink)

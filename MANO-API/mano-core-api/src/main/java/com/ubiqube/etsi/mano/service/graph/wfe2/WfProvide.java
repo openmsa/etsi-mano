@@ -16,6 +16,11 @@
  */
 package com.ubiqube.etsi.mano.service.graph.wfe2;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class WfProvide {
-
+	// Nothing.
 }

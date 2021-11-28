@@ -42,7 +42,7 @@ public class SwaggerDocumentationConfigMain {
 	}
 
 	@Bean
-	public OpenAPI OpenApiMain(final ManoProperties oauth2Params) {
+	public OpenAPI openApiMain(final ManoProperties oauth2Params) {
 		final OpenAPI openApi = new OpenAPI();
 		final SecurityScheme sec = secutiryConfig.getSwaggerSecurityScheme(oauth2Params);
 		if (null != sec) {

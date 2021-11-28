@@ -36,9 +36,9 @@ public class VnfmActionsController {
 
 	private final VnfmActionController actionController;
 
-	public VnfmActionsController(final VnfmActionController _actionController) {
+	public VnfmActionsController(final VnfmActionController actionController) {
 		super();
-		actionController = _actionController;
+		this.actionController = actionController;
 	}
 
 	@JmsListener(destination = "system.actions.vnfm", concurrency = "10-25")

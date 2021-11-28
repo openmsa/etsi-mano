@@ -196,7 +196,7 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	private static OrchExecutionResults<?> convertResults(final ExecutionResults<UnitOfWork<?>, String> res) {
-		final List<OrchExecutionResultImpl> all = res.getAll().stream().map(x -> new OrchExecutionResultImpl(x.getId(), ResultType.valueOf(x.getStatus().toString()), x.getMessage())).collect(Collectors.toList());
+		final List<OrchExecutionResultImpl> all = res.getAll().stream().map(x -> new OrchExecutionResultImpl(x.getId(), ResultType.valueOf(x.getStatus().toString()), x.getMessage())).toList();
 		return new OrchExecutionResultsImpl(all);
 	}
 

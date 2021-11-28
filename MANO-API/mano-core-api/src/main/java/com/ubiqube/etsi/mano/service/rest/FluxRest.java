@@ -168,11 +168,11 @@ public class FluxRest {
 	}
 
 	public final <T> T call(final URI uri, final HttpMethod method, final Class<T> clazz) {
-		return _call(uri, method, null, clazz);
+		return innerCall(uri, method, null, clazz);
 	}
 
 	public final <T> T call(final URI uri, final HttpMethod method, final Object body, final Class<T> clazz) {
-		return _call(uri, method, body, clazz);
+		return innerCall(uri, method, body, clazz);
 	}
 
 	public <T> T get(final URI uri, final ParameterizedTypeReference<T> myBean) {
@@ -203,7 +203,7 @@ public class FluxRest {
 		return wc;
 	}
 
-	private final <T> T _call(final URI uri, final HttpMethod method, final Object requestObject, final Class<T> clazz) {
+	private final <T> T innerCall(final URI uri, final HttpMethod method, final Object requestObject, final Class<T> clazz) {
 		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, method, requestObject)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()

@@ -32,9 +32,9 @@ public class DnsHostUow extends VnfAbstractUnitOfWork {
 
 	private final DnsHostTask task;
 
-	public DnsHostUow(final DnsHostTask _task) {
-		super(_task);
-		task = _task;
+	public DnsHostUow(final DnsHostTask task) {
+		super(task);
+		this.task = task;
 	}
 
 	@Override

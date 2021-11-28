@@ -67,7 +67,7 @@ public class ComputeMonitoringContributor extends AbstractVnfPlanContributor {
 					task.setMonitoringParams(y);
 					task.setToscaName(x.getName());
 					return task;
-				}).collect(Collectors.toList()).stream())
+				}).toList().stream())
 				.collect(Collectors.toList());
 	}
 

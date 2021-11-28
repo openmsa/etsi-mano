@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mec.mepm.service.graph;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.github.dexecutor.core.task.ExecutionResult;
 import com.github.dexecutor.core.task.ExecutionResults;
@@ -35,8 +34,8 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 public class AppReport implements Report {
 	private final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> results;
 
-	public AppReport(final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> _results) {
-		results = _results;
+	public AppReport(final ExecutionResults<UnitOfWork<AppTask, AppParameters>, String> results) {
+		this.results = results;
 	}
 
 	public List<ExecutionResult<UnitOfWork<AppTask, AppParameters>, String>> getSkipped() {
@@ -45,12 +44,12 @@ public class AppReport implements Report {
 
 	@Override
 	public List<ReportItem> getSuccess() {
-		return results.getSuccess().stream().map(this::map).collect(Collectors.toList());
+		return results.getSuccess().stream().map(this::map).toList();
 	}
 
 	@Override
 	public List<ReportItem> getErrored() {
-		return results.getErrored().stream().map(this::map).collect(Collectors.toList());
+		return results.getErrored().stream().map(this::map).toList();
 	}
 
 	public List<ExecutionResult<UnitOfWork<AppTask, AppParameters>, String>> getAll() {

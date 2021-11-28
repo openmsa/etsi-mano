@@ -60,7 +60,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 import reactor.netty.http.client.HttpClient;
 
-public class OAuth2TestSecond {
+class OAuth2TestSecond {
 	private final DefaultMapperFactory mapperFactory;
 
 	public OAuth2TestSecond() {
