@@ -180,49 +180,49 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	@Override
-	public OrchExecutionResults<?> execute(final ExecutionGraph implementation, final Context context, final OrchExecutionListener<?> listener) {
+	public <U> OrchExecutionResults<U> execute(final ExecutionGraph implementation, final Context context, final OrchExecutionListener<U> listener) {
 		final ExecutionGraphImpl impl = (ExecutionGraphImpl) implementation;
 		// Execute delete.
-		final ExecutionResults<UnitOfWork<?>, String> deleteRes = execDelete(impl.getDeleteImplementation(), context, listener);
-		final OrchExecutionResults<?> finalDelete = convertResults(deleteRes);
+		final ExecutionResults<UnitOfWork<U>, String> deleteRes = execDelete(impl.getDeleteImplementation(), context, listener);
+		final OrchExecutionResults<U> finalDelete = convertResults(deleteRes);
 		if (!deleteRes.getErrored().isEmpty()) {
 			return finalDelete;
 		}
 		// Execute create.
 		exportGraph(impl.getCreateImplementation(), "vnf-added.dot");
-		final ExecutionResults<UnitOfWork<?>, String> res = execCreate(impl.getCreateImplementation(), context, listener);
+		final ExecutionResults<UnitOfWork<U>, String> res = execCreate(impl.getCreateImplementation(), context, listener);
 		finalDelete.addAll(convertResults(res));
 		return finalDelete;
 	}
 
-	private static OrchExecutionResults<?> convertResults(final ExecutionResults<UnitOfWork<?>, String> res) {
+	private static <U> OrchExecutionResults<U> convertResults(final ExecutionResults<UnitOfWork<U>, String> res) {
 		final List<OrchExecutionResultImpl> all = res.getAll().stream().map(x -> new OrchExecutionResultImpl(x.getId(), ResultType.valueOf(x.getStatus().toString()), x.getMessage())).toList();
 		return new OrchExecutionResultsImpl(all);
 	}
 
-	private static ExecutionResults<UnitOfWork<?>, String> execCreate(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final Context context, final OrchExecutionListener<?> listener) {
-		return createExecutor(g, new CreateTaskProvider(context, listener));
+	private static <U> ExecutionResults<UnitOfWork<U>, String> execCreate(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final Context context, final OrchExecutionListener<U> listener) {
+		return createExecutor(g, new CreateTaskProvider<>(context, listener));
 	}
 
-	private static ExecutionResults<UnitOfWork<?>, String> execDelete(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final Context context, final OrchExecutionListener<?> listener) {
-		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> rev = GraphTools.revert(g);
-		return createExecutor(rev, new DeleteTaskProvider(context, listener));
+	private static <U> ExecutionResults<UnitOfWork<U>, String> execDelete(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final Context context, final OrchExecutionListener<U> listener) {
+		final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> rev = GraphTools.revert(g);
+		return createExecutor(rev, new DeleteTaskProvider<>(context, listener));
 	}
 
-	private static ExecutionResults<UnitOfWork<?>, String> createExecutor(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final TaskProvider<UnitOfWork<?>, String> uowTaskProvider) {
+	private static <U> ExecutionResults<UnitOfWork<U>, String> createExecutor(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final TaskProvider<UnitOfWork<U>, String> uowTaskProvider) {
 		final ExecutorService executorService = Executors.newFixedThreadPool(10);
-		final DexecutorConfig<UnitOfWork<?>, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
+		final DexecutorConfig<UnitOfWork<U>, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
-		final DefaultDexecutor<UnitOfWork<?>, String> executor = new DefaultDexecutor<>(config);
+		final DefaultDexecutor<UnitOfWork<U>, String> executor = new DefaultDexecutor<>(config);
 		addRoot(g, executor);
 		g.edgeSet().forEach(x -> executor.addDependency(x.getSource(), x.getTarget()));
 
-		final ExecutionResults<UnitOfWork<?>, String> res = executor.execute(ExecutionConfig.TERMINATING);
+		final ExecutionResults<UnitOfWork<U>, String> res = executor.execute(ExecutionConfig.TERMINATING);
 		executorService.shutdown();
 		return res;
 	}
 
-	private static void addRoot(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final DefaultDexecutor<UnitOfWork<?>, String> executor) {
+	private static <U> void addRoot(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final DefaultDexecutor<UnitOfWork<U>, String> executor) {
 		g.vertexSet().forEach(x -> {
 			if (g.incomingEdgesOf(x).isEmpty() && g.outgoingEdgesOf(x).isEmpty()) {
 				executor.addIndependent(x);

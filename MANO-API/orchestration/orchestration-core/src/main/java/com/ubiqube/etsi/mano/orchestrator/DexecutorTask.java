@@ -21,19 +21,19 @@ import java.util.function.Function;
 import com.github.dexecutor.core.task.Task;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
-public class DexecutorTask<P> extends Task<UnitOfWork, String> {
+public class DexecutorTask<P> extends Task<UnitOfWork<P>, String> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final transient UnitOfWork<?> uaow;
+	private final transient UnitOfWork<P> uaow;
 
 	private final transient Function<Context, String> function;
 
-	private transient OrchExecutionListener listener;
+	private transient OrchExecutionListener<P> listener;
 
 	private Context context;
 
-	public DexecutorTask(final OrchExecutionListener listener, final UnitOfWork<?> uaow, final Context context, final boolean create) {
+	public DexecutorTask(final OrchExecutionListener<P> listener, final UnitOfWork<P> uaow, final Context context, final boolean create) {
 		super();
 		this.uaow = uaow;
 		this.listener = listener;

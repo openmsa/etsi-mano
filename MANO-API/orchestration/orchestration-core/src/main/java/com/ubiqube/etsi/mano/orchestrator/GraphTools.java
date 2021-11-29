@@ -41,15 +41,15 @@ public class GraphTools {
 		// Nothing.
 	}
 
-	public static ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> createGraph() {
+	public static <U> ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> createGraph() {
 		// Vertex everyThing
-		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(UnitOfWorkConnectivity.class));
-		g.addGraphListener(new UnitOfWorkVertexListener());
+		final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(UnitOfWorkConnectivity.class));
+		g.addGraphListener(new UnitOfWorkVertexListener<>());
 		return g;
 	}
 
-	public static ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> revert(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g) {
-		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> gNew = createGraph();
+	public static <U> ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> revert(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g) {
+		final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> gNew = createGraph();
 		g.vertexSet().forEach(gNew::addVertex);
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;

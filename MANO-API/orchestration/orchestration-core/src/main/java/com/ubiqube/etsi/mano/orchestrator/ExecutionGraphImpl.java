@@ -26,21 +26,21 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ExecutionGraphImpl implements ExecutionGraph {
+public class ExecutionGraphImpl<U> implements ExecutionGraph {
 
-	private final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g;
-	private final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> r;
+	private final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g;
+	private final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> r;
 
-	public ExecutionGraphImpl(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> nr) {
+	public ExecutionGraphImpl(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> nr) {
 		this.g = g;
 		this.r = nr;
 	}
 
-	public ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> getCreateImplementation() {
+	public ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> getCreateImplementation() {
 		return g;
 	}
 
-	public ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> getDeleteImplementation() {
+	public ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> getDeleteImplementation() {
 		return r;
 	}
 

@@ -28,21 +28,21 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class CreateTaskProvider implements TaskProvider<UnitOfWork<?>, String> {
+public class CreateTaskProvider<U> implements TaskProvider<UnitOfWork<U>, String> {
 	private static final Logger LOG = LoggerFactory.getLogger(CreateTaskProvider.class);
 	private final Context context;
-	private final OrchExecutionListener listener;
+	private final OrchExecutionListener<U> listener;
 
-	public CreateTaskProvider(final Context context, final OrchExecutionListener listener) {
+	public CreateTaskProvider(final Context context, final OrchExecutionListener<U> listener) {
 		super();
 		this.context = context;
 		this.listener = listener;
 	}
 
 	@Override
-	public Task<UnitOfWork<?>, String> provideTask(final UnitOfWork uaow) {
+	public Task<UnitOfWork<U>, String> provideTask(final UnitOfWork<U> uaow) {
 		LOG.debug("Called with: {}", uaow);
-		return new UowExecCreateTask(listener, uaow, context);
+		return new UowExecCreateTask<>(listener, uaow, context);
 	}
 
 }
