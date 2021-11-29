@@ -46,7 +46,7 @@ public class AffinityRuleSystem extends AbstractVimSystem<AffinityRuleTask> {
 	}
 
 	@Override
-	SystemBuilder getImplementation(final OrchestrationService<AffinityRuleTask> orchestrationService, final VirtualTask<AffinityRuleTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	SystemBuilder<AffinityRuleTask> getImplementation(final OrchestrationService<AffinityRuleTask> orchestrationService, final VirtualTask<AffinityRuleTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfAffinityUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 

@@ -21,33 +21,33 @@ import java.util.List;
 
 import org.jgrapht.ListenableGraph;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class SystemBuilderImpl implements SystemBuilder {
-	private final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g = GraphTools.createGraph();
-	private UnitOfWork<?> single = null;
+public class SystemBuilderImpl<U> implements SystemBuilder<U> {
+	private final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g = GraphTools.createGraph();
+	private UnitOfWork<U> single = null;
 
-	public static SystemBuilder of(final UnitOfWork<?> vt) {
-		final SystemBuilderImpl ib = new SystemBuilderImpl();
+	public static <U> SystemBuilder<U> of(final UnitOfWork<U> vt) {
+		final SystemBuilderImpl<U> ib = new SystemBuilderImpl<>();
 		ib.single = vt;
 		return ib;
 	}
 
-	public static SystemBuilder of(final UnitOfWork<?> left, final UnitOfWork<?> right) {
-		final SystemBuilderImpl ib = new SystemBuilderImpl();
+	public static <U> SystemBuilder<U> of(final UnitOfWork<U> left, final UnitOfWork<U> right) {
+		final SystemBuilderImpl<U> ib = new SystemBuilderImpl<>();
 		ib.g.addVertex(left);
 		ib.g.addVertex(right);
 		ib.g.addEdge(left, right);
 		return ib;
 	}
 
-	public SystemBuilder edge(final UnitOfWork<?> left, final UnitOfWork<?> right) {
+	public SystemBuilder<U> edge(final UnitOfWork<U> left, final UnitOfWork<U> right) {
 		g.addVertex(left);
 		g.addVertex(right);
 		g.addEdge(left, right);
@@ -55,21 +55,21 @@ public class SystemBuilderImpl implements SystemBuilder {
 	}
 
 	@Override
-	public List<UnitOfWorkConnectivity> getEdges() {
+	public List<ConnectivityEdge<UnitOfWork<U>>> getEdges() {
 		return g.edgeSet().stream().toList();
 	}
 
 	@Override
-	public UnitOfWork<?> getSingle() {
+	public UnitOfWork<U> getSingle() {
 		return single;
 	}
 
-	public List<UnitOfWork<?>> getVertex() {
+	public List<UnitOfWork<U>> getVertex() {
 		return g.vertexSet().stream().toList();
 	}
 
 	@Override
-	public List<UnitOfWork<?>> getIncomingVertex() {
+	public List<UnitOfWork<U>> getIncomingVertex() {
 		if (null != single) {
 			return Arrays.asList(single);
 		}
@@ -77,7 +77,7 @@ public class SystemBuilderImpl implements SystemBuilder {
 	}
 
 	@Override
-	public List<UnitOfWork<?>> getOutgoingVertex() {
+	public List<UnitOfWork<U>> getOutgoingVertex() {
 		if (null != single) {
 			return Arrays.asList(single);
 		}
@@ -85,7 +85,7 @@ public class SystemBuilderImpl implements SystemBuilder {
 	}
 
 	@Override
-	public void add(final UnitOfWork<?> src, final UnitOfWork<?> dest) {
+	public void add(final UnitOfWork<U> src, final UnitOfWork<U> dest) {
 		g.addVertex(src);
 		g.addVertex(dest);
 		g.addEdge(src, dest);

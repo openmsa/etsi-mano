@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
 import com.ubiqube.etsi.mano.orchestrator.exceptions.OrchestrationException;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.sys.System;
 
@@ -36,25 +37,25 @@ import com.ubiqube.etsi.mano.service.sys.System;
  *
  */
 @Service
-public class ImplementationService {
-	private final Map<String, System<?>> systems;
+public class ImplementationService<U> {
+	private final Map<String, System<U>> systems;
 	private final SystemManager vimManager;
-	private final OrchestrationService<?> orchestrationService;
+	private final OrchestrationService<U> orchestrationService;
 
-	public ImplementationService(final List<System<?>> systems, final SystemManager vimManager, final OrchestrationService<?> orchestrationService) {
+	public ImplementationService(final List<System<U>> systems, final SystemManager vimManager, final OrchestrationService<U> orchestrationService) {
 		super();
 		this.systems = systems.stream().collect(Collectors.toMap(System::getProviderId, Function.identity()));
 		this.vimManager = vimManager;
 		this.orchestrationService = orchestrationService;
 	}
 
-	public SystemBuilder getTargetSystem(final VirtualTask<?> virtualTask) {
+	public SystemBuilder<UnitOfWork<U>> getTargetSystem(final VirtualTask<U> virtualTask) {
 		final String connectionId = virtualTask.getVimConnectionId();
 		if (null == connectionId) {
 			throw new OrchestrationException("Unable to find VimId: " + virtualTask.getVimConnectionId() + ", for task: " + virtualTask.getName());
 		}
 		final SystemConnections vim = vimManager.findVimByVimIdAndProviderId(connectionId, virtualTask.getVimProviderId());
-		final System sys = systems.get(virtualTask.getFactoryProviderId());
+		final System<U> sys = systems.get(virtualTask.getFactoryProviderId());
 		if (null == sys) {
 			throw new OrchestrationException("Unable to find system matching: " + vim.getVimType() + "/" + connectionId);
 		}

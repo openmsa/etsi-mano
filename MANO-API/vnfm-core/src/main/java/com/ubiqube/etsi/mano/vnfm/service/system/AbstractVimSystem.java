@@ -34,12 +34,12 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
  */
 public abstract class AbstractVimSystem<U> implements System<U> {
 	@Override
-	public final SystemBuilder getImplementation(final OrchestrationService orchestrationService, final VirtualTask<U> virtualTask, final SystemConnections vimConnectionInformation) {
+	public final SystemBuilder<U> getImplementation(final OrchestrationService<U> orchestrationService, final VirtualTask<U> virtualTask, final SystemConnections vimConnectionInformation) {
 		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 		mapperFactory.classMap(SystemConnections.class, VimConnectionInformation.class).byDefault().register();
 		final VimConnectionInformation vimConn = mapperFactory.getMapperFacade().map(vimConnectionInformation, VimConnectionInformation.class);
 		return getImplementation(orchestrationService, virtualTask, vimConn);
 	}
 
-	abstract SystemBuilder getImplementation(final OrchestrationService<U> orchestrationService, final VirtualTask<U> virtualTask, VimConnectionInformation vimConnectionInformation);
+	abstract SystemBuilder<U> getImplementation(final OrchestrationService<U> orchestrationService, final VirtualTask<U> virtualTask, VimConnectionInformation vimConnectionInformation);
 }

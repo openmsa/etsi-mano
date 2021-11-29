@@ -39,7 +39,7 @@ public interface Workflow<P extends PackageBase, B extends Blueprint, R extends 
 
 	R execCreate(B localPlan, GenericExecParams params);
 
-	OrchExecutionResults execute(final PreExecutionGraph<VnfTask> plan, final B parameters);
+	OrchExecutionResults<VnfTask> execute(final PreExecutionGraph<VnfTask> plan, final B parameters);
 
 	void refresh(PreExecutionGraph<T> prePlan, Blueprint<T, ?> localPlan);
 }

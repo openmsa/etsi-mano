@@ -47,7 +47,7 @@ public class OsComputeSystem extends AbstractVimSystem<ComputeTask> {
 	}
 
 	@Override
-	public SystemBuilder getImplementation(final OrchestrationService<ComputeTask> orchestrationService, final VirtualTask<ComputeTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	public SystemBuilder<ComputeTask> getImplementation(final OrchestrationService<ComputeTask> orchestrationService, final VirtualTask<ComputeTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfComputeUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 

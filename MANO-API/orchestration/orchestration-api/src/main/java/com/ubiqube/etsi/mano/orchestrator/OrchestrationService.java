@@ -23,14 +23,15 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  * @param <U> Unit of work Parameter.
+ * @param <V> Task.
  */
 public interface OrchestrationService<U> {
 
-	SystemBuilder systemBuilderOf(UnitOfWork<U> uow);
+	SystemBuilder<U> systemBuilderOf(UnitOfWork<U> uow);
 
-	SystemBuilder systemBuilderOf(final UnitOfWork<U> left, final UnitOfWork<U> right);
+	SystemBuilder<U> systemBuilderOf(final UnitOfWork<U> left, final UnitOfWork<U> right);
 
-	SystemBuilder createEmptySystemBuilder();
+	SystemBuilder<U> createEmptySystemBuilder();
 
 	Context createEmptyContext();
 }

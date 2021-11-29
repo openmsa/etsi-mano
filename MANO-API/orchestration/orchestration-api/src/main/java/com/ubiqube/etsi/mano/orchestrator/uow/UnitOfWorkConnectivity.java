@@ -16,33 +16,41 @@
  */
 package com.ubiqube.etsi.mano.orchestrator.uow;
 
-public class UnitOfWorkConnectivity {
-	private UnitOfWork source;
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ * @deprecated use ConnectivityEdge<UnitOfWork<U>>
+ */
+@Deprecated(forRemoval = true)
+public class UnitOfWorkConnectivity<U> {
+	private UnitOfWork<U> source;
 
-	private UnitOfWork target;
+	private UnitOfWork<U> target;
 
 	public UnitOfWorkConnectivity() {
 		// Nothing.
 	}
 
-	public UnitOfWorkConnectivity(final UnitOfWork source, final UnitOfWork target) {
+	public UnitOfWorkConnectivity(final UnitOfWork<U> source, final UnitOfWork<U> target) {
 		this.source = source;
 		this.target = target;
 	}
 
-	public UnitOfWork getSource() {
+	public UnitOfWork<U> getSource() {
 		return source;
 	}
 
-	public void setSource(final UnitOfWork source) {
+	public void setSource(final UnitOfWork<U> source) {
 		this.source = source;
 	}
 
-	public UnitOfWork getTarget() {
+	public UnitOfWork<U> getTarget() {
 		return target;
 	}
 
-	public void setTarget(final UnitOfWork target) {
+	public void setTarget(final UnitOfWork<U> target) {
 		this.target = target;
 	}
 

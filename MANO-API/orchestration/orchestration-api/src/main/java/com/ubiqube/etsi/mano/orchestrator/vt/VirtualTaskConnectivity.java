@@ -16,33 +16,33 @@
  */
 package com.ubiqube.etsi.mano.orchestrator.vt;
 
-public class VirtualTaskConnectivity {
-	private VirtualTask<?> source;
+public class VirtualTaskConnectivity<U> {
+	private VirtualTask<U> source;
 
-	private VirtualTask<?> target;
+	private VirtualTask<U> target;
 
 	public VirtualTaskConnectivity() {
 		// Nothing.
 	}
 
-	public VirtualTaskConnectivity(final VirtualTask<?> source, final VirtualTask<?> target) {
+	public VirtualTaskConnectivity(final VirtualTask<U> source, final VirtualTask<U> target) {
 		this.source = source;
 		this.target = target;
 	}
 
-	public VirtualTask<?> getSource() {
+	public VirtualTask<U> getSource() {
 		return source;
 	}
 
-	public void setSource(final VirtualTask<?> source) {
+	public void setSource(final VirtualTask<U> source) {
 		this.source = source;
 	}
 
-	public VirtualTask<?> getTarget() {
+	public VirtualTask<U> getTarget() {
 		return target;
 	}
 
-	public void setTarget(final VirtualTask<?> target) {
+	public void setTarget(final VirtualTask<U> target) {
 		this.target = target;
 	}
 

@@ -23,25 +23,25 @@ import java.util.List;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class OrchExecutionResultsImpl implements OrchExecutionResults {
-	private final List<OrchExecutionResultImpl> results;
+public class OrchExecutionResultsImpl<U> implements OrchExecutionResults<U> {
+	private final List<OrchExecutionResult<U>> results;
 
-	public OrchExecutionResultsImpl(final List<OrchExecutionResultImpl> all) {
-		this.results = all;
+	public OrchExecutionResultsImpl(final List<OrchExecutionResultImpl<U>> all) {
+		this.results = all.stream().map(x -> (OrchExecutionResult<U>) x).toList();
 	}
 
 	@Override
-	public List<? extends OrchExecutionResult> getSuccess() {
-		return results.stream().filter(x -> x.getResult() == ResultType.SUCCESS).toList();
+	public List<OrchExecutionResult<U>> getSuccess() {
+		return results.stream().filter(x -> x.getResult() == ResultType.SUCCESS).map(x -> x).toList();
 	}
 
 	@Override
-	public List getErrored() {
-		return results.stream().filter(x -> x.getResult() == ResultType.ERRORED).toList();
+	public List<OrchExecutionResult<U>> getErrored() {
+		return results.stream().filter(x -> x.getResult() == ResultType.ERRORED).map(x -> x).toList();
 	}
 
 	@Override
-	public void addAll(final OrchExecutionResults convertResults) {
+	public void addAll(final OrchExecutionResults<U> convertResults) {
 		results.addAll(convertResults.getErrored());
 		results.addAll(convertResults.getSuccess());
 	}

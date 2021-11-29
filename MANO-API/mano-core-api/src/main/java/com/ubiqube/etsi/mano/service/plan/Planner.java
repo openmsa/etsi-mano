@@ -38,6 +38,15 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ * @param <P>
+ * @param <PA> Parameters.
+ * @param <B>
+ */
 public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? extends Instance>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);

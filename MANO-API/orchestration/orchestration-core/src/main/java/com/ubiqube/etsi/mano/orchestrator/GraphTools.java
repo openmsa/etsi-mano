@@ -22,8 +22,8 @@ import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkVertexListener;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTaskConnectivity;
@@ -41,25 +41,25 @@ public class GraphTools {
 		// Nothing.
 	}
 
-	public static <U> ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> createGraph() {
+	public static <U> ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> createGraph() {
 		// Vertex everyThing
-		final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(UnitOfWorkConnectivity.class));
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
 		g.addGraphListener(new UnitOfWorkVertexListener<>());
 		return g;
 	}
 
-	public static <U> ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> revert(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g) {
-		final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> gNew = createGraph();
+	public static <U> ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> revert(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g) {
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> gNew = createGraph();
 		g.vertexSet().forEach(gNew::addVertex);
 		g.edgeSet().forEach(x -> gNew.addEdge(x.getTarget(), x.getSource()));
 		return gNew;
 	}
 
-	public static void dump(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g) {
+	public static <U> void dump(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g) {
 		g.edgeSet().forEach(x -> LOG.debug(" {} => {}", x.getSource(), x.getTarget()));
 	}
 
-	public static void dumpVt(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> g) {
+	public static <U> void dumpVt(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> g) {
 		g.edgeSet().forEach(x -> LOG.debug(" {} => {}", x.getSource(), x.getTarget()));
 	}
 }

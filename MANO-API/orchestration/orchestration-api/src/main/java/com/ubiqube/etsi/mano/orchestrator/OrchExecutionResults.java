@@ -25,10 +25,10 @@ import java.util.List;
  */
 public interface OrchExecutionResults<U> {
 
-	List<? extends OrchExecutionResult<U>> getSuccess();
+	List<OrchExecutionResult<U>> getSuccess();
 
-	List<? extends OrchExecutionResult<U>> getErrored();
+	List<OrchExecutionResult<U>> getErrored();
 
-	void addAll(OrchExecutionResults<?> convertResults);
+	void addAll(OrchExecutionResults<U> convertResults);
 
 }

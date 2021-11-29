@@ -28,23 +28,23 @@ public class PreExecutionGraphImpl<U> implements PreExecutionGraph<U> {
 	/**
 	 * The create VT graps.
 	 */
-	private final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> g;
+	private final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> g;
 
 	/**
 	 * Graph for removal.
 	 */
-	private final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> r;
+	private final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> r;
 
-	public PreExecutionGraphImpl(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> g, final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> r) {
+	public PreExecutionGraphImpl(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> g, final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> r) {
 		this.g = g;
 		this.r = r;
 	}
 
-	public ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> getCreateGraph() {
+	public ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> getCreateGraph() {
 		return g;
 	}
 
-	public ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> getDeleteGraph() {
+	public ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> getDeleteGraph() {
 		return r;
 	}
 

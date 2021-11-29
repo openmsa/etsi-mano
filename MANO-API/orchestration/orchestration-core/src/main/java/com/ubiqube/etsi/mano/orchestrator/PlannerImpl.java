@@ -44,7 +44,6 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.service.ImplementationService;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkVertexListener;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTaskConnectivity;
@@ -56,7 +55,7 @@ import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTaskVertexListener;
  *
  */
 @Service
-public class PlannerImpl<U> implements Planner<U> {
+public class PlannerImpl<P, U, W> implements Planner<P, U, W> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PlannerImpl.class);
 
@@ -76,17 +75,17 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	@Override
-	public <V> PreExecutionGraph<V> makePlan(final Bundle bundle, final List<Class<? extends Node>> planConstituent, final U parameters) {
-		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> createGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
-		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> deleteGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
-		createGraph.addGraphListener(new VirtualTaskVertexListener());
-		deleteGraph.addGraphListener(new VirtualTaskVertexListener());
+	public PreExecutionGraph<W> makePlan(final Bundle bundle, final List<Class<? extends Node>> planConstituent, final P parameters) {
+		final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> createGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
+		final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> deleteGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
+		createGraph.addGraphListener(new VirtualTaskVertexListener<>());
+		deleteGraph.addGraphListener(new VirtualTaskVertexListener<>());
 		planConstituent.forEach(x -> {
 			final PlanContributor conts = contributors.get(x);
 			if (null == conts) {
 				LOG.warn("Unable to find contributor for {}.", x.getSimpleName());
 			} else {
-				final List<? extends VirtualTask<?>> tasks = conts.contribute(bundle, parameters);
+				final List<? extends VirtualTask<U>> tasks = conts.contribute(bundle, parameters);
 				tasks.forEach(y -> {
 					if (y.isDeleteTask()) {
 						LOG.debug("Deleting: {}", y);
@@ -110,9 +109,9 @@ public class PlannerImpl<U> implements Planner<U> {
 		return new PreExecutionGraphImpl(createGraph, deleteGraph);
 	}
 
-	private static void rebuildConnectivity(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> graph) {
+	private void rebuildConnectivity(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> graph) {
 		graph.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
-			final VirtualTask<?> dep = findProducer(y, graph);
+			final VirtualTask<U> dep = findProducer(y, graph);
 			if (null == dep) {
 				LOG.info("Single(dep): {} ", x);
 				graph.addVertex(x);
@@ -124,55 +123,55 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	@Override
-	public ExecutionGraph implement(final PreExecutionGraph<?> g) {
-		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> ng = createImplementation(((PreExecutionGraphImpl) g).getCreateGraph());
-		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> nr = createImplementation(((PreExecutionGraphImpl) g).getDeleteGraph());
+	public ExecutionGraph implement(final PreExecutionGraph<U> g) {
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> ng = createImplementation(((PreExecutionGraphImpl) g).getCreateGraph());
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> nr = createImplementation(((PreExecutionGraphImpl) g).getDeleteGraph());
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Create graph:");
 			GraphTools.dump(ng);
 			LOG.debug("Remove graph:");
 			GraphTools.dump(nr);
 		}
-		return new ExecutionGraphImpl(ng, nr);
+		return new ExecutionGraphImpl<>(ng, nr);
 	}
 
-	private ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> createImplementation(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf) {
-		final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> ng = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(UnitOfWorkConnectivity.class));
-		ng.addGraphListener(new UnitOfWorkVertexListener());
+	private ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> createImplementation(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> gf) {
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> ng = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
+		ng.addGraphListener(new UnitOfWorkVertexListener<>());
 		// First resolve implementation.
 		gf.vertexSet().forEach(x -> {
-			final SystemBuilder db = implementationService.getTargetSystem(x);
+			final SystemBuilder<U> db = implementationService.getTargetSystem(x);
 			x.setSystemBuilder(db);
 			db.getIncomingVertex().forEach(ng::addVertex);
 			db.getOutgoingVertex().forEach(ng::addVertex);
 		});
 		// Connect everything.
 		gf.edgeSet().forEach(x -> {
-			final SystemBuilder ibSrc = x.getSource().getSystemBuilder();
-			final SystemBuilder ibTgt = x.getTarget().getSystemBuilder();
+			final SystemBuilder<U> ibSrc = x.getSource().getSystemBuilder();
+			final SystemBuilder<U> ibTgt = x.getTarget().getSystemBuilder();
 			linkTo(ng, ibSrc, ibTgt);
 		});
 		return ng;
 	}
 
-	private static void linkTo(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final SystemBuilder ibSrc, final SystemBuilder ibTgt) {
+	private static <U> void linkTo(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final SystemBuilder<U> ibSrc, final SystemBuilder<U> ibTgt) {
 		linkTo(g, ibSrc.getOutgoingVertex(), ibTgt.getIncomingVertex());
 		defnieSubGraph(g, ibSrc);
 		defnieSubGraph(g, ibTgt);
 	}
 
-	private static void defnieSubGraph(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final SystemBuilder systemBuilder) {
+	private static <U> void defnieSubGraph(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final SystemBuilder<U> systemBuilder) {
 		if (null != systemBuilder.getSingle()) {
 			return;
 		}
 		systemBuilder.getEdges().forEach(x -> g.addEdge(x.getSource(), x.getTarget()));
 	}
 
-	private static void linkTo(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final List<UnitOfWork<?>> outgoingVertex, final List<UnitOfWork<?>> incomingVertex) {
+	private static <U> void linkTo(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final List<UnitOfWork<U>> outgoingVertex, final List<UnitOfWork<U>> incomingVertex) {
 		outgoingVertex.forEach(x -> incomingVertex.forEach(y -> g.addEdge(x, y)));
 	}
 
-	private static VirtualTask<?> findProducer(final NamedDependency namedDependency, final ListenableGraph<? extends VirtualTask<?>, VirtualTaskConnectivity> gf) {
+	private static <U> VirtualTask<U> findProducer(final NamedDependency namedDependency, final ListenableGraph<? extends VirtualTask<U>, VirtualTaskConnectivity<U>> gf) {
 		return gf.vertexSet().stream().filter(x -> x.getNamedProduced().stream()
 				.anyMatch(namedDependency::match))
 				.findAny()
@@ -180,8 +179,8 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	@Override
-	public <U> OrchExecutionResults<U> execute(final ExecutionGraph implementation, final Context context, final OrchExecutionListener<U> listener) {
-		final ExecutionGraphImpl impl = (ExecutionGraphImpl) implementation;
+	public OrchExecutionResults<U> execute(final ExecutionGraph implementation, final Context context, final OrchExecutionListener<U> listener) {
+		final ExecutionGraphImpl<U> impl = (ExecutionGraphImpl<U>) implementation;
 		// Execute delete.
 		final ExecutionResults<UnitOfWork<U>, String> deleteRes = execDelete(impl.getDeleteImplementation(), context, listener);
 		final OrchExecutionResults<U> finalDelete = convertResults(deleteRes);
@@ -195,21 +194,21 @@ public class PlannerImpl<U> implements Planner<U> {
 		return finalDelete;
 	}
 
-	private static <U> OrchExecutionResults<U> convertResults(final ExecutionResults<UnitOfWork<U>, String> res) {
-		final List<OrchExecutionResultImpl> all = res.getAll().stream().map(x -> new OrchExecutionResultImpl(x.getId(), ResultType.valueOf(x.getStatus().toString()), x.getMessage())).toList();
-		return new OrchExecutionResultsImpl(all);
+	private OrchExecutionResults<U> convertResults(final ExecutionResults<UnitOfWork<U>, String> res) {
+		final List<OrchExecutionResultImpl<U>> all = res.getAll().stream().map(x -> new OrchExecutionResultImpl<>(x.getId(), ResultType.valueOf(x.getStatus().toString()), x.getMessage())).toList();
+		return new OrchExecutionResultsImpl<>(all);
 	}
 
-	private static <U> ExecutionResults<UnitOfWork<U>, String> execCreate(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final Context context, final OrchExecutionListener<U> listener) {
+	private static <U> ExecutionResults<UnitOfWork<U>, String> execCreate(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final Context context, final OrchExecutionListener<U> listener) {
 		return createExecutor(g, new CreateTaskProvider<>(context, listener));
 	}
 
-	private static <U> ExecutionResults<UnitOfWork<U>, String> execDelete(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final Context context, final OrchExecutionListener<U> listener) {
-		final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> rev = GraphTools.revert(g);
+	private static <U> ExecutionResults<UnitOfWork<U>, String> execDelete(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final Context context, final OrchExecutionListener<U> listener) {
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> rev = GraphTools.revert(g);
 		return createExecutor(rev, new DeleteTaskProvider<>(context, listener));
 	}
 
-	private static <U> ExecutionResults<UnitOfWork<U>, String> createExecutor(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final TaskProvider<UnitOfWork<U>, String> uowTaskProvider) {
+	private static <U> ExecutionResults<UnitOfWork<U>, String> createExecutor(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final TaskProvider<UnitOfWork<U>, String> uowTaskProvider) {
 		final ExecutorService executorService = Executors.newFixedThreadPool(10);
 		final DexecutorConfig<UnitOfWork<U>, String> config = new DexecutorConfig<>(executorService, uowTaskProvider);
 		// What about config setExecutionListener.
@@ -222,7 +221,7 @@ public class PlannerImpl<U> implements Planner<U> {
 		return res;
 	}
 
-	private static <U> void addRoot(final ListenableGraph<UnitOfWork<U>, UnitOfWorkConnectivity> g, final DefaultDexecutor<UnitOfWork<U>, String> executor) {
+	private static <U> void addRoot(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final DefaultDexecutor<UnitOfWork<U>, String> executor) {
 		g.vertexSet().forEach(x -> {
 			if (g.incomingEdgesOf(x).isEmpty() && g.outgoingEdgesOf(x).isEmpty()) {
 				executor.addIndependent(x);
@@ -230,8 +229,8 @@ public class PlannerImpl<U> implements Planner<U> {
 		});
 	}
 
-	public static <U extends UnitOfWork> void exportGraph(final ListenableGraph g, final String fileName) {
-		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> "\"" + x.getTask().getName() + RandomStringUtils.random(5, true, true) + "\"");
+	public static <U> void exportGraph(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final String fileName) {
+		final DOTExporter<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> exporter = new DOTExporter<>(x -> "\"" + x.getTask().getName() + RandomStringUtils.random(5, true, true) + "\"");
 		try (final FileOutputStream out = new FileOutputStream(fileName)) {
 			exporter.exportGraph(g, out);
 		} catch (final IOException e) {

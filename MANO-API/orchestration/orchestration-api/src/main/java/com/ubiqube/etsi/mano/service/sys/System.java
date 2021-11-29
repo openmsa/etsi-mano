@@ -25,11 +25,12 @@ import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
- * @param <P> Task parameter.
+ * @param <U> Task Dao.
+ * @param <V> UnitOfWork.
  */
-public interface System<P> {
+public interface System<U> {
 
 	String getProviderId();
 
-	SystemBuilder getImplementation(OrchestrationService orchestrationService, VirtualTask<P> virtualTask, SystemConnections vim);
+	SystemBuilder getImplementation(OrchestrationService<U> orchestrationService, VirtualTask<U> virtualTask, SystemConnections vim);
 }

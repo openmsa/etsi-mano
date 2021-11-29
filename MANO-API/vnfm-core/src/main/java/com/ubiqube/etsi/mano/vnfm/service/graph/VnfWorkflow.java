@@ -67,13 +67,14 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.AbstractContribut
 @Service
 public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport, VnfTask> {
 	private final VnfPlanner planner;
-	private final Planner<VnfBlueprint> planv2;
+	private final Planner<VnfBlueprint, VnfTask, VnfTask> planv2;
 	private final VnfPlanExecutor executor;
 	private final List<AbstractContributorV2Base> planContributors;
 	private final OrchestrationService<?> orchestrationService;
 	private final VnfLiveInstanceJpa vnfInstanceJpa;
 
-	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final List<AbstractContributorV2Base> planContributors, final Planner<VnfBlueprint> planv2,
+	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final List<AbstractContributorV2Base> planContributors,
+			final Planner<VnfBlueprint, VnfTask, VnfTask> planv2,
 			final OrchestrationService<?> orchestrationService, final VnfLiveInstanceJpa vnfInstanceJpa) {
 		this.planner = planner;
 		this.executor = executor;

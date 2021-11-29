@@ -68,7 +68,7 @@ public class OrchestrationTest {
 		final List<PlanContributor> contributors = new ArrayList<>();
 		contributors.add(new ContributorA());
 		contributors.add(new ContributorB());
-		return new PlannerImpl(contributors, implementationService);
+		return (Planner) new PlannerImpl(contributors, implementationService);
 	}
 
 	@Test

@@ -18,23 +18,23 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 import java.util.List;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface SystemBuilder {
-	List<UnitOfWorkConnectivity> getEdges();
+public interface SystemBuilder<U> {
+	List<ConnectivityEdge<UnitOfWork<U>>> getEdges();
 
-	UnitOfWork<?> getSingle();
+	UnitOfWork<U> getSingle();
 
-	List<UnitOfWork<?>> getIncomingVertex();
+	List<UnitOfWork<U>> getIncomingVertex();
 
-	List<UnitOfWork<?>> getOutgoingVertex();
+	List<UnitOfWork<U>> getOutgoingVertex();
 
-	void add(UnitOfWork<?> src, UnitOfWork<?> dest);
+	void add(UnitOfWork<U> src, UnitOfWork<U> dest);
 
 }

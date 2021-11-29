@@ -25,6 +25,7 @@ import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ * @param <U> Parameters.
  */
 public interface VirtualTask<U> {
 
@@ -42,9 +43,9 @@ public interface VirtualTask<U> {
 
 	void setParameters(U u);
 
-	void setSystemBuilder(SystemBuilder db);
+	void setSystemBuilder(SystemBuilder<U> db);
 
-	SystemBuilder getSystemBuilder();
+	SystemBuilder<U> getSystemBuilder();
 
 	boolean isDeleteTask();
 
