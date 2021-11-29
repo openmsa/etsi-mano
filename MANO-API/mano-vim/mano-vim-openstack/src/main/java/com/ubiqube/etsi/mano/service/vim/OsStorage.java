@@ -29,9 +29,9 @@ import org.openstack4j.api.storage.BlockVolumeService;
 import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Payload;
 import org.openstack4j.model.common.Payloads;
-import org.openstack4j.model.compute.Image;
 import org.openstack4j.model.image.v2.ContainerFormat;
 import org.openstack4j.model.image.v2.DiskFormat;
+import org.openstack4j.model.image.v2.Image;
 import org.openstack4j.model.image.v2.builder.ImageBuilder;
 import org.openstack4j.model.storage.block.Volume;
 import org.openstack4j.model.storage.block.builder.VolumeBuilder;
@@ -72,8 +72,8 @@ public class OsStorage implements Storage {
 
 	@Override
 	public Optional<SwImage> getSwImageMatching(final SoftwareImage img) {
-		// XXX: Checksum is not comparated, and checksum exist in os.image()
-		final Optional<? extends Image> image = os.compute().images().list().stream()
+		// XXX: Checksum is not checked, and checksum exist in os.image()
+		final Optional<? extends Image> image = os.imagesV2().list().stream()
 				.filter(x -> x.getName().equals(img.getName()))
 				.findFirst();
 		if (image.isPresent()) {
@@ -108,7 +108,7 @@ public class OsStorage implements Storage {
 	@Override
 	public String createStorage(final VnfStorage vnfStorage, final String aliasName) {
 		final Object imgName = vnfStorage.getSoftwareImage().getName();
-		final Image image = os.compute().images().list().stream()
+		final Image image = os.imagesV2().list().stream()
 				.filter(x -> x.getName().equals(imgName) || x.getId().equals(imgName))
 				.findFirst()
 				.orElseThrow(() -> new VimException("Image " + vnfStorage.getSoftwareImage().getName() + " not found"));
@@ -131,7 +131,7 @@ public class OsStorage implements Storage {
 	@Override
 	@Nonnull
 	public SysImage getImagesInformations(final String name) {
-		final List<? extends Image> images = os.compute().images().list();
+		final List<? extends Image> images = os.imagesV2().list();
 		final Image image = images.stream().filter(x -> x.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new VimException("Image " + name + " Cannot be found on Vim."));
 		return mapper.map(image, SysImage.class);
 	}
