@@ -128,7 +128,7 @@ public class OpenStackVim implements Vim {
 		return base.authenticate();
 	}
 
-	private synchronized OSClientV3 getClient(final VimConnectionInformation vimConnectionInformation) {
+	private synchronized static OSClientV3 getClient(final VimConnectionInformation vimConnectionInformation) {
 		final Map<String, OSClientV3> sess = sessions.get();
 		if (null == sess) {
 			final Map<String, OSClientV3> newSess = new ConcurrentHashMap<>();
@@ -147,7 +147,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public void allocateResources(final VimConnectionInformation vimConnectionInformation, final GrantInformationExt grantInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		// XXX Do placement with blazar.
 	}
 
@@ -164,7 +164,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData, final List<String> securityGroup, final List<String> affinityRules) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		final ServerCreateBuilder bs = Builders.server();
 		LOG.debug("Creating server flavor={}, image={}", flavorId, imageId);
 		bs.image(imageId);
@@ -192,7 +192,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		LOG.debug("Flavor mem={} disk={}", virtualMemorySize / MEGA, disk / GIGA);
 		final List<Flavor> matchingFlavor = os.compute().flavors().list()
 				.parallelStream()
@@ -248,7 +248,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public List<String> getZoneAvailableList(final VimConnectionInformation vimConnectionInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		final List<? extends AvailabilityZone> list = os.compute().zones().list();
 		return list.stream().filter(x -> x.getZoneState().getAvailable())
 				.map(AvailabilityZone::getZoneName)
@@ -257,7 +257,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public void deleteCompute(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		final ActionResponse res = os.compute().servers().delete(resourceId);
 		if (409 == res.getCode()) {
 			return;
@@ -281,7 +281,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public List<ServerGroup> getServerGroup(final VimConnectionInformation vimConnectionInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		return os.compute().hostAggregates().list().stream().map(x -> new ServerGroup(x.getId(), x.getName(), x.getAvailabilityZone()))
 				.toList();
 
@@ -289,19 +289,19 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public void startServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		os.compute().servers().action(resourceId, Action.START);
 	}
 
 	@Override
 	public void stopServer(final VimConnectionInformation vimConnectionInformation, final String resourceId) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		os.compute().servers().action(resourceId, Action.STOP);
 	}
 
 	@Override
 	public ResourceQuota getQuota(final VimConnectionInformation vimConnectionInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		final AbsoluteLimit usage = os.compute().quotaSets().limits().getAbsolute();
 		final OsQuotas quotas = new OsQuotas();
 		Optional.ofNullable(usage.getMaxSecurityGroups()).ifPresent(quotas::setSecurityGroupsMax);
@@ -365,7 +365,7 @@ public class OpenStackVim implements Vim {
 
 	private Callable<List<VimCapability>> getExtensions(final VimConnectionInformation vimConnectionInformation) {
 		return () -> {
-			final OSClientV3 os = this.getClient(vimConnectionInformation);
+			final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 			final List<? extends Extension> list = os.networking().network().listExtensions();
 			return list.stream()
 					.map(this::convertExtenstionToCaps)
@@ -376,7 +376,7 @@ public class OpenStackVim implements Vim {
 
 	private Callable<List<VimCapability>> getAgents(final VimConnectionInformation vimConnectionInformation) {
 		return () -> {
-			final OSClientV3 os = this.getClient(vimConnectionInformation);
+			final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 			final List<? extends Agent> list = os.networking().agent().list();
 			return list.stream()
 					.map(this::convertAgentToCaps)
@@ -387,7 +387,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		final String affinity = ar.isAnti() ? "anti-affinity" : "affinity";
 		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(ar.getId().toString(), affinity);
 		return res.getId();
@@ -430,31 +430,31 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public @Null VimMonitoring getMonitoring(final VimConnectionInformation vimConnectionInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		return new OpenstackMonitoring(os);
 	}
 
 	@Override
 	public com.ubiqube.etsi.mano.service.vim.Network network(final VimConnectionInformation vimConnectionInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		return new OsNetwork(os, vimConnectionInformation);
 	}
 
 	@Override
 	public Storage storage(final VimConnectionInformation vimConnectionInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		return new OsStorage(os, mapper);
 	}
 
 	@Override
 	public Dns dns(final VimConnectionInformation vimConnectionInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		return new OsDns(os);
 	}
 
 	@Override
 	public PhysResources getPhysicalResources(final VimConnectionInformation vimConnectionInformation) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		final HypervisorStatistics stats = os.compute().hypervisors().statistics();
 		final OsPhysResources ret = new OsPhysResources();
 		ret.setFreeDisk(stats.getFreeDisk());
@@ -470,7 +470,7 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public void deleteServerGroup(final VimConnectionInformation vimConnectionInformation, final String vimResourceId) {
-		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		os.compute().serverGroups().delete(vimResourceId);
 	}
 

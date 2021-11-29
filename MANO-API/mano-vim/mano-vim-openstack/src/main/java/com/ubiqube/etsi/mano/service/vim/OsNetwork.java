@@ -64,8 +64,6 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 		Optional.ofNullable(l2.getMtu()).ifPresent(bNet::mtu);
 		Optional.ofNullable(l2.getNetworkType()).ifPresent(x2 -> bNet.networkType(NetworkType.valueOf(x2.toUpperCase())));
 		// Don't know how to use vlan_transarent.
-		// Optional.ofNullable(l2.getVlanTransparent()).ifPresent(x ->
-		// bNet.vlanTransparent(x.booleanValue()));
 		Optional.ofNullable(dnsDomain).ifPresent(bNet::dnsDomain);
 		Optional.ofNullable(qosPolicyId).ifPresent(bNet::qosPolicyId);
 		final Network network = os.networking().network().create(bNet.adminStateUp(true).build());
