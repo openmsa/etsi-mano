@@ -16,9 +16,14 @@
  */
 package com.ubiqube.parser.tosca;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.ubiqube.parser.tosca.api.ToscaInernalBase;
 
 public class Bean extends ToscaInernalBase {
+	private String name;
 
 	private String targets;
 
@@ -31,6 +36,11 @@ public class Bean extends ToscaInernalBase {
 	private int i;
 
 	private Integer i2;
+
+	private List<String> members;
+
+	private Map<String, ValueObject> attributes = new HashMap<>();
+	private Map<String, Artifact> artifacts = new HashMap<>();
 
 	public String getTargets() {
 		return targets;
@@ -78,6 +88,38 @@ public class Bean extends ToscaInernalBase {
 
 	public void setI2(final Integer i2) {
 		this.i2 = i2;
+	}
+
+	public List<String> getMembers() {
+		return members;
+	}
+
+	public void setMembers(final List<String> members) {
+		this.members = members;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	public Map<String, ValueObject> getAttributes() {
+		return attributes;
+	}
+
+	public Map<String, Artifact> getArtifacts() {
+		return artifacts;
+	}
+
+	public void setArtifacts(final Map<String, Artifact> artifacts) {
+		this.artifacts = artifacts;
+	}
+
+	public void setAttributes(final Map<String, ValueObject> attributes) {
+		this.attributes = attributes;
 	}
 
 }

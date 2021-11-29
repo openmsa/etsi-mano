@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  *
  */
 public final class ClassUtils {
-	private final static Pattern PACKAGE_PATTERN = Pattern.compile("(?<package>.*)(?=\\.)\\.(?<clazz>.*)");
+	private static final Pattern PACKAGE_PATTERN = Pattern.compile("(?<package>.*)(?=\\.)\\.(?<clazz>.*)");
 
 	private ClassUtils() {
 		// Nothing.

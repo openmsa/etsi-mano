@@ -21,9 +21,9 @@ public class ToscaClassHolder {
 	private final ToscaClass node;
 	private final String name;
 
-	public ToscaClassHolder(final String _name, final ToscaClass _node) {
-		node = _node;
-		name = _name;
+	public ToscaClassHolder(final String name, final ToscaClass node) {
+		this.node = node;
+		this.name = name;
 	}
 
 	public ToscaClassHolder getParent() {

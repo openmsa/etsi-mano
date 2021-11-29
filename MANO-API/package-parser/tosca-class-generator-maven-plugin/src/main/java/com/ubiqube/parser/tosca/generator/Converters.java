@@ -81,7 +81,8 @@ public class Converters {
 		}
 		if (jType.equals(String.class)) {
 			return JExpr.lit((String) def);
-		} else if (jType.equals(Boolean.class)) {
+		}
+		if (jType.equals(Boolean.class)) {
 			return JExpr.lit((Boolean) def);
 		} else if (jType.equals(Character.class)) {
 			return JExpr.lit(((String) def).charAt(0));
@@ -101,7 +102,9 @@ public class Converters {
 	}
 
 	public static JExpression convert(final Object def, final JType type) {
-		LOG.debug("def={} jType={}", def, type.name());
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("def={} jType={}", def, type.name());
+		}
 		// XXX to do.
 		switch (type.name()) {
 		case "String":

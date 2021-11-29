@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -46,7 +45,7 @@ public class OperationDeserializer extends StdDeserializer<OperationDefinition> 
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public OperationDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public OperationDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final TreeNode value = p.getCodec().readTree(p);
 		LOG.debug("value {}<=>{}", value.getClass(), value);
 		if (value instanceof TextNode) {

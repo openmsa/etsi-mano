@@ -18,11 +18,14 @@ package com.ubiqube.parser.tosca;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class TriggerDefinition {
 	private String description;
 	private String event;
 	private TimeInterval schedule;
-	private EventFilter target_filter;
+	@JsonProperty("target_filter")
+	private EventFilter targetFilter;
 	private List<CondictionClause> condition;
 	private List<ActivityListDefinition> action;
 
@@ -50,12 +53,12 @@ public class TriggerDefinition {
 		this.schedule = schedule;
 	}
 
-	public EventFilter getTarget_filter() {
-		return target_filter;
+	public EventFilter getTargetFilter() {
+		return targetFilter;
 	}
 
-	public void setTarget_filter(final EventFilter target_filter) {
-		this.target_filter = target_filter;
+	public void setTargetFilter(final EventFilter targetFilter) {
+		this.targetFilter = targetFilter;
 	}
 
 	public List<CondictionClause> getCondition() {

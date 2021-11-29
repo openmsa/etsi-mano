@@ -52,6 +52,9 @@ import com.ubiqube.parser.tosca.annotations.Relationship;
 import com.ubiqube.parser.tosca.constraints.Constraint;
 
 public class ToscaWalker {
+	private static final String TOSCA_ARTIFACTS_ROOT = "tosca.artifacts.Root";
+	private static final String TOSCA_NODES_ROOT = "tosca.nodes.Root";
+	private static final String TOSCA_POLICIES_ROOT = "tosca.policies.Root";
 	private static final String STRING = "string";
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaWalker.class);
 	private ToscaContext root = null;
@@ -61,11 +64,19 @@ public class ToscaWalker {
 	public void generate(final String file, final ToscaListener listener) {
 		final ToscaParser tp = new ToscaParser(new File(file));
 		root = tp.getContext();
-		final Map<String, CapabilityTypes> caps = root.getCapabilities();
-		final Map<String, DataType> dt = root.getDataTypes();
-		final Set<Entry<String, DataType>> e = dt.entrySet();
-		listener.startDocument();
 
+		listener.startDocument();
+		handleCapability(listener);
+		handleDataType(listener);
+		handleArtefact(listener);
+		handleNodeType(listener);
+		handleGroupType(listener);
+		handlePolicies(listener);
+		listener.terminateDocument();
+	}
+
+	private void handleCapability(final ToscaListener listener) {
+		final Map<String, CapabilityTypes> caps = root.getCapabilities();
 		final Set<Entry<String, CapabilityTypes>> cape = caps.entrySet();
 		for (final Entry<String, CapabilityTypes> entry : cape) {
 			if (cache.contains(entry.getKey())) {
@@ -73,7 +84,11 @@ public class ToscaWalker {
 			}
 			generateClass(entry.getKey(), entry.getValue(), listener);
 		}
+	}
 
+	private void handleDataType(final ToscaListener listener) {
+		final Map<String, DataType> dt = root.getDataTypes();
+		final Set<Entry<String, DataType>> e = dt.entrySet();
 		for (final Entry<String, DataType> entry : e) {
 			final DataType val = entry.getValue();
 			if (cache.contains(entry.getKey())) {
@@ -87,30 +102,37 @@ public class ToscaWalker {
 				cache.add(entry.getKey());
 			}
 		}
+	}
 
-		Set<Entry<String, ToscaClass>> arts = root.getArtifacts().entrySet();
+	private void handleNodeType(final ToscaListener listener) {
+		final Set<Entry<String, ToscaClass>> arts = root.getNodeType().entrySet();
 		for (final Entry<String, ToscaClass> entry : arts) {
 			if (cache.contains(entry.getKey())) {
 				continue;
 			}
-			if ("tosca.artifacts.Root".equals(entry.getKey())) {
-				createArtifactRoot(listener);
-			} else {
-				generateToscaClass(entry.getKey(), entry.getValue(), listener);
-			}
-		}
-		arts = root.getNodeType().entrySet();
-		for (final Entry<String, ToscaClass> entry : arts) {
-			if (cache.contains(entry.getKey())) {
-				continue;
-			}
-			if ("tosca.nodes.Root".equals(entry.getKey())) {
+			if (TOSCA_NODES_ROOT.equals(entry.getKey())) {
 				createNodeRoot(listener);
 			} else {
 				generateToscaClass(entry.getKey(), entry.getValue(), listener);
 			}
 		}
+	}
 
+	private void handleArtefact(final ToscaListener listener) {
+		final Set<Entry<String, ToscaClass>> arts = root.getArtifacts().entrySet();
+		for (final Entry<String, ToscaClass> entry : arts) {
+			if (cache.contains(entry.getKey())) {
+				continue;
+			}
+			if (TOSCA_ARTIFACTS_ROOT.equals(entry.getKey())) {
+				createArtifactRoot(listener);
+			} else {
+				generateToscaClass(entry.getKey(), entry.getValue(), listener);
+			}
+		}
+	}
+
+	private void handleGroupType(final ToscaListener listener) {
 		final Set<Entry<String, GroupType>> groups = root.getGroupType().entrySet();
 		for (final Entry<String, GroupType> entry : groups) {
 			if (cache.contains(entry.getKey())) {
@@ -118,47 +140,49 @@ public class ToscaWalker {
 			}
 			generateGroupType(entry.getKey(), entry.getValue(), listener);
 		}
+	}
+
+	private void handlePolicies(final ToscaListener listener) {
 		final Set<Entry<String, PolicyType>> policies = root.getPoliciesType().entrySet();
 		for (final Entry<String, PolicyType> entry : policies) {
 			if (cache.contains(entry.getKey())) {
 				continue;
 			}
-			if ("tosca.policies.Root".equals(entry.getKey())) {
+			if (TOSCA_POLICIES_ROOT.equals(entry.getKey())) {
 				createPolicyRoot(listener);
 			} else {
 				generatePolicyType(entry.getKey(), entry.getValue(), listener);
 			}
 		}
-		listener.terminateDocument();
 	}
 
 	private void createPolicyRoot(final ToscaListener listener) {
-		startClass("tosca.policies.Root", null, listener);
+		startClass(TOSCA_POLICIES_ROOT, null, listener);
 
 		listener.startField("triggers", ValueObject.mapOf(PolicyDefinition.class.getName()));
 		listener.onFieldTerminate();
 
-		cache.add("tosca.policies.Root");
+		cache.add(TOSCA_POLICIES_ROOT);
 		listener.terminateClass();
 	}
 
 	private void createNodeRoot(final ToscaListener listener) {
-		startClass("tosca.nodes.Root", null, listener);
+		startClass(TOSCA_NODES_ROOT, null, listener);
 
 		listener.startField("artifacts", ValueObject.mapOf(Artifact.class.getName()));
 		listener.onFieldTerminate();
 
-		cache.add("tosca.nodes.Root");
+		cache.add(TOSCA_NODES_ROOT);
 		listener.terminateClass();
 	}
 
 	private void createArtifactRoot(final ToscaListener listener) {
-		startClass("tosca.artifacts.Root", null, listener);
+		startClass(TOSCA_ARTIFACTS_ROOT, null, listener);
 
 		listener.startField("file", new ValueObject(STRING));
 		listener.onFieldTerminate();
 
-		cache.add("tosca.artifacts.Root");
+		cache.add(TOSCA_ARTIFACTS_ROOT);
 		listener.terminateClass();
 	}
 
@@ -276,11 +300,9 @@ public class ToscaWalker {
 			if (value.getDef() != null) {
 				listener.onFieldSetDefaultValue(value.getDef());
 			}
-			if (!value.getConstraints().isEmpty()) {
-				if (!value.getType().startsWith("scalar-unit.")) {
-					final List<Constraint> cont = value.getConstraints();
-					cont.forEach(listener::onFieldConstraints);
-				}
+			if (!value.getConstraints().isEmpty() && !value.getType().startsWith("scalar-unit.")) {
+				final List<Constraint> cont = value.getConstraints();
+				cont.forEach(listener::onFieldConstraints);
 			}
 			if (primitive.containsKey(value.getType())) {
 				final List<Constraint> cont = primitive.get(value.getType()).getConstraints();
@@ -301,29 +323,7 @@ public class ToscaWalker {
 
 		final String type = valueObject.getType();
 		if (isContainer(type)) {
-			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = Converters.convert(subType);
-			if (null != jTy) {
-				return;
-			}
-			if (cache.contains(subType)) {
-				return;
-			}
-			final DataType dType = root.getDataTypes().get(subType);
-			if (null != dType) {
-				generateClassFromDataType(subType, dType, listener);
-			} else {
-				if (classExistOnClassPath(subType)) {
-					cache.add(subType);
-					return;
-				}
-				final ToscaClass nt = root.getNodeType().get(subType);
-				if (null == nt) {
-					throw new IllegalArgumentException(subType + " is undefnied.");
-				}
-				generateToscaClass(subType,
-						nt, listener);
-			}
+			handleContainer(valueObject, listener);
 			return;
 		}
 		if (null != primitive.get(type)) {
@@ -339,6 +339,32 @@ public class ToscaWalker {
 				return;
 			}
 			generateClassFromDataType(valueObject.getType(), dType, listener);
+		}
+	}
+
+	private void handleContainer(final ValueObject valueObject, final ToscaListener listener) {
+		final String subType = valueObject.getEntrySchema().getType();
+		final Class<?> jTy = Converters.convert(subType);
+		if (null != jTy) {
+			return;
+		}
+		if (cache.contains(subType)) {
+			return;
+		}
+		final DataType dType = root.getDataTypes().get(subType);
+		if (null != dType) {
+			generateClassFromDataType(subType, dType, listener);
+		} else {
+			if (classExistOnClassPath(subType)) {
+				cache.add(subType);
+				return;
+			}
+			final ToscaClass nt = root.getNodeType().get(subType);
+			if (null == nt) {
+				throw new IllegalArgumentException(subType + " is undefnied.");
+			}
+			generateToscaClass(subType,
+					nt, listener);
 		}
 	}
 
@@ -401,38 +427,39 @@ public class ToscaWalker {
 	}
 
 	private void getExtends(final String derivedFrom, final ToscaListener listener) {
-		if (!cache.contains(derivedFrom)) {
-			final CapabilityTypes def = root.getCapabilities().get(derivedFrom);
-			boolean found = false;
-			if (null != def) {
-				generateClass(derivedFrom, def, listener);
-				found = true;
-			} else {
-				final ToscaClass node = root.getNodeType().get(derivedFrom);
-				if (node != null) {
-					generateToscaClass(derivedFrom, node, listener);
-					found = true;
-				}
-				final DataType dt = root.getDataTypes().get(derivedFrom);
-				if (null != dt) {
-					generateClassFromDataType(derivedFrom, dt, listener);
-					found = true;
-				}
-				final PolicyType pol = root.getPoliciesType().get(derivedFrom);
-				if (null != pol) {
-					generateClassFromPolicyType(derivedFrom, pol, listener);
-					found = true;
-				}
-				if (!found && classExistOnClassPath(ClassUtils.toscaToJava(derivedFrom))) {
-					found = true;
-				}
-			}
-			if (!found) {
-				throw new ParseException("Could not find parent class: " + derivedFrom);
-			}
-			LOG.debug("Caching {}", derivedFrom);
-			cache.add(derivedFrom);
+		if (cache.contains(derivedFrom)) {
+			return;
 		}
+		final CapabilityTypes def = root.getCapabilities().get(derivedFrom);
+		boolean found = false;
+		if (null != def) {
+			generateClass(derivedFrom, def, listener);
+			found = true;
+		} else {
+			final ToscaClass node = root.getNodeType().get(derivedFrom);
+			if (node != null) {
+				generateToscaClass(derivedFrom, node, listener);
+				found = true;
+			}
+			final DataType dt = root.getDataTypes().get(derivedFrom);
+			if (null != dt) {
+				generateClassFromDataType(derivedFrom, dt, listener);
+				found = true;
+			}
+			final PolicyType pol = root.getPoliciesType().get(derivedFrom);
+			if (null != pol) {
+				generateClassFromPolicyType(derivedFrom, pol, listener);
+				found = true;
+			}
+			if (!found && classExistOnClassPath(ClassUtils.toscaToJava(derivedFrom))) {
+				found = true;
+			}
+		}
+		if (!found) {
+			throw new ParseException("Could not find parent class: " + derivedFrom);
+		}
+		LOG.debug("Caching {}", derivedFrom);
+		cache.add(derivedFrom);
 	}
 
 	private static boolean isList(final List<String> occ) {

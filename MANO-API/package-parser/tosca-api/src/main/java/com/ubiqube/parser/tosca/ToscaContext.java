@@ -19,6 +19,7 @@ package com.ubiqube.parser.tosca;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class ToscaContext {
 
 	private Map<String, PolicyDefinition> policies = new HashMap<>();
 
-	public ToscaContext(final ToscaRoot root, final IResolver _resolver) {
+	public ToscaContext(final ToscaRoot root, final IResolver inResolver) {
 		artifacts = root.getArtifactTypes();
 		capabilities = root.getCapabilityTypes();
 		description = root.getDescription();
@@ -58,38 +59,38 @@ public class ToscaContext {
 		relationship = root.getRelationshipTypes();
 		topologies = root.getTopologyTemplate();
 		version = root.getVersion();
-		if (null != root.getData_types()) {
-			dataTypes = root.getData_types();
+		if (null != root.getDataTypes()) {
+			dataTypes = root.getDataTypes();
 		}
-		if (null != root.getGroup_types()) {
-			groupType = root.getGroup_types();
+		if (null != root.getGroupTypes()) {
+			groupType = root.getGroupTypes();
 		}
 		if (null != root.getGroups()) {
 			groupDefinition = root.getGroups();
 		}
-		if (null != root.getPolicy_types()) {
-			policiesType = root.getPolicy_types();
+		if (null != root.getPolicyTypes()) {
+			policiesType = root.getPolicyTypes();
 		}
 		if (null != root.getPolicies()) {
 			policies = root.getPolicies();
 		}
-		resolver = _resolver;
+		resolver = inResolver;
 	}
 
-	public void setImports(final Imports _imports) {
-		imports = _imports;
+	public void setImports(final Imports imports) {
+		this.imports = imports;
 	}
 
-	public void setDescription(final String _description) {
-		description = _description;
+	public void setDescription(final String description) {
+		this.description = description;
 	}
 
-	public void setVersion(final String _version) {
-		version = _version;
+	public void setVersion(final String version) {
+		this.version = version;
 	}
 
 	public void setTopologies(final TopologyTemplate topo) {
-		topologies = topo;
+		this.topologies = topo;
 	}
 
 	public void setNodeType(final Map<String, ToscaClass> nodesType) {
@@ -227,8 +228,6 @@ public class ToscaContext {
 			dataTypes.putAll(context.getDataTypes());
 		}
 		mergeHash(nodeType, context.getNodeType());
-		// mergeHash(relationship, context.getRelationship());
-		// topologies.merge(context.getTopologies());
 		// group
 		if (null != context.getGroupDefinition()) {
 			groupDefinition.putAll(context.getGroupDefinition());
@@ -351,65 +350,40 @@ public class ToscaContext {
 	}
 
 	public void addRoot(final ToscaRoot root2) {
-		if (null != root2.getArtifactTypes()) {
-			artifacts.putAll(root2.getArtifactTypes());
-		}
-		if (null != root2.getCapabilityTypes()) {
-			capabilities.putAll(root2.getCapabilityTypes());
-		}
-		if (null != root2.getImports()) {
+		Optional.ofNullable(root2.getArtifactTypes()).ifPresent(x -> artifacts.putAll(x));
+		Optional.ofNullable(root2.getCapabilityTypes()).ifPresent(x -> capabilities.putAll(x));
+		Optional.ofNullable(root2.getImports()).ifPresent(x -> {
 			if (null == imports) {
-				imports = root2.getImports();
+				imports = x;
 			} else {
-				imports.putAll(root2.getImports());
+				imports.putAll(x);
 			}
-		}
-		if (null != root2.getNodeTypes()) {
-			nodeType.putAll(root2.getNodeTypes());
-		}
-		if (null != root2.getData_types()) {
-			dataTypes.putAll(root2.getData_types());
-		}
-		if (null != root2.getRelationshipTypes()) {
-			relationship.putAll(root2.getRelationshipTypes());
-		}
-		if (null != root2.getTopologyTemplate()) {
+		});
+		Optional.ofNullable(root2.getNodeTypes()).ifPresent(x -> nodeType.putAll(x));
+		Optional.ofNullable(root2.getDataTypes()).ifPresent(x -> dataTypes.putAll(x));
+		Optional.ofNullable(root2.getRelationshipTypes()).ifPresent(x -> relationship.putAll(x));
+		Optional.ofNullable(root2.getTopologyTemplate()).ifPresent(x -> {
 			if (null == topologies) {
 				topologies = root2.getTopologyTemplate();
 			} else {
 				topologies.putAll(root2.getTopologyTemplate());
 			}
-		}
+		});
+		groupDefinition = assign(root2.getGroups(), groupDefinition);
+		groupType = assign(root2.getGroupTypes(), groupType);
+		policies = assign(root2.getPolicies(), policies);
+		policiesType = assign(root2.getPolicyTypes(), policiesType);
+	}
 
-		if (null != root2.getGroups()) {
-			if (null == groupDefinition) {
-				groupDefinition = root2.getGroups();
-			} else {
-				groupDefinition.putAll(root2.getGroups());
-			}
+	private static <K, V> Map<K, V> assign(final Map<K, V> in, final Map<K, V> here) {
+		if (null == here) {
+			return in;
 		}
-		if (null != root2.getGroup_types()) {
-			if (null == groupType) {
-				groupType = root2.getGroup_types();
-			} else {
-				groupType.putAll(root2.getGroup_types());
-			}
+		if (Optional.ofNullable(in).isPresent()) {
+			here.putAll(in);
+			return here;
 		}
-
-		if (null != root2.getPolicies()) {
-			if (null == policies) {
-				policies = root2.getPolicies();
-			} else {
-				policies.putAll(root2.getPolicies());
-			}
-		}
-		if (null != root2.getPolicy_types()) {
-			if (null == policiesType) {
-				policiesType = root2.getPolicy_types();
-			} else {
-				policiesType.putAll(root2.getPolicy_types());
-			}
-		}
+		return new HashMap<>();
 	}
 
 	public boolean isAssignableFor(final String source, final String clazz) {
@@ -420,16 +394,13 @@ public class ToscaContext {
 			return res;
 		}
 		final PolicyType policy = policiesType.get(source);
-		if (null != policy) {
-			if (source.equalsIgnoreCase(clazz)) {
-				return true;
-			}
+		if (null != policy && source.equalsIgnoreCase(clazz)) {
+			return true;
 		}
+
 		final GroupType group = groupType.get(source);
-		if (null != group) {
-			if (source.equalsIgnoreCase(clazz)) {
-				return true;
-			}
+		if (null != group && source.equalsIgnoreCase(clazz)) {
+			return true;
 		}
 		LOG.debug("Not found: {}", source);
 		return false;

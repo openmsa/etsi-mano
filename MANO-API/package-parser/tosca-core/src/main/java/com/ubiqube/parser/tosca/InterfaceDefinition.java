@@ -19,11 +19,13 @@ package com.ubiqube.parser.tosca;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class InterfaceDefinition {
 	@JsonAnySetter
 	private Map<String, OperationDefinition> operations;
-	private String derived_from;
+	@JsonProperty("derived_from")
+	private String derivedFrom;
 	private String description;
 
 	public Map<String, OperationDefinition> getOperations() {
@@ -42,12 +44,12 @@ public class InterfaceDefinition {
 		this.description = description;
 	}
 
-	public String getDerived_from() {
-		return derived_from;
+	public String getDerivedFrom() {
+		return derivedFrom;
 	}
 
-	public void setDerived_from(final String derived_from) {
-		this.derived_from = derived_from;
+	public void setDerivedFrom(final String derivedFrom) {
+		this.derivedFrom = derivedFrom;
 	}
 
 }

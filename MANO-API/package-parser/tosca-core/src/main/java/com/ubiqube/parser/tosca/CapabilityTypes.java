@@ -19,9 +19,12 @@ package com.ubiqube.parser.tosca;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CapabilityTypes extends ToscaBasePropertiesEntity {
 	private Map<String, ValueObject> attributes;
-	private List<String> valid_source_types;
+	@JsonProperty("valid_source_types")
+	private List<String> validSourceTypes;
 
 	public Map<String, ValueObject> getAttributes() {
 		return attributes;
@@ -31,12 +34,12 @@ public class CapabilityTypes extends ToscaBasePropertiesEntity {
 		this.attributes = attributes;
 	}
 
-	public List<String> getValid_source_types() {
-		return valid_source_types;
+	public List<String> getValidSourceTypes() {
+		return validSourceTypes;
 	}
 
-	public void setValid_source_types(final List<String> valid_source_types) {
-		this.valid_source_types = valid_source_types;
+	public void setValidSourceTypes(final List<String> validSourceTypes) {
+		this.validSourceTypes = validSourceTypes;
 	}
 
 }

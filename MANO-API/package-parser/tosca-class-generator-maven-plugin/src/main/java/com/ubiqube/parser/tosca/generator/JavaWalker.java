@@ -240,7 +240,9 @@ public class JavaWalker extends AbstractWalker {
 
 	@Override
 	public void onFieldAnnotate(final Class<? extends Annotation> class1, final String[] array) {
-		LOG.debug("Annotate: {}, {}", class1.getName(), Arrays.toString(array));
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Annotate: {}, {}", class1.getName(), Arrays.toString(array));
+		}
 		final JAnnotationArrayMember ann = currentField.annotate(class1).paramArray(VALUE);
 		for (final String string : array) {
 			ann.param(string);
@@ -299,31 +301,10 @@ public class JavaWalker extends AbstractWalker {
 		}
 		final String type = valueObject.getType();
 		if ("list".equals(type)) {
-			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = Converters.convert(subType);
-			if (null != jTy) {
-				return codeModel.ref(List.class).narrow(jTy);
-			}
-			if ("trigger".equals(subType)) {
-				return codeModel.ref(List.class).narrow(TriggerDefinition.class);
-			}
-			final JDefinedClass cached = cache.get(subType);
-			if (null != cached) {
-				return codeModel.ref(List.class).narrow(cached);
-			}
-			return codeModel.ref(List.class).narrow(getClassOf(subType));
+			return handleList(valueObject);
 		}
 		if ("map".equals(type)) {
-			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = Converters.convert(subType);
-			if (null != jTy) {
-				return codeModel.ref(Map.class).narrow(String.class, jTy);
-			}
-			final JDefinedClass cahed = cache.get(subType);
-			if (null != cahed) {
-				return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
-			}
-			return codeModel.ref(Map.class).narrow(String.class, getClassOf(subType));
+			return handleMap(valueObject);
 		}
 		if ("trigger".equals(type)) {
 			return codeModel.ref(TriggerDefinition.class);
@@ -337,6 +318,35 @@ public class JavaWalker extends AbstractWalker {
 			return codeModel.ref(clazz);
 		}
 		throw new ParseException("Bad tosca type: " + valueObject.getType());
+	}
+
+	private JType handleMap(final ValueObject valueObject) {
+		final String subType = valueObject.getEntrySchema().getType();
+		final Class<?> jTy = Converters.convert(subType);
+		if (null != jTy) {
+			return codeModel.ref(Map.class).narrow(String.class, jTy);
+		}
+		final JDefinedClass cahed = cache.get(subType);
+		if (null != cahed) {
+			return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
+		}
+		return codeModel.ref(Map.class).narrow(String.class, getClassOf(subType));
+	}
+
+	private JType handleList(final ValueObject valueObject) {
+		final String subType = valueObject.getEntrySchema().getType();
+		final Class<?> jTy = Converters.convert(subType);
+		if (null != jTy) {
+			return codeModel.ref(List.class).narrow(jTy);
+		}
+		if ("trigger".equals(subType)) {
+			return codeModel.ref(List.class).narrow(TriggerDefinition.class);
+		}
+		final JDefinedClass cached = cache.get(subType);
+		if (null != cached) {
+			return codeModel.ref(List.class).narrow(cached);
+		}
+		return codeModel.ref(List.class).narrow(getClassOf(subType));
 	}
 
 	private static Class<?> getClassOf(final String subType) {

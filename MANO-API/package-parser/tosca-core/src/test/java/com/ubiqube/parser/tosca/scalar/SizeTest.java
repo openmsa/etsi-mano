@@ -16,12 +16,16 @@
  */
 package com.ubiqube.parser.tosca.scalar;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 
-public class SizeTest {
+class SizeTest {
 
+	@SuppressWarnings("static-method")
 	@Test
-	void testName() throws Exception {
+	void testName() {
 		final Size sz = new Size("10gb");
+		assertNotNull(sz);
 	}
 }

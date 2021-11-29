@@ -18,7 +18,6 @@ package com.ubiqube.parser.tosca.deserializer;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,7 +42,7 @@ public class ActivityDeserializer extends StdDeserializer<ActivityListDefinition
 	}
 
 	@Override
-	public ActivityListDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JacksonException {
+	public ActivityListDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final ObjectNode value = p.getCodec().readTree(p);
 		if (value.has("delegate")) {
 			final JsonNode v = value.get("delegate");

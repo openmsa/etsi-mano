@@ -18,14 +18,17 @@ package com.ubiqube.parser.tosca;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ubiqube.parser.tosca.constraints.Constraint;
 
 public class DataType extends ToscaBasePropertiesEntity {
 	private List<Constraint> constraints;
 	// 1.3
-	private Object key_schema;
+	@JsonProperty("key_schema")
+	private Object keySchema;
 	// 1.3
-	private Object entry_schema;
+	@JsonProperty("entry_schema")
+	private Object entrySchema;
 
 	public List<Constraint> getConstraints() {
 		return constraints;
@@ -35,20 +38,20 @@ public class DataType extends ToscaBasePropertiesEntity {
 		this.constraints = constraints;
 	}
 
-	public Object getKey_schema() {
-		return key_schema;
+	public Object getKeySchema() {
+		return keySchema;
 	}
 
-	public void setKey_schema(final Object key_schema) {
-		this.key_schema = key_schema;
+	public void setKeySchema(final Object keySchema) {
+		this.keySchema = keySchema;
 	}
 
-	public Object getEntry_schema() {
-		return entry_schema;
+	public Object getEntrySchema() {
+		return entrySchema;
 	}
 
-	public void setEntry_schema(final Object entry_schema) {
-		this.entry_schema = entry_schema;
+	public void setEntrySchema(final Object entrySchema) {
+		this.entrySchema = entrySchema;
 	}
 
 }

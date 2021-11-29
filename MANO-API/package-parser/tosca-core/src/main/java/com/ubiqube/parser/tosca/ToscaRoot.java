@@ -30,11 +30,15 @@ public class ToscaRoot {
 	private Map<String, ToscaClass> artifactTypes = new HashMap<>();
 	private Map<String, RelationshipType> relationshipTypes = new HashMap<>();
 	private Map<String, ToscaClass> nodeTypes = new HashMap<>();
-	private Map<String, InterfaceDefinition> interface_types;
-	private Map<String, DataType> data_types;
-	private Map<String, PolicyType> policy_types;
+	@JsonProperty("interface_types")
+	private Map<String, InterfaceDefinition> interfaceTypes;
+	@JsonProperty("data_types")
+	private Map<String, DataType> dataTypes;
+	@JsonProperty("policy_types")
+	private Map<String, PolicyType> policyTypes;
 	private Map<String, PolicyDefinition> policies;
-	private Map<String, GroupType> group_types;
+	@JsonProperty("group_types")
+	private Map<String, GroupType> groupTypes;
 	private Map<String, GroupDefinition> groups;
 	private Map<String, String> metadata;
 
@@ -108,36 +112,36 @@ public class ToscaRoot {
 		this.nodeTypes = nodeTypes;
 	}
 
-	public Map<String, InterfaceDefinition> getInterface_types() {
-		return interface_types;
+	public Map<String, InterfaceDefinition> getInterfaceTypes() {
+		return interfaceTypes;
 	}
 
-	public void setInterface_types(final Map<String, InterfaceDefinition> interface_type) {
-		this.interface_types = interface_type;
+	public void setInterfaceTypes(final Map<String, InterfaceDefinition> interfaceType) {
+		this.interfaceTypes = interfaceType;
 	}
 
-	public Map<String, DataType> getData_types() {
-		return data_types;
+	public Map<String, DataType> getDataTypes() {
+		return dataTypes;
 	}
 
-	public void setData_types(final Map<String, DataType> data_types) {
-		this.data_types = data_types;
+	public void setDataTypes(final Map<String, DataType> dataTypes) {
+		this.dataTypes = dataTypes;
 	}
 
-	public Map<String, PolicyType> getPolicy_types() {
-		return policy_types;
+	public Map<String, PolicyType> getPolicyTypes() {
+		return policyTypes;
 	}
 
-	public void setPolicy_types(final Map<String, PolicyType> policy_types) {
-		this.policy_types = policy_types;
+	public void setPolicyTypes(final Map<String, PolicyType> policyTypes) {
+		this.policyTypes = policyTypes;
 	}
 
-	public Map<String, GroupType> getGroup_types() {
-		return group_types;
+	public Map<String, GroupType> getGroupTypes() {
+		return groupTypes;
 	}
 
-	public void setGroup_types(final Map<String, GroupType> group_types) {
-		this.group_types = group_types;
+	public void setGroupTypes(final Map<String, GroupType> groupTypes) {
+		this.groupTypes = groupTypes;
 	}
 
 	public Map<String, String> getMetadata() {

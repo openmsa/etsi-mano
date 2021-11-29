@@ -1,25 +1,17 @@
-tosca_definitions_version: tosca_simple_yaml_1_2
-description: ETSI NFV SOL 001 nsd types definitions version 2.6.1
+tosca_definitions_version: tosca_simple_yaml_1_3
+description: ETSI NFV SOL 001 nsd types definitions version 3.5.1
 metadata:
   template_name: etsi_nfv_sol001_nsd_types
   template_author: ETSI_NFV
-  template_version: 2.6.1
+  template_version: 3.5.1
 
 imports:
-  - https://forge.etsi.org/rep/nfv/SOL001/raw/v2.6.1/etsi_nfv_sol001_common_types.yaml
+     - https://forge.etsi.org/rep/nfv/SOL001/raw/v3.5.1/etsi_nfv_sol001_common_types.yaml
+     - https://forge.etsi.org/rep/nfv/SOL001/raw/v3.5.1/etsi_nfv_sol001_vnfd_types.yaml
+     - https://forge.etsi.org/rep/nfv/SOL001/raw/v3.5.1/etsi_nfv_sol001_pnfd_types.yaml
+# editor's note: During the development of the SOL001ed351 GS, to enable this file to be verified by a TOSCA parser, the imports statement has to be replaced with a reference to a local copy of the common definitions YAML file
 
 data_types:
-  tosca.datatypes.nfv.ServiceAvailability:
-    derived_from: tosca.datatypes.Root
-    description: service availability
-    properties:
-      level:
-        type: string
-        description: service availability levels
-        required: true
-        constraints:
-          - valid_values: [ level1, level2, level3 ]
-
   tosca.datatypes.nfv.NsVlProfile:
     derived_from: tosca.datatypes.Root
     description: Describes additional instantiation data for a given NsVirtualLink used in a specific NS deployment flavour.
@@ -36,11 +28,19 @@ data_types:
         type: tosca.datatypes.nfv.NsVirtualLinkQos
         description: Specifies the QoS requirements of a VL instantiated according to this profile.
         required: false
-      service_availability:
-        type: tosca.datatypes.nfv.ServiceAvailability
-        description: Network service virtual link service availability levels, as described in ETSI GS NFV-REL 001
+      service_availability_level:
+        type: integer
+        description: Specifies the service availability level for the VL instance created from this profile
         required: false 
- 
+        constraints:
+          - greater_or_equal: 1
+      virtual_link_protocol_data:
+        type: list
+        description: Specifies the protocol data for a virtual link.
+        required: false
+        entry_schema:
+          type: tosca.datatypes.nfv.NsVirtualLinkProtocolData
+
   tosca.datatypes.nfv.NsVirtualLinkQos:
     derived_from: tosca.datatypes.nfv.Qos
     description: describes QoS data for a given VL used in a VNF deployment flavour 
@@ -76,59 +76,277 @@ data_types:
         type: string
         description: Identifies the applicable network service DF within the scope of the NSD.
         required: true
-  
+
+  tosca.datatypes.nfv.Mask:
+    derived_from: tosca.datatypes.Root
+    properties:  
+      starting_point: 
+        description: Indicates the offset between the last bit of the source mac address and the first bit of the sequence of bits to be matched.
+        type: integer
+        required: true    
+      length: 
+        description: Indicates the number of bits to be matched.
+        type: integer
+        required: true
+      value:
+        description: Provide the sequence of bit values to be matched.
+        type: string
+        required: true 
+
+  tosca.datatypes.nfv.NsOperationAdditionalParameters:
+    derived_from: tosca.datatypes.Root
+    description: Is an empty base type for deriving data types for describing NS-specific additional parameters to be passed when invoking NS lifecycle management operations 
+    #properties:
+ 
+  tosca.datatypes.nfv.NsMonitoringParameter:
+    derived_from: tosca.datatypes.Root
+    description: Represents information on virtualised resource related performance metrics applicable to the NS.
+    properties:
+      name:
+        type: string
+        description: Human readable name of the monitoring parameter
+        required: true
+      performance_metric:
+        type: string
+        description: Identifies a performance metric to be monitored, according to ETSI GS NFV-IFA 027. 
+        required: true
+        constraints:
+           - valid_values: [byte_incoming_sap, byte_outgoing_sap, packet_incoming_sap, packet_outgoing_sap, byte_incoming, byte_outgoing, packet_incoming, packet_outgoing ] 
+      collection_period:  
+        type: scalar-unit.time
+        description: Describes the periodicity at which to collect the performance information.
+        required: false
+
+  tosca.datatypes.nfv.NsVirtualLinkProtocolData:
+    derived_from: tosca.datatypes.Root
+    description: describes one protocol layer and associated protocol data for a given virtual link used in a specific NS deployment flavour
+    properties:
+      associated_layer_protocol:
+         type: string
+         description: Identifies one of the protocols a virtualLink gives access to (ethernet, mpls, odu2, ipv4, ipv6, pseudo-wire) as specified by the connectivity_type property.
+         required: true
+         constraints:
+           - valid_values: [ ethernet, mpls, odu2, ipv4, ipv6, pseudo-wire ]
+      l2_protocol_data:
+         type: tosca.datatypes.nfv.NsL2ProtocolData
+         description: Specifies the L2 protocol data for a virtual link. Shall be present when the associatedLayerProtocol attribute indicates a L2 protocol and shall be absent otherwise.
+         required: false
+      l3_protocol_data:
+         type: tosca.datatypes.nfv.NsL3ProtocolData
+         description: Specifies the L3 protocol data for this virtual link. Shall be present when the associatedLayerProtocol attribute indicates a L3 protocol and shall be absent otherwise.
+         required: false
+
+  tosca.datatypes.nfv.NsL2ProtocolData:
+    derived_from: tosca.datatypes.Root
+    description: describes L2 protocol data for a given virtual link used in a specific NS deployment flavour.
+    properties:
+      name:
+        type: string
+        description: Identifies the network name associated with this L2 protocol.
+        required: false
+      network_type:
+        type: string
+        description: Specifies the network type for this L2 protocol. The value may be overridden at run-time.
+        required: false
+        constraints:
+          - valid_values: [ flat, vlan, vxlan, gre ]
+      vlan_transparent:
+        type: boolean
+        description: Specifies whether to support VLAN transparency for this L2 protocol or not.
+        required: false
+        default: false
+      mtu:
+        type: integer
+        description: Specifies the maximum transmission unit (MTU) value for this L2 protocol.
+        required: false
+        constraints:
+          - greater_than: 0 
+      segmentation_id:
+        type: string
+        description: Specifies a specific virtualised network segment, which depends on the network type. For e.g., VLAN ID for VLAN network type and tunnel ID for GRE/VXLAN network types
+        required: false
+
+  tosca.datatypes.nfv.NsL3ProtocolData:
+    derived_from: tosca.datatypes.Root
+    description: describes L3 protocol data for a given virtual link used in a specific NS deployment flavour.
+    properties:
+      name:
+        type: string
+        description: Identifies the network name associated with this L3 protocol.
+        required: false
+      ip_version:
+        type: string
+        description: Specifies IP version of this L3 protocol. The value of the ip_version property shall be consistent with the value of the layer_protocol in the connectivity_type property of the virtual link node.
+        required: true
+        constraints:
+          - valid_values: [ ipv4, ipv6 ]
+      cidr:
+        type: string
+        description: Specifies the CIDR (Classless Inter-Domain Routing) of this L3 protocol. The value may be overridden at run-time.
+        required: true  
+      ip_allocation_pools:
+        type: list
+        description: Specifies the allocation pools with start and end IP addresses for this L3 protocol. The value may be overridden at run-time.
+        required: false
+        entry_schema:
+          type: tosca.datatypes.nfv.NsIpAllocationPool
+
+  tosca.datatypes.nfv.NsIpAllocationPool:
+    derived_from: tosca.datatypes.Root
+    description: Specifies a range of IP addresses
+    properties:
+      start_ip_address:
+        type: string
+        description: The IP address to be used as the first one in a pool of addresses derived from the cidr block full IP range
+        required: true
+      end_ip_address:
+        type: string
+        description: The IP address to be used as the last one in a pool of addresses derived from the cidr block full IP range
+        required: true
+
+  tosca.datatypes.nfv.NsScalingAspect:
+    derived_from: tosca.datatypes.Root
+    description: describes the details of an aspect used for horizontal scaling
+    properties:
+      name:
+        type: string
+        description: Human readable name of the aspect
+        required: true
+      description:
+        type: string
+        description: Human readable description of the aspect
+        required: true
+      ns_scale_levels: 
+        type: map
+        description: Description of the NS levels for this scaling aspect.
+        required: true
+        key_schema: 
+          type: integer # Integer type in order to number the levels. First level is level 0.
+        entry_schema:
+          type: tosca.datatypes.nfv.NsLevels
+
+  tosca.datatypes.nfv.NsLevels:
+    derived_from: tosca.datatypes.Root
+    description: describes the Ns levels
+    properties:
+      description:
+        type: string
+        description: Human readable description of the Ns level
+        required: true
+
+  tosca.datatypes.nfv.scaleNsByStepsData:
+    derived_from: tosca.datatypes.Root
+    description: describes the information needed to scale an NS instance by one or more scaling steps, with respect to a particular NS scaling aspect
+    properties:
+      scaling_direction:
+        type: string
+        description: Indicates the type of the scale operation requested.
+        required: true
+        constraints:
+          - valid_values: [ scale_out, scale_in ]
+      aspect:
+        type: string
+        description: Identifier of the scaling aspect.
+        required: true
+      number_of_steps:
+        type: integer
+        description: Number of scaling steps to be executed.
+        required: true
+        constraints:
+          - greater_than: 0
+        default: 1
+
+  tosca.datatypes.nfv.scaleNsToLevelData:
+    derived_from: tosca.datatypes.Root
+    description: describes the information needed to scale an NS instance to a target size.
+    properties:
+      instantiation_level:
+        type: string
+        description: Identifier of the target instantiation level of the current deployment flavour to which the NS is requested to be scaled. Either instantiation_level or ns_scale_info shall be provided.
+        required: false
+      ns_scale_info:
+        type: map # key: aspectId
+        description: For each scaling aspect of the current deployment flavour, indicates the target scale level to which the NS is to be scaled. Either instantiation_level or ns_scale_info shall be provided.
+        required: false
+        entry_schema:
+          type: integer
+        
+capability_types:
+  tosca.capabilities.nfv.Forwarding:
+    derived_from: tosca.capabilities.Root
+
+relationship_types:
+  tosca.relationships.nfv.ForwardTo:
+    derived_from: tosca.relationships.Root
+    valid_target_types: [ tosca.capabilities.nfv.Forwarding ]
+
 interface_types:
   tosca.interfaces.nfv.Nslcm:
     derived_from: tosca.interfaces.Root
     description: This interface encompasses a set of TOSCA operations corresponding to NS LCM operations defined in ETSI GS NFV-IFA 013. as well as to preamble and postamble procedures to the execution of the NS LCM operations.
-    instantiate_start:
-      description: Preamble to execution of the instantiate operation
-    instantiate:
-      description: Base procedure for instantiating an NS, corresponding to the Instantiate NS operation defined in GS NFV-IFA 013. 
-    instantiate_end:
-      description: Postamble to the execution of the instantiate operation
-    terminate_start:
-      description: Preamble to execution of the terminate operation
-    terminate:
-      description: Base procedure for terminating an NS, corresponding to the Terminate NS operation defined in GS NFV-IFA 013. 
-    terminate_end:
-      description: Postamble to the execution of the terminate operation
-    update_start:
-      description: Preamble to execution of the update operation
-    update:
-      description: Base procedure for updating an NS, corresponding to the Update NS operation defined in GS NFV-IFA 013. 
-    update_end:
-      description: Postamble to the execution of the update operation
-    scale_start:
-      description: Preamble to execution of the scale operation
-    scale:
-      description: Base procedure for scaling an NS, corresponding to the Scale NS operation defined in GS NFV-IFA 013. 
-    scale_end:
-      description: Postamble to the execution of the scale operation
-    heal_start:
-      description: Preamble to execution of the heal operation
-    heal:
-      description: Base procedure for healing an NS, corresponding to the Heal NS operation defined in GS NFV-IFA 013. 
-    heal_end:
-      description: Postamble to the execution of the heal operation
+    operations:
+      instantiate_start:
+        description: Preamble to execution of the instantiate operation
+      instantiate:
+        description: Base procedure for instantiating an NS, corresponding to the Instantiate NS operation defined in ETSI GS NFV-IFA 013.
+        # inputs:
+          # additional_parameters:
+          #   type: tosca.datatypes.nfv.NsOperationAdditionalParameters
+          #   required: false 
+      instantiate_end:
+        description: Postamble to the execution of the instantiate operation
+      terminate_start:
+        description: Preamble to execution of the terminate operation
+      terminate:
+        description: Base procedure for terminating an NS, corresponding to the Terminate NS operation defined in ETSI GS NFV-IFA 013. 
+      terminate_end:
+        description: Postamble to the execution of the terminate operation
+      update_start:
+        description: Preamble to execution of the update operation
+      update:
+        description: Base procedure for updating an NS, corresponding to the Update NS operation defined in ETSI GS NFV-IFA 013. 
+      update_end:
+        description: Postamble to the execution of the update operation
+      scale_start:
+        description: Preamble to execution of the scale operation
+      scale:
+        description: Base procedure for scaling an NS, corresponding to the Scale NS operation defined in ETSI GS NFV-IFA 013.
+        # inputs:
+          # additional_parameters:
+          #   type: tosca.datatypes.nfv.NsOperationAdditionalParameters
+          #   required: false 
+        inputs:
+          scale_ns_by_steps_data:
+            type: tosca.datatypes.nfv.scaleNsByStepsData
+            description: Describes the information needed to scale an NS instance by one or more scaling steps, with respect to a particular NS scaling aspect as defined in ETSI GS NFV-IFA 013. Either scale_ns_by_steps_data or scale_ns_to_level_data shall be provided.
+            required: false
+          scale_ns_to_level_data:
+            type: tosca.datatypes.nfv.scaleNsToLevelData
+            description: Describes the information needed to scale an NS instance to a target size as defined in ETSI GS NFV-IFA 013. Either scale_ns_by_steps_data or scale_ns_to_level_data shall be provided.
+            required: false          
+      scale_end:
+        description: Postamble to the execution of the scale operation
+      heal_start:
+        description: Preamble to execution of the heal operation
+      heal:
+        description: Base procedure for healing an NS, corresponding to the Heal NS operation defined in ETSI GS NFV-IFA 013.
+        # inputs:
+          # additional_parameters:
+          #   type: tosca.datatypes.nfv.NsOperationAdditionalParameters
+          #   required: false 
+      heal_end:
+        description: Postamble to the execution of the heal operation
+        
+  tosca.interfaces.nfv.NsVnfIndicator:
+    derived_from: tosca.interfaces.Root
+    description: This interface is an empty base interface type for deriving NS specific interface types that include VNF indicator specific notifications which will be used in a NS.
 
-group_types:
-  tosca.groups.nfv.PlacementGroup:
-    derived_from: tosca.groups.Root
-    description: PlacementGroup is used for describing the affinity or anti-affinity relationship applicable between VNF instances created using different VNFDs, the Virtual Link instances created using different VLDs or the nested NS instances created using different NSDs
-    properties:
-      description:
-        type: string
-        description: Human readable description of the group
-        required: true
-    members: [ tosca.nodes.nfv.VNF, tosca.nodes.nfv.NsVirtualLink, tosca.nodes.nfv.NS ]
-  
 node_types:
   tosca.nodes.nfv.NS:
     derived_from: tosca.nodes.Root
     properties: 
       descriptor_id: 
-        type: string # GUID
+        type: string # UUID
         description: Identifier of this NS descriptor
         required: true
       designer:
@@ -143,9 +361,9 @@ node_types:
         type: string
         description: Provides the human readable name of the NSD.
         required: true
-      invariant_id:
+      invariant_id: # UUID
         type: string
-        description: Identifies an NSD in a version independent manner. This attribute is invariant across versions of NSD.
+        description: Identifies an NSD in a version independent manner. This attribute is invariant across versions of NSD
         required: true
       flavour_id:
         type: string
@@ -155,6 +373,24 @@ node_types:
         type: tosca.datatypes.nfv.NsProfile
         description: Specifies a profile of a NS, when this NS is used as nested NS within another NS.
         required: false
+      service_availability_level:
+        type: integer
+        description: Specifies the service availability level for the NS instance.
+        required: false
+        constraints:
+          - greater_or_equal: 1
+      priority:
+        type: integer
+        description: Specifies the priority for the NS instance. Examples for the usage of priority include conflict resolution in case of resource shortage.
+        required: false
+        constraints:
+          - greater_or_equal: 0
+    attributes:
+      scale_status:
+        type: map # key: aspectId
+        description: Scale status of the NS, one entry per aspect. Represents for every scaling aspect how "big" the NS has been scaled w.r.t. that aspect.
+        entry_schema:
+          type: integer
     requirements:
       - virtual_link:
           capability: tosca.capabilities.nfv.VirtualLinkable
@@ -172,14 +408,16 @@ node_types:
       - external_virtual_link:
           capability: tosca.capabilities.nfv.VirtualLinkable
           relationship: tosca.relationships.nfv.VirtualLinksTo
+          occurrences: [0, 1]
       - internal_virtual_link:
           capability: tosca.capabilities.nfv.VirtualLinkable
           relationship: tosca.relationships.nfv.VirtualLinksTo
+          occurrences: [1, 1]
 
   tosca.nodes.nfv.NsVirtualLink:
     derived_from: tosca.nodes.Root
     description: node definition of Virtual Links
-    properties:
+    properties: 
       vl_profile:
         type: tosca.datatypes.nfv.NsVlProfile # only covers min/max bitrate requirements
         description: Specifies instantiation parameters for a virtual link of a particular NS deployment flavour.

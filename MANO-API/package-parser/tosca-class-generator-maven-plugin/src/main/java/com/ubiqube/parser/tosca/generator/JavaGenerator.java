@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JClassAlreadyExistsException;
 import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JDefinedClass;
@@ -136,7 +137,6 @@ public class JavaGenerator {
 			}
 			generateToscaClass(entry.getKey(), entry.getValue());
 		}
-		// new File("src/generated/java").mkdirs();
 		codeModel.build(new File("src/generated/java"));
 	}
 
@@ -309,7 +309,7 @@ public class JavaGenerator {
 
 			Optional.ofNullable(val.getRequired())
 					.filter(Boolean.TRUE::equals)
-					.map(x -> field.annotate(NotNull.class));
+					.ifPresent(x -> field.annotate(NotNull.class));
 			// Jackson Constraint Annotate
 			field.annotate(JsonProperty.class).param(VALUE, entry.getKey());
 			if (val.getDef() != null) {
@@ -318,7 +318,6 @@ public class JavaGenerator {
 					field.init(Converters.convert(codeModel, val.getDef(), jType));
 				} else {
 					LOG.error("could not init the field {} of type {}", entry.getKey(), jType2);
-					// field.init(convert(val.getDef(), jType2.));
 				}
 
 			}
@@ -402,52 +401,59 @@ public class JavaGenerator {
 		}
 		final String type = valueObject.getType();
 		if ("list".equals(type)) {
-			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = Converters.convert(subType);
-			if (null != jTy) {
-				return codeModel.ref(List.class).narrow(jTy);
-			}
-			final JDefinedClass cached = cache.get(subType);
-			if (null != cached) {
-				return codeModel.ref(List.class).narrow(cached);
-			}
-			final DataType dType = root.getDataTypes().get(subType);
-			JType cl;
-			if (null != dType) {
-				cl = generateClassFromDataType(subType, dType);
-			} else {
-				cl = generateToscaClass(subType,
-						root.getNodeType().get(subType));
-			}
-			return codeModel.ref(List.class).narrow(cl);
+			return handleList(valueObject);
 		}
 		if ("map".equals(type)) {
-			final String subType = valueObject.getEntrySchema().getType();
-			final Class<?> jTy = Converters.convert(subType);
-			if (null != jTy) {
-				return codeModel.ref(Map.class).narrow(String.class, jTy);
-			}
-			final JDefinedClass cahed = cache.get(subType);
-			if (null != cahed) {
-				return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
-			}
-			// XXX
-			LOG.info("Map of {}", subType);
-			final DataType dType = root.getDataTypes().get(subType);
-			JType cl;
-			if (null != dType) {
-				cl = generateClassFromDataType(subType, dType);
-			} else {
-				cl = generateToscaClass(subType,
-						root.getNodeType().get(subType));
-			}
-			return codeModel.ref(Map.class).narrow(String.class).narrow(cl);
+			return handleMap(valueObject);
 		}
 		final DataType dType = root.getDataTypes().get(valueObject.getType());
 		if (null != dType) {
 			return generateClassFromDataType(valueObject.getType(), dType);
 		}
 		throw new ParseException("Bad type: " + valueObject);
+	}
+
+	private JType handleList(final ValueObject valueObject) {
+		final String subType = valueObject.getEntrySchema().getType();
+		final Class<?> jTy = Converters.convert(subType);
+		if (null != jTy) {
+			return codeModel.ref(List.class).narrow(jTy);
+		}
+		final JDefinedClass cached = cache.get(subType);
+		if (null != cached) {
+			return codeModel.ref(List.class).narrow(cached);
+		}
+		final DataType dType = root.getDataTypes().get(subType);
+		JType cl;
+		if (null != dType) {
+			cl = generateClassFromDataType(subType, dType);
+		} else {
+			cl = generateToscaClass(subType,
+					root.getNodeType().get(subType));
+		}
+		return codeModel.ref(List.class).narrow(cl);
+	}
+
+	private JClass handleMap(final ValueObject valueObject) {
+		final String subType = valueObject.getEntrySchema().getType();
+		final Class<?> jTy = Converters.convert(subType);
+		if (null != jTy) {
+			return codeModel.ref(Map.class).narrow(String.class, jTy);
+		}
+		final JDefinedClass cahed = cache.get(subType);
+		if (null != cahed) {
+			return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
+		}
+		LOG.info("Map of {}", subType);
+		final DataType dType = root.getDataTypes().get(subType);
+		JType cl;
+		if (null != dType) {
+			cl = generateClassFromDataType(subType, dType);
+		} else {
+			cl = generateToscaClass(subType,
+					root.getNodeType().get(subType));
+		}
+		return codeModel.ref(Map.class).narrow(String.class).narrow(cl);
 	}
 
 	private JPackage getPackage(final String key) {

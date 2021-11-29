@@ -48,24 +48,24 @@ public abstract class AbstractWalker implements ToscaListener {
 		onClassTerminate();
 		if (!stack.isEmpty()) {
 			final Context context = stack.pop();
-			LOG.debug("Poping context => {} restoring => {}", currentClassName, context.currentClassName);
-			currentClass = context.currentClass;
-			currentField = context.currentField;
-			currentClassName = context.currentClassName;
+			LOG.debug("Poping context => {} restoring => {}", currentClassName, context.lCurrentClassName);
+			currentClass = context.lCurrentClass;
+			currentField = context.lCurrentField;
+			currentClassName = context.lCurrentClassName;
 		}
 	}
 
 	protected abstract void onClassTerminate();
 
 	class Context {
-		protected JDefinedClass currentClass = null;
-		protected JFieldVar currentField;
-		protected String currentClassName;
+		protected JDefinedClass lCurrentClass = null;
+		protected JFieldVar lCurrentField;
+		protected String lCurrentClassName;
 
-		public Context(final JDefinedClass _currentClass, final JFieldVar _currentField, final String _currentClassName) {
-			currentClass = _currentClass;
-			currentField = _currentField;
-			currentClassName = _currentClassName;
+		public Context(final JDefinedClass currentClass, final JFieldVar currentField, final String currentClassName) {
+			this.lCurrentClass = currentClass;
+			this.lCurrentField = currentField;
+			this.lCurrentClassName = currentClassName;
 		}
 	}
 }

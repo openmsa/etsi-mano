@@ -27,6 +27,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
+import com.ubiqube.parser.tosca.ParseException;
+
 @Mojo(name = "tosca-class-generator", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class ClassGeneratorMojo extends AbstractMojo {
 
@@ -66,6 +68,7 @@ public class ClassGeneratorMojo extends AbstractMojo {
 		if (objectOrNull == null) {
 			getLog().error(
 					"Found null '" + objectName + "', implying that Maven @Component injection was not done properly.");
+			throw new ParseException("");
 		}
 		return objectOrNull;
 	}

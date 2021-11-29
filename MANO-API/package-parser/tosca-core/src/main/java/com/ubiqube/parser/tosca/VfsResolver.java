@@ -49,7 +49,7 @@ public class VfsResolver extends Resolver {
 			return null;
 		}
 		imported.add(url);
-		LOG.info("Resolving: {} from: {}", url, parent.toString());
+		LOG.info("Resolving: {} from: {}", url, parent);
 		if (isUrl(url)) {
 			return super.getContent(url);
 		}
@@ -69,7 +69,7 @@ public class VfsResolver extends Resolver {
 		return res.find();
 	}
 
-	public void setParent(final FileObject _parent) {
-		parent = _parent;
+	public void setParent(final FileObject parent) {
+		this.parent = parent;
 	}
 }

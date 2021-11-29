@@ -16,17 +16,21 @@
  */
 package com.ubiqube.parser.tosca;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.parser.tosca.generator.JavaWalker;
 import com.ubiqube.parser.tosca.generator.ToscaWalker;
 
-public class JavaWalkerTest {
+class JavaWalkerTest {
 
+	@SuppressWarnings({ "unused", "static-method" })
 	@Test
 	void testName() throws Exception {
 		final JavaWalker jw = new JavaWalker("target/tmp");
 		final ToscaWalker tw = new ToscaWalker();
 		tw.generate("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml", jw);
+		assertTrue(true);
 	}
 }

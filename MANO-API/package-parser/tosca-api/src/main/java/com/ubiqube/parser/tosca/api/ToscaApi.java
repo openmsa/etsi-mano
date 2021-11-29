@@ -43,7 +43,7 @@ public class ToscaApi {
 	/**
 	 * Constructor.
 	 */
-	public ToscaApi() {
+	private ToscaApi() {
 		// Nothing.
 	}
 
@@ -55,8 +55,8 @@ public class ToscaApi {
 	 * @param destination Destination class.
 	 * @return A List of populated object.
 	 */
-	public <T> List<T> getObjects(final ToscaContext root, final Map<String, String> parameters, final Class<T> destination) {
-		final List<NodeTemplate> nodes = getNodeMatching(root, parameters, destination);
+	public static <T> List<T> getObjects(final ToscaContext root, final Map<String, String> parameters, final Class<T> destination) {
+		final List<NodeTemplate> nodes = getNodeMatching(root, destination);
 		final ContextResolver contextResolver = new ContextResolver(root, parameters);
 		if (!nodes.isEmpty()) {
 			return contextResolver.mapToscaToClass(nodes, destination);
@@ -121,8 +121,7 @@ public class ToscaApi {
 	 * @param destination Target class.
 	 * @return A list of {@link NodeTemplate}.
 	 */
-	public <T> List<NodeTemplate> getNodeMatching(final ToscaContext root, final Map<String, String> parameters, final Class<T> destination) {
-		final ContextResolver contextResolver = new ContextResolver(root, parameters);
+	private static <T> List<NodeTemplate> getNodeMatching(final ToscaContext root, final Class<T> destination) {
 		final String clazzname = destination.getName();
 		return root.getTopologies()
 				.getNodeTemplate()
@@ -131,7 +130,6 @@ public class ToscaApi {
 				.filter(x -> root.isAssignableFor(x.getValue().getType(), clazzname))
 				.map(x -> {
 					final NodeTemplate val = x.getValue();
-					// val.setName(contextResolver.resolvValue(x.getKey(), ScriptingValue.class));
 					val.setName(x.getKey());
 					return val;
 				})

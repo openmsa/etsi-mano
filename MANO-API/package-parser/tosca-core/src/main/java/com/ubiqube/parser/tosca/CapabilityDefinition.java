@@ -19,6 +19,7 @@ package com.ubiqube.parser.tosca;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ubiqube.parser.tosca.deserializer.CapabilityDeserializer;
 
@@ -28,7 +29,8 @@ public class CapabilityDefinition {
 	private String description;
 	private ToscaProperties properties;
 	private Map<String, ValueObject> attributes;
-	private List<String> valid_source_types;
+	@JsonProperty("valid_source_types")
+	private List<String> validSourceTypes;
 	private Occurrences occurrences;
 
 	public String getType() {
@@ -63,12 +65,12 @@ public class CapabilityDefinition {
 		this.attributes = attributes;
 	}
 
-	public List<String> getValid_source_types() {
-		return valid_source_types;
+	public List<String> getValidSourceTypes() {
+		return validSourceTypes;
 	}
 
-	public void setValid_source_types(final List<String> valid_source_types) {
-		this.valid_source_types = valid_source_types;
+	public void setValidSourceTypes(final List<String> validSourceTypes) {
+		this.validSourceTypes = validSourceTypes;
 	}
 
 	public Occurrences getOccurrences() {

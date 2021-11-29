@@ -39,8 +39,6 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.el.ELManager;
-
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +51,6 @@ import com.ubiqube.parser.tosca.scalar.Frequency;
 import com.ubiqube.parser.tosca.scalar.Size;
 import com.ubiqube.parser.tosca.scalar.Time;
 
-import tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements;
 import tosca.groups.nfv.PlacementGroup;
 import tosca.nodes.Compute;
 import tosca.nodes.nfv.VNF;
@@ -72,7 +69,7 @@ import tosca.policies.nfv.VduScalingAspectDeltas;
 import tosca.policies.nfv.VirtualLinkBitrateInitialDelta;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class ToscaApiTest {
+class ToscaApiTest {
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaApiTest.class);
 
 	private final ConvertApi conv = new ConvertApi();
@@ -93,85 +90,50 @@ public class ToscaApiTest {
 		complex.add(Time.class);
 	}
 
-	void testGetFilesOpenTosca() throws Exception {
+	@SuppressWarnings("static-method")
+	void testGetFilesOpenTosca() {
 		final ToscaParser toscaParser = new ToscaParser(new File("src/test/resources/msa-api_w1-wip1.csar"));
 		final ToscaContext root = toscaParser.getContext();
 	}
 
 	// @Test
-	void testName() throws Exception {
+	void testName() {
 		final ToscaParser tp = new ToscaParser(new File("src/test/resources/web_mysql_tosca.yaml"));
 		final ToscaContext root = tp.getContext();
-		final ToscaApi toscaApi = new ToscaApi();
-		final List<Compute> res = toscaApi.getObjects(root, parameters, Compute.class);
+		final List<Compute> res = ToscaApi.getObjects(root, parameters, Compute.class);
 		System.out.println("" + res);
 	}
 
 	@Test
-	public void testUbiCsar() throws Exception {
+	void testUbiCsar() throws Exception {
 		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 		final ToscaParser tp = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = tp.getContext();
-		final ToscaApi toscaApi = new ToscaApi();
-		final List<tosca.nodes.nfv.vdu.Compute> res = toscaApi.getObjects(root, parameters, tosca.nodes.nfv.vdu.Compute.class);
-		assertEquals(2, res.size());
-		checknull(res.get(0));
-		final List<VirtualBlockStorage> list = toscaApi.getObjects(root, parameters, VirtualBlockStorage.class);
-		assertEquals(1, list.size());
-		checknull(list.get(0));
-		final List<VirtualObjectStorage> vos = toscaApi.getObjects(root, parameters, VirtualObjectStorage.class);
-		assertEquals(1, vos.size());
-		checknull(vos.get(0));
-		final List<VnfVirtualLink> listVl = toscaApi.getObjects(root, parameters, VnfVirtualLink.class);
-		assertEquals(3, listVl.size());
-		checknull(listVl.get(0));
-		final List<VduCp> listVduCp = toscaApi.getObjects(root, parameters, VduCp.class);
-		assertEquals(4, listVduCp.size());
-		checknull(listVduCp.get(0));
-		final List<PlacementGroup> listPg = toscaApi.getObjects(root, parameters, PlacementGroup.class);
-		assertEquals(1, listPg.size());
-		checknull(listPg.get(0));
-		final List<VduInstantiationLevels> listvduIl = toscaApi.getObjects(root, parameters, VduInstantiationLevels.class);
-		assertEquals(1, listvduIl.size());
-		checknull(listvduIl.get(0));
-		final List<VnfExtCp> listExtCp = toscaApi.getObjects(root, parameters, VnfExtCp.class);
-		assertEquals(1, listExtCp.size());
-		testVnfExtCp(listExtCp.get(0));
-		checknull(listExtCp.get(0));
-		System.out.println("" + ELManager.class);
 
-		testToscaClass(toscaApi, 1, root, parameters, VNF.class);
-		testToscaClass(toscaApi, 2, root, parameters, ScalingAspects.class);
-		testToscaClass(toscaApi, 2, root, parameters, VduInitialDelta.class);
-		testToscaClass(toscaApi, 2, root, parameters, VduScalingAspectDeltas.class);
-		testToscaClass(toscaApi, 1, root, parameters, SecurityGroupRule.class);
-		testToscaClass(toscaApi, 1, root, parameters, SupportedVnfInterface.class);
-		testToscaClass(toscaApi, 1, root, parameters, AffinityRule.class);
-		testToscaClass(toscaApi, 1, root, parameters, VirtualLinkBitrateInitialDelta.class);
-		testToscaClass(toscaApi, 2, root, parameters, tosca.nodes.nfv.vdu.Compute.class);
+		testToscaClass(1, root, parameters, VirtualBlockStorage.class);
+		testToscaClass(1, root, parameters, VirtualObjectStorage.class);
+		testToscaClass(3, root, parameters, VnfVirtualLink.class);
+		testToscaClass(4, root, parameters, VduCp.class);
+		testToscaClass(1, root, parameters, PlacementGroup.class);
+		testToscaClass(1, root, parameters, VduInstantiationLevels.class);
+		testToscaClass(1, root, parameters, VnfExtCp.class);
+		testToscaClass(1, root, parameters, VNF.class);
+		testToscaClass(2, root, parameters, ScalingAspects.class);
+		testToscaClass(2, root, parameters, VduInitialDelta.class);
+		testToscaClass(2, root, parameters, VduScalingAspectDeltas.class);
+		testToscaClass(1, root, parameters, SecurityGroupRule.class);
+		testToscaClass(1, root, parameters, SupportedVnfInterface.class);
+		testToscaClass(1, root, parameters, AffinityRule.class);
+		testToscaClass(1, root, parameters, VirtualLinkBitrateInitialDelta.class);
+		testToscaClass(2, root, parameters, tosca.nodes.nfv.vdu.Compute.class);
 	}
 
-	private List<?> testToscaClass(final ToscaApi toscaApi, final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<?> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {
-		final List<?> listVsad = toscaApi.getObjects(root, parameters, clazz);
+	private List<?> testToscaClass(final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<?> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {
+		final List<?> listVsad = ToscaApi.getObjects(root, parameters, clazz);
 		assertEquals(i, listVsad.size());
 		checknull(listVsad.get(0));
-//		final Set<?> violations = ToscaApi.validate(listVsad.get(0));
-//		if (!violations.isEmpty()) {
-//			violations.forEach(x -> {
-//				LOG.error("{}", x);
-//			});
-//			assertTrue(false);
-//		}
 		return listVsad;
-	}
-
-	private static void testVnfExtCp(final VnfExtCp vnfExtCp) {
-		assertEquals("ext01", vnfExtCp.getInternalName());
-		final List<VirtualNetworkInterfaceRequirements> vnirs = vnfExtCp.getVirtualNetworkInterfaceRequirements();
-		assertEquals(1, vnirs.size());
-		final VirtualNetworkInterfaceRequirements vnir = vnirs.get(0);
-		assertEquals("vl01", vnir.getName());
 	}
 
 	protected void assertFullEqual(final Object orig, final Object tgt, final Set<String> ignore, final Deque<String> stack) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
