@@ -48,7 +48,6 @@ public abstract class AbstractPackageReader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractPackageReader.class);
 
-	private final ToscaApi toscaApi;
 	private final ToscaContext root;
 	private final MapperFacade mapper;
 
@@ -58,7 +57,6 @@ public abstract class AbstractPackageReader {
 		final File tempFile = PkgUtils.fetchData(data);
 		toscaParser = new ToscaParser(tempFile);
 		root = toscaParser.getContext();
-		toscaApi = new ToscaApi();
 		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 		additionalMapping(mapperFactory);
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
@@ -73,7 +71,7 @@ public abstract class AbstractPackageReader {
 	@SuppressWarnings("null")
 	@Nonnull
 	protected <T, U> Set<U> getSetOf(final Class<T> toscaClass, final Class<U> to, final Map<String, String> parameters) {
-		final List<T> list = toscaApi.getObjects(root, parameters, toscaClass);
+		final List<T> list = ToscaApi.getObjects(root, parameters, toscaClass);
 		LOG.debug("Found {} {} node in TOSCA model", list.size(), toscaClass.getSimpleName());
 		return list.stream()
 				.map(x -> mapper.map(x, to))
@@ -82,7 +80,7 @@ public abstract class AbstractPackageReader {
 
 	@Nonnull
 	protected <T> Set<T> getSetOf(final Class<T> toscaClass, final Map<String, String> parameters) {
-		final List<T> list = toscaApi.getObjects(root, parameters, toscaClass);
+		final List<T> list = ToscaApi.getObjects(root, parameters, toscaClass);
 		LOG.debug("Found {} {} node in TOSCA model", list.size(), toscaClass.getSimpleName());
 		return list.stream()
 				.collect(Collectors.toSet());
@@ -91,14 +89,14 @@ public abstract class AbstractPackageReader {
 	@SuppressWarnings("null")
 	@Nonnull
 	protected <T, U> List<U> getListOf(final Class<T> toscaClass, final Class<U> to, final Map<String, String> parameters) {
-		final List<T> obj = toscaApi.getObjects(root, parameters, toscaClass);
+		final List<T> obj = ToscaApi.getObjects(root, parameters, toscaClass);
 		return mapper.mapAsList(obj, to);
 	}
 
 	@SuppressWarnings("null")
 	@Nonnull
 	protected <U> List<U> getObjects(final Class<U> toscaClass, final Map<String, String> parameters) {
-		return toscaApi.getObjects(root, parameters, toscaClass);
+		return ToscaApi.getObjects(root, parameters, toscaClass);
 	}
 
 	@Nonnull
