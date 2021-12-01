@@ -29,23 +29,22 @@ public class ZipUtil {
 	}
 
 	public static void makeToscaZip(final String dest, final Entry... toscaFile) throws IOException {
-		final FileOutputStream fos = new FileOutputStream(dest);
+		try (FileOutputStream fos = new FileOutputStream(dest)) {
+			try (ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+				for (final Entry srcFile : toscaFile) {
+					try (InputStream is = ZipUtil.class.getClassLoader().getResourceAsStream(srcFile.classPath)) {
+						final ZipEntry zipEntry = new ZipEntry(srcFile.zipName);
+						zipOut.putNextEntry(zipEntry);
 
-		final ZipOutputStream zipOut = new ZipOutputStream(fos);
-		for (final Entry srcFile : toscaFile) {
-			final InputStream is = ZipUtil.class.getClassLoader().getResourceAsStream(srcFile.classPath);
-			final ZipEntry zipEntry = new ZipEntry(srcFile.zipName);
-			zipOut.putNextEntry(zipEntry);
-
-			final byte[] bytes = new byte[1024];
-			int length;
-			while ((length = is.read(bytes)) >= 0) {
-				zipOut.write(bytes, 0, length);
+						final byte[] bytes = new byte[1024];
+						int length;
+						while ((length = is.read(bytes)) >= 0) {
+							zipOut.write(bytes, 0, length);
+						}
+					}
+				}
 			}
-			is.close();
 		}
-		zipOut.close();
-		fos.close();
 	}
 
 	public static class Entry {

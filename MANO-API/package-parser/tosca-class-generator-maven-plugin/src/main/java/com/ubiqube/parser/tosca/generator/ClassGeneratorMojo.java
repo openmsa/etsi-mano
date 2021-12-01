@@ -47,7 +47,7 @@ public class ClassGeneratorMojo extends AbstractMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Starting class generation using: " + file);
-		final JavaWalker jw = new JavaWalker(outputDirectory.getAbsolutePath());
+		final JavaPoetWalker jw = new JavaPoetWalker(outputDirectory.getAbsolutePath());
 		final ToscaWalker tw = new ToscaWalker();
 		tw.generate(file.getAbsolutePath(), jw);
 		try {
