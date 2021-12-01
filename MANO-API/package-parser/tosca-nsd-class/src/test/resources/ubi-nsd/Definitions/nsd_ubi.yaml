@@ -27,8 +27,13 @@ topology_template:
           min_number_of_instances: 1
           max_number_of_instances: 1
           flavour_id: flavor02
+        service_availability_level: 1
+        priority: 1
+        scale_status: # This is a capabilities not a properties.
+          level1: 1
       requirements:
-        #- virtual_link: # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link: 
+            node: vl # tosca.nodes.nfv.NsVirtualLink
 
 
     ubiqube:
@@ -53,16 +58,37 @@ topology_template:
             root: 200
             leaf: 400
           qos: # tosca.datatypes.nfv.NsVirtualLinkQos
+            latency: 10 s
+            packet_delay_variation: 1s
+            packet_loss_ratio: 0.001
             priority: 0
-          service_availability: # tosca.datatypes.nfv.ServiceAvailability
-            level: level1
+          service_availability_level: 1
+          virtual_link_protocol_data: # list<tosca.datatypes.nfv.NsVirtualLinkProtocolData>
+            - associated_layer_protocol: mpls
+              l2_protocol_data: # tosca.datatypes.nfv.NsL2ProtocolData
+                name: name
+                network_type: vxlan
+                vlan_transparent: false
+                mtu: 1400
+                segmentation_id: vlan0
+              l3_protocol_data: # tosca.datatypes.nfv.NsL3ProtocolData
+                name: l3
+                ip_version: ipv4
+                cidr: 0.0.0.0
+                ip_allocation_pools: # List<tosca.datatypes.nfv.NsIpAllocationPool>
+                  - start_ip_address: 1.1.1.1
+                    end_ip_address: 2.2.2.2
         connectivity_type: # tosca.datatypes.nfv.ConnectivityType
           layer_protocols:
             - ipv4
           flow_pattern: mesh
-        test_access:
+        test_access: # valid_values: [ passive_monitoring, active_loopback ]
           - test
-  
+      capabilities:
+        virtual_linkable: # tosca.capabilities.nfv.VirtualLinkable
+      requirements:
+        - virtual_link: 
+            node: vl # tosca.nodes.nfv.NsVirtualLink
   
   
     sap01:
@@ -85,8 +111,10 @@ topology_template:
                   number_of_ip_address: 10
         trunk_mode: false
       requirements:
-        # - external_virtual_link:
-        # - internal_virtual_link: # Must be defined
+        - external_virtual_link:
+            node: public
+        - internal_virtual_link: # Must be defined
+            node: public
 
     nfp_position_element:
       type: tosca.nodes.nfv.NfpPositionElement
@@ -170,14 +198,113 @@ policies:
           value: string
       targets: # tosca.nodes.nfv.NFP
 
+  monitoring_rule:
+    type: tosca.policies.nfv.NsMonitoring
+    properties:
+      ns_monitoring_parameters: # map tosca.datatypes.nfv.NsMonitoringParameter
+        mon_name:
+          name: name
+          performance_metric: byte_incoming_sap
+          collection_period: 60 s
+    targets: # tosca.nodes.nfv.NS
+
+  vnf_mon:
+    type: tosca.policies.nfv.VnfMonitoring
+    properties:
+      vnf_monitoring_parameters: # map tosca.datatypes.nfv.VnfMonitoringParameter
+        vnf_mon:
+          name: name
+
+  ns_scaling_aspect:
+    type: tosca.policies.nfv.NsScalingAspects
+    properties:
+      aspects: # map tosca.datatypes.nfv.NsScalingAspect
+        an_aspect:
+          name: an another name
+          description: descr
+          ns_scale_levels:
+            1: # map<Integer, tosca.datatypes.nfv.NsLevels> 
+              description: descr
+
+  vnf_to_level_map:
+    type: tosca.policies.nfv.VnfToLevelMapping
+    properties:
+      aspect: aspect
+      number_of_instances: # map<Integer, Integer>
+        1: 2
+        2: 1
+    targets: # [ tosca.nodes.nfv.VNF ]
+
+  ns_to_level_map:
+    type: tosca.policies.nfv.NsToLevelMapping
+    properties:
+      aspect: name
+      number_of_instances: # map<Integer, Integer>
+        1: 3
+        2: 4
+    targets: # [ tosca.nodes.nfv.NS ]
+
+  virt_link_mapping:
+    type: tosca.policies.nfv.VirtualLinkToLevelMapping
+    properties:
+      aspect: aspect
+      bit_rate_requirements: # map<Integer, tosca.datatypes.nfv.LinkBitrateRequirements>
+        1:
+          root: 12
+          leaf: 34
+    targets: # [ tosca.nodes.nfv.NsVirtualLink ]
+
+  ns instantiation_level:
+    type: tosca.policies.nfv.NsInstantiationLevels
+    properties:
+      ns_levels: # map<tosca.datatypes.nfv.NsLevels>
+        level:
+          description: descr
+
+  vnf_to_inst_level:
+    type: tosca.policies.nfv.VnfToInstantiationLevelMapping
+    properties:
+      number_of_instances: # map<String, Integer>
+        inst_lvl: 5
+    targets: #[ tosca.nodes.nfv.VNF ]
+
+  ns_to_inst_level:
+    type: tosca.policies.nfv.NsToInstantiationLevelMapping
+    properties:
+      number_of_instances: # map<String, Integer>
+        inst_lvl: 2
+    targets: #[ tosca.nodes.nfv.NS ]
+
+  vl_to_inst:
+    type: tosca.policies.nfv.VirtualLinkToInstantiationLevelMapping
+    properties:
+      bit_rate_requirements: # map<String, tosca.datatypes.nfv.LinkBitrateRequirements>
+        inst_lvl:
+          root: 34
+          leaf: 45
+
+  auto_scale:
+    type: tosca.policies.nfv.NsAutoScale
+    properties:
+    targets: #[ tosca.nodes.nfv.NS ]
+
 
 group_types:
   vnfgg:
     type: tosca.groups.nfv.VNFFG
     properties:
       description: descr
-    members:
+    members: # [ tosca.nodes.nfv.NFP, tosca.nodes.nfv.VNF, tosca.nodes.nfv.PNF, tosca.nodes.nfv.NS, tosca.nodes.nfv.NsVirtualLink, tosca.nodes.nfv.NfpPositionElement ]
       - one
       - two
+
+  placement_group:
+    tpye: tosca.groups.nfv.NsPlacementGroup
+    properties:
+      description: descr.
+
+
+
+
 
 
