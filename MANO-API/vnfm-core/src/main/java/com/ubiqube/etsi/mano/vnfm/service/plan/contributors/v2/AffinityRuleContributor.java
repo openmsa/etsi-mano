@@ -64,7 +64,7 @@ public class AffinityRuleContributor extends AbstractContributorV2Base<AffinityR
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(blueprint.getVnfInstance());
 		}
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final VnfInstance vnfInstance = vnfInstanceGatewayService.findById(blueprint.getInstance().getId());
 		final List<AffinityRuleVt> ret = new ArrayList<>();
 		vnfPackage.getAffinityRules().forEach(x -> {

@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.service.plan.contributors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -83,7 +82,8 @@ public class NsdConributor extends AbstractNsContributor {
 					sap.setNsdId(inst.getId());
 					sap.setChangeType(ChangeType.ADDED);
 					return sap;
-				}).collect(Collectors.toList());
+				}).map(NsTask.class::cast)
+				.toList();
 	}
 
 	private List<NsTask> doTerminate(NsdInstance instance) {

@@ -8,7 +8,7 @@
  *
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     MERCHANTABILITY or FITNESS FOR A RRTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
  *
  *     You should have received a copy of the GNU General Public License
@@ -44,16 +44,16 @@ import com.ubiqube.etsi.mano.service.vim.node.Start;
  *
  * @param <U>
  * @param <P>
- * @param <PA> Parameters.
+ * @param <R> Parameters.
  * @param <B>
  */
-public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? extends Instance>> {
+public abstract class Planner<U extends Task, P, R, B extends Blueprint<U, ? extends Instance>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 
-	private final List<? extends PlanContributor<P, B, U, PA>> planContributors;
+	private final List<? extends PlanContributor<P, B, U, R>> planContributors;
 
-	protected Planner(final List<? extends PlanContributor<P, B, U, PA>> contributor) {
+	protected Planner(final List<? extends PlanContributor<P, B, U, R>> contributor) {
 		planContributors = contributor;
 	}
 
@@ -81,14 +81,14 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 	}
 
 	private void contribute(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final Class<? extends Node> node) {
-		final List<PlanContributor<P, B, U, PA>> contributors = getContributors(node);
+		final List<PlanContributor<P, B, U, R>> contributors = getContributors(node);
 		LOG.debug("Contributors for node {} = {}", node, contributors);
 		blueprint.getTasks().addAll(contributors.stream()
 				.flatMap(x -> x.contribute(bundle, blueprint, scaling).stream())
 				.toList());
 	}
 
-	private List<PlanContributor<P, B, U, PA>> getContributors(final Class<? extends Node> node) {
+	private List<PlanContributor<P, B, U, R>> getContributors(final Class<? extends Node> node) {
 		// No toList.
 		return planContributors.stream().filter(x -> x.getContributionType() == node).collect(Collectors.toList());
 	}
@@ -97,14 +97,14 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 		return connections.stream().filter(x -> x.getSource() == class1).toList();
 	}
 
-	public ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> convertToExecution(final B blueprint, final ChangeType changeType) {
+	public ListenableGraph<UnitOfWork<U, R>, ConnectivityEdge<UnitOfWork<U, R>>> convertToExecution(final B blueprint, final ChangeType changeType) {
 		final Set<U> tasks = blueprint.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
-		final List<UnitOfWork<U, PA>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).toList();
+		final List<UnitOfWork<U, R>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).toList();
 		final WfConfiguration wfConfiguration = new WfConfiguration(planContributors);
 		wfConfiguration.getConfigurationGraph();
-		final ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> g = wfConfiguration.autoConnect(list);
+		final ListenableGraph<UnitOfWork<U, R>, ConnectivityEdge<UnitOfWork<U, R>>> g = wfConfiguration.autoConnect(list);
 		// Add start
-		final UnitOfWork<U, PA> root = getStartNode();
+		final UnitOfWork<U, R> root = getStartNode();
 		g.addVertex(root);
 		g.vertexSet().stream()
 				.filter(key -> g.incomingEdgesOf(key).isEmpty())
@@ -117,5 +117,5 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 		return g;
 	}
 
-	protected abstract UnitOfWork<U, PA> getStartNode();
+	protected abstract UnitOfWork<U, R> getStartNode();
 }

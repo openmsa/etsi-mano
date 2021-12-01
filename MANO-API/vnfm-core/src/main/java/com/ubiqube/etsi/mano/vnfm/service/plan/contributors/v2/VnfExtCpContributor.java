@@ -73,7 +73,7 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 			return doTerminatePlan(plan.getVnfInstance());
 		}
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(plan.getVnfInstance(), ExternalCpTask.class.getSimpleName());
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final List ret = new ArrayList<>();
 		vnfPackage.getVnfExtCp().stream().forEach(x -> {
 			if (!have(instances, x.getToscaName())) {

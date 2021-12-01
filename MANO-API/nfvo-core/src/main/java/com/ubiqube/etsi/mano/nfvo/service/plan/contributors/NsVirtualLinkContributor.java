@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.service.plan.contributors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -76,7 +75,8 @@ public class NsVirtualLinkContributor extends AbstractNsContributor {
 					nsVl.setChangeType(ChangeType.ADDED);
 					nsVl.setNsVirtualLink(x);
 					return nsVl;
-				}).collect(Collectors.toList());
+				}).map(NsTask.class::cast)
+				.toList();
 	}
 
 	private List<NsTask> doTerminate(NsdInstance instance) {

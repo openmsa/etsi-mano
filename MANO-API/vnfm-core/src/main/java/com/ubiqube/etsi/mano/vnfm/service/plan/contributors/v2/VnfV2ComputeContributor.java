@@ -77,7 +77,7 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(blueprint.getVnfInstance());
 		}
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final Instance vnfInstance = vnfInstanceServiceVnfm.findById(blueprint.getInstance().getId());
 		final Set<ScaleInfo> scaling = merge(blueprint, vnfInstance);
 		final List<ComputeVt> ret = new ArrayList<>();

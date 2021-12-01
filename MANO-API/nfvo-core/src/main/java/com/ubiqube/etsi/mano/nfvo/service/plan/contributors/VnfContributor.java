@@ -89,14 +89,13 @@ public class VnfContributor extends AbstractNsContributor {
 					final VnfInstance vnfmVnfInstance = vnfm.createVnfInstance(x, "VNF instance hold by: " + blueprint.getNsInstance().getId(), x.getId().toString());
 					final VnfInstance vnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
 					vnfInstance.setNsInstance(blueprint.getNsInstance());
-					// vnfInstance.setMetadata(metadata);
-					// vnfInstance.setVnfConfigurableProperties(vnfConfigurableProperties);
 					vnf.setVnfInstance(vnfInstance.getId().toString());
 					vnf.setAlias(nsPackageVnfPackage.getToscaName());
 					vnf.setToscaName(nsPackageVnfPackage.getToscaName());
 					// XXX Not sure about the profileId is.
 					return vnf;
-				}).collect(Collectors.toList());
+				}).map(NsTask.class::cast)
+				.toList();
 	}
 
 	private static Set<String> getNetworks(VnfPackage x) {

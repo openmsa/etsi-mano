@@ -63,7 +63,7 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 		if (PlanOperationType.TERMINATE == parameters.getOperation()) {
 			return doTerminatePlan(parameters.getVnfInstance());
 		}
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final Set<VnfVl> vls = vnfPackage.getVnfVl();
 		final List<NetWorkVt> ret = new ArrayList<>();
 		for (final VnfVl vnfVl : vls) {

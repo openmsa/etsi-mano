@@ -63,7 +63,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final List<StorageVt> ret = new ArrayList<>();
 		plan.getTasks().stream()
 				.filter(ComputeTask.class::isInstance)

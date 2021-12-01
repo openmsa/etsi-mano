@@ -8,7 +8,7 @@
  *
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     MERCHANTABILITY or FITNESS FOR A RRTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
  *
  *     You should have received a copy of the GNU General Public License
@@ -25,14 +25,14 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 
-public interface PlanContributor<P, B, U extends Task, PA> {
+public interface PlanContributor<P, B, U extends Task, R> {
 
 	Class<? extends Node> getContributionType();
 
 	// XXX: Why do we have a scaleInfo here ???
 	List<U> contribute(P bundle, B blueprint, Set<ScaleInfo> scaling);
 
-	List<UnitOfWork<U, PA>> convertTasksToExecNode(Set<U> tasks, B blueprint);
+	List<UnitOfWork<U, R>> convertTasksToExecNode(Set<U> tasks, B blueprint);
 
 	void getDependencies(DependencyBuilder dependencyBuilder);
 }

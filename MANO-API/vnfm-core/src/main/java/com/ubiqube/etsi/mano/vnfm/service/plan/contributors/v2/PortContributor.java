@@ -53,7 +53,7 @@ public class PortContributor extends AbstractContributorV2Base<ExternalCpTask, P
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final List<PortVt> ret = new ArrayList<>();
 		vnfPackage.getVnfExtCp().stream().forEach(x -> {
 			final Optional<VnfCompute> compute = vnfPackage.getVnfCompute().stream()
