@@ -33,7 +33,7 @@ import com.ubiqube.parser.tosca.api.ToscaApi;
 
 class ToscaParserTest {
 
-	/// TODO remote URL use some tosca 1.0 @Test
+	/// Remote URL use some tosca 1.0 @Test
 	@SuppressWarnings("static-method")
 	void testName() {
 		final ToscaParser tp = new ToscaParser(new File("src/test/resources/web_mysql_tosca.yaml"));
@@ -47,6 +47,7 @@ class ToscaParserTest {
 		ctx.mapPoliciesToClass(policies, Bean.class);
 	}
 
+	@SuppressWarnings("static-method")
 	@Test
 	void testToscaResolver() {
 		final ToscaParser tp = new ToscaParser(new File("src/test/resources/ubi-tosca/Definitions/tosca_ubi.yaml"));
@@ -61,7 +62,7 @@ class ToscaParserTest {
 		ctx.mapToscaToClass(nodes, Bean.class);
 	}
 
-	private List<NodeTemplate> gestNodes() {
+	private static List<NodeTemplate> gestNodes() {
 		final List<NodeTemplate> nodes = new ArrayList<>();
 		final NodeTemplate nt = new NodeTemplate();
 		final Map<String, Artifact> artifacts = new HashMap<>();
@@ -83,7 +84,7 @@ class ToscaParserTest {
 		return nodes;
 	}
 
-	private RequirementDefinition getRequirement() {
+	private static RequirementDefinition getRequirement() {
 		final Map<String, Requirement> reqMap = new HashMap<>();
 		return new RequirementDefinition(reqMap);
 	}

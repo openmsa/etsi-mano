@@ -20,10 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.parser.tosca.ZipUtil.Entry;
 import com.ubiqube.parser.tosca.csar.CsarParser;
 
 class CsarTest {
@@ -35,8 +37,30 @@ class CsarTest {
 	}
 
 	@SuppressWarnings("static-method")
-	void testGetFiles() {
-		final CsarParser csar = new CsarParser(new File("src/test/resources/csar_elk.csar"));
+	@Test
+	void testGetFiles() throws IOException {
+		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
+		final CsarParser csar = new CsarParser(new File("/tmp/ubi-tosca.csar"));
+		final List<?> list = csar.getFiles();
+		assertNotNull(list);
+		final String def = csar.getEntryDefinition();
+		assertNotNull(def);
+	}
+
+	@SuppressWarnings("static-method")
+	// There is some inputstream problem when 2 test are running.
+	void testGetElkFiles() throws IOException {
+		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar",
+				Entry.of("csar_elk/Definitions/collectd.yaml", "Definitions/collectd.yaml"),
+				Entry.of("csar_elk/Definitions/elasticsearch.yaml", "Definitions/elasticsearch.yaml"),
+				Entry.of("csar_elk/Definitions/kibana.yaml", "Definitions/kibana.yaml"),
+				Entry.of("csar_elk/Definitions/logstash.yaml", "Definitions/logstash.yaml"),
+				Entry.of("csar_elk/Definitions/paypalpizzastore_nodejs_app.yaml", "Definitions/paypalpizzastore_nodejs_app.yaml"),
+				Entry.of("csar_elk/Definitions/rsyslog.yaml", "Definitions/rsyslog.yaml"),
+				Entry.of("csar_elk/Definitions/tosca_elk.yaml", "Definitions/tosca_elk.yaml"),
+				Entry.of("csar_elk/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
+		final CsarParser csar = new CsarParser(new File("/tmp/ubi-tosca.csar"));
 		final List<?> list = csar.getFiles();
 		assertNotNull(list);
 	}
