@@ -111,14 +111,14 @@ public class JavaWalker extends AbstractWalker {
 	public void onDataTypeExtend(final String derivedFrom) {
 		JClass superClass = cache.get(derivedFrom);
 		if (null == superClass) {
-			superClass = codeModel.ref(getClassOf(ClassUtils.toscaToJava(derivedFrom)));
+			superClass = codeModel.ref(ClassUtils.getClassOf(ClassUtils.toscaToJava(derivedFrom)));
 		}
 		currentClass._extends(superClass);
 	}
 
 	@Override
 	public void startField(final String fieldName, final String type, final boolean multi) {
-		final Class<?> conv = Converters.convert(type);
+		final Class<?> conv = GenericConverters.convert(type);
 		JClass typ = null;
 		if (null == conv) {
 			typ = cache.get(type);
@@ -309,11 +309,11 @@ public class JavaWalker extends AbstractWalker {
 		if ("trigger".equals(type)) {
 			return codeModel.ref(TriggerDefinition.class);
 		}
-		final Class<?> conv = Converters.convert(valueObject.getType());
+		final Class<?> conv = GenericConverters.convert(valueObject.getType());
 		if (null != conv) {
 			return codeModel.ref(conv);
 		}
-		final Class<?> clazz = getExistingClass(valueObject.getType());
+		final Class<?> clazz = ClassUtils.getExistingClass(valueObject.getType());
 		if (null != clazz) {
 			return codeModel.ref(clazz);
 		}
@@ -322,7 +322,7 @@ public class JavaWalker extends AbstractWalker {
 
 	private JType handleMap(final ValueObject valueObject) {
 		final String subType = valueObject.getEntrySchema().getType();
-		final Class<?> jTy = Converters.convert(subType);
+		final Class<?> jTy = GenericConverters.convert(subType);
 		if (null != jTy) {
 			return codeModel.ref(Map.class).narrow(String.class, jTy);
 		}
@@ -330,12 +330,12 @@ public class JavaWalker extends AbstractWalker {
 		if (null != cahed) {
 			return codeModel.ref(Map.class).narrow(String.class).narrow(cahed);
 		}
-		return codeModel.ref(Map.class).narrow(String.class, getClassOf(subType));
+		return codeModel.ref(Map.class).narrow(String.class, ClassUtils.getClassOf(subType));
 	}
 
 	private JType handleList(final ValueObject valueObject) {
 		final String subType = valueObject.getEntrySchema().getType();
-		final Class<?> jTy = Converters.convert(subType);
+		final Class<?> jTy = GenericConverters.convert(subType);
 		if (null != jTy) {
 			return codeModel.ref(List.class).narrow(jTy);
 		}
@@ -346,23 +346,6 @@ public class JavaWalker extends AbstractWalker {
 		if (null != cached) {
 			return codeModel.ref(List.class).narrow(cached);
 		}
-		return codeModel.ref(List.class).narrow(getClassOf(subType));
-	}
-
-	private static Class<?> getClassOf(final String subType) {
-		try {
-			return Class.forName(subType);
-		} catch (final ClassNotFoundException e) {
-			throw new ParseException("Unknown subtype: " + subType, e);
-		}
-	}
-
-	private static Class<?> getExistingClass(final String type) {
-		try {
-			return Class.forName(type);
-		} catch (final ClassNotFoundException e) {
-			LOG.trace("", e);
-		}
-		return null;
+		return codeModel.ref(List.class).narrow(ClassUtils.getClassOf(subType));
 	}
 }

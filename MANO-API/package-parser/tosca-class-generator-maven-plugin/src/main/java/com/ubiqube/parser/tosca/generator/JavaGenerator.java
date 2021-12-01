@@ -415,7 +415,7 @@ public class JavaGenerator {
 
 	private JType handleList(final ValueObject valueObject) {
 		final String subType = valueObject.getEntrySchema().getType();
-		final Class<?> jTy = Converters.convert(subType);
+		final Class<?> jTy = GenericConverters.convert(subType);
 		if (null != jTy) {
 			return codeModel.ref(List.class).narrow(jTy);
 		}
@@ -436,7 +436,7 @@ public class JavaGenerator {
 
 	private JClass handleMap(final ValueObject valueObject) {
 		final String subType = valueObject.getEntrySchema().getType();
-		final Class<?> jTy = Converters.convert(subType);
+		final Class<?> jTy = GenericConverters.convert(subType);
 		if (null != jTy) {
 			return codeModel.ref(Map.class).narrow(String.class, jTy);
 		}
@@ -469,7 +469,7 @@ public class JavaGenerator {
 
 	private static Class<?> convert(final ValueObject valueObject) {
 		final String type = valueObject.getType();
-		return Converters.convert(type);
+		return GenericConverters.convert(type);
 	}
 
 }

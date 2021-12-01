@@ -344,7 +344,7 @@ public class ToscaWalker {
 
 	private void handleContainer(final ValueObject valueObject, final ToscaListener listener) {
 		final String subType = valueObject.getEntrySchema().getType();
-		final Class<?> jTy = Converters.convert(subType);
+		final Class<?> jTy = GenericConverters.convert(subType);
 		if (null != jTy) {
 			return;
 		}
@@ -399,7 +399,6 @@ public class ToscaWalker {
 			listener.onFieldAnnotate(JsonProperty.class, x);
 			listener.onFieldTerminate();
 		});
-
 	}
 
 	private void generateCaps(final ToscaListener listener, final Map<String, CapabilityDefinition> capabilities) {
