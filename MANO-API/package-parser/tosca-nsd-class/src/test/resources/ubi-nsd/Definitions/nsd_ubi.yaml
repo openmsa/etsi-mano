@@ -8,7 +8,6 @@ description: >
 
 imports:
   - etsi_nfv_sol001_nsd_types.yaml
-  - fix_ubiqube.yaml
 
 
 topology_template:
@@ -37,13 +36,10 @@ topology_template:
 
 
     ubiqube:
-      type: tosca.nodes.nfv.NsTopology
+      type: tosca.nodes.nfv.VNF
       properties:
         flavour_id: flavor01
-        vnfd_invariant:
-          - dcd11fbf-c767-41eb-abc9-cec35dd95bca
-        nested_nsd_invariant:
-          - 3b91b199-73a6-439d-b8f1-fb1fa236815e
+        descriptor_id: dcd11fbf-c767-41eb-abc9-cec35dd95bca
 
 
     vl01:
