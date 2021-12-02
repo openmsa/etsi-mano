@@ -36,8 +36,8 @@ import ma.glasnost.orika.MapperFactory;
 import tosca.datatypes.nfv.AddressData;
 import tosca.datatypes.nfv.NsVirtualLinkProtocolData;
 import tosca.nodes.nfv.NS;
-import tosca.nodes.nfv.NsTopology;
 import tosca.nodes.nfv.Sap;
+import tosca.nodes.nfv.VNF;
 import tosca.policies.nfv.SecurityGroupRule;
 
 /**
@@ -116,30 +116,27 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		return getSetOf(Sap.class, NsSap.class, userData);
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
 		final List<SecurityGroupRule> sgr = getObjects(SecurityGroupRule.class, userData);
 		return sgr.stream().map(x -> new SecurityGroupAdapter(getMapper().map(x, SecurityGroup.class), x.getTargets())).collect(Collectors.toSet());
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Set<String> getNestedNsd(final Map<String, String> userData) {
-		final List<NsTopology> sgr = getObjects(NsTopology.class, userData);
+		final List<NS> sgr = getObjects(NS.class, userData);
 		return sgr.stream()
-				.filter(x -> x.getNestedNsdInvariant() != null)
-				.flatMap(x -> x.getNestedNsdInvariant().stream())
+				.filter(x -> x.getDescriptorId() != null)
+				.map(NS::getDescriptorId)
 				.collect(Collectors.toSet());
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Set<String> getVnfd(final Map<String, String> userData) {
-		final List<NsTopology> sgr = getObjects(NsTopology.class, userData);
+		final List<VNF> sgr = getObjects(VNF.class, userData);
 		return sgr.stream()
-				.filter(x -> x.getVnfdInvariant() != null)
-				.flatMap(x -> x.getVnfdInvariant().stream()).collect(Collectors.toSet());
+				.filter(x -> x.getDescriptorId() != null)
+				.map(VNF::getDescriptorId).collect(Collectors.toSet());
 	}
 
 }
