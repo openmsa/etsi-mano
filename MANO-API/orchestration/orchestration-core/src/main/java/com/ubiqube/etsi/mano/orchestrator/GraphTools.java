@@ -43,7 +43,7 @@ public class GraphTools {
 
 	public static <U> ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> createGraph() {
 		// Vertex everyThing
-		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g = (ListenableGraph) (Object) new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
 		g.addGraphListener(new UnitOfWorkVertexListener<>());
 		return g;
 	}

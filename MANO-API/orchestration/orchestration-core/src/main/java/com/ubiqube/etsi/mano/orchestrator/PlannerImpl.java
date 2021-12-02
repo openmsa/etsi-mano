@@ -76,8 +76,8 @@ public class PlannerImpl<P, U, W> implements Planner<P, U, W> {
 
 	@Override
 	public PreExecutionGraph<W> makePlan(final Bundle bundle, final List<Class<? extends Node>> planConstituent, final P parameters) {
-		final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> createGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
-		final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> deleteGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
+		final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> createGraph = (ListenableGraph) (Object) new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
+		final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> deleteGraph = (ListenableGraph) (Object) new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
 		createGraph.addGraphListener(new VirtualTaskVertexListener<>());
 		deleteGraph.addGraphListener(new VirtualTaskVertexListener<>());
 		planConstituent.forEach(x -> {
@@ -136,7 +136,7 @@ public class PlannerImpl<P, U, W> implements Planner<P, U, W> {
 	}
 
 	private ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> createImplementation(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> gf) {
-		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> ng = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
+		final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> ng = (ListenableGraph) (Object) new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(ConnectivityEdge.class));
 		ng.addGraphListener(new UnitOfWorkVertexListener<>());
 		// First resolve implementation.
 		gf.vertexSet().forEach(x -> {
