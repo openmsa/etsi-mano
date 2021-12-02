@@ -2,18 +2,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ubiqube.mano</groupId>
+		<artifactId>mano-super-pom</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath/>
+	</parent>
 	<artifactId>etsi-sol012-341</artifactId>
 	<packaging>jar</packaging>
 	<name>etsi-sol012-331</name>
-	<repositories>
-		<repository>
-			<id>nexus</id>
-			<url>http://nexus2.ubiqube.com:8081/repository/maven-public/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
@@ -24,7 +21,6 @@
 			<url>http://nexus2.ubiqube.com:8081/repository/maven-releases/</url>
 		</repository>
 	</distributionManagement>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -93,9 +89,13 @@
 			<artifactId>orika-core</artifactId>
 		</dependency>
 	</dependencies>
-	<parent>
-		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<url>http://nexus2.ubiqube.com:8081/repository/maven-public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
