@@ -262,30 +262,36 @@ public class ContextResolver {
 		}
 	}
 
-	private static void handleRequirements(final Map<String, Requirement> requirements, final PropertyDescriptor[] propsDescr, final Object cls) {
-		requirements.forEach((x, y) -> {
-			// XXX I think it could be ONE of Node, caps, Link
-			final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
-			if (props != null) {
-				final Class<?> p = props.getPropertyType();
-				if (p.isAssignableFrom(List.class)) {
-					final List r = methodInvoke(props.getReadMethod(), cls);
-					if (null == r) {
-						final List l = new ArrayList<>();
-						final String value = y.getCapability();
-						Objects.nonNull(value);
-						l.add(value);
-						methodInvoke(props.getWriteMethod(), cls, l);
+	private static void handleRequirements(final List<Map<String, Requirement>> requirements, final PropertyDescriptor[] propsDescr, final Object cls) {
+		requirements.forEach(z -> {
+			z.forEach((x, y) -> {
+				// XXX I think it could be ONE of Node, caps, Link
+				final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
+				if (props != null) {
+					final Class<?> p = props.getPropertyType();
+					if (p.isAssignableFrom(List.class)) {
+						final List r = methodInvoke(props.getReadMethod(), cls);
+						handleReqList(r, y, cls, props);
 					} else {
-						final String value = y.getCapability();
-						Objects.nonNull(value);
-						r.add(value);
+						methodInvoke(props.getWriteMethod(), cls, y.getCapability());
 					}
-				} else {
-					methodInvoke(props.getWriteMethod(), cls, y.getCapability());
 				}
-			}
+			});
 		});
+	}
+
+	private static void handleReqList(final List list, final Requirement req, final Object cls, final PropertyDescriptor props) {
+		if (null == list) {
+			final List l = new ArrayList<>();
+			final String value = req.getCapability();
+			Objects.nonNull(value);
+			l.add(value);
+			methodInvoke(props.getWriteMethod(), cls, l);
+		} else {
+			final String value = req.getCapability();
+			Objects.nonNull(value);
+			list.add(value);
+		}
 	}
 
 	private static PropertyDescriptor getPropertyFor(final String x, final PropertyDescriptor[] propsDescr) {

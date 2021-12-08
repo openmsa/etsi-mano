@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -379,7 +380,8 @@ public class ToscaWalker {
 	}
 
 	private static void generateRequirements(final ToscaListener listener, final RequirementDefinition requirements) {
-		requirements.getRequirements().forEach((final String x, final Requirement y) -> {
+		final Map<String, Requirement> req = requirements.getRequirements().stream().flatMap(x -> x.entrySet().stream()).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+		req.forEach((final String x, final Requirement y) -> {
 			final String fieldName = fieldCamelCase(x + "_req");
 			LOG.debug("Forcing field Object");
 			listener.startField(fieldName, STRING, isList(y.getOccurrences()));

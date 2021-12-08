@@ -85,7 +85,7 @@ class ToscaParserTest {
 	}
 
 	private static RequirementDefinition getRequirement() {
-		final Map<String, Requirement> reqMap = new HashMap<>();
+		final List<Map<String, Requirement>> reqMap = new ArrayList<>();
 		return new RequirementDefinition(reqMap);
 	}
 

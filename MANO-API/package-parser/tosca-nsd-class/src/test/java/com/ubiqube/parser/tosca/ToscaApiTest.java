@@ -98,12 +98,13 @@ class ToscaApiTest {
 		testToscaClass(1, root, parameters, Sap.class);
 		testToscaClass(1, root, parameters, NFP.class);
 		testToscaClass(1, root, parameters, NfpRule.class);
-		testToscaClass(1, root, parameters, NfpPosition.class);
+		final List<NfpPosition> nfpos = testToscaClass(1, root, parameters, NfpPosition.class);
+		assertEquals(2, nfpos.get(0).getElementReq().size());
 		testToscaClass(2, root, parameters, NfpPositionElement.class);
 	}
 
-	private List<?> testToscaClass(final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<?> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {
-		final List<?> listVsad = ToscaApi.getObjects(root, parameters, clazz);
+	private <U> List<U> testToscaClass(final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<U> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {
+		final List<U> listVsad = ToscaApi.getObjects(root, parameters, clazz);
 		assertEquals(i, listVsad.size());
 		checknull(listVsad.get(0));
 		return listVsad;
