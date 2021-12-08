@@ -14,31 +14,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca.scalar;
+package com.ubiqube.parser.tosca.convert;
 
-import com.ubiqube.parser.tosca.ParseException;
+import com.ubiqube.parser.tosca.scalar.Range;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class Range {
-	long min;
-	long max;
-
-	public Range(final String value) {
-		final String[] arr = value.split("-");
-		if (arr.length != 2) {
-			throw new ParseException("Range must have two element " + value);
-		}
-		min = Long.parseLong(arr[0].trim());
-		max = Long.parseLong(arr[1].trim());
-	}
+public class RangeConverter implements Converter<Range> {
 
 	@Override
-	public String toString() {
-		return min + " - " + max;
+	public Range convert(final Object value) {
+		return new Range((String) value);
 	}
 
 }

@@ -60,7 +60,7 @@ public class RequirementDeserialization extends StdDeserializer<RequirementDefin
 		return new RequirementDefinition(reqMap);
 	}
 
-	private Map<String, Requirement> handle(final ObjectNode value, final ObjectCodec objectCodec) {
+	private static Map<String, Requirement> handle(final ObjectNode value, final ObjectCodec objectCodec) {
 		final Map<String, Requirement> reqMap = new HashMap<>();
 		final Iterator<Entry<String, JsonNode>> fields = value.fields();
 		while (fields.hasNext()) {

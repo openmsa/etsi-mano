@@ -31,16 +31,17 @@ topology_template:
         scale_status: # This is a capabilities not a properties.
           level1: 1
       requirements:
-        - virtual_link: 
-            node: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link: vl # tosca.nodes.nfv.NsVirtualLink
 
 
-    ubiqube:
+    vnf_1:
       type: tosca.nodes.nfv.VNF
       properties:
         flavour_id: flavor01
         descriptor_id: dcd11fbf-c767-41eb-abc9-cec35dd95bca
-
+      requirements:
+        - virtual_link: vl01
+        - virtual_link: vl02
 
     vl01:
       type: tosca.nodes.nfv.NsVirtualLink
@@ -83,8 +84,7 @@ topology_template:
       capabilities:
         virtual_linkable: # tosca.capabilities.nfv.VirtualLinkable
       requirements:
-        - virtual_link: 
-            node: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link: vl # tosca.nodes.nfv.NsVirtualLink
   
   
     sap01:
@@ -107,41 +107,61 @@ topology_template:
                   number_of_ip_address: 10
         trunk_mode: false
       requirements:
-        - external_virtual_link:
-            node: public
-        - internal_virtual_link: # Must be defined
-            node: public
+        - external_virtual_link: public
+        - internal_virtual_link: vl01
 
-    nfp_position_element:
+
+
+    # For VNF_1
+    element_1:  # Port pair? port pair group ?
       type: tosca.nodes.nfv.NfpPositionElement
       capabilities:
         forwarding: # tosca.capabilities.nfv.Forwarding
+          internal_name: test
       requirements:
-        - profile_element: forward_to
-
-
-    nfp_position:
+        - profile_element: 
+            node: VNF_1_forward_1
+            capability: forwarding
+        - profile_element: 
+            node: VNF_1_forward_2
+            capability: forwarding
+  
+    # For VNF_2
+    element_2:  # Port pair? port pair group ?
+      type: tosca.nodes.nfv.NfpPositionElement
+      requirements:
+        - profile_element: 
+            node: VNF_2_forward_3
+            capability: forwarding
+        - profile_element: 
+            node: VNF_2_forward_4
+            capability: forwarding
+  
+  
+    nfp_position_1:
       type: tosca.nodes.nfv.NfpPosition
       properties:
-        forwarding_behaviour: all
+        forwarding_behaviour: lb
       capabilities:
         forwarding: # tosca.capabilities.nfv.Forwarding
+          internal_name: test
       requirements:
-        - element: # tosca.nodes.nfv.NfpPositionElement
-
-
-    nfp:
+        - element: element_1 # tosca.nodes.nfv.NfpPositionElement
+        - element: element_2
+  
+    nfp_1:
       type: tosca.nodes.nfv.NFP
       requirements:
-        - nfp_position: # tosca.nodes.nfv.NfpPosition
-
+        - nfp_position: nfp_position_1
+        - nfp_position: nfp_position_2
+  
     forwarding:
       type: tosca.nodes.nfv.Forwarding
       capabilities:
         virtual_linkable: # tosca.capabilities.nfv.VirtualLinkable
         forwarding: # tosca.capabilities.nfv.Forwarding
       requirements:
-        - virtual_link:
+        - virtual_link: vl01
 
 
 policies:
@@ -173,26 +193,6 @@ policies:
     targets:
       - sap01
 
-
-  nfp_rule:
-    type: tosca.policies.nfv.NfpRule
-    properties:
-      ether_destination_address:
-      ether_source_address:
-      ether_type: ipv4
-      vlan_tag:
-        - srt
-        - str2
-      protocol:
-      dscp:
-      source_port_range: 0 - 22
-      source_ip_address_prefix:
-      destination_ip_address_prefix:
-      extended_criteria: # tosca.datatypes.nfv.Mask
-        - starting_point: 1
-          length: 7
-          value: string
-      targets: # tosca.nodes.nfv.NFP
 
   monitoring_rule:
     type: tosca.policies.nfv.NsMonitoring
@@ -300,6 +300,27 @@ group_types:
       description: descr.
 
 
+policies:
+  nfp_rule: # classifier
+    type: tosca.policies.nfv.NfpRule
+    properties:
+      destination_port_range: 1 - 4
+      ether_destination_address: 1.2.3.4
+      ether_source_address: 4.5.6.7
+      ether_type: ipv4
+      vlan_tag:
+        - srt
+        - str2
+      protocol: ipv4
+      dscp: a1234
+      source_port_range: 0 - 22
+      source_ip_address_prefix: 1.2.3
+      destination_ip_address_prefix: 2.3.4
+      extended_criteria: # tosca.datatypes.nfv.Mask
+        - starting_point: 1
+          length: 7
+          value: string
+      targets: [ nfp_1] # tosca.nodes.nfv.NFP
 
 
 

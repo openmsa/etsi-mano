@@ -51,9 +51,13 @@ import com.ubiqube.parser.tosca.scalar.Frequency;
 import com.ubiqube.parser.tosca.scalar.Size;
 import com.ubiqube.parser.tosca.scalar.Time;
 
+import tosca.nodes.nfv.NFP;
 import tosca.nodes.nfv.NS;
+import tosca.nodes.nfv.NfpPosition;
+import tosca.nodes.nfv.NfpPositionElement;
 import tosca.nodes.nfv.NsVirtualLink;
 import tosca.nodes.nfv.Sap;
+import tosca.policies.nfv.NfpRule;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 class ToscaApiTest {
@@ -92,8 +96,10 @@ class ToscaApiTest {
 		testToscaClass(1, root, parameters, NS.class);
 		testToscaClass(1, root, parameters, NsVirtualLink.class);
 		testToscaClass(1, root, parameters, Sap.class);
-		// testToscaClass(1, root, parameters, NfpPositionElement.class);
-		// NfpPositionElement
+		testToscaClass(1, root, parameters, NFP.class);
+		testToscaClass(1, root, parameters, NfpRule.class);
+		testToscaClass(1, root, parameters, NfpPosition.class);
+		testToscaClass(2, root, parameters, NfpPositionElement.class);
 	}
 
 	private List<?> testToscaClass(final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<?> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {

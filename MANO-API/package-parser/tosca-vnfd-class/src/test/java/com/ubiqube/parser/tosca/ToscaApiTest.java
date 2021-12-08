@@ -151,8 +151,7 @@ class ToscaApiTest {
 				LOG.warn("  - {} is null", methodDescriptor.getName());
 				continue;
 			}
-			if (src instanceof List) {
-				final List sl = (List) src;
+			if (src instanceof final List sl) {
 				final List dl = (List) dst;
 				assertNotNull(dl, "Target element is null for field: " + methodDescriptor.getName() + prettyStack(stack));
 				assertEquals(sl.size(), dl.size(), "List are not equals " + methodDescriptor.getName() + prettyStack(stack));

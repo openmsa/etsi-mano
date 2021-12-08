@@ -93,12 +93,11 @@ topology_template:
           compute_requirements: # map string
             req: requirement
           virtual_memory: # tosca.datatypes.nfv.VirtualMemory
-            properties:
-              virtual_mem_size: 512 MiB
-              virtual_mem_oversubscription_policy: what
-              vdu_mem_requirements:
-                read: openstack
-              numa_enabled: true
+            virtual_mem_size: 512 MiB
+            virtual_mem_oversubscription_policy: what
+            vdu_mem_requirements:
+              read: openstack
+            numa_enabled: true
           virtual_cpu: # tosca.datatypes.nfv.VirtualCpu
             cpu_architecture: x86_64
             num_virtual_cpu: 1

@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -55,10 +56,12 @@ import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.FloatConverter;
 import com.ubiqube.parser.tosca.convert.FrequencyConverter;
+import com.ubiqube.parser.tosca.convert.RangeConverter;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
 import com.ubiqube.parser.tosca.convert.TimeConverter;
 import com.ubiqube.parser.tosca.convert.VersionConverter;
 import com.ubiqube.parser.tosca.scalar.Frequency;
+import com.ubiqube.parser.tosca.scalar.Range;
 import com.ubiqube.parser.tosca.scalar.Size;
 import com.ubiqube.parser.tosca.scalar.Time;
 import com.ubiqube.parser.tosca.scalar.Version;
@@ -89,6 +92,7 @@ public class ContextResolver {
 		conv.register(Float.class.getCanonicalName(), new FloatConverter());
 		conv.register(Frequency.class.getCanonicalName(), new FrequencyConverter());
 		conv.register(Version.class.getCanonicalName(), new VersionConverter());
+		conv.register(Range.class.getCanonicalName(), new RangeConverter());
 	}
 
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
@@ -268,13 +272,17 @@ public class ContextResolver {
 					final List r = methodInvoke(props.getReadMethod(), cls);
 					if (null == r) {
 						final List l = new ArrayList<>();
-						l.add(y.getNode());
+						final String value = y.getCapability();
+						Objects.nonNull(value);
+						l.add(value);
 						methodInvoke(props.getWriteMethod(), cls, l);
 					} else {
-						r.add(y.getNode());
+						final String value = y.getCapability();
+						Objects.nonNull(value);
+						r.add(value);
 					}
 				} else {
-					methodInvoke(props.getWriteMethod(), cls, y.getNode());
+					methodInvoke(props.getWriteMethod(), cls, y.getCapability());
 				}
 			}
 		});

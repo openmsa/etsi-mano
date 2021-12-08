@@ -82,8 +82,7 @@ topology_template:
           aspectid: #
             scale_level: 1
       requirements:
-        - virtual_link: 
-            node: public
+        - virtual_link: public
 
 
 
@@ -119,10 +118,8 @@ topology_template:
               logical_node_requirements: #map
                 key: value
       requirements:
-        - external_virtual_link: 
-            node: public
-        - internal_virtual_link: 
-            node: leftVl01
+        - external_virtual_link: public
+        - internal_virtual_link: leftVl01
 
     leftVdu01:
       type: tosca.nodes.nfv.Vdu.Compute
@@ -182,8 +179,7 @@ topology_template:
             source_path: file://
             destination_path: /opt/
       requirements:
-        - virtual_storage:
-            node: block01
+        - virtual_storage: block01
       capabilities:
         virtual_binding: # List of tosca.capabilities.nfv.VirtualBindable
           internal_name: test
@@ -447,10 +443,8 @@ topology_template:
         trunk_binding: # tosca.capabilities.nfv.TrunkBindable
           internal_name: tb
       requirements:
-        - virtual_link:
-            node: leftVl01
-        - virtual_binding:
-            node: leftVdu01
+        - virtual_link: leftVl01
+        - virtual_binding: leftVdu01
 
     cpLc02:
       type: tosca.nodes.nfv.VduCp
@@ -468,10 +462,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: middleVl01
-        - virtual_binding:
-            node: leftVdu01
+        - virtual_link: middleVl01
+        - virtual_binding: leftVdu01
 
 
     cpRc01:
@@ -481,10 +473,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: rightVl01
-        - virtual_binding:
-            node: rightVdu01
+        - virtual_link: rightVl01
+        - virtual_binding: rightVdu01
 
     cpRc02:
       type: tosca.nodes.nfv.VduCp
@@ -493,10 +483,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: middleVl01
-        - virtual_binding:
-            node: rightVdu01
+        - virtual_link: middleVl01
+        - virtual_binding: rightVdu01
 
 
 
