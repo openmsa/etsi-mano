@@ -22,6 +22,9 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsNsd;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
+import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -41,8 +44,12 @@ public interface NsPackageProvider {
 	Set<SecurityGroupAdapter> getSecurityGroups(Map<String, String> userData);
 
 	@Nonnull
-	Set<String> getNestedNsd(final Map<String, String> userData);
+	Set<NsNsd> getNestedNsd(final Map<String, String> userData);
 
 	@Nonnull
-	Set<String> getVnfd(final Map<String, String> userData);
+	Set<NsVnf> getVnfd(final Map<String, String> userData);
+
+	@Nonnull
+	Set<VnffgDescriptor> getVnffg(Map<String, String> userData);
+
 }
