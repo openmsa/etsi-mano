@@ -58,7 +58,6 @@ public class NsTask extends AbstractTask {
 
 	@Override
 	public ScaleInfo getScaleInfo() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

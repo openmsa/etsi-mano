@@ -14,14 +14,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
+package com.ubiqube.etsi.mano.dao.mano.pkg;
 
-import java.util.Set;
-import java.util.UUID;
-
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.Embeddable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,18 +26,33 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Entity
+@Embeddable
 @Getter
 @Setter
-public class NsdTask extends NsTask {
+public class VnfProfile {
+	/**
+	 * Identifier of the instantiation level of the VNF DF to be used for
+	 * instantiation. If not present, the default instantiation level as declared in
+	 * the VNFD shall be used.
+	 */
+	private String instantiationLevel;
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Specifies the service availability level for the VNF instance created from
+	 * this profile.
+	 */
+	private Integer serviceAvailabilityLevel;
 
-	private UUID nsdId;
+	/**
+	 * Minimum number of instances of the VNF based on this VNFD that is permitted
+	 * to exist for this VnfProfile.
+	 */
+	private Integer minNumberOfInstances;
 
-	private UUID nsInstanceId;
+	/**
+	 * Maximum number of instances of the VNF based on this VNFD that is permitted
+	 * to exist for this VnfProfile.
+	 */
+	private Integer maxNumberOfInstances;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<NsVirtualLink> virtualLinks;
 }

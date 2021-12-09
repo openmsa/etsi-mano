@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -74,8 +75,16 @@ public class NsVirtualLink implements ToscaEntity, Auditable {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> testAccess;
-
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> vnffg;
 	@Embedded
 	private Audit audit;
+
+	public void addVnffg(final String name) {
+		if (null == vnffg) {
+			vnffg = new HashSet<>();
+		}
+		vnffg.add(name);
+	}
 
 }
