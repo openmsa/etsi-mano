@@ -17,15 +17,13 @@
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class NfvoUnitOfWork implements UnitOfWork<NsTask, NsParameters> {
-
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+public abstract class NfvoUnitOfWork implements UnitOfWork<NsTask> {
+	//
 }

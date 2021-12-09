@@ -68,7 +68,7 @@ public abstract class AbstractGenericAction {
 		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getInstance().getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
-			LOG.info("Instantiate {} Success...", blueprintId);
+			LOG.info("VNF Instantiate {} Success...", blueprintId);
 			orchestrationAdapter.fireEvent(WorkflowEvent.INSTANTIATE_SUCCESS, blueprintId);
 		} catch (final RuntimeException e) {
 			LOG.error("VNF Instantiate Failed", e);

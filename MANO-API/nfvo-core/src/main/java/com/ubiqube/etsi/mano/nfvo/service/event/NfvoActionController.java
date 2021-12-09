@@ -59,10 +59,10 @@ public class NfvoActionController {
 			nsPackagingManager.nsOnboarding(objectId);
 			break;
 		case NS_INSTANTIATE:
-			nfvoActions.nsInstantiate(objectId);
+			nfvoActions.instantiate(objectId);
 			break;
 		case NS_TERMINATE:
-			nfvoActions.nsTerminate(objectId);
+			nfvoActions.terminate(objectId);
 			break;
 		default:
 			LOG.warn("Unknown event: {}", eventType);

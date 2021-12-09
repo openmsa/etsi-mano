@@ -76,6 +76,10 @@ import ma.glasnost.orika.MapperFacade;
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ *
+ *         This class is need in VNFM, when the NFVO onboard a package, we will
+ *         receive a notification, then we download the new package, and onboard
+ *         it.
  */
 @Service
 public class VnfPackageOnboardingImpl {

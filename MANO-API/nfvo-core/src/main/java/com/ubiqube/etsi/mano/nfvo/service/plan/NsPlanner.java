@@ -26,7 +26,6 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsStartUow;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.AbstractNsContributor;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.plan.Planner;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
@@ -39,13 +38,13 @@ import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 @Service
 public class NsPlanner extends Planner<NsTask, NsdPackage, NsParameters, Blueprint<NsTask, NsdInstance>> {
 
-	public NsPlanner(final List<AbstractNsContributor> planContributors) {
-		super((List<? extends PlanContributor<NsdPackage, Blueprint<NsTask, NsdInstance>, NsTask, NsParameters>>) (Object) planContributors);
+	protected NsPlanner(final List<? extends PlanContributor<NsdPackage, Blueprint<NsTask, NsdInstance>, NsTask, NsParameters>> contributor) {
+		super(contributor);
 	}
 
 	@Override
 	protected UnitOfWork<NsTask, NsParameters> getStartNode() {
-		return new NsStartUow();
+		return (UnitOfWork<NsTask, NsParameters>) new NsStartUow(null, null);
 	}
 
 }

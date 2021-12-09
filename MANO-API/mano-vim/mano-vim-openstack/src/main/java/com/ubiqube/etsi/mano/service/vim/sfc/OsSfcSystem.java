@@ -14,35 +14,35 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
+package com.ubiqube.etsi.mano.service.vim.sfc;
 
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
+import org.springframework.stereotype.Service;
+
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSfcTask;
+import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
+import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.sys.System;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class AbstractNsUnitOfWork<U> implements UnitOfWork<U> {
-	private final VirtualTask<U> task;
-	private final Class<? extends Node> node;
+@Service
+public class OsSfcSystem implements System<NsSfcTask> {
 
-	protected AbstractNsUnitOfWork(final VirtualTask<U> task, final Class<? extends Node> node) {
-		super();
-		this.task = task;
-		this.node = node;
+	@Override
+	public String getProviderId() {
+		return "OPENSTACK_V3";
 	}
 
 	@Override
-	public final VirtualTask<U> getTask() {
-		return task;
-	}
-
-	@Override
-	public final Class<? extends Node> getNode() {
-		return node;
+	public SystemBuilder getImplementation(final OrchestrationService<NsSfcTask> orchestrationService, final VirtualTask<NsSfcTask> virtualTask, final SystemConnections vim) {
+		final SystemBuilder<NsSfcTask> builder = orchestrationService.createEmptySystemBuilder();
+		// builder.add(src, dest);
+		return null;
 	}
 
 }

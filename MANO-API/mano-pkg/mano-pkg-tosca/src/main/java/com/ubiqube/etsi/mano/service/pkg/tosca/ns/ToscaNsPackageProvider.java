@@ -183,11 +183,11 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 				.collect(Collectors.toSet());
 	}
 
-	private NFP findNfp(final String nfpName, final List<NFP> nfp) {
+	private static NFP findNfp(final String nfpName, final List<NFP> nfp) {
 		return nfp.stream().filter(x -> x.getInternalName().equals(nfpName)).findFirst().orElseThrow();
 	}
 
-	private String getNfpName(final NfpRule rule) {
+	private static String getNfpName(final NfpRule rule) {
 		final List<String> tgt = rule.getTargets();
 		if (tgt.size() != 1) {
 			throw new ToscaException("Rule [" + rule.getInternalName() + "] must have only one target.");
@@ -195,7 +195,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		return tgt.get(0);
 	}
 
-	private List<NfpPosition> findNfpPosition(final List<String> nfpPositionReq, final List<NfpPosition> nfpPosition) {
+	private static List<NfpPosition> findNfpPosition(final List<String> nfpPositionReq, final List<NfpPosition> nfpPosition) {
 		return nfpPosition.stream().filter(x -> nfpPositionReq.contains(x.getInternalName())).toList();
 	}
 

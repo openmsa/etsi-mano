@@ -14,26 +14,39 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.plan.contributors;
+package com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt;
 
 import java.util.List;
-import java.util.Set;
 
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSfcTask;
+import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
 
-@Deprecated(forRemoval = true)
-public interface PlanContributor<P, B, U extends Task, R> {
+public class NsVnnfgVt extends NsVtBase<NsSfcTask> {
 
-	Class<? extends Node> getContributionType();
+	protected NsVnnfgVt(final NsSfcTask nt) {
+		super(nt);
+	}
 
-	// XXX: Why do we have a scaleInfo here ???
-	List<U> contribute(P bundle, B blueprint, Set<ScaleInfo> scaling);
+	@Override
+	public List<NamedDependency> getNameDependencies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	List<UnitOfWork<U, R>> convertTasksToExecNode(Set<U> tasks, B blueprint);
+	@Override
+	public List<NamedDependency> getNamedProduced() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	void getDependencies(DependencyBuilder dependencyBuilder);
+	@Override
+	public String getFactoryProviderId() {
+		return "SFC";
+	}
+
+	@Override
+	public String getVimProviderId() {
+		return "NETWORK";
+	}
+
 }

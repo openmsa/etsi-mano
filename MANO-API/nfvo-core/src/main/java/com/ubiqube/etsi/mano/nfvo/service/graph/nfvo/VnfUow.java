@@ -16,8 +16,6 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,81 +31,31 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfVt;
+import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.WfDependency;
-import com.ubiqube.etsi.mano.service.graph.WfProduce;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfUow extends AbstractNsUnitOfWork {
+public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfUow.class);
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	private final transient VnfInstantiate request;
-	private final transient VnfmInterface vnfm;
+	private final VnfInstantiate request;
+	private final VnfmInterface vnfm;
 
 	private final NsVnfTask task;
 
-	public VnfUow(final NsVnfTask task, final VnfInstantiate request, final VnfmInterface vnfm) {
-		super(task);
-		this.task = task;
+	public VnfUow(final NsVnfVt task, final VnfInstantiate request, final VnfmInterface vnfm) {
+		super(task, VnfNode.class);
+		this.task = task.getParameters();
 		this.request = request;
 		this.vnfm = vnfm;
-	}
-
-	@Override
-	public String exec(final NsParameters params) {
-		final Set<ExtVirtualLinkDataEntity> net = task.getExternalNetworks().stream().map(x -> {
-			final String resource = params.getContext().get(x);
-			if (null == resource) {
-				return null;
-			}
-			final ExtVirtualLinkDataEntity ext = new ExtVirtualLinkDataEntity();
-			ext.setResourceId(resource);
-			ext.setVimLevelResourceType(x);
-			ext.setResourceProviderId("PROVIDER");
-			ext.setVimConnectionId("VIM");
-			return ext;
-		})
-				.filter(Objects::nonNull)
-				.collect(Collectors.toSet());
-		request.setExtVirtualLinks(net);
-		final VnfBlueprint res = vnfm.vnfInstatiate(task.getVnfInstance(), request, null);
-		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
-		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
-			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
-		}
-		return res.getInstance().getId().toString();
-	}
-
-	@Override
-	public String rollback(final NsParameters params) {
-		final VnfInstance inst = vnfm.getVnfInstance(task.getVnfInstance());
-		if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
-			return null;
-		}
-		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getVnfInstance());
-		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
-		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
-			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
-		}
-		// XXX OVI: We need some other mechanism, we should not delete the instance at
-		// this point. But as long a vnf instance exist you can't delete the package.
-		vnfm.delete(task.getVnfInstance());
-		return result.getId().toString();
-	}
-
-	@Override
-	protected String getPrefix() {
-		return "vnf";
 	}
 
 	/**
@@ -139,13 +87,45 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public List<WfDependency> getDependencies() {
-		return task.getExternalNetworks().stream().map(x -> new WfDependency(NsVlNode.class, x)).toList();
+	public String execute(final Context context) {
+		final Set<ExtVirtualLinkDataEntity> net = task.getExternalNetworks().stream().map(x -> {
+			final String resource = context.get(Network.class, x);
+			if (null == resource) {
+				return null;
+			}
+			final ExtVirtualLinkDataEntity ext = new ExtVirtualLinkDataEntity();
+			ext.setResourceId(resource);
+			ext.setVimLevelResourceType(x);
+			ext.setResourceProviderId("PROVIDER");
+			ext.setVimConnectionId("VIM");
+			return ext;
+		})
+				.filter(Objects::nonNull)
+				.collect(Collectors.toSet());
+		request.setExtVirtualLinks(net);
+		final VnfBlueprint res = vnfm.vnfInstatiate(task.getVnfInstance(), request, null);
+		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
+		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
+			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
+		}
+		return res.getInstance().getId().toString();
 	}
 
 	@Override
-	public List<WfProduce> getProduce() {
-		return Arrays.asList(new WfProduce(VnfNode.class, task.getToscaName(), task.getId()));
+	public String rollback(final Context context) {
+		final VnfInstance inst = vnfm.getVnfInstance(task.getVnfInstance());
+		if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
+			return null;
+		}
+		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getVnfInstance());
+		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
+		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
+			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
+		}
+		// XXX OVI: We need some other mechanism, we should not delete the instance at
+		// this point. But as long a vnf instance exist you can't delete the package.
+		vnfm.delete(task.getVnfInstance());
+		return result.getId().toString();
 	}
 
 }

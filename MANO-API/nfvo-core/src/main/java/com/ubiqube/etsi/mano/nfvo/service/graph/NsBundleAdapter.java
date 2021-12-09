@@ -14,24 +14,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg.bean;
+package com.ubiqube.etsi.mano.nfvo.service.graph;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.orchestrator.Bundle;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Getter
-@Setter
-public class ScaleInfo {
-	private String name;
-	/**
-	 * The scale level for a particular aspect
-	 *
-	 */
-	private Integer scaleLevel;
-
+public record NsBundleAdapter(NsdPackage nsPackage) implements Bundle {
+	//
 }

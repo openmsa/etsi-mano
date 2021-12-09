@@ -28,26 +28,19 @@ import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.nfvo.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
-import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
-import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfUow;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfVt;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 
 /**
  *
@@ -55,7 +48,7 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
  *
  */
 @Service
-public class VnfContributor extends AbstractNsContributor {
+public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 	private final NsInstanceService nsInstanceService;
 	private final VnfmInterface vnfm;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
@@ -66,13 +59,37 @@ public class VnfContributor extends AbstractNsContributor {
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
+	private static Set<String> getNetworks(VnfPackage x) {
+		return x.getVnfCompute().stream().flatMap(y -> y.getNetworks().stream()).collect(Collectors.toSet());
+	}
+
+	private List<NsVnfVt> doTerminatePlan(NsdInstance instance) {
+		List<NsVnfVt> ret = new ArrayList<>();
+		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfTask.class.getSimpleName());
+		insts.stream().forEach(x -> {
+			NsVnfTask task = (NsVnfTask) x.getNsTask();
+			NsVnfTask nt = createDeleteTask(NsVnfTask::new, x);
+			Set<String> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
+			nt.setExternalNetworks(nets);
+			nt.setVnfInstance(task.getVnfInstance());
+			ret.add(new NsVnfVt(nt));
+		});
+		return ret;
+	}
+
+	private static NsdPackageVnfPackage find(final VnfPackage vnfPackage, final Set<NsdPackageVnfPackage> vnfPkgIds) {
+		return vnfPkgIds.stream()
+				.filter(x -> x.getVnfPackage().getId().compareTo(vnfPackage.getId()) == 0)
+				.findFirst().orElseThrow(() -> new NotFoundException("VNF Package not found: " + vnfPackage.getId()));
+	}
+
 	@Override
-	public Class<? extends Node> getContributionType() {
+	public Class<? extends Node> getNode() {
 		return VnfNode.class;
 	}
 
 	@Override
-	public List<NsTask> contribute(final NsdPackage bundle, final NsBlueprint blueprint, final Set<ScaleInfo> scaling) {
+	protected List<NsVnfVt> nsContribute(NsdPackage bundle, NsBlueprint blueprint) {
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(blueprint.getInstance());
 		}
@@ -93,51 +110,8 @@ public class VnfContributor extends AbstractNsContributor {
 					vnf.setAlias(nsPackageVnfPackage.getToscaName());
 					vnf.setToscaName(nsPackageVnfPackage.getToscaName());
 					// XXX Not sure about the profileId is.
-					return vnf;
-				}).map(NsTask.class::cast)
-				.toList();
-	}
-
-	private static Set<String> getNetworks(VnfPackage x) {
-		return x.getVnfCompute().stream().flatMap(y -> y.getNetworks().stream()).collect(Collectors.toSet());
-	}
-
-	private List<NsTask> doTerminatePlan(NsdInstance instance) {
-		List<NsTask> ret = new ArrayList<>();
-		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfTask.class.getSimpleName());
-		insts.stream().forEach(x -> {
-			NsVnfTask task = (NsVnfTask) x.getNsTask();
-			NsVnfTask nt = createDeleteTask(NsVnfTask::new, x);
-			Set<String> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
-			nt.setExternalNetworks(nets);
-			nt.setVnfInstance(task.getVnfInstance());
-			ret.add(nt);
-		});
-		return ret;
-	}
-
-	private static NsdPackageVnfPackage find(final VnfPackage vnfPackage, final Set<NsdPackageVnfPackage> vnfPkgIds) {
-		return vnfPkgIds.stream()
-				.filter(x -> x.getVnfPackage().getId().compareTo(vnfPackage.getId()) == 0)
-				.findFirst().orElseThrow(() -> new NotFoundException("VNF Package not found: " + vnfPackage.getId()));
-	}
-
-	@Override
-	public List<UnitOfWork<NsTask, NsParameters>> convertTasksToExecNode(final Set<NsTask> tasks, final NsBlueprint blueprint) {
-		final ArrayList<UnitOfWork<NsTask, NsParameters>> ret = new ArrayList<>();
-		tasks.stream()
-				.filter(NsVnfTask.class::isInstance)
-				.map(NsVnfTask.class::cast)
-				.forEach(x -> {
-					final VnfInstantiate request = new VnfInstantiate();
-					ret.add(new VnfUow(x, request, vnfm));
-				});
-		return ret;
-	}
-
-	@Override
-	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		dependencyBuilder.connectionFrom(NsVlNode.class);
+					return new NsVnfVt(vnf);
+				}).toList();
 	}
 
 }

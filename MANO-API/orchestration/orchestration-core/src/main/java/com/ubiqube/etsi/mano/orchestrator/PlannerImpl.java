@@ -59,9 +59,9 @@ public class PlannerImpl<P, U, W> implements Planner<P, U, W> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PlannerImpl.class);
 
-	Map<Class<? extends Node>, PlanContributor> contributors;
+	private final Map<Class<? extends Node>, PlanContributor> contributors;
 
-	ImplementationService implementationService;
+	private final ImplementationService implementationService;
 
 	public PlannerImpl(final List<PlanContributor> contributorRaw, final ImplementationService implementationService) {
 		super();

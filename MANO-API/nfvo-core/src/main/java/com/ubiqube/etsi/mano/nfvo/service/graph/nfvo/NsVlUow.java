@@ -16,60 +16,45 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVirtualLinkVt;
+import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
-import com.ubiqube.etsi.mano.service.graph.WfDependency;
-import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class NsVlUow extends AbstractNsUnitOfWork {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+public class NsVlUow extends AbstractNsUnitOfWork<NsVirtualLinkTask> {
 	private final NsVirtualLinkTask task;
 	private final VlProtocolData vlProtocolData;
+	private final Vim vim;
+	private final VimConnectionInformation vimConnectionInformation;
 
-	public NsVlUow(final NsVirtualLinkTask task) {
-		super(task);
-		this.task = task;
-		if (null != task.getNsVirtualLink()) {
-			vlProtocolData = task.getNsVirtualLink().getNsVlProfile().getVlProtocolData().iterator().next();
+	public NsVlUow(final NsVirtualLinkVt task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
+		super(task, NsVlNode.class);
+		this.task = task.getParameters();
+		this.vim = vim;
+		this.vimConnectionInformation = vimConnectionInformation;
+		if (null != this.task.getNsVirtualLink()) {
+			vlProtocolData = this.task.getNsVirtualLink().getNsVlProfile().getVlProtocolData().iterator().next();
 		} else {
 			vlProtocolData = null;
 		}
 	}
 
 	@Override
-	public String exec(final NsParameters params) {
-		final String ret = params.getVim().network(params.getVimConnectionInformation()).createNetwork(vlProtocolData, task.getToscaName(), null, null);
+	public String execute(final Context context) {
+		final String ret = vim.network(vimConnectionInformation).createNetwork(vlProtocolData, task.getToscaName(), null, null);
 		final IpPool ipAllocationPool = null;
-		params.getVim().network(params.getVimConnectionInformation()).createSubnet(vlProtocolData.getL3ProtocolData(), ipAllocationPool, ret);
+		vim.network(vimConnectionInformation).createSubnet(vlProtocolData.getL3ProtocolData(), ipAllocationPool, ret);
 		return ret;
 	}
 
 	@Override
-	public String rollback(final NsParameters params) {
-		params.getVim().network(params.getVimConnectionInformation()).deleteVirtualLink(task.getVimResourceId());
+	public String rollback(final Context context) {
+		vim.network(vimConnectionInformation).deleteVirtualLink(task.getVimResourceId());
 		return null;
-	}
-
-	@Override
-	protected String getPrefix() {
-		return "nsvl";
-	}
-
-	@Override
-	public List<WfDependency> getDependencies() {
-		return new ArrayList<>();
-	}
-
-	@Override
-	public List<WfProduce> getProduce() {
-		return Arrays.asList(new WfProduce(NsVlNode.class, task.getToscaName(), task.getId()));
 	}
 
 }

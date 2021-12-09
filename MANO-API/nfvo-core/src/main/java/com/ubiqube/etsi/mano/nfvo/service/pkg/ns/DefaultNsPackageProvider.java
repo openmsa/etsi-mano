@@ -16,11 +16,13 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsNsd;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
+import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -39,26 +41,31 @@ public class DefaultNsPackageProvider implements NsPackageProvider {
 
 	@Override
 	public Set<NsVirtualLink> getNsVirtualLink(final Map<String, String> userData) {
-		return new HashSet<>();
+		return Set.of();
 	}
 
 	@Override
 	public Set<NsSap> getNsSap(final Map<String, String> userData) {
-		return new HashSet<>();
+		return Set.of();
 	}
 
 	@Override
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
-		return new HashSet<>();
+		return Set.of();
 	}
 
 	@Override
-	public Set<String> getNestedNsd(final Map<String, String> userData) {
-		return new HashSet<>();
+	public Set<NsNsd> getNestedNsd(final Map<String, String> userData) {
+		return Set.of();
 	}
 
 	@Override
-	public Set<String> getVnfd(final Map<String, String> userData) {
-		return new HashSet<>();
+	public Set<NsVnf> getVnfd(final Map<String, String> userData) {
+		return Set.of();
+	}
+
+	@Override
+	public Set<VnffgDescriptor> getVnffg(final Map<String, String> userData) {
+		return Set.of();
 	}
 }

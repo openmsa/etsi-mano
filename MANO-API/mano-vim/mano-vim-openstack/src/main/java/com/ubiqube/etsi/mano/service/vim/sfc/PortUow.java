@@ -14,26 +14,38 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.plan.contributors;
+package com.ubiqube.etsi.mano.service.vim.sfc;
 
-import java.util.List;
-import java.util.Set;
-
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSfcTask;
+import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
-@Deprecated(forRemoval = true)
-public interface PlanContributor<P, B, U extends Task, R> {
+public class PortUow implements UnitOfWork<NsSfcTask> {
 
-	Class<? extends Node> getContributionType();
+	@Override
+	public VirtualTask<NsSfcTask> getTask() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	// XXX: Why do we have a scaleInfo here ???
-	List<U> contribute(P bundle, B blueprint, Set<ScaleInfo> scaling);
+	@Override
+	public String execute(final Context context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	List<UnitOfWork<U, R>> convertTasksToExecNode(Set<U> tasks, B blueprint);
+	@Override
+	public String rollback(final Context context) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	void getDependencies(DependencyBuilder dependencyBuilder);
+	@Override
+	public Class<? extends Node> getNode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

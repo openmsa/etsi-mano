@@ -14,36 +14,40 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
+package com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt;
+
+import java.util.Arrays;
+import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsSapVt;
-import com.ubiqube.etsi.mano.orchestrator.Context;
+import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-public class SapUow extends AbstractNsUnitOfWork<NsSapTask> {
-	private final NsSapTask nsSapd;
+public class NsSapVt extends NsVtBase<NsSapTask> {
 
-	public SapUow(final NsSapVt taskEntity) {
-		super(taskEntity, SapNode.class);
-		nsSapd = taskEntity.getParameters();
+	public NsSapVt(final NsSapTask nt) {
+		super(nt);
 	}
 
 	@Override
-	public String execute(final Context context) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<NamedDependency> getNameDependencies() {
+		return Arrays.asList(new NamedDependency(Network.class, getParameters().getNsSap().getInternalVirtualLink()));
 	}
 
 	@Override
-	public String rollback(final Context context) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<NamedDependency> getNamedProduced() {
+		return Arrays.asList(new NamedDependency(SapNode.class, getParameters().getToscaName()));
+	}
+
+	@Override
+	public String getFactoryProviderId() {
+		return "SAP";
+	}
+
+	@Override
+	public String getVimProviderId() {
+		return "NETWORK";
 	}
 
 }

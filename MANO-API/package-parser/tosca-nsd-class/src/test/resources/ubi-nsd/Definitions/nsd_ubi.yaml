@@ -8,6 +8,7 @@ description: >
 
 imports:
   - etsi_nfv_sol001_nsd_types.yaml
+  - etsi_nfv_sol001_vnfd_types.yaml
 
 
 topology_template:
