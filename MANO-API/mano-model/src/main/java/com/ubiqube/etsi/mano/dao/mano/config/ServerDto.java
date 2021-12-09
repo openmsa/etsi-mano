@@ -16,12 +16,19 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.config;
 
+import java.util.Set;
+
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Getter
 @Setter
 public class ServerDto {
@@ -39,4 +46,5 @@ public class ServerDto {
 
 	private SubscriptionType subscriptionType;
 
+	private Set<String> capabilities;
 }

@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -81,6 +82,9 @@ public class Servers {
 	private PlanStatusType serverStatus;
 
 	private FailureDetails failureDetails;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> capabilities;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<RemoteSubscription> remoteSubscriptions;
