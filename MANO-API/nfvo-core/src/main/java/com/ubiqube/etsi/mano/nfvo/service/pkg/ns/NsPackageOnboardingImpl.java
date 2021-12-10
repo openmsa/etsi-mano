@@ -92,6 +92,7 @@ public class NsPackageOnboardingImpl {
 			nsOnboardingInternal(nsPackage);
 			nsPackage.setNsdOnboardingState(OnboardingStateType.ONBOARDED);
 			nsPackage.setNsdOperationalState(PackageOperationalState.ENABLED);
+			nsPackage.setOnboardingFailureDetails(new FailureDetails());
 			nsdPackageJpa.save(nsPackage);
 		} catch (final RuntimeException e) {
 			LOG.error("NSD error", e);

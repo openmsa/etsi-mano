@@ -317,6 +317,7 @@ public class VnfPackageOnboardingImpl {
 	private VnfPackage finishOnboarding(final VnfPackage vnfPackage) {
 		vnfPackage.setOnboardingState(OnboardingStateType.ONBOARDED);
 		vnfPackage.setOperationalState(PackageOperationalState.ENABLED);
+		vnfPackage.setOnboardingFailureDetails(new FailureDetails());
 		return vnfPackageService.save(vnfPackage);
 	}
 
