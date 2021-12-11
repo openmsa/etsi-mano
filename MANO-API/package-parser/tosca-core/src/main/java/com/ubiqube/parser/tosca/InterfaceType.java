@@ -25,7 +25,7 @@ public class InterfaceType extends ToscaBaseEntity {
 	// In V1.0 Json any setter is usefull, while not in V1.3
 	@JsonAnySetter
 	private Map<String, OperationDefinition> operations;
-	private Object notifications;
+	private NotificationType notifications;
 
 	public ToscaProperties getInputs() {
 		return inputs;
@@ -47,7 +47,7 @@ public class InterfaceType extends ToscaBaseEntity {
 		return notifications;
 	}
 
-	public void setNotifications(final Object notifications) {
+	public void setNotifications(final NotificationType notifications) {
 		this.notifications = notifications;
 	}
 

@@ -36,6 +36,8 @@ import com.ubiqube.parser.tosca.CapabilityDefinition;
 import com.ubiqube.parser.tosca.CapabilityTypes;
 import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.GroupType;
+import com.ubiqube.parser.tosca.InterfaceType;
+import com.ubiqube.parser.tosca.OperationDefinition;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.PolicyType;
@@ -73,7 +75,18 @@ public class ToscaWalker {
 		handleNodeType(listener);
 		handleGroupType(listener);
 		handlePolicies(listener);
+		handleInterfaces(listener);
 		listener.terminateDocument();
+	}
+
+	private void handleInterfaces(final ToscaListener listener) {
+		final Map<String, InterfaceType> inter = root.getInterfaceTypes();
+		final Set<Entry<String, InterfaceType>> interEs = inter.entrySet();
+		for (final Entry<String, InterfaceType> entry : interEs) {
+			if (cache.contains(entry.getKey())) {
+			}
+			generateClass(entry.getKey(), entry.getValue(), listener);
+		}
 	}
 
 	private void handleCapability(final ToscaListener listener) {
@@ -242,6 +255,22 @@ public class ToscaWalker {
 		LOG.debug("generateClassFromDataType end {}", className);
 		cache.add(className);
 		listener.terminateClass();
+	}
+
+	private void generateClass(final String className, final InterfaceType definition, final ToscaListener listener) {
+		LOG.debug("generateClass interface {}", className);
+		startClass(className, definition.getDerivedFrom(), listener);
+		Optional.ofNullable(definition.getInputs()).ifPresent(x -> generateFields(listener, x.getProperties()));
+		Optional.ofNullable(definition.getOperations()).ifPresent(x -> generateOperations(listener, x));
+		cache.add(className);
+		Optional.ofNullable(definition.getDescription()).ifPresent(listener::onClassDescription);
+		listener.terminateClass();
+		LOG.debug("generateClass end {}", className);
+	}
+
+	private Object generateOperations(final ToscaListener listener, final Map<String, OperationDefinition> x) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private void generateClass(final String className, final CapabilityTypes definition, final ToscaListener listener) {

@@ -114,7 +114,9 @@ class ToscaApiTest {
 		testToscaClass(1, root, parameters, VirtualBlockStorage.class);
 		testToscaClass(1, root, parameters, VirtualObjectStorage.class);
 		testToscaClass(3, root, parameters, VnfVirtualLink.class);
-		testToscaClass(4, root, parameters, VduCp.class);
+		final List<VduCp> cps = testToscaClass(4, root, parameters, VduCp.class);
+		assertNotNull(cps.get(0).getVirtualBindingReq());
+		assertNotNull(cps.get(0).getVirtualLinkReq());
 		testToscaClass(1, root, parameters, PlacementGroup.class);
 		testToscaClass(1, root, parameters, VduInstantiationLevels.class);
 		testToscaClass(1, root, parameters, VnfExtCp.class);
@@ -129,8 +131,8 @@ class ToscaApiTest {
 		testToscaClass(2, root, parameters, tosca.nodes.nfv.vdu.Compute.class);
 	}
 
-	private List<?> testToscaClass(final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<?> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {
-		final List<?> listVsad = ToscaApi.getObjects(root, parameters, clazz);
+	private <U> List<U> testToscaClass(final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<U> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {
+		final List<U> listVsad = ToscaApi.getObjects(root, parameters, clazz);
 		assertEquals(i, listVsad.size());
 		checknull(listVsad.get(0));
 		return listVsad;

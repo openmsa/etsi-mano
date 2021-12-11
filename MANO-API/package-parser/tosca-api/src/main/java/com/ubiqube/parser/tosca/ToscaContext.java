@@ -50,6 +50,8 @@ public class ToscaContext {
 
 	private Map<String, PolicyDefinition> policies = new HashMap<>();
 
+	private Map<String, InterfaceType> interfaceTypes;
+
 	public ToscaContext(final ToscaRoot root, final IResolver inResolver) {
 		artifacts = root.getArtifactTypes();
 		capabilities = root.getCapabilityTypes();
@@ -59,6 +61,7 @@ public class ToscaContext {
 		relationship = root.getRelationshipTypes();
 		topologies = root.getTopologyTemplate();
 		version = root.getVersion();
+		interfaceTypes = root.getInterfaceTypes();
 		if (null != root.getDataTypes()) {
 			dataTypes = root.getDataTypes();
 		}
@@ -161,6 +164,10 @@ public class ToscaContext {
 		return policies;
 	}
 
+	public Map<String, InterfaceType> getInterfaceTypes() {
+		return interfaceTypes;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
@@ -242,6 +249,10 @@ public class ToscaContext {
 		if (null != context.getPoliciesType()) {
 			policiesType.putAll(context.getPoliciesType());
 		}
+		if (null != context.getInterfaceTypes()) {
+			interfaceTypes.putAll(context.getInterfaceTypes());
+		}
+
 	}
 
 	private static void mergeHash(final Map<String, ToscaClass> dst, final Map<String, ToscaClass> src) {
@@ -373,6 +384,7 @@ public class ToscaContext {
 		groupType = assign(root2.getGroupTypes(), groupType);
 		policies = assign(root2.getPolicies(), policies);
 		policiesType = assign(root2.getPolicyTypes(), policiesType);
+		interfaceTypes = assign(root2.getInterfaceTypes(), interfaceTypes);
 	}
 
 	private static <K, V> Map<K, V> assign(final Map<K, V> in, final Map<K, V> here) {

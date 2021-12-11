@@ -31,7 +31,7 @@ public class ToscaRoot {
 	private Map<String, RelationshipType> relationshipTypes = new HashMap<>();
 	private Map<String, ToscaClass> nodeTypes = new HashMap<>();
 	@JsonProperty("interface_types")
-	private Map<String, InterfaceDefinition> interfaceTypes;
+	private Map<String, InterfaceType> interfaceTypes;
 	@JsonProperty("data_types")
 	private Map<String, DataType> dataTypes;
 	@JsonProperty("policy_types")
@@ -112,11 +112,11 @@ public class ToscaRoot {
 		this.nodeTypes = nodeTypes;
 	}
 
-	public Map<String, InterfaceDefinition> getInterfaceTypes() {
+	public Map<String, InterfaceType> getInterfaceTypes() {
 		return interfaceTypes;
 	}
 
-	public void setInterfaceTypes(final Map<String, InterfaceDefinition> interfaceType) {
+	public void setInterfaceTypes(final Map<String, InterfaceType> interfaceType) {
 		this.interfaceTypes = interfaceType;
 	}
 
