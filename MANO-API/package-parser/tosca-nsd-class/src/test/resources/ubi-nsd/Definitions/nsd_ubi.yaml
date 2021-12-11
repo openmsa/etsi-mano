@@ -324,5 +324,98 @@ policies:
       targets: [ nfp_1] # tosca.nodes.nfv.NFP
 
 
+  ns-scaling_aspect:
+    type: tosca.policies.nfv.NsScalingAspects
+    properties:
+      aspects:
+        aspect_1:
+          name: aspect_1
+          description: descr 1
+          ns_scale_levels: # Map<Integer, tosca.datatypes.nfv.NsLevels>
+            1:
+              description: descr
+            2:
+              description: descr2
+
+
+  vnf_scaling_mapping:
+    type: tosca.policies.nfv.VnfToLevelMapping
+    properties:
+      aspect: aspect_1
+      number_of_instances: # Map<Integer, Integer>
+        0: 1
+        1: 1
+        2: 2
+        3: 2
+    targets: [ vnf ]
+
+  ns_to_level_mapping:
+    type: tosca.policies.nfv.NsToLevelMapping
+    properties:
+      aspect: aspect_1
+      number_of_instances: # Map<Integer, Integer>
+        0: 1
+        1: 1
+        2: 2
+        3: 2
+    targets: [ vnf ]
+
+  vl_level_mapping:
+    type: tosca.policies.nfv.VirtualLinkToLevelMapping
+    properties:
+      aspect: aspect_1
+      bit_rate_requirements: # Map<Integer, tosca.datatypes.nfv.LinkBitrateRequirements>
+        1:
+          root: 1000
+          leaf: 2000
+        2:
+          root: 1000
+          leaf: 2000
+    targets: [ vl ]
+
+  ns_inst_level_1:
+    type: tosca.policies.nfv.NsInstantiationLevels
+    properties:
+      ns_levels: # Map<String, tosca.datatypes.nfv.NsLevels>
+        1:
+          description: descr
+        2:
+          description: descr2
+      default_level: levelèname
+
+  vnf_inst_level:
+    type: tosca.policies.nfv.VnfToInstantiationLevelMapping
+    properties:
+      number_of_instances: # Map<String, Integer>
+        level1: 3
+        level2: 1
+    targets: [ vnf ]
+
+  ns_inst_level_mapping:
+    type: tosca.policies.nfv.NsToInstantiationLevelMapping
+    properties:
+      number_of_instances: # Map<String, Integer>
+        level0: 1
+        level1: 2
+    targets: [ ns ]
+
+  vl_inst_level_mapping:
+    type: tosca.policies.nfv.VirtualLinkToInstantiationLevelMapping
+    properties:
+      bit_rate_requirements: # Map<String, tosca.datatypes.nfv.LinkBitrateRequirements>
+        1:
+          root: 1000
+          leaf: 2000
+        2:
+          root: 1000
+          leaf: 2000
+    targets: [ vl ]
+
+  ns_autoscale:
+    type: tosca.policies.nfv.NsAutoScale
+    targets: [ ns ]
+
+
+
 
 

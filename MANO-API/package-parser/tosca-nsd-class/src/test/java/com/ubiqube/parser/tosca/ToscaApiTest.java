@@ -58,6 +58,15 @@ import tosca.nodes.nfv.NfpPositionElement;
 import tosca.nodes.nfv.NsVirtualLink;
 import tosca.nodes.nfv.Sap;
 import tosca.policies.nfv.NfpRule;
+import tosca.policies.nfv.NsAutoScale;
+import tosca.policies.nfv.NsInstantiationLevels;
+import tosca.policies.nfv.NsScalingAspects;
+import tosca.policies.nfv.NsToInstantiationLevelMapping;
+import tosca.policies.nfv.NsToLevelMapping;
+import tosca.policies.nfv.VirtualLinkToInstantiationLevelMapping;
+import tosca.policies.nfv.VirtualLinkToLevelMapping;
+import tosca.policies.nfv.VnfToInstantiationLevelMapping;
+import tosca.policies.nfv.VnfToLevelMapping;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 class ToscaApiTest {
@@ -101,6 +110,15 @@ class ToscaApiTest {
 		final List<NfpPosition> nfpos = testToscaClass(1, root, parameters, NfpPosition.class);
 		assertEquals(2, nfpos.get(0).getElementReq().size());
 		testToscaClass(2, root, parameters, NfpPositionElement.class);
+		testToscaClass(1, root, parameters, NsAutoScale.class);
+		testToscaClass(1, root, parameters, VirtualLinkToInstantiationLevelMapping.class);
+		testToscaClass(1, root, parameters, NsToInstantiationLevelMapping.class);
+		testToscaClass(1, root, parameters, VnfToInstantiationLevelMapping.class);
+		testToscaClass(1, root, parameters, NsInstantiationLevels.class);
+		testToscaClass(1, root, parameters, VirtualLinkToLevelMapping.class);
+		testToscaClass(1, root, parameters, NsToLevelMapping.class);
+		testToscaClass(1, root, parameters, VnfToLevelMapping.class);
+		testToscaClass(1, root, parameters, NsScalingAspects.class);
 	}
 
 	private <U> List<U> testToscaClass(final int i, final ToscaContext root, final Map<String, String> parameters2, final Class<U> clazz) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, IntrospectionException {
