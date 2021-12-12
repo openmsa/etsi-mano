@@ -146,6 +146,8 @@ public class NsdPackage implements PackageBase, Auditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<VnffgDescriptor> vnffgs;
 
+	private boolean autoHealEnabled;
+
 	@Override
 	public PackageOperationalState getOperationalState() {
 		return this.nsdOperationalState;

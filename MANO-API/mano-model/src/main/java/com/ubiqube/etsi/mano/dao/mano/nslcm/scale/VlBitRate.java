@@ -14,29 +14,17 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
-import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfLevelMapping;
-import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -47,39 +35,13 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class NsdPackageVnfPackage implements Serializable {
+public class VlBitRate implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@ManyToOne(cascade = CascadeType.DETACH)
-	private VnfPackage vnfPackage;
-
-	@ManyToOne
-	private NsdPackage nsdPackage;
-
-	private String toscaName;
-
-	private String toscaId;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> virtualLinks;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<VnfScalingStepMapping> stepMapping;
-
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<VnfLevelMapping> levelMapping;
-
-	public void addVirtualLink(final String vl) {
-		if (null == virtualLinks) {
-			this.virtualLinks = new HashSet<>();
-		}
-		virtualLinks.add(vl);
-	}
+	private int root;
+	private int leaf;
 }
