@@ -18,8 +18,11 @@ package com.ubiqube.etsi.mano.service.pkg.tosca.ns;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.NsAddressData;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
@@ -33,11 +36,18 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.LevelMapping;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.NsScaling;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.RootLeaf;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.StepMapping;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.VlLevelMapping;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.VlStepMapping;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
 
 import ma.glasnost.orika.MapperFactory;
 import tosca.datatypes.nfv.AddressData;
+import tosca.datatypes.nfv.LinkBitrateRequirements;
 import tosca.datatypes.nfv.NsVirtualLinkProtocolData;
 import tosca.groups.nfv.VNFFG;
 import tosca.nodes.nfv.Forwarding;
@@ -48,7 +58,12 @@ import tosca.nodes.nfv.NfpPositionElement;
 import tosca.nodes.nfv.Sap;
 import tosca.nodes.nfv.VNF;
 import tosca.policies.nfv.NfpRule;
+import tosca.policies.nfv.NsAutoScale;
+import tosca.policies.nfv.NsToLevelMapping;
 import tosca.policies.nfv.SecurityGroupRule;
+import tosca.policies.nfv.VirtualLinkToLevelMapping;
+import tosca.policies.nfv.VnfToInstantiationLevelMapping;
+import tosca.policies.nfv.VnfToLevelMapping;
 
 /**
  *
@@ -204,6 +219,47 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 
 	private static NFP findNfp(final List<NFP> nfp, final List<String> members) {
 		return nfp.stream().filter(x -> members.contains(x.getInternalName())).findFirst().orElseThrow();
+	}
+
+	@Override
+	public boolean isAutoHealEnabled() {
+		final List<NsAutoScale> autoScale = getObjects(NsAutoScale.class, Map.of());
+		return !autoScale.isEmpty();
+	}
+
+	@Override
+	public NsScaling getNsScaling(final Map<String, String> userData) {
+		final NsScaling ret = new NsScaling();
+		// Level
+		final List<VnfToInstantiationLevelMapping> vnfLevel = getObjects(VnfToInstantiationLevelMapping.class, userData);
+		ret.setVnfLevelMapping(vnfLevel.stream().map(x -> new LevelMapping(x.getTargets(), x.getNumberOfInstances())).toList());
+		final List<NsToLevelMapping> nsLevel = getObjects(NsToLevelMapping.class, userData);
+		ret.setNsLevelMapping(nsLevel.stream().map(x -> new LevelMapping(x.getTargets(), x.getNumberOfInstances())).toList());
+		final List<VirtualLinkToLevelMapping> vlLevel = getObjects(VirtualLinkToLevelMapping.class, userData);
+		ret.setVlLevelMapping(vlLevel.stream().map(x -> new VlLevelMapping(x.getTargets(), map(x.getBitRateRequirements()))).toList());
+		// Step
+		final List<VnfToLevelMapping> vnfStep = getObjects(VnfToLevelMapping.class, userData);
+		ret.setVnfStepMapping(vnfStep.stream().map(x -> new StepMapping(x.getAspect(), x.getTargets(), mapLevel(x.getNumberOfInstances()))).toList());
+		final List<NsToLevelMapping> nsStep = getObjects(NsToLevelMapping.class, userData);
+		ret.setNsStepMapping(nsStep.stream().map(x -> new StepMapping(x.getAspect(), x.getTargets(), mapLevel(x.getNumberOfInstances()))).toList());
+		final List<VirtualLinkToLevelMapping> vlStep = getObjects(VirtualLinkToLevelMapping.class, userData);
+		ret.setVlStepMapping(vlStep.stream().map(x -> new VlStepMapping(x.getAspect(), x.getTargets(), mapVlLevel(x.getBitRateRequirements()))).toList());
+		return ret;
+	}
+
+	private static Map<Integer, RootLeaf> mapVlLevel(@NotNull final Map<String, LinkBitrateRequirements> bitRateRequirements) {
+		return bitRateRequirements.entrySet().stream()
+				.collect(Collectors.toMap(x -> Integer.valueOf(x.getKey()), x -> new RootLeaf(x.getValue().getRoot(), x.getValue().getLeaf())));
+	}
+
+	private static Map<Integer, Integer> mapLevel(final Map<String, Integer> map) {
+		return map.entrySet().stream()
+				.collect(Collectors.toMap(x -> Integer.valueOf(x.getKey()), Entry::getValue));
+	}
+
+	private static Map<String, RootLeaf> map(@NotNull final Map<String, LinkBitrateRequirements> bitRateRequirements) {
+		return bitRateRequirements.entrySet().stream()
+				.collect(Collectors.toMap(Entry::getKey, x -> new RootLeaf(x.getValue().getRoot(), x.getValue().getLeaf())));
 	}
 
 }

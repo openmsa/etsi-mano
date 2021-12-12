@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.NsScaling;
 
 public interface NsPackageProvider {
 
@@ -51,5 +52,9 @@ public interface NsPackageProvider {
 
 	@Nonnull
 	Set<VnffgDescriptor> getVnffg(Map<String, String> userData);
+
+	boolean isAutoHealEnabled();
+
+	NsScaling getNsScaling(Map<String, String> userData);
 
 }

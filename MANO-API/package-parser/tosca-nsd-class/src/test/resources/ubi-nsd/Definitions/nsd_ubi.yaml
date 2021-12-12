@@ -328,17 +328,25 @@ policies:
     type: tosca.policies.nfv.NsScalingAspects
     properties:
       aspects:
-        aspect_1:
+        frontend:
+          name: frontend
+          description: descr 1
+          ns_scale_levels: # Map<Integer, tosca.datatypes.nfv.NsLevels>
+            1:
+              description: descr of first level.
+            2:
+              description: descr of 2nd level.
+        database:
           name: aspect_1
           description: descr 1
           ns_scale_levels: # Map<Integer, tosca.datatypes.nfv.NsLevels>
             1:
-              description: descr
+              description: descr of first level.
             2:
-              description: descr2
+              description: descr of 2nd level.
 
 
-  vnf_scaling_mapping:
+  frontend_level_mapping:
     type: tosca.policies.nfv.VnfToLevelMapping
     properties:
       aspect: aspect_1
@@ -347,18 +355,18 @@ policies:
         1: 1
         2: 2
         3: 2
-    targets: [ vnf ]
+    targets: [ frontend ]
 
-  ns_to_level_mapping:
+  database_level_mapping:
     type: tosca.policies.nfv.NsToLevelMapping
     properties:
-      aspect: aspect_1
+      aspect: database
       number_of_instances: # Map<Integer, Integer>
         0: 1
         1: 1
         2: 2
         3: 2
-    targets: [ vnf ]
+    targets: [ database ]
 
   vl_level_mapping:
     type: tosca.policies.nfv.VirtualLinkToLevelMapping
@@ -373,15 +381,16 @@ policies:
           leaf: 2000
     targets: [ vl ]
 
+  # Global instantiation level for this document (NSD)
   ns_inst_level_1:
     type: tosca.policies.nfv.NsInstantiationLevels
     properties:
-      ns_levels: # Map<String, tosca.datatypes.nfv.NsLevels>
-        1:
+      ns_levels: # Map<String, tosca.datatypes.nfv.NsLevels> key= levelId
+        ns_to_level_mapping:
           description: descr
         2:
           description: descr2
-      default_level: levelèname
+      default_level: ns_to_level_mapping
 
   vnf_inst_level:
     type: tosca.policies.nfv.VnfToInstantiationLevelMapping
@@ -394,19 +403,19 @@ policies:
   ns_inst_level_mapping:
     type: tosca.policies.nfv.NsToInstantiationLevelMapping
     properties:
-      number_of_instances: # Map<String, Integer>
-        level0: 1
-        level1: 2
+      number_of_instances: # Map<String, Integer>, key=tosca.policies.nfv.NsInstantiationLevels
+        level1: 1
+        level2: 2
     targets: [ ns ]
 
   vl_inst_level_mapping:
     type: tosca.policies.nfv.VirtualLinkToInstantiationLevelMapping
     properties:
       bit_rate_requirements: # Map<String, tosca.datatypes.nfv.LinkBitrateRequirements>
-        1:
+        level1:
           root: 1000
           leaf: 2000
-        2:
+        level2:
           root: 1000
           leaf: 2000
     targets: [ vl ]

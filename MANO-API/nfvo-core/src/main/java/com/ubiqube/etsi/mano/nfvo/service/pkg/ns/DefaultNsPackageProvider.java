@@ -68,4 +68,9 @@ public class DefaultNsPackageProvider implements NsPackageProvider {
 	public Set<VnffgDescriptor> getVnffg(final Map<String, String> userData) {
 		return Set.of();
 	}
+
+	@Override
+	public boolean isAutoHealEnabled() {
+		return false;
+	}
 }

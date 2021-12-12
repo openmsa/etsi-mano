@@ -49,6 +49,7 @@ import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.NsScaling;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 
 import ma.glasnost.orika.MapperFacade;
@@ -155,18 +156,18 @@ public class NsPackageOnboardingImpl {
 				})
 				.collect(Collectors.toSet());
 		final Set<VnffgDescriptor> vnffg = packageProvider.getVnffg(userData);
+		nsPackage.setAutoHealEnabled(packageProvider.isAutoHealEnabled());
 		nsPackage.setVnffgs(vnffg);
 		rebuildConnectivity(vnffg, nsPackage);
 		nsPackage.setNestedNsdInfoIds(nsds);
+		final NsScaling nsScaling = packageProvider.getNsScaling(userData);
 	}
 
 	private static void rebuildConnectivity(final Set<VnffgDescriptor> vnffg, final NsdPackage nsPackage) {
 		vnffg.stream().forEach(x -> {
 			final NsVirtualLink vl = findVl(nsPackage, x.getVirtualLinkId());
 			vl.addVnffg(x.getName());
-			x.getPairs().forEach(y -> {
-				assignVnnfg(x.getName(), nsPackage);
-			});
+			x.getPairs().forEach(y -> assignVnnfg(x.getName(), nsPackage));
 		});
 	}
 
