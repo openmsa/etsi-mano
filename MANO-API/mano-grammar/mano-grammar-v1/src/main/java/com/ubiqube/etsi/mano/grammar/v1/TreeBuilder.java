@@ -28,7 +28,7 @@
  * containing Woodstox, in file "ASL2.0", under the same directory
  * as this file.
  */
-package org.mano.grammar.v1;
+package com.ubiqube.etsi.mano.grammar.v1;
 
 import java.util.ArrayList;
 import java.util.List;

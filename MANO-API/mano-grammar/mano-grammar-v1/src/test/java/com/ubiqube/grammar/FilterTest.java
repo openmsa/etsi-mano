@@ -38,12 +38,12 @@ import java.util.List;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.jupiter.api.Test;
-import org.mano.grammar.v1.TreeBuilder;
 
 import com.mano.etsi.grammar.v1.EtsiFilter;
 import com.mano.etsi.grammar.v1.EtsiLexer;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
+import com.ubiqube.etsi.mano.grammar.v1.TreeBuilder;
 
 class FilterTest {
 

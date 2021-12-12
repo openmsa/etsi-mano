@@ -35,21 +35,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
+import com.ubiqube.etsi.mano.grammar.v1.Grammarv1Service;
 
-public class GrammarTest {
+class GrammarTest {
+	private final Grammarv1Service grammarv1Service = new Grammarv1Service();
 
 	/**
 	 * Simple value can be cinfused with STRING <=> AATTRIBUTES.
-	 *
-	 * @throws Exception
 	 */
 	@Test
-	void testSimpleValue() throws Exception {
-		final AstBuilder astBuilder = new AstBuilder("id.gt=aaa");
-		final List<Node<String>> nodes = astBuilder.getNodes();
+	void testSimpleValue() {
+		final List<Node<String>> nodes = grammarv1Service.parse("id.gt=aaa");
 		assertEquals(1, nodes.size());
 		assertNode(nodes.get(0), "id", Operand.GT, "aaa");
 	}
@@ -65,9 +63,8 @@ public class GrammarTest {
 	}
 
 	/**
-	 * This is a multivalue.
+	 * This is a multivalue, it will failed.
 	 */
-	@Disabled("code currently does handle multivalues")
 	@Test
 	void testMultiValueIssue() {
 		final List<Node<String>> nodes = grammarv1Service.parse("id.eq=fce04624-6f92-42b1-bf50-437b682288a5,OOOOOOO");
