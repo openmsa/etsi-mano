@@ -152,8 +152,7 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 
 	@Override
 	public NsdInstance getInstance() {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstance;
 	}
 
 }
