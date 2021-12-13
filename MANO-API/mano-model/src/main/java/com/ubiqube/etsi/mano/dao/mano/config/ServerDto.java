@@ -18,6 +18,8 @@ package com.ubiqube.etsi.mano.dao.mano.config;
 
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
@@ -32,10 +34,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ServerDto {
+	@NotNull
 	private String name;
 
 	private AuthentificationInformations authentification;
-
+	@NotNull
 	private String url;
 
 	private boolean ignoreSsl;
@@ -47,4 +50,7 @@ public class ServerDto {
 	private SubscriptionType subscriptionType;
 
 	private Set<String> capabilities;
+
+	@NotNull
+	private ServerType serverType;
 }

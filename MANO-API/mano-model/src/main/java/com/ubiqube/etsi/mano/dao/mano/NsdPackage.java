@@ -94,6 +94,8 @@ public class NsdPackage implements PackageBase, Auditable {
 
 	private String flavorId;
 
+	private Integer serviceAvailabilityLevel;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "nsdPackage")
 	private Set<NsdPackageVnfPackage> vnfPkgIds;
 
@@ -134,6 +136,7 @@ public class NsdPackage implements PackageBase, Auditable {
 	@OneToMany(cascade = CascadeType.DETACH)
 	@JoinColumn
 	private Set<NsdInstance> nsInstance;
+
 	// 2.7.1
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<NsArchiveArtifactInfo> artifacts;

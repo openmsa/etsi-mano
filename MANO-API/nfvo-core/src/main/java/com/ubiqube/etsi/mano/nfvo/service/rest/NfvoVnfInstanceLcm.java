@@ -32,6 +32,7 @@ import com.ubiqube.etsi.mano.controller.vnflcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
@@ -63,7 +64,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public List<VnfInstance> get(final MultiValueMap<String, String> requestParams) {
+	public List<VnfInstance> get(final Servers servers, final MultiValueMap<String, String> requestParams) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFFM, "vnf_instances", Map.of());
 		final HttpGateway httpGateway = server.httpGateway();
@@ -73,7 +74,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfInstance post(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
+	public VnfInstance post(final Servers servers, final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Object req = httpGateway.createVnfInstanceRequest(vnfdId, vnfInstanceName, vnfInstanceDescription);
@@ -84,7 +85,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public void delete(final UUID vnfInstanceId) {
+	public void delete(final Servers servers, final UUID vnfInstanceId) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstanceId);
 		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}", uriVariables);
@@ -92,7 +93,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfBlueprint instantiate(final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
+	public VnfBlueprint instantiate(final Servers servers, final UUID vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final var req = mapper.map(instantiateVnfRequest, httpGateway.getVnfInstanceInstantiateRequestClass());
@@ -104,7 +105,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfBlueprint terminate(final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
+	public VnfBlueprint terminate(final Servers servers, final UUID vnfInstanceId, final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final var req = httpGateway.createVnfInstanceTerminate(terminationType, gracefulTerminationTimeout);
@@ -116,7 +117,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfBlueprint scaleToLevel(final UUID vnfInstanceId, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
+	public VnfBlueprint scaleToLevel(final Servers servers, final UUID vnfInstanceId, final VnfScaleToLevelRequest scaleVnfToLevelRequest) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Class<?> reqClass = httpGateway.getVnfInstanceScaleToLevelRequest();
@@ -129,7 +130,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfBlueprint scale(final UUID vnfInstanceId, final VnfScaleRequest scaleVnfRequest) {
+	public VnfBlueprint scale(final Servers servers, final UUID vnfInstanceId, final VnfScaleRequest scaleVnfRequest) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Class<?> reqClass = httpGateway.getVnfInstanceScaleRequest();
@@ -142,7 +143,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfBlueprint operate(final UUID vnfInstanceId, final VnfOperateRequest operateVnfRequest) {
+	public VnfBlueprint operate(final Servers servers, final UUID vnfInstanceId, final VnfOperateRequest operateVnfRequest) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Class<?> reqClass = httpGateway.getVnfInstanceOperateRequest();
@@ -155,7 +156,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfBlueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
+	public VnfBlueprint vnfLcmOpOccsGet(final Servers servers, @NotNull final UUID id) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Map<String, Object> uriVariables = Map.of("id", id);
@@ -166,7 +167,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfBlueprint changeExtConn(@NotNull final UUID vnfInstanceId, final ChangeExtVnfConnRequest cevcr) {
+	public VnfBlueprint changeExtConn(final Servers servers, @NotNull final UUID vnfInstanceId, final ChangeExtVnfConnRequest cevcr) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Class<?> reqClass = httpGateway.getVnfInstanceChangeExtConnRequest();
@@ -179,7 +180,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	}
 
 	@Override
-	public VnfInstance findById(final String vnfInstance) {
+	public VnfInstance findById(final Servers servers, final String vnfInstance) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstance);

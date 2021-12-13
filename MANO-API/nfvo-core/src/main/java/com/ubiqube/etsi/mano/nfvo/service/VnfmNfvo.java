@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.controller.vnflcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
@@ -41,33 +42,33 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfInstance createVnfInstance(final VnfPackage vnf, final String vnfInstanceDescription, final String vnfInstanceName) {
-		return lcm.post(vnf.getVnfdId(), vnfInstanceName, vnfInstanceDescription);
+	public VnfInstance createVnfInstance(final Servers servers, final VnfPackage vnf, final String vnfInstanceDescription, final String vnfInstanceName) {
+		return lcm.post(servers, vnf.getVnfdId(), vnfInstanceName, vnfInstanceDescription);
 	}
 
 	@Override
-	public VnfBlueprint vnfInstatiate(final String vnfInstanceId, final VnfInstantiate instantiateVnfRequest, final UUID vnfId) {
-		return lcm.instantiate(UUID.fromString(vnfInstanceId), instantiateVnfRequest);
+	public VnfBlueprint vnfInstatiate(final Servers servers, final String vnfInstanceId, final VnfInstantiate instantiateVnfRequest, final UUID vnfId) {
+		return lcm.instantiate(servers, UUID.fromString(vnfInstanceId), instantiateVnfRequest);
 	}
 
 	@Override
-	public VnfBlueprint vnfLcmOpOccsGet(@NotNull final UUID id) {
-		return lcm.vnfLcmOpOccsGet(id);
+	public VnfBlueprint vnfLcmOpOccsGet(final Servers servers, @NotNull final UUID id) {
+		return lcm.vnfLcmOpOccsGet(servers, id);
 	}
 
 	@Override
-	public VnfBlueprint vnfTerminate(final String nsInstanceId) {
-		return lcm.terminate(UUID.fromString(nsInstanceId), CancelModeTypeEnum.FORCEFUL, null);
+	public VnfBlueprint vnfTerminate(final Servers servers, final String nsInstanceId) {
+		return lcm.terminate(servers, UUID.fromString(nsInstanceId), CancelModeTypeEnum.FORCEFUL, null);
 	}
 
 	@Override
-	public VnfInstance getVnfInstance(final String vnfInstance) {
-		return lcm.findById(vnfInstance);
+	public VnfInstance getVnfInstance(final Servers servers, final String vnfInstance) {
+		return lcm.findById(servers, vnfInstance);
 	}
 
 	@Override
-	public void delete(final String vnfInstance) {
-		lcm.delete(getSafeUUID(vnfInstance));
+	public void delete(final Servers servers, final String vnfInstance) {
+		lcm.delete(servers, getSafeUUID(vnfInstance));
 	}
 
 }

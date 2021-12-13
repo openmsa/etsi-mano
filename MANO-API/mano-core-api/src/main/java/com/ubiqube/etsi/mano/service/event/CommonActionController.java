@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
@@ -100,7 +101,7 @@ public class CommonActionController {
 	public Servers registerNfvoEx(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
 		Servers server = serversJpa.findById(objectId).orElseThrow();
 		final FluxRest rest = new FluxRest(server);
-		final List<RemoteSubscription> remoteSubscription = server.getRemoteSubscriptions();
+		final Set<RemoteSubscription> remoteSubscription = server.getRemoteSubscriptions();
 		if (!isSubscribe(SubscriptionType.NSDVNF, remoteSubscription)) {
 			final Subscription subscription = vnfPackageSubscribe(rest);
 			final RemoteSubscription remote = reMap(subscription, server);
@@ -162,7 +163,7 @@ public class CommonActionController {
 		return mapper.map(res, Subscription.class);
 	}
 
-	private static boolean isSubscribe(final SubscriptionType subscriptionType, final List<RemoteSubscription> remoteSubscriptions) {
+	private static boolean isSubscribe(final SubscriptionType subscriptionType, final Set<RemoteSubscription> remoteSubscriptions) {
 		final Optional<RemoteSubscription> res = remoteSubscriptions.stream().filter(x -> x.getSubscriptionType() == subscriptionType).findFirst();
 		return res.isPresent();
 	}

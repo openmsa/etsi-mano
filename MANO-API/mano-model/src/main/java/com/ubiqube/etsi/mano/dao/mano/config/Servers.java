@@ -16,8 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.config;
 
+import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -56,7 +56,10 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Servers {
+public class Servers implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -81,13 +84,16 @@ public class Servers {
 	@Enumerated(EnumType.STRING)
 	private PlanStatusType serverStatus;
 
+	@Enumerated(EnumType.STRING)
+	private ServerType serverType;
+
 	private FailureDetails failureDetails;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> capabilities;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<RemoteSubscription> remoteSubscriptions;
+	private Set<RemoteSubscription> remoteSubscriptions;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ApiVersion> versions;

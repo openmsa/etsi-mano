@@ -55,7 +55,7 @@ public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
 		VnfBlueprint tmp = lcm;
 		OperationStatusType state = tmp.getOperationStatus();
 		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state) {
-			tmp = nsLcmOpOccsService.vnfLcmOpOccsGet(lcm.getId());
+			tmp = nsLcmOpOccsService.vnfLcmOpOccsGet(nsdTask.getServer(), lcm.getId());
 			state = tmp.getOperationStatus();
 			sleepSeconds(1);
 		}
@@ -75,7 +75,7 @@ public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
 
 	@Override
 	public String execute(final Context context) {
-		final VnfBlueprint lcm = nsLcmOpOccsService.instantiate(nsdTask.getNsInstanceId(), instantiateRequest);
+		final VnfBlueprint lcm = nsLcmOpOccsService.instantiate(nsdTask.getServer(), nsdTask.getNsInstanceId(), instantiateRequest);
 		final VnfBlueprint result = waitLcmCompletion(lcm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
@@ -85,7 +85,7 @@ public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		final VnfBlueprint lcm = nsLcmOpOccsService.terminate(nsdTask.getNsInstanceId(), null, 0);
+		final VnfBlueprint lcm = nsLcmOpOccsService.terminate(nsdTask.getServer(), nsdTask.getNsInstanceId(), null, 0);
 		final VnfBlueprint result = waitLcmCompletion(lcm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());

@@ -34,6 +34,11 @@ import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class ServerService {
 
@@ -93,4 +98,5 @@ public class ServerService {
 				.build();
 		return new ServerAdapter(httpGateway, server);
 	}
+
 }

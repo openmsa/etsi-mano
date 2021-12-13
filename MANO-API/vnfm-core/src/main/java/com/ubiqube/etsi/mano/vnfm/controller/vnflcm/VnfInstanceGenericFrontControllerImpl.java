@@ -30,7 +30,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-import com.ubiqube.etsi.mano.controller.vnflcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -59,7 +58,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 
 	private final VnfPackageService vnfPackageService;
 
-	private final VnfInstanceLcm vnfInstanceLcm;
+	private final VnfInstanceLcmImpl vnfInstanceLcm;
 
 	// XXX Duplicate service.
 	private final VnfInstanceService vnfInstancesService;
@@ -68,7 +67,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 
 	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
-	public VnfInstanceGenericFrontControllerImpl(final VnfPackageService vnfPackageService, final VnfInstanceLcm vnfInstanceLcm, final VnfInstanceService vnfInstancesService,
+	public VnfInstanceGenericFrontControllerImpl(final VnfPackageService vnfPackageService, final VnfInstanceLcmImpl vnfInstanceLcm, final VnfInstanceService vnfInstancesService,
 			final MapperFacade mapper, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super();
 		this.vnfPackageService = vnfPackageService;
@@ -80,7 +79,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 
 	@Override
 	public ResponseEntity<Void> terminate(final UUID vnfInstanceId, final CancelModeTypeEnum cancelMode, final int timeout, final Function<VnfBlueprint, String> getSelfLink) {
-		final VnfBlueprint lcm = vnfInstanceLcm.terminate(vnfInstanceId, cancelMode, timeout);
+		final VnfBlueprint lcm = vnfInstanceLcm.terminate(null, vnfInstanceId, cancelMode, timeout);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
@@ -88,7 +87,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 	@Override
 	public <U> ResponseEntity<Void> scaleToLevel(final UUID vnfInstanceId, final U body, final Function<VnfBlueprint, String> getSelfLink) {
 		final VnfScaleToLevelRequest req = mapper.map(body, VnfScaleToLevelRequest.class);
-		final VnfBlueprint lcm = vnfInstanceLcm.scaleToLevel(vnfInstanceId, req);
+		final VnfBlueprint lcm = vnfInstanceLcm.scaleToLevel(null, vnfInstanceId, req);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
@@ -96,7 +95,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 	@Override
 	public <U> ResponseEntity<Void> scale(final UUID vnfInstanceId, final U body, final Function<VnfBlueprint, String> getSelfLink) {
 		final VnfScaleRequest req = mapper.map(body, VnfScaleRequest.class);
-		final VnfBlueprint lcm = vnfInstanceLcm.scale(vnfInstanceId, req);
+		final VnfBlueprint lcm = vnfInstanceLcm.scale(null, vnfInstanceId, req);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
@@ -119,7 +118,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 	@Override
 	public <U> ResponseEntity<Void> operate(final UUID vnfInstanceId, final U body, final Function<VnfBlueprint, String> getSelfLink) {
 		final VnfOperateRequest req = mapper.map(body, VnfOperateRequest.class);
-		final VnfBlueprint lcm = vnfInstanceLcm.operate(vnfInstanceId, req);
+		final VnfBlueprint lcm = vnfInstanceLcm.operate(null, vnfInstanceId, req);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
@@ -127,7 +126,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 	@Override
 	public <U> ResponseEntity<Void> instantiate(final UUID vnfInstanceId, final U body, final Function<VnfBlueprint, String> getSelfLink) {
 		final VnfInstantiate req = mapper.map(body, VnfInstantiate.class);
-		final VnfBlueprint lcm = vnfInstanceLcm.instantiate(vnfInstanceId, req);
+		final VnfBlueprint lcm = vnfInstanceLcm.instantiate(null, vnfInstanceId, req);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
@@ -152,7 +151,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 
 	@Override
 	public ResponseEntity<Void> deleteById(final UUID vnfInstanceId) {
-		vnfInstanceLcm.delete(vnfInstanceId);
+		vnfInstanceLcm.delete(null, vnfInstanceId);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -182,14 +181,14 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		ensureInstantiated(vnfInstance);
 		final ChangeExtVnfConnRequest cevcr = mapper.map(object, ChangeExtVnfConnRequest.class);
-		final VnfBlueprint lcm = vnfInstanceLcm.changeExtConn(vnfInstanceId, cevcr);
+		final VnfBlueprint lcm = vnfInstanceLcm.changeExtConn(null, vnfInstanceId, cevcr);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
 	}
 
 	@Override
 	public <U> ResponseEntity<U> create(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription, final Class<U> clazz, final Consumer<U> makeLink, final String selfLink) {
-		final VnfInstance vnfInstance = vnfInstanceLcm.post(vnfdId, vnfInstanceName, vnfInstanceDescription);
+		final VnfInstance vnfInstance = vnfInstanceLcm.post(null, vnfdId, vnfInstanceName, vnfInstanceDescription);
 		final U inst = mapper.map(vnfInstance, clazz);
 		makeLink.accept(inst);
 		return ResponseEntity.created(URI.create(selfLink)).body(inst);

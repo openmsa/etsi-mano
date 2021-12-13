@@ -65,11 +65,11 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 	 * @param vnfm
 	 * @return
 	 */
-	private static VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
+	private VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfBlueprint tmp = vnfLcmOpOccs;
 		OperationStatusType state = tmp.getOperationStatus();
 		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state || OperationStatusType.NOT_STARTED == state) {
-			tmp = vnfm.vnfLcmOpOccsGet(vnfLcmOpOccs.getId());
+			tmp = vnfm.vnfLcmOpOccsGet(task.getServer(), vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
 			sleepSeconds(1);
 		}
@@ -103,7 +103,7 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 				.filter(Objects::nonNull)
 				.collect(Collectors.toSet());
 		request.setExtVirtualLinks(net);
-		final VnfBlueprint res = vnfm.vnfInstatiate(task.getVnfInstance(), request, null);
+		final VnfBlueprint res = vnfm.vnfInstatiate(task.getServer(), task.getVnfInstance(), request, null);
 		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
@@ -113,18 +113,18 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		final VnfInstance inst = vnfm.getVnfInstance(task.getVnfInstance());
+		final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), task.getVnfInstance());
 		if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
 			return null;
 		}
-		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getVnfInstance());
+		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getServer(), task.getVnfInstance());
 		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
 		// XXX OVI: We need some other mechanism, we should not delete the instance at
 		// this point. But as long a vnf instance exist you can't delete the package.
-		vnfm.delete(task.getVnfInstance());
+		vnfm.delete(task.getServer(), task.getVnfInstance());
 		return result.getId().toString();
 	}
 

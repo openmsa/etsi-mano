@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.pkg;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 import lombok.Getter;
@@ -29,7 +31,10 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class VnfProfile {
+public class VnfProfile implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Identifier of the instantiation level of the VNF DF to be used for
 	 * instantiation. If not present, the default instantiation level as declared in

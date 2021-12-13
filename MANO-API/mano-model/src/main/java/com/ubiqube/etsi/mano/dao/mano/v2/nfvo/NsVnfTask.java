@@ -30,6 +30,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -60,6 +61,12 @@ public class NsVnfTask extends NsTask {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> externalNetworks = new LinkedHashSet<>();
+
+	/**
+	 * VNFM to use if any.
+	 */
+	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	private Servers server;
 
 	@Override
 	public UUID getId() {

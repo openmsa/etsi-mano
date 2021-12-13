@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
@@ -43,7 +44,10 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthentificationInformations {
+public class AuthentificationInformations implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Enumerated(EnumType.STRING)
 	@FullTextField
 	@ElementCollection

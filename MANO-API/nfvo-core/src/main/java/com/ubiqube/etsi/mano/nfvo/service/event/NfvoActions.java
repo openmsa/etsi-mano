@@ -39,7 +39,6 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  */
 @Service
 public class NfvoActions extends AbstractGenericAction {
-
 	public NfvoActions(final NsWorkflow workflow, final NsOrchestrationAdapter orchestrationAdapter) {
 		super(workflow, null /* vimResourceService */, orchestrationAdapter);
 	}
