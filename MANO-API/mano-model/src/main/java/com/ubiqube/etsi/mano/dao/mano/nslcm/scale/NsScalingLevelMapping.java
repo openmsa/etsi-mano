@@ -23,7 +23,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -34,7 +36,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class NsLevelMapping extends NsVnfLevelMapping {
+@AllArgsConstructor
+@NoArgsConstructor
+public class NsScalingLevelMapping extends NsVnfLevelMapping {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -42,4 +46,7 @@ public class NsLevelMapping extends NsVnfLevelMapping {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	public NsScalingLevelMapping(final String name, final int numberOfInstance) {
+		super(name, numberOfInstance);
+	}
 }

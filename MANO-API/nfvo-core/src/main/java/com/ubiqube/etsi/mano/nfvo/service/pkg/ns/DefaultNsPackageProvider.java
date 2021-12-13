@@ -26,6 +26,7 @@ import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
+import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.NsScaling;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 
 /**
@@ -72,5 +73,11 @@ public class DefaultNsPackageProvider implements NsPackageProvider {
 	@Override
 	public boolean isAutoHealEnabled() {
 		return false;
+	}
+
+	@Override
+	public NsScaling getNsScaling(final Map<String, String> userData) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

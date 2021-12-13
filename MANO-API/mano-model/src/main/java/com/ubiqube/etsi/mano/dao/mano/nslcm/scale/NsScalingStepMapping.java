@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -23,12 +24,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class NsScalingStepMapping extends NsVnfScalingStepMapping {
 
 	/** Serial. */
@@ -38,4 +48,7 @@ public class NsScalingStepMapping extends NsVnfScalingStepMapping {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	public NsScalingStepMapping(final Map<Integer, Integer> levels) {
+		super(levels);
+	}
 }

@@ -94,4 +94,18 @@ public class NsVirtualLink implements ToscaEntity, Auditable {
 		vnffg.add(name);
 	}
 
+	public void addStepMapping(final NsVlStepMapping mapping) {
+		if (null == stepMapping) {
+			stepMapping = new HashSet<>();
+		}
+		stepMapping.add(mapping);
+	}
+
+	public void addLevelMapping(final NsVlLevelMapping mapping) {
+		if (null == levelMapping) {
+			levelMapping = new HashSet<>();
+		}
+		levelMapping.add(mapping);
+	}
+
 }

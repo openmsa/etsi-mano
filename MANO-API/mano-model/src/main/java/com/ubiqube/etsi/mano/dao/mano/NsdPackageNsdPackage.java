@@ -31,7 +31,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsLevelMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingLevelMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingStepMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVnfScalingStepMapping;
 
 import lombok.Getter;
@@ -72,7 +73,7 @@ public class NsdPackageNsdPackage implements Serializable {
 	private Set<NsVnfScalingStepMapping> stepMapping;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	private Set<NsLevelMapping> levelMapping;
+	private Set<NsScalingLevelMapping> levelMapping;
 
 	public NsdPackageNsdPackage(final NsdPackage parent, final NsdPackage child, final String toscaName, final Set<String> virtualLinks) {
 		super();
@@ -87,5 +88,19 @@ public class NsdPackageNsdPackage implements Serializable {
 			this.virtualLinks = new HashSet<>();
 		}
 		virtualLinks.add(vl);
+	}
+
+	public void addStepMapping(final NsScalingStepMapping scaling) {
+		if (null == stepMapping) {
+			stepMapping = new HashSet<>();
+		}
+		stepMapping.add(scaling);
+	}
+
+	public void addLevelMapping(final NsScalingLevelMapping mapping) {
+		if (null == levelMapping) {
+			levelMapping = new HashSet<>();
+		}
+		levelMapping.add(mapping);
 	}
 }

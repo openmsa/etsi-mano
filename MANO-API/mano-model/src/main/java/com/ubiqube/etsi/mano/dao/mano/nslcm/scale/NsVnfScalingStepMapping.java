@@ -18,17 +18,15 @@ package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OrderColumn;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -39,14 +37,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class NsVnfScalingStepMapping implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
-
-	private String aspectId;
 
 	@OrderColumn
 	@ElementCollection(fetch = FetchType.EAGER)

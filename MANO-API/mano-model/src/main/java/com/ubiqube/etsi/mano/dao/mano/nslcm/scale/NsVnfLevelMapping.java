@@ -18,7 +18,9 @@ package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -28,6 +30,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class NsVnfLevelMapping implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

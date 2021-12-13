@@ -25,6 +25,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -35,6 +36,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class NsVlLevelMapping implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -46,4 +48,10 @@ public class NsVlLevelMapping implements Serializable {
 	private String name;
 	private int root;
 	private int leaf;
+	
+	public NsVlLevelMapping(String name, int root, int leaf) {
+		this.name = name;
+		this.root = root;
+		this.leaf=leaf;
+	}
 }

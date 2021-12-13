@@ -39,6 +39,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NsVlStepMapping implements Serializable {
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -47,5 +48,9 @@ public class NsVlStepMapping implements Serializable {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<Integer, VlBitRate> stepMapping;
+
+	public NsVlStepMapping(final Map<Integer, VlBitRate> stepMapping) {
+		this.stepMapping = stepMapping;
+	}
 
 }

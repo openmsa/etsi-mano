@@ -31,7 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfLevelMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
 
 import lombok.AllArgsConstructor;
@@ -74,12 +74,26 @@ public class NsdPackageVnfPackage implements Serializable {
 	private Set<VnfScalingStepMapping> stepMapping;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<VnfLevelMapping> levelMapping;
+	private Set<VnfScalingLevelMapping> levelMapping;
 
 	public void addVirtualLink(final String vl) {
 		if (null == virtualLinks) {
 			this.virtualLinks = new HashSet<>();
 		}
 		virtualLinks.add(vl);
+	}
+
+	public void addStepMapping(final VnfScalingStepMapping scaling) {
+		if (null == stepMapping) {
+			stepMapping = new HashSet<>();
+		}
+		stepMapping.add(scaling);
+	}
+
+	public void addLevelMapping(final VnfScalingLevelMapping mapping) {
+		if (null == levelMapping) {
+			levelMapping = new HashSet<>();
+		}
+		levelMapping.add(mapping);
 	}
 }
