@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 import javax.validation.constraints.NotNull;
 
@@ -43,6 +44,7 @@ import com.ubiqube.etsi.mano.dao.mano.common.ApiVersion;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.config.RemoteSubscription;
+import com.ubiqube.etsi.mano.dao.mano.config.ServerType;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
@@ -78,15 +80,17 @@ public class CommonActionController {
 		this.manoProperties = manoProperties;
 	}
 
-	public Object registerVnfm(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
+	public Object registerServer(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
+		final Servers server = serversJpa.findById(objectId).orElseThrow();
+		if (server.getServerType() == ServerType.NFVO) {
+			return register(server, this::registerNfvoEx, parameters);
+		}
+		return register(server, this::registerVnfmEx, parameters);
 	}
 
-	public Object registerNfvo(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
-		final Servers server = serversJpa.findById(objectId).orElseThrow();
+	public Servers register(@NotNull final Servers server, final BiFunction<Servers, Map<String, Object>, Servers> func, @NotNull final Map<String, Object> parameters) {
 		try {
-			final Servers res = registerNfvoEx(objectId, parameters);
+			final Servers res = func.apply(server, parameters);
 			res.setFailureDetails(null);
 			res.setServerStatus(PlanStatusType.SUCCESS);
 			return serversJpa.save(res);
@@ -98,8 +102,13 @@ public class CommonActionController {
 		}
 	}
 
-	public Servers registerNfvoEx(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
-		Servers server = serversJpa.findById(objectId).orElseThrow();
+	private Servers registerVnfmEx(final Servers server, final Map<String, Object> parameters) {
+		extractEndpoint(server);
+		server.setServerStatus(PlanStatusType.SUCCESS);
+		return serversJpa.save(server);
+	}
+
+	private Servers registerNfvoEx(@NotNull final Servers server, @NotNull final Map<String, Object> parameters) {
 		final FluxRest rest = new FluxRest(server);
 		final Set<RemoteSubscription> remoteSubscription = server.getRemoteSubscriptions();
 		if (!isSubscribe(SubscriptionType.NSDVNF, remoteSubscription)) {
@@ -107,7 +116,7 @@ public class CommonActionController {
 			final RemoteSubscription remote = reMap(subscription, server);
 			remoteSubscription.add(remote);
 			extractEndpoint(server);
-			server = serversJpa.save(server);
+			return serversJpa.save(server);
 		}
 		return server;
 	}

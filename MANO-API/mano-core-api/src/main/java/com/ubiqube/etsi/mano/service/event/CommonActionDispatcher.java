@@ -39,8 +39,7 @@ public class CommonActionDispatcher {
 
 	public void dispatch(@NotNull final ActionType actionType, @NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
 		switch (actionType) {
-		case REGISTER_NFVO -> controller.registerNfvo(objectId, parameters);
-		case REGISTER_VNFM -> controller.registerVnfm(objectId, parameters);
+		case REGISTER_SERVER -> controller.registerServer(objectId, parameters);
 		default -> throw new IllegalArgumentException("Unexpected value: " + actionType);
 		}
 

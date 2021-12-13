@@ -66,7 +66,7 @@ public class ServerService {
 	public Servers createServer(final Servers servers) {
 		servers.setServerStatus(PlanStatusType.NOT_STARTED);
 		final Servers server = serversJpa.save(servers);
-		eventManager.sendAction(ActionType.REGISTER_NFVO, server.getId());
+		eventManager.sendAction(ActionType.REGISTER_SERVER, server.getId());
 		return server;
 	}
 
@@ -88,7 +88,7 @@ public class ServerService {
 	}
 
 	public void retryById(final UUID id) {
-		eventManager.sendAction(ActionType.REGISTER_NFVO, id);
+		eventManager.sendAction(ActionType.REGISTER_SERVER, id);
 	}
 
 	public ServerAdapter buildServerAdapter(final Subscription subscription) {
