@@ -108,6 +108,8 @@ public class VnfmGateway261 implements HttpGateway {
 			return "vrqan/v1/";
 		case SOL003_GRANT:
 			return "grant/v1/";
+		case SOL003_VNFPKGM:
+			return "vnfpkgm/v1/";
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + type);
 		}
