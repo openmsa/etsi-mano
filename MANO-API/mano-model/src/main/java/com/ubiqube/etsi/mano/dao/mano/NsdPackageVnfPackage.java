@@ -30,6 +30,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
@@ -70,7 +71,7 @@ public class NsdPackageVnfPackage implements Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> virtualLinks;
 
-	@ElementCollection(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfScalingStepMapping> stepMapping;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

@@ -69,10 +69,10 @@ public class NsdPackageNsdPackage implements Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> virtualLinks;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<NsVnfScalingStepMapping> stepMapping;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<NsScalingLevelMapping> levelMapping;
 
 	public NsdPackageNsdPackage(final NsdPackage parent, final NsdPackage child, final String toscaName, final Set<String> virtualLinks) {

@@ -16,20 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
-import java.io.Serializable;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -37,23 +24,11 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-public class NsVlStepMapping implements Serializable {
+public class NsScalingAspect {
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<VlBitRate> stepMapping;
-
-	public NsVlStepMapping(final Set<VlBitRate> stepMapping) {
-		this.stepMapping = stepMapping;
-	}
-
+	private String name;
+	private String description;
+	private int maxLevel;
 }

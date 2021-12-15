@@ -17,16 +17,12 @@
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
 import java.io.Serializable;
-import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,19 +37,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class NsVlStepMapping implements Serializable {
-
+public class StepMapping implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<VlBitRate> stepMapping;
+	private int name;
 
-	public NsVlStepMapping(final Set<VlBitRate> stepMapping) {
-		this.stepMapping = stepMapping;
+	private int numberOfInstance;
+	
+	public StepMapping(Integer name, Integer value) {
+		this.name = name;
+		this.numberOfInstance = value;
 	}
 
 }

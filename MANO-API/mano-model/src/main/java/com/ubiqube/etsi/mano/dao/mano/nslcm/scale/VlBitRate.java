@@ -46,6 +46,7 @@ public class VlBitRate implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	private Integer name;
 	private int root;
 	private int leaf;
 }

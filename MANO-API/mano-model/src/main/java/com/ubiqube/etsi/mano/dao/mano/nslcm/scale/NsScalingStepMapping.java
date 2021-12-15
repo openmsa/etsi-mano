@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -48,7 +48,7 @@ public class NsScalingStepMapping extends NsVnfScalingStepMapping {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	public NsScalingStepMapping(final Map<Integer, Integer> levels) {
+	public NsScalingStepMapping(final Set<StepMapping> levels) {
 		super(levels);
 	}
 }
