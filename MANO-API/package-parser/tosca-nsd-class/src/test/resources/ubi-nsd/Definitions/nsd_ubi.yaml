@@ -34,8 +34,16 @@ topology_template:
       requirements:
         - virtual_link: vl # tosca.nodes.nfv.NsVirtualLink
 
+    database:
+      type: tosca.nodes.nfv.NS
+      properties:
+        descriptor_id: fb4f8f06-f4b0-4d80-8cda-cd95cf018972
+        invariant_id: 1984f114-816e-45ac-a5f7-0c7e61726114
+        flavour_id: flavor01
+      requirements:
+        - virtual_link: vl01 # tosca.nodes.nfv.NsVirtualLink
 
-    vnf_1:
+    frontend:
       type: tosca.nodes.nfv.VNF
       properties:
         flavour_id: flavor01
@@ -65,7 +73,7 @@ topology_template:
             - associated_layer_protocol: mpls
               l2_protocol_data: # tosca.datatypes.nfv.NsL2ProtocolData
                 name: name
-                network_type: vxlan
+                #network_type: vxlan
                 vlan_transparent: false
                 mtu: 1400
                 segmentation_id: vlan0
@@ -321,7 +329,7 @@ policies:
         - starting_point: 1
           length: 7
           value: string
-      targets: [ nfp_1] # tosca.nodes.nfv.NFP
+    targets: [ nfp_1] # tosca.nodes.nfv.NFP
 
 
   ns-scaling_aspect:
@@ -379,7 +387,7 @@ policies:
         2:
           root: 1000
           leaf: 2000
-    targets: [ vl ]
+    targets: [ vl01 ]
 
   # Global instantiation level for this document (NSD)
   ns_inst_level_1:
@@ -398,7 +406,7 @@ policies:
       number_of_instances: # Map<String, Integer>
         level1: 3
         level2: 1
-    targets: [ vnf ]
+    targets: [ frontend ]
 
   ns_inst_level_mapping:
     type: tosca.policies.nfv.NsToInstantiationLevelMapping
@@ -406,7 +414,7 @@ policies:
       number_of_instances: # Map<String, Integer>, key=tosca.policies.nfv.NsInstantiationLevels
         level1: 1
         level2: 2
-    targets: [ ns ]
+    targets: [ database ]
 
   vl_inst_level_mapping:
     type: tosca.policies.nfv.VirtualLinkToInstantiationLevelMapping
@@ -418,11 +426,11 @@ policies:
         level2:
           root: 1000
           leaf: 2000
-    targets: [ vl ]
+    targets: [ vl01 ]
 
   ns_autoscale:
     type: tosca.policies.nfv.NsAutoScale
-    targets: [ ns ]
+    targets: [ database ]
 
 
 
