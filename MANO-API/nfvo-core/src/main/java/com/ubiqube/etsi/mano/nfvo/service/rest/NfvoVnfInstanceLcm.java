@@ -66,7 +66,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	@Override
 	public List<VnfInstance> get(final Servers servers, final MultiValueMap<String, String> requestParams) {
 		final ServerAdapter server = serverService.findNearestServer();
-		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFFM, "vnf_instances", Map.of());
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances", Map.of());
 		final HttpGateway httpGateway = server.httpGateway();
 		final ParameterizedTypeReference<List<?>> clazz = httpGateway.getVnfInstanceListParam();
 		final List<?> resp = server.rest().get(uri, clazz);
@@ -78,7 +78,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Object req = httpGateway.createVnfInstanceRequest(vnfdId, vnfInstanceName, vnfInstanceDescription);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances", Map.of());
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances", Map.of());
 		final Class<?> clazz = httpGateway.getVnfInstanceClass();
 		final var res = server.rest().post(uri, req, clazz);
 		return mapper.map(res, VnfInstance.class);
@@ -88,7 +88,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 	public void delete(final Servers servers, final UUID vnfInstanceId) {
 		final ServerAdapter server = serverService.findNearestServer();
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstanceId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}", uriVariables);
 		server.rest().delete(uri, null);
 	}
 
@@ -98,7 +98,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final HttpGateway httpGateway = server.httpGateway();
 		final var req = mapper.map(instantiateVnfRequest, httpGateway.getVnfInstanceInstantiateRequestClass());
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstanceId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}/instantiate", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}/instantiate", uriVariables);
 		final Class<?> respClass = httpGateway.getVnfLcmOpOccs();
 		final var resp = server.rest().post(uri, req, respClass);
 		return mapper.map(resp, VnfBlueprint.class);
@@ -110,7 +110,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final HttpGateway httpGateway = server.httpGateway();
 		final var req = httpGateway.createVnfInstanceTerminate(terminationType, gracefulTerminationTimeout);
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstanceId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}/terminate", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}/terminate", uriVariables);
 		final Class<?> respClass = httpGateway.getVnfLcmOpOccs();
 		final var resp = server.rest().post(uri, req, respClass);
 		return mapper.map(resp, VnfBlueprint.class);
@@ -122,7 +122,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final HttpGateway httpGateway = server.httpGateway();
 		final Class<?> reqClass = httpGateway.getVnfInstanceScaleToLevelRequest();
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstanceId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}/scale_to_level", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}/scale_to_level", uriVariables);
 		final var req = mapper.map(scaleVnfToLevelRequest, reqClass);
 		final Class<?> respClass = httpGateway.getVnfLcmOpOccs();
 		final var resp = server.rest().post(uri, req, respClass);
@@ -135,7 +135,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final HttpGateway httpGateway = server.httpGateway();
 		final Class<?> reqClass = httpGateway.getVnfInstanceScaleRequest();
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstanceId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}/scale", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}/scale", uriVariables);
 		final var req = mapper.map(scaleVnfRequest, reqClass);
 		final Class<?> respClass = httpGateway.getVnfLcmOpOccs();
 		final var resp = server.rest().post(uri, req, respClass);
@@ -148,7 +148,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final HttpGateway httpGateway = server.httpGateway();
 		final Class<?> reqClass = httpGateway.getVnfInstanceOperateRequest();
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstanceId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}/operate", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}/operate", uriVariables);
 		final var req = mapper.map(operateVnfRequest, reqClass);
 		final Class<?> respClass = httpGateway.getVnfLcmOpOccs();
 		final var resp = server.rest().post(uri, req, respClass);
@@ -160,7 +160,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Map<String, Object> uriVariables = Map.of("id", id);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_lcm_op_occs/{id}", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_lcm_op_occs/{id}", uriVariables);
 		final Class<?> respClass = httpGateway.getVnfLcmOpOccs();
 		final var resp = server.rest().post(uri, null, respClass);
 		return mapper.map(resp, VnfBlueprint.class);
@@ -172,7 +172,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final HttpGateway httpGateway = server.httpGateway();
 		final Class<?> reqClass = httpGateway.getVnfInstanceChangeExtConnRequest();
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstanceId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}/change_ext_conn", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}/change_ext_conn", uriVariables);
 		final var req = mapper.map(cevcr, reqClass);
 		final Class<?> respClass = httpGateway.getVnfLcmOpOccs();
 		final var resp = server.rest().post(uri, req, respClass);
@@ -184,7 +184,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final ServerAdapter server = serverService.findNearestServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstance);
-		final URI uri = server.getUriFor(ApiVersionType.SOL002_VNFLCM, "vnf_instances/{id}", uriVariables);
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}", uriVariables);
 		final Class<?> respClass = httpGateway.getVnfInstanceClass();
 		final var resp = server.rest().post(uri, null, respClass);
 		return mapper.map(resp, VnfInstance.class);
