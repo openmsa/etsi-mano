@@ -137,9 +137,9 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 			return null;
 		}
 		final List<Servers> available = servers.stream()
-				.filter(x -> {It's an or;
+				.filter(x -> {
 					final List<String> s = x.getCapabilities().stream().filter(vnfmInfos::contains).toList();
-					return s.size() == vnfmInfos.size();
+					return !s.isEmpty();
 				})
 				.toList();
 		if (available.isEmpty()) {
