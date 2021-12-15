@@ -48,6 +48,7 @@ import com.ubiqube.etsi.mano.dao.mano.config.ServerType;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
 import com.ubiqube.etsi.mano.model.ApiVersionInformation;
 import com.ubiqube.etsi.mano.service.HttpGateway;
@@ -81,7 +82,7 @@ public class CommonActionController {
 	}
 
 	public Object registerServer(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
-		final Servers server = serversJpa.findById(objectId).orElseThrow();
+		final Servers server = serversJpa.findById(objectId).orElseThrow(() -> new GenericException("Could not find server: " + objectId));
 		if (server.getServerType() == ServerType.NFVO) {
 			return register(server, this::registerNfvoEx, parameters);
 		}
