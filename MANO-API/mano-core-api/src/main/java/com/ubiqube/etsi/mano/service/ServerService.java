@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,7 @@ import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
  *
  */
 @Service
+@Transactional
 public class ServerService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ServerService.class);
