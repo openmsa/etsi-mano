@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VirtualLinkUowV2;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfSubnetworkUowV2;
@@ -52,7 +53,7 @@ public class VimNetworkSystem extends AbstractVimSystem<NetworkTask> {
 	}
 
 	@Override
-	SystemBuilder getImplementation(final OrchestrationService<NetworkTask> orchestrationService, final VirtualTask<NetworkTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder getImplementation(final OrchestrationService<NetworkTask> orchestrationService, final VirtualTask<NetworkTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		final VirtualLinkUowV2 net = new VirtualLinkUowV2(virtualTask, vim, vimConnectionInformation);
 		final NetworkTask p = virtualTask.getParameters();
 		final Set<VlProtocolData> vlp = p.getVnfVl().getVlProfileEntity().getVirtualLinkProtocolData();

@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.service.system;
+package com.ubiqube.etsi.mano.service.system;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
@@ -41,5 +41,5 @@ public abstract class AbstractVimSystem<U> implements System<U> {
 		return getImplementation(orchestrationService, virtualTask, vimConn);
 	}
 
-	abstract SystemBuilder<U> getImplementation(final OrchestrationService<U> orchestrationService, final VirtualTask<U> virtualTask, VimConnectionInformation vimConnectionInformation);
+	protected abstract SystemBuilder<U> getImplementation(final OrchestrationService<U> orchestrationService, final VirtualTask<U> virtualTask, VimConnectionInformation vimConnectionInformation);
 }
