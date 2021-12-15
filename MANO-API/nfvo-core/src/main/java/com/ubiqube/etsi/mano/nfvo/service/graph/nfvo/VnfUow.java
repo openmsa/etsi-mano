@@ -31,10 +31,10 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfVt;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 
 /**
@@ -46,15 +46,13 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfUow.class);
 
-	private final VnfInstantiate request;
 	private final VnfmInterface vnfm;
 
 	private final NsVnfTask task;
 
-	public VnfUow(final NsVnfVt task, final VnfInstantiate request, final VnfmInterface vnfm) {
+	public VnfUow(final VirtualTask<NsVnfTask> task, final VnfmInterface vnfm) {
 		super(task, VnfNode.class);
 		this.task = task.getParameters();
-		this.request = request;
 		this.vnfm = vnfm;
 	}
 
@@ -102,6 +100,7 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 		})
 				.filter(Objects::nonNull)
 				.collect(Collectors.toSet());
+		final VnfInstantiate request = createRequest();
 		request.setExtVirtualLinks(net);
 		final VnfBlueprint res = vnfm.vnfInstatiate(task.getServer(), task.getVnfInstance(), request, null);
 		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
@@ -109,6 +108,17 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
 		return res.getInstance().getId().toString();
+	}
+
+	private VnfInstantiate createRequest() {
+		final VnfInstantiate inst = new VnfInstantiate();
+		// inst.setExtManagedVirtualLinks(task.getExternalNetworks());
+		// inst.setExtVirtualLinks(extVirtualLinks);
+		inst.setFlavourId(task.getFlavourId());
+		inst.setInstantiationLevelId(task.getInstantiationLevelId());
+		inst.setLocalizationLanguage(task.getLocalizationLanguage());
+		// inst.setVimConnectionInfo(task.getVimConnectionInfo());
+		return inst;
 	}
 
 	@Override

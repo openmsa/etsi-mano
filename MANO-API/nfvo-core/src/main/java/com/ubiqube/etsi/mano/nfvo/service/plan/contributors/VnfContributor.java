@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.service.plan.contributors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 	private final VnfmInterface vnfm;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 	private final ServersJpa serversJpa;
+	private final Random rand = new Random();
 
 	public VnfContributor(final NsInstanceService nsInstanceService, final VnfmInterface vnfm, final NsLiveInstanceJpa nsLiveInstanceJpa, final ServersJpa serversJpa) {
 		this.nsInstanceService = nsInstanceService;
@@ -145,7 +147,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 		if (available.isEmpty()) {
 			throw new GenericException("No VNFM server found for the following requirements: " + vnfmInfos);
 		}
-		return available.get(0);
+		return available.get(rand.nextInt(available.size()));
 	}
 
 }

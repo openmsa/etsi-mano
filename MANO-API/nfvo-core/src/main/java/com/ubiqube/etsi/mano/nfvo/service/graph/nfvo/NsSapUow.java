@@ -17,19 +17,19 @@
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsSapVt;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class SapUow extends AbstractNsUnitOfWork<NsSapTask> {
+public class NsSapUow extends AbstractNsUnitOfWork<NsSapTask> {
 	private final NsSapTask nsSapd;
 
-	public SapUow(final NsSapVt taskEntity) {
+	public NsSapUow(final VirtualTask<NsSapTask> taskEntity) {
 		super(taskEntity, SapNode.class);
 		nsSapd = taskEntity.getParameters();
 	}

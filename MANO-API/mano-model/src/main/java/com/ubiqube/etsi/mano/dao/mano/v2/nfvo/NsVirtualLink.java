@@ -78,12 +78,16 @@ public class NsVirtualLink implements ToscaEntity, Auditable {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> testAccess;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> vnffg;
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<NsVlStepMapping> stepMapping;
+
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<NsVlLevelMapping> levelMapping;
+
 	@Embedded
 	private Audit audit;
 

@@ -155,7 +155,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		}
 		return sgr.stream()
 				.filter(x -> x.getDescriptorId() != null)
-				.map(x -> new NsNsd(x.getInvariantId(), x.getFlavourId(), x.getVirtualLinkReq()))
+				.map(x -> new NsNsd(x.getInvariantId(), x.getInternalName(), x.getFlavourId(), x.getVirtualLinkReq()))
 				.collect(Collectors.toSet());
 	}
 
@@ -164,7 +164,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		final List<VNF> sgr = getObjects(VNF.class, userData);
 		return sgr.stream()
 				.filter(x -> x.getDescriptorId() != null)
-				.map(x -> new NsVnf(x.getDescriptorId(), x.getFlavourId(), x.getVirtualLinkReq()))
+				.map(x -> new NsVnf(x.getDescriptorId(), x.getInternalName(), x.getFlavourId(), x.getVirtualLinkReq()))
 				.collect(Collectors.toSet());
 	}
 
@@ -207,6 +207,9 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 
 	private static String getNfpName(final NfpRule rule) {
 		final List<String> tgt = rule.getTargets();
+		if (null == tgt || tgt.isEmpty()) {
+			throw new ToscaException("Rule [" + rule.getInternalName() + "] must have a target.");
+		}
 		if (tgt.size() != 1) {
 			throw new ToscaException("Rule [" + rule.getInternalName() + "] must have only one target.");
 		}

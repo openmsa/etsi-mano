@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsOrchestrationAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsWorkflow;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
+import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.event.AbstractGenericAction;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -39,8 +40,8 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  */
 @Service
 public class NfvoActions extends AbstractGenericAction {
-	public NfvoActions(final NsWorkflow workflow, final NsOrchestrationAdapter orchestrationAdapter) {
-		super(workflow, null /* vimResourceService */, orchestrationAdapter);
+	public NfvoActions(final NsWorkflow workflow, final VimResourceService vimResourceService, final NsOrchestrationAdapter orchestrationAdapter) {
+		super(workflow, vimResourceService, orchestrationAdapter);
 	}
 
 	@Override

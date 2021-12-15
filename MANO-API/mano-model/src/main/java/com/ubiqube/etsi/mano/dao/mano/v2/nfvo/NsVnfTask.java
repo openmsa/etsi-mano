@@ -68,6 +68,12 @@ public class NsVnfTask extends NsTask {
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private Servers server;
 
+	private String flavourId;
+
+	private String instantiationLevelId;
+
+	private String localizationLanguage;
+
 	@Override
 	public UUID getId() {
 		return id;

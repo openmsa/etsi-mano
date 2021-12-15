@@ -40,14 +40,11 @@ public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
 
 	private final NsdTask nsdTask;
 
-	private final VnfInstantiate instantiateRequest;
-
 	private final VnfInstanceLcm nsLcmOpOccsService;
 
-	public NsUow(final VirtualTask<NsdTask> task, final VnfInstantiate req, final VnfInstanceLcm nsLcmOpOccsService) {
+	public NsUow(final VirtualTask<NsdTask> task, final VnfInstanceLcm nsLcmOpOccsService) {
 		super(task, NsdNode.class);
 		this.nsdTask = task.getParameters();
-		this.instantiateRequest = req;
 		this.nsLcmOpOccsService = nsLcmOpOccsService;
 	}
 
@@ -75,12 +72,24 @@ public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
 
 	@Override
 	public String execute(final Context context) {
+		final VnfInstantiate instantiateRequest = createInstantiateRequest();
 		final VnfBlueprint lcm = nsLcmOpOccsService.instantiate(nsdTask.getServer(), nsdTask.getNsInstanceId(), instantiateRequest);
 		final VnfBlueprint result = waitLcmCompletion(lcm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
 		}
 		return lcm.getId().toString();
+	}
+
+	private VnfInstantiate createInstantiateRequest() {
+		final VnfInstantiate inst = new VnfInstantiate();
+		// inst.setExtManagedVirtualLinks(nsdTask.getExtCps());
+		// inst.setExtVirtualLinks(nsdTask.getExtCps());
+		inst.setFlavourId(nsdTask.getFlavourId());
+		inst.setInstantiationLevelId(nsdTask.getInstantiationLevelId());
+		inst.setLocalizationLanguage(nsdTask.getLocalizationLanguage());
+		inst.setVimConnectionInfo(nsdTask.getVimConnectionInformations().stream().toList());
+		return inst;
 	}
 
 	@Override

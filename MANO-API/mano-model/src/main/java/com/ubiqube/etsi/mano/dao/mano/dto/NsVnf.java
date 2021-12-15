@@ -34,6 +34,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class NsVnf {
 	private String vnfdId;
+	private String name;
 	private String flavourId;
 	private String virtualLink;
 }

@@ -32,6 +32,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class NsNsd {
 	private String nsdId;
+	private String name;
 	private String flavourId;
-	String virtulaLink;
+	private String virtulaLink;
 }

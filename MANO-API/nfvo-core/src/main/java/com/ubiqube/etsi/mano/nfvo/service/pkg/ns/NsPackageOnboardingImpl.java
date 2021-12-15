@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -43,6 +42,7 @@ import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingStepMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVlLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVlStepMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.StepMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VlBitRate;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
@@ -55,6 +55,7 @@ import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.NsScaling;
@@ -144,7 +145,7 @@ public class NsPackageOnboardingImpl {
 					final VnfPackage vnfPackage = optPackage.orElseThrow(() -> new NotFoundException("Vnfd descriptor_id not found: " + x.getVnfdId()));
 					final NsdPackageVnfPackage nsdPackageVnfPackage = new NsdPackageVnfPackage();
 					nsdPackageVnfPackage.setNsdPackage(nsPackage);
-					nsdPackageVnfPackage.setToscaName(x.getVnfdId());
+					nsdPackageVnfPackage.setToscaName(x.getName());
 					nsdPackageVnfPackage.setVnfPackage(vnfPackage);
 					nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink());
 					vnfPackage.addNsdPackage(nsdPackageVnfPackage);
@@ -155,11 +156,11 @@ public class NsPackageOnboardingImpl {
 		nsPackage.setVnfPkgIds(vnfds);
 		final Set<NsdPackageNsdPackage> nsds = packageProvider.getNestedNsd(userData).stream()
 				.map(x -> {
-					final NsdPackage nestedNsd = nsdPackageJpa.findByNsdInvariantId(x.getNsdId()).orElseThrow(() -> new NotFoundException("Nsd invariant_id not found: " + x));
+					final NsdPackage nestedNsd = nsdPackageJpa.findByNsdInvariantId(x.getNsdId()).orElseThrow(() -> new NotFoundException("Nsd invariant_id not found: " + x.getNsdId()));
 					final NsdPackageNsdPackage nsdnsd = new NsdPackageNsdPackage();
 					nsdnsd.setParent(nsPackage);
 					nsdnsd.setChild(nestedNsd);
-					nsdnsd.setToscaName(x.getNsdId());
+					nsdnsd.setToscaName(x.getName());
 					nsdnsd.addVirtualLink(x.getVirtulaLink());
 					return nsdnsd;
 				})
@@ -176,12 +177,12 @@ public class NsPackageOnboardingImpl {
 	private static void remapScaling(final NsdPackage nsPackage, final NsScaling nsScaling) {
 		nsScaling.getNsStepMapping().forEach(x -> x.target().forEach(y -> {
 			final NsdPackageNsdPackage nsd = findNesteedNs(nsPackage, y);
-			final NsScalingStepMapping scaling = new NsScalingStepMapping(x.mapping());
+			final NsScalingStepMapping scaling = new NsScalingStepMapping(mapStepMapping(x.mapping()));
 			x.mapping().entrySet().forEach(z -> nsd.addStepMapping(scaling));
 		}));
 		nsScaling.getVnfStepMapping().forEach(x -> x.target().forEach(y -> {
 			final NsdPackageVnfPackage nsd = findVnf(nsPackage, y);
-			final VnfScalingStepMapping scaling = new VnfScalingStepMapping(x.mapping());
+			final VnfScalingStepMapping scaling = new VnfScalingStepMapping(mapStepMapping(x.mapping()));
 			x.mapping().entrySet().forEach(z -> nsd.addStepMapping(scaling));
 		}));
 		nsScaling.getVlStepMapping().forEach(x -> x.targets().forEach(y -> {
@@ -213,16 +214,22 @@ public class NsPackageOnboardingImpl {
 		}));
 	}
 
-	private static Map<Integer, VlBitRate> mapVlStep(final Map<Integer, RootLeaf> mapping) {
-		return mapping.entrySet().stream().collect(Collectors.toMap(Entry::getKey, x -> new VlBitRate(null, x.getValue().root(), x.getValue().leaf())));
+	private static Set<StepMapping> mapStepMapping(final Map<Integer, Integer> mapping) {
+		return mapping.entrySet().stream().map(x -> new StepMapping(x.getKey(), x.getValue())).collect(Collectors.toSet());
+	}
+
+	private static Set<VlBitRate> mapVlStep(final Map<Integer, RootLeaf> mapping) {
+		return mapping.entrySet().stream()
+				.map(x -> new VlBitRate(null, x.getKey(), x.getValue().root(), x.getValue().leaf()))
+				.collect(Collectors.toSet());
 	}
 
 	private static NsdPackageVnfPackage findVnf(final NsdPackage nsPackage, final String y) {
-		return nsPackage.getVnfPkgIds().stream().filter(x -> x.getToscaName().equals(y)).findAny().orElseThrow(() -> new GenericException("Could not a VNFD named: " + y));
+		return nsPackage.getVnfPkgIds().stream().filter(x -> x.getToscaName().equals(y)).findAny().orElseThrow(() -> new GenericException("Could not find a VNFD named: " + y));
 	}
 
 	private static NsdPackageNsdPackage findNesteedNs(final NsdPackage nsPackage, final String y) {
-		return nsPackage.getNestedNsdInfoIds().stream().filter(x -> x.getToscaName().equals(y)).findAny().orElseThrow(() -> new GenericException("Could not a NSD named: " + y));
+		return nsPackage.getNestedNsdInfoIds().stream().filter(x -> x.getToscaName().equals(y)).findAny().orElseThrow(() -> new GenericException("Could not find a NSD named: " + y));
 	}
 
 	private static void rebuildConnectivity(final Set<VnffgDescriptor> vnffg, final NsdPackage nsPackage) {
@@ -258,7 +265,7 @@ public class NsPackageOnboardingImpl {
 	}
 
 	private static NsVirtualLink findVl(final NsdPackage nsPackage, final String virtualLinkId) {
-		return nsPackage.getNsVirtualLinks().stream().filter(x -> x.getToscaName().equals(virtualLinkId)).findFirst().orElseThrow();
+		return nsPackage.getNsVirtualLinks().stream().filter(x -> x.getToscaName().equals(virtualLinkId)).findFirst().orElseThrow(() -> new ToscaException("Could not find VL named: " + virtualLinkId));
 	}
 
 	private Optional<VnfPackage> getVnfPackage(final String flavor, final String descriptorId, final String version) {
