@@ -33,6 +33,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.nfvo.controller.nslcm.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
+import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVt;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
@@ -73,12 +74,12 @@ public class NsdConributor extends AbstractNsContributor<NsdTask, NsVt> {
 	}
 
 	@Override
-	protected List<NsVt> nsContribute(NsdPackage bundle, NsBlueprint blueprint) {
+	protected List<NsVt> nsContribute(final NsBundleAdapter bundle, final NsBlueprint blueprint) {
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminate(blueprint.getInstance());
 		}
 
-		final Set<NsdPackage> saps = nsInstanceService.findNestedNsdByNsInstance(bundle);
+		final Set<NsdPackage> saps = nsInstanceService.findNestedNsdByNsInstance(bundle.nsPackage());
 		return saps.stream()
 				.filter(x -> 0 == nsInstanceService.countLiveInstanceOfNsd(blueprint.getNsInstance(), x.getId()))
 				.map(x -> {

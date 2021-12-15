@@ -22,12 +22,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -43,6 +44,7 @@ import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
 import com.ubiqube.etsi.mano.nfvo.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
+import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfVt;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
@@ -54,6 +56,7 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
  *
  */
 @Service
+@Transactional
 public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 	private final NsInstanceService nsInstanceService;
 	private final VnfmInterface vnfm;
@@ -97,17 +100,17 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 	}
 
 	@Override
-	protected List<NsVnfVt> nsContribute(final NsdPackage bundle, final NsBlueprint blueprint) {
+	protected List<NsVnfVt> nsContribute(final NsBundleAdapter bundle, final NsBlueprint blueprint) {
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(blueprint.getInstance());
 		}
-		final Set<VnfPackage> vnfs = nsInstanceService.findVnfPackageByNsInstance(bundle);
+		final Set<VnfPackage> vnfs = nsInstanceService.findVnfPackageByNsInstance(bundle.nsPackage());
 		return vnfs.stream()
 				.filter(x -> 0 == nsInstanceService.countLiveInstanceOfVnf(blueprint.getNsInstance(), x.getId()))
 				.map(x -> {
 					final NsVnfTask vnf = createTask(NsVnfTask::new);
 					vnf.setChangeType(ChangeType.ADDED);
-					final NsdPackageVnfPackage nsPackageVnfPackage = find(x, bundle.getVnfPkgIds());
+					final NsdPackageVnfPackage nsPackageVnfPackage = find(x, bundle.nsPackage().getVnfPkgIds());
 					final Set<String> nets = getNetworks(x);
 					vnf.setExternalNetworks(nets);
 					vnf.setNsPackageVnfPackage(nsPackageVnfPackage);
@@ -134,7 +137,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 			return null;
 		}
 		final List<Servers> available = servers.stream()
-				.filter(x -> {
+				.filter(x -> {It's an or;
 					final List<String> s = x.getCapabilities().stream().filter(vnfmInfos::contains).toList();
 					return s.size() == vnfmInfos.size();
 				})

@@ -26,11 +26,11 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
+import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsSapVt;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
@@ -46,16 +46,16 @@ public class SapContributor extends AbstractNsContributor<NsSapTask, NsSapVt> {
 	private final NsBlueprintService blueprintService;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public SapContributor(final NsBlueprintService blueprintService, NsLiveInstanceJpa nsLiveInstanceJpa) {
+	public SapContributor(final NsBlueprintService blueprintService, final NsLiveInstanceJpa nsLiveInstanceJpa) {
 		this.blueprintService = blueprintService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
-	private List<NsSapVt> doTerminate(NsdInstance instance) {
-		List<NsSapVt> ret = new ArrayList<>();
-		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsSapTask.class.getSimpleName());
+	private List<NsSapVt> doTerminate(final NsdInstance instance) {
+		final List<NsSapVt> ret = new ArrayList<>();
+		final List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsSapTask.class.getSimpleName());
 		insts.stream().forEach(x -> {
-			NsSapTask nt = createDeleteTask(NsSapTask::new, x);
+			final NsSapTask nt = createDeleteTask(NsSapTask::new, x);
 			nt.setNsSap(((NsSapTask) x.getNsTask()).getNsSap());
 			ret.add(new NsSapVt(nt));
 		});
@@ -68,11 +68,11 @@ public class SapContributor extends AbstractNsContributor<NsSapTask, NsSapVt> {
 	}
 
 	@Override
-	protected List<NsSapVt> nsContribute(NsdPackage bundle, NsBlueprint plan) {
+	protected List<NsSapVt> nsContribute(final NsBundleAdapter bundle, final NsBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminate(plan.getInstance());
 		}
-		final Set<NsSap> saps = bundle.getNsSaps();
+		final Set<NsSap> saps = bundle.nsPackage().getNsSaps();
 		return saps.stream()
 				.filter(x -> 0 == blueprintService.getNumberOfLiveSap(plan.getNsInstance(), x))
 				.map(x -> {
