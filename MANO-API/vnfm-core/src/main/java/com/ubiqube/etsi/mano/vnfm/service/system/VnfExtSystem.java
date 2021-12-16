@@ -48,7 +48,7 @@ public class VnfExtSystem extends AbstractVimSystem<ExternalCpTask> {
 	}
 
 	@Override
-	SystemBuilder<ExternalCpTask> getImplementation(final OrchestrationService<ExternalCpTask> orchestrationService, final VirtualTask<ExternalCpTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<ExternalCpTask> getImplementation(final OrchestrationService<ExternalCpTask> orchestrationService, final VirtualTask<ExternalCpTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfExtCpUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 

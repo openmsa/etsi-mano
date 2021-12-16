@@ -47,7 +47,7 @@ public class MonitoringSystem extends AbstractVimSystem<MonitoringTask> {
 	}
 
 	@Override
-	SystemBuilder<MonitoringTask> getImplementation(final OrchestrationService<MonitoringTask> orchestrationService, final VirtualTask<MonitoringTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<MonitoringTask> getImplementation(final OrchestrationService<MonitoringTask> orchestrationService, final VirtualTask<MonitoringTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfMonitoringUow2(virtualTask, vnfMonitoringService, vimConnectionInformation));
 	}
 

@@ -48,7 +48,7 @@ public class StorageVimSystem extends AbstractVimSystem<StorageTask> {
 	}
 
 	@Override
-	SystemBuilder<StorageTask> getImplementation(final OrchestrationService<StorageTask> orchestrationService, final VirtualTask<StorageTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<StorageTask> getImplementation(final OrchestrationService<StorageTask> orchestrationService, final VirtualTask<StorageTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfStorageUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 
