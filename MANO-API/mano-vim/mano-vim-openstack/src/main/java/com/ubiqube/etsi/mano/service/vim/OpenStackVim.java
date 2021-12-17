@@ -201,7 +201,8 @@ public class OpenStackVim implements Vim {
 				.filter(x -> x.getDisk() == disk / GIGA)
 				.map(Flavor.class::cast)
 				.filter(x -> {
-					final Map<String, String> specs = os.compute().flavors().listExtraSpecs(x.getId());
+					final OSClientV3 os2 = OpenStackVim.getClient(vimConnectionInformation);
+					final Map<String, String> specs = os2.compute().flavors().listExtraSpecs(x.getId());
 					return isMatching(flavorSpec, specs);
 				})
 				.toList();
