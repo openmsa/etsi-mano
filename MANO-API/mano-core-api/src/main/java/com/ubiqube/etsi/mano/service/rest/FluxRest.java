@@ -24,6 +24,8 @@ import java.util.UUID;
 
 import javax.net.ssl.SSLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -66,6 +68,9 @@ import reactor.netty.http.client.HttpClient;
  *
  */
 public class FluxRest {
+
+	private static final Logger LOG = LoggerFactory.getLogger(FluxRest.class);
+
 	private final WebClient webClient;
 	private final String rootUrl;
 	private final String id = UUID.randomUUID().toString();
@@ -179,7 +184,7 @@ public class FluxRest {
 		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.GET, null)
 				.retrieve()
 				.toEntity(myBean);
-		return getBlockingResult(resp);
+		return getBlockingResult(resp, null);
 	}
 
 	public UriComponentsBuilder uriBuilder() {
@@ -208,13 +213,18 @@ public class FluxRest {
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.toEntity(clazz);
-		return getBlockingResult(resp);
+		return getBlockingResult(resp, clazz);
 	}
 
-	private static <T> T getBlockingResult(final Mono<ResponseEntity<T>> resp) {
+	private <T> T getBlockingResult(final Mono<ResponseEntity<T>> resp, final Class<T> clazz) {
 		final ResponseEntity<T> resp2 = resp.block();
 		if (null == resp2) {
 			return null;
+		}
+		final Optional<URI> uri = Optional.ofNullable(resp2.getHeaders().getLocation()).filter(x -> !x.toString().isEmpty());
+		if (uri.isPresent()) {
+			LOG.info("Location: {}", uri);
+			return innerCall(uri.get(), HttpMethod.GET, null, clazz);
 		}
 		return resp2.getBody();
 	}
