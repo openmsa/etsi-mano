@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.orchestrator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ import java.util.List;
  *
  */
 public class OrchExecutionResultsImpl<U> implements OrchExecutionResults<U> {
-	private final List<OrchExecutionResult<U>> results;
+	private List<OrchExecutionResult<U>> results;
 
 	public OrchExecutionResultsImpl(final List<OrchExecutionResultImpl<U>> all) {
 		this.results = all.stream().map(x -> (OrchExecutionResult<U>) x).toList();
@@ -42,6 +43,7 @@ public class OrchExecutionResultsImpl<U> implements OrchExecutionResults<U> {
 
 	@Override
 	public void addAll(final OrchExecutionResults<U> convertResults) {
+		results = new ArrayList<>(results);
 		results.addAll(convertResults.getErrored());
 		results.addAll(convertResults.getSuccess());
 	}
