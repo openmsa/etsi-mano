@@ -79,7 +79,7 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 			bSub.addPool(ipAllocationPool.getStartIpAddress(), ipAllocationPool.getEndIpAddress());
 		}
 		bSub.cidr(l3ProtocolData.getCidr())
-				.enableDHCP(l3ProtocolData.isDhcpEnabled())
+				.enableDHCP(Optional.ofNullable(l3ProtocolData.isDhcpEnabled()).orElse(false))
 				.gateway(l3ProtocolData.getGatewayIp())
 				.tenantId(vimConnectionInformation.getAccessInfo().get("projectId"))
 				.ipVersion(convertIpVersion(l3ProtocolData.getIpVersion()))
