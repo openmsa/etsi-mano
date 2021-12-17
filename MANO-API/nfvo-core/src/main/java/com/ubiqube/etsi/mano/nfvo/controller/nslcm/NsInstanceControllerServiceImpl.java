@@ -78,8 +78,8 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 	}
 
 	@Override
-	public NsdInstance createNsd(final String _nsdId, final String nsName, final String nsDescription) {
-		final NsdPackage nsd = nsdPackageService.findByNsdId(_nsdId);
+	public NsdInstance createNsd(final String nsdId, final String nsName, final String nsDescription) {
+		final NsdPackage nsd = nsdPackageService.findByNsdId(nsdId);
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
 		nsd.setNsdUsageState(PackageUsageState.IN_USE);
@@ -93,10 +93,10 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 		final NsdInstance nsInstanceTmp = nsInstanceService.save(nsInstance);
 
 		final List<NsVnfInstance> vnfInstances = new ArrayList<>();
-
+		// It's strange, we are creating NSD instance but not VNF.
 		nsd.getNestedNsdInfoIds().forEach(x -> {
 			// create nested instance.
-			final NsdInstance nsIn = createNsd(_nsdId, nsName, nsDescription);
+			final NsdInstance nsIn = createNsd(x.getChild().getNsdId(), "Sub NSD of " + nsdId, nsDescription);
 			nsInstanceTmp.addNestedNsInstance(nsIn);
 		});
 		nsInstanceTmp.setVnfInstance(vnfInstances);

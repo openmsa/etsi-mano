@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -172,6 +174,19 @@ public class NsPackageOnboardingImpl {
 		nsPackage.setNestedNsdInfoIds(nsds);
 		final NsScaling nsScaling = packageProvider.getNsScaling(userData);
 		remapScaling(nsPackage, nsScaling);
+		verifyCircularDependencies(nsPackage, new ArrayDeque<>());
+	}
+
+	private void verifyCircularDependencies(final NsdPackage nsPackage, final Deque<UUID> stack) {
+		stack.push(nsPackage.getId());
+		nsPackage.getNestedNsdInfoIds().forEach(x -> {
+			if (stack.contains(x.getId())) {
+				throw new GenericException("Circular dependency detected, trying to include " + x.getId() + ", chain: " + stack);
+			}
+			final NsdPackage p = nsdPackageJpa.findById(x.getChild().getId()).orElseThrow();
+			verifyCircularDependencies(p, stack);
+		});
+		stack.pop();
 	}
 
 	private static void remapScaling(final NsdPackage nsPackage, final NsScaling nsScaling) {
