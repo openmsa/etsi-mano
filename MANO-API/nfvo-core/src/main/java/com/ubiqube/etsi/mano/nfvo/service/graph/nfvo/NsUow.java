@@ -73,6 +73,10 @@ public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
 	@Override
 	public String execute(final Context context) {
 		final VnfInstantiate instantiateRequest = createInstantiateRequest();
+		instantiateRequest.setFlavourId(nsdTask.getFlavourId());
+		instantiateRequest.setInstantiationLevelId(nsdTask.getInstantiationLevelId());
+		instantiateRequest.setLocalizationLanguage(nsdTask.getLocalizationLanguage());
+		instantiateRequest.setVimConnectionInfo(nsdTask.getVimConnectionInformations().stream().toList());
 		final VnfBlueprint lcm = nsLcmOpOccsService.instantiate(nsdTask.getServer(), nsdTask.getNsInstanceId(), instantiateRequest);
 		final VnfBlueprint result = waitLcmCompletion(lcm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
