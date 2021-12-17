@@ -41,11 +41,11 @@ public class NsVirtualLinkVt extends NsVtBase<NsVirtualLinkTask> {
 
 	@Override
 	public String getFactoryProviderId() {
-		return "NETWORK";
+		return "NSNETWORK";
 	}
 
 	@Override
 	public String getVimProviderId() {
-		return "NETWORK";
+		return "NSNETWORK";
 	}
 }
