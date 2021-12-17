@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -84,6 +86,26 @@ public class SystemService {
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("SECURITY-GROUP");
 		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("NSD");
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("SAP");
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("NSNETWORK");
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("VNF");
+		sys.add(sc);
 		return systemJpa.save(sys);
+	}
+
+	public Iterable<Systems> findAll() {
+		return systemJpa.findAll();
+	}
+
+	public void deleteById(final UUID id) {
+		systemJpa.deleteById(id);
 	}
 }
