@@ -62,7 +62,7 @@ public class SwaggerDocumentationConfigMain {
 	public GroupedOpenApi customImplementationMain() {
 		return GroupedOpenApi.builder()
 				.group("main")
-				.packagesToScan("com.ubiqube.etsi.mano.controller")
+				.packagesToScan("com.ubiqube.etsi.mano.controller", "com.ubiqube.etsi.mano.nfvo.controller")
 				.build();
 	}
 }
