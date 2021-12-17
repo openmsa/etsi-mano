@@ -90,7 +90,6 @@ public abstract class AbstractGenericAction {
 		//
 		vnfWorkflow.refresh(prePlan, localPlan);
 		final OrchExecutionResults<Task> res = vnfWorkflow.execute(prePlan, localPlan);
-		localPlan = orchestrationAdapter.getBluePrint(localPlan.getId());
 		setLiveSatus(localPlan, vnfInstance, res);
 		//
 		setResultLcmInstance(localPlan, res);
