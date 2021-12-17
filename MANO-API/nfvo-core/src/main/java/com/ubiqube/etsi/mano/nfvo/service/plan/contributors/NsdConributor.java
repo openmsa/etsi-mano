@@ -83,7 +83,7 @@ public class NsdConributor extends AbstractNsContributor<NsdTask, NsVt> {
 		return saps.stream()
 				.filter(x -> 0 == nsInstanceService.countLiveInstanceOfNsd(blueprint.getNsInstance(), x.getId()))
 				.map(x -> {
-					final NsdInstance inst = nsInstanceControllerService.createNsd(x.getId().toString(), "nested_of_" + blueprint.getNsInstance().getId(), "");
+					final NsdInstance inst = nsInstanceControllerService.createNsd(x.getNsdId().toString(), "nested_of_" + blueprint.getNsInstance().getId(), "");
 					final NsdTask nsd = createTask(NsdTask::new);
 					nsd.setNsdId(inst.getId());
 					nsd.setChangeType(ChangeType.ADDED);
