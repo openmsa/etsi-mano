@@ -41,6 +41,9 @@ public class NotificationsController {
 		case VNF_PKG_ONBOARDING:
 			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageOnboardingNotification");
 			break;
+		case VNF_PKG_ONDELETION:
+			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
+			break;
 		case VNF_PKG_ONCHANGE:
 			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
 			break;

@@ -113,9 +113,14 @@ public class CommonActionController {
 		final FluxRest rest = new FluxRest(server);
 		final Set<RemoteSubscription> remoteSubscription = server.getRemoteSubscriptions();
 		if (!isSubscribe(SubscriptionType.NSDVNF, remoteSubscription)) {
-			final Subscription subscription = vnfPackageSubscribe(rest);
+			final Subscription subscription = vnfPackageOnboardingSubscribe(rest);
 			final RemoteSubscription remote = reMap(subscription, server);
 			remoteSubscription.add(remote);
+
+			final Subscription subs = vnfPackageChangeSubscribe(rest);
+			final RemoteSubscription rmt = reMap(subs, server);
+			remoteSubscription.add(rmt);
+
 			extractEndpoint(server);
 			return serversJpa.save(server);
 		}
@@ -149,7 +154,15 @@ public class CommonActionController {
 				.build();
 	}
 
-	private Subscription vnfPackageSubscribe(final FluxRest rest) {
+	private Subscription vnfPackageOnboardingSubscribe(final FluxRest rest) {
+		final Subscription subsOut = createSubscription(ApiTypesEnum.SOL003, "/vnfpkgm/v1/notification/onboarding", SubscriptionType.NSDVNF);
+		final UriComponents uri = rest.uriBuilder().pathSegment("vnfpkgm/v1/subscriptions").build();
+		final Class<?> clazz = httpGateway.get(0).getVnfPackageSubscriptionClass();
+		final Class<?> clazzWire = httpGateway.get(0).getPkgmSubscriptionRequest();
+		return postSubscription(rest, uri.toUri(), subsOut, clazzWire, clazz);
+	}
+
+	private Subscription vnfPackageChangeSubscribe(final FluxRest rest) {
 		final Subscription subsOut = createSubscription(ApiTypesEnum.SOL003, "/vnfpkgm/v1/notification/onboarding", SubscriptionType.NSDVNF);
 		final UriComponents uri = rest.uriBuilder().pathSegment("vnfpkgm/v1/subscriptions").build();
 		final Class<?> clazz = httpGateway.get(0).getVnfPackageSubscriptionClass();

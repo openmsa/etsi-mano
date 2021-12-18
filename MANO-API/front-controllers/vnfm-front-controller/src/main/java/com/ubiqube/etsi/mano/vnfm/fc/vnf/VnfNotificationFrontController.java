@@ -24,4 +24,6 @@ public interface VnfNotificationFrontController {
 
 	ResponseEntity<Void> onNotification(Object body, String version);
 
+	ResponseEntity<Void> onChange(Object body, String string);
+
 }
