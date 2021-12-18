@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,7 @@ public class ServerService {
 		return serversJpa.findById(id).orElseThrow(() -> new GenericException("Could not find server id " + id));
 	}
 
+	@Transactional(TxType.NOT_SUPPORTED)
 	public Servers createServer(final Servers servers) {
 		servers.setServerStatus(PlanStatusType.NOT_STARTED);
 		final Servers server = serversJpa.save(servers);
