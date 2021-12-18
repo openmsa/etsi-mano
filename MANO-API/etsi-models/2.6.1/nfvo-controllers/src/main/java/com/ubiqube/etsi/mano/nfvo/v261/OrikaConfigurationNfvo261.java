@@ -35,10 +35,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
@@ -124,24 +122,10 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("id", "resourceDefinitionId")
 				.field("type", "type")
 				.field("vduId", "vduId")
-				.register();
-		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformation.class)
-				.fieldBToA("id", "id")
 				.field("resource.vimConnectionId", "vimConnectionId")
 				.field("resource.resourceProviderId", "resourceProviderId")
-				.field("type", "type")
-				.field("vduId", "vduId")
-				.byDefault()
 				.register();
 
-		orikaMapperFactory.classMap(VnfGrantsRequest.class, GrantRequest.class)
-				.field("vnfLcmOpOccs.vnfInstance.id", "vnfInstanceId")
-				.field("vnfLcmOpOccs.id", "vnfLcmOpOccId")
-				.field("vnfInstance.id", "vnfInstanceId")
-				.field("instanceLink", "links.vnfInstance.href")
-				.field("lcmLink", "links.vnfLcmOpOcc.href")
-				.byDefault()
-				.register();
 		orikaMapperFactory.classMap(InstantiateNsRequest.class, NsdInstance.class)
 				.field("nsFlavourId", "instantiatedVnfInfo.flavourId")
 				.byDefault()
