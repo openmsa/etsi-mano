@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -30,8 +31,6 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimTask;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -58,19 +57,20 @@ public abstract class AbstractGrantService implements VimResourceService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public final void allocate(final Blueprint plan) {
-		final VnfGrantsRequest grantRequest = mapper.map(plan, VnfGrantsRequest.class);
+		final GrantResponse grantRequest = mapper.map(plan, GrantResponse.class);
 		final Predicate<? super VimTask> isManoClass = x -> x.getType() == ResourceTypeEnum.COMPUTE ||
 				x.getType() == ResourceTypeEnum.LINKPORT ||
 				x.getType() == ResourceTypeEnum.STORAGE ||
 				x.getType() == ResourceTypeEnum.VL;
 		plan.getTasks().stream()
 				.filter(isManoClass)
+				.map(VimTask.class::cast)
 				.forEach(xx -> {
 					final VimTask x = (VimTask) xx;
 					if (x.getChangeType() == ChangeType.ADDED) {
-						grantRequest.getAddResources().add(mapper.map(x, GrantInformation.class));
+						grantRequest.getAddResources().add(mapper.map(x, GrantInformationExt.class));
 					} else {
-						grantRequest.getRemoveResources().add(mapper.map(x, GrantInformation.class));
+						grantRequest.getRemoveResources().add(mapper.map(x, GrantInformationExt.class));
 					}
 				});
 		final GrantResponse grantsResp = nfvo.sendSyncGrantRequest(grantRequest);

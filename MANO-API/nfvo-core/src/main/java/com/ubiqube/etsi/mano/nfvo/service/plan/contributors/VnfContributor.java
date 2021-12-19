@@ -124,7 +124,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 					vnf.setVnfInstance(vnfInstance.getId().toString());
 					vnf.setAlias(nsPackageVnfPackage.getToscaName());
 					vnf.setToscaName(nsPackageVnfPackage.getToscaName());
-
+					vnf.setFlavourId("flavour");
 					return new NsVnfVt(vnf);
 				}).toList();
 	}

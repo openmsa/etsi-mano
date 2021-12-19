@@ -19,12 +19,9 @@ package com.ubiqube.etsi.mano.vnfm.config;
 import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
-import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
@@ -75,37 +72,24 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 
-		orikaMapperFactory.classMap(GrantInformation.class, GrantInformationExt.class)
+		orikaMapperFactory.classMap(GrantInformationExt.class, GrantInformationExt.class)
 				.exclude("id")
 				.field("id", "resourceDefinitionId")
 				.byDefault()
 				.register();
-
-		orikaMapperFactory.classMap(GrantResponse.class, VnfGrantsRequest.class)
-				.field("vnfInstanceId", "vnfInstance.id")
-				.field("vnfLcmOpOccId", "vnfLcmOpOccs.id")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(GrantInformation.class, ComputeTask.class)
+		orikaMapperFactory.classMap(GrantInformationExt.class, ComputeTask.class)
 				.field("vduId", "vnfCompute.id")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(GrantInformation.class, NetworkTask.class)
+		orikaMapperFactory.classMap(GrantInformationExt.class, NetworkTask.class)
 				.field("vduId", "vnfVl.id")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(GrantInformation.class, DnsZoneTask.class)
+		orikaMapperFactory.classMap(GrantInformationExt.class, DnsZoneTask.class)
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(GrantInformation.class, StorageTask.class)
+		orikaMapperFactory.classMap(GrantInformationExt.class, StorageTask.class)
 				.field("vduId", "vnfStorage.id")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(VnfGrantsRequest.class, VnfBlueprint.class)
-				.exclude("vnfInstance")
-				.field("vnfInstance.id", "vnfInstance.id")
-				.field("vnfLcmOpOccs.id", "id")
-				.field("vnfdId", "vnfInstance.vnfdId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfInstantiate.class, VnfBlueprint.class)
@@ -113,7 +97,9 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 		/*
-		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance. class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}") .byDefault() .register();
+		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.
+		 * class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}")
+		 * .byDefault() .register();
 		 */
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new UuidConverter());

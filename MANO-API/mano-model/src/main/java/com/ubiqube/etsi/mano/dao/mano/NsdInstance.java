@@ -106,7 +106,7 @@ public class NsdInstance extends Instance {
 	@JoinColumn
 	private Set<ParamsForVnf> additionalParamsForVnf;
 	// 3.3.1
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private Set<WanConnectionInformation> wanConnectionInfo;
 	// 3.3.1
 	@ElementCollection(fetch = FetchType.EAGER)

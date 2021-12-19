@@ -61,6 +61,10 @@ public class VnfmGrantManagementImpl implements GrantManagement {
 		final URI uri = server.getUriFor(ApiVersionType.SOL003_GRANT, "grants/{grantId}", uriVariables);
 		final HttpGateway httpGateway = server.httpGateway();
 		final ResponseEntity<?> resp = server.rest().getWithReturn(uri, httpGateway.getGrantResponse());
+		return buildResponse(resp, grantId);
+	}
+
+	private GrantResponse buildResponse(final ResponseEntity<?> resp, final UUID grantId) {
 		GrantResponse grants = new GrantResponse();
 		if (resp.getStatusCodeValue() == 202) {
 			grants.setId(grantId);
@@ -86,15 +90,15 @@ public class VnfmGrantManagementImpl implements GrantManagement {
 
 	private static GrantResponse handleLocation(final ResponseEntity<?> resp) {
 		final Optional<List<String>> loc = Optional.ofNullable(resp.getHeaders().get("Location"));
-		if (loc.isPresent()) {
-			final Matcher m = UUID_REGEXP.matcher(loc.get().get(0));
-			m.find();
-			final String uuid = m.group("uuid");
-			final GrantResponse grants = new GrantResponse();
-			grants.setId(UUID.fromString(uuid));
-			grants.setAvailable(Boolean.FALSE);
-			return grants;
+		if (!loc.isPresent()) {
+			throw new GenericException("Grant post received a ACCEPTED response with no Location header");
 		}
-		throw new GenericException("Grant post received a ACCEPTED response with no Location header");
+		final Matcher m = UUID_REGEXP.matcher(loc.get().get(0));
+		m.find();
+		final String uuid = m.group("uuid");
+		final GrantResponse grants = new GrantResponse();
+		grants.setId(UUID.fromString(uuid));
+		grants.setAvailable(Boolean.FALSE);
+		return grants;
 	}
 }

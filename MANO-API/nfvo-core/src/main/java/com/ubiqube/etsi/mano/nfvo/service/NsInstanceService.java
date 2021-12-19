@@ -125,4 +125,8 @@ public class NsInstanceService {
 		return 0 != nsdInstanceJpa.countByNsdInfo(nsPackage);
 	}
 
+	public Iterable<NsdInstance> findAll() {
+		return nsdInstanceJpa.findAll();
+	}
+
 }

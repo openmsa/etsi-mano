@@ -230,7 +230,7 @@ public abstract class AbstractGrantAction {
 				return vcrfe;
 			});
 			final VimComputeResourceFlavourEntity vcre = new VimComputeResourceFlavourEntity(vcretmp);
-			vcre.setVnfdVirtualComputeDescId(x.getId().toString());
+			vcre.setVnfdVirtualComputeDescId(x.getToscaName());
 			listVcrfe.add(vcre);
 		});
 		return listVcrfe;
@@ -256,7 +256,7 @@ public abstract class AbstractGrantAction {
 					final Optional<SwImage> newImg = vim.storage(vimInfo).getSwImageMatching(img);
 					return newImg.orElseGet(() -> uploadImage(vimInfo, vim, x, grants.getVnfdId()));
 				});
-				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
+				listVsie.add(mapSoftwareImage(imgCached, img.getName(), vimInfo, vim));
 			}
 		});
 		final Set<VnfStorage> storage = getVnfStorage(grants.getId());
@@ -264,7 +264,7 @@ public abstract class AbstractGrantAction {
 			final SoftwareImage img = x.getSoftwareImage();
 			if (null != img) {
 				final SwImage imgCached = cache.get(img.getName());
-				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
+				listVsie.add(mapSoftwareImage(imgCached, img.getName(), vimInfo, vim));
 			}
 		});
 		return listVsie;
@@ -282,10 +282,10 @@ public abstract class AbstractGrantAction {
 
 	protected abstract InputStream findImage(final SoftwareImage softwareImage, final String vnfdId);
 
-	private static VimSoftwareImageEntity mapSoftwareImage(final SwImage softwareImage, final UUID vduId, final VimConnectionInformation vimInfo, final Vim vim) {
+	private static VimSoftwareImageEntity mapSoftwareImage(final SwImage softwareImage, final String vduId, final VimConnectionInformation vimInfo, final Vim vim) {
 		final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
 		vsie.setVimSoftwareImageId(softwareImage.getVimResourceId());
-		vsie.setVnfdSoftwareImageId(vduId.toString());
+		vsie.setVnfdSoftwareImageId(vduId);
 		vsie.setVimConnectionId(vimInfo.getVimId());
 		vsie.setResourceProviderId(vim.getType());
 		return vsie;
