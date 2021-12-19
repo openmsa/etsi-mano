@@ -49,6 +49,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
 import org.springframework.web.reactive.function.client.WebClient.RequestBodySpec;
 import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
+import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
@@ -157,7 +158,13 @@ public class FluxRest {
 				.retrieve()
 				.toEntity(clazz);
 		return resp.block();
+	}
 
+	public final ResponseEntity<?> deleteWithReturn(final URI uri, final Object body) {
+		final ResponseSpec resp = makeBaseQuery(uri, HttpMethod.DELETE, body)
+				.accept(MediaType.APPLICATION_JSON)
+				.retrieve();
+		return resp.toBodilessEntity().block();
 	}
 
 	public final <T> T post(final URI uri, final Class<T> clazz) {
