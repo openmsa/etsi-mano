@@ -54,8 +54,8 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 
 	private final VnfInstanceGenericFrontController frontController;
 
-	public VnfLcm261Sol003Controller(final VnfInstanceGenericFrontController _frontController) {
-		frontController = _frontController;
+	public VnfLcm261Sol003Controller(final VnfInstanceGenericFrontController frontController) {
+		this.frontController = frontController;
 		LOG.info("Starting Ns Instance SOL002 Controller.");
 	}
 
