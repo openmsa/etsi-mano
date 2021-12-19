@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.service;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -76,6 +76,9 @@ public class ServerService {
 	@Transactional(TxType.NOT_SUPPORTED)
 	public Servers createServer(final Servers servers) {
 		servers.setServerStatus(PlanStatusType.NOT_STARTED);
+		Optional.ofNullable(serversJpa.findByUrl(servers.getUrl())).ifPresent(x -> {
+			throw new GenericException("duplicate Server: " + x.get().getId() + " url=" + servers.getUrl());
+		});
 		final Servers server = serversJpa.save(servers);
 		eventManager.sendAction(ActionType.REGISTER_SERVER, server.getId());
 		return server;
@@ -85,14 +88,13 @@ public class ServerService {
 		final Servers server = serversJpa.findById(id).orElseThrow(() -> new GenericException("Could not find server id " + id));
 		final FluxRest rest = new FluxRest(server);
 		server.getRemoteSubscriptions().forEach(x -> {
-			unregister(rest, server, x);
+			unregister(rest, x);
 		});
 		serversJpa.deleteById(id);
 	}
 
-	private void unregister(final FluxRest rest, final Servers server, final RemoteSubscription x) {
+	private void unregister(final FluxRest rest, final RemoteSubscription x) {
 		final String uri = "/" + new File(httpGateway.getUrlFor(ApiVersionType.SOL003_VNFPKGM), "subscriptions/{id}");
-		final Object params = Map.of("id", x.getRemoteSubscriptionId());
 		final URI resp = rest.uriBuilder().path(uri).build(x.getRemoteSubscriptionId());
 		rest.deleteWithReturn(resp, null);
 	}

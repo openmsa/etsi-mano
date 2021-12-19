@@ -16,8 +16,6 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,13 +25,14 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
+import com.ubiqube.etsi.mano.service.event.Notifications;
+import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
@@ -44,11 +43,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	private final GrammarParser grammarParser;
 
-	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager em, final GrammarParser grammarParser) {
+	private final Notifications notifications;
+
+	private final ServerService serverService;
+
+	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager em, final GrammarParser grammarParser, final Notifications notifications, final ServerService serverService) {
 		super();
 		this.subscriptionJpa = repository;
 		this.em = em;
 		this.grammarParser = grammarParser;
+		this.notifications = notifications;
+		this.serverService = serverService;
 	}
 
 	@Override
@@ -62,17 +67,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public Subscription save(final Subscription subscription, final SubscriptionType type) {
 		subscription.setSubscriptionType(type);
-		testSubscription(subscription);
+		final ServerAdapter server = serverService.buildServerAdapter(subscription);
+		notifications.check(server, subscription.getCallbackUri());
 		return subscriptionJpa.save(subscription);
-	}
-
-	private static void testSubscription(final Subscription subscription) {
-		try {
-			final URL url = new URL(subscription.getCallbackUri());
-			url.openConnection();
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
 	}
 
 	@Override

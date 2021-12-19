@@ -33,7 +33,6 @@ import org.springframework.util.MultiValueMap;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.service.SubscriptionService;
-import com.ubiqube.etsi.mano.service.event.Notifications;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -48,13 +47,10 @@ public class SubscriptionFrontControllerImpl implements SubscriptionFrontControl
 
 	private final MapperFacade mapper;
 
-	private final Notifications notifications;
-
-	public SubscriptionFrontControllerImpl(final SubscriptionService subscriptionService, final MapperFacade mapper, final Notifications notifications) {
+	public SubscriptionFrontControllerImpl(final SubscriptionService subscriptionService, final MapperFacade mapper) {
 		super();
 		this.subscriptionService = subscriptionService;
 		this.mapper = mapper;
-		this.notifications = notifications;
 	}
 
 	@Override
@@ -69,7 +65,6 @@ public class SubscriptionFrontControllerImpl implements SubscriptionFrontControl
 	@Override
 	public <U> ResponseEntity<U> create(final Object subscriptionRequest, final Class<U> clazz, final Consumer<U> makeLinks, final Function<U, String> getSelfLink, final SubscriptionType type) {
 		Subscription subscription = mapper.map(subscriptionRequest, Subscription.class);
-		notifications.check(subscription.getAuthentication(), subscription.getCallbackUri());
 		subscription = subscriptionService.save(subscription, type);
 		final U res = mapper.map(subscription, clazz);
 		makeLinks.accept(res);

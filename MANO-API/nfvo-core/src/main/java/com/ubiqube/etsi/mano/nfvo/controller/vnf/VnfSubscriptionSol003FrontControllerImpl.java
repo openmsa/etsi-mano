@@ -29,9 +29,6 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionSol003FrontController
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.ServerService;
-import com.ubiqube.etsi.mano.service.event.Notifications;
-import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -47,16 +44,9 @@ public class VnfSubscriptionSol003FrontControllerImpl implements VnfSubscription
 
 	private final MapperFacade mapper;
 
-	private final Notifications notifications;
-
-	private final ServerService serverService;
-
-	public VnfSubscriptionSol003FrontControllerImpl(final VnfSubscriptionManagement vnfSubscriptionManagement, final MapperFacade mapper, final Notifications notifications,
-			final ServerService serverService) {
+	public VnfSubscriptionSol003FrontControllerImpl(final VnfSubscriptionManagement vnfSubscriptionManagement, final MapperFacade mapper) {
 		this.vnfSubscriptionManagement = vnfSubscriptionManagement;
 		this.mapper = mapper;
-		this.notifications = notifications;
-		this.serverService = serverService;
 	}
 
 	@Override
@@ -69,12 +59,9 @@ public class VnfSubscriptionSol003FrontControllerImpl implements VnfSubscription
 
 	@Override
 	public <U> ResponseEntity<U> create(final Object subscriptionsPostQuery, final Class<U> clazz, final Consumer<U> makeLinks) {
-		Subscription subscription = mapper.map(subscriptionsPostQuery, Subscription.class);
-		// Check subscription.
-		final ServerAdapter server = serverService.findNearestServer();
-		notifications.check(server, subscription.getCallbackUri());
-		subscription = vnfSubscriptionManagement.subscriptionsPost(subscription, ApiTypesEnum.SOL005);
-		final U pkgmSubscription = mapper.map(subscription, clazz);
+		final Subscription subscription = mapper.map(subscriptionsPostQuery, Subscription.class);
+		final Subscription ns = vnfSubscriptionManagement.subscriptionsPost(subscription, ApiTypesEnum.SOL005);
+		final U pkgmSubscription = mapper.map(ns, clazz);
 		makeLinks.accept(pkgmSubscription);
 		return new ResponseEntity<>(pkgmSubscription, HttpStatus.CREATED);
 	}
