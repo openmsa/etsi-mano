@@ -1,0 +1,41 @@
+#
+#
+#
+#
+tosca_definitions_version: tosca_simple_yaml_1_0
+description: >
+  Sample NSD for integration testing.
+
+imports:
+  - etsi_nfv_sol001_nsd_types.yaml
+  - etsi_nfv_sol001_vnfd_types.yaml
+
+
+topology_template:
+  node_templates:
+    ns01:
+      type: tosca.nodes.nfv.NS
+      properties:
+        descriptor_id: fb4f8f06-f4b0-4d80-8cda-cd95cf018972
+        designer: ovi@ubiqube.com
+        version: 0.0.1
+        name: First NSD.
+        invariant_id: fb4f8f06-f4b0-4d80-8cda-cd95cf018972
+        flavour_id: flavor01
+        ns_profile: # tosca.datatypes.nfv.NsProfile
+          ns_instantiation_level: demo
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          flavour_id: flavor02
+        service_availability_level: 1
+        priority: 1
+        scale_status: # This is a capabilities not a properties.
+          level1: 1
+      requirements:
+        - virtual_link: vl # tosca.nodes.nfv.NsVirtualLink
+
+
+
+
+
+

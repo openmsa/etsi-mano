@@ -1,0 +1,51 @@
+#
+#
+#
+#
+tosca_definitions_version: tosca_simple_yaml_1_0
+description: >
+  Sample NSD for integration testing.
+
+imports:
+  - etsi_nfv_sol001_nsd_types.yaml
+  - etsi_nfv_sol001_vnfd_types.yaml
+
+
+topology_template:
+  node_templates:
+    ns01:
+      type: tosca.nodes.nfv.NS
+      properties:
+        descriptor_id: 6603b739-7915-4258-a8ee-49c548213a07
+        designer: ovi@ubiqube.com
+        version: 0.0.1
+        name: First NSD.
+        invariant_id: e0ea6b80-216b-4b73-88e8-bc459388020b
+        flavour_id: flavor01
+        ns_profile: # tosca.datatypes.nfv.NsProfile
+          ns_instantiation_level: demo
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          flavour_id: flavor02
+        service_availability_level: 1
+        priority: 1
+        scale_status: # This is a capabilities not a properties.
+          level1: 1
+      requirements:
+        - virtual_link: vl # tosca.nodes.nfv.NsVirtualLink
+
+    frontend:
+      type: tosca.nodes.nfv.VNF
+      properties:
+        descriptor_id: dcd11fbf-c767-41eb-abc9-cec35dd95bca
+        provider: Ubiqube internal.
+        product_name: Integration tests
+        software_version: 1.0.0
+        descriptor_version: 1.0.1
+        flavour_id: flavor01
+        monitoring_parameters: # list tosca.datatypes.nfv.VnfMonitoringParameter
+          mon01:
+            performance_metric: v_disk_usage_peak_vnf
+            collection_period: 1 m
+      requirements:
+        - virtual_link: public
