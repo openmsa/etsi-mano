@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +35,10 @@ import lombok.Setter;
 @Setter
 @Getter
 @Embeddable
-public class NsHealData {
+public class NsHealData implements Serializable {
+
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 
 	private DegreeHealingType degreeHealing;
 

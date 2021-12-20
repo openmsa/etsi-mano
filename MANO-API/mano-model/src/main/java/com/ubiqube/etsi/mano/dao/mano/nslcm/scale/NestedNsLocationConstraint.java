@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,7 +35,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class NestedNsLocationConstraint {
+public class NestedNsLocationConstraint implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String nsProfileId;
