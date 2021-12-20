@@ -27,7 +27,7 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
  */
 public interface OrchestrationService<U> {
 
-	SystemBuilder<U> systemBuilderOf(UnitOfWork<U> uow);
+	SystemBuilder<UnitOfWork<U>> systemBuilderOf(UnitOfWork<U> uow);
 
 	SystemBuilder<U> systemBuilderOf(final UnitOfWork<U> left, final UnitOfWork<U> right);
 

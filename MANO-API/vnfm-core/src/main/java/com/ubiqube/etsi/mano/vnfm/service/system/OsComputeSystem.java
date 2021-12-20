@@ -22,6 +22,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -48,7 +49,7 @@ public class OsComputeSystem extends AbstractVimSystem<ComputeTask> {
 	}
 
 	@Override
-	public SystemBuilder<ComputeTask> getImplementation(final OrchestrationService<ComputeTask> orchestrationService, final VirtualTask<ComputeTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	public SystemBuilder<UnitOfWork<ComputeTask>> getImplementation(final OrchestrationService<ComputeTask> orchestrationService, final VirtualTask<ComputeTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfComputeUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 

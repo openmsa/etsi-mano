@@ -24,6 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsUow;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 
@@ -47,7 +48,7 @@ public class NsNsdSystem extends AbstractVimSystem<NsdTask> {
 	}
 
 	@Override
-	protected SystemBuilder<NsdTask> getImplementation(final OrchestrationService<NsdTask> orchestrationService, final VirtualTask<NsdTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<UnitOfWork<NsdTask>> getImplementation(final OrchestrationService<NsdTask> orchestrationService, final VirtualTask<NsdTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new NsUow(virtualTask, nsLcmOpOccsService));
 	}
 

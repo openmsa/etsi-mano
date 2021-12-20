@@ -30,8 +30,8 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 public class OrchestrationServiceImpl<U> implements OrchestrationService<U> {
 
 	@Override
-	public SystemBuilder<U> systemBuilderOf(final UnitOfWork<U> uow) {
-		return SystemBuilderImpl.of(uow);
+	public SystemBuilder<UnitOfWork<U>> systemBuilderOf(final UnitOfWork<U> uow) {
+		return (SystemBuilder<UnitOfWork<U>>) SystemBuilderImpl.of(uow);
 	}
 
 	@Override

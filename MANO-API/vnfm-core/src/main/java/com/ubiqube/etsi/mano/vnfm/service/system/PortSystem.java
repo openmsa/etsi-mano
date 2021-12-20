@@ -22,6 +22,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -48,7 +49,7 @@ public class PortSystem extends AbstractVimSystem<ExternalCpTask> {
 	}
 
 	@Override
-	protected SystemBuilder<ExternalCpTask> getImplementation(final OrchestrationService<ExternalCpTask> orchestrationService, final VirtualTask<ExternalCpTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<UnitOfWork<ExternalCpTask>> getImplementation(final OrchestrationService<ExternalCpTask> orchestrationService, final VirtualTask<ExternalCpTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfPortUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 

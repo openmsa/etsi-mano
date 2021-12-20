@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsVlUow;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -47,7 +48,7 @@ public class NsVirtualLinkSystem extends AbstractVimSystem<NsVirtualLinkTask> {
 	}
 
 	@Override
-	protected SystemBuilder<NsVirtualLinkTask> getImplementation(final OrchestrationService<NsVirtualLinkTask> orchestrationService, final VirtualTask<NsVirtualLinkTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<UnitOfWork<NsVirtualLinkTask>> getImplementation(final OrchestrationService<NsVirtualLinkTask> orchestrationService, final VirtualTask<NsVirtualLinkTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new NsVlUow(virtualTask, vim, vimConnectionInformation));
 	}
 
