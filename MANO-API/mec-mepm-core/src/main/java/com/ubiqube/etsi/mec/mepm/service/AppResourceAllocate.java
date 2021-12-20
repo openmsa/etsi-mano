@@ -44,6 +44,7 @@ public class AppResourceAllocate implements ResourceAllocate {
 	@Override
 	public GrantResponse sendSyncGrantRequest(final GrantInterface req) {
 		// final GrantsRequest finalReq = mapper.map(req, GrantsRequest.class);
+		LOG.info("Sending grant.");
 		return sendAndWaitGrantRequest(req);
 	}
 

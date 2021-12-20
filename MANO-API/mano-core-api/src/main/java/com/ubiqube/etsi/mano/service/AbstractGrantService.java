@@ -31,6 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimTask;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -58,17 +59,19 @@ public abstract class AbstractGrantService implements VimResourceService {
 	@Override
 	public final void allocate(final Blueprint plan) {
 		final GrantResponse grantRequest = mapper.map(plan, GrantResponse.class);
-		final Predicate<? super VimTask> isManoClass = x -> x.getType() == ResourceTypeEnum.COMPUTE ||
-				x.getType() == ResourceTypeEnum.LINKPORT ||
-				x.getType() == ResourceTypeEnum.STORAGE ||
-				x.getType() == ResourceTypeEnum.VL;
+		final Predicate<? super VimTask> isManoClass = x -> (x.getType() == ResourceTypeEnum.COMPUTE) ||
+				(x.getType() == ResourceTypeEnum.LINKPORT) ||
+				(x.getType() == ResourceTypeEnum.STORAGE) ||
+				(x.getType() == ResourceTypeEnum.VL);
 		plan.getTasks().stream()
 				.filter(isManoClass)
 				.map(VimTask.class::cast)
 				.forEach(xx -> {
 					final VimTask x = (VimTask) xx;
 					if (x.getChangeType() == ChangeType.ADDED) {
-						grantRequest.getAddResources().add(mapper.map(x, GrantInformationExt.class));
+						final GrantInformationExt obj = mapper.map(x, GrantInformationExt.class);
+						obj.setResourceTemplateId(x.getToscaName());
+						grantRequest.getAddResources().add(obj);
 					} else {
 						grantRequest.getRemoveResources().add(mapper.map(x, GrantInformationExt.class));
 					}
@@ -92,6 +95,13 @@ public abstract class AbstractGrantService implements VimResourceService {
 		plan.setGrantsRequestId(grantsResp.getId().toString());
 		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
 		fixUnknownTask(plan.getTasks(), plan.getVimConnections());
+		fixVimConnections(plan.getVimConnections());
+	}
+
+	private void fixVimConnections(final Set<VimConnectionInformation> vimConnections) {
+		vimConnections.forEach(x -> {
+			x.setGeoloc(new GeoPoint(10, 10));
+		});
 	}
 
 	private static void fixUnknownTask(final Set<? extends VimTask> tasks, final Set<VimConnectionInformation> vimConnections) {
@@ -107,23 +117,22 @@ public abstract class AbstractGrantService implements VimResourceService {
 				.filter(x -> x.getChangeType() != ChangeType.REMOVED)
 				.map(ComputeTask.class::cast)
 				.forEach(x -> {
-					x.setFlavorId(findFlavor(vimAssets, x.getVnfCompute().getId()));
-					x.setImageId(findImage(vimAssets, x.getVnfCompute().getId()));
+					x.setFlavorId(findFlavor(vimAssets, x.getVnfCompute().getToscaName()));
+					x.setImageId(findImage(vimAssets, x.getVnfCompute().getSoftwareImage().getName()));
 				});
 	}
 
-	private static String findImage(final GrantVimAssetsEntity vimAssets, final UUID vduId) {
+	private static String findImage(final GrantVimAssetsEntity vimAssets, final String imageName) {
 		return vimAssets.getSoftwareImages().stream()
-				.filter(x -> x.getVnfdSoftwareImageId().equals(vduId.toString()))
+				.filter(x -> x.getVnfdSoftwareImageId().equals(imageName))
 				.map(VimSoftwareImageEntity::getVimSoftwareImageId)
 				.findFirst()
-				.orElseThrow(() -> new NotFoundException("Could not find Image for vdu: " + vduId));
-
+				.orElseThrow(() -> new NotFoundException("Could not find Image for vdu: " + imageName));
 	}
 
-	private static String findFlavor(final GrantVimAssetsEntity vimAssets, final UUID vduId) {
+	private static String findFlavor(final GrantVimAssetsEntity vimAssets, final String vduId) {
 		return vimAssets.getComputeResourceFlavours().stream()
-				.filter(x -> x.getVnfdVirtualComputeDescId().equals(vduId.toString()))
+				.filter(x -> x.getVnfdVirtualComputeDescId().equals(vduId))
 				.map(VimComputeResourceFlavourEntity::getVimFlavourId)
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException("Could not find flavor for vdu: " + vduId));

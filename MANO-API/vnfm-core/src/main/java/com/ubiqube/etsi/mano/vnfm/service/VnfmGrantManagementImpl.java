@@ -71,6 +71,7 @@ public class VnfmGrantManagementImpl implements GrantManagement {
 			grants.setAvailable(Boolean.FALSE);
 		} else {
 			grants = mapper.map(resp.getBody(), GrantResponse.class);
+			grants.setAvailable(true);
 		}
 		return grants;
 	}
