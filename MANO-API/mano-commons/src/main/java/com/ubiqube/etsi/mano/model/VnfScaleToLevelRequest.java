@@ -19,35 +19,36 @@ package com.ubiqube.etsi.mano.model;
 import java.util.List;
 import java.util.Map;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleToLevelData;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class VnfScaleToLevelRequest {
-	private String instantiationLevelId = null;
+	private String instantiationLevelId;
 
 	private List<CommScaleInfo> scaleInfo;
 
-	private Map<String, String> additionalParams = null;
+	private Map<String, String> additionalParams;
 
-	public String getInstantiationLevelId() {
-		return instantiationLevelId;
-	}
-
-	public void setInstantiationLevelId(final String instantiationLevelId) {
-		this.instantiationLevelId = instantiationLevelId;
-	}
-
-	public List<CommScaleInfo> getScaleInfo() {
-		return scaleInfo;
-	}
-
-	public void setScaleInfo(final List<CommScaleInfo> scaleInfo) {
-		this.scaleInfo = scaleInfo;
-	}
-
-	public Map<String, String> getAdditionalParams() {
-		return additionalParams;
-	}
-
-	public void setAdditionalParams(final Map<String, String> additionalParams) {
-		this.additionalParams = additionalParams;
+	public static VnfScaleToLevelRequest of(final ScaleToLevelData scaleData) {
+		final List<VnfScaleInfo> l = scaleData.getVnfScaleInfo();
+		final List<CommScaleInfo> scaleInfo = l.stream().map(CommScaleInfo::of).toList();
+		return new VnfScaleToLevelRequest(scaleData.getVnfInstantiationLevelId(), scaleInfo, scaleData.getAdditionalParams());
 	}
 
 }
