@@ -21,6 +21,7 @@ import java.time.OffsetDateTime;
 import javax.annotation.Nonnull;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
@@ -39,7 +40,7 @@ public final class LcmFactory {
 		nsLcmOpOccsNsLcmOpOcc.setOperationStatus(OperationStatusType.PROCESSING);
 		nsLcmOpOccsNsLcmOpOcc.setStartTime(OffsetDateTime.now());
 		nsLcmOpOccsNsLcmOpOcc.setStateEnteredTime(OffsetDateTime.now());
+		nsLcmOpOccsNsLcmOpOcc.setParameters(new BlueprintParameters());
 		return nsLcmOpOccsNsLcmOpOcc;
 	}
-
 }

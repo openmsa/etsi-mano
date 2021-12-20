@@ -134,7 +134,6 @@ public class VnfPackageOnboardingImpl {
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 		} catch (final RuntimeException e) {
 			LOG.error("", e);
-			// XXX It is ERROR in
 			final VnfPackage v2 = vnfPackageService.findById(vnfPackage.getId());
 			v2.setOnboardingState(OnboardingStateType.CREATED);
 			v2.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));

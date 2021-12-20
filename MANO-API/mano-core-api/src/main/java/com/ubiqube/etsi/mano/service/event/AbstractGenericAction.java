@@ -54,7 +54,7 @@ public abstract class AbstractGenericAction {
 
 	private final VimResourceService vimResourceService;
 
-	OrchestrationAdapter<?, ?> orchestrationAdapter;
+	private final OrchestrationAdapter<?, ?> orchestrationAdapter;
 
 	protected AbstractGenericAction(final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter) {
 		super();
