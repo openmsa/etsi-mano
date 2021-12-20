@@ -118,10 +118,8 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 
 	@Override
 	public NsBlueprint terminate(final UUID nsInstanceUuid, final OffsetDateTime terminationTime) {
-		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
-		ensureInstantiated(nsInstanceDb);
-		ensureNotLocked(nsInstanceDb);
-		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.TERMINATE);
+		final NsBlueprint nsLcm = lcmForRunningOperation(nsInstanceUuid, PlanOperationType.TERMINATE);
+		nsLcm.setStartTime(terminationTime);
 		nsBlueprintService.save(nsLcm);
 		// XXX we can use quartz cron job for terminationTime.
 		eventManager.sendActionNfvo(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<>());
@@ -130,13 +128,26 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 
 	@Override
 	public NsBlueprint heal(final UUID nsInstanceUuid, final NsHeal nsHeal) {
-		// TODO Auto-generated method stub
-		return null;
+		final NsBlueprint nsLcm = lcmForRunningOperation(nsInstanceUuid, PlanOperationType.HEAL);
+		nsLcm.getParameters().setNsHeal(nsHeal);
+		nsBlueprintService.save(nsLcm);
+		eventManager.sendActionNfvo(ActionType.NS_HEAL, nsLcm.getId(), new HashMap<>());
+		return nsLcm;
 	}
 
 	@Override
 	public NsBlueprint scale(final UUID nsInstanceUuid, final NsScale nsInst) {
-		// TODO Auto-generated method stub
-		return null;
+		final NsBlueprint nsLcm = lcmForRunningOperation(nsInstanceUuid, PlanOperationType.SCALE);
+		nsLcm.getParameters().setNsScale(nsInst);
+		nsBlueprintService.save(nsLcm);
+		eventManager.sendActionNfvo(ActionType.NS_SCALE, nsLcm.getId(), new HashMap<>());
+		return nsLcm;
+	}
+
+	private NsBlueprint lcmForRunningOperation(final UUID nsInstanceUuid, final PlanOperationType pt) {
+		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
+		ensureInstantiated(nsInstanceDb);
+		ensureNotLocked(nsInstanceDb);
+		return LcmFactory.createNsLcmOpOcc(nsInstanceDb, pt);
 	}
 }
