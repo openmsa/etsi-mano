@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -43,7 +44,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class ScaleNsData {
+public class ScaleNsData implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -70,5 +74,8 @@ public class ScaleNsData {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<NestedNsLocationConstraint> nestedNslocationConstraints;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<ScaleVnfData> scaleVnfData;
 
 }

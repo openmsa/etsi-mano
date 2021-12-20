@@ -192,31 +192,31 @@ public class NsPackageOnboardingImpl {
 	private static void remapScaling(final NsdPackage nsPackage, final NsScaling nsScaling) {
 		nsScaling.getNsStepMapping().forEach(x -> x.target().forEach(y -> {
 			final NsdPackageNsdPackage nsd = findNesteedNs(nsPackage, y);
-			final NsScalingStepMapping scaling = new NsScalingStepMapping(mapStepMapping(x.mapping()));
+			final NsScalingStepMapping scaling = new NsScalingStepMapping(mapStepMapping(x.mapping()), x.aspectId());
 			x.mapping().entrySet().forEach(z -> nsd.addStepMapping(scaling));
 		}));
 		nsScaling.getVnfStepMapping().forEach(x -> x.target().forEach(y -> {
 			final NsdPackageVnfPackage nsd = findVnf(nsPackage, y);
-			final VnfScalingStepMapping scaling = new VnfScalingStepMapping(mapStepMapping(x.mapping()));
+			final VnfScalingStepMapping scaling = new VnfScalingStepMapping(mapStepMapping(x.mapping()), x.aspectId());
 			x.mapping().entrySet().forEach(z -> nsd.addStepMapping(scaling));
 		}));
 		nsScaling.getVlStepMapping().forEach(x -> x.targets().forEach(y -> {
 			final NsVirtualLink vl = findVl(nsPackage, y);
-			final NsVlStepMapping mapping = new NsVlStepMapping(mapVlStep(x.mapping()));
+			final NsVlStepMapping mapping = new NsVlStepMapping(mapVlStep(x.mapping()), x.aspectId());
 			vl.addStepMapping(mapping);
 		}));
 
 		nsScaling.getNsLevelMapping().forEach(x -> x.target().forEach(y -> {
 			final NsdPackageNsdPackage nsd = findNesteedNs(nsPackage, y);
 			x.mapping().entrySet().forEach(z -> {
-				final NsScalingLevelMapping mapping = new NsScalingLevelMapping(z.getKey(), z.getValue());
+				final NsScalingLevelMapping mapping = new NsScalingLevelMapping(z.getKey(), x.aspectId(), z.getValue());
 				nsd.addLevelMapping(mapping);
 			});
 		}));
 		nsScaling.getVnfLevelMapping().forEach(x -> x.target().forEach(y -> {
 			final NsdPackageVnfPackage nsd = findVnf(nsPackage, y);
 			x.mapping().entrySet().forEach(z -> {
-				final VnfScalingLevelMapping mapping = new VnfScalingLevelMapping(z.getKey(), z.getValue());
+				final VnfScalingLevelMapping mapping = new VnfScalingLevelMapping(z.getKey(), x.aspectId(), z.getValue());
 				nsd.addLevelMapping(mapping);
 			});
 		}));

@@ -235,9 +235,9 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		final NsScaling ret = new NsScaling();
 		// Level
 		final List<VnfToInstantiationLevelMapping> vnfLevel = getObjects(VnfToInstantiationLevelMapping.class, userData);
-		ret.setVnfLevelMapping(vnfLevel.stream().map(x -> new LevelMapping(x.getTargets(), x.getNumberOfInstances())).toList());
+		ret.setVnfLevelMapping(vnfLevel.stream().map(x -> new LevelMapping(x.getInternalName(), x.getTargets(), x.getNumberOfInstances())).toList());
 		final List<NsToLevelMapping> nsLevel = getObjects(NsToLevelMapping.class, userData);
-		ret.setNsLevelMapping(nsLevel.stream().map(x -> new LevelMapping(x.getTargets(), x.getNumberOfInstances())).toList());
+		ret.setNsLevelMapping(nsLevel.stream().map(x -> new LevelMapping(x.getAspect(), x.getTargets(), x.getNumberOfInstances())).toList());
 		final List<VirtualLinkToLevelMapping> vlLevel = getObjects(VirtualLinkToLevelMapping.class, userData);
 		ret.setVlLevelMapping(vlLevel.stream().map(x -> new VlLevelMapping(x.getTargets(), map(x.getBitRateRequirements()))).toList());
 		// Step

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -35,14 +36,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class ScaleVnfData {
+public class ScaleVnfData implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
 	private String vnfInstanceId = null;
 
-	private ScaleType scaleVnfType;
+	private VnfScaleType scaleVnfType;
 
 	@OneToOne
 	private ScaleToLevelData scaleToLevelData;

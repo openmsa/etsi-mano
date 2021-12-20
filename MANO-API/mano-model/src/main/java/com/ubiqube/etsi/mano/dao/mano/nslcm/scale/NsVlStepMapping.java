@@ -49,11 +49,14 @@ public class NsVlStepMapping implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	private String aspectId;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VlBitRate> stepMapping;
 
-	public NsVlStepMapping(final Set<VlBitRate> stepMapping) {
+	public NsVlStepMapping(final Set<VlBitRate> stepMapping, final String aspectId) {
 		this.stepMapping = stepMapping;
+		this.aspectId = aspectId;
 	}
 
 }

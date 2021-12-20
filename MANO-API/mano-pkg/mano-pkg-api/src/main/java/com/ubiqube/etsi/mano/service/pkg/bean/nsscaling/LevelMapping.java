@@ -24,6 +24,6 @@ import java.util.Map;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public record LevelMapping(List<String> target, Map<String, Integer> mapping) {
+public record LevelMapping(String aspectId, List<String> target, Map<String, Integer> mapping) {
 	//
 }

@@ -46,7 +46,7 @@ public class NsScalingLevelMapping extends NsVnfLevelMapping {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	public NsScalingLevelMapping(final String name, final int numberOfInstance) {
-		super(name, numberOfInstance);
+	public NsScalingLevelMapping(final String name, final String aspectId, final int numberOfInstance) {
+		super(name, aspectId, numberOfInstance);
 	}
 }

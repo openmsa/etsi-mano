@@ -16,7 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -39,7 +40,10 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-public class NsHeal {
+public class NsHeal implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -48,5 +52,5 @@ public class NsHeal {
 	private NsHealData healNsData;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<HealVnfData> healVnfData;
+	private Set<HealVnfData> healVnfData;
 }

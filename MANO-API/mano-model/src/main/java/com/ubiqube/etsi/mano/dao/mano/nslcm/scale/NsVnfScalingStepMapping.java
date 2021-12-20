@@ -52,11 +52,14 @@ public class NsVnfScalingStepMapping implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	private String aspectId;
+
 	@OrderColumn
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<StepMapping> levels;
 
-	public NsVnfScalingStepMapping(final Set<StepMapping> levels) {
+	public NsVnfScalingStepMapping(final Set<StepMapping> levels, final String aspectId) {
 		this.levels = levels;
+		this.aspectId = aspectId;
 	}
 }
