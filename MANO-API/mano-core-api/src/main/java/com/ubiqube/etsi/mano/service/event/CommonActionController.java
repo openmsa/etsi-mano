@@ -40,6 +40,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuthParamBasic;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
 import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
+import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersion;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
@@ -158,7 +159,8 @@ public class CommonActionController {
 	}
 
 	private Subscription vnfPackageOnboardingSubscribe(final FluxRest rest) {
-		final Subscription subsOut = createSubscription(ApiTypesEnum.SOL003, "/vnfpkgm/v1/notification/onboarding", SubscriptionType.NSDVNF);
+		final List<FilterAttributes> filters = List.of(FilterAttributes.of("notificationTypes[0]", "VnfPackageOnboardingNotification"));
+		final Subscription subsOut = createSubscriptionWithFilter(ApiTypesEnum.SOL003, "/vnfpkgm/v1/notification/onboarding", SubscriptionType.NSDVNF, filters);
 		final UriComponents uri = rest.uriBuilder().pathSegment("vnfpkgm/v1/subscriptions").build();
 		final Class<?> clazz = httpGateway.get(0).getVnfPackageSubscriptionClass();
 		final Class<?> clazzWire = httpGateway.get(0).getPkgmSubscriptionRequest();
@@ -166,20 +168,22 @@ public class CommonActionController {
 	}
 
 	private Subscription vnfPackageChangeSubscribe(final FluxRest rest) {
-		final Subscription subsOut = createSubscription(ApiTypesEnum.SOL003, "/vnfpkgm/v1/notification/change", SubscriptionType.NSDVNF);
+		final List<FilterAttributes> filters = List.of(FilterAttributes.of("notificationTypes[0]", "VnfPackageChangeNotification"));
+		final Subscription subsOut = createSubscriptionWithFilter(ApiTypesEnum.SOL003, "/vnfpkgm/v1/notification/change", SubscriptionType.NSDVNF, filters);
 		final UriComponents uri = rest.uriBuilder().pathSegment("vnfpkgm/v1/subscriptions").build();
 		final Class<?> clazz = httpGateway.get(0).getVnfPackageSubscriptionClass();
 		final Class<?> clazzWire = httpGateway.get(0).getPkgmSubscriptionRequest();
 		return postSubscription(rest, uri.toUri(), subsOut, clazzWire, clazz);
 	}
 
-	private Subscription createSubscription(final ApiTypesEnum apiType, final String url, final SubscriptionType subscriptionType) {
+	private Subscription createSubscriptionWithFilter(final ApiTypesEnum apiType, final String url, final SubscriptionType subscriptionType, final List<FilterAttributes> filters) {
 		final AuthentificationInformations auth = createAuthInformation();
 		return Subscription.builder()
 				.api(apiType)
 				.authentication(auth)
 				.callbackUri(manoProperties.getFrontendUrl() + url)
 				.subscriptionType(subscriptionType)
+				.filters(filters)
 				.build();
 	}
 
