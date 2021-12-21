@@ -85,16 +85,18 @@ public class ServerService {
 	public void deleteById(final UUID id) {
 		final Servers server = serversJpa.findById(id).orElseThrow(() -> new GenericException("Could not find server id " + id));
 		final FluxRest rest = new FluxRest(server);
-		server.getRemoteSubscriptions().forEach(x -> {
-			unregister(rest, x);
-		});
+		server.getRemoteSubscriptions().forEach(x -> unregister(rest, x));
 		serversJpa.deleteById(id);
 	}
 
 	private void unregister(final FluxRest rest, final RemoteSubscription x) {
 		final String uri = "/" + new File(httpGateway.getUrlFor(ApiVersionType.SOL003_VNFPKGM), "subscriptions/{id}");
 		final URI resp = rest.uriBuilder().path(uri).build(x.getRemoteSubscriptionId());
-		rest.deleteWithReturn(resp, null);
+		try {
+			rest.deleteWithReturn(resp, null);
+		} catch (final RuntimeException e) {
+			LOG.warn("Could not remove subscription: {}", x.getRemoteSubscriptionId());
+		}
 	}
 
 	public ServerAdapter findNearestServer() {
