@@ -104,7 +104,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	public List<Subscription> selectNotifications(final UUID vnfPkgId, final String event) {
-		return subscriptionJpa.findEventAndVnfPkg(event, vnfPkgId.toString());
+		final List<Subscription> lst = subscriptionJpa.findEventAndVnfPkg(event, vnfPkgId.toString());
+		return lst.stream()
+				.filter(x -> x.getFilters().stream().anyMatch(y -> y.getAttribute().startsWith("notificationTypes[") && y.getValue().equals(event)))
+				.toList();
 	}
 
 	@Override
