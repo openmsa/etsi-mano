@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 
@@ -33,5 +34,7 @@ public interface SubscriptionService {
 	Subscription findById(UUID subscriptionId, SubscriptionType type);
 
 	List<Subscription> selectNotifications(UUID vnfPkgId, String event);
+
+	List<Subscription> findByApiAndCallbackUriSubscriptionType(ApiTypesEnum api, String callbackUri, SubscriptionType subscriptionType);
 
 }

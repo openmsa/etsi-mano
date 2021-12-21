@@ -17,14 +17,18 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
+import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.Node;
@@ -67,9 +71,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public Subscription save(final Subscription subscription, final SubscriptionType type) {
 		subscription.setSubscriptionType(type);
+		final List<Subscription> lst = findByApiAndCallbackUriSubscriptionType(subscription.getApi(), subscription.getCallbackUri(), subscription.getSubscriptionType());
+		if (isMatching(subscription, lst)) {
+			throw new GenericException("Subscription already exist.");
+		}
 		final ServerAdapter server = serverService.buildServerAdapter(subscription);
 		notifications.check(server, subscription.getCallbackUri());
 		return subscriptionJpa.save(subscription);
+	}
+
+	private static boolean isMatching(final Subscription subscription, final List<Subscription> lst) {
+		final List<FilterAttributes> filters = Optional.ofNullable(subscription.getFilters()).orElseGet(List::of);
+		if (filters.isEmpty()) {
+			return lst.stream().anyMatch(x -> x.getFilters().isEmpty());
+		}
+		return lst.stream()
+				.flatMap(x -> x.getFilters().stream())
+				.anyMatch(x -> filters.stream()
+						.anyMatch(y -> y.getAttribute().equals(x.getAttribute()) && y.getValue().equals(x.getValue())));
 	}
 
 	@Override
@@ -86,6 +105,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public List<Subscription> selectNotifications(final UUID vnfPkgId, final String event) {
 		return subscriptionJpa.findEventAndVnfPkg(event, vnfPkgId.toString());
+	}
+
+	@Override
+	public List<Subscription> findByApiAndCallbackUriSubscriptionType(final ApiTypesEnum api, final String callbackUri, final SubscriptionType subscriptionType) {
+		return subscriptionJpa.findByApiAndCallbackUriAndSubscriptionType(api, callbackUri, subscriptionType);
 	}
 
 }
