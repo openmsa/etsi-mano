@@ -95,6 +95,7 @@ public class ServerService {
 		try {
 			rest.deleteWithReturn(resp, null);
 		} catch (final RuntimeException e) {
+			LOG.debug("", e);
 			LOG.warn("Could not remove subscription: {}", x.getRemoteSubscriptionId());
 		}
 	}
