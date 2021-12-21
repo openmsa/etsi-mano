@@ -19,11 +19,9 @@ package com.ubiqube.etsi.mano.service;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,11 +71,11 @@ public class ServerService {
 		return serversJpa.findById(id).orElseThrow(() -> new GenericException("Could not find server id " + id));
 	}
 
-	@Transactional(TxType.NOT_SUPPORTED)
+	// @Transactional(TxType.NOT_SUPPORTED)
 	public Servers createServer(final Servers servers) {
 		servers.setServerStatus(PlanStatusType.NOT_STARTED);
-		Optional.ofNullable(serversJpa.findByUrl(servers.getUrl())).ifPresent(x -> {
-			throw new GenericException("duplicate Server: " + x.get().getId() + " url=" + servers.getUrl());
+		serversJpa.findByUrl(servers.getUrl()).ifPresent(x -> {
+			throw new GenericException("duplicate Server: " + x.getId() + " url=" + servers.getUrl());
 		});
 		final Servers server = serversJpa.save(servers);
 		eventManager.sendAction(ActionType.REGISTER_SERVER, server.getId());
