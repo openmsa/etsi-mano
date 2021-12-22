@@ -34,12 +34,22 @@ import io.swagger.v3.oas.models.security.SecurityScheme.In;
 @Service
 public class KeycloakAuth implements SecutiryConfig {
 
+	private final Http403EntryPoint http403EntryPoint;
+
+	public KeycloakAuth(final Http403EntryPoint http403EntryPoint) {
+		super();
+		this.http403EntryPoint = http403EntryPoint;
+	}
+
 	/**
 	 * All request must be authenticated, No login page.
 	 */
 	@Override
 	public void configure(final ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry http) throws Exception {
-		http.and().oauth2ResourceServer().jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()));
+		http.and()
+				.oauth2ResourceServer()
+				.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+				.authenticationEntryPoint(http403EntryPoint);
 	}
 
 	private static Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
