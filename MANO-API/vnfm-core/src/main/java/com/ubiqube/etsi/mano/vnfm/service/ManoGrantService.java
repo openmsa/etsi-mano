@@ -22,6 +22,7 @@ import javax.transaction.Transactional.TxType;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.AbstractGrantService;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -35,7 +36,7 @@ import ma.glasnost.orika.MapperFacade;
 @Transactional(TxType.NEVER)
 public class ManoGrantService extends AbstractGrantService {
 
-	public ManoGrantService(final MapperFacade mapper, final VnfResourceAllocate nfvo) {
-		super(mapper, nfvo);
+	public ManoGrantService(final MapperFacade mapper, final VnfResourceAllocate nfvo, final VimManager vimManager) {
+		super(mapper, nfvo, vimManager);
 	}
 }

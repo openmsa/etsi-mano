@@ -35,6 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -49,9 +50,12 @@ public abstract class AbstractGrantService implements VimResourceService {
 
 	private final ResourceAllocate nfvo;
 
-	protected AbstractGrantService(final MapperFacade mapper, final ResourceAllocate nfvo) {
+	private final VimManager vimManager;
+
+	protected AbstractGrantService(final MapperFacade mapper, final ResourceAllocate nfvo, final VimManager vimManager) {
 		this.mapper = mapper;
 		this.nfvo = nfvo;
+		this.vimManager = vimManager;
 	}
 
 	// @Override
@@ -71,9 +75,9 @@ public abstract class AbstractGrantService implements VimResourceService {
 					if (x.getChangeType() == ChangeType.ADDED) {
 						final GrantInformationExt obj = mapper.map(x, GrantInformationExt.class);
 						obj.setResourceTemplateId(x.getToscaName());
-						grantRequest.getAddResources().add(obj);
+						grantRequest.addAddResources(obj);
 					} else {
-						grantRequest.getRemoveResources().add(mapper.map(x, GrantInformationExt.class));
+						grantRequest.addRemoveResources(mapper.map(x, GrantInformationExt.class));
 					}
 				});
 		final GrantResponse grantsResp = nfvo.sendSyncGrantRequest(grantRequest);
@@ -101,6 +105,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 	private void fixVimConnections(final Set<VimConnectionInformation> vimConnections) {
 		vimConnections.forEach(x -> {
 			x.setGeoloc(new GeoPoint(10, 10));
+			vimManager.registerIfNeeded(x);
 		});
 	}
 

@@ -162,7 +162,7 @@ public abstract class AbstractGenericAction {
 
 	private void instantiateShield(final UUID blueprintId, final WorkflowEvent success, final WorkflowEvent failure) {
 		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
-		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getId());
+		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getInstance().getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
 			LOG.info("{} {} Success...", success, blueprintId);

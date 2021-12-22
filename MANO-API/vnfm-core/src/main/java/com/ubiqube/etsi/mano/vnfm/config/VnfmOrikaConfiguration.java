@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.config;
 import org.springframework.stereotype.Component;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -73,15 +74,16 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 
 		orikaMapperFactory.classMap(GrantInformationExt.class, GrantInformationExt.class)
-				.exclude("id")
 				.field("id", "resourceDefinitionId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, ComputeTask.class)
+				.field("id", "id")
 				.field("vduId", "vnfCompute.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, NetworkTask.class)
+				.field("id", "id")
 				.field("vduId", "vnfVl.id")
 				.byDefault()
 				.register();
@@ -89,11 +91,18 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, StorageTask.class)
+				.field("id", "id")
 				.field("vduId", "vnfStorage.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfInstantiate.class, VnfBlueprint.class)
 				.field("vimConnectionInfo", "vimConnections")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantResponse.class, VnfBlueprint.class)
+				.field("vnfdId", "vnfInstance.vnfdId")
+				.field("vnfInstanceId", "vnfInstance.id")
+				.field("vnfLcmOpOccId", "id")
 				.byDefault()
 				.register();
 		/*
