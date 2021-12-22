@@ -38,21 +38,11 @@ public class NotificationsController {
 	public void onEvent(final EventMessage ev) {
 		LOG.info("Notification Controller Received event: {}", ev);
 		switch (ev.getNotificationEvent()) {
-		case VNF_PKG_ONBOARDING:
-			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageOnboardingNotification");
-			break;
-		case VNF_PKG_ONDELETION:
-			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
-			break;
-		case VNF_PKG_ONCHANGE:
-			vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
-			break;
-		case VRQAN:
-			vnfEvent.onEvent(ev.getObjectId(), "VrQuotaAvailNotification");
-			break;
-		default:
-			LOG.error("Unable to handle event type {}", ev.getNotificationEvent());
-			break;
+		case VNF_PKG_ONBOARDING -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageOnboardingNotification");
+		case VNF_PKG_ONDELETION -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
+		case VNF_PKG_ONCHANGE -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
+		case VRQAN -> vnfEvent.onEvent(ev.getObjectId(), "VrQuotaAvailNotification");
+		default -> LOG.error("Unable to handle event type {}", ev.getNotificationEvent());
 		}
 	}
 }

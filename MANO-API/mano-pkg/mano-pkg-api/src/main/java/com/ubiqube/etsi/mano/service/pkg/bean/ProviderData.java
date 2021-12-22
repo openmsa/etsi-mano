@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.MonitoringParams;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VnfProfile;
 
 import lombok.Getter;
 import lombok.Setter;
