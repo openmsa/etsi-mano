@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.repository.jpa;
 
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class NsdPackageDb extends AbstractDirectJpa<NsdPackage> implements NsdRe
 	}
 
 	@Override
-	public void changeNsdUpdateState(final NsdPackage nsdPackage, final PackageUsageState state) {
+	public void changeNsdUpdateState(final NsdPackage nsdPackage, @Nonnull final PackageUsageState state) {
 		nsdPackage.setNsdUsageState(state);
 		save(nsdPackage);
 	}

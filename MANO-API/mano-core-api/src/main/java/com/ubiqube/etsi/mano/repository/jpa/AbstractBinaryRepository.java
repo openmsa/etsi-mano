@@ -53,7 +53,7 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public final void storeObject(final UUID id, final String filename, final Object object) {
+	public final void storeObject(@NotNull final UUID id, @NotNull final String filename, final Object object) {
 		try {
 			final String str = jsonMapper.writeValueAsString(object);
 			storeBinary(id, filename, new ByteArrayInputStream(str.getBytes(Charset.defaultCharset())));
@@ -63,7 +63,7 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public final void storeBinary(final UUID id, final String filename, final InputStream stream) {
+	public final void storeBinary(@NotNull final UUID id, @NotNull final String filename, final InputStream stream) {
 		final Path dir = namingStrategy.getRoot(getFrontClass(), id);
 		dir.toFile().mkdirs();
 		final Path path = namingStrategy.getRoot(getFrontClass(), id, filename);
@@ -71,12 +71,12 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public final byte[] getBinary(final UUID id, final String filename) {
+	public final byte[] getBinary(@NotNull final UUID id, @NotNull final String filename) {
 		return getBinary(id, filename, 0, null);
 	}
 
 	@Override
-	public final byte[] getBinary(final UUID id, final String filename, final int min, final Long max) {
+	public final byte[] getBinary(@NotNull final UUID id, @NotNull final String filename, final int min, final Long max) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), id, filename);
 		try (InputStream os = contentManager.load(path, min, max)) {
 			return StreamUtils.copyToByteArray(os);
