@@ -144,6 +144,7 @@ public class ContextResolver {
 		} catch (final IntrospectionException e) {
 			throw new ParseException(e);
 		}
+		stack.push(policy.getName());
 		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
 		logClass(clazz.getName(), propsDescr);
 		final Object cls = newInstance(clazz);
@@ -160,6 +161,7 @@ public class ContextResolver {
 		tib.setInternalDescription(policy.getDescription());
 		setProperty(cls, SET_NAME, policy.getName());
 		setProperty(cls, SET_DESCRIPTION, policy.getDescription());
+		stack.pop();
 		return cls;
 	}
 
@@ -170,6 +172,7 @@ public class ContextResolver {
 		} catch (final IntrospectionException e) {
 			throw new ParseException(e);
 		}
+		stack.push(group.getName());
 		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
 		logClass(clazz.getName(), propsDescr);
 		final Object cls = newInstance(clazz);
@@ -185,6 +188,7 @@ public class ContextResolver {
 		tib.setInternalDescription(group.getDescription());
 		setProperty(cls, SET_NAME, group.getName());
 		setProperty(cls, SET_DESCRIPTION, group.getDescription());
+		stack.pop();
 		return cls;
 	}
 
@@ -203,6 +207,7 @@ public class ContextResolver {
 		} catch (final IntrospectionException e) {
 			throw new ParseException(e);
 		}
+		stack.push(node.getName());
 		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
 		logClass(clazz.getName(), propsDescr);
 		final Object cls = newInstance(clazz);
@@ -474,10 +479,7 @@ public class ContextResolver {
 	}
 
 	private Object convert(final Object res, final Class<?> parameterType) {
-		if (res.getClass().equals(parameterType)) {
-			return res;
-		}
-		if (parameterType.isAssignableFrom(res.getClass())) {
+		if (res.getClass().equals(parameterType) || parameterType.isAssignableFrom(res.getClass())) {
 			return res;
 		}
 		LOG.debug("Converting: {} into {}", res.getClass(), parameterType.getName());
@@ -552,7 +554,7 @@ public class ContextResolver {
 	}
 
 	private static void throwException(final String string, final Deque<String> stack, final Exception e) {
-		throw new ParseException(string + "\n" + buildError(stack), e);
+		throw new ParseException(string + "\nStackTrace: " + buildError(stack), e);
 	}
 
 	private static String buildError(final Deque<String> stack) {
