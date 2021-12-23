@@ -110,6 +110,53 @@ topology_template:
         test_access:
           - test
 
+    # For VNF_1
+    element_1:  # Port pair? port pair group ?
+      type: tosca.nodes.nfv.NfpPositionElement
+      requirements:
+        - profile_element:
+            node: VNF_1_forward_1
+            capability: forwarding
+        - profile_element:
+            node: VNF_1_forward_2
+            capability: forwarding
+
+    # For VNF_2
+    element_2:  # Port pair? port pair group ?
+      type: tosca.nodes.nfv.NfpPositionElement
+      requirements:
+        - profile_element:
+            node: VNF_2_forward_3
+            capability: forwarding
+        - profile_element:
+            node: VNF_2_forward_4
+            capability: forwarding
+
+
+    nfp_position_1:
+      type: tosca.nodes.nfv.NfpPosition
+      properties:
+        forwarding_behaviour: lb
+      capabilities:
+        forwarding: # tosca.capabilities.nfv.Forwarding
+      requirements:
+        - element: element_1# tosca.nodes.nfv.NfpPositionElement
+        - element: element_2
+
+
+    nfp_1:
+      type: tosca.nodes.nfv.NFP
+      requirements:
+        - nfp_position: nfp_position_1 # tosca.nodes.nfv.NfpPosition
+        - nfp_position: nfp_position_2
+
+    forwarding:
+      type: tosca.nodes.nfv.Forwarding
+      capabilities:
+        virtual_linkable: # tosca.capabilities.nfv.VirtualLinkable
+        forwarding: # tosca.capabilities.nfv.Forwarding
+      requirements:
+        - virtual_link: vl01
 
 policies:
   affinity:
@@ -140,76 +187,6 @@ policies:
     targets:
       - sap01
 
-  # For VNF_1
-  element_1:  # Port pair? port pair group ?
-    type: tosca.nodes.nfv.NfpPositionElement
-    capabilities:
-      forwarding: # tosca.capabilities.nfv.Forwarding
-    requirements:
-      - profile_element: 
-        node: VNF_1_forward_1
-        capability: forwarding
-      - profile_element: 
-        node: VNF_1_forward_2
-        capability: forwarding
-
-  # For VNF_2
-  element_2:  # Port pair? port pair group ?
-    type: tosca.nodes.nfv.NfpPositionElement
-    requirements:
-      - profile_element: 
-        node: VNF_2_forward_3
-        capability: forwarding
-      - profile_element: 
-        node: VNF_2_forward_4
-        capability: forwarding
-
-
-  nfp_position_1:
-    type: tosca.nodes.nfv.NfpPosition
-    properties:
-      forwarding_behaviour: lb
-    capabilities:
-      forwarding: # tosca.capabilities.nfv.Forwarding
-    requirements:
-      - element: element_1# tosca.nodes.nfv.NfpPositionElement
-      - element: element_2
-
-
-  nfp_1:
-    type: tosca.nodes.nfv.NFP
-    requirements:
-      - nfp_position: # tosca.nodes.nfv.NfpPosition
-        forwarding_behaviour: all
-        capabilities:
-          forwarding: forwarding # tosca.capabilities.nfv.Forwarding
-        requirements:
-      - nfp_position: nfp_position_1
-      - nfp_position: nfp_position_2
-
-  forwarding:
-    type: tosca.nodes.nfv.Forwarding
-    capabilities:
-      virtual_linkable: # tosca.capabilities.nfv.VirtualLinkable
-      forwarding: # tosca.capabilities.nfv.Forwarding
-    requirements:
-      - virtual_link: vl01
-
-
-group_types:
-  vnfgg:
-    type: tosca.groups.nfv.VNFFG
-    properties:
-      description: descr
-    members:  [ nfp_1, VNF_1, VNF_2, VNF_3, internal, element_1, element_2, element_3 ]
-    
-
-  placement_group:
-    tpye: tosca.groups.nfv.NsPlacementGroup
-    properties:
-      description: descr.
-
-policies:
   nfp_rule: # classifier
     type: tosca.policies.nfv.NfpRule
     properties:
@@ -228,7 +205,21 @@ policies:
         - starting_point: 1
           length: 7
           value: string
-      targets: nfp_1 # tosca.nodes.nfv.NFP
+    targets:
+      - nfp_1 # tosca.nodes.nfv.NFP
+
+group_types:
+  vnfgg:
+    type: tosca.groups.nfv.VNFFG
+    properties:
+      description: descr
+    members:  [ nfp_1, VNF_1, VNF_2, VNF_3, internal, element_1, element_2, element_3 ]
+
+
+  placement_group:
+    tpye: tosca.groups.nfv.NsPlacementGroup
+    properties:
+      description: descr.
 
 
 
