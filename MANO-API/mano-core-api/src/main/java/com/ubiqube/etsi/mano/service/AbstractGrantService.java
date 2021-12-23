@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -77,21 +79,24 @@ public abstract class AbstractGrantService implements VimResourceService {
 						obj.setResourceTemplateId(x.getToscaName());
 						grantRequest.addAddResources(obj);
 					} else {
-						grantRequest.addRemoveResources(mapper.map(x, GrantInformationExt.class));
+						final GrantInformationExt obj = mapper.map(x, GrantInformationExt.class);
+						obj.setResourceId(x.getVimResourceId());
+						grantRequest.addRemoveResources(obj);
 					}
 				});
 		final GrantResponse grantsResp = nfvo.sendSyncGrantRequest(grantRequest);
 		// Merge resources.
-		grantsResp.getAddResources().forEach(x -> {
-			// Get VNFM Grant Resource information ID.
-			final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
-			final VimTask task = findTask(plan, grantUuid);
-			task.setVimReservationId(x.getReservationId());
-			task.setResourceGroupId(x.getResourceGroupId());
-			task.setZoneId(x.getZoneId());
-			task.setResourceProviderId(x.getResourceProviderId());
-			task.setVimConnectionId(x.getVimConnectionId());
-		});
+		Optional.ofNullable(grantsResp.getAddResources()).orElseGet(LinkedHashSet::new)
+				.forEach(x -> {
+					// Get VNFM Grant Resource information ID.
+					final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
+					final VimTask task = findTask(plan, grantUuid);
+					task.setVimReservationId(x.getReservationId());
+					task.setResourceGroupId(x.getResourceGroupId());
+					task.setZoneId(x.getZoneId());
+					task.setResourceProviderId(x.getResourceProviderId());
+					task.setVimConnectionId(x.getVimConnectionId());
+				});
 		grantsResp.getVimConnections().forEach(plan::addVimConnection);
 		plan.setZoneGroups(mapper.mapAsSet(grantsResp.getZoneGroups(), BlueZoneGroupInformation.class));
 		plan.setZones(grantsResp.getZones());
