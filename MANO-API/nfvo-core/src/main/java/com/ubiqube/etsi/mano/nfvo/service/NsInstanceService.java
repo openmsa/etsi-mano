@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -106,6 +107,7 @@ public class NsInstanceService {
 		nsdInstanceJpa.deleteById(nsInstanceUuid);
 	}
 
+	@Transactional
 	public NsdInstance findById(final UUID nsUuid) {
 		final NsdInstance inst = nsdInstanceJpa.findById(nsUuid).orElseThrow(() -> new NotFoundException("Not found " + nsUuid));
 		inst.setInstantiationState(isLive(nsUuid));
