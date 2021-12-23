@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.controller.vnflcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
@@ -42,12 +41,12 @@ public class VnfmNfvo implements VnfmInterface {
 	}
 
 	@Override
-	public VnfInstance createVnfInstance(final Servers servers, final VnfPackage vnf, final String vnfInstanceDescription, final String vnfInstanceName) {
-		return lcm.post(servers, vnf.getVnfdId(), vnfInstanceName, vnfInstanceDescription);
+	public VnfInstance createVnfInstance(final Servers servers, final String vnfdId, final String vnfInstanceDescription, final String vnfInstanceName) {
+		return lcm.post(servers, vnfdId, vnfInstanceName, vnfInstanceDescription);
 	}
 
 	@Override
-	public VnfBlueprint vnfInstatiate(final Servers servers, final String vnfInstanceId, final VnfInstantiate instantiateVnfRequest, final UUID vnfId) {
+	public VnfBlueprint vnfInstatiate(final Servers servers, final String vnfInstanceId, final VnfInstantiate instantiateVnfRequest) {
 		return lcm.instantiate(servers, UUID.fromString(vnfInstanceId), instantiateVnfRequest);
 	}
 
