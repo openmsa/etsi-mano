@@ -134,4 +134,10 @@ public class VimManager {
 		systemService.registerVim(n);
 		init();
 	}
+
+	public void deleteVim(final UUID id) {
+		vimConnectionInformationJpa.deleteById(id);
+		systemService.deleteById(id);
+		rebuildCache();
+	}
 }

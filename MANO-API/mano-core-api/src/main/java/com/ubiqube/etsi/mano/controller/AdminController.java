@@ -68,8 +68,7 @@ public class AdminController {
 
 	@DeleteMapping(value = "/vim/{id}")
 	public ResponseEntity<Void> deleteVim(@PathVariable("id") final String id) {
-		vciJpa.deleteById(UUID.fromString(id));
-		vimManager.rebuildCache();
+		vimManager.deleteVim(UUID.fromString(id));
 		return ResponseEntity.noContent().build();
 	}
 
