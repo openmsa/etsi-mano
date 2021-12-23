@@ -55,6 +55,8 @@ public class NsVnfTask extends NsTask {
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private NsdPackageVnfPackage nsPackageVnfPackage;
 
+	private String description;
+
 	private String vnfInstance;
 
 	private String vnfdId;
