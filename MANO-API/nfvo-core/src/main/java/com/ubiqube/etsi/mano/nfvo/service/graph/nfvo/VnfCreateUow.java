@@ -33,7 +33,7 @@ public class VnfCreateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	private final NsVnfTask task;
 
-	protected VnfCreateUow(final VirtualTask<NsVnfTask> task, final VnfmInterface vnfm) {
+	public VnfCreateUow(final VirtualTask<NsVnfTask> task, final VnfmInterface vnfm) {
 		super(task, VnfCreateNode.class);
 		this.vnfm = vnfm;
 		this.task = task.getParameters();
@@ -48,7 +48,7 @@ public class VnfCreateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		vnfm.delete(task.getServer(), task.getVnfInstance());
+		vnfm.delete(task.getServer(), task.getVimResourceId());
 		return null;
 	}
 }
