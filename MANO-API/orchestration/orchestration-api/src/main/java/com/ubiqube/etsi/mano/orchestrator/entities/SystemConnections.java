@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.orchestrator.entities;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,22 +47,23 @@ public class SystemConnections {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id = null;
+	private final UUID id = null;
 
 	@FullTextField
-	private String vimId = null;
+	@Column(unique = true)
+	private final String vimId = null;
 
 	@FullTextField
-	private String vimType = null;
+	private final String vimType = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<String, String> interfaceInfo = null;
+	private final Map<String, String> interfaceInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<String, String> accessInfo = null;
+	private final Map<String, String> accessInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<String, String> extra = null;
+	private final Map<String, String> extra = null;
 
 	@GeoPointBinding
 	private GeoPoint geoloc;
