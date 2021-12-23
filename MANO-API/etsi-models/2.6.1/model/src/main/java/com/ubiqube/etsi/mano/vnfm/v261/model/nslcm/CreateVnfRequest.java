@@ -30,6 +30,7 @@
 package com.ubiqube.etsi.mano.vnfm.v261.model.nslcm;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -40,6 +41,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 
 public class CreateVnfRequest {
+	@NotNull
 	@JsonProperty("vnfdId")
 	private String vnfdId = null;
 
@@ -55,7 +57,8 @@ public class CreateVnfRequest {
 	}
 
 	/**
-	 * Identifier that identifies the VNFD which defines the VNF instance to be created.
+	 * Identifier that identifies the VNFD which defines the VNF instance to be
+	 * created.
 	 *
 	 * @return vnfdId
 	 **/
@@ -123,7 +126,8 @@ public class CreateVnfRequest {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
