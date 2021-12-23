@@ -42,6 +42,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
 
 /**
  *
@@ -149,7 +150,10 @@ public class VnfmGateway261 implements HttpGateway {
 
 	@Override
 	public Object createVnfInstanceTerminate(final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
-		return TerminateVnfRequest.class;
+		final TerminateVnfRequest ret = new TerminateVnfRequest();
+		ret.setTerminationType(TerminationTypeEnum.fromValue(terminationType.toString()));
+		ret.setGracefulTerminationTimeout(gracefulTerminationTimeout);
+		return ret;
 	}
 
 	@Override
