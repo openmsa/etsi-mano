@@ -71,15 +71,18 @@ public class ServerService {
 		return serversJpa.findById(id).orElseThrow(() -> new GenericException("Could not find server id " + id));
 	}
 
-	// @Transactional(TxType.NOT_SUPPORTED)
+	/**
+	 * Cannot be transactional because of CLOG field on servers.tlsCert.
+	 *
+	 * @param servers
+	 * @return
+	 */
 	public Servers createServer(final Servers servers) {
 		servers.setServerStatus(PlanStatusType.NOT_STARTED);
 		serversJpa.findByUrl(servers.getUrl()).ifPresent(x -> {
 			throw new GenericException("duplicate Server: " + x.getId() + " url=" + servers.getUrl());
 		});
-		final Servers server = serversJpa.save(servers);
-		eventManager.sendAction(ActionType.REGISTER_SERVER, server.getId());
-		return server;
+		return serversJpa.save(servers);
 	}
 
 	public void deleteById(final UUID id) {
