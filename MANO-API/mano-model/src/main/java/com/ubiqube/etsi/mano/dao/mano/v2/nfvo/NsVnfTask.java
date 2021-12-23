@@ -57,8 +57,6 @@ public class NsVnfTask extends NsTask {
 
 	private String description;
 
-	private String vnfInstance;
-
 	private String vnfdId;
 
 	@ElementCollection(fetch = FetchType.EAGER)

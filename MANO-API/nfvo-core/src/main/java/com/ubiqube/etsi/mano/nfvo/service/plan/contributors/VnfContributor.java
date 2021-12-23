@@ -31,7 +31,6 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.config.ServerType;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
@@ -42,14 +41,14 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.config.ServersJpa;
-import com.ubiqube.etsi.mano.nfvo.factory.NsInstanceFactory;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfVt;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfCreateVt;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfInstantiateVt;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVtBase;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
-import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfInstantiateNode;
 
 /**
  *
@@ -58,16 +57,14 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
  */
 @Service
 @Transactional
-public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
+public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<NsVnfTask>> {
 	private final NsInstanceService nsInstanceService;
-	private final VnfmInterface vnfm;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 	private final ServersJpa serversJpa;
 	private final Random rand = new Random();
 
-	public VnfContributor(final NsInstanceService nsInstanceService, final VnfmInterface vnfm, final NsLiveInstanceJpa nsLiveInstanceJpa, final ServersJpa serversJpa) {
+	public VnfContributor(final NsInstanceService nsInstanceService, final NsLiveInstanceJpa nsLiveInstanceJpa, final ServersJpa serversJpa) {
 		this.nsInstanceService = nsInstanceService;
-		this.vnfm = vnfm;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 		this.serversJpa = serversJpa;
 	}
@@ -76,16 +73,17 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 		return x.getVnfCompute().stream().flatMap(y -> y.getNetworks().stream()).collect(Collectors.toSet());
 	}
 
-	private List<NsVnfVt> doTerminatePlan(final NsdInstance instance) {
-		final List<NsVnfVt> ret = new ArrayList<>();
+	private List<NsVtBase<NsVnfTask>> doTerminatePlan(final NsdInstance instance) {
+		final List<NsVtBase<NsVnfTask>> ret = new ArrayList<>();
 		final List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfTask.class.getSimpleName());
 		insts.stream().forEach(x -> {
 			final NsVnfTask task = (NsVnfTask) x.getNsTask();
 			final NsVnfTask nt = createDeleteTask(NsVnfTask::new, x);
 			final Set<String> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
 			nt.setExternalNetworks(nets);
-			nt.setVnfInstance(task.getVnfInstance());
-			ret.add(new NsVnfVt(nt));
+			nt.setVimResourceId(task.getVimResourceId());
+			ret.add(new NsVnfCreateVt(nt));
+			ret.add(new NsVnfInstantiateVt(nt));
 		});
 		return ret;
 	}
@@ -98,18 +96,19 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 
 	@Override
 	public Class<? extends Node> getNode() {
-		return VnfNode.class;
+		return VnfInstantiateNode.class;
 	}
 
 	@Override
-	protected List<NsVnfVt> nsContribute(final NsBundleAdapter bundle, final NsBlueprint blueprint) {
+	protected List<NsVtBase<NsVnfTask>> nsContribute(final NsBundleAdapter bundle, final NsBlueprint blueprint) {
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(blueprint.getInstance());
 		}
 		final Set<VnfPackage> vnfs = nsInstanceService.findVnfPackageByNsInstance(bundle.nsPackage());
-		return vnfs.stream()
+		final List<NsVtBase<NsVnfTask>> ret = new ArrayList<>();
+		vnfs.stream()
 				.filter(x -> 0 == nsInstanceService.countLiveInstanceOfVnf(blueprint.getNsInstance(), x.getId()))
-				.map(x -> {
+				.forEach(x -> {
 					final NsVnfTask vnf = createTask(NsVnfTask::new);
 					vnf.setChangeType(ChangeType.ADDED);
 					final NsdPackageVnfPackage nsPackageVnfPackage = find(x, bundle.nsPackage().getVnfPkgIds());
@@ -118,15 +117,14 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVnfVt> {
 					vnf.setNsPackageVnfPackage(nsPackageVnfPackage);
 					final Servers server = selectServer(x);
 					vnf.setServer(server);
-					final VnfInstance vnfmVnfInstance = vnfm.createVnfInstance(server, x, "VNF instance hold by: " + blueprint.getNsInstance().getId(), x.getId().toString());
-					final VnfInstance vnfInstance = NsInstanceFactory.createNsInstancesNsInstanceVnfInstance(vnfmVnfInstance, x);
-					vnfInstance.setNsInstance(blueprint.getNsInstance());
-					vnf.setVnfInstance(vnfInstance.getId().toString());
 					vnf.setAlias(nsPackageVnfPackage.getToscaName());
 					vnf.setToscaName(nsPackageVnfPackage.getToscaName());
 					vnf.setFlavourId("flavour");
-					return new NsVnfVt(vnf);
-				}).toList();
+					vnf.setVnfdId(nsPackageVnfPackage.getVnfPackage().getVnfdId());
+					ret.add(new NsVnfCreateVt(vnf));
+					ret.add(new NsVnfInstantiateVt(vnf));
+				});
+		return ret;
 	}
 
 	private Servers selectServer(final VnfPackage vnfPackage) {

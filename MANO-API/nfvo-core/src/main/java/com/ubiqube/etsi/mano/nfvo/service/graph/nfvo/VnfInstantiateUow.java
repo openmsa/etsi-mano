@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,13 +27,15 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfInstantiateNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
@@ -42,16 +45,16 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
+public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VnfUow.class);
+	private static final Logger LOG = LoggerFactory.getLogger(VnfInstantiateUow.class);
 
 	private final VnfmInterface vnfm;
 
 	private final NsVnfTask task;
 
-	public VnfUow(final VirtualTask<NsVnfTask> task, final VnfmInterface vnfm) {
-		super(task, VnfNode.class);
+	public VnfInstantiateUow(final VirtualTask<NsVnfTask> task, final VnfmInterface vnfm) {
+		super(task, VnfInstantiateNode.class);
 		this.task = task.getParameters();
 		this.vnfm = vnfm;
 	}
@@ -65,7 +68,7 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 	 */
 	private VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfBlueprint tmp = vnfLcmOpOccs;
-		OperationStatusType state = tmp.getOperationStatus();
+		OperationStatusType state = OperationStatusType.NOT_STARTED;
 		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state || OperationStatusType.NOT_STARTED == state) {
 			tmp = vnfm.vnfLcmOpOccsGet(task.getServer(), vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
@@ -86,6 +89,7 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String execute(final Context context) {
+		final String inst = context.get(VnfCreateNode.class, task.getToscaName());
 		final Set<ExtVirtualLinkDataEntity> net = task.getExternalNetworks().stream().map(x -> {
 			final String resource = context.get(Network.class, x);
 			if (null == resource) {
@@ -102,10 +106,11 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 				.collect(Collectors.toSet());
 		final VnfInstantiate request = createRequest();
 		request.setExtVirtualLinks(net);
-		final VnfBlueprint res = vnfm.vnfInstatiate(task.getServer(), task.getVnfInstance(), request, null);
+		final VnfBlueprint res = vnfm.vnfInstatiate(task.getServer(), inst, request);
 		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
-			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
+			final String details = Optional.ofNullable(result.getError()).map(FailureDetails::getDetail).orElse("[No content]");
+			throw new GenericException("VNF LCM Failed: " + details);
 		}
 		return res.getInstance().getId().toString();
 	}
@@ -123,18 +128,15 @@ public class VnfUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), task.getVnfInstance());
+		final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), task.getVimResourceId());
 		if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
 			return null;
 		}
-		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getServer(), task.getVnfInstance());
+		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getServer(), task.getVimResourceId());
 		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
-		// XXX OVI: We need some other mechanism, we should not delete the instance at
-		// this point. But as long a vnf instance exist you can't delete the package.
-		vnfm.delete(task.getServer(), task.getVnfInstance());
 		return result.getId().toString();
 	}
 

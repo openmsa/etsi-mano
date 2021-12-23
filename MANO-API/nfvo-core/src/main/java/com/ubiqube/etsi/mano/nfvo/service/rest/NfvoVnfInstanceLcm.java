@@ -162,7 +162,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final Map<String, Object> uriVariables = Map.of("id", id);
 		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_lcm_op_occs/{id}", uriVariables);
 		final Class<?> respClass = httpGateway.getVnfLcmOpOccs();
-		final var resp = server.rest().post(uri, null, respClass);
+		final var resp = server.rest().get(uri, respClass);
 		return mapper.map(resp, VnfBlueprint.class);
 	}
 
@@ -186,7 +186,7 @@ public class NfvoVnfInstanceLcm implements VnfInstanceLcm {
 		final Map<String, Object> uriVariables = Map.of("id", vnfInstance);
 		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}", uriVariables);
 		final Class<?> respClass = httpGateway.getVnfInstanceClass();
-		final var resp = server.rest().post(uri, null, respClass);
+		final var resp = server.rest().get(uri, respClass);
 		return mapper.map(resp, VnfInstance.class);
 	}
 

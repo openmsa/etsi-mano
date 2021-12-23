@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
-import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfUow;
+import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfCreateUow;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
@@ -34,22 +34,22 @@ import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
  *
  */
 @Service
-public class NsVnfSystem extends AbstractVimSystem<NsVnfTask> {
+public class NsVnfCreateSystem extends AbstractVimSystem<NsVnfTask> {
 	private final VnfmInterface vnfm;
 
-	public NsVnfSystem(final VnfmInterface vnfm) {
+	public NsVnfCreateSystem(final VnfmInterface vnfm) {
 		super();
 		this.vnfm = vnfm;
 	}
 
 	@Override
 	public String getProviderId() {
-		return "VNF";
+		return "VNF-CREATE";
 	}
 
 	@Override
 	protected SystemBuilder<UnitOfWork<NsVnfTask>> getImplementation(final OrchestrationService<NsVnfTask> orchestrationService, final VirtualTask<NsVnfTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
-		return orchestrationService.systemBuilderOf(new VnfUow(virtualTask, vnfm));
+		return orchestrationService.systemBuilderOf(new VnfCreateUow(virtualTask, vnfm));
 	}
 
 }
