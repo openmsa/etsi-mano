@@ -22,37 +22,39 @@ import java.util.List;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfInstantiateNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NsVnfInstantiateVt extends NsVtBase<NsVnfTask> {
+public class NsVnfCreateVt extends NsVtBase<NsVnfTask> {
 
-	public NsVnfInstantiateVt(final NsVnfTask nt) {
+	public NsVnfCreateVt(final NsVnfTask nt) {
 		super(nt);
 	}
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		return Arrays.asList(new NamedDependency(VnfCreateNode.class, getParameters().getToscaName()));
+		return getParameters().getNsPackageVnfPackage().getVirtualLinks().stream()
+				.map(x -> new NamedDependency(Network.class, x))
+				.toList();
 	}
 
 	@Override
 	public List<NamedDependency> getNamedProduced() {
-		return Arrays.asList(new NamedDependency(VnfInstantiateNode.class, getParameters().getToscaName()));
+		return Arrays.asList(new NamedDependency(VnfCreateNode.class, getParameters().getToscaName()));
 	}
 
 	@Override
 	public String getFactoryProviderId() {
-		return "VNF";
+		return "VNF-CREATE";
 	}
 
 	@Override
 	public String getVimProviderId() {
-		return "VNF";
+		return "VNF-CREATE";
 	}
 
 }
