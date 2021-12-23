@@ -22,6 +22,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
@@ -124,7 +125,7 @@ public class VnfLcm261Sol003Controller implements VnfLcm261Sol003Api {
 	@Override
 	public ResponseEntity<Void> vnfInstancesVnfInstanceIdTerminatePost(final String vnfInstanceId, final TerminateVnfRequest terminateVnfRequest) {
 		return frontController.terminate(getSafeUUID(vnfInstanceId), CancelModeTypeEnum.valueOf(terminateVnfRequest.getTerminationType().toString()),
-				terminateVnfRequest.getGracefulTerminationTimeout(), VnfLcm261Sol003Controller::getLcmLink);
+				Optional.ofNullable(terminateVnfRequest.getGracefulTerminationTimeout()).orElse(0), VnfLcm261Sol003Controller::getLcmLink);
 	}
 
 	public static String getSelfLink(final String id) {
