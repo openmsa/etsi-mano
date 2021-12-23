@@ -129,10 +129,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: internal
-        - virtual_binding:
-            node: vsrx
+        - virtual_link: internal
+        - virtual_binding: vsrx
 
     cpLc02:
       type: tosca.nodes.nfv.VduCp
@@ -148,10 +146,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: internal2
-        - virtual_binding:
-            node: vsrx
+        - virtual_link: internal2
+        - virtual_binding: vsrx
 
     cpLc03:
       type: tosca.nodes.nfv.VduCp
@@ -167,10 +163,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: public
-        - virtual_binding:
-            node: vsrx
+        - virtual_link: public
+        - virtual_binding: vsrx
 
     cpLc04:
       type: tosca.nodes.nfv.VduCp
@@ -186,10 +180,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: mngt
-        - virtual_binding:
-            node: vsrx
+        - virtual_link: mngt
+        - virtual_binding: vsrx
 
 
 
