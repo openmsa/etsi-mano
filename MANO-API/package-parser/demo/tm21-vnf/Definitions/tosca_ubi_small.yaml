@@ -183,6 +183,22 @@ topology_template:
         - virtual_link: mngt
         - virtual_binding: vsrx
 
+    block01:
+      type: tosca.nodes.nfv.Vdu.VirtualBlockStorage
+      properties:
+        virtual_block_storage_data:
+          size_of_storage: 6 GB
+        sw_image_data:
+          name: cirros
+          version: 1.0.0
+          checksum:
+            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+            algorithm: SHA-256
+          container_format: BARE
+          disk_format: QCOW2
+          min_disk: 6 GB
+          min_ram: 2 GB
+          operating_system: centos8
 
 
 
