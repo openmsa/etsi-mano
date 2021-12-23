@@ -44,6 +44,7 @@ import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.VlLevelMapping;
 import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.VlStepMapping;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
+import com.ubiqube.parser.tosca.ParseException;
 
 import ma.glasnost.orika.MapperFactory;
 import tosca.datatypes.nfv.AddressData;
@@ -202,7 +203,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 	}
 
 	private static NFP findNfp(final String nfpName, final List<NFP> nfp) {
-		return nfp.stream().filter(x -> x.getInternalName().equals(nfpName)).findFirst().orElseThrow();
+		return nfp.stream().filter(x -> x.getInternalName().equals(nfpName)).findFirst().orElseThrow(() -> new ParseException("Could not find Nfp named: " + nfpName));
 	}
 
 	private static String getNfpName(final NfpRule rule) {
