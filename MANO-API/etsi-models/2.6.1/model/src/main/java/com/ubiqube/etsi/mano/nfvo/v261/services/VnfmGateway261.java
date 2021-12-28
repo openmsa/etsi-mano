@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
 /**
  *
@@ -122,11 +123,19 @@ public class VnfmGateway261 implements HttpGateway {
 	}
 
 	@Override
-	public ParameterizedTypeReference<List<?>> getVnfInstanceListParam() {
+	public ParameterizedTypeReference<List<Class<?>>> getVnfInstanceListParam() {
 		final ParameterizedTypeReference<List<VnfInstance>> res = new ParameterizedTypeReference<>() {
 			// Nothing.
 		};
-		return (ParameterizedTypeReference<List<?>>) (Object) res;
+		return (ParameterizedTypeReference<List<Class<?>>>) (Object) res;
+	}
+
+	@Override
+	public ParameterizedTypeReference<List<Class<?>>> getListVnfLcmOpOccs() {
+		final ParameterizedTypeReference<List<VnfLcmOpOcc>> res = new ParameterizedTypeReference<>() {
+			// Nothing.
+		};
+		return (ParameterizedTypeReference<List<Class<?>>>) (Object) res;
 	}
 
 	@Override

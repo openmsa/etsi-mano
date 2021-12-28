@@ -14,16 +14,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.service;
-
-import java.util.UUID;
+package com.ubiqube.etsi.mano.service.rest;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
-import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
-import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.service.rest.ManoClientFactory;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
+import com.ubiqube.etsi.mano.service.ServerService;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -31,26 +29,24 @@ import com.ubiqube.etsi.mano.service.rest.ManoClientFactory;
  *
  */
 @Service
-public class VnfmGrantManagementImpl implements GrantManagement {
-	private final ManoClientFactory manoClientFactory;
+public class ManoClientFactory {
 
-	public VnfmGrantManagementImpl(final ManoClientFactory manoClientFactory) {
+	private final MapperFacade mapper;
+	private final ServerService serverService;
+
+	public ManoClientFactory(final MapperFacade mapper, final ServerService serverService) {
 		super();
-		this.manoClientFactory = manoClientFactory;
+		this.mapper = mapper;
+		this.serverService = serverService;
 	}
 
-	@Override
-	public GrantResponse get(final UUID grantId) {
-		return manoClientFactory.getClient()
-				.grant(grantId)
-				.find();
+	public ManoClient getClient() {
+		final ServerAdapter server = serverService.findNearestServer();
+		return new ManoClient(mapper, server);
 	}
 
-	@Override
-	public GrantResponse post(final GrantInterface grant) {
-		return manoClientFactory.getClient()
-				.grant()
-				.create(grant);
+	public ManoClient getClient(final Servers servers) {
+		final ServerAdapter server = serverService.buildServerAdapter(servers);
+		return new ManoClient(mapper, server);
 	}
-
 }

@@ -16,12 +16,11 @@
  */
 package com.ubiqube.etsi.mano.service.rest;
 
-import java.io.File;
-import java.net.URI;
-import java.util.Map;
+import java.util.UUID;
 
+import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
-import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 
 /**
@@ -29,37 +28,33 @@ import com.ubiqube.etsi.mano.service.HttpGateway;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ServerAdapter {
+public class ManoVnfPackage {
+	private final ManoClient client;
 
-	private final HttpGateway httpGateway;
-	private final FluxRest rest;
-	private final Servers server;
-
-	public ServerAdapter(final HttpGateway httpGateway, final Servers server) {
-		super();
-		this.httpGateway = httpGateway;
-		this.server = server;
-		rest = new FluxRest(server);
+	public ManoVnfPackage(final ManoClient manoClient, final UUID id) {
+		this.client = manoClient;
+		client.setObjectId(id);
+		client.setQueryType(ApiVersionType.SOL003_VNFPKGM);
+		client.setFragment("/vnf_packages/{id}");
 	}
 
-	public Servers getServer() {
-		return server;
+	public ManoVnfPackage(final ManoClient manoClient) {
+		this.client = manoClient;
 	}
 
-	public HttpGateway httpGateway() {
-		return httpGateway;
+	public VnfPackage find() {
+		return client.createQuery()
+				.setOutClass(VnfPackage.class)
+				.getSingle();
 	}
 
-	public URI getUriFor(final ApiVersionType type, final String urlPart, final Map<String, Object> params) {
-		final String url = new File(httpGateway.getUrlFor(type), urlPart).toString();
-		return rest.uriBuilder().pathSegment(url).buildAndExpand(params).toUri();
+	public Subscription subscribe(final Subscription subscription) {
+		client.setFragment("/subscriptions");
+		return client.createQuery()
+				.setWireInClass(HttpGateway::getPkgmSubscriptionRequest)
+				.setWireOutClass(HttpGateway::getVnfPackageSubscriptionClass)
+				.setOutClass(Subscription.class)
+				.post(subscription);
 	}
 
-	public FluxRest rest() {
-		return rest;
-	}
-
-	public URI getUriFor(final ApiVersionType type, final String urlPart) {
-		return getUriFor(type, urlPart, Map.of());
-	}
 }

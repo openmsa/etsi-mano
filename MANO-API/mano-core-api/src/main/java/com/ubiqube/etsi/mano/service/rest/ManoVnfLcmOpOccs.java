@@ -16,12 +16,11 @@
  */
 package com.ubiqube.etsi.mano.service.rest;
 
-import java.io.File;
-import java.net.URI;
-import java.util.Map;
+import java.util.List;
+import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
-import com.ubiqube.etsi.mano.dao.mano.config.Servers;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 
 /**
@@ -29,37 +28,34 @@ import com.ubiqube.etsi.mano.service.HttpGateway;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ServerAdapter {
+public class ManoVnfLcmOpOccs {
 
-	private final HttpGateway httpGateway;
-	private final FluxRest rest;
-	private final Servers server;
+	private final ManoClient client;
 
-	public ServerAdapter(final HttpGateway httpGateway, final Servers server) {
-		super();
-		this.httpGateway = httpGateway;
-		this.server = server;
-		rest = new FluxRest(server);
+	public ManoVnfLcmOpOccs(final ManoClient client, final UUID id) {
+		this.client = client;
+		client.setQueryType(ApiVersionType.SOL003_VNFLCM);
+		client.setObjectId(id);
+		client.setFragment("vnf_lcm_op_occs");
 	}
 
-	public Servers getServer() {
-		return server;
+	public ManoVnfLcmOpOccs(final ManoClient manoClient) {
+		this(manoClient, null);
 	}
 
-	public HttpGateway httpGateway() {
-		return httpGateway;
+	public List<VnfBlueprint> list() {
+		return client.createQuery()
+				.setInClassList(HttpGateway::getListVnfLcmOpOccs)
+				.setOutClass(VnfBlueprint.class)
+				.getList();
 	}
 
-	public URI getUriFor(final ApiVersionType type, final String urlPart, final Map<String, Object> params) {
-		final String url = new File(httpGateway.getUrlFor(type), urlPart).toString();
-		return rest.uriBuilder().pathSegment(url).buildAndExpand(params).toUri();
+	public VnfBlueprint find() {
+		client.setFragment("vnf_lcm_op_occs/{id}");
+		return client.createQuery(HttpGateway::getVnfInstanceInstantiateRequestClass)
+				.setWireOutClass(HttpGateway::getVnfLcmOpOccs)
+				.setOutClass(VnfBlueprint.class)
+				.getSingle();
 	}
 
-	public FluxRest rest() {
-		return rest;
-	}
-
-	public URI getUriFor(final ApiVersionType type, final String urlPart) {
-		return getUriFor(type, urlPart, Map.of());
-	}
 }

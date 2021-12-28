@@ -128,4 +128,8 @@ public class ServerService {
 		return new ServerAdapter(httpGateway, server);
 	}
 
+	public ServerAdapter buildServerAdapter(final Servers servers) {
+		return new ServerAdapter(httpGateway, servers);
+	}
+
 }

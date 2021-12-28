@@ -47,7 +47,9 @@ public interface HttpGateway {
 
 	Class<?> getVnfInstanceClass();
 
-	ParameterizedTypeReference<List<?>> getVnfInstanceListParam();
+	ParameterizedTypeReference<List<Class<?>>> getVnfInstanceListParam();
+
+	ParameterizedTypeReference<List<Class<?>>> getListVnfLcmOpOccs();
 
 	Object createVnfInstanceRequest(String vnfdId, String vnfInstanceName, String vnfInstanceDescription);
 
