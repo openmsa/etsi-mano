@@ -16,10 +16,8 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service;
 
-import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.core.env.Environment;
@@ -33,10 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
-import com.ubiqube.etsi.mano.service.ServerService;
 import com.ubiqube.etsi.mano.service.rest.ManoClientFactory;
-import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 /**
  *
@@ -47,14 +42,12 @@ import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 public class VnfmVersionManager {
 	private final Environment env;
 	private final ManoProperties manoProperties;
-	private final ServerService serverService;
 	private final ManoClientFactory manoClientFactory;
 
-	public VnfmVersionManager(final Environment env, final ManoProperties manoProperties, final ServerService serverService, final ManoClientFactory manoClientFactory) {
+	public VnfmVersionManager(final Environment env, final ManoProperties manoProperties, final ManoClientFactory manoClientFactory) {
 		super();
 		this.env = env;
 		this.manoProperties = manoProperties;
-		this.serverService = serverService;
 		this.manoClientFactory = manoClientFactory;
 	}
 
@@ -65,10 +58,9 @@ public class VnfmVersionManager {
 	}
 
 	public void getPackageContent(final String pkgId, final Path file) {
-		final ServerAdapter server = serverService.findNearestServer();
-		final Map<String, Object> uriVariables = Map.of("id", pkgId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFPKGM, "/vnf_packages/{id}/package_content", uriVariables);
-		server.rest().download(uri, file);
+		manoClientFactory.getClient()
+				.vnfPackage(UUID.fromString(pkgId))
+				.downloadContent(file);
 	}
 
 	public Subscription subscribe(final Subscription subscription) {

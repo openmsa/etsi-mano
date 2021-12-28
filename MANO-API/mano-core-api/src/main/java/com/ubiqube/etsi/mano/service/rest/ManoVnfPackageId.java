@@ -16,47 +16,39 @@
  */
 package com.ubiqube.etsi.mano.service.rest;
 
-import java.util.List;
+import java.nio.file.Path;
 import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author ncuser
  *
  */
-public class ManoVnfPackage {
+public class ManoVnfPackageId {
 	private final ManoClient client;
 
-	public ManoVnfPackage(final ManoClient manoClient, final UUID id) {
+	public ManoVnfPackageId(final ManoClient manoClient, final UUID id) {
 		this.client = manoClient;
 		client.setObjectId(id);
 		client.setQueryType(ApiVersionType.SOL003_VNFPKGM);
-		client.setFragment("/vnf_packages");
+		client.setFragment("/vnf_packages/{id}");
 	}
 
-	public ManoVnfPackage(final ManoClient manoClient) {
-		this(manoClient, null);
-	}
-
-	public List<VnfPackage> list() {
+	public VnfPackage find() {
 		return client.createQuery()
-				.setInClassList(HttpGateway::getVnfPackageClassList)
+				.setWireOutClass(HttpGateway::getVnfPackageClass)
 				.setOutClass(VnfPackage.class)
-				.getList();
+				.getSingle();
 	}
 
-	public Subscription subscribe(final Subscription subscription) {
-		client.setFragment("/subscriptions");
-		return client.createQuery()
-				.setWireInClass(HttpGateway::getPkgmSubscriptionRequest)
-				.setWireOutClass(HttpGateway::getVnfPackageSubscriptionClass)
-				.setOutClass(Subscription.class)
-				.post(subscription);
+	public void downloadContent(final Path file) {
+		client.setFragment("/vnf_packages/{id}/package_content");
+		client.createQuery()
+				.download(file);
 	}
 
 }

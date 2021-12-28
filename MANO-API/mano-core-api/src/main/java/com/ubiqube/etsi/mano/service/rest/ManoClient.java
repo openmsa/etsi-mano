@@ -103,8 +103,8 @@ public class ManoClient {
 		return new ManoGrant(this, id);
 	}
 
-	public ManoVnfPackage vnfPackage(final UUID id) {
-		return new ManoVnfPackage(this, id);
+	public ManoVnfPackageId vnfPackage(final UUID id) {
+		return new ManoVnfPackageId(this, id);
 	}
 
 	public ManoVnfPackage vnfPackage() {

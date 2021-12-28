@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -136,6 +137,12 @@ public class ManoQueryBuilder {
 	private URI buildUri(final ServerAdapter server) {
 		final Map<String, Object> uriParams = Optional.ofNullable(client.getObjectId()).map(x -> Map.of("id", (Object) x.toString())).orElseGet(Map::of);
 		return server.getUriFor(client.getQueryType(), client.getSetFragment(), uriParams);
+	}
+
+	public void download(final Path file) {
+		final ServerAdapter server = client.getServer();
+		final URI uri = buildUri(server);
+		server.rest().download(uri, file);
 	}
 
 }

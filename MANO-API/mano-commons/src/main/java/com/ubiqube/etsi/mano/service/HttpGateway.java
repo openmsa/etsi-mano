@@ -33,6 +33,8 @@ public interface HttpGateway {
 
 	Class<?> getVnfPackageClass();
 
+	ParameterizedTypeReference<List<Class<?>>> getVnfPackageClassList();
+
 	Class<?> getVnfPackageSubscriptionClass();
 
 	Class<?> getPkgmSubscriptionRequest();
