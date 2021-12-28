@@ -14,30 +14,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.v271;
+package com.ubiqube.etsi.mano.controller;
 
-import java.time.OffsetDateTime;
+import java.util.List;
 
-import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.ubiqube.etsi.mano.controller.AbstractEtsiImplementation;
+import lombok.Getter;
+import lombok.Setter;
 
-@Service
-public class EtsiImplementation271Nfvo extends AbstractEtsiImplementation {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 
-	@Override
-	public String getVersion() {
-		return "2.7.1";
-	}
+@Getter
+@Setter
+public class Protocol {
 
-	@Override
-	public boolean isDeprecated() {
-		return false;
-	}
+	private String version;
 
-	@Override
-	public OffsetDateTime getRetirementDate() {
-		return null;
-	}
+	@JsonProperty("protocol")
+	private String proto;
 
+	private List<Protocols> protocols;
 }

@@ -18,9 +18,9 @@ package com.ubiqube.etsi.mano.nfvo.v281;
 
 import java.time.OffsetDateTime;
 
-import com.ubiqube.etsi.mano.controller.EtsiImplementation;
+import com.ubiqube.etsi.mano.controller.AbstractEtsiImplementation;
 
-public class EtsiImplementation281Nfvo implements EtsiImplementation {
+public class EtsiImplementation281Nfvo extends AbstractEtsiImplementation {
 
 	@Override
 	public String getVersion() {

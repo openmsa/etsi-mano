@@ -20,7 +20,7 @@ import java.time.OffsetDateTime;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.EtsiImplementation;
+import com.ubiqube.etsi.mano.controller.AbstractEtsiImplementation;
 
 /**
  *
@@ -28,7 +28,7 @@ import com.ubiqube.etsi.mano.controller.EtsiImplementation;
  *
  */
 @Service
-public class Vnfm351Implementation implements EtsiImplementation {
+public class Vnfm351Implementation extends AbstractEtsiImplementation {
 
 	@Override
 	public String getVersion() {
