@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service.event;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,6 +68,8 @@ import ma.glasnost.orika.MapperFacade;
 public class CommonActionController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CommonActionController.class);
+	private static final List<String> VNFM_FRAGMENT = Arrays.asList("vnflcm", "vnfpm", "vnffm", "vnfind", "vrqan", "vnfsnapshotpkgm");
+	private static final List<String> NFVO_FRAGMENT = Arrays.asList("grant", "vnfpkgm", "nsd", "nslcm", "nspm", "nsfm", "nfvici", "vnfsnapshotpkgm", "lcmcoord");
 
 	private final ServersJpa serversJpa;
 	private final Environment env;
@@ -108,9 +111,37 @@ public class CommonActionController {
 	}
 
 	private Servers registerVnfmEx(final Servers server, final Map<String, Object> parameters) {
-		extractEndpoint(server);
+		extractVersions(server);
 		server.setServerStatus(PlanStatusType.SUCCESS);
 		return serversJpa.save(server);
+	}
+
+	private void extractVersions(final Servers server) {
+		if (server.getServerType() == ServerType.VNFM) {
+			extratVersion(VNFM_FRAGMENT, server);
+		} else {
+			extratVersion(NFVO_FRAGMENT, server);
+		}
+	}
+
+	private void extratVersion(final List<String> fragments, final Servers server) {
+		final Set<ApiVersion> versions = new LinkedHashSet<>();
+		server.setVersions(versions);
+		fragments.forEach(x -> Optional.ofNullable(getVersion(x, server)).ifPresent(versions::add));
+	}
+
+	private ApiVersion getVersion(final String fragment, final Servers server) {
+		try {
+			final Map<String, Object> uriVariables = Map.of("fragment", fragment);
+			final FluxRest rest = new FluxRest(server);
+			final UriComponents uri = rest.uriBuilder().pathSegment("{fragment}/api_versions")
+					.buildAndExpand(uriVariables);
+			final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class);
+			return mapper.map(res, ApiVersion.class);
+		} catch (final RuntimeException e) {
+			LOG.info("Error fetching " + fragment, e);
+		}
+		return null;
 	}
 
 	private Servers registerNfvoEx(@NotNull final Servers server, @NotNull final Map<String, Object> parameters) {
