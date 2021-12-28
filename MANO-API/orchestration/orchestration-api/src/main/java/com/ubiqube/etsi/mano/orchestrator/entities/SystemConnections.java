@@ -47,23 +47,23 @@ public class SystemConnections {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private final UUID id = null;
+	private UUID id = null;
 
 	@FullTextField
 	@Column(unique = true)
-	private final String vimId = null;
+	private String vimId = null;
 
 	@FullTextField
-	private final String vimType = null;
+	private String vimType = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private final Map<String, String> interfaceInfo = null;
+	private Map<String, String> interfaceInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private final Map<String, String> accessInfo = null;
+	private Map<String, String> accessInfo = null;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private final Map<String, String> extra = null;
+	private Map<String, String> extra = null;
 
 	@GeoPointBinding
 	private GeoPoint geoloc;
