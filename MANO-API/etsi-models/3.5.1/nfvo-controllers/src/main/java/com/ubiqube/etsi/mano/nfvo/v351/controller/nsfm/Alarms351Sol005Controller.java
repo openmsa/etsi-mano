@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +28,7 @@ import com.ubiqube.etsi.mano.nfvo.v351.model.nsfm.Alarm;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsfm.AlarmModifications;
 
 @RestController
+@ConditionalOnMissingClass("com.ubiqube.etsi.mano.nfvo.v331.controller.nsfm.Alarms331Sol005Api")
 public class Alarms351Sol005Controller implements Alarms351Sol005Api {
 
 	@Override

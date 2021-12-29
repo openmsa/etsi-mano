@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.vnfm.v351;
+package com.ubiqube.etsi.mano.v271.services;
 
 import java.time.OffsetDateTime;
 
@@ -22,17 +22,12 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.controller.AbstractEtsiImplementation;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
 @Service
-public class EtsiImplementation351Nfvo extends AbstractEtsiImplementation {
+public class EtsiImplementation271 extends AbstractEtsiImplementation {
 
 	@Override
 	public String getVersion() {
-		return "3.5.1";
+		return "2.7.1";
 	}
 
 	@Override

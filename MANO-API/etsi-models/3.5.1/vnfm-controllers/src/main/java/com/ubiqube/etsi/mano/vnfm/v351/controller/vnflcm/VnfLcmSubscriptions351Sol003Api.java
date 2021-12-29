@@ -51,7 +51,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = { "/sol003/vnflcm/v2/subscriptions" }, headers = "Version=3.5.1")
+@RequestMapping(value = { "/sol003/vnflcm/v2/subscriptions" }, headers = "Version=2.1.0")
 @RolesAllowed({ "ROLE_NFVO" })
 public interface VnfLcmSubscriptions351Sol003Api {
 

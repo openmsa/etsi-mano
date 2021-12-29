@@ -39,7 +39,7 @@
 	},
 	{
 		"version": "3.5.1",
-		"protocol": "sol003",
+		"protocol": "sol005",
 		"protocols": [
 			{
 				"fragment": "nsd",
