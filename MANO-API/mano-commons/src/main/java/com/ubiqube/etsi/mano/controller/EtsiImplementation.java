@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.controller;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public interface EtsiImplementation {
 
@@ -25,4 +26,6 @@ public interface EtsiImplementation {
 	boolean isDeprecated();
 
 	OffsetDateTime getRetirementDate();
+
+	List<Protocol> getProtocols();
 }
