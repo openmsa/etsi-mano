@@ -47,7 +47,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "indicators", description = "the indicators API")
-@RequestMapping(value = "/sol002/vnfind/v1", headers = "Version=2.8.1")
+@RequestMapping(value = "/sol002/vnfind/v1", headers = "Version=1.2.1")
 @RolesAllowed({ "ROLE_EM" })
 public interface Indicators281Sol002Api {
 

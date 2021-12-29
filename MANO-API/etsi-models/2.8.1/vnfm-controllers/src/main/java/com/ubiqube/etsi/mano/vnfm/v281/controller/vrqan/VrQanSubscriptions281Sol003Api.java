@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
-@RequestMapping(value = "/sol003/vrqan/v1/", headers = { "Version=3.3.1" })
+@RequestMapping(value = "/sol003/vrqan/v1/", headers = { "Version=1.2.1" })
 @RolesAllowed({ "ROLE_NFVO" })
 public interface VrQanSubscriptions281Sol003Api {
 
