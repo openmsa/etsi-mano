@@ -59,7 +59,7 @@ import io.swagger.annotations.ApiResponses;
  * @version 1.4.0
  */
 @Api(value = "vnf_instances", description = "the vnf_instances API")
-@RequestMapping(value = "/sol003/vnflcm/v1/vnf_instances", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol003/vnflcm/v1/vnf_instances", headers = "Version=1.4.0")
 @RolesAllowed({ "ROLE_NFVO" })
 public interface VnfInstances271Sol003Api {
 
