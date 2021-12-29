@@ -102,7 +102,7 @@ class ToscaApiTest {
 		final ToscaParser tp = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = tp.getContext();
 
-		testToscaClass(1, root, parameters, NS.class);
+		testToscaClass(2, root, parameters, NS.class);
 		testToscaClass(1, root, parameters, NsVirtualLink.class);
 		testToscaClass(1, root, parameters, Sap.class);
 		testToscaClass(1, root, parameters, NFP.class);
@@ -164,11 +164,7 @@ class ToscaApiTest {
 				stack.pop();
 				continue;
 			}
-			if (src instanceof Map) {
-				stack.pop();
-				continue;
-			}
-			if (src instanceof Set) {
+			if ((src instanceof Map) || (src instanceof Set)) {
 				stack.pop();
 				continue;
 			}

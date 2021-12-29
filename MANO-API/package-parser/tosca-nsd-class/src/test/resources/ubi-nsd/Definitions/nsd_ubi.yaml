@@ -73,7 +73,7 @@ topology_template:
             - associated_layer_protocol: mpls
               l2_protocol_data: # tosca.datatypes.nfv.NsL2ProtocolData
                 name: name
-                #network_type: vxlan
+                network_type: vxlan
                 vlan_transparent: false
                 mtu: 1400
                 segmentation_id: vlan0
