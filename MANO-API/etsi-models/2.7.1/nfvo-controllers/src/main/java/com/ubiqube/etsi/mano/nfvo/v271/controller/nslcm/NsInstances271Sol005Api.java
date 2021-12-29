@@ -55,7 +55,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "ns_instances", description = "the ns_instances API")
-@RequestMapping(value = "/sol005/nslcm/v1/ns_instances", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol005/nslcm/v1/ns_instances", headers = "Version=1.3.0")
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsInstances271Sol005Api {
 

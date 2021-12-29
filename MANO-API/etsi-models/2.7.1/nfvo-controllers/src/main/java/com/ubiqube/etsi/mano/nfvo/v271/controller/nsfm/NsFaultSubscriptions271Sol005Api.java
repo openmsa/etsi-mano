@@ -53,7 +53,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "subscriptions", description = "the subscriptions API")
-@RequestMapping(value = "/sol005/nsfm/v1/subsciptions", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol005/nsfm/v1/subsciptions", headers = "Version=1.2.0")
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsFaultSubscriptions271Sol005Api {
 

@@ -47,7 +47,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "grants", description = "the grants API")
 // "Version=1.3.0"
-@RequestMapping(value = "/sol003/grant/v1/grants", headers = { "Version=2.7.1" })
+@RequestMapping(value = "/sol003/grant/v1/grants", headers = { "Version=1.3.0" })
 @RolesAllowed({ "ROLE_VNFM" })
 public interface Grants271Sol003Api {
 

@@ -57,7 +57,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "ns_descriptors", description = "the ns_descriptors API")
-@RequestMapping(value = "/sol005/nsd/v1/ns_descriptors", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol005/nsd/v2/ns_descriptors", headers = "Version=2.0.0")
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsDescriptors271Sol005Api {
 

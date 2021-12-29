@@ -21,9 +21,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsFrontController;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.GrantRequest;
@@ -35,6 +37,7 @@ import com.ubiqube.etsi.mano.vnfm.v281.model.grant.Link;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class Grants281Sol003Controller implements Grants281Sol003Api {
 	private final LcmGrantsFrontController lcmGrantsFrontController;
 

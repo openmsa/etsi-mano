@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
-@RequestMapping(value = "/sol005/nsd/v1/subscriptions", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol005/nsd/v2/subscriptions", headers = "Version=2.0.0")
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsdSubscriptions271Sol005Api {
 

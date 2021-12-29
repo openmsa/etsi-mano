@@ -20,9 +20,11 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 
 /**
  *
@@ -30,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class AlarmsSubscriptions281Sol005Controller implements AlarmsSubscriptions281Sol005Api {
 
 	private final ObjectMapper objectMapper;
