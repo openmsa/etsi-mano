@@ -59,4 +59,6 @@ public class RemoteSubscription implements Serializable {
 	private SubscriptionType subscriptionType;
 
 	private String remoteSubscriptionId;
+
+	private UUID remoteServerId;
 }

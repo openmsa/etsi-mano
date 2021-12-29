@@ -54,9 +54,9 @@ public class ServerService {
 
 	private final ServersJpa serversJpa;
 	private final EventManager eventManager;
-	private final HttpGateway httpGateway;
+	private final List<HttpGateway> httpGateway;
 
-	public ServerService(final ServersJpa serversJpa, final EventManager eventManager, final HttpGateway httpGateway) {
+	public ServerService(final ServersJpa serversJpa, final EventManager eventManager, final List<HttpGateway> httpGateway) {
 		super();
 		this.serversJpa = serversJpa;
 		this.eventManager = eventManager;
@@ -93,7 +93,9 @@ public class ServerService {
 	}
 
 	private void unregister(final FluxRest rest, final RemoteSubscription x) {
-		final String uri = "/" + new File(httpGateway.getUrlFor(ApiVersionType.SOL003_VNFPKGM), "subscriptions/{id}");
+		final Servers srv = findById(x.getRemoteServerId());
+		final HttpGateway hg = filterServer(srv);
+		final String uri = "/" + new File(hg.getUrlFor(ApiVersionType.SOL003_VNFPKGM), "subscriptions/{id}");
 		final URI resp = rest.uriBuilder().path(uri).build(x.getRemoteSubscriptionId());
 		try {
 			rest.deleteWithReturn(resp, null);
@@ -107,13 +109,14 @@ public class ServerService {
 		final List<Servers> lst = serversJpa.findByServerStatusIn(List.of(PlanStatusType.SUCCESS));
 		if (lst.isEmpty()) {
 			LOG.warn("Unable to find a remote server.");
-			return new ServerAdapter(httpGateway, new Servers());
+			return new ServerAdapter(httpGateway.get(0), new Servers());
 		}
 		if (lst.size() > 1) {
 			LOG.warn("More than one server exist, picking the first one.");
 		}
 		final Servers server = lst.get(0);
-		return new ServerAdapter(httpGateway, server);
+		final HttpGateway hg = filterServer(server);
+		return new ServerAdapter(hg, server);
 	}
 
 	public void retryById(final UUID id) {
@@ -125,11 +128,17 @@ public class ServerService {
 				.authentification(subscription.getAuthentication())
 				.url(subscription.getCallbackUri())
 				.build();
-		return new ServerAdapter(httpGateway, server);
+		final HttpGateway hg = filterServer(server);
+		return new ServerAdapter(hg, server);
 	}
 
 	public ServerAdapter buildServerAdapter(final Servers servers) {
-		return new ServerAdapter(httpGateway, servers);
+		final HttpGateway hg = filterServer(servers);
+		return new ServerAdapter(hg, servers);
+	}
+
+	private HttpGateway filterServer(final Servers servers) {
+		return httpGateway.stream().filter(x -> x.getVersion().equals(servers.getVersion())).findAny().orElseThrow(() -> new GenericException("Unable to find server " + servers.getId()));
 	}
 
 }

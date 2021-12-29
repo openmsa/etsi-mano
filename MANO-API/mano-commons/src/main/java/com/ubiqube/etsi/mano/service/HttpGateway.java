@@ -78,4 +78,6 @@ public interface HttpGateway {
 	Object createNotificationVnfIdentifierDeletionNotification(UUID subscriptionId, UUID vnfInstanceId);
 
 	Object createNotificationVnfLcmOperationOccurrenceNotification(UUID subscriptionId, UUID vnfLcmOpOccsId);
+
+	String getVersion();
 }

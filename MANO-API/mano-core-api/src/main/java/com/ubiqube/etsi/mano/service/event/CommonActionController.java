@@ -186,6 +186,7 @@ public class CommonActionController {
 		return RemoteSubscription.builder()
 				.remoteSubscriptionId(subscription.getId().toString())
 				.subscriptionType(server.getSubscriptionType())
+				.remoteServerId(server.getId())
 				.build();
 	}
 
