@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ubiqube.etsi.mano.dao.mano.NsAddressData;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsVlProfile;
@@ -72,6 +75,8 @@ import tosca.policies.nfv.VnfToLevelMapping;
  *
  */
 public class ToscaNsPackageProvider extends AbstractPackageReader implements NsPackageProvider {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ToscaNsPackageProvider.class);
 
 	public ToscaNsPackageProvider(final byte[] data) {
 		super(data);
@@ -185,7 +190,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		final List<NfpRule> nfpRule = getObjects(NfpRule.class, userData);
 		// vnffg link to NFP, VNF, PNF, NS, NsVirtualLink, NfpPositionElement
 		final List<VNFFG> vnffg = getObjects(VNFFG.class, userData);
-		nfpRule.stream().map(x -> {
+		final List<VnffgDescriptor> rules = nfpRule.stream().map(x -> {
 			final String nfpName = getNfpName(x);
 			final NFP localNfp = findNfp(nfpName, nfp);
 			localNfp.getNfpPositionReq();
@@ -195,8 +200,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 			final NFP nfpd = findNfp(nfp, x.getMembers());
 			final VnffgDescriptor vnffgd = new VnffgDescriptor();
 			final List<NfpPosition> nfpPos = findNfpPosition(nfpd.getNfpPositionReq(), nfpPosition);
-			//
-			// vnffgd.setClassifier(getMapper().map(nfpr, Classifier.class));
+			LOG.trace("{}, {}", rules, nfpPos);
 			return vnffgd;
 		})
 				.collect(Collectors.toSet());

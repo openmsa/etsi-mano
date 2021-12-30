@@ -55,6 +55,9 @@ public class SingleControllerCondition extends SpringBootCondition implements Co
 		final Object src = getSource(annotations);
 		final Class<?> clazz = buildClass(src);
 		final RequestMapping srcAnnotation = AnnotationUtils.findAnnotation(clazz, RequestMapping.class);
+		if (null == srcAnnotation) {
+			throw new GenericException("Could not find request mapping on " + src);
+		}
 		final String[] beans = Optional.ofNullable(beanFactory).map(x -> x.getBeanNamesForAnnotation(RestController.class)).orElseGet(() -> new String[0]);
 		for (final String bean : beans) {
 			final Class<?> type = Optional.ofNullable(beanFactory).map(x -> x.getType(bean)).orElseThrow();
