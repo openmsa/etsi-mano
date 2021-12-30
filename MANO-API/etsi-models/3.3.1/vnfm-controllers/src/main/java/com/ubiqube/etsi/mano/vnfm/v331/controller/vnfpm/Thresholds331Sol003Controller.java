@@ -82,7 +82,7 @@ public class Thresholds331Sol003Controller implements Thresholds331Sol003Api {
 	}
 
 	private static String getSelfLink(final Threshold threshold) {
-		return linkTo(methodOn(Thresholds331Sol003Api.class).thresholdsThresholdIdGet(threshold.getId().toString())).withSelfRel().getHref();
+		return linkTo(methodOn(Thresholds331Sol003Api.class).thresholdsThresholdIdGet(threshold.getId())).withSelfRel().getHref();
 	}
 
 }
