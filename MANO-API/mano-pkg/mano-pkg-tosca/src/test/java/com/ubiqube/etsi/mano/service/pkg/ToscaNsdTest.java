@@ -96,6 +96,6 @@ public class ToscaNsdTest {
 	@Test
 	void testUbiqube02() throws Exception {
 		final Set<NsNsd> list = tpp.getNestedNsd(new HashMap<String, String>());
-		assertEquals(1, list.size());
+		assertEquals(0, list.size());
 	}
 }
