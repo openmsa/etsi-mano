@@ -139,21 +139,25 @@ public class VnfmApiVersion {
 	}
 
 	@GetMapping(value = "/{module}/v{v:\\d+}/api_versions", produces = { "application/json" }, consumes = { "application/json" })
-	public ResponseEntity<ApiVersionInformation> apiMajorVersionsV1Get(@PathVariable("module") final String module, final HttpServletRequest request) {
-		return handleQuery(module, request.getRequestURI());
+	public ResponseEntity<ApiVersionInformation> apiMajorVersionsV1Get(@PathVariable("module") final String module, final HttpServletRequest request, @PathVariable("v") final Integer v) {
+		return handleQuery(module, request.getRequestURI(), v);
 	}
 
 	@GetMapping(value = "/{module}/api_versions", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<ApiVersionInformation> apiMajorVersionsGet(@PathVariable("module") final String module, final HttpServletRequest request) {
-		return handleQuery(module, request.getRequestURI());
+		return handleQuery(module, request.getRequestURI(), null);
 	}
 
-	private ResponseEntity<ApiVersionInformation> handleQuery(final String module, final String url) {
+	private ResponseEntity<ApiVersionInformation> handleQuery(final String module, final String url, final Integer v) {
 		final ApiVersionInformation apiVersion = new ApiVersionInformation();
 		final String frag = getFragment(url, module);
 		String key = null;
 		if (module.equals(frag)) {
-			final Optional<Entry<String, List<String>>> optApi = dedupe.entrySet().stream().filter(x -> x.getKey().startsWith("/" + module + "/")).findFirst();
+			final StringBuilder filter = new StringBuilder("/" + module + "/");
+			if (v != null) {
+				filter.append("v").append(v);
+			}
+			final Optional<Entry<String, List<String>>> optApi = dedupe.entrySet().stream().filter(x -> x.getKey().startsWith(filter.toString())).findFirst();
 			optApi.ifPresent(x -> apiVersion.setUriPrefix(x.getKey()));
 			key = apiVersion.getUriPrefix();
 		} else {
