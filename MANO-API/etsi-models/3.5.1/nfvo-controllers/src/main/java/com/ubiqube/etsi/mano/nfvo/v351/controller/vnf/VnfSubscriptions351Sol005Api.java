@@ -46,7 +46,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=3.5.1" })
+@RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=2.2.0" })
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface VnfSubscriptions351Sol005Api {
 

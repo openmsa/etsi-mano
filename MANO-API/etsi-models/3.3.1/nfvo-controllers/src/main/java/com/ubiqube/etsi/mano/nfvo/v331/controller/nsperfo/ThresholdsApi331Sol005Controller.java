@@ -20,9 +20,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.CreateThresholdRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.Threshold;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.ThresholdModifications;
@@ -33,6 +35,7 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.ThresholdModifications;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class ThresholdsApi331Sol005Controller implements Thresholds331Sol005Api {
 
 	@Override

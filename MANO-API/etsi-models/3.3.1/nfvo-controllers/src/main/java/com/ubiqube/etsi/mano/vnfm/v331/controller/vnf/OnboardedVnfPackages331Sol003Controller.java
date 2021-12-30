@@ -25,12 +25,14 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.service.LinksSol003;
@@ -42,6 +44,7 @@ import com.ubiqube.etsi.mano.vnfm.v331.service.LinksSol003;
  */
 @RolesAllowed({ "ROLE_VNFM" })
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class OnboardedVnfPackages331Sol003Controller implements OnboardedVnfPackages331Sol003Api {
 	private final VnfPackageFrontController vnfPackageFrontController;
 
