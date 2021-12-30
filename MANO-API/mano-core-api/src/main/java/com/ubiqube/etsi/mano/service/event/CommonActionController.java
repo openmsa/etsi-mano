@@ -146,6 +146,7 @@ public class CommonActionController {
 
 	private Servers registerNfvoEx(@NotNull final Servers server, @NotNull final Map<String, Object> parameters) {
 		final FluxRest rest = new FluxRest(server);
+		extractVersions(server);
 		final Set<RemoteSubscription> remoteSubscription = server.getRemoteSubscriptions();
 		if (!isSubscribe(SubscriptionType.NSDVNF, remoteSubscription)) {
 			addSubscription(rest, server, this::vnfPackageOnboardingSubscribe, remoteSubscription);
