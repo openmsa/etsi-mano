@@ -53,7 +53,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "pm_jobs", description = "the pm_jobs API")
-@RequestMapping(value = "/sol003/vnfpm/v1", headers = "Version=2.1.0")
+@RequestMapping(value = "/sol003/vnfpm/v2", headers = "Version=2.1.0")
 @RolesAllowed({ "ROLE_NFVO" })
 public interface PmJobs281Sol003Api {
 
