@@ -82,7 +82,7 @@ public class VnfSubscriptions331Sol005Controller implements VnfSubscriptions331S
 	 */
 	@Override
 	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
-		return vnfSubscriptionSol03FrontController.create(subscriptionsPostQuery, PkgmSubscription.class, VnfSubscriptions331Sol005Controller::makeLinks);
+		return vnfSubscriptionSol03FrontController.create(subscriptionsPostQuery, VnfSubscriptions331Sol005Api.class, PkgmSubscription.class, VnfSubscriptions331Sol005Controller::makeLinks);
 	}
 
 	/**

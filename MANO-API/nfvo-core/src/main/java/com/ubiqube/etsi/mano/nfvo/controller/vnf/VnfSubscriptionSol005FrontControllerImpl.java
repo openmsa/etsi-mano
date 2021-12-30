@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionManagement;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionSol005FrontController;
@@ -58,12 +60,28 @@ public class VnfSubscriptionSol005FrontControllerImpl implements VnfSubscription
 	}
 
 	@Override
-	public <U> ResponseEntity<U> create(final Object subscriptionsPostQuery, final Class<U> clazz, final Consumer<U> makeLinks) {
+	public <U> ResponseEntity<U> create(final Object subscriptionsPostQuery, final Class<?> version, final Class<U> clazz, final Consumer<U> makeLinks) {
 		Subscription subscription = mapper.map(subscriptionsPostQuery, Subscription.class);
+		final String v = extractVersion(version);
+		subscription.setVersion(v);
 		subscription = vnfSubscriptionManagement.subscriptionsPost(subscription, ApiTypesEnum.SOL005);
 		final U pkgmSubscription = mapper.map(subscription, clazz);
 		makeLinks.accept(pkgmSubscription);
 		return new ResponseEntity<>(pkgmSubscription, HttpStatus.CREATED);
+	}
+
+	private static String extractVersion(final Class<?> version) {
+		final RequestMapping ann = AnnotationUtils.findAnnotation(version, RequestMapping.class);
+		if (null == ann) {
+			return null;
+		}
+		final String[] headers = ann.headers();
+		for (final String header : headers) {
+			if (header.startsWith("Version=")) {
+				return header.substring("Version=".length());
+			}
+		}
+		return null;
 	}
 
 	@Override

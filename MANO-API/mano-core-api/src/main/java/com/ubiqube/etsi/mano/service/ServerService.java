@@ -128,6 +128,9 @@ public class ServerService {
 				.authentification(subscription.getAuthentication())
 				.url(subscription.getCallbackUri())
 				.build();
+		if (null == server.getVersion()) {
+			return new ServerAdapter(httpGateway.get(0), server);
+		}
 		final HttpGateway hg = filterServer(server);
 		return new ServerAdapter(hg, server);
 	}
@@ -138,7 +141,7 @@ public class ServerService {
 	}
 
 	private HttpGateway filterServer(final Servers servers) {
-		return httpGateway.stream().filter(x -> x.getVersion().equals(servers.getVersion())).findAny().orElseThrow(() -> new GenericException("Unable to find server " + servers.getId()));
+		return httpGateway.stream().filter(x -> x.getVersion().equals(servers.getVersion())).findAny().orElseThrow(() -> new GenericException("Unable to find version " + servers.getVersion()));
 	}
 
 }

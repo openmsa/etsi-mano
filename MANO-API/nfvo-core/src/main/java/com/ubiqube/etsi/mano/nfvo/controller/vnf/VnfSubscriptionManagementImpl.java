@@ -57,6 +57,7 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	@Override
 	public Subscription subscriptionsPost(@Nonnull final Subscription subscription, final ApiTypesEnum api) {
 		subscription.setApi(api);
+		subscription.setSubscriptionType(SubscriptionType.VNF);
 		final ServerAdapter server = serverService.buildServerAdapter(subscription);
 		notifications.check(server, subscription.getCallbackUri());
 		return subscriptionService.save(subscription, SubscriptionType.VNF);

@@ -80,4 +80,6 @@ public class Subscription implements BaseEntity {
 	@JoinColumn
 	private List<FilterAttributes> filters;
 
+	private String version;
+
 }
