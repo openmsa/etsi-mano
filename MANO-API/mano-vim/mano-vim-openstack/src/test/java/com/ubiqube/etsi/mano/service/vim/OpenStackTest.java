@@ -53,6 +53,8 @@ import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.RouterInterface;
 import org.openstack4j.model.network.SecurityGroupRule;
 import org.openstack4j.model.network.Subnet;
+import org.openstack4j.model.network.ext.FlowClassifier;
+import org.openstack4j.model.network.ext.PortPair;
 import org.openstack4j.model.telemetry.gnocchi.MetricCreate;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
@@ -80,6 +82,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 @Tag("Remote")
 //@ExtendWith(MockitoExtension.class)
 //@RunWith(MockitoJUnitRunner.Silent.class)
+@SuppressWarnings("static-method")
 public class OpenStackTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OpenStackTest.class);
@@ -535,5 +538,27 @@ public class OpenStackTest {
 		final org.openstack4j.model.network.SecurityGroup res = os.networking().securitygroup().create(securityGroup);
 		System.out.println("" + res.getId());
 		assertNotNull(os);
+	}
+
+	@Test
+	void testSfc() {
+		final OSClientV3 os = getQueensConnection();
+		Builders.portChain().build();
+		Builders.portPairGroup().build();
+		Builders.portForwarding().build();
+		os.sfc().portchains();
+		os.sfc().portpairgroups();
+		final FlowClassifier flowClassifier = Builders.flowClassifier().build();
+		os.sfc().flowclassifiers().create(flowClassifier);
+		final PortPair portPair = Builders.portPair().build();
+		os.sfc().portpairs().create(portPair);
+		assertTrue(true);
+	}
+
+	void testPort() {
+		final OSClientV3 os = getQueensConnection();
+		final Port port = Builders.port().build();
+		os.networking().port().create(port);
+		assertTrue(true);
 	}
 }

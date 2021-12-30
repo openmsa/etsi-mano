@@ -160,11 +160,11 @@ public class FluxRest {
 		return resp.block();
 	}
 
-	public final ResponseEntity<?> deleteWithReturn(final URI uri, final Object body) {
+	public final <T> ResponseEntity<T> deleteWithReturn(final URI uri, final Object body) {
 		final ResponseSpec resp = makeBaseQuery(uri, HttpMethod.DELETE, body)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve();
-		return resp.toBodilessEntity().block();
+		return (ResponseEntity<T>) resp.toBodilessEntity().block();
 	}
 
 	public final <T> T post(final URI uri, final Class<T> clazz) {

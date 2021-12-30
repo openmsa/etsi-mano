@@ -79,8 +79,8 @@ public class ManoClient {
 		return server;
 	}
 
-	public Function<HttpGateway, ?> getRequestObject() {
-		return requestObject;
+	public <T> Function<HttpGateway, T> getRequestObject() {
+		return (Function<HttpGateway, T>) requestObject;
 	}
 
 	public String getSetFragment() {

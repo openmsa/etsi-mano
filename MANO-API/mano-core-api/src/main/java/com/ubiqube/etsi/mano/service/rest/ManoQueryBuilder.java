@@ -73,11 +73,11 @@ public class ManoQueryBuilder {
 		//
 	}
 
-	public ResponseEntity<?> getRaw() {
+	public <T> ResponseEntity<T> getRaw() {
 		final ServerAdapter server = client.getServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final URI uri = buildUri(server);
-		return server.rest().getWithReturn(uri, this.wireOutClass.apply(httpGateway));
+		return (ResponseEntity<T>) server.rest().getWithReturn(uri, this.wireOutClass.apply(httpGateway));
 	}
 
 	public <T> T getSingle() {
