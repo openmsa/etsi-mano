@@ -22,7 +22,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +54,7 @@ import com.ubiqube.etsi.mano.model.ApiVersionInformationApiVersions;
  *
  */
 @RestController
-@RequestMapping(value = "/sol005")
+@RequestMapping(value = { "/sol003", "/sol005" })
 @Lazy
 public class NfvoApiVersion {
 
@@ -81,7 +87,7 @@ public class NfvoApiVersion {
 					if (null == part) {
 						LOG.warn("Ignoring controller: {}", x);
 					} else {
-						version.forEach(y -> res.put(part + y, new Endpoint(part.replace("/", ""), y)));
+						version.forEach(y -> res.put(part + y, new Endpoint(part, y)));
 					}
 				}
 			}
@@ -94,10 +100,20 @@ public class NfvoApiVersion {
 		final Set<String> mutableSet = new HashSet<>(Arrays.asList("/vrqan/", "/vnfpkgm/", "/grant/", "/vnfpm/", "/vnflcm/", "/vnfind/", "/vnffm/", "/vrgan/", "/nsd/", "/nsfm/", "/nslcm/", "/nspm/", "/vnfpkgm/", "/vnfconfig/", "/vnfsnapshotpkgm/", "/nsiun/"));
 		for (final String string : mutableSet) {
 			if (url.contains(string)) {
-				return string;
+				return getFragment(url, string);
 			}
 		}
 		return null;
+	}
+
+	private static String getFragment(final String url, final String string) {
+		final String regexp = string.replace("/", "\\/");
+		final Pattern p = Pattern.compile("(" + regexp + "v[0-9])");
+		final Matcher m = p.matcher(url);
+		if (m.find()) {
+			return m.group(0);
+		}
+		return string;
 	}
 
 	private static List<String> getVersion(final String[] headers) {
@@ -129,12 +145,34 @@ public class NfvoApiVersion {
 
 	}
 
-	@GetMapping(value = { "/{module}/v1/api_versions", "/{module}/api_versions" }, produces = { "application/json" }, consumes = { "application/json" })
-	public ResponseEntity<ApiVersionInformation> apiMajorVersionsGet(@PathVariable("module") final String module) {
-		final ApiVersionInformation apiVersion = new ApiVersionInformation();
-		apiVersion.setUriPrefix("/sol005/" + module + "/v1/");
+	@GetMapping(value = "/{module}/v{v:\\d+}/api_versions", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<ApiVersionInformation> apiMajorVersionsV1Get(@PathVariable("module") final String module, final HttpServletRequest request, @PathVariable("v") final Integer v) {
+		return handleQuery(module, request.getRequestURI(), v);
+	}
 
-		final List<String> versions = dedupe.get(module);
+	@GetMapping(value = "/{module}/api_versions", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<ApiVersionInformation> apiMajorVersionsGet(@PathVariable("module") final String module, final HttpServletRequest request) {
+		return handleQuery(module, request.getRequestURI(), null);
+	}
+
+	private ResponseEntity<ApiVersionInformation> handleQuery(final String module, final String url, final Integer v) {
+		final ApiVersionInformation apiVersion = new ApiVersionInformation();
+		final String frag = getFragment(url, module);
+		String key = null;
+		if (module.equals(frag)) {
+			final StringBuilder filter = new StringBuilder("/" + module + "/");
+			if (v != null) {
+				filter.append("v").append(v);
+			}
+			final Optional<Entry<String, List<String>>> optApi = dedupe.entrySet().stream().filter(x -> x.getKey().startsWith(filter.toString())).findFirst();
+			optApi.ifPresent(x -> apiVersion.setUriPrefix(x.getKey()));
+			key = apiVersion.getUriPrefix();
+		} else {
+			apiVersion.setUriPrefix(frag);
+			key = frag;
+		}
+
+		final List<String> versions = dedupe.get(key);
 		if (null == versions) {
 			return ResponseEntity.noContent().build();
 		}
@@ -142,5 +180,4 @@ public class NfvoApiVersion {
 		apiVersion.setApiVersions(list);
 		return ResponseEntity.ok(apiVersion);
 	}
-
 }
