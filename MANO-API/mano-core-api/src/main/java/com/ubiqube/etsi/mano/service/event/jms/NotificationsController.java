@@ -38,6 +38,8 @@ public class NotificationsController {
 	public void onEvent(final EventMessage ev) {
 		LOG.info("Notification Controller Received event: {}", ev);
 		switch (ev.getNotificationEvent()) {
+		case NS_PKG_ONBOARDING -> vnfEvent.onEvent(ev.getObjectId(), "NsdOnBoardingNotification");
+		case NS_PKG_ONCHANGE -> vnfEvent.onEvent(ev.getObjectId(), "NsdChangeNotification");
 		case VNF_PKG_ONBOARDING -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageOnboardingNotification");
 		case VNF_PKG_ONDELETION -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
 		case VNF_PKG_ONCHANGE -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
