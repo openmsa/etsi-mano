@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppTask;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
@@ -83,15 +82,15 @@ public class AppWorkflow implements Workflow<AppPkg, AppBlueprint, AppReport, Ap
 	}
 
 	@Override
-	public OrchExecutionResults execute(final PreExecutionGraph<VnfTask> plan, final AppBlueprint parameters) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void refresh(final PreExecutionGraph<AppTask> prePlan, final Blueprint<AppTask, ?> localPlan) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public OrchExecutionResults<AppTask> execute(final PreExecutionGraph<AppTask> plan, final AppBlueprint parameters) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

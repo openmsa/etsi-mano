@@ -81,7 +81,7 @@ public class AppPackageMeoControllerImpl implements AppPackageMeoController {
 
 	@Override
 	public List<AppPkg> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
+		final SearchQueryer sq = new SearchQueryer(em, null);
 		return sq.getCriteria(filter, AppPkg.class);
 	}
 

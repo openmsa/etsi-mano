@@ -40,7 +40,7 @@ public class AppPackagingManager {
 	private final List<PackageDescriptor<AppToscaProvider>> providers;
 
 	public AppPackagingManager(final List<PackageDescriptor<AppToscaProvider>> providers) {
-		providers = new ArrayList<>(providers);
+		this.providers = new ArrayList<>(providers);
 	}
 
 	public AppPackageProvider getProviderFor(final byte[] data) {
