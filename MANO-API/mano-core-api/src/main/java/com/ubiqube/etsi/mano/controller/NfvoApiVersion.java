@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.controller;
+package com.ubiqube.etsi.mano.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +54,7 @@ import com.ubiqube.etsi.mano.model.ApiVersionInformationApiVersions;
  *
  */
 @RestController
-@RequestMapping(value = { "/sol003", "/sol005" })
+@RequestMapping(value = { "/sol002", "/sol003", "/sol005" })
 @Lazy
 public class NfvoApiVersion {
 
