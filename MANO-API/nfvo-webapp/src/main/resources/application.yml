@@ -32,6 +32,7 @@ logging:
           autoconfigure:
             logging:
               ConditionEvaluationReportLoggingListener: INFO
+        context: INFO
         jms: INFO
         security: INFO
         web:
