@@ -23,9 +23,7 @@ import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.sys.System;
-
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 /**
  *
@@ -34,11 +32,16 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
  * @param <U> Task parameter.
  */
 public abstract class AbstractVimSystem<U> implements System<U> {
+	private final VimManager vimManager;
+
+	public AbstractVimSystem(final VimManager vimManager) {
+		super();
+		this.vimManager = vimManager;
+	}
+
 	@Override
 	public final SystemBuilder<UnitOfWork<U>> getImplementation(final OrchestrationService<U> orchestrationService, final VirtualTask<U> virtualTask, final SystemConnections vimConnectionInformation) {
-		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-		mapperFactory.classMap(SystemConnections.class, VimConnectionInformation.class).byDefault().register();
-		final VimConnectionInformation vimConn = mapperFactory.getMapperFacade().map(vimConnectionInformation, VimConnectionInformation.class);
+		final VimConnectionInformation vimConn = vimManager.findVimByVimId(vimConnectionInformation.getVimId());
 		return getImplementation(orchestrationService, virtualTask, vimConn);
 	}
 

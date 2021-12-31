@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 /**
  *
@@ -37,8 +38,8 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 public class NsVirtualLinkSystem extends AbstractVimSystem<NsVirtualLinkTask> {
 	private final Vim vim;
 
-	public NsVirtualLinkSystem(final Vim vim) {
-		super();
+	public NsVirtualLinkSystem(final Vim vim, final VimManager vimManager) {
+		super(vimManager);
 		this.vim = vim;
 	}
 

@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 /**
  *
@@ -37,8 +38,8 @@ import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 public class NsVnfInstantiateSystem extends AbstractVimSystem<NsVnfTask> {
 	private final VnfmInterface vnfm;
 
-	public NsVnfInstantiateSystem(final VnfmInterface vnfm) {
-		super();
+	public NsVnfInstantiateSystem(final VnfmInterface vnfm, final VimManager vimManager) {
+		super(vimManager);
 		this.vnfm = vnfm;
 	}
 

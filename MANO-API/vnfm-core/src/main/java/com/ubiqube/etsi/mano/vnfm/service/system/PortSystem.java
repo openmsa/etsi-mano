@@ -26,6 +26,7 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfPortUowV2;
 
 /**
@@ -38,8 +39,8 @@ public class PortSystem extends AbstractVimSystem<ExternalCpTask> {
 
 	private final Vim vim;
 
-	public PortSystem(final Vim vim) {
-		super();
+	public PortSystem(final Vim vim, final VimManager vimManager) {
+		super(vimManager);
 		this.vim = vim;
 	}
 

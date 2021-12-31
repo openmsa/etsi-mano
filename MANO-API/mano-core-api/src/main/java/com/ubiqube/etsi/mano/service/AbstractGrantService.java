@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
@@ -104,14 +105,14 @@ public abstract class AbstractGrantService implements VimResourceService {
 		plan.setGrantsRequestId(grantsResp.getId().toString());
 		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
 		fixUnknownTask(plan.getTasks(), plan.getVimConnections());
-		fixVimConnections(plan.getVimConnections());
+		plan.setVimConnections(fixVimConnections(plan.getVimConnections()));
 	}
 
-	private void fixVimConnections(final Set<VimConnectionInformation> vimConnections) {
-		vimConnections.forEach(x -> {
+	private Set<VimConnectionInformation> fixVimConnections(final Set<VimConnectionInformation> vimConnections) {
+		return vimConnections.stream().map(x -> {
 			x.setGeoloc(new GeoPoint(10, 10));
-			vimManager.registerIfNeeded(x);
-		});
+			return vimManager.registerIfNeeded(x);
+		}).collect(Collectors.toSet());
 	}
 
 	private static void fixUnknownTask(final Set<? extends VimTask> tasks, final Set<VimConnectionInformation> vimConnections) {

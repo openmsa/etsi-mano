@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 /**
  *
@@ -37,8 +38,8 @@ import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 public class NsNsdSystem extends AbstractVimSystem<NsdTask> {
 	private final VnfInstanceLcm nsLcmOpOccsService;
 
-	public NsNsdSystem(final VnfInstanceLcm nsLcmOpOccsService) {
-		super();
+	public NsNsdSystem(final VnfInstanceLcm nsLcmOpOccsService, final VimManager vimManager) {
+		super(vimManager);
 		this.nsLcmOpOccsService = nsLcmOpOccsService;
 	}
 

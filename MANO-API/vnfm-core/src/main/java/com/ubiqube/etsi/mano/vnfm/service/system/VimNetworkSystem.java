@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VirtualLinkUowV2;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfSubnetworkUowV2;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.SubNetworkVt;
@@ -42,8 +43,8 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.SubNetworkVt;
 public class VimNetworkSystem extends AbstractVimSystem<NetworkTask> {
 	private final Vim vim;
 
-	public VimNetworkSystem(final Vim vim) {
-		super();
+	public VimNetworkSystem(final Vim vim, final VimManager vimManager) {
+		super(vimManager);
 		this.vim = vim;
 	}
 
