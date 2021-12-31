@@ -22,10 +22,13 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 
@@ -35,23 +38,30 @@ import com.ubiqube.etsi.mano.service.HttpGateway;
  *
  */
 public class ManoGrant {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ManoGrant.class);
 	private static final Pattern UUID_REGEXP = Pattern.compile("(?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})$");
+
 	private final ManoClient client;
 	private UUID id;
 
 	public ManoGrant(final ManoClient manoClient) {
 		this.client = manoClient;
+		client.setFragment("grants");
+		manoClient.setQueryType(ApiVersionType.SOL003_GRANT);
 	}
 
 	public ManoGrant(final ManoClient manoClient, final UUID id) {
 		this.client = manoClient;
 		client.setObjectId(id);
+		client.setFragment("grants/{id}");
+		manoClient.setQueryType(ApiVersionType.SOL003_GRANT);
 		this.id = id;
 	}
 
 	public GrantResponse find() {
 		final ResponseEntity<?> resp = client.createQuery()
-				.setWireOutClass(HttpGateway::getVnfInstanceClass)
+				.setWireOutClass(HttpGateway::getGrantResponse)
 				.getRaw();
 		return buildResponse(resp, id);
 	}
@@ -59,9 +69,21 @@ public class ManoGrant {
 	public GrantResponse create(final GrantInterface grant) {
 		final ResponseEntity<?> resp = client.createQuery()
 				.setWireInClass(HttpGateway::getGrantRequest)
-				.setWireOutClass(HttpGateway::getVnfInstanceClass)
+				.setWireOutClass(HttpGateway::getGrantResponse)
+				.setOutClass(GrantResponse.class)
 				.postRaw(grant);
-		return handleLocation(resp);
+		GrantResponse respCreate = handleLocation(resp);
+		final ManoGrant manoId = new ManoGrant(client, respCreate.getId());
+		while (Boolean.FALSE.equals(respCreate.getAvailable())) {
+			try {
+				Thread.sleep(1000);
+			} catch (final InterruptedException e) {
+				LOG.debug("", e);
+				Thread.currentThread().interrupt();
+			}
+			respCreate = manoId.find();
+		}
+		return respCreate;
 	}
 
 	private static GrantResponse handleLocation(final ResponseEntity<?> resp) {

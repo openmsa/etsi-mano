@@ -117,7 +117,7 @@ public class ManoQueryBuilder {
 
 	private Object remapRequest(final Object req) {
 		final HttpGateway httpGateway = client.getServer().httpGateway();
-		final Object obj = client.getRequestObject().apply(httpGateway);
+		final Object obj = wireInClass.apply(httpGateway);
 		if (obj instanceof final Class<?> clz) {
 			return mapper.map(req, clz);
 		}
@@ -129,7 +129,7 @@ public class ManoQueryBuilder {
 		final URI uri = buildUri(server);
 		final HttpGateway httpGateway = server.httpGateway();
 		final Object reqMap = client.getRequestObject().apply(httpGateway);
-		final Class<?> clazz = wireInClass.apply(httpGateway);
+		final Class<?> clazz = wireOutClass.apply(httpGateway);
 		final var res = server.rest().post(uri, reqMap, clazz);
 		return (T) mapper.map(res, this.outClass);
 	}
