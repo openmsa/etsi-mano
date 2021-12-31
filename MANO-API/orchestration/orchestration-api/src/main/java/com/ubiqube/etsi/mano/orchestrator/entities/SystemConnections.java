@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.orchestrator.entities;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,7 +49,7 @@ public class SystemConnections {
 	private UUID id = null;
 
 	@FullTextField
-	@Column(unique = true)
+	// @Column(unique = true)
 	private String vimId = null;
 
 	@FullTextField
