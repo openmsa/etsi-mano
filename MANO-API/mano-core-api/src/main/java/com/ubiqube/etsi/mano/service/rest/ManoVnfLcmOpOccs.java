@@ -52,7 +52,7 @@ public class ManoVnfLcmOpOccs {
 
 	public VnfBlueprint find() {
 		client.setFragment("vnf_lcm_op_occs/{id}");
-		return client.createQuery(HttpGateway::getVnfInstanceInstantiateRequestClass)
+		return client.createQuery()
 				.setWireOutClass(HttpGateway::getVnfLcmOpOccs)
 				.setOutClass(VnfBlueprint.class)
 				.getSingle();

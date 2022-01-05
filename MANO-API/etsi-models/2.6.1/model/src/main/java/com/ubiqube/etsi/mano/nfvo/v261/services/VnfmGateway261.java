@@ -32,7 +32,6 @@ import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 import com.ubiqube.etsi.mano.service.NfvoFactory;
 import com.ubiqube.etsi.mano.service.VnfmFactory;
@@ -155,7 +154,7 @@ public class VnfmGateway261 implements HttpGateway {
 
 	@Override
 	public Class<?> getVnfLcmOpOccs() {
-		return NsLcmOpOcc.class;
+		return VnfLcmOpOcc.class;
 	}
 
 	@Override

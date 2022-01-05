@@ -49,7 +49,7 @@ public class ManoVnfInstance {
 	public <T> T create(final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
 		final Function<HttpGateway, Object> request = (final HttpGateway httpGateway) -> httpGateway.createVnfInstanceRequest(vnfdId, vnfInstanceName, vnfInstanceDescription);
 		return client.createQuery(request)
-				.setWireInClass(HttpGateway::getVnfInstanceClass)
+				.setWireOutClass(HttpGateway::getVnfInstanceClass)
 				.setOutClass(VnfInstance.class)
 				.post();
 	}

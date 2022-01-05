@@ -110,7 +110,7 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			final String details = Optional.ofNullable(result.getError()).map(FailureDetails::getDetail).orElse("[No content]");
-			throw new GenericException("VNF LCM Failed: " + details);
+			throw new GenericException("VNF LCM Failed: " + details + " With state: " + result.getOperationStatus());
 		}
 		return res.getInstance().getId().toString();
 	}

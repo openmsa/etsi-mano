@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscriptionRequest;
@@ -144,7 +143,7 @@ public class HttpGateway351 implements HttpGateway {
 
 	@Override
 	public Class<?> getVnfLcmOpOccs() {
-		return NsLcmOpOcc.class;
+		return VnfLcmOpOcc.class;
 	}
 
 	@Override
