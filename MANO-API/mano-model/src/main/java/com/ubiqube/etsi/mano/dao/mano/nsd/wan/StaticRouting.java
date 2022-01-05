@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Embeddable;
@@ -35,7 +36,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class StaticRouting {
+public class StaticRouting implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Enumerated(EnumType.STRING)
 	private IpType ipVersion;
 

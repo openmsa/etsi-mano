@@ -30,9 +30,9 @@ public class UowNsTaskCreateProvider implements TaskProvider<UnitOfWork<NsTask, 
 
 	private final NsParameters params;
 
-	public UowNsTaskCreateProvider(final NsParameters _params) {
+	public UowNsTaskCreateProvider(final NsParameters params) {
 		super();
-		params = _params;
+		this.params = params;
 	}
 
 	@Override

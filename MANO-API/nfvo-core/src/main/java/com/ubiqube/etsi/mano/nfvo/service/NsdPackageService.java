@@ -39,10 +39,10 @@ public class NsdPackageService {
 
 	private final NsdPackageVnfPackageJpa nsdPackageVnfPackageJpa;
 
-	public NsdPackageService(final NsdPackageJpa _nsdPackageJpa, final NsdPackageNsdPackageJpa _nsdPackageNsdPackageJpa, final NsdPackageVnfPackageJpa _nsdPackageVnfPackageJpa) {
-		nsdPackageJpa = _nsdPackageJpa;
-		nsdPackageNsdPackageJpa = _nsdPackageNsdPackageJpa;
-		nsdPackageVnfPackageJpa = _nsdPackageVnfPackageJpa;
+	public NsdPackageService(final NsdPackageJpa nsdPackageJpa, final NsdPackageNsdPackageJpa nsdPackageNsdPackageJpa, final NsdPackageVnfPackageJpa nsdPackageVnfPackageJpa) {
+		this.nsdPackageJpa = nsdPackageJpa;
+		this.nsdPackageNsdPackageJpa = nsdPackageNsdPackageJpa;
+		this.nsdPackageVnfPackageJpa = nsdPackageVnfPackageJpa;
 	}
 
 	public Set<NsdPackageVnfPackage> findVnfPackageByNsPackage(final NsdPackage nsdPackage) {

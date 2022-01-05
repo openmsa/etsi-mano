@@ -52,15 +52,15 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	private static final long serialVersionUID = 1L;
 
 	private final transient VnfInstantiate request;
-	private final VnfmInterface vnfm;
+	private final transient VnfmInterface vnfm;
 
 	private final NsVnfTask task;
 
-	public VnfUow(final NsVnfTask _task, final VnfInstantiate _request, final VnfmInterface _vnfm) {
-		super(_task);
-		task = _task;
-		request = _request;
-		vnfm = _vnfm;
+	public VnfUow(final NsVnfTask task, final VnfInstantiate request, final VnfmInterface vnfm) {
+		super(task);
+		this.task = task;
+		this.request = request;
+		this.vnfm = vnfm;
 	}
 
 	@Override
@@ -99,7 +99,8 @@ public class VnfUow extends AbstractNsUnitOfWork {
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
-		// XXX OVI: We need some other mechanism, we should not delete the instance at this point. But as long a vnf instance exist you can't delete the package.
+		// XXX OVI: We need some other mechanism, we should not delete the instance at
+		// this point. But as long a vnf instance exist you can't delete the package.
 		vnfm.delete(task.getVnfInstance());
 		return result.getId().toString();
 	}
@@ -119,7 +120,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 	private static VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfBlueprint tmp = vnfLcmOpOccs;
 		OperationStatusType state = tmp.getOperationStatus();
-		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state) || (OperationStatusType.NOT_STARTED == state)) {
+		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state || OperationStatusType.NOT_STARTED == state) {
 			tmp = vnfm.vnfLcmOpOccsGet(vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
 			sleepSeconds(1);
@@ -139,7 +140,7 @@ public class VnfUow extends AbstractNsUnitOfWork {
 
 	@Override
 	public List<WfDependency> getDependencies() {
-		return task.getExternalNetworks().stream().map(x -> new WfDependency(NsVlNode.class, x)).collect(Collectors.toList());
+		return task.getExternalNetworks().stream().map(x -> new WfDependency(NsVlNode.class, x)).toList();
 	}
 
 	@Override

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import lombok.Getter;
@@ -28,7 +29,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class VnfcInfoModificationsEntity {
+public class VnfcInfoModificationsEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String id = null;
 
 	private Map<String, String> vnfcConfigurableProperties = null;

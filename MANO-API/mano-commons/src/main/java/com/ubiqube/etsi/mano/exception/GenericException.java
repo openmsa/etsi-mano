@@ -18,7 +18,7 @@ package com.ubiqube.etsi.mano.exception;
 
 /**
  * A generic exception.
- * 
+ *
  * @author ovi@ubiqube.com
  *
  */
@@ -27,12 +27,12 @@ public class GenericException extends RuntimeException {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public GenericException(Exception _e) {
-		super(_e);
+	public GenericException(final Exception e) {
+		super(e);
 	}
 
-	public GenericException(String _string) {
-		super(_string);
+	public GenericException(final String message) {
+		super(message);
 	}
 
 }

@@ -23,15 +23,15 @@ import javax.validation.constraints.NotNull;
 
 public interface BinaryRepository {
 
-	void storeObject(@NotNull UUID _id, @NotNull String _filename, Object _object);
+	void storeObject(@NotNull UUID id, @NotNull String filename, Object object);
 
-	void storeBinary(@NotNull UUID _id, @NotNull String _filename, InputStream _stream);
+	void storeBinary(@NotNull UUID id, @NotNull String filename, InputStream stream);
 
-	byte[] getBinary(@NotNull UUID _id, @NotNull String _filename);
+	byte[] getBinary(@NotNull UUID id, @NotNull String filename);
 
-	byte[] getBinary(@NotNull UUID _id, @NotNull String _filename, int min, Long max);
+	byte[] getBinary(@NotNull UUID id, @NotNull String filename, int min, Long max);
 
-	void delete(@NotNull UUID _id, @NotNull String _filename);
+	void delete(@NotNull UUID id, @NotNull String filename);
 
-	void delete(@NotNull UUID _id);
+	void delete(@NotNull UUID id);
 }

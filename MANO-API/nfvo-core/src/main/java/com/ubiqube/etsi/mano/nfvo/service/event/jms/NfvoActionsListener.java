@@ -41,9 +41,9 @@ public class NfvoActionsListener {
 
 	private final NfvoActionController actionController;
 
-	public NfvoActionsListener(final NfvoActionController _actionController) {
+	public NfvoActionsListener(final NfvoActionController actionController) {
 		super();
-		actionController = _actionController;
+		this.actionController = actionController;
 	}
 
 	@JmsListener(destination = "system.actions.nfvo", concurrency = "10-25")

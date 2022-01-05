@@ -29,9 +29,11 @@ import com.ubiqube.etsi.mec.mepm.repositories.AppLiveInstanceJpa;
  *
  */
 public class AppParameters extends GenericExecParams {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	private final VimConnectionInformation vimConnectionInformation;
-	private final Vim vim;
-	private final AppLiveInstanceJpa appLiveInstanceJpa;
+	private final transient Vim vim;
+	private final transient AppLiveInstanceJpa appLiveInstanceJpa;
 	private final Map<String, String> context;
 
 	public AppParameters(final VimConnectionInformation vimConnectionInformation, final Vim vim, final AppLiveInstanceJpa vnfLiveInstanceJpa, final Map<String, String> context, final String _vimResourceId) {

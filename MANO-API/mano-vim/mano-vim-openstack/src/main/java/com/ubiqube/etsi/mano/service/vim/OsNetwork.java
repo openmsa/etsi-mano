@@ -30,6 +30,7 @@ import org.openstack4j.model.network.Network;
 import org.openstack4j.model.network.NetworkType;
 import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Router;
+import org.openstack4j.model.network.SecurityGroupRule;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.network.builder.NetworkBuilder;
 import org.openstack4j.model.network.builder.SubnetBuilder;
@@ -39,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 
@@ -154,8 +156,41 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 		os.networking().port().delete(uuid);
 	}
 
+	@Override
+	public String createSecurityGroup(final String name) {
+		final org.openstack4j.model.network.SecurityGroup securityGroup = Builders.securityGroup()
+				.name(name)
+				.build();
+		final org.openstack4j.model.network.SecurityGroup res = os.networking().securitygroup().create(securityGroup);
+		return res.getId();
+	}
+
+	@Override
+	public String createSecurityRule(final SecurityGroup sg, final String name) {
+		final SecurityGroupRule group = Builders.securityGroupRule()
+				.direction(sg.getDirection())
+				.ethertype(sg.getEtherType())
+				.portRangeMin(sg.getPortRangeMin())
+				.portRangeMax(sg.getPortRangeMax())
+				.protocol(sg.getProtocol())
+				.securityGroupId(name)
+				.build();
+		final SecurityGroupRule res = os.networking().securityrule().create(group);
+		return res.getId();
+	}
+
+	@Override
+	public void deleteSecurityRule(final String vimResourceId) {
+		os.networking().securityrule().delete(vimResourceId);
+	}
+
+	@Override
+	public void deleteSecurityGroup(final String vimResourceId) {
+		os.networking().securitygroup().delete(vimResourceId);
+	}
+
 	private static void checkResult(final ActionResponse action) {
-		if (!action.isSuccess() && (action.getCode() != 404)) {
+		if (!action.isSuccess() && action.getCode() != 404) {
 			throw new VimException(action.getCode() + " " + action.getFault());
 		}
 	}

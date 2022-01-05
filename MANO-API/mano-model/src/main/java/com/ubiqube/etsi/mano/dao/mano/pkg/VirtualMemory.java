@@ -14,8 +14,37 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service;
+package com.ubiqube.etsi.mano.dao.mano.pkg;
 
-public class NetworkIpam {
+import java.io.Serializable;
+import java.util.Map;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Embeddable
+@Getter
+@Setter
+public class VirtualMemory implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	private Boolean numaEnabled;
+
+	private long virtualMemSize;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Map<String, String> vduMemRequirements;
+
+	private String virtualMemOversubscriptionPolicy;
 
 }

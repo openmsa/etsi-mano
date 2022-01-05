@@ -43,9 +43,9 @@ public class LcmGrantsFrontControllerImpl implements LcmGrantsFrontController {
 	private final GrantManagement grantManagement;
 	private final MapperFacade mapper;
 
-	public LcmGrantsFrontControllerImpl(final GrantManagement _grantManagement, final MapperFacade _mapper) {
-		grantManagement = _grantManagement;
-		mapper = _mapper;
+	public LcmGrantsFrontControllerImpl(final GrantManagement grantManagement, final MapperFacade mapper) {
+		this.grantManagement = grantManagement;
+		this.mapper = mapper;
 	}
 
 	@Override

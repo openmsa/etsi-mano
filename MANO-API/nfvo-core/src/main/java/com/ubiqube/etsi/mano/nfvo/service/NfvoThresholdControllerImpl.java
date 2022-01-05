@@ -39,9 +39,9 @@ public class NfvoThresholdControllerImpl extends SearchableService implements Nf
 
 	private final ThresholdJpa thresholdJpa;
 
-	public NfvoThresholdControllerImpl(final ManoSearchResponseService searchService, final EntityManager em, final ThresholdJpa _thresholdJpa) {
+	public NfvoThresholdControllerImpl(final ManoSearchResponseService searchService, final EntityManager em, final ThresholdJpa thresholdJpa) {
 		super(searchService, em, Threshold.class);
-		thresholdJpa = _thresholdJpa;
+		this.thresholdJpa = thresholdJpa;
 	}
 
 	@Override

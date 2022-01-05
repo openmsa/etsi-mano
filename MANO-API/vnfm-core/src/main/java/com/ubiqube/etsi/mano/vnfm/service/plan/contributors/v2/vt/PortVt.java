@@ -46,8 +46,12 @@ public class PortVt extends VnfVtBase<ExternalCpTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "PORT";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "NETWORK";
+	}
 }

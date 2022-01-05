@@ -96,9 +96,7 @@ public class NsVirtualLinkContributor extends AbstractNsContributor {
 		tasks.stream()
 				.filter(NsVirtualLinkTask.class::isInstance)
 				.map(NsVirtualLinkTask.class::cast)
-				.forEach(x -> {
-					ret.add(new NsVlUow(x));
-				});
+				.forEach(x -> ret.add(new NsVlUow(x)));
 		return ret;
 	}
 

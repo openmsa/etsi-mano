@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -41,16 +39,18 @@ import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.VfsResolver;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
 
+import jakarta.validation.constraints.NotNull;
+
 public class CsarParser {
 	private final FileObject csar;
 	private Properties props;
 	private VfsResolver resolver;
 
-	public CsarParser(final String filename) {
+	public CsarParser(final File filename) {
 		FileSystemManager fsManager;
 		try {
 			fsManager = VFS.getManager();
-			csar = fsManager.resolveFile(computeFilename(filename));
+			csar = fsManager.resolveFile(computeFilename(filename.toString()));
 			resolver = new VfsResolver();
 			props = getMetaFileContent(csar);
 

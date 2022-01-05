@@ -59,15 +59,18 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 
 	private final NsdController nsdController;
 
-	public NsDescriptorGenericFrontControllerImpl(final MapperFacade _mapper, final NsdController _nsdController) {
-		mapper = _mapper;
-		nsdController = _nsdController;
+	public NsDescriptorGenericFrontControllerImpl(final MapperFacade mapper, final NsdController nsdController) {
+		this.mapper = mapper;
+		this.nsdController = nsdController;
 	}
 
 	/**
 	 * Query information about multiple NS descriptor resources.
 	 *
-	 * \&quot;The GET method queries information about multiple NS descriptor resources. This method shall follow the provisions specified in the Tables 5.4.2.3.2-1 and 5.4.2.3.2-2 for URI query parameters, request and response data structures, and response codes.\&quot;
+	 * \&quot;The GET method queries information about multiple NS descriptor
+	 * resources. This method shall follow the provisions specified in the Tables
+	 * 5.4.2.3.2-1 and 5.4.2.3.2-2 for URI query parameters, request and response
+	 * data structures, and response codes.\&quot;
 	 *
 	 */
 	@Override
@@ -78,7 +81,10 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	/**
 	 * Delete an individual NS descriptor resource.
 	 *
-	 * The DELETE method deletes an individual NS descriptor resource. An individual NS descriptor resource can only be deleted when there is no NS instance using it (i.e. usageState &#x3D; NOT_IN_USE) and has been disabled already (i.e. operationalState &#x3D; DISABLED). Otherwise, the DELETE method shall fail.
+	 * The DELETE method deletes an individual NS descriptor resource. An individual
+	 * NS descriptor resource can only be deleted when there is no NS instance using
+	 * it (i.e. usageState &#x3D; NOT_IN_USE) and has been disabled already (i.e.
+	 * operationalState &#x3D; DISABLED). Otherwise, the DELETE method shall fail.
 	 *
 	 */
 	@Override
@@ -91,7 +97,10 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	/**
 	 * Read information about an individual NS descriptor resource.
 	 *
-	 * \&quot;The GET method reads information about an individual NS descriptor. This method shall follow the provisions specified in GS NFV-SOL 005 Tables 5.4.3.3.2-1 and 5.4.3.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response data structures, and response codes.\&quot;
+	 * \&quot;The GET method reads information about an individual NS descriptor.
+	 * This method shall follow the provisions specified in GS NFV-SOL 005 Tables
+	 * 5.4.3.3.2-1 and 5.4.3.3.2-2 of GS NFV-SOL 005 for URI query parameters,
+	 * request and response data structures, and response codes.\&quot;
 	 *
 	 */
 	@Override
@@ -105,9 +114,22 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	/**
 	 * Fetch the content of a NSD.
 	 *
-	 * The GET method fetches the content of the NSD. The NSD can be implemented as a single file or as a collection of multiple files. If the NSD is implemented in the form of multiple files, a ZIP file embedding these files shall be returned. If the NSD is implemented as a single file, either that file or a ZIP file embedding that file shall be returned. The selection of the format is controlled by the \&quot;Accept\&quot; HTTP header passed in the GET request:• If the \&quot;Accept\&quot; header
-	 * contains only \&quot;text/plain\&quot; and the NSD is implemented as a single file, the file shall be returned; otherwise, an error message shall be returned.• If the \&quot;Accept\&quot; header contains only \&quot;application/zip\&quot;, the single file or the multiple files that make up the NSD shall be returned embedded in a ZIP file.• If the \&quot;Accept\&quot; header contains both \&quot;text/plain\&quot; and \&quot;application/zip\&quot;, it is up to the NFVO to choose the format to
-	 * return for a single-file NSD; for a multi-file NSD, a ZIP file shall be returned.NOTE: The structure of the NSD zip file is outside the scope of the present document.
+	 * The GET method fetches the content of the NSD. The NSD can be implemented as
+	 * a single file or as a collection of multiple files. If the NSD is implemented
+	 * in the form of multiple files, a ZIP file embedding these files shall be
+	 * returned. If the NSD is implemented as a single file, either that file or a
+	 * ZIP file embedding that file shall be returned. The selection of the format
+	 * is controlled by the \&quot;Accept\&quot; HTTP header passed in the GET
+	 * request:• If the \&quot;Accept\&quot; header contains only
+	 * \&quot;text/plain\&quot; and the NSD is implemented as a single file, the
+	 * file shall be returned; otherwise, an error message shall be returned.• If
+	 * the \&quot;Accept\&quot; header contains only \&quot;application/zip\&quot;,
+	 * the single file or the multiple files that make up the NSD shall be returned
+	 * embedded in a ZIP file.• If the \&quot;Accept\&quot; header contains both
+	 * \&quot;text/plain\&quot; and \&quot;application/zip\&quot;, it is up to the
+	 * NFVO to choose the format to return for a single-file NSD; for a multi-file
+	 * NSD, a ZIP file shall be returned.NOTE: The structure of the NSD zip file is
+	 * outside the scope of the present document.
 	 *
 	 */
 	@Override
@@ -119,9 +141,20 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	/**
 	 * Upload the content of a NSD.
 	 *
-	 * \&quot;The PUT method is used to upload the content of a NSD. The NSD to be uploaded can be implemented as a single file or as a collection of multiple files, as defined in clause 5.4.4.3.2 of GS NFV-SOL 005. If the NSD is implemented in the form of multiple files, a ZIP file embedding these files shall be uploaded. If the NSD is implemented as a single file, either that file or a ZIP file embedding that file shall be uploaded. The \&quot;Content-Type\&quot; HTTP header in the PUT request
-	 * shall be set accordingly based on the format selection of the NSD. If the NSD to be uploaded is a text file, the \&quot;Content-Type\&quot; header is set to \&quot;text/plain\&quot;. If the NSD to be uploaded is a zip file, the \&quot;Content-Type\&quot; header is set to \&quot;application/zip\&quot;. This method shall follow the provisions specified in the Tables 5.4.4.3.3-1 and 5.4.4.3.3-2 of GS-NFV-SOL 005 for URI query parameters, request and response data structures, and response
-	 * codes.\&quot;
+	 * \&quot;The PUT method is used to upload the content of a NSD. The NSD to be
+	 * uploaded can be implemented as a single file or as a collection of multiple
+	 * files, as defined in clause 5.4.4.3.2 of GS NFV-SOL 005. If the NSD is
+	 * implemented in the form of multiple files, a ZIP file embedding these files
+	 * shall be uploaded. If the NSD is implemented as a single file, either that
+	 * file or a ZIP file embedding that file shall be uploaded. The
+	 * \&quot;Content-Type\&quot; HTTP header in the PUT request shall be set
+	 * accordingly based on the format selection of the NSD. If the NSD to be
+	 * uploaded is a text file, the \&quot;Content-Type\&quot; header is set to
+	 * \&quot;text/plain\&quot;. If the NSD to be uploaded is a zip file, the
+	 * \&quot;Content-Type\&quot; header is set to \&quot;application/zip\&quot;.
+	 * This method shall follow the provisions specified in the Tables 5.4.4.3.3-1
+	 * and 5.4.4.3.3-2 of GS-NFV-SOL 005 for URI query parameters, request and
+	 * response data structures, and response codes.\&quot;
 	 *
 	 */
 	@Override
@@ -135,10 +168,19 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	}
 
 	/**
-	 * Modify the operational state and/or the user defined data of an individual NS descriptor resource.
+	 * Modify the operational state and/or the user defined data of an individual NS
+	 * descriptor resource.
 	 *
-	 * The PATCH method modifies the operational state and/or user defined data of an individual NS descriptor resource. This method can be used to: 1) Enable a previously disabled individual NS descriptor resource, allowing again its use for instantiation of new network service with this descriptor. The usage state (i.e. \&quot;IN_USE/NOT_IN_USE\&quot;) shall not change as result. 2) Disable a previously enabled individual NS descriptor resource, preventing any further use for instantiation of new
-	 * network service(s) with this descriptor. The usage state (i.e. \&quot;IN_USE/NOT_IN_USE\&quot;) shall not changes a result. 3) Modify the user defined data of an individual NS descriptor resource.
+	 * The PATCH method modifies the operational state and/or user defined data of
+	 * an individual NS descriptor resource. This method can be used to: 1) Enable a
+	 * previously disabled individual NS descriptor resource, allowing again its use
+	 * for instantiation of new network service with this descriptor. The usage
+	 * state (i.e. \&quot;IN_USE/NOT_IN_USE\&quot;) shall not change as result. 2)
+	 * Disable a previously enabled individual NS descriptor resource, preventing
+	 * any further use for instantiation of new network service(s) with this
+	 * descriptor. The usage state (i.e. \&quot;IN_USE/NOT_IN_USE\&quot;) shall not
+	 * changes a result. 3) Modify the user defined data of an individual NS
+	 * descriptor resource.
 	 *
 	 */
 	@Override
@@ -152,7 +194,8 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	/**
 	 * Create a new NS descriptor resource.
 	 *
-	 * The POST method is used to create a new NS descriptor resource or a new version of an on-boarded NS descriptor.
+	 * The POST method is used to create a new NS descriptor resource or a new
+	 * version of an on-boarded NS descriptor.
 	 *
 	 */
 	@Override

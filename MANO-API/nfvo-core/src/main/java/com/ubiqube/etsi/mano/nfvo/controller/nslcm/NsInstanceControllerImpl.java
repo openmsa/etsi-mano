@@ -22,7 +22,6 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -57,10 +56,10 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 	private final NsdPackageJpa nsdPackageJpa;
 
-	public NsInstanceControllerImpl(final NsInstanceService _nsInstanceService, final NsBlueprintService _lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
+	public NsInstanceControllerImpl(final NsInstanceService nsInstanceService, final NsBlueprintService lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
 			final MapperFacade mapper, final VnfInstanceGatewayService vnfInstancesService, final NsdPackageJpa nsdPackageJpa) {
-		nsInstanceService = _nsInstanceService;
-		blueprintService = _lcmOpOccsService;
+		this.nsInstanceService = nsInstanceService;
+		this.blueprintService = lcmOpOccsService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 		this.mapper = mapper;
 		this.vnfInstancesService = vnfInstancesService;
@@ -94,7 +93,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 		final List<VnfInstanceDto> vnfInstance = vnfs.stream()
 				.map(x -> vnfInstancesService.findById(UUID.fromString(x.getResourceId())))
 				.map(x -> mapper.map(x, VnfInstanceDto.class))
-				.collect(Collectors.toList());
+				.toList();
 		dto.setVnfInstance(vnfInstance);
 		final List<NsLiveInstance> vls = nsLiveInstanceJpa.findByNsdInstanceAndClass(ret, NsVirtualLinkTask.class.getSimpleName());
 		final List<NsVirtualLinkInfoDto> vlsDto = vls.stream().map(x -> {
@@ -102,13 +101,12 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 
 			vlDto.setId(x.getId().toString());
 			vlDto.setNsVirtualLinkDescId(x.getNsTask().getToscaName());
-			// vlDto.setNsVirtualLinkProfileId(nsVirtualLinkProfileId);
 			final List<ResourceHandle> resourceHandle = new ArrayList<>();
 			final ResourceHandle r = mapper.map(x, ResourceHandle.class);
 			resourceHandle.add(r);
 			vlDto.setResourceHandle(resourceHandle);
 			return vlDto;
-		}).collect(Collectors.toList());
+		}).toList();
 		dto.setVirtualLinkInfo(vlsDto);
 		return dto;
 	}

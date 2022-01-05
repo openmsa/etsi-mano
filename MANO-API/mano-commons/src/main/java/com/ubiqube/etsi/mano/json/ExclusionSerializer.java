@@ -29,12 +29,12 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 public class ExclusionSerializer extends BeanSerializerModifier {
 	private final List<ViewHolder> excluded;
 
-	public ExclusionSerializer(@Nonnull List<ViewHolder> _excluded) {
-		excluded = _excluded;
+	public ExclusionSerializer(@Nonnull final List<ViewHolder> excluded) {
+		this.excluded = excluded;
 	}
 
 	@Override
-	public List<BeanPropertyWriter> changeProperties(SerializationConfig config, BeanDescription beanDesc, List<BeanPropertyWriter> beanProperties) {
+	public List<BeanPropertyWriter> changeProperties(final SerializationConfig config, final BeanDescription beanDesc, final List<BeanPropertyWriter> beanProperties) {
 		final List<BeanPropertyWriter> result = new ArrayList<>();
 		for (final BeanPropertyWriter beanPropertyWriter : beanProperties) {
 			final String partName = beanPropertyWriter.getName();

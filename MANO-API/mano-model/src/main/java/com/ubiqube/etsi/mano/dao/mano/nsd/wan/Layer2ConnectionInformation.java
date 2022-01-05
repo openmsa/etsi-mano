@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.persistence.ElementCollection;
@@ -36,7 +37,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class Layer2ConnectionInformation {
+public class Layer2ConnectionInformation implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	@Enumerated(EnumType.STRING)
 	private ConnectionType connectionType;
 	@Enumerated(EnumType.STRING)

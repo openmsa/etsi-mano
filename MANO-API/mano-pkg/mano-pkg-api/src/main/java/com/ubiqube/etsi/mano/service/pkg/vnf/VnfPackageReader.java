@@ -29,8 +29,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
+import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
@@ -77,5 +79,9 @@ public interface VnfPackageReader {
 
 	@Nonnull
 	List<VduScalingAspectDeltas> getVduScalingAspectDeltas(Map<String, String> parameters);
+
+	Set<AffinityRuleAdapater> getAffinityRules(Map<String, String> userDefinedData);
+
+	Set<SecurityGroupAdapter> getSecurityGroups(Map<String, String> userData);
 
 }

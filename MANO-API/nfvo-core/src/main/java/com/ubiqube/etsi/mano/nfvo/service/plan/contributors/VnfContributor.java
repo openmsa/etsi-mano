@@ -60,9 +60,9 @@ public class VnfContributor extends AbstractNsContributor {
 	private final VnfmInterface vnfm;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public VnfContributor(final NsInstanceService _nsInstanceService, final VnfmInterface _vnfm, NsLiveInstanceJpa nsLiveInstanceJpa) {
-		nsInstanceService = _nsInstanceService;
-		vnfm = _vnfm;
+	public VnfContributor(final NsInstanceService nsInstanceService, final VnfmInterface vnfm, NsLiveInstanceJpa nsLiveInstanceJpa) {
+		this.nsInstanceService = nsInstanceService;
+		this.vnfm = vnfm;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 

@@ -56,7 +56,7 @@ public abstract class AbstractPackageReader {
 
 	protected AbstractPackageReader(final byte[] data) {
 		final File tempFile = PkgUtils.fetchData(data);
-		toscaParser = new ToscaParser(tempFile.getAbsolutePath());
+		toscaParser = new ToscaParser(tempFile);
 		root = toscaParser.getContext();
 		toscaApi = new ToscaApi();
 		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
@@ -64,6 +64,7 @@ public abstract class AbstractPackageReader {
 		final ConverterFactory converterFactory = mapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new SizeConverter());
 		converterFactory.registerConverter(new TimeConverter());
+		converterFactory.registerConverter(new FrequencyConverter());
 		mapper = mapperFactory.getMapperFacade();
 	}
 

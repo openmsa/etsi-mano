@@ -33,9 +33,9 @@ public abstract class AbstractNsUnitOfWork implements UnitOfWork<NsTask, NsParam
 	private final String name;
 
 	// Nothing.
-	public AbstractNsUnitOfWork(final NsTask _resourceHandleEntity) {
-		resourceHandleEntity = _resourceHandleEntity;
-		name = _resourceHandleEntity.getToscaName();
+	protected AbstractNsUnitOfWork(final NsTask resourceHandleEntity) {
+		this.resourceHandleEntity = resourceHandleEntity;
+		this.name = resourceHandleEntity.getToscaName();
 	}
 
 	@Override

@@ -66,11 +66,12 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	private final VnfPackageService vnfPackageService;
 	private final MapperFacade mapper;
 
-	public VnfManagement(final VnfPackageRepository _vnfPackageRepository, final MapperFacade _mapper, final VnfPackageService _vnfPackageService, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, VnfPackage.class);
-		vnfPackageRepository = _vnfPackageRepository;
-		mapper = _mapper;
-		vnfPackageService = _vnfPackageService;
+	public VnfManagement(final VnfPackageRepository vnfPackageRepository, final MapperFacade mapper, final VnfPackageService vnfPackageService, final EntityManager em,
+			final ManoSearchResponseService searchService) {
+		super(searchService, em, VnfPackage.class);
+		this.vnfPackageRepository = vnfPackageRepository;
+		this.mapper = mapper;
+		this.vnfPackageService = vnfPackageService;
 		LOG.info("Starting VNF Package Management For NFVO+VNFM or NFVO Only Management.");
 	}
 
@@ -137,15 +138,15 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final UUID _vnfPkgId, final String _range) {
-		vnfPackageRepository.get(_vnfPkgId);
-		final byte[] bytes = vnfPackageRepository.getBinary(_vnfPkgId, "vnfd");
-		return SpringUtil.handleBytes(bytes, _range);
+	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final UUID vnfPkgId, final String range) {
+		vnfPackageRepository.get(vnfPkgId);
+		final byte[] bytes = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
+		return SpringUtil.handleBytes(bytes, range);
 	}
 
-	private static ResponseEntity<List<ResourceRegion>> handleArtifact(final ZipInputStream zis, final String _range) throws IOException {
+	private static ResponseEntity<List<ResourceRegion>> handleArtifact(final ZipInputStream zis, final String range) throws IOException {
 		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-		return SpringUtil.handleBytes(zcontent, _range);
+		return SpringUtil.handleBytes(zcontent, range);
 	}
 
 	private static void handleMimeType(final BodyBuilder bodyBuilder, final String mime) {

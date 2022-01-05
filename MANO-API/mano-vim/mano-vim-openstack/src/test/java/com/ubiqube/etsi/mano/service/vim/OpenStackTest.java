@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,6 +51,7 @@ import org.openstack4j.model.identity.v3.Service;
 import org.openstack4j.model.network.Port;
 import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.RouterInterface;
+import org.openstack4j.model.network.SecurityGroupRule;
 import org.openstack4j.model.network.Subnet;
 import org.openstack4j.model.telemetry.gnocchi.MetricCreate;
 import org.openstack4j.openstack.OSFactory;
@@ -63,6 +65,7 @@ import com.google.common.collect.ImmutableList;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L2Data;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
@@ -118,20 +121,27 @@ public class OpenStackTest {
 		// 1.17
 
 		/*
-		 * final RegionService regions = os.identity().regions(); final List<? extends Region> zl = regions.list(); zl.forEach(x -> System.out.println("" + x.getId()));
+		 * final RegionService regions = os.identity().regions(); final List<? extends
+		 * Region> zl = regions.list(); zl.forEach(x -> System.out.println("" +
+		 * x.getId()));
 		 */
 		/*
-		 * final List<? extends Domain> domains = os.identity().domains().list(); domains.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Domain> domains = os.identity().domains().list();
+		 * domains.forEach(x -> System.out.println("" + x.getName()));
 		 *
-		 * final List<? extends Flavor> flavors = os.compute().flavors().list(); flavors.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Flavor> flavors = os.compute().flavors().list();
+		 * flavors.forEach(x -> System.out.println("" + x.getName()));
 		 *
-		 * final List<? extends Image> images = os.compute().images().list(); images.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Image> images = os.compute().images().list();
+		 * images.forEach(x -> System.out.println("" + x.getName()));
 		 */
 		/*
-		 * final List<? extends Server> servers = os.compute().servers().list(); servers.forEach(x -> System.out.println("" + x.getName()));
+		 * final List<? extends Server> servers = os.compute().servers().list();
+		 * servers.forEach(x -> System.out.println("" + x.getName()));
 		 */
 		/*
-		 * final Set<ServiceType> le = os.getSupportedServices(); System.out.println("" + le);
+		 * final Set<ServiceType> le = os.getSupportedServices(); System.out.println(""
+		 * + le);
 		 */
 		// createServer(os);
 
@@ -265,7 +275,7 @@ public class OpenStackTest {
 		final int numVcpu = 1;
 		final long virtualMemorySize = 2 * 100000000L;
 		final long disk = 20 * 1000000000L;
-		final String lid = vim.getOrCreateFlavor(vimConnectionInformation, "Junit-flavor", numVcpu, virtualMemorySize, disk);
+		final String lid = vim.getOrCreateFlavor(vimConnectionInformation, "Junit-flavor", numVcpu, virtualMemorySize, disk, new HashMap<>());
 		assertNotNull(lid);
 	}
 
@@ -280,7 +290,7 @@ public class OpenStackTest {
 		vnfc.setName("vdu01");
 		final List<String> networks = new ArrayList<>();
 		final List<String> storages = new ArrayList<>();
-		final String lid = vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages, null);
+		final String lid = vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages, null, List.of(), List.of());
 		assertNotNull(lid);
 	}
 
@@ -303,9 +313,18 @@ public class OpenStackTest {
 				.authenticate();
 	}
 
+	private static OSClientV3 getVictoriaConnection() {
+		final Identifier domainIdentifier = Identifier.byName("Default");
+		return OSFactory.builderV3()
+				.endpoint("http://os-victoria:5000/v3")
+				.credentials("admin", "cf83a3d4263b4be0", domainIdentifier)
+				.scopeToProject(Identifier.byId("29672f9f0e444a4bb0f8691195939d37"))
+				.authenticate();
+	}
+
 	@Test
-	static void testTrain() throws Exception {
-		final OSClientV3 os = getTrainConnection();
+	void testTrain() throws Exception {
+		final OSClientV3 os = getVictoriaConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
 		System.out.println("l=" + l.get());
@@ -316,7 +335,7 @@ public class OpenStackTest {
 	}
 
 	@Test
-	static void testQueens() throws Exception {
+	void testQueens() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
@@ -502,4 +521,37 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
+	@Test
+	void testServerGroup() throws Exception {
+		final OSClientV3 os = getQueensConnection();
+		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(UUID.randomUUID().toString(), "affinity");
+		assertNotNull(os);
+	}
+
+	@Test
+	void testSecurityGroup() throws Exception {
+		final SecurityGroup sg = new SecurityGroup();
+		sg.setDirection("ingress");
+		sg.setEtherType("ipv4");
+		sg.setPortRangeMin(22);
+		sg.setPortRangeMax(24);
+		sg.setProtocol("tcp");
+		sg.setToscaName("security");
+		final OSClientV3 os = getQueensConnection();
+		final SecurityGroupRule group = Builders.securityGroupRule()
+				.direction(sg.getDirection())
+				.ethertype(sg.getEtherType())
+				.portRangeMin(sg.getPortRangeMin())
+				.portRangeMax(sg.getPortRangeMax())
+				.protocol(sg.getProtocol())
+				.securityGroupId(sg.getToscaName())
+				.build();
+		// final SecurityGroupRule res = os.networking().securityrule().create(group);
+		final org.openstack4j.model.network.SecurityGroup securityGroup = Builders.securityGroup()
+				.name("security")
+				.build();
+		final org.openstack4j.model.network.SecurityGroup res = os.networking().securitygroup().create(securityGroup);
+		System.out.println("" + res.getId());
+		assertNotNull(os);
+	}
 }

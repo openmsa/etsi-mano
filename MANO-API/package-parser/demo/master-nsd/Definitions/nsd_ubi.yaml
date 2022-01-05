@@ -114,7 +114,7 @@ policies:
       direction: egress
       ether_type: ipv4
       protocol: tcp
-      port_range_min: 0
+      port_range_min: 1
       port_range_max: 65535
     targets:
       - sap01

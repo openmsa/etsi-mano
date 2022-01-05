@@ -88,13 +88,11 @@ public class WfConfiguration {
 			// Link B <- me.
 			if (replacements.containsKey(x.getSource())) {
 				complexLink(g, replacements.get(x.getSource()), x.getTarget());
+			} else if (replacements.containsKey(x.getTarget())) {
+				complexLink(g, x.getSource(), replacements.get(x.getTarget()));
 			} else {
-				if (replacements.containsKey(x.getTarget())) {
-					complexLink(g, x.getSource(), replacements.get(x.getTarget()));
-				} else {
-					LOG.debug("Link: {} -> {}", x.getSource(), x.getTarget());
-					g.addEdge(x.getSource(), x.getTarget());
-				}
+				LOG.debug("Link: {} -> {}", x.getSource(), x.getTarget());
+				g.addEdge(x.getSource(), x.getTarget());
 			}
 		});
 		optimze(g);
@@ -137,9 +135,9 @@ public class WfConfiguration {
 		final List<DeferedConnection<U, P>> deferedFinal = new ArrayList<>();
 		final List<DeferedConnection<U, P>> implemented = new ArrayList<>();
 		deferedConnetion.forEach(x -> {
-			final ReplaceBuilder repl = replacements.get(x.getNode());
+			final ReplaceBuilder repl = replacements.get(x.node());
 			if (isInReplacementFunction(repl, x)) {
-				g.addEdge(x.getFrom(), x.getTo());
+				g.addEdge(x.from(), x.to());
 				implemented.add(x);
 			} else {
 				deferedFinal.add(x);
@@ -147,16 +145,16 @@ public class WfConfiguration {
 		});
 		// List of net => compute
 		deferedFinal.forEach(x -> {
-			final ReplaceBuilder repl = replacements.get(x.getNode());
+			final ReplaceBuilder repl = replacements.get(x.node());
 			final List<ConnectivityEdge<Class<? extends Node>>> nodes = findOutterVertex(repl);
 			// Net => Subnet
 			// for each source node, map the implementation one.
 			// find Original Node and get produce/node/name matching dependency/node/name
-			final Set<ConnectivityEdge<UnitOfWork<U, P>>> out = g.outgoingEdgesOf(x.getFrom());
+			final Set<ConnectivityEdge<UnitOfWork<U, P>>> out = g.outgoingEdgesOf(x.from());
 			final List<UnitOfWork<U, P>> matchingNodes = getAllMatchingNodes(out, nodes);
 			matchingNodes.forEach(y -> {
-				LOG.debug(" - Defered link: {} => {}", y, x.getTo());
-				g.addEdge(y, x.getTo());
+				LOG.debug(" - Defered link: {} => {}", y, x.to());
+				g.addEdge(y, x.to());
 			});
 		});
 	}
@@ -165,7 +163,7 @@ public class WfConfiguration {
 		return edges.stream()
 				.filter(x -> have(nodes, x.getTarget().getProduce()))
 				.map(ConnectivityEdge::getTarget)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static boolean have(final List<ConnectivityEdge<Class<? extends Node>>> nodes, final List<WfProduce> l) {
@@ -178,7 +176,8 @@ public class WfConfiguration {
 	}
 
 	/**
-	 * The concept is an ending node is a node that doesn't appear in a source node. for example : A -> B -> C
+	 * The concept is an ending node is a node that doesn't appear in a source node.
+	 * for example : A -> B -> C
 	 *
 	 * @param repl A replace builder instance.
 	 * @return list of ending Nodes.
@@ -197,10 +196,10 @@ public class WfConfiguration {
 		final List<NodeConnectivity> edges = repl.getEdges();
 		for (final NodeConnectivity connectivityEdge : edges) {
 			// Net -> sub
-			if (connectivityEdge.getSource() != defered.getNode()) {
+			if (connectivityEdge.getSource() != defered.node()) {
 				continue;
 			}
-			final List<WfProduce> deps = defered.getTo().getProduce();
+			final List<WfProduce> deps = defered.to().getProduce();
 			final List<WfProduce> list = getAllOf(deps, connectivityEdge.getTarget());
 			if (!list.isEmpty()) {
 				return true;
@@ -309,29 +308,7 @@ public class WfConfiguration {
 		});
 	}
 
-	static class DeferedConnection<U extends Task, P> {
-		private final Class<? extends Node> node;
-		private final UnitOfWork<U, P> from;
-		private final UnitOfWork<U, P> to;
-
-		public DeferedConnection(final Class<? extends Node> node, final UnitOfWork<U, P> from, final UnitOfWork<U, P> to) {
-			super();
-			this.node = node;
-			this.from = from;
-			this.to = to;
-		}
-
-		public Class<? extends Node> getNode() {
-			return node;
-		}
-
-		public UnitOfWork<U, P> getFrom() {
-			return from;
-		}
-
-		public UnitOfWork<U, P> getTo() {
-			return to;
-		}
-
+	record DeferedConnection<U extends Task, P> (Class<? extends Node> node, UnitOfWork<U, P> from, UnitOfWork<U, P> to) {
+		//
 	}
 }

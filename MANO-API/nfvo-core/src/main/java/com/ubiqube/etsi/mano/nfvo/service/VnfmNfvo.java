@@ -36,8 +36,8 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
 public class VnfmNfvo implements VnfmInterface {
 	private final VnfInstanceLcm lcm;
 
-	public VnfmNfvo(final VnfInstanceLcm _lcm) {
-		lcm = _lcm;
+	public VnfmNfvo(final VnfInstanceLcm lcm) {
+		this.lcm = lcm;
 	}
 
 	@Override

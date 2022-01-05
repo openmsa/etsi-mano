@@ -33,8 +33,8 @@ import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 public class VimServiceImpl implements VimService {
 	private final VimConnectionInformationJpa vimConnectionInformationJpa;
 
-	public VimServiceImpl(final VimConnectionInformationJpa _vimConnectionInformationJpa) {
-		vimConnectionInformationJpa = _vimConnectionInformationJpa;
+	public VimServiceImpl(final VimConnectionInformationJpa vimConnectionInformationJpa) {
+		this.vimConnectionInformationJpa = vimConnectionInformationJpa;
 	}
 
 	@Override

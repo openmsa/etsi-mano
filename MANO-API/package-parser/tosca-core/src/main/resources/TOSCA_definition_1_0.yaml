@@ -762,7 +762,6 @@ interface_types:
       description: > 
         Operation to notify the target node of a source node which
         is now available via a relationship.
-      description:
     target_changed:
       description: > 
         Operation to notify source some property or attribute of the

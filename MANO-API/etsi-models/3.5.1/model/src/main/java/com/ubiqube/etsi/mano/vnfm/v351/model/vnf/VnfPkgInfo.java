@@ -29,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.Checksum;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -69,7 +70,7 @@ public class VnfPkgInfo {
 	private List<String> compatibleSpecificationVersions = null;
 
 	@JsonProperty("checksum")
-	private String checksum = null;
+	private Checksum checksum = null;
 
 	/**
 	 * Signals the security option used by the package as defined in clause 5.1 of
@@ -128,7 +129,8 @@ public class VnfPkgInfo {
 	private PackageUsageStateType usageState = null;
 
 	@JsonProperty("vnfmInfo")
-	private String vnfmInfo = null;
+	@Valid
+	private List<String> vnfmInfo = new ArrayList<>();
 
 	@JsonProperty("userDefinedData")
 	private Map<String, String> userDefinedData = null;
@@ -190,7 +192,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return vnfProvider
 	 **/
-	@Schema(description = "")
+	@Schema(description = "Provider of the VNF package and the VNFD. This information is copied from the VNFD.  It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfProvider() {
 		return vnfProvider;
@@ -210,7 +212,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return vnfProductName
 	 **/
-	@Schema(description = "")
+	@Schema(description = "Name to identify the VNF product.Invariant for the VNF product lifetime.  This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise. ")
 
 	public String getVnfProductName() {
 		return vnfProductName;
@@ -290,7 +292,7 @@ public class VnfPkgInfo {
 		this.compatibleSpecificationVersions = compatibleSpecificationVersions;
 	}
 
-	public VnfPkgInfo checksum(final String checksum) {
+	public VnfPkgInfo checksum(final Checksum checksum) {
 		this.checksum = checksum;
 		return this;
 	}
@@ -302,11 +304,12 @@ public class VnfPkgInfo {
 	 **/
 	@Schema(description = "")
 
-	public String getChecksum() {
+	@Valid
+	public Checksum getChecksum() {
 		return checksum;
 	}
 
-	public void setChecksum(final String checksum) {
+	public void setChecksum(final Checksum checksum) {
 		this.checksum = checksum;
 	}
 
@@ -342,7 +345,7 @@ public class VnfPkgInfo {
 	 *
 	 * @return signingCertificate
 	 **/
-	@Schema(description = "")
+	@Schema(description = "The singleton signing certificate if it is included as a file in the VNF package. ")
 
 	public String getSigningCertificate() {
 		return signingCertificate;
@@ -484,8 +487,13 @@ public class VnfPkgInfo {
 		this.usageState = usageState;
 	}
 
-	public VnfPkgInfo vnfmInfo(final String vnfmInfo) {
+	public VnfPkgInfo vnfmInfo(final List<String> vnfmInfo) {
 		this.vnfmInfo = vnfmInfo;
+		return this;
+	}
+
+	public VnfPkgInfo addVnfmInfoItem(final String vnfmInfoItem) {
+		this.vnfmInfo.add(vnfmInfoItem);
 		return this;
 	}
 
@@ -494,14 +502,14 @@ public class VnfPkgInfo {
 	 *
 	 * @return vnfmInfo
 	 **/
-	@Schema(required = true, description = "")
+	@Schema(required = true, description = "Specifies VNFMs compatible with the VNF. This information is copied from the VNFD. See note 4. ")
 	@NotNull
 
-	public String getVnfmInfo() {
+	public List<String> getVnfmInfo() {
 		return vnfmInfo;
 	}
 
-	public void setVnfmInfo(final String vnfmInfo) {
+	public void setVnfmInfo(final List<String> vnfmInfo) {
 		this.vnfmInfo = vnfmInfo;
 	}
 

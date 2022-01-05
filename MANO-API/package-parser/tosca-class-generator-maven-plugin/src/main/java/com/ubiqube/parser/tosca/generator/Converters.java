@@ -16,6 +16,8 @@
  */
 package com.ubiqube.parser.tosca.generator;
 
+import java.time.ZonedDateTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +67,10 @@ public class Converters {
 		if ("version".equals(type)) {
 			return Version.class;
 		}
+		if ("timestamp".equals(type)) {
+			return ZonedDateTime.class;
+		}
+
 		return null;
 	}
 
@@ -72,7 +78,8 @@ public class Converters {
 		LOG.debug("def={} jType={}", def, jType);
 		if (jType.equals(Long.class)) {
 			return JExpr.lit(Long.parseLong((String) def));
-		} else if (jType.equals(String.class)) {
+		}
+		if (jType.equals(String.class)) {
 			return JExpr.lit((String) def);
 		} else if (jType.equals(Boolean.class)) {
 			return JExpr.lit((Boolean) def);

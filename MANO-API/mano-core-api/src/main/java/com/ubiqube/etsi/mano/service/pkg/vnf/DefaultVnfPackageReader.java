@@ -29,12 +29,13 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
+import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInitialDelta;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduInstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 
 public class DefaultVnfPackageReader implements VnfPackageReader {
 	@Override
@@ -109,6 +110,16 @@ public class DefaultVnfPackageReader implements VnfPackageReader {
 	@Override
 	public List<VduScalingAspectDeltas> getVduScalingAspectDeltas(final Map<String, String> parameters) {
 		return new ArrayList<>();
+	}
+
+	@Override
+	public Set<AffinityRuleAdapater> getAffinityRules(final Map<String, String> userDefinedData) {
+		return new HashSet<>();
+	}
+
+	@Override
+	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
+		return new HashSet<>();
 	}
 
 }

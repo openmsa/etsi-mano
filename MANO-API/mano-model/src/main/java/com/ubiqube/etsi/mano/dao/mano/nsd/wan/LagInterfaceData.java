@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class LagInterfaceData {
+public class LagInterfaceData implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> aggregatedEndpoints = new HashSet<>();
 

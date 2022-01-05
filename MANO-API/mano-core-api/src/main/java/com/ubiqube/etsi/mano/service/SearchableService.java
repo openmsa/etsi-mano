@@ -43,11 +43,11 @@ public class SearchableService {
 
 	private final Class<?> clazz;
 
-	public SearchableService(final ManoSearchResponseService searchService, final EntityManager em, final Class<?> _clazz) {
+	public SearchableService(final ManoSearchResponseService searchService, final EntityManager em, final Class<?> clazz) {
 		super();
 		this.searchService = searchService;
 		this.em = em;
-		clazz = _clazz;
+		this.clazz = clazz;
 	}
 
 	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink) {

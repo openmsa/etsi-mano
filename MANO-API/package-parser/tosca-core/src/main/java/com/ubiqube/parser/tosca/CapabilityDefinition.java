@@ -19,6 +19,10 @@ package com.ubiqube.parser.tosca;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.ubiqube.parser.tosca.deserializer.CapabilityDeserializer;
+
+@JsonDeserialize(using = CapabilityDeserializer.class)
 public class CapabilityDefinition {
 	private String type;
 	private String description;

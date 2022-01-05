@@ -51,6 +51,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.ZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualCpu;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualMemory;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
@@ -162,7 +164,7 @@ public abstract class AbstractGrantAction {
 		final GrantVimAssetsEntity grantVimAssetsEntity = new GrantVimAssetsEntity();
 		grants.setVimAssets(grantVimAssetsEntity);
 		// XXX Push only needed ones. ( in case of terminate no need to push assets.)
-		final Runnable getSoftwareImages = () -> grantVimAssetsEntity.setSoftwareImages(getSoftwareImage(vimInfo, vim, grants));
+		final Runnable getSoftwareImages = () -> grantVimAssetsEntity.setSoftwareImages(getSoftwareImageSafe(vimInfo, vim, grants));
 		executorService.submit(getSoftwareImages);
 
 		final Runnable getComputeResourceFlavours = () -> {
@@ -216,9 +218,11 @@ public abstract class AbstractGrantAction {
 		final List<VimComputeResourceFlavourEntity> listVcrfe = new ArrayList<>();
 		final Map<String, VimComputeResourceFlavourEntity> cache = new HashMap<>();
 		getVnfCompute(id).forEach(x -> {
-			final String key = x.getNumVcpu() + "-" + x.getVirtualMemorySize() + "-" + x.getDiskSize();
+			final VirtualCpu vCpu = x.getVirtualCpu();
+			final VirtualMemory vMem = x.getVirtualMemory();
+			final String key = vCpu.getNumVirtualCpu() + "-" + vMem.getVirtualMemSize() + "-" + x.getDiskSize();
 			final VimComputeResourceFlavourEntity vcretmp = cache.computeIfAbsent(key, y -> {
-				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) x.getNumVcpu(), x.getVirtualMemorySize(), x.getDiskSize());
+				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) vCpu.getNumVirtualCpu(), vMem.getVirtualMemSize(), x.getDiskSize(), vCpu.getVduCpuRequirements());
 				final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
 				vcrfe.setVimConnectionId(vimConnectionInformation.getVimId());
 				vcrfe.setResourceProviderId(vim.getType());
@@ -232,6 +236,15 @@ public abstract class AbstractGrantAction {
 		return listVcrfe;
 	}
 
+	private Set<VimSoftwareImageEntity> getSoftwareImageSafe(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {
+		try {
+			return getSoftwareImage(vimInfo, vim, grants);
+		} catch (final RuntimeException e) {
+			LOG.error("getImage error", e);
+		}
+		return new HashSet<>();
+	}
+
 	private Set<VimSoftwareImageEntity> getSoftwareImage(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {
 		final Set<VimSoftwareImageEntity> listVsie = new HashSet<>();
 		final Map<String, SwImage> cache = new HashMap<>();
@@ -241,12 +254,7 @@ public abstract class AbstractGrantAction {
 				// Get Vim or create vim resource via Or-Vi
 				final SwImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
 					final Optional<SwImage> newImg = vim.storage(vimInfo).getSwImageMatching(img);
-					try (final InputStream is = findImage(x.getSoftwareImage(), grants.getVnfdId())) {
-						// Use or-vi, Vim is not on the same server. Path is given in tosca file.
-						return newImg.orElseGet(() -> vim.storage(vimInfo).uploadSoftwareImage(is, img));
-					} catch (final IOException e) {
-						throw new GenericException(e);
-					}
+					return newImg.orElseGet(() -> uploadImage(vimInfo, vim, x, grants.getVnfdId()));
 				});
 				listVsie.add(mapSoftwareImage(imgCached, x.getId(), vimInfo, vim));
 			}
@@ -260,6 +268,16 @@ public abstract class AbstractGrantAction {
 			}
 		});
 		return listVsie;
+	}
+
+	private SwImage uploadImage(final VimConnectionInformation vimInfo, final Vim vim, final VnfCompute x, final String vnfdId) {
+		final SoftwareImage img = x.getSoftwareImage();
+		try (final InputStream is = findImage(x.getSoftwareImage(), vnfdId)) {
+			// Use or-vi, Vim is not on the same server. Path is given in tosca file.
+			return vim.storage(vimInfo).uploadSoftwareImage(is, img);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	protected abstract InputStream findImage(final SoftwareImage softwareImage, final String vnfdId);

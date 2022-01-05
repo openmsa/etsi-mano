@@ -24,11 +24,11 @@ public class BadRequestException extends ResponseStatusException {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public BadRequestException(String _detail) {
-		super(HttpStatus.BAD_REQUEST, _detail);
+	public BadRequestException(final String detail) {
+		super(HttpStatus.BAD_REQUEST, detail);
 	}
 
-	public BadRequestException(String _detail, Throwable e) {
-		super(HttpStatus.BAD_REQUEST, _detail, e);
+	public BadRequestException(final String detail, final Throwable e) {
+		super(HttpStatus.BAD_REQUEST, detail, e);
 	}
 }

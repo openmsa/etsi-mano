@@ -59,11 +59,11 @@ public class ExtVirtualLinkDataEntity implements Serializable {
 	private String vimLevelResourceType;
 
 	@Valid
-	@OneToMany(mappedBy = "extVirtualLinkDataEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<VnfExtCpDataEntity> extCps = new LinkedHashSet<>();
 
 	@Valid
-	@OneToMany(mappedBy = "extVirtualLinkDataEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ExtLinkPortDataEntity> extLinkPorts = null;
 
 	@ManyToOne

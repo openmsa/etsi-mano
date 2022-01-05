@@ -14,13 +14,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service;
+package com.ubiqube.etsi.mano.service;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.nfvo.repository.jpa.SystemsJpa;
+import com.ubiqube.etsi.mano.jpa.SystemsJpa;
 import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
 import com.ubiqube.etsi.mano.orchestrator.entities.Systems;
 
@@ -77,6 +77,12 @@ public class SystemService {
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("STORAGE");
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("AFFINITY");
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("SECURITY-GROUP");
 		sys.add(sc);
 		return systemJpa.save(sys);
 	}

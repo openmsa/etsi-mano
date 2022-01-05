@@ -34,7 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public abstract class AbstractRest implements NfvoRest {
 	private RestTemplate restTemplate;
 
-	public AbstractRest() {
+	protected AbstractRest() {
 		restTemplate = new RestTemplate();
 	}
 
@@ -67,13 +67,13 @@ public abstract class AbstractRest implements NfvoRest {
 	@Override
 	public final <T> T call(final URI uri, final HttpMethod method, final Class<T> clazz) {
 		final HttpEntity<String> request = new HttpEntity<>(getHttpHeaders());
-		return _call(uri, method, request, clazz);
+		return call(uri, method, request, clazz);
 	}
 
 	@Override
 	public final <T> T call(final URI uri, final HttpMethod method, final Object body, final Class<T> clazz) {
 		final HttpEntity<Object> request = new HttpEntity<>(body, getHttpHeaders());
-		return _call(uri, method, request, clazz);
+		return call(uri, method, request, clazz);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public abstract class AbstractRest implements NfvoRest {
 		return restTemplate;
 	}
 
-	private final <T, Tbody> T _call(final URI uri, final HttpMethod method, final HttpEntity<Tbody> request, final Class<T> clazz) {
+	private final <T, Tbody> T call(final URI uri, final HttpMethod method, final HttpEntity<Tbody> request, final Class<T> clazz) {
 		final ResponseEntity<T> resp = restTemplate.exchange(uri, method, request, clazz);
 		return resp.getBody();
 	}
@@ -112,7 +112,7 @@ public abstract class AbstractRest implements NfvoRest {
 		return httpHeaders;
 	}
 
-	protected final static String authBasic(final String user, final String password) {
+	protected static final String authBasic(final String user, final String password) {
 		final String toEncode = user + ':' + password;
 		return "Basic " + Base64.getEncoder().encodeToString(toEncode.getBytes());
 	}

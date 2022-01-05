@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.service.mon.jms;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
@@ -51,7 +50,7 @@ public class NotificationController {
 		// Get Gnocchi instances and sub metrics.
 		final List<TelemetryMetricsResult> allHostMetrics = job.getHosts().stream()
 				.flatMap(x -> gnocchiSubTelemetry.getMetricsForVnfc(vimManager.findVimById(job.getVimId()), x, job.getMetrics(), job.getId()).stream())
-				.collect(Collectors.toList());
+				.toList();
 		// Now we have a batch of metrics. Send to data poller.
 		allHostMetrics.forEach(x -> {
 			jmsTopicTemplate.convertAndSend("mano.monitoring.gnocchi.data", x);

@@ -34,7 +34,7 @@ public class AffinityRule extends PlacementGroup {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private AffinityScopeType scope;
+	private String scope;
 
 	private boolean isAnti;
 }

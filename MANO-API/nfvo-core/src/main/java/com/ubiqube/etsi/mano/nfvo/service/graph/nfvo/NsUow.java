@@ -29,7 +29,6 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
-import com.ubiqube.etsi.mano.nfvo.controller.nslcm.NsInstanceControllerService;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
 import com.ubiqube.etsi.mano.service.graph.WfDependency;
 import com.ubiqube.etsi.mano.service.graph.WfProduce;
@@ -48,18 +47,15 @@ public class NsUow extends AbstractNsUnitOfWork {
 
 	private final NsdTask nsdTask;
 
-	private final VnfInstantiate instantiateRequest;
-
-	private final transient NsInstanceControllerService nsInstanceControllerService;
+	private final transient VnfInstantiate instantiateRequest;
 
 	private final transient VnfInstanceLcm nsLcmOpOccsService;
 
-	public NsUow(final NsdTask _task, final VnfInstantiate req, final NsInstanceControllerService _nsInstanceControllerService, final VnfInstanceLcm _nsLcmOpOccsService) {
-		super(_task);
-		nsdTask = _task;
-		instantiateRequest = req;
-		nsInstanceControllerService = _nsInstanceControllerService;
-		nsLcmOpOccsService = _nsLcmOpOccsService;
+	public NsUow(final NsdTask task, final VnfInstantiate req, final VnfInstanceLcm nsLcmOpOccsService) {
+		super(task);
+		this.nsdTask = task;
+		this.instantiateRequest = req;
+		this.nsLcmOpOccsService = nsLcmOpOccsService;
 	}
 
 	@Override
@@ -90,7 +86,7 @@ public class NsUow extends AbstractNsUnitOfWork {
 	private VnfBlueprint waitLcmCompletion(final VnfBlueprint lcm) {
 		VnfBlueprint tmp = lcm;
 		OperationStatusType state = tmp.getOperationStatus();
-		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
+		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state) {
 			tmp = nsLcmOpOccsService.vnfLcmOpOccsGet(lcm.getId());
 			state = tmp.getOperationStatus();
 			sleepSeconds(1);

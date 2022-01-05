@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.dto;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.persistence.Embeddable;
@@ -31,7 +32,10 @@ import lombok.Setter;
 @Setter
 @Getter
 @Embeddable
-public class ModificationsTriggeredByVnfPkgChangeEntity {
+public class ModificationsTriggeredByVnfPkgChangeEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private Map<String, String> vnfConfigurableProperties = null;
 
 	private Map<String, String> metadata = null;

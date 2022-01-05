@@ -26,6 +26,7 @@ import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VimSoftwareImageEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimTask;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -48,18 +49,20 @@ public abstract class AbstractGrantService implements VimResourceService {
 
 	private final ResourceAllocate nfvo;
 
-	protected AbstractGrantService(final MapperFacade _mapper, final ResourceAllocate _nfvo) {
-		mapper = _mapper;
-		nfvo = _nfvo;
+	protected AbstractGrantService(final MapperFacade mapper, final ResourceAllocate nfvo) {
+		this.mapper = mapper;
+		this.nfvo = nfvo;
 	}
 
+	// @Override
+	@SuppressWarnings("unchecked")
 	@Override
 	public final void allocate(final Blueprint plan) {
 		final VnfGrantsRequest grantRequest = mapper.map(plan, VnfGrantsRequest.class);
-		final Predicate<? super VimTask> isManoClass = x -> (x.getType() == ResourceTypeEnum.COMPUTE) ||
-				(x.getType() == ResourceTypeEnum.LINKPORT) ||
-				(x.getType() == ResourceTypeEnum.STORAGE) ||
-				(x.getType() == ResourceTypeEnum.VL);
+		final Predicate<? super VimTask> isManoClass = x -> x.getType() == ResourceTypeEnum.COMPUTE ||
+				x.getType() == ResourceTypeEnum.LINKPORT ||
+				x.getType() == ResourceTypeEnum.STORAGE ||
+				x.getType() == ResourceTypeEnum.VL;
 		plan.getTasks().stream()
 				.filter(isManoClass)
 				.forEach(xx -> {
@@ -82,17 +85,25 @@ public abstract class AbstractGrantService implements VimResourceService {
 			task.setResourceProviderId(x.getResourceProviderId());
 			task.setVimConnectionId(x.getVimConnectionId());
 		});
-		grantsResp.getVimConnections().forEach(x -> plan.addVimConnection(x));
+		grantsResp.getVimConnections().forEach(plan::addVimConnection);
 		plan.setZoneGroups(mapper.mapAsSet(grantsResp.getZoneGroups(), BlueZoneGroupInformation.class));
 		plan.setZones(grantsResp.getZones());
 		plan.setExtManagedVirtualLinks(grantsResp.getExtManagedVirtualLinks());
 		plan.setGrantsRequestId(grantsResp.getId().toString());
 		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
+		fixUnknownTask(plan.getTasks(), plan.getVimConnections());
+	}
+
+	private static void fixUnknownTask(final Set<? extends VimTask> tasks, final Set<VimConnectionInformation> vimConnections) {
+		final VimConnectionInformation vimConn = vimConnections.iterator().next();
+		tasks.stream()
+				.filter(x -> x.getVimConnectionId() == null)
+				.forEach(x -> x.setVimConnectionId(vimConn.getVimId()));
 	}
 
 	private static void mapVimAsset(final Set<VimTask> tasks, final GrantVimAssetsEntity vimAssets) {
 		tasks.stream()
-				.filter(x -> x instanceof ComputeTask)
+				.filter(ComputeTask.class::isInstance)
 				.filter(x -> x.getChangeType() != ChangeType.REMOVED)
 				.map(ComputeTask.class::cast)
 				.forEach(x -> {

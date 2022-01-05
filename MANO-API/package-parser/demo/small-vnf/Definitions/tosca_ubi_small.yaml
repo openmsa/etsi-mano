@@ -176,7 +176,6 @@ topology_template:
                 ip_allocation_pools: # list tosca.datatypes.nfv.IpAllocationPool
                   - start_ip_address: 192.168.0.100
                     end_ip_address: 192.168.0.254
-              associated_layer_protocol: ipv4
           qos: # tosca.datatypes.nfv.Qos
             latency: 5 ms
             packet_delay_variation: 1 s
@@ -334,7 +333,7 @@ policies:
       direction: ingress
       ether_type: ipv4
       protocol: tcp
-      port_range_min: 0
+      port_range_min: 1
       port_range_max: 65535
 
   supported_vnf_int:

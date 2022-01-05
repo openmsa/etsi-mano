@@ -17,13 +17,14 @@
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.AffinityRuleNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityGroupNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -51,12 +52,21 @@ public class VnfComputeUowV2 extends AbstractUowV2<ComputeTask> {
 		final List<String> storages = getTask().getParameters().getVnfCompute().getStorages().stream()
 				.map(x -> context.getParent(Storage.class, x + "-" + getTask().getAlias()))
 				.flatMap(List::stream)
-				.collect(Collectors.toList());
+				.toList();
 		final List<String> net = t.getVnfCompute().getNetworks().stream()
 				.map(x -> context.getParent(Network.class, x))
 				.flatMap(List::stream)
-				.collect(Collectors.toList());
-		return vim.createCompute(vimConnectionInformation, t.getAlias(), t.getFlavorId(), t.getImageId(), net, storages, t.getBootData());
+				.toList();
+		final List<String> affinity = t.getVnfCompute().getAffinityRule().stream()
+				.map(x -> context.getParent(AffinityRuleNode.class, x))
+				.flatMap(List::stream)
+				.toList();
+		final List<String> security = t.getVnfCompute().getSecurityGroup().stream()
+				.map(x -> context.getParent(SecurityGroupNode.class, x))
+				.flatMap(List::stream)
+				.toList();
+
+		return vim.createCompute(vimConnectionInformation, t.getAlias(), t.getFlavorId(), t.getImageId(), net, storages, t.getBootData(), security, affinity);
 	}
 
 	@Override

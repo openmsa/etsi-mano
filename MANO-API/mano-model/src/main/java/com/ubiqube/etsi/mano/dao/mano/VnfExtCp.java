@@ -17,17 +17,18 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -63,7 +64,14 @@ public class VnfExtCp implements Serializable, ToscaEntity {
 	@JoinColumn
 	private Set<VirtualNicReq> virtualNetworkInterfaceRequirements;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<SecurityGroup> securityGroup;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> securityGroup;
+
+	public void addSecurityGroup(final String toscaName2) {
+		if (null == securityGroup) {
+			securityGroup = new LinkedHashSet<>();
+		}
+		securityGroup.add(toscaName2);
+	}
 
 }

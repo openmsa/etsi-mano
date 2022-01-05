@@ -39,6 +39,9 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
+import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualCpu;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualMemory;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -80,14 +83,11 @@ public class VnfCompute implements ToscaEntity, Auditable {
 	private String sourcePath;
 	private String destinationPath;
 
-	@GenericField
-	private long virtualMemorySize;
+	@Embedded
+	private VirtualCpu virtualCpu = new VirtualCpu();
 
-	@FullTextField
-	private String cpuArchitecture;
-
-	@GenericField
-	private long numVcpu;
+	@Embedded
+	private VirtualMemory virtualMemory = new VirtualMemory();
 
 	@GenericField
 	private long diskSize;
@@ -110,8 +110,8 @@ public class VnfCompute implements ToscaEntity, Auditable {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<PlacementGroup> placementGroup;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	private Set<AffinityRule> affinityRule;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> affinityRule;
 	/**
 	 * Initial delta.
 	 */
@@ -122,6 +122,9 @@ public class VnfCompute implements ToscaEntity, Auditable {
 
 	@Embedded
 	private VduProfile vduProfile = new VduProfile();
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> securityGroup;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "vnfCompute")
 	private Set<VnfComputeAspectDelta> scalingAspectDeltas;
@@ -139,6 +142,20 @@ public class VnfCompute implements ToscaEntity, Auditable {
 			instantiationLevel = new LinkedHashSet<>();
 		}
 		instantiationLevel.add(_vduInstantiationLevel);
+	}
+
+	public void addSecurityGroups(final String securityGroupName) {
+		if (null == securityGroup) {
+			securityGroup = new LinkedHashSet<>();
+		}
+		securityGroup.add(securityGroupName);
+	}
+
+	public void addAffinity(final String toscaName2) {
+		if (null == affinityRule) {
+			affinityRule = new LinkedHashSet<>();
+		}
+		affinityRule.add(toscaName2);
 	}
 
 }

@@ -24,7 +24,7 @@ public class NotAcceptableException extends ResponseStatusException {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public NotAcceptableException(String _detail) {
-		super(HttpStatus.NOT_ACCEPTABLE, _detail);
+	public NotAcceptableException(final String detail) {
+		super(HttpStatus.NOT_ACCEPTABLE, detail);
 	}
 }

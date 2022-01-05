@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,6 +59,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.VimService;
@@ -75,13 +78,14 @@ public class OpenStackVim implements Vim {
 
 	private static final ThreadLocal<Map<String, OSClientV3>> sessions = new ThreadLocal<>();
 
-	private final VimService vciJpa;
-
 	private final MapperFacade mapper;
 
+	private final Map<String, String> flavors;
+
 	public OpenStackVim(final VimService _vciJpa, final MapperFacade _mapper) {
-		vciJpa = _vciJpa;
-		mapper = _mapper;
+		this.mapper = _mapper;
+		this.flavors = Map.of("availability_zone_type", "...");
+
 		LOG.info("Booting Openstack VIM.\n" +
 				"   ___  ___   __   _____ __  __ \n" +
 				"  / _ \\/ __|__\\ \\ / /_ _|  \\/  |\n" +
@@ -160,19 +164,21 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData) {
+	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData, final List<String> securityGroup, final List<String> affinityRules) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
 		final ServerCreateBuilder bs = Builders.server();
 		LOG.debug("Creating server flavor={}, image={}", flavorId, imageId);
 		bs.image(imageId);
 		bs.name(instanceName);
 		bs.flavor(flavorId);
-		if ((null != cloudInitData) && !cloudInitData.isEmpty()) {
+		if (null != cloudInitData && !cloudInitData.isEmpty()) {
 			bs.userData(Base64.getEncoder().encodeToString(cloudInitData.getBytes(Charset.defaultCharset())));
 		}
-		if (!networks.isEmpty()) {
-			bs.networks(networks);
+		bs.networks(networks);
+		if (!affinityRules.isEmpty()) {
+			bs.addSchedulerHint("group", affinityRules.get(0));
 		}
+		securityGroup.stream().forEach(bs::addSecurityGroup);
 		for (int i = 0; i < storages.size(); i++) {
 			final BlockDeviceMappingCreate blockDevice = Builders.blockDeviceMapping()
 					.uuid(storages.get(i))
@@ -186,18 +192,28 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk) {
+	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
 		final OSClientV3 os = this.getClient(vimConnectionInformation);
-		LOG.debug("mem={} disk={}", (virtualMemorySize / MEGA), (disk / GIGA));
-		final Optional<Flavor> matchingFlavor = os.compute().flavors().list()
-				.stream()
+		LOG.debug("Flavor mem={} disk={}", virtualMemorySize / MEGA, disk / GIGA);
+		final List<Flavor> matchingFlavor = os.compute().flavors().list()
+				.parallelStream()
 				.filter(x -> x.getVcpus() == numVcpu)
-				.filter(x -> x.getRam() == (virtualMemorySize / MEGA))
-				.filter(x -> x.getDisk() == (disk / GIGA))
-				.map(x -> (Flavor) x)
-				.findFirst();
-		// XXX We can't use name maybe use an UUID.
-		return matchingFlavor.orElseGet(() -> os.compute()
+				.filter(x -> x.getRam() == virtualMemorySize / MEGA)
+				.filter(x -> x.getDisk() == disk / GIGA)
+				.map(Flavor.class::cast)
+				.filter(x -> {
+					final Map<String, String> specs = os.compute().flavors().listExtraSpecs(x.getId());
+					return isMatching(flavorSpec, specs);
+				})
+				.toList();
+		if (!matchingFlavor.isEmpty()) {
+			return matchingFlavor.get(0).getId();
+		}
+		return createFlavor(os, name, numVcpu, virtualMemorySize, disk, flavorSpec).getId();
+	}
+
+	private Flavor createFlavor(final OSClientV3 os, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
+		final Flavor flavor = os.compute()
 				.flavors()
 				.create(Builders.flavor()
 						.disk((int) (disk / GIGA))
@@ -205,8 +221,30 @@ public class OpenStackVim implements Vim {
 						.vcpus(numVcpu)
 						.isPublic(true)
 						.name(name)
-						.build()))
-				.getId();
+						.build());
+		if (flavorSpec.isEmpty()) {
+			return flavor;
+		}
+		final Map<String, String> newSpec = flavorSpec.entrySet().stream()
+				.map(x -> Map.entry(convert(x.getKey()), x.getValue()))
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+		os.compute().flavors().createAndUpdateExtraSpecs(flavor.getId(), newSpec);
+		return flavor;
+	}
+
+	private boolean isMatching(final Map<String, String> flavorSpec, final Map<String, String> specs) {
+		final Set<Entry<String, String>> entries = flavorSpec.entrySet();
+		for (final Entry<String, String> entry : entries) {
+			final String osEntry = convert(entry.getKey());
+			if (specs.get(osEntry) == null) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private String convert(final String key) {
+		return flavors.get(key);
 	}
 
 	@Override
@@ -215,7 +253,7 @@ public class OpenStackVim implements Vim {
 		final List<? extends AvailabilityZone> list = os.compute().zones().list();
 		return list.stream().filter(x -> x.getZoneState().getAvailable())
 				.map(AvailabilityZone::getZoneName)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override
@@ -292,7 +330,6 @@ public class OpenStackVim implements Vim {
 	public List<VimCapability> getCaps(final VimConnectionInformation vimConnectionInformation) {
 		final ExecutorService tpe = Executors.newFixedThreadPool(5);
 		final CompletionService<List<VimCapability>> completionService = new ExecutorCompletionService<>(tpe);
-		final List<? extends Extension> exts;
 		completionService.submit(getExtensions(vimConnectionInformation));
 		completionService.submit(getAgents(vimConnectionInformation));
 		int received = 0;
@@ -345,26 +382,41 @@ public class OpenStackVim implements Vim {
 			return list.stream()
 					.map(this::convertAgentToCaps)
 					.filter(Objects::nonNull)
-					.collect(Collectors.toList());
+					.toList();
 		};
+	}
+
+	@Override
+	public String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		final String affinity = ar.isAnti() ? "anti-affinity" : "affinity";
+		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(ar.getId().toString(), affinity);
+		return res.getId();
 	}
 
 	private VimCapability convertExtenstionToCaps(final Extension ext) {
 		if ("dns-integration".equals(ext.getAlias())) {
 			return VimCapability.HAVE_DNS;
-		} else if ("availability_zone".equals(ext.getAlias())) {
+		}
+		if ("availability_zone".equals(ext.getAlias())) {
 			return VimCapability.HAVE_AVAILABILITY_ZONE;
-		} else if ("bgp".equals(ext.getAlias())) {
+		}
+		if ("bgp".equals(ext.getAlias())) {
 			return VimCapability.HAVE_BGP;
-		} else if ("net-mtu".equals(ext.getAlias())) {
+		}
+		if ("net-mtu".equals(ext.getAlias())) {
 			return VimCapability.HAVE_NET_MTU;
-		} else if ("qos".equals(ext.getAlias())) {
+		}
+		if ("qos".equals(ext.getAlias())) {
 			return VimCapability.HAVE_QOS;
-		} else if ("router".equals(ext.getAlias())) {
+		}
+		if ("router".equals(ext.getAlias())) {
 			return VimCapability.HAVE_ROUTER;
-		} else if ("vlan-transparent".equals(ext.getAlias())) {
+		}
+		if ("vlan-transparent".equals(ext.getAlias())) {
 			return VimCapability.HAVE_VLAN_TRANSPARENT;
-		} else if ("extra_dhcp_opt".equals(ext.getAlias())) {
+		}
+		if ("extra_dhcp_opt".equals(ext.getAlias())) {
 			return VimCapability.HAVE_DHCP;
 		}
 		return null;
@@ -415,6 +467,12 @@ public class OpenStackVim implements Vim {
 		ret.setVirtualCPU(stats.getVirtualCPU());
 		ret.setVirtualUsedCPU(stats.getVirtualUsedCPU());
 		return ret;
+	}
+
+	@Override
+	public void deleteServerGroup(final VimConnectionInformation vimConnectionInformation, final String vimResourceId) {
+		final OSClientV3 os = this.getClient(vimConnectionInformation);
+		os.compute().serverGroups().delete(vimResourceId);
 	}
 
 }

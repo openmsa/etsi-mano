@@ -78,16 +78,17 @@ public class NfvoActions {
 	private final NsPlanner nsPlanner;
 	private final NsBlueprintService nsBlueprintService;
 
-	public NfvoActions(final NsInstanceService _nsInstanceRepository, final NsdRepository _nsdRepository, final VimManager _vimManager, final EventManager _eventManager, final NsPlanner _nsPlanner, final NsPlanExecutor _executor, final NsLiveInstanceJpa _nsLiveInstanceJpa, final NsBlueprintService _nsBlueprintService) {
+	public NfvoActions(final NsInstanceService nsInstanceRepository, final NsdRepository nsdRepository, final VimManager vimManager, final EventManager eventManager,
+			final NsPlanner nsPlanner, final NsPlanExecutor executor, final NsLiveInstanceJpa nsLiveInstanceJpa, final NsBlueprintService nsBlueprintService) {
 		super();
-		nsInstanceRepository = _nsInstanceRepository;
-		nsdRepository = _nsdRepository;
-		vimManager = _vimManager;
-		eventManager = _eventManager;
-		nsPlanner = _nsPlanner;
-		executor = _executor;
-		nsLiveInstanceJpa = _nsLiveInstanceJpa;
-		nsBlueprintService = _nsBlueprintService;
+		this.nsInstanceRepository = nsInstanceRepository;
+		this.nsdRepository = nsdRepository;
+		this.vimManager = vimManager;
+		this.eventManager = eventManager;
+		this.nsPlanner = nsPlanner;
+		this.executor = executor;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
+		this.nsBlueprintService = nsBlueprintService;
 	}
 
 	public void nsTerminate(@Nonnull final UUID lcmOpOccsId) {

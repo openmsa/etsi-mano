@@ -17,10 +17,12 @@
 package com.ubiqube.etsi.mano.service.vim;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
@@ -48,9 +50,9 @@ public interface Vim {
 	VimMonitoring getMonitoring(VimConnectionInformation vimConnectionInformation);
 
 	@Nonnull
-	String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk);
+	String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk, Map<String, String> flavorSpec);
 
-	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages, String cloudInitData);
+	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages, String cloudInitData, List<String> securityGroup, List<String> affinityRules);
 
 	void deleteCompute(VimConnectionInformation vimConnectionInformation, String resourceId);
 
@@ -72,4 +74,7 @@ public interface Vim {
 
 	void freeResources(VimConnectionInformation vimConnectionInformation, GrantInformationExt x);
 
+	String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar);
+
+	void deleteServerGroup(VimConnectionInformation vimConnectionInformation, String vimResourceId);
 }

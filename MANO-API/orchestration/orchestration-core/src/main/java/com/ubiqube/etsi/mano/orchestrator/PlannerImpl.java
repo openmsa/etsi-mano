@@ -77,10 +77,10 @@ public class PlannerImpl<U> implements Planner<U> {
 
 	@Override
 	public <V> PreExecutionGraph<V> makePlan(final Bundle bundle, final List<Class<? extends Node>> planConstituent, final U parameters) {
-		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
-		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gr = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
-		gf.addGraphListener(new VirtualTaskVertexListener());
-		gr.addGraphListener(new VirtualTaskVertexListener());
+		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> createGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
+		final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> deleteGraph = new DefaultListenableGraph<>(new DirectedAcyclicGraph<>(VirtualTaskConnectivity.class));
+		createGraph.addGraphListener(new VirtualTaskVertexListener());
+		deleteGraph.addGraphListener(new VirtualTaskVertexListener());
 		planConstituent.forEach(x -> {
 			final PlanContributor conts = contributors.get(x);
 			if (null == conts) {
@@ -90,35 +90,35 @@ public class PlannerImpl<U> implements Planner<U> {
 				tasks.forEach(y -> {
 					if (y.isDeleteTask()) {
 						LOG.debug("Deleting: {}", y);
-						gr.addVertex(y);
+						deleteGraph.addVertex(y);
 					} else {
 						LOG.debug("Adding: {}", y);
-						gf.addVertex(y);
+						createGraph.addVertex(y);
 					}
 				});
 			}
 		});
 		// Rebuild connectivity.
-		rebuildConnectivity(gf);
-		rebuildConnectivity(gr);
+		rebuildConnectivity(createGraph);
+		rebuildConnectivity(deleteGraph);
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Create graph:");
-			GraphTools.dumpVt(gf);
+			GraphTools.dumpVt(createGraph);
 			LOG.debug("Remove graph:");
-			GraphTools.dumpVt(gr);
+			GraphTools.dumpVt(deleteGraph);
 		}
-		return new PreExecutionGraphImpl(gf, gr);
+		return new PreExecutionGraphImpl(createGraph, deleteGraph);
 	}
 
-	private static void rebuildConnectivity(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> gf) {
-		gf.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
-			final VirtualTask<?> dep = findDependency(y, gf);
+	private static void rebuildConnectivity(final ListenableGraph<VirtualTask<?>, VirtualTaskConnectivity> graph) {
+		graph.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
+			final VirtualTask<?> dep = findProducer(y, graph);
 			if (null == dep) {
-				LOG.info("Single: {} ", x);
-				gf.addVertex(x);
+				LOG.info("Single(dep): {} ", x);
+				graph.addVertex(x);
 			} else {
-				LOG.debug("Add edge : {} <-> {}", dep, x);
-				gf.addEdge(dep, x);
+				LOG.debug("Add edge(dep): {} <-> {}", dep, x);
+				graph.addEdge(dep, x);
 			}
 		}));
 	}
@@ -141,7 +141,7 @@ public class PlannerImpl<U> implements Planner<U> {
 		ng.addGraphListener(new UnitOfWorkVertexListener());
 		// First resolve implementation.
 		gf.vertexSet().forEach(x -> {
-			final SystemBuilder db = implementationService.getTaretSystem(x);
+			final SystemBuilder db = implementationService.getTargetSystem(x);
 			x.setSystemBuilder(db);
 			db.getIncomingVertex().forEach(ng::addVertex);
 			db.getOutgoingVertex().forEach(ng::addVertex);
@@ -172,7 +172,7 @@ public class PlannerImpl<U> implements Planner<U> {
 		outgoingVertex.forEach(x -> incomingVertex.forEach(y -> g.addEdge(x, y)));
 	}
 
-	private static VirtualTask<?> findDependency(final NamedDependency namedDependency, final ListenableGraph<? extends VirtualTask<?>, VirtualTaskConnectivity> gf) {
+	private static VirtualTask<?> findProducer(final NamedDependency namedDependency, final ListenableGraph<? extends VirtualTask<?>, VirtualTaskConnectivity> gf) {
 		return gf.vertexSet().stream().filter(x -> x.getNamedProduced().stream()
 				.anyMatch(namedDependency::match))
 				.findAny()
@@ -231,7 +231,7 @@ public class PlannerImpl<U> implements Planner<U> {
 	}
 
 	public static <U extends UnitOfWork> void exportGraph(final ListenableGraph g, final String fileName) {
-		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> x.getTask().getName().replace('-', '_') + "_" + RandomStringUtils.random(5, true, true));
+		final DOTExporter<U, ConnectivityEdge<U>> exporter = new DOTExporter<>(x -> "\"" + x.getTask().getName() + RandomStringUtils.random(5, true, true) + "\"");
 		try (final FileOutputStream out = new FileOutputStream(fileName)) {
 			exporter.exportGraph(g, out);
 		} catch (final IOException e) {

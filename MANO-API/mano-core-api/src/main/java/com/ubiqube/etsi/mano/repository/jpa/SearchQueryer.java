@@ -39,9 +39,9 @@ public class SearchQueryer {
 
 	private final EntityManager entityManager;
 
-	public SearchQueryer(final EntityManager _entityManager) {
+	public SearchQueryer(final EntityManager entityManager) {
 		super();
-		this.entityManager = _entityManager;
+		this.entityManager = entityManager;
 	}
 
 	public <T> List<T> getCriteria(final List<Node<?>> nodes, final Class<T> clazz) {
@@ -86,8 +86,7 @@ public class SearchQueryer {
 			return pf.match().field(name).matching(value).toPredicate();
 		case NCONT:
 			return pf.matchAll().except(pf.match().field(name).matching(value)).toPredicate();
-		case IN:
-		case NIN:
+		case IN, NIN:
 		default:
 			throw new GenericException("Unknown query Op: " + op);
 		}

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.grant;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -39,7 +40,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class ConstraintResourceRef {
+public class ConstraintResourceRef implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
@@ -54,7 +58,11 @@ public class ConstraintResourceRef {
 	private String resourceProviderId = null;
 
 	/**
-	 * The type of the identifier. Permitted values: * RES_MGMT: Resource-management-level identifier; this identifier is managed by the VIM in the direct mode of VNF-related resource management, and is managed by the NFVO in the indirect mode) * GRANT: Reference to the identifier of a \"ResourceDefinition\" structure in the \"GrantRequest\" structure.
+	 * The type of the identifier. Permitted values: * RES_MGMT:
+	 * Resource-management-level identifier; this identifier is managed by the VIM
+	 * in the direct mode of VNF-related resource management, and is managed by the
+	 * NFVO in the indirect mode) * GRANT: Reference to the identifier of a
+	 * \"ResourceDefinition\" structure in the \"GrantRequest\" structure.
 	 */
 	public enum IdTypeEnum {
 		RES_MGMT("RES_MGMT"),

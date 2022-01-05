@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca;
 
+import java.math.BigDecimal;
+
 import com.ubiqube.parser.tosca.scalar.Time;
 
 import ma.glasnost.orika.MappingContext;
@@ -26,7 +28,9 @@ public class TimeConverter extends BidirectionalConverter<Time, Long> {
 
 	@Override
 	public Long convertTo(final Time source, final Type<Long> destinationType, final MappingContext mappingContext) {
-		return source.getValue().longValue();
+		final BigDecimal v = source.getValue();
+		final BigDecimal unit = BigDecimal.valueOf(100_000_000);
+		return v.divide(unit).longValue();
 	}
 
 	@Override

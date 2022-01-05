@@ -19,6 +19,12 @@ package com.ubiqube.parser.tosca;
 import java.util.Map;
 
 // TODO rename activityDefinition
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @deprecated This file have been split between callActivity*
+ */
+@Deprecated
 public class ActionDefinition {
 	private String delegate;
 	private String workflow;

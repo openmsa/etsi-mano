@@ -51,7 +51,7 @@ public class MonitoringTask implements VirtualTask<MonitoringTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -98,4 +98,8 @@ public class MonitoringTask implements VirtualTask<MonitoringTask> {
 		return null;
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "GNOCCHI";
+	}
 }

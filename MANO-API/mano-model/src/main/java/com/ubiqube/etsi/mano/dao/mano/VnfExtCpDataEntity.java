@@ -17,7 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -25,7 +25,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.Valid;
 
 import lombok.Getter;
@@ -50,10 +49,7 @@ public class VnfExtCpDataEntity implements Serializable {
 	private String cpdId = null;
 
 	@Valid
-	@OneToMany(mappedBy = "vnfExtCpDataEntity")
-	private List<VnfExtCpConfiguration> cpConfig = null;
-
-	@OneToOne
-	private ExtVirtualLinkDataEntity extVirtualLinkDataEntity;
+	@OneToMany
+	private Map<String, VnfExtCpConfiguration> cpConfig = null;
 
 }

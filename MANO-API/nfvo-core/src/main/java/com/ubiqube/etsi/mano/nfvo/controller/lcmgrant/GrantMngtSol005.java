@@ -53,10 +53,10 @@ public class GrantMngtSol005 implements GrantManagement {
 	private final MapperFacade mapper;
 	private final EventManager eventManager;
 
-	public GrantMngtSol005(final GrantsResponseJpa _grantsJpa, final MapperFacade _mapper, final EventManager _eventManager) {
-		grantsResponseJpa = _grantsJpa;
-		mapper = _mapper;
-		eventManager = _eventManager;
+	public GrantMngtSol005(final GrantsResponseJpa grantsJpa, final MapperFacade mapper, final EventManager eventManager) {
+		this.grantsResponseJpa = grantsJpa;
+		this.mapper = mapper;
+		this.eventManager = eventManager;
 	}
 
 	@Override

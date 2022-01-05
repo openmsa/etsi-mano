@@ -45,31 +45,31 @@ public class SpelPatcher implements Patcher {
 	private final JsonWalker jsonWalker;
 	private final SpelWriter spelWriter;
 
-	public SpelPatcher(final ObjectMapper _mapper, final JsonWalker _jsonWalker, final SpelWriter _spelWriter) {
-		mapper = _mapper;
-		jsonWalker = _jsonWalker;
-		spelWriter = _spelWriter;
+	public SpelPatcher(final ObjectMapper mapper, final JsonWalker jsonWalker, final SpelWriter spelWriter) {
+		this.mapper = mapper;
+		this.jsonWalker = jsonWalker;
+		this.spelWriter = spelWriter;
 		LOG.info("SpelPatcher activated.");
 	}
 
 	@Override
-	public void patch(final String _patchDocument, final Object _entity) {
+	public void patch(final String patchDocument, final Object entity) {
 		try {
 			final CollectNonNullListener beanListener = new CollectNonNullListener();
-			final JsonNode patch = mapper.readTree(_patchDocument);
+			final JsonNode patch = mapper.readTree(patchDocument);
 			jsonWalker.walk(patch, beanListener);
 			final List<AttrHolder> attrsHolders = beanListener.getAttrs();
 			final List<FilterAttributes> attrs = spelWriter.getFilterAttrs(attrsHolders);
-			patchAttrs(attrs, _entity);
-		} catch (final IOException _e) {
-			throw new GenericException(_e);
+			patchAttrs(attrs, entity);
+		} catch (final IOException e) {
+			throw new GenericException(e);
 		}
 	}
 
-	private static void patchAttrs(final List<FilterAttributes> attrs, final Object _entity) {
+	private static void patchAttrs(final List<FilterAttributes> attrs, final Object entity) {
 		final SpelParserConfiguration config = new SpelParserConfiguration(true, true); // auto create objects if null
 		final ExpressionParser parser = new SpelExpressionParser(config);
-		final StandardEvaluationContext modelContext = new StandardEvaluationContext(_entity);
+		final StandardEvaluationContext modelContext = new StandardEvaluationContext(entity);
 		LOG.debug("Patching attr: {}", attrs);
 		attrs.forEach(x -> parser.parseExpression(x.getAttribute()).setValue(modelContext, x.getValue()));
 	}

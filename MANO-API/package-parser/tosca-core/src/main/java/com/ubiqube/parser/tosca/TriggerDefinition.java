@@ -24,7 +24,7 @@ public class TriggerDefinition {
 	private TimeInterval schedule;
 	private EventFilter target_filter;
 	private List<CondictionClause> condition;
-	private List<ActionDefinition> action;
+	private List<ActivityListDefinition> action;
 
 	public String getDescription() {
 		return description;
@@ -66,11 +66,11 @@ public class TriggerDefinition {
 		this.condition = condition;
 	}
 
-	public List<ActionDefinition> getAction() {
+	public List<ActivityListDefinition> getAction() {
 		return action;
 	}
 
-	public void setAction(final List<ActionDefinition> action) {
+	public void setAction(final List<ActivityListDefinition> action) {
 		this.action = action;
 	}
 

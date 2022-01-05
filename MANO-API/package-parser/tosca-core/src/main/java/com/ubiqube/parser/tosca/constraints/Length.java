@@ -14,8 +14,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
+package com.ubiqube.parser.tosca.constraints;
 
-public class NsRollbackParameters {
+public class Length extends SimpleValue implements Constraint {
+
+	public Length(final String _value) {
+		super(_value);
+	}
 
 }

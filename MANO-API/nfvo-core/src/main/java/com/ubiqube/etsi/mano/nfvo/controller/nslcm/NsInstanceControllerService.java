@@ -40,7 +40,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
  */
 public interface NsInstanceControllerService {
 
-	NsdInstance createNsd(String _nsdId, String nsName, String nsDescription);
+	NsdInstance createNsd(String nsdId, String nsName, String nsDescription);
 
 	NsBlueprint instantiate(UUID nsUuid, NsInstantiate req);
 

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.grant;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -36,7 +37,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class SnapshotResourceDefinitionEntity {
+public class SnapshotResourceDefinitionEntity implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;

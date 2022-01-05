@@ -20,7 +20,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -34,15 +33,15 @@ import ma.glasnost.orika.MappingContext;
 public class SpelWriter {
 	private final MapperFacade mapper;
 
-	public SpelWriter(final MapperFacade _mapperFacade) {
+	public SpelWriter(final MapperFacade mapperFacade) {
 		super();
-		mapper = _mapperFacade;
+		this.mapper = mapperFacade;
 	}
 
 	public List<FilterAttributes> getFilterAttrs(final List<AttrHolder> attrs) {
 		return attrs.stream()
 				.map(this::handle)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private FilterAttributes handle(final AttrHolder attrHolder) {
@@ -66,30 +65,31 @@ public class SpelWriter {
 	}
 
 	private static String handleElement(final AttrNode elem, final AttrNode prev) {
-		if (elem instanceof NamedAttrNode) {
+		if (elem instanceof final NamedAttrNode node) {
 			if (prev == null) {
-				return ((NamedAttrNode) elem).getName();
+				return node.getName();
 			}
-			// XXX Is there another way to adress map.
-			if (prev instanceof NamedAttrNode) {
-				final NamedAttrNode previous = (NamedAttrNode) prev;
+			// Is there another way to adress map.
+			if (prev instanceof final NamedAttrNode previous) {
 				if ("userDefinedData".equals(previous.getName())) {
-					return '[' + ((NamedAttrNode) elem).getName() + ']';
+					return '[' + node.getName() + ']';
 				}
-				return '.' + ((NamedAttrNode) elem).getName();
+				return '.' + node.getName();
 			}
-			return '.' + ((NamedAttrNode) elem).getName();
-		} else if (elem instanceof IndiceAttrNode) {
-			return elem.toString();
-		} else if (elem instanceof ListAttrNode) {
-			if (prev == null) {
-				return ((ListAttrNode) elem).getName();
-			}
-			return '.' + ((ListAttrNode) elem).getName();
-		} else if (elem instanceof AttrMapEntryNode) {
-			return '[' + ((AttrMapEntryNode) elem).getName() + ']';
-		} else {
-			throw new GenericException("Unknown Node instance: " + elem.getClass());
+			return '.' + node.getName();
 		}
+		if (elem instanceof IndiceAttrNode) {
+			return elem.toString();
+		}
+		if (elem instanceof final ListAttrNode node) {
+			if (prev == null) {
+				return node.getName();
+			}
+			return '.' + node.getName();
+		}
+		if (elem instanceof final AttrMapEntryNode node) {
+			return '[' + node.getName() + ']';
+		}
+		throw new GenericException("Unknown Node instance: " + elem.getClass());
 	}
 }

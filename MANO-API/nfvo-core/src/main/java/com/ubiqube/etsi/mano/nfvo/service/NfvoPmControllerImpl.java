@@ -39,9 +39,9 @@ import com.ubiqube.etsi.mano.service.SearchableService;
 public class NfvoPmControllerImpl extends SearchableService implements NfvoPmController {
 	private final PmJobsJpa pmJobsJpa;
 
-	public NfvoPmControllerImpl(final ManoSearchResponseService searchService, final EntityManager em, final PmJobsJpa _pmJobsJpa) {
+	public NfvoPmControllerImpl(final ManoSearchResponseService searchService, final EntityManager em, final PmJobsJpa pmJobsJpa) {
 		super(searchService, em, PmJob.class);
-		pmJobsJpa = _pmJobsJpa;
+		this.pmJobsJpa = pmJobsJpa;
 	}
 
 	@Override

@@ -48,16 +48,16 @@ import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 @Service
 public class NsdControllerImpl extends SearchableService implements NsdController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(NsdController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(NsdControllerImpl.class);
 	private final NsdRepository nsdRepository;
 	private final Patcher patcher;
 	private final EventManager eventManager;
 
-	public NsdControllerImpl(final NsdRepository _nsdRepository, final Patcher _patcher, final EventManager _eventManager, final EntityManager _em, final ManoSearchResponseService searchService) {
-		super(searchService, _em, NsdPackage.class);
-		nsdRepository = _nsdRepository;
-		patcher = _patcher;
-		eventManager = _eventManager;
+	public NsdControllerImpl(final NsdRepository nsdRepository, final Patcher patcher, final EventManager eventManager, final EntityManager em, final ManoSearchResponseService searchService) {
+		super(searchService, em, NsdPackage.class);
+		this.nsdRepository = nsdRepository;
+		this.patcher = patcher;
+		this.eventManager = eventManager;
 		LOG.info("Starting NSD Management SOL005 Controller.");
 	}
 
@@ -94,7 +94,7 @@ public class NsdControllerImpl extends SearchableService implements NsdControlle
 	public NsdPackage nsDescriptorsNsdInfoIdPatch(final UUID id, final String body, final String ifMatch) {
 		final NsdPackage nsdPkgInfo = nsdRepository.get(id);
 		ensureIsOnboarded(nsdPkgInfo);
-		if ((ifMatch != null) && !ifMatch.equals(nsdPkgInfo.getVersion() + "")) {
+		if (ifMatch != null && !ifMatch.equals(nsdPkgInfo.getVersion() + "")) {
 			throw new PreConditionException(ifMatch + " does not match " + nsdPkgInfo.getVersion());
 		}
 		patcher.patch(body, nsdPkgInfo);

@@ -38,8 +38,8 @@ public class NsdSubscriptionFrontControllerImpl implements NsdSubscriptionFrontC
 
 	private final SubscriptionFrontController subscriptionService;
 
-	public NsdSubscriptionFrontControllerImpl(final SubscriptionFrontController _subscriptionService) {
-		subscriptionService = _subscriptionService;
+	public NsdSubscriptionFrontControllerImpl(final SubscriptionFrontController subscriptionService) {
+		this.subscriptionService = subscriptionService;
 	}
 
 	/**

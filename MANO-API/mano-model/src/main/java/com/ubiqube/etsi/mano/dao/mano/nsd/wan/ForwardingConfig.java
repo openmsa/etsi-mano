@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.ElementCollection;
@@ -35,7 +36,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class ForwardingConfig {
+public class ForwardingConfig implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<ResourceHandle> networkResources;
 

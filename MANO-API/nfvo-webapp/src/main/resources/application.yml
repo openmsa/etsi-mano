@@ -14,6 +14,9 @@ logging:
     com:
       ubiqube:
         etsi: DEBUG
+    ma:
+      glasnost:
+        orika: INFO
     org:
       apache:
         http:
@@ -22,15 +25,15 @@ logging:
           audit: WARN
       hibernate:
         SQL: INFO
-      keycloak: DEBUG
+      keycloak: INFO
       openstack4j: INFO
       springframework:
-        security: DEBUG
         boot:
           autoconfigure:
             logging:
               ConditionEvaluationReportLoggingListener: INFO
         jms: INFO
+        security: INFO
         web:
           filter: DEBUG
 
@@ -47,6 +50,8 @@ management:
       mode: full
 
 mano:
+  frontend-url: http://localhost:8090/ubi-etsi-mano/sol003
+  swagger-o-auth2: https://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/token
   election:
     script-path: /tmp/etsi-mano/election/groovy
   nfvo:
@@ -91,7 +96,7 @@ spring:
               name: admin
               password: admin
         password: admin
-        url: http://localhost:8081
+        url: http://monitoring.mano.ubiqube.com/monitoring/
         username: admin
   datasource:
     driverClassName: org.h2.Driver

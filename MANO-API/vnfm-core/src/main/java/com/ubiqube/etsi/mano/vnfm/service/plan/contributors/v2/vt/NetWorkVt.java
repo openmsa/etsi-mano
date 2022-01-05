@@ -16,12 +16,12 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.AffinityRuleNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 
 /**
@@ -37,7 +37,10 @@ public class NetWorkVt extends VnfVtBase<NetworkTask> {
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		return new ArrayList<>();
+		return getParameters().getVnfVl().getAffinityRules()
+				.stream()
+				.map(x -> new NamedDependency(AffinityRuleNode.class, x))
+				.toList();
 	}
 
 	@Override
@@ -46,8 +49,12 @@ public class NetWorkVt extends VnfVtBase<NetworkTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "NETWORK";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "NETWORK";
+	}
 }

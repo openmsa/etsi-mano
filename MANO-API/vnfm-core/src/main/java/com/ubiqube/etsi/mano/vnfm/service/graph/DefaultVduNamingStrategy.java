@@ -36,4 +36,10 @@ public class DefaultVduNamingStrategy implements VduNamingStrategy {
 		return vnfInstanceId.substring(0, 8) + '-' + toscaName + '-' + String.format("%04d", count);
 	}
 
+	@Override
+	public String nameSingleResource(final VnfBlueprint blueprint, final String toscaName) {
+		final String vnfInstanceId = blueprint.getVnfInstance().getId().toString();
+		return vnfInstanceId.substring(0, 8) + '-' + toscaName;
+	}
+
 }

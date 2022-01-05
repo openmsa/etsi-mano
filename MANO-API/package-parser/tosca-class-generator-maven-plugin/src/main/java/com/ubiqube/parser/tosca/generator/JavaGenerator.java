@@ -83,7 +83,7 @@ public class JavaGenerator {
 	private final Map<String, DataType> primitive = new HashMap<>();
 
 	public void generate(final String file) throws JClassAlreadyExistsException, IOException {
-		final ToscaParser tp = new ToscaParser(file);
+		final ToscaParser tp = new ToscaParser(new File(file));
 		root = tp.getContext();
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
 		final Map<String, DataType> dt = root.getDataTypes();
@@ -148,6 +148,9 @@ public class JavaGenerator {
 			return true;
 		}
 		if ("string".equals(val.getDerivedFrom())) {
+			return true;
+		}
+		if ("timestamp".equals(val.getDerivedFrom())) {
 			return true;
 		}
 		return false;
@@ -250,7 +253,7 @@ public class JavaGenerator {
 			return false;
 		}
 		final String indice = occ.get(1);
-		return ("UNBOUNDED".equals(indice) || (Integer.parseInt(indice) > 1));
+		return "UNBOUNDED".equals(indice) || Integer.parseInt(indice) > 1;
 	}
 
 	private void generateCaps(final JDefinedClass jc, final Map<String, CapabilityDefinition> capabilities) {
@@ -260,10 +263,10 @@ public class JavaGenerator {
 				final CapabilityTypes caps = root.getCapabilities().get(y.getType());
 				jType = generateClass(y.getType(), caps);
 			}
-			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
+			if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {
 				throw new ParseException("Unable to handle Attributes in " + x + '=' + y.getType());
 			}
-			if ((y.getProperties() != null) && !y.getProperties().getProperties().isEmpty()) {
+			if (y.getProperties() != null && !y.getProperties().getProperties().isEmpty()) {
 				throw new ParseException("Unable to handle properties in " + x + '=' + y.getType());
 			}
 			final String fieldName = fieldCamelCase(x);
@@ -296,13 +299,11 @@ public class JavaGenerator {
 			final String fieldName = fieldCamelCase(entry.getKey());
 			if (null != jType) {
 				field = jc.field(JMod.PRIVATE, jType, fieldName);
+			} else if (null != primitive.get(val.getType())) {
+				field = jc.field(JMod.PRIVATE, Integer.class, fieldName);
 			} else {
-				if (null != primitive.get(val.getType())) {
-					field = jc.field(JMod.PRIVATE, Integer.class, fieldName);
-				} else {
-					jType2 = findJType(entry.getValue());
-					field = jc.field(JMod.PRIVATE, jType2, fieldName);
-				}
+				jType2 = findJType(entry.getValue());
+				field = jc.field(JMod.PRIVATE, jType2, fieldName);
 			}
 			Optional.ofNullable(val.getDescription()).ifPresent(x -> field.javadoc().add(x));
 
@@ -337,14 +338,14 @@ public class JavaGenerator {
 	private void createGetterSetter(final String fieldName, final JDefinedClass jc, final JFieldVar field, final ValueObject val) {
 		final String methodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 		final JMethod getter = jc.method(JMod.PUBLIC, field.type(), "get" + methodName);
-		if ((null != val.getRequired()) && (Boolean.TRUE.equals(val.getRequired()))) {
+		if (null != val.getRequired() && Boolean.TRUE.equals(val.getRequired())) {
 			getter.annotate(NotNull.class);
 		}
 		getter.body()._return(field);
 		// Setter
 		final JMethod setVar = jc.method(JMod.PUBLIC, codeModel.VOID, "set" + methodName);
 		final JVar param = setVar.param(field.type(), field.name());
-		if ((null != val.getRequired()) && (Boolean.TRUE.equals(val.getRequired()))) {
+		if (null != val.getRequired() && Boolean.TRUE.equals(val.getRequired())) {
 			param.annotate(NotNull.class);
 		}
 		setVar.body().assign(JExpr._this().ref(field.name()), JExpr.ref(field.name()));

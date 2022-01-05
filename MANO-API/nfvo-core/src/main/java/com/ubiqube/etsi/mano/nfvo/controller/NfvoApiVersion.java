@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +58,8 @@ public class NfvoApiVersion {
 
 	private final ApplicationContext applicationContext;
 
-	public NfvoApiVersion(final ApplicationContext _applicationContext) {
-		applicationContext = _applicationContext;
+	public NfvoApiVersion(final ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
 		extractVersions();
 	}
 
@@ -75,9 +74,9 @@ public class NfvoApiVersion {
 			}
 			final Object obj = applicationContext.getBean(x);
 			final RequestMapping req = AnnotationUtils.findAnnotation(obj.getClass(), RequestMapping.class);
-			if ((null != req) && (req.headers() != null)) {
+			if (null != req && req.headers() != null) {
 				final List<String> version = getVersion(req.headers());
-				if ((!version.isEmpty()) && (req.value().length > 0)) {
+				if (!version.isEmpty() && req.value().length > 0) {
 					final String part = findMatch(req.value()[0]);
 					if (null == part) {
 						LOG.warn("Ignoring controller: {}", x);
@@ -139,7 +138,7 @@ public class NfvoApiVersion {
 		if (null == versions) {
 			return ResponseEntity.noContent().build();
 		}
-		final List<ApiVersionInformationApiVersions> list = versions.stream().map(x -> new ApiVersionInformationApiVersions().version(x).isDeprecated(Boolean.FALSE)).collect(Collectors.toList());
+		final List<ApiVersionInformationApiVersions> list = versions.stream().map(x -> new ApiVersionInformationApiVersions().version(x).isDeprecated(Boolean.FALSE)).toList();
 		apiVersion.setApiVersions(list);
 		return ResponseEntity.ok(apiVersion);
 	}

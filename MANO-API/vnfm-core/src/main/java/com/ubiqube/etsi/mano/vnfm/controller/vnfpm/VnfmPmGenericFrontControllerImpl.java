@@ -20,6 +20,7 @@ import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_DEFAULT_EXCLUDE_FI
 import static com.ubiqube.etsi.mano.Constants.VNFPMJOB_SEARCH_MANDATORY_FIELDS;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -32,7 +33,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.service.VimService;
 import com.ubiqube.etsi.mano.vnfm.fc.vnfpm.VnfmPmGenericFrontController;
+import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -44,13 +49,16 @@ import ma.glasnost.orika.MapperFacade;
 @Service
 public class VnfmPmGenericFrontControllerImpl implements VnfmPmGenericFrontController {
 	private final VnfmPmController vnfmPmController;
-
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 	private final MapperFacade mapper;
+	private final VimService vimService;
 
-	public VnfmPmGenericFrontControllerImpl(final VnfmPmController vnfmPmController, final MapperFacade mapper) {
+	public VnfmPmGenericFrontControllerImpl(final VnfmPmController vnfmPmController, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final MapperFacade mapper, final VimService vimService) {
 		super();
 		this.vnfmPmController = vnfmPmController;
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 		this.mapper = mapper;
+		this.vimService = vimService;
 	}
 
 	@Override
@@ -81,14 +89,27 @@ public class VnfmPmGenericFrontControllerImpl implements VnfmPmGenericFrontContr
 	@Override
 	public <U> ResponseEntity<U> pmJobsPost(@Valid final Object createPmJobRequest, final Class<U> clazz, final Consumer<U> makeLinks, final Function<U, String> getSelfLink) {
 		com.ubiqube.etsi.mano.dao.mano.pm.PmJob res = mapper.map(createPmJobRequest, com.ubiqube.etsi.mano.dao.mano.pm.PmJob.class);
-		final VimConnectionInformation vimConnectionInformation = new VimConnectionInformation();
-		vimConnectionInformation.setId(UUID.fromString("5916a837-1ea6-4cf4-8401-c77fb412c9fc"));
-		res.setVimConnectionInformation(vimConnectionInformation);
+		final List<VnfLiveInstance> vlis = vnfLiveInstanceJpa.findByResourceIdIn(res.getObjectInstanceIds());
+		checkFetchedData(vlis, res.getObjectInstanceIds());
+		final VimConnectionInformation vci = vimService.findById(UUID.fromString(vlis.get(0).getVimConnectionId())).orElseThrow();
+		res.setVimConnectionInformation(vci);
 		res = vnfmPmController.save(res);
 		final U obj = mapper.map(res, clazz);
 		makeLinks.accept(obj);
 		final String link = getSelfLink.apply(obj);
 		return ResponseEntity.created(URI.create(link)).body(obj);
+	}
+
+	private static void checkFetchedData(final List<VnfLiveInstance> vlis, final List<String> objectInstanceIds) {
+		if (vlis.size() != objectInstanceIds.size()) {
+			throw new GenericException("Some of the resources have not been found: " + vlis);
+		}
+		final String vimRef = vlis.get(0).getVimConnectionId();
+		vlis.forEach(x -> {
+			if (x.getVimConnectionId() != vimRef) {
+				throw new GenericException("");
+			}
+		});
 	}
 
 	@Override

@@ -9,7 +9,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.version.jackson.databind>2.12.4</project.version.jackson.databind>
+		<project.version.jackson.databind>2.13.0</project.version.jackson.databind>
 	</properties>
 
 	<modules>
@@ -125,7 +125,7 @@
 					<dependency>
 						<groupId>org.junit.jupiter</groupId>
 						<artifactId>junit-jupiter-engine</artifactId>
-						<version>5.7.2</version>
+						<version>5.8.1</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -225,11 +225,20 @@
 				<artifactId>commons-io</artifactId>
 				<version>2.11.0</version>
 			</dependency>
-
+			<dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>7.0.1.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish</groupId>
+				<artifactId>javax.el</artifactId>
+				<version>3.0.0</version>
+			</dependency>
 			<dependency>
 				<groupId>org.junit.jupiter</groupId>
 				<artifactId>junit-jupiter</artifactId>
-				<version>5.7.2</version>
+				<version>5.8.1</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>

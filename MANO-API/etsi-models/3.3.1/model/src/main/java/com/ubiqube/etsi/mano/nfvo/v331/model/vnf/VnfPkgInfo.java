@@ -57,13 +57,14 @@ public class VnfPkgInfo {
 	private String vnfdVersion = null;
 
 	@JsonProperty("compatibleSpecificationVersions")
-	private String compatibleSpecificationVersions = null;
+	private List<String> compatibleSpecificationVersions = null;
 
 	@JsonProperty("checksum")
 	private Checksum checksum = null;
 
 	/**
-	 * Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
+	 * Signals the security option used by the package as defined in clause 5.1 of
+	 * ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
 	 */
 	public enum PackageSecurityOptionEnum {
 		_1("OPTION_1"),
@@ -176,7 +177,9 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Provider of the VNF package and the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
+	 * Provider of the VNF package and the VNFD. This information is copied from the
+	 * VNFD. It shall be present after the VNF package content has been on-boarded
+	 * and absent otherwise.
 	 *
 	 * @return vnfProvider
 	 **/
@@ -196,7 +199,9 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
+	 * Name to identify the VNF product.Invariant for the VNF product lifetime. This
+	 * information is copied from the VNFD. It shall be present after the VNF
+	 * package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfProductName
 	 **/
@@ -250,7 +255,7 @@ public class VnfPkgInfo {
 		this.vnfdVersion = vnfdVersion;
 	}
 
-	public VnfPkgInfo compatibleSpecificationVersions(final String compatibleSpecificationVersions) {
+	public VnfPkgInfo compatibleSpecificationVersions(final List<String> compatibleSpecificationVersions) {
 		this.compatibleSpecificationVersions = compatibleSpecificationVersions;
 		return this;
 	}
@@ -262,11 +267,11 @@ public class VnfPkgInfo {
 	 **/
 	@Schema(description = "")
 
-	public String getCompatibleSpecificationVersions() {
+	public List<String> getCompatibleSpecificationVersions() {
 		return compatibleSpecificationVersions;
 	}
 
-	public void setCompatibleSpecificationVersions(final String compatibleSpecificationVersions) {
+	public void setCompatibleSpecificationVersions(final List<String> compatibleSpecificationVersions) {
 		this.compatibleSpecificationVersions = compatibleSpecificationVersions;
 	}
 
@@ -297,7 +302,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
+	 * Signals the security option used by the package as defined in clause 5.1 of
+	 * ETSI GS NFV-SOL 004 [5]. Valid values: OPTION_1, OPTION_2
 	 *
 	 * @return packageSecurityOption
 	 **/
@@ -318,7 +324,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * The singleton signing certificate if it is included as a file in the VNF package.
+	 * The singleton signing certificate if it is included as a file in the VNF
+	 * package.
 	 *
 	 * @return signingCertificate
 	 **/
@@ -346,7 +353,10 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector.
+	 * Information about VNF package artifacts that are software images. This
+	 * attribute shall not be present before the VNF package content is on-boarded.
+	 * Otherwise, this attribute shall be present unless it has been requested to be
+	 * excluded per attribute selector.
 	 *
 	 * @return softwareImages
 	 **/
@@ -374,7 +384,10 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts contained in the VNF package that are not software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts.
+	 * Information about VNF package artifacts contained in the VNF package that are
+	 * not software images. This attribute shall not be present before the VNF
+	 * package content is on-boarded. Otherwise, this attribute shall be present if
+	 * the VNF package contains additional artifacts.
 	 *
 	 * @return additionalArtifacts
 	 **/
@@ -465,7 +478,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Specifies VNFMs compatible with the VNF. This information is copied from the VNFD. See note 4.
+	 * Specifies VNFMs compatible with the VNF. This information is copied from the
+	 * VNFD. See note 4.
 	 *
 	 * @return vnfmInfo
 	 **/
@@ -549,7 +563,7 @@ public class VnfPkgInfo {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final VnfPkgInfo vnfPkgInfo = (VnfPkgInfo) o;
@@ -608,7 +622,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

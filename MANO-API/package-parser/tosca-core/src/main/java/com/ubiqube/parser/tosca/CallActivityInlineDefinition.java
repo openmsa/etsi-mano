@@ -14,19 +14,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.repository.jpa;
+package com.ubiqube.parser.tosca;
 
-import java.util.UUID;
+import java.util.Map;
 
-import org.springframework.data.repository.CrudRepository;
-
-import com.ubiqube.etsi.mano.orchestrator.entities.Systems;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface SystemsJpa extends CrudRepository<Systems, UUID> {
-	// Nothing.
+@Getter
+@Setter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+public class CallActivityInlineDefinition {
+	private String workflow;
+	private Map<String, Object> inputs;
 }

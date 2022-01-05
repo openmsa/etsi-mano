@@ -35,7 +35,7 @@ public class UuidConverter extends BidirectionalConverter<String, UUID> {
 	private static final Logger LOG = LoggerFactory.getLogger(UuidConverter.class);
 
 	@Override
-	public UUID convertTo(final String source, final Type<UUID> _destinationType, final MappingContext mappingContext) {
+	public UUID convertTo(final String source, final Type<UUID> dt, final MappingContext mappingContext) {
 		try {
 			return UUID.fromString(source);
 		} catch (final RuntimeException e) {
@@ -45,7 +45,7 @@ public class UuidConverter extends BidirectionalConverter<String, UUID> {
 	}
 
 	@Override
-	public String convertFrom(final UUID source, final Type<String> _destinationType, final MappingContext mappingContext) {
+	public String convertFrom(final UUID source, final Type<String> dt, final MappingContext mappingContext) {
 		return source.toString();
 	}
 

@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -105,7 +104,7 @@ public class PolicyControllerImpl extends SearchableService implements PolicyCon
 		final Policies p = policiesJpa.findById(safeUUID).orElseThrow();
 		if (null != patch.getRemoveAssociations()) {
 			patch.getRemoveAssociations().forEach(x -> {
-				final List<String> newList = p.getAssociations().stream().filter(y -> y.equals(x)).collect(Collectors.toList());
+				final List<String> newList = p.getAssociations().stream().filter(y -> y.equals(x)).toList();
 				p.setAssociations(newList);
 			});
 		}

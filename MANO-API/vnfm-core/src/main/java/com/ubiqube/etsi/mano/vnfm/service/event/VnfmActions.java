@@ -111,11 +111,10 @@ public class VnfmActions extends AbstractGenericAction {
 		final VnfBlueprint blueprint = blueprintService.findById(blueprintId);
 		final VnfInstance vnfInstance = vnfInstanceServiceVnfm.findById(blueprint.getVnfInstance().getId());
 		final Set<ExtVirtualLinkDataEntity> evl = blueprint.getChangeExtVnfConnRequest().getExtVirtualLinks();
-		evl.forEach(x -> {
-			x.getExtCps().forEach(y -> {
-				final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId());
-			});
-		});
-
+		final List<VnfLiveInstance> vli = evl.stream()
+				.flatMap(x -> x.getExtCps().stream())
+				.flatMap(y -> vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId()).stream())
+				.toList();
+		System.out.println("" + vli.get(0).getTask());
 	}
 }

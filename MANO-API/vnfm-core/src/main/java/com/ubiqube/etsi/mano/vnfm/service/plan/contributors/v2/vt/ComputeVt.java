@@ -22,8 +22,10 @@ import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.AffinityRuleNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityGroupNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
 
 /**
@@ -46,8 +48,18 @@ public class ComputeVt extends VnfVtBase<ComputeTask> {
 		final List<NamedDependency> storages = getParameters().getVnfCompute().getStorages()
 				.stream()
 				.map(x -> new NamedDependency(Storage.class, x + "-" + getAlias()))
-				.collect(Collectors.toList());
+				.toList();
 		ret.addAll(storages);
+		final List<NamedDependency> affinity = getParameters().getVnfCompute().getAffinityRule()
+				.stream()
+				.map(x -> new NamedDependency(AffinityRuleNode.class, x))
+				.toList();
+		ret.addAll(affinity);
+		final List<NamedDependency> sg = getParameters().getVnfCompute().getSecurityGroup()
+				.stream()
+				.map(x -> new NamedDependency(SecurityGroupNode.class, x))
+				.toList();
+		ret.addAll(sg);
 		return ret;
 	}
 
@@ -57,8 +69,12 @@ public class ComputeVt extends VnfVtBase<ComputeTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "COMPUTE";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "COMPUTE";
+	}
 }

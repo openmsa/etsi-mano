@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.json;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,7 +42,7 @@ public final class MapperForView {
 
 	public static ObjectMapper getMapperForView(@Nullable final Set<String> exclude, @Nullable final Set<String> fields) {
 		final ObjectMapper mapper = getMapperInstance();
-		if ((null != exclude) && !exclude.isEmpty()) {
+		if (null != exclude && !exclude.isEmpty()) {
 			final List<ViewHolder> excludeList = buildViewList(exclude);
 			mapper.registerModule(new SimpleModule() {
 				private static final long serialVersionUID = 1L;
@@ -54,7 +53,7 @@ public final class MapperForView {
 					context.addBeanSerializerModifier(new ExclusionSerializer(excludeList));
 				}
 			});
-		} else if ((null != fields) && !fields.isEmpty()) {
+		} else if (null != fields && !fields.isEmpty()) {
 			mapper.registerModule(new SimpleModule() {
 				private static final long serialVersionUID = 1L;
 
@@ -72,7 +71,7 @@ public final class MapperForView {
 	private static List<ViewHolder> buildViewList(@Nonnull final Set<String> exclude) {
 		return exclude.stream()
 				.map(ViewHolder::new)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static ObjectMapper getMapperInstance() {

@@ -44,9 +44,9 @@ public class RepositoryInitializer {
 
 	private final NamingStrategy namingStrategy;
 
-	public RepositoryInitializer(final Low _repositoryService, final NamingStrategy _namingStrategy) {
-		lowDriver = _repositoryService;
-		namingStrategy = _namingStrategy;
+	public RepositoryInitializer(final Low repositoryService, final NamingStrategy namingStrategy) {
+		this.lowDriver = repositoryService;
+		this.namingStrategy = namingStrategy;
 		init();
 	}
 

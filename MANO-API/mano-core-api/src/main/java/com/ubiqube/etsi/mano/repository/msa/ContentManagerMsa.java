@@ -35,24 +35,24 @@ public class ContentManagerMsa implements ContentManager {
 	}
 
 	@Override
-	public void store(final Path _filename, final InputStream _stream) {
-		lowDriver.add(_filename.toString(), _stream);
+	public void store(final Path filename, final InputStream stream) {
+		lowDriver.add(filename.toString(), stream);
 	}
 
 	@Override
-	public InputStream load(final Path _filename, final int start, final Long end) {
-		final byte[] bytes = lowDriver.get(_filename.toString(), start, end);
+	public InputStream load(final Path filename, final int start, final Long end) {
+		final byte[] bytes = lowDriver.get(filename.toString(), start, end);
 		return new ByteArrayInputStream(bytes);
 	}
 
 	@Override
-	public void mkdir(final Path _path) {
-		lowDriver.mkdir(_path.toString());
+	public void mkdir(final Path path) {
+		lowDriver.mkdir(path.toString());
 	}
 
 	@Override
-	public void delete(final Path _path) {
-		lowDriver.delete(_path.toString());
+	public void delete(final Path path) {
+		lowDriver.delete(path.toString());
 	}
 
 }

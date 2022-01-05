@@ -16,6 +16,7 @@
  */
 package com.ubiqube.parser.tosca.generator;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +59,7 @@ public class ToscaWalker {
 	private final Set<String> cache = new HashSet<>();
 
 	public void generate(final String file, final ToscaListener listener) {
-		final ToscaParser tp = new ToscaParser(file);
+		final ToscaParser tp = new ToscaParser(new File(file));
 		root = tp.getContext();
 		final Map<String, CapabilityTypes> caps = root.getCapabilities();
 		final Map<String, DataType> dt = root.getDataTypes();
@@ -381,10 +382,10 @@ public class ToscaWalker {
 			if (!cache.contains(y.getType()) && !classExistOnClassPath(y.getType())) {
 				generateClass(y.getType(), caps, listener);
 			}
-			if ((y.getAttributes() != null) && !y.getAttributes().isEmpty()) {
+			if (y.getAttributes() != null && !y.getAttributes().isEmpty()) {
 				throw new ParseException("Unable to handle Attributes in " + x + '=' + y.getType());
 			}
-			if ((y.getProperties() != null) && !y.getProperties().getProperties().isEmpty()) {
+			if (y.getProperties() != null && !y.getProperties().getProperties().isEmpty()) {
 				throw new ParseException("Unable to handle properties in " + x + '=' + y.getType());
 			}
 			final String fieldName = fieldCamelCase(x);
@@ -442,7 +443,7 @@ public class ToscaWalker {
 			return false;
 		}
 		final String indice = occ.get(1);
-		return ("UNBOUNDED".equals(indice) || (Integer.parseInt(indice) > 1));
+		return "UNBOUNDED".equals(indice) || Integer.parseInt(indice) > 1;
 	}
 
 	private static String fieldCamelCase(final String key) {

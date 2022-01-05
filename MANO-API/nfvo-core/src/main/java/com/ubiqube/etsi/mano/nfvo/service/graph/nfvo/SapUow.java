@@ -36,9 +36,9 @@ public class SapUow extends AbstractNsUnitOfWork {
 	private static final long serialVersionUID = 1L;
 	private final NsSapTask nsSapd;
 
-	public SapUow(final NsSapTask _taskEntity) {
-		super(_taskEntity);
-		nsSapd = _taskEntity;
+	public SapUow(final NsSapTask taskEntity) {
+		super(taskEntity);
+		nsSapd = taskEntity;
 	}
 
 	@Override

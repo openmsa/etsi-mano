@@ -37,8 +37,8 @@ public class NsPackageManagerImpl implements NsPackageManager {
 
 	private final List<PackageDescriptor<NsPackageProvider>> providers;
 
-	public NsPackageManagerImpl(final List<PackageDescriptor<NsPackageProvider>> _providers) {
-		providers = _providers;
+	public NsPackageManagerImpl(final List<PackageDescriptor<NsPackageProvider>> providers) {
+		this.providers = providers;
 	}
 
 	@Override

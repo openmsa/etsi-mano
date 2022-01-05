@@ -56,10 +56,11 @@ public class NsdConributor extends AbstractNsContributor {
 	private final VnfInstanceLcm nsLcmOpOccsService;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsdConributor(final NsInstanceService _nsInstanceService, final NsInstanceControllerService _nsInstanceControllerService, final VnfInstanceLcm _nsLcmOpOccsService, NsLiveInstanceJpa nsLiveInstanceJpa) {
-		nsInstanceService = _nsInstanceService;
-		nsInstanceControllerService = _nsInstanceControllerService;
-		nsLcmOpOccsService = _nsLcmOpOccsService;
+	public NsdConributor(final NsInstanceService nsInstanceService, final NsInstanceControllerService nsInstanceControllerService, final VnfInstanceLcm nsLcmOpOccsService,
+			NsLiveInstanceJpa nsLiveInstanceJpa) {
+		this.nsInstanceService = nsInstanceService;
+		this.nsInstanceControllerService = nsInstanceControllerService;
+		this.nsLcmOpOccsService = nsLcmOpOccsService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
@@ -103,7 +104,7 @@ public class NsdConributor extends AbstractNsContributor {
 				.map(NsdTask.class::cast)
 				.forEach(x -> {
 					// XXX Null is a future problem.
-					ret.add(new NsUow(x, null, nsInstanceControllerService, nsLcmOpOccsService));
+					ret.add(new NsUow(x, null, nsLcmOpOccsService));
 				});
 		return ret;
 	}

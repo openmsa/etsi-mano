@@ -38,10 +38,12 @@ import com.ubiqube.etsi.mano.orchestrator.Planner;
 import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.AffinityRuleNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.DnsZone;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Monitoring;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityGroupNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SubNetwork;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
@@ -86,7 +88,8 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	@Override
 	public PreExecutionGraph<VnfTask> setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint) {
 		final List<Class<? extends Node>> planConstituent = new ArrayList<>();
-		// Doesn't works with jdk17 but fine with eclipse. planContributors.stream().map(AbstractContributorV2Base::getNode).collect(Collectors.toList());
+		// Doesn't works with jdk17 but fine with eclipse.
+		// planContributors.stream().map(AbstractContributorV2Base::getNode).collect(Collectors.toList());
 		for (final AbstractContributorV2Base b : planContributors) {
 			planConstituent.add(b.getNode());
 		}
@@ -133,6 +136,12 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 				break;
 			case VL:
 				context.add(Network.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			case AFFINITY_RULE:
+				context.add(AffinityRuleNode.class, x.getTask().getToscaName(), x.getResourceId());
+				break;
+			case SECURITY_GROUP:
+				context.add(SecurityGroupNode.class, x.getTask().getToscaName(), x.getResourceId());
 				break;
 			default:
 				throw new GenericException(x.getTask().getType() + " is not handled.");

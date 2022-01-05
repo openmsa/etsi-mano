@@ -32,7 +32,9 @@ public interface VirtualTask<U> {
 
 	List<NamedDependency> getNamedProduced();
 
-	String getProviderId();
+	String getFactoryProviderId();
+
+	String getVimProviderId();
 
 	String getVimConnectionId();
 

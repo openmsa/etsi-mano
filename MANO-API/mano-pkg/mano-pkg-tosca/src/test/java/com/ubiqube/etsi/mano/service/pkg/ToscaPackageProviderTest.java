@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +30,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
+import com.ubiqube.etsi.mano.dao.mano.MonitoringParams;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -36,14 +39,25 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
+import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.tosca.vnf.ToscaVnfPackageReader;
-import com.ubiqube.etsi.mano.test.TestTools;
+import com.ubiqube.etsi.mano.test.ZipUtil;
+import com.ubiqube.etsi.mano.test.ZipUtil.Entry;
+
+import ma.glasnost.orika.OrikaSystemProperties;
+import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 
 public class ToscaPackageProviderTest {
 	private final ToscaVnfPackageReader tpp;
 
 	public ToscaPackageProviderTest() throws IOException {
-		final byte[] data = TestTools.readFile("/ubi-tosca.csar");
+		System.setProperty(OrikaSystemProperties.COMPILER_STRATEGY, EclipseJdtCompilerStrategy.class.getName());
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES, "true");
+		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/orika-test");
+		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/Definitions/etsi_nfv_sol001_vnfd_types.yaml", "Definitions/etsi_nfv_sol001_vnfd_types.yaml"),
+				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
+		final byte[] data = Files.readAllBytes(Path.of("/tmp/ubi-tosca.csar"));
 		tpp = new ToscaVnfPackageReader(data);
 	}
 
@@ -59,9 +73,24 @@ public class ToscaPackageProviderTest {
 		final Set<VnfCompute> vnfCn = tpp.getVnfComputeNodes(new HashMap<String, String>());
 		System.out.println("" + vnfCn);
 		assertEquals(2, vnfCn.size());
-		final VnfCompute cn = vnfCn.iterator().next();
-		// assertEquals("leftVdu01", cn.getToscaName());
+		VnfCompute cn = vnfCn.iterator().next();
+		checkmonitoringConfig(cn.getMonitoringParameters());
+		cn = vnfCn.iterator().next();
+		checkmonitoringConfig(cn.getMonitoringParameters());
 		assertNotNull(cn);
+	}
+
+	private static void checkmonitoringConfig(final Set<MonitoringParams> set) {
+		if (set == null) {
+			return;
+		}
+
+		final MonitoringParams mp = set.iterator().next();
+		if (mp == null) {
+			return;
+		}
+		assertEquals(600L, mp.getCollectionPeriod());
+		assertEquals("metric name", mp.getName());
 	}
 
 	@Test
@@ -130,4 +159,14 @@ public class ToscaPackageProviderTest {
 		assertNotNull(list);
 	}
 
+	@Test
+	void testGetProviderPadata() throws Exception {
+		final ProviderData res = tpp.getProviderPadata();
+		assertNotNull(res);
+		final Set<MonitoringParams> monParams = res.getMonitoringParameters();
+		assertNotNull(monParams);
+		assertEquals(1, monParams.size());
+		final MonitoringParams data = monParams.iterator().next();
+		assertEquals("mon01", data.getName());
+	}
 }

@@ -16,11 +16,13 @@
  */
 package com.ubiqube.etsi.mano.service.mon.model;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,12 +35,16 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class MonitoringData {
+@IdClass(MonitoringId.class)
+public class MonitoringData implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	private UUID id;
 	@Id
 	private OffsetDateTime time;
 	private String masterJobId;
 	private Double value;
+	@Id
 	private String key;
 	private boolean status;
 	private String vnfInstanceId;

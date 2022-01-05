@@ -76,19 +76,19 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 
 	private final VnfInstanceJpa vnfInstanceJpa;
 
-	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa _vnfComputeAspectDeltaJpa, final VnfStorageJpa _vnfStorageJpa,
-			final VnfVlJpa _vnfVl, final VnfComputeJpa _vnfComputeJpa, final VnfExtCpJpa _vnfExtCpJpa, final VnfPackageJpa _vnfPackageJpa,
-			final VnfInstantiationLevelsJpa _vnfInstantiationLevelsJpa, final VnfLinkPortJpa _vnfLinkPortJpa, final EntityManager _em,
+	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa vnfComputeAspectDeltaJpa, final VnfStorageJpa vnfStorageJpa,
+			final VnfVlJpa vnfVl, final VnfComputeJpa vnfComputeJpa, final VnfExtCpJpa vnfExtCpJpa, final VnfPackageJpa vnfPackageJpa,
+			final VnfInstantiationLevelsJpa vnfInstantiationLevelsJpa, final VnfLinkPortJpa vnfLinkPortJpa, final EntityManager em,
 			final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa, final VnfPackageRepository vnfPackageRepository) {
-		super(searchService, _em, VnfPackage.class);
-		vnfComputeAspectDeltaJpa = _vnfComputeAspectDeltaJpa;
-		vnfStorageJpa = _vnfStorageJpa;
-		vnfVl = _vnfVl;
-		vnfComputeJpa = _vnfComputeJpa;
-		vnfExtCpJpa = _vnfExtCpJpa;
-		vnfPackageJpa = _vnfPackageJpa;
-		vnfInstantiationLevelsJpa = _vnfInstantiationLevelsJpa;
-		vnfLinkPortJpa = _vnfLinkPortJpa;
+		super(searchService, em, VnfPackage.class);
+		this.vnfComputeAspectDeltaJpa = vnfComputeAspectDeltaJpa;
+		this.vnfStorageJpa = vnfStorageJpa;
+		this.vnfVl = vnfVl;
+		this.vnfComputeJpa = vnfComputeJpa;
+		this.vnfExtCpJpa = vnfExtCpJpa;
+		this.vnfPackageJpa = vnfPackageJpa;
+		this.vnfInstantiationLevelsJpa = vnfInstantiationLevelsJpa;
+		this.vnfLinkPortJpa = vnfLinkPortJpa;
 		this.vnfInstanceJpa = vnfInstanceJpa;
 		this.vnfPackageRepository = vnfPackageRepository;
 	}

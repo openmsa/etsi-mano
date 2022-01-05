@@ -71,12 +71,15 @@ public class GrantAction extends AbstractGrantAction {
 
 	private final VnfPackageService vnfPackageService;
 
-	public GrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VnfInstanceGatewayService _vnfInstancesRepository, final VimElection _vimElection, final VnfPackageService _vnfPackageService) {
-		super(_grantJpa, _vimManager, _vimElection);
-		grantJpa = _grantJpa;
-		vimManager = _vimManager;
-		vnfInstanceService = _vnfInstancesRepository;
-		vnfPackageService = _vnfPackageService;
+	private final Random rnd;
+
+	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VnfInstanceGatewayService vnfInstancesRepository, final VimElection vimElection, final VnfPackageService vnfPackageService) {
+		super(grantJpa, vimManager, vimElection);
+		this.grantJpa = grantJpa;
+		this.vimManager = vimManager;
+		this.vnfInstanceService = vnfInstancesRepository;
+		this.vnfPackageService = vnfPackageService;
+		this.rnd = new Random();
 	}
 
 	@Override
@@ -96,7 +99,7 @@ public class GrantAction extends AbstractGrantAction {
 	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse, final VnfPackage vnfPackage) {
 		final Set<VimConnectionInformation> vimConns = grantResponse.getVimConnections();
 		String vimId;
-		if ((null != vimConns) && !vimConns.isEmpty()) {
+		if (null != vimConns && !vimConns.isEmpty()) {
 			LOG.info("Selecting vim via Given one.");
 			vimId = vimConns.iterator().next().getVimId();
 			return vimManager.findVimByVimId(vimId);
@@ -135,7 +138,7 @@ public class GrantAction extends AbstractGrantAction {
 		if (vimsSelected.isEmpty()) {
 			throw new GenericException("No Vim found, after quota filtering.");
 		}
-		return vimsSelected.get(new Random().nextInt(vimsSelected.size()));
+		return vimsSelected.get(rnd.nextInt(vimsSelected.size()));
 	}
 
 	private QuotaNeeded summarizeResources(final GrantResponse grantResponse, final VnfPackage vnfPackage) {
@@ -147,8 +150,8 @@ public class GrantAction extends AbstractGrantAction {
 			if (grantInformationExt.getType() == ResourceTypeEnum.COMPUTE) {
 				final VnfCompute compute = findCompute(vnfPackage, grantInformationExt.getVduId());
 				disk += compute.getDiskSize();
-				vcpu += compute.getNumVcpu();
-				ram += compute.getVirtualMemorySize();
+				vcpu += compute.getVirtualCpu().getNumVirtualCpu();
+				ram += compute.getVirtualMemory().getVirtualMemSize();
 			} else if (grantInformationExt.getType() == ResourceTypeEnum.STORAGE) {
 				// Cinder.
 			}
@@ -173,7 +176,6 @@ public class GrantAction extends AbstractGrantAction {
 			final FileContent fc = img.getContent();
 			return fc.getInputStream();
 		} catch (final FileSystemException e) {
-			LOG.error("", e);
 			throw new GenericException(e);
 		}
 	}

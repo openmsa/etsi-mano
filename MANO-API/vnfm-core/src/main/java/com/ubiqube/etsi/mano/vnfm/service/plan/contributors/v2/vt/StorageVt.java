@@ -46,8 +46,12 @@ public class StorageVt extends VnfVtBase<StorageTask> {
 	}
 
 	@Override
-	public String getProviderId() {
+	public String getFactoryProviderId() {
 		return "STORAGE";
 	}
 
+	@Override
+	public String getVimProviderId() {
+		return "STORAGE";
+	}
 }

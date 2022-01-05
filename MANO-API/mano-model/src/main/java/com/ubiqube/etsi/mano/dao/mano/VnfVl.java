@@ -16,10 +16,12 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -71,6 +73,13 @@ public class VnfVl implements ToscaEntity, Auditable {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<PlacementGroup> placementGroup;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	private Set<AffinityRule> affinityRules;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> affinityRules;
+
+	public void addAffinity(final String toscaName2) {
+		if (null == affinityRules) {
+			this.affinityRules = new LinkedHashSet<>();
+		}
+		affinityRules.add(toscaName2);
+	}
 }

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nsd.wan;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.persistence.ElementCollection;
@@ -33,7 +34,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class BgpRouting {
+public class BgpRouting implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String bgpAs;
 
 	private String bgpNeighbour;

@@ -62,7 +62,7 @@ public class OrchestrationTest {
 	private ImplementationService implementationService;
 
 	private Planner getPlanner() {
-		final List<System> systems = Arrays.asList(new SysA(), new SysB());
+		final List<System<?>> systems = Arrays.asList(new SysA(), new SysB());
 
 		implementationService = new ImplementationService(systems, vimManager, null);
 		final List<PlanContributor> contributors = new ArrayList<>();

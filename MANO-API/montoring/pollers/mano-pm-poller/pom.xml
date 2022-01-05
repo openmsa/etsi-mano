@@ -32,14 +32,6 @@
 			<artifactId>spring-jms</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.openstack4j.core.connectors</groupId>
-			<artifactId>openstack4j-httpclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.openstack4j.core</groupId>
-			<artifactId>openstack4j-core</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>mano-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>

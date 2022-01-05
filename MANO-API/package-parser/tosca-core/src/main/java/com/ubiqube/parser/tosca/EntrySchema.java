@@ -25,6 +25,14 @@ public class EntrySchema {
 	private String description;
 	private List<Constraint> constraints;
 
+	public EntrySchema() {
+		//
+	}
+
+	public EntrySchema(final String type) {
+		this.type = type;
+	}
+
 	public String getType() {
 		return type;
 	}

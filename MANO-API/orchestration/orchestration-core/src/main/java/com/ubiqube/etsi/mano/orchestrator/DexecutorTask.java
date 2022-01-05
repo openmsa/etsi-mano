@@ -25,7 +25,7 @@ public class DexecutorTask<P> extends Task<UnitOfWork, String> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private final UnitOfWork<?> uaow;
+	private final transient UnitOfWork<?> uaow;
 
 	private final transient Function<Context, String> function;
 

@@ -30,16 +30,18 @@ import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
 public class VnfPackageDb extends AbstractDirectJpa<VnfPackage> implements VnfPackageRepository {
 
-	private final CrudRepository<VnfPackage, UUID> repository;
-
 	private final NamingStrategy namingStrategy;
 
-	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> _repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
-		super(em, _repository, contentManager, jsonMapper, namingStrategy);
-		repository = _repository;
+	public VnfPackageDb(final EntityManager em, final CrudRepository<VnfPackage, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+		super(em, repository, contentManager, jsonMapper, namingStrategy);
 		this.namingStrategy = namingStrategy;
 	}
 

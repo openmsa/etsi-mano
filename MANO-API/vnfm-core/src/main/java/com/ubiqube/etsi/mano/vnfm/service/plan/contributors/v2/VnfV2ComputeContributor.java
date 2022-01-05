@@ -97,11 +97,11 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 	private List<ComputeVt> doTerminatePlan(final VnfInstance vnfInstance) {
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, ComputeTask.class.getSimpleName());
 		return instances.stream().map(x -> {
-			final ComputeTask computeTask = createDeleteTask(ComputeTask::new, x);
-			computeTask.setType(ResourceTypeEnum.COMPUTE);
-			computeTask.setVnfCompute(((ComputeTask) x.getTask()).getVnfCompute());
-			return new ComputeVt(computeTask);
-		}).collect(Collectors.toList());
+			final ComputeTask task = createDeleteTask(ComputeTask::new, x);
+			task.setType(ResourceTypeEnum.COMPUTE);
+			task.setVnfCompute(((ComputeTask) x.getTask()).getVnfCompute());
+			return new ComputeVt(task);
+		}).toList();
 	}
 
 	private List<ComputeVt> removeInstance(final VnfCompute vnfCompute, final VnfBlueprint plan, final ScaleInfo scaleInfo, final NumberOfCompute numInst) {
@@ -110,11 +110,11 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 		final List<ComputeVt> ret = new ArrayList<>();
 		for (int i = 0; i < toDelete; i++) {
 			final VnfLiveInstance inst = instantiated.pop();
-			final ComputeTask computeTask = createDeleteTask(ComputeTask::new, inst);
-			computeTask.setVnfCompute(vnfCompute);
-			computeTask.setType(ResourceTypeEnum.COMPUTE);
-			computeTask.setScaleInfo(scaleInfo);
-			ret.add(new ComputeVt(computeTask));
+			final ComputeTask task = createDeleteTask(ComputeTask::new, inst);
+			task.setVnfCompute(vnfCompute);
+			task.setType(ResourceTypeEnum.COMPUTE);
+			task.setScaleInfo(scaleInfo);
+			ret.add(new ComputeVt(task));
 		}
 		return ret;
 	}
