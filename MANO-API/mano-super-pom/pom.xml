@@ -215,7 +215,7 @@
 			<dependency>
 				<groupId>org.keycloak</groupId>
 				<artifactId>keycloak-spring-boot-starter</artifactId>
-				<version>15.0.2</version>
+				<version>16.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>de.codecentric</groupId>
