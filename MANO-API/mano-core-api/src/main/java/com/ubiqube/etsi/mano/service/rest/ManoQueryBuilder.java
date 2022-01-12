@@ -145,4 +145,10 @@ public class ManoQueryBuilder {
 		server.rest().download(uri, file);
 	}
 
+	public void upload(final Path path, final String accept) {
+		final ServerAdapter server = client.getServer();
+		final URI uri = buildUri(server);
+		server.rest().upload(uri, path, accept);
+	}
+
 }

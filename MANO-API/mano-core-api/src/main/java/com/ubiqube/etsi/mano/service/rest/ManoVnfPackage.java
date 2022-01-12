@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
@@ -57,6 +58,13 @@ public class ManoVnfPackage {
 				.setWireOutClass(HttpGateway::getVnfPackageSubscriptionClass)
 				.setOutClass(Subscription.class)
 				.post(subscription);
+	}
+
+	public VnfPackage create(final Map<String, String> userDefinedData) {
+		return client.createQuery(httpGateway -> httpGateway.createVnfPackageRequest(userDefinedData))
+				.setWireOutClass(HttpGateway::getVnfPackageClass)
+				.setOutClass(VnfPackage.class)
+				.post();
 	}
 
 }

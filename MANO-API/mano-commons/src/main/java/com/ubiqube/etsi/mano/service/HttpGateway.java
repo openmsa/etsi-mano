@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,6 +33,8 @@ import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 public interface HttpGateway {
 
 	Class<?> getVnfPackageClass();
+
+	Class<?> createVnfPackageRequest(Map<String, String> userDefinedData);
 
 	ParameterizedTypeReference<List<Class<?>>> getVnfPackageClassList();
 
@@ -52,6 +55,8 @@ public interface HttpGateway {
 	ParameterizedTypeReference<List<Class<?>>> getVnfInstanceListParam();
 
 	ParameterizedTypeReference<List<Class<?>>> getListVnfLcmOpOccs();
+
+	ParameterizedTypeReference<List<Class<?>>> getNsdPackageClassList();
 
 	Object createVnfInstanceRequest(String vnfdId, String vnfInstanceName, String vnfInstanceDescription);
 
@@ -80,4 +85,8 @@ public interface HttpGateway {
 	Object createNotificationVnfLcmOperationOccurrenceNotification(UUID subscriptionId, UUID vnfLcmOpOccsId);
 
 	String getVersion();
+
+	Class<?> getNsdPackageClass();
+
+	Object createNsdPackageRequest(Map<String, Object> userDefinedData);
 }

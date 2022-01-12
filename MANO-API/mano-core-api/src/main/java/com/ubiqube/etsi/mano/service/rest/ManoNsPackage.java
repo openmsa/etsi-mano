@@ -16,48 +16,40 @@
  */
 package com.ubiqube.etsi.mano.service.rest;
 
-import java.nio.file.Path;
-import java.util.UUID;
+import java.util.List;
+import java.util.Map;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 
 /**
  *
- * @author ncuser
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ManoVnfPackageId {
+public class ManoNsPackage {
+
 	private final ManoClient client;
 
-	public ManoVnfPackageId(final ManoClient manoClient, final UUID id) {
+	public ManoNsPackage(final ManoClient manoClient) {
 		this.client = manoClient;
-		client.setObjectId(id);
-		client.setQueryType(ApiVersionType.SOL003_VNFPKGM);
-		client.setFragment("/vnf_packages/{id}");
+		client.setQueryType(ApiVersionType.SOL005_NSD);
+		client.setFragment("/ns_descriptors");
 	}
 
-	public VnfPackage find() {
+	public List<NsdPackage> list() {
 		return client.createQuery()
-				.setWireOutClass(HttpGateway::getVnfPackageClass)
-				.setOutClass(VnfPackage.class)
-				.getSingle();
+				.setInClassList(HttpGateway::getNsdPackageClassList)
+				.setOutClass(NsdPackage.class)
+				.getList();
 	}
 
-	public void downloadContent(final Path file) {
-		client.setFragment("/vnf_packages/{id}/package_content");
-		client.createQuery()
-				.download(file);
-	}
-
-	public void delete() {
-		client.createQuery()
-				.delete();
-	}
-
-	public void onboard(final Path path, final String accept) {
-		client.createQuery().upload(path, accept);
+	public NsdPackage create(final Map<String, Object> userDefinedData) {
+		return client.createQuery(httpGateway -> httpGateway.createNsdPackageRequest(userDefinedData))
+				.setWireOutClass(HttpGateway::getNsdPackageClass)
+				.setOutClass(NsdPackage.class)
+				.post();
 	}
 
 }

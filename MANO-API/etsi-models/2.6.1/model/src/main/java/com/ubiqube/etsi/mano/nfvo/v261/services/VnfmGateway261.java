@@ -17,7 +17,10 @@
 package com.ubiqube.etsi.mano.nfvo.v261.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,6 +35,9 @@ import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 import com.ubiqube.etsi.mano.service.NfvoFactory;
 import com.ubiqube.etsi.mano.service.VnfmFactory;
@@ -93,6 +99,10 @@ public class VnfmGateway261 implements HttpGateway {
 		}
 	}
 
+	/**
+	 * XXX: v1 should not be present here as it is the server protocol version, it
+	 * will depend on target server.
+	 */
 	@Override
 	public String getUrlFor(final ApiVersionType type) {
 		switch (type) {
@@ -112,8 +122,10 @@ public class VnfmGateway261 implements HttpGateway {
 			return "grant/v1/";
 		case SOL003_VNFPKGM:
 			return "vnfpkgm/v1/";
+		case SOL005_NSD:
+			return "nsd/v1/";
 		default:
-			throw new IllegalArgumentException("Unexpected value: " + type);
+			throw new IllegalArgumentException("Unexpected value: " + type.name());
 		}
 	}
 
@@ -224,5 +236,28 @@ public class VnfmGateway261 implements HttpGateway {
 	@Override
 	public String getVersion() {
 		return "2.6.1";
+	}
+
+	@Override
+	public Class<?> createVnfPackageRequest(final Map<String, String> userDefinedData) {
+		return CreateVnfPkgInfoRequest.class;
+	}
+
+	@Override
+	public ParameterizedTypeReference<List<Class<?>>> getNsdPackageClassList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<?> getNsdPackageClass() {
+		return NsdInfo.class;
+	}
+
+	@Override
+	public Object createNsdPackageRequest(final Map<String, Object> userDefinedData) {
+		final CreateNsdInfoRequest req = new CreateNsdInfoRequest();
+		req.setUserDefinedData(userDefinedData.entrySet().stream().map(x -> Map.entry(x.getKey(), x.getValue().toString())).collect(Collectors.toMap(Entry::getKey, Entry::getValue)));
+		return req;
 	}
 }

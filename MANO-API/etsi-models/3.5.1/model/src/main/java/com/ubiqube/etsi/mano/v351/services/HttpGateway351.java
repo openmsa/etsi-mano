@@ -17,7 +17,10 @@
 package com.ubiqube.etsi.mano.v351.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,10 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
+import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.CreateNsdInfoRequest;
+import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.VnfInstance;
+import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.VnfPkgInfo;
@@ -218,6 +224,29 @@ public class HttpGateway351 implements HttpGateway {
 	@Override
 	public String getVersion() {
 		return "3.5.1";
+	}
+
+	@Override
+	public Class<?> createVnfPackageRequest(final Map<String, String> userDefinedData) {
+		return CreateVnfPkgInfoRequest.class;
+	}
+
+	@Override
+	public ParameterizedTypeReference<List<Class<?>>> getNsdPackageClassList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<?> getNsdPackageClass() {
+		return NsdInfo.class;
+	}
+
+	@Override
+	public Object createNsdPackageRequest(final Map<String, Object> userDefinedData) {
+		final CreateNsdInfoRequest req = new CreateNsdInfoRequest();
+		req.setUserDefinedData(userDefinedData.entrySet().stream().map(x -> Map.entry(x.getKey(), x.getValue().toString())).collect(Collectors.toMap(Entry::getKey, Entry::getValue)));
+		return req;
 	}
 
 }
