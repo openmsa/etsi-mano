@@ -136,23 +136,23 @@ public class NsOrchestrationAdapter implements OrchestrationAdapter<NsTask, NsdI
 	private static NotificationEvent convert(final WorkflowEvent instantiateProcessing) {
 		switch (instantiateProcessing) {
 		case INSTANTIATE_PROCESSING:
-			return NotificationEvent.VNF_INSTANCE_CREATE;
+			return NotificationEvent.NS_INSTANCE_CREATE;
 		case INSTANTIATE_SUCCESS:
-			return NotificationEvent.VNF_INSTANTIATE;
+			return NotificationEvent.NS_INSTANTIATE;
 		case INSTANTIATE_FAILED:
-			return NotificationEvent.VNF_INSTANTIATE_FAILED;
+			return NotificationEvent.NS_INSTANTIATE;
 		case SCALE_FAILED:
-			return NotificationEvent.VNF_SCALE;
+			return NotificationEvent.NS_SCALE;
 		case SCALE_SUCCESS:
-			return NotificationEvent.VNF_SCALE;
+			return NotificationEvent.NS_SCALE;
 		case SCALETOLEVEL_FAILED:
-			return NotificationEvent.VNF_SCALE;
+			return NotificationEvent.NS_SCALE;
 		case SCALETOLEVEL_SUCCESS:
-			return NotificationEvent.VNF_SCALE;
+			return NotificationEvent.NS_SCALE;
 		case TERMINATE_FAILED:
-			return NotificationEvent.VNF_TERMINATE;
+			return NotificationEvent.NS_TERMINATE;
 		case TERMINATE_SUCCESS:
-			return NotificationEvent.VNF_TERMINATE;
+			return NotificationEvent.NS_TERMINATE;
 		default:
 			throw new GenericException("Unknow event: " + instantiateProcessing);
 		}

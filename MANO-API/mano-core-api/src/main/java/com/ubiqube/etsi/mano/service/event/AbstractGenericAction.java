@@ -91,10 +91,10 @@ public abstract class AbstractGenericAction {
 		copyVimConnections(vnfInstance, localPlan);
 		vnfInstance.setLockedBy(null);
 		orchestrationAdapter.save(vnfInstance);
-		LOG.info("Saving VNF LCM OP OCCS.");
+		LOG.info("Saving LCM OP OCCS.");
 		localPlan = orchestrationAdapter.save(localPlan);
 		// XXX Send COMPLETED event.
-		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), localPlan.getId());
+		LOG.info("Instance {} / LCM {} Finished.", vnfInstance.getId(), localPlan.getId());
 	}
 
 	private static void copyVimConnections(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
@@ -106,7 +106,7 @@ public abstract class AbstractGenericAction {
 
 	private static void setInstanceStatus(final Instance vnfInstance, final Blueprint localPlan, final Set<ScaleInfo> newScale) {
 		Optional.ofNullable(localPlan.getParameters().getScaleStatus()).map(x -> x.stream().map(y -> new ScaleInfo(y.getAspectId(), y.getScaleLevel())).collect(Collectors.toSet())).ifPresent(x -> vnfInstance.getInstantiatedVnfInfo().setScaleStatus(x));
-		LOG.info("Saving VNF Instance.");
+		LOG.info("Saving Instance.");
 		vnfInstance.getInstantiatedVnfInfo().setInstantiationLevelId(localPlan.getParameters().getInstantiationLevelId());
 		if (null != localPlan.getParameters().getFlavourId()) {
 			vnfInstance.getInstantiatedVnfInfo().setFlavourId(localPlan.getParameters().getFlavourId());

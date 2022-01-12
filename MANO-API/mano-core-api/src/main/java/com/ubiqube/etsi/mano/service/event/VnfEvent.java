@@ -53,7 +53,7 @@ public class VnfEvent {
 
 	public void onEvent(final UUID vnfPkgId, final String event) {
 		final List<Subscription> res = subscriptionService.selectNotifications(vnfPkgId, event);
-		LOG.info("VNF Package event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
+		LOG.info("Event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
 		res.stream().forEach(x -> sendNotification(vnfPkgId, x, event));
 	}
 

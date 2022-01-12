@@ -38,12 +38,24 @@ public class NotificationsController {
 	public void onEvent(final EventMessage ev) {
 		LOG.info("Notification Controller Received event: {}", ev);
 		switch (ev.getNotificationEvent()) {
+		// NSD
 		case NS_PKG_ONBOARDING -> vnfEvent.onEvent(ev.getObjectId(), "NsdOnBoardingNotification");
+		case NS_PKG_ONDELETION -> vnfEvent.onEvent(ev.getObjectId(), "NsdDeletionNotification");
 		case NS_PKG_ONCHANGE -> vnfEvent.onEvent(ev.getObjectId(), "NsdChangeNotification");
+		// VNFD
 		case VNF_PKG_ONBOARDING -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageOnboardingNotification");
 		case VNF_PKG_ONDELETION -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
 		case VNF_PKG_ONCHANGE -> vnfEvent.onEvent(ev.getObjectId(), "VnfPackageChangeNotification");
 		case VRQAN -> vnfEvent.onEvent(ev.getObjectId(), "VrQuotaAvailNotification");
+		// NS instance.
+		case NS_INSTANCE_CREATE -> vnfEvent.onEvent(ev.getObjectId(), "NsIdentifierCreationNotification");
+		case NS_INSTANCE_DELETE -> vnfEvent.onEvent(ev.getObjectId(), "NsIdentifierDeletionNotification");
+		case NS_INSTANTIATE -> vnfEvent.onEvent(ev.getObjectId(), "NsLcmOperationOccurrenceNotification");
+		// VNF instance.
+		case VNF_INSTANCE_CREATE -> vnfEvent.onEvent(ev.getObjectId(), "VnfIdentifierCreationNotification");
+		case VNF_INSTANCE_DELETE -> vnfEvent.onEvent(ev.getObjectId(), "VnfIdentifierDeletionNotification");
+		case VNF_INSTANTIATE -> vnfEvent.onEvent(ev.getObjectId(), "VnfLcmOperationOccurrenceNotification");
+		case VNF_INSTANTIATE_FAILED -> vnfEvent.onEvent(ev.getObjectId(), "VnfLcmOperationOccurrenceNotification");
 		default -> LOG.error("Unable to handle event type {}", ev.getNotificationEvent());
 		}
 	}
