@@ -250,7 +250,7 @@ public class FluxRest {
 				.block();
 	}
 
-	public static MultiValueMap<String, ?> fromPath(final Path path, final String accept) {
+	private static MultiValueMap<String, ?> fromPath(final Path path, final String accept) {
 		final MultipartBodyBuilder builder = new MultipartBodyBuilder();
 		builder.part("file", new FileSystemResource(path), MediaType.valueOf(accept));
 		return builder.build();
