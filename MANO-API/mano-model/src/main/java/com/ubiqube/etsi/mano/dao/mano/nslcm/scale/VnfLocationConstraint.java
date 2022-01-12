@@ -19,7 +19,9 @@ package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 import java.io.Serializable;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,6 +48,6 @@ public class VnfLocationConstraint implements Serializable {
 
 	private String vnfProfileId;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private LocationConstraints locationConstraints;
 }

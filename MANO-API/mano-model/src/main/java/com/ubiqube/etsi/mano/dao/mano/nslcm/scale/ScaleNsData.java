@@ -58,12 +58,13 @@ public class ScaleNsData implements Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> vnfInstanceToBeRemoved;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ScaleNsByStepsData scaleNsByStepsData;
-	@OneToOne
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ScaleNsToLevelData scaleNsToLevelData;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ParamsForVnf additionalParamsForNs;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

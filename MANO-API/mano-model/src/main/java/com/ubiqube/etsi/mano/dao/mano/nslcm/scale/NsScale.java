@@ -54,7 +54,7 @@ public class NsScale implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private ScaleType scaleType;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ScaleNsData scaleNsData;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

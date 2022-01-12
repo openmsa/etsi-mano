@@ -83,7 +83,7 @@ public class GrantResponse implements BaseEntity, Auditable, GrantInterface {
 	private String vnfLcmOpOccId;
 
 	@Valid
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private Set<VimConnectionInformation> vimConnections;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
@@ -114,7 +114,7 @@ public class GrantResponse implements BaseEntity, Auditable, GrantInterface {
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private  Set<GrantInformationExt> updateResources = new LinkedHashSet<>();
+	private Set<GrantInformationExt> updateResources = new LinkedHashSet<>();
 
 	@Embedded
 	private GrantVimAssetsEntity vimAssets;
@@ -145,14 +145,14 @@ public class GrantResponse implements BaseEntity, Auditable, GrantInterface {
 	 */
 	private Boolean available;
 
-	public void addExtManagedVl(ExtManagedVirtualLinkDataEntity extVl) {
+	public void addExtManagedVl(final ExtManagedVirtualLinkDataEntity extVl) {
 		if (null == extManagedVirtualLinks) {
 			extManagedVirtualLinks = new HashSet<>();
 		}
 		extManagedVirtualLinks.add(extVl);
 	}
 
-	public void addZones(ZoneInfoEntity zone) {
+	public void addZones(final ZoneInfoEntity zone) {
 		if (null == zones) {
 			zones = new HashSet<>();
 		}
@@ -161,14 +161,14 @@ public class GrantResponse implements BaseEntity, Auditable, GrantInterface {
 
 	}
 
-	public void addAddResources(GrantInformationExt obj) {
+	public void addAddResources(final GrantInformationExt obj) {
 		if (null == addResources) {
 			addResources = new LinkedHashSet<>();
 		}
 		addResources.add(obj);
 	}
 
-	public void addRemoveResources(GrantInformationExt obj) {
+	public void addRemoveResources(final GrantInformationExt obj) {
 		if (null == removeResources) {
 			removeResources = new LinkedHashSet<>();
 		}
