@@ -16,11 +16,11 @@ topology_template:
     ns01:
       type: tosca.nodes.nfv.NS
       properties:
-        descriptor_id: fb4f8f06-f4b0-4d80-8cda-cd95cf018972
+        descriptor_id: 90d89295-05ab-488b-b378-445f6a633f18
         designer: ovi@ubiqube.com
         version: 0.0.1
         name: First NSD.
-        invariant_id: fb4f8f06-f4b0-4d80-8cda-cd95cf018972
+        invariant_id: 90d89295-05ab-488b-b378-445f6a633f18
         flavour_id: flavor01
         ns_profile: # tosca.datatypes.nfv.NsProfile
           ns_instantiation_level: demo
