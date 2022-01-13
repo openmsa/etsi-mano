@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -52,6 +53,7 @@ public class SearchableService {
 		this.grammarParser = grammarParser;
 	}
 
+	@Transactional
 	public <U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink) {
 		final String filter = getSingleField(requestParams, "filter");
 		final List<?> result = queryDb(filter);
