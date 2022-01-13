@@ -63,9 +63,7 @@ public class VnfMonitoringService {
 	}
 
 	public void unregister(final String resourceId) {
-		final PmJob entity = pmJobsJpa.findById(UUID.fromString(resourceId)).orElseThrow();
-		pmJobsJpa.delete(entity);
-
+		pmJobsJpa.findById(UUID.fromString(resourceId)).ifPresent(pmJobsJpa::delete);
 	}
 
 }
