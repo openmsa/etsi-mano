@@ -48,7 +48,9 @@ public class VnfCreateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		vnfm.delete(task.getServer(), task.getVimResourceId());
+		if (null != task.getVimResourceId()) {
+			vnfm.delete(task.getServer(), task.getVimResourceId());
+		}
 		return null;
 	}
 }

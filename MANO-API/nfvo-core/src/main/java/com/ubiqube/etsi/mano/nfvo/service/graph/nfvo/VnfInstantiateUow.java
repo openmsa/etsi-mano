@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
@@ -128,8 +129,13 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), task.getVimResourceId());
-		if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
+		try {
+			final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), task.getVimResourceId());
+			if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
+				return null;
+			}
+		} catch (final WebClientResponseException.NotFound e) {
+			LOG.trace("Not found exception, ignoring.", e);
 			return null;
 		}
 		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getServer(), task.getVimResourceId());
