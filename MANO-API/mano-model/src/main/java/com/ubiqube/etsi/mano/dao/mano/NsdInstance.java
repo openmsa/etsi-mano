@@ -81,7 +81,7 @@ public class NsdInstance extends Instance {
 	@OneToMany
 	private List<NsdInstance> nestedNsInstance = null;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<NsScaleInfo> nsScaleStatus;
 
 	// XXX Add additionalAffinityOrAntiAffinityRule
