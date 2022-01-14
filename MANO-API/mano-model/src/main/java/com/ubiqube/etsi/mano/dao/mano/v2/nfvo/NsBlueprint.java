@@ -96,7 +96,7 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> warnings;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private Set<VimConnectionInformation> vimConnections;
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<BlueZoneGroupInformation> zoneGroups;
