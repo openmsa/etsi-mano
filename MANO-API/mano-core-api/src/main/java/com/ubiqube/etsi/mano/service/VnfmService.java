@@ -16,6 +16,12 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+/**
+ * This service is only useful for detecting VNFM implementation.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface VnfmService {
 	// Nothing.
 }
