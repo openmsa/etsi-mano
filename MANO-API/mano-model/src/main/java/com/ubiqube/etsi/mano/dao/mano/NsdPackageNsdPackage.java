@@ -48,7 +48,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Setter
-public class NsdPackageNsdPackage implements Serializable {
+public class NsdPackageNsdPackage implements Levelable<NsVnfScalingStepMapping, NsScalingLevelMapping>, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

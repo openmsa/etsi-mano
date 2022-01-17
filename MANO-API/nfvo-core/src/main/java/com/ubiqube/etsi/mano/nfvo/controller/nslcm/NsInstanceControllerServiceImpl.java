@@ -109,6 +109,7 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 		ensureNotInstantiated(nsInstanceDb);
 		ensureNotLocked(nsInstanceDb);
 		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.INSTANTIATE);
+		mapper.map(req, nsLcm);
 		if (req.getNsInstantiationLevelId() == null) {
 			nsLcm.setNsInstantiationLevelId(nsInstanceDb.getNsdInfo().getInstantiationLevel());
 		}

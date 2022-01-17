@@ -14,29 +14,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.exception;
+package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
 /**
- * A generic exception.
  *
- * @author ovi@ubiqube.com
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class GenericException extends RuntimeException {
+public interface NsScaleLevel {
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+	String getAspectId();
 
-	public GenericException(final Exception e) {
-		super(e);
-	}
-
-	public GenericException(final String message) {
-		super(message);
-	}
-
-	public GenericException(final String message, final RuntimeException e) {
-		super(message, e);
-	}
-
+	int getNumberOfInstance();
 }

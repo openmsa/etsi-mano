@@ -50,7 +50,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NsdPackageVnfPackage implements Serializable {
+public class NsdPackageVnfPackage implements Levelable<VnfScalingStepMapping, VnfScalingLevelMapping>, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

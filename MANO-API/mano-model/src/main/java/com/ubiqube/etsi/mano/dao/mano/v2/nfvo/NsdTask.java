@@ -51,7 +51,7 @@ public class NsdTask extends NsTask {
 	private UUID nsInstanceId;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<NsVirtualLink> virtualLinks;
+	private Set<String> virtualLinks;
 
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private Servers server;

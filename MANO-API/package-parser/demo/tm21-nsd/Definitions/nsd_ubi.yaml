@@ -208,6 +208,52 @@ policies:
     targets:
       - nfp_1 # tosca.nodes.nfv.NFP
 
+
+  ns_scaling_aspect:
+    type: tosca.policies.nfv.NsScalingAspects
+    properties:
+      aspects: # map tosca.datatypes.nfv.NsScalingAspect
+        an_aspect:
+          name: an another name
+          description: descr
+          ns_scale_levels:
+            1: # map<Integer, tosca.datatypes.nfv.NsLevels> 
+              description: descr
+
+  vnf_to_level_map:
+    type: tosca.policies.nfv.VnfToLevelMapping
+    properties:
+      aspect: aspect
+      number_of_instances: # map<Integer, Integer>
+        1: 1
+        2: 2
+        3: 3
+    targets: [ vnf_1 ]
+
+  ns instantiation_level:
+    type: tosca.policies.nfv.NsInstantiationLevels
+    properties:
+      ns_levels: # map<tosca.datatypes.nfv.NsLevels>
+        level:
+          description: descr
+
+  vnf_to_inst_level:
+    type: tosca.policies.nfv.VnfToInstantiationLevelMapping
+    properties:
+      number_of_instances: # map<String, Integer>
+        1: 1
+        2: 2
+        3: 3
+    targets: [ vnf_1 ]
+
+  vl_to_inst:
+    type: tosca.policies.nfv.VirtualLinkToInstantiationLevelMapping
+    properties:
+      bit_rate_requirements: # map<String, tosca.datatypes.nfv.LinkBitrateRequirements>
+        inst_lvl:
+          root: 34
+          leaf: 45
+
 group_types:
   vnfgg:
     type: tosca.groups.nfv.VNFFG

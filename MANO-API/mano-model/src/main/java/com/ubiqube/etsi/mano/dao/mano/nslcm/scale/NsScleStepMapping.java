@@ -14,10 +14,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.orchestrator.nodes.nfvo;
+package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
-import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import java.util.Set;
 
-public class NsdNode implements Node {
-	// Nothing.
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface NsScleStepMapping {
+
+	String getAspectId();
+
+	// int getNumberOfInstance();
+
+	Set<StepMapping> getLevels();
 }

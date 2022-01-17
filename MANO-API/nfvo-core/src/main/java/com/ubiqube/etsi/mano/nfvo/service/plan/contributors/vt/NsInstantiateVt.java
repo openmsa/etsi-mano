@@ -21,32 +21,33 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdCreateNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdInstantiateNode;
 
-public class NsVt extends NsVtBase<NsdTask> {
+public class NsInstantiateVt extends NsVtBase<NsdTask> {
 
-	public NsVt(final NsdTask nt) {
+	public NsInstantiateVt(final NsdTask nt) {
 		super(nt);
 	}
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		return getParameters().getVirtualLinks().stream().map(x -> new NamedDependency(NsdNode.class, getParameters().getToscaName())).toList();
+		return Arrays.asList(new NamedDependency(NsdCreateNode.class, getParameters().getToscaName()));
 	}
 
 	@Override
 	public List<NamedDependency> getNamedProduced() {
-		return Arrays.asList(new NamedDependency(NsdNode.class, getParameters().getToscaName()));
+		return Arrays.asList(new NamedDependency(NsdInstantiateNode.class, getParameters().getToscaName()));
 	}
 
 	@Override
 	public String getFactoryProviderId() {
-		return "NSD";
+		return "NSD-INSTANTIATE";
 	}
 
 	@Override
 	public String getVimProviderId() {
-		return "NSD";
+		return "NSD-INSTANTIATE";
 	}
 
 }

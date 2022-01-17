@@ -141,7 +141,10 @@ public class ServerService {
 	}
 
 	private HttpGateway filterServer(final Servers servers) {
-		return httpGateway.stream().filter(x -> x.getVersion().equals(servers.getVersion())).findAny().orElseThrow(() -> new GenericException("Unable to find version " + servers.getVersion()));
+		return httpGateway.stream()
+				.filter(x -> x.getVersion().equals(servers.getVersion()))
+				.findAny()
+				.orElseThrow(() -> new GenericException("Unable to find version " + servers.getVersion()));
 	}
 
 }

@@ -69,6 +69,7 @@ import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.event.AbstractGenericAction;
 import com.ubiqube.etsi.mano.service.event.OrchestrationAdapter;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
+import com.ubiqube.etsi.mano.service.rest.ManoClientFactory;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 /**
@@ -80,6 +81,7 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
 public class NfvoActions extends AbstractGenericAction {
 	private OrchestrationAdapter<?, ?> orchestrationAdapter;
 	NsLiveInstanceJpa nsLiveInstanceJpa;
+	ManoClientFactory manoClientFactory;
 
 	public NfvoActions(final NsWorkflow workflow, final VimResourceService vimResourceService, final NsOrchestrationAdapter orchestrationAdapter) {
 		super(workflow, vimResourceService, orchestrationAdapter);
@@ -114,23 +116,24 @@ public class NfvoActions extends AbstractGenericAction {
 
 	private Set<ScaleInfo> vnfScale(final NsBlueprint blueprint, final NsdInstance instance, final Set<ScaleVnfData> scaleVnfData) {
 		scaleVnfData.forEach(x -> {
-			final NsLiveInstance inst = nsLiveInstanceJpa.findById(UUID.fromString(x.getVnfInstanceId())).orElseThrow(() -> new GenericException("Could not find VNF instance: " + x.getVnfInstanceId()));
+			final UUID uuid = UUID.fromString(x.getVnfInstanceId());
+			final NsLiveInstance inst = nsLiveInstanceJpa.findById(uuid).orElseThrow(() -> new GenericException("Could not find VNF instance: " + x.getVnfInstanceId()));
 			// OUT, IN, TO_INSTANTIATION_LEVEL, TO_SCALE_LEVEL_S_
 			if (x.getScaleVnfType() == VnfScaleType.OUT || x.getScaleVnfType() == VnfScaleType.IN) {
 				final ScaleTypeEnum type = x.getScaleVnfType() == VnfScaleType.OUT ? ScaleTypeEnum.OUT : ScaleTypeEnum.IN;
-				vnfScaleStep(type, x.getScaleByStepData());
+				vnfScaleStep(uuid, type, x.getScaleByStepData());
 			}
-			vnfScaleLevel(x.getScaleToLevelData());
+			vnfScaleLevel(uuid, x.getScaleToLevelData());
 		});
 		return null;
 	}
 
-	private void vnfScaleLevel(final ScaleToLevelData scaleData) {
-
-		VnfScaleToLevelRequest.of(scaleData);
+	private void vnfScaleLevel(final UUID vnfInstanceId, final ScaleToLevelData scaleData) {
+		final VnfScaleToLevelRequest scaleVnfToLevelRequest = VnfScaleToLevelRequest.of(scaleData);
+		manoClientFactory.getClient().vnfInstance(vnfInstanceId).scaleToLevel(scaleVnfToLevelRequest);
 	}
 
-	private void vnfScaleStep(final ScaleTypeEnum scaleType, final ScaleByStepData scaleData) {
+	private void vnfScaleStep(final UUID vnfInstanceId, final ScaleTypeEnum scaleType, final ScaleByStepData scaleData) {
 		final VnfScaleRequest req = VnfScaleRequest.of(scaleType, scaleData);
 	}
 
@@ -206,7 +209,7 @@ public class NfvoActions extends AbstractGenericAction {
 		return nsdInfo.getVnfPkgIds().stream().filter(x -> x.getStepMapping().stream().anyMatch(y -> y.getAspectId().equals(aspectId))).toList();
 	}
 
-	private void nsScaleByLevel(final NsBlueprint blueprint, final NsdInstance instance, final ScaleNsData scaleNsData) {
+	private static void nsScaleByLevel(final NsBlueprint blueprint, final NsdInstance instance, final ScaleNsData scaleNsData) {
 		final ScaleNsToLevelData level = scaleNsData.getScaleNsToLevelData();
 		if (level.getNsInstantiationLevel() != null) {
 

@@ -14,29 +14,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.exception;
+package com.ubiqube.etsi.mano.dao.mano;
+
+import java.util.Set;
+
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScaleLevel;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScleStepMapping;
 
 /**
- * A generic exception.
  *
- * @author ovi@ubiqube.com
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class GenericException extends RuntimeException {
+public interface Levelable<U extends NsScleStepMapping, V extends NsScaleLevel> {
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+	Set<V> getLevelMapping();
 
-	public GenericException(final Exception e) {
-		super(e);
-	}
-
-	public GenericException(final String message) {
-		super(message);
-	}
-
-	public GenericException(final String message, final RuntimeException e) {
-		super(message, e);
-	}
+	Set<U> getStepMapping();
 
 }

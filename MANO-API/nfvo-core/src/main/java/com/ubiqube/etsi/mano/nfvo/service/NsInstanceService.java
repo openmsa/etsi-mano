@@ -72,18 +72,18 @@ public class NsInstanceService {
 		return 0;
 	}
 
-	public int countLiveInstanceOfVirtualLink(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
+	public int countLiveInstanceOfVirtualLink(final NsdInstance nsInstance, final String toscaName) {
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskToscaName(nsInstance, toscaName);
 		return res.size();
 	}
 
-	public int countLiveInstanceOfVnf(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
+	public int countLiveInstanceOfVnf(final NsdInstance nsInstance, final String toscaName) {
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskToscaName(nsInstance, toscaName);
 		return res.size();
 	}
 
-	public int countLiveInstanceOfNsd(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
+	public int countLiveInstanceOfNsd(final NsdInstance nsInstance, final String toscaName) {
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskToscaName(nsInstance, toscaName);
 		return res.size();
 	}
 

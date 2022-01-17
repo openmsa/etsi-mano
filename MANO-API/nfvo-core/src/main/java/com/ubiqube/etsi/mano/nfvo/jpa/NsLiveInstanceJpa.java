@@ -40,7 +40,7 @@ public interface NsLiveInstanceJpa extends CrudRepository<NsLiveInstance, UUID> 
 	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND t.nsVirtualLink is not null AND t.toscaName = ?2 ORDER BY nli.audit.createdOn DESC")
 	List<NsLiveInstance> findByVnfInstanceAndTaskVlIsNotNull(NsdInstance vnfInstance, String toscaName);
 
-	List<NsLiveInstance> findByNsInstanceAndNsTaskId(NsdInstance nsInstance, UUID id);
+	List<NsLiveInstance> findByNsInstanceAndNsTaskToscaName(NsdInstance nsInstance, String toscaName);
 
 	List<NsLiveInstance> findByNsInstanceId(UUID nsUuid);
 

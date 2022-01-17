@@ -14,29 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.exception;
+package com.ubiqube.etsi.mano.orchestrator.nodes.nfvo;
+
+import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 
 /**
- * A generic exception.
  *
- * @author ovi@ubiqube.com
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class GenericException extends RuntimeException {
-
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	public GenericException(final Exception e) {
-		super(e);
-	}
-
-	public GenericException(final String message) {
-		super(message);
-	}
-
-	public GenericException(final String message, final RuntimeException e) {
-		super(message, e);
-	}
-
+public class NsdInstantiateNode implements Node {
+	// Nothing.
 }
