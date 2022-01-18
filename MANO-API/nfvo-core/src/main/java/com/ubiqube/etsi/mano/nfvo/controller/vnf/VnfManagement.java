@@ -208,4 +208,10 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 		return null;
 	}
 
+	@Override
+	public <U> U vnfPackagesVnfPkgVnfdIdGet(final UUID vnfdId, final Class<U> clazz) {
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
+		return mapper.map(vnfPackage, clazz);
+	}
+
 }

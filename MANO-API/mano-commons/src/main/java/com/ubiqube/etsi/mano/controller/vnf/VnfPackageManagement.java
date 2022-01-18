@@ -84,4 +84,6 @@ public interface VnfPackageManagement {
 
 	ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsGet(UUID vnfdId, String range);
 
+	<U> U vnfPackagesVnfPkgVnfdIdGet(UUID vnfPkgId, Class<U> clazz);
+
 }

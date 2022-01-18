@@ -197,9 +197,10 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public <U> ResponseEntity<U> onboardedFindById(final UUID safeUUID, final Class<U> clazz, final Consumer<U> makeLinks) {
-		// TODO Auto-generated method stub
-		return null;
+	public <U> ResponseEntity<U> onboardedFindById(final UUID vnfPkgId, final Class<U> clazz, final Consumer<U> makeLinks) {
+		final U vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgVnfdIdGet(vnfPkgId, clazz);
+		makeLinks.accept(vnfPkgInfo);
+		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
 	}
 
 	@Override
