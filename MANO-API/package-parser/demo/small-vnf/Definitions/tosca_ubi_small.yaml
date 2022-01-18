@@ -198,10 +198,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: leftVl01
-        - virtual_binding:
-            node: webserver
+        - virtual_link: leftVl01
+        - virtual_binding: webserver
 
 
 groups:
@@ -335,6 +333,7 @@ policies:
       protocol: tcp
       port_range_min: 1
       port_range_max: 65535
+    targets: [ webserver ]
 
   supported_vnf_int:
     type: tosca.policies.nfv.SupportedVnfInterface

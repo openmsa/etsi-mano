@@ -8,7 +8,6 @@ description: >
 
 imports:
   - etsi_nfv_sol001_nsd_types.yaml
-  - fix_ubiqube.yaml
 
 
 topology_template:
@@ -31,12 +30,16 @@ topology_template:
         #- virtual_link: # tosca.nodes.nfv.NsVirtualLink
 
 
-    ubiqube:
-      type: tosca.nodes.nfv.NsTopology
+    vnf_1:
+      type:  tosca.nodes.nfv.VNF
       properties:
         flavour_id: flavor01
-        vnfd_invariant:
-          - 5e84f394-4721-4122-a3e9-3ad3e74c7af2
+        descriptor_id: 5e84f394-4721-4122-a3e9-3ad3e74c7af2
+      requirements:
+        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
+            node: internal
+        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
+            node: internal2
 
 
     vl01:
@@ -52,8 +55,21 @@ topology_template:
             leaf: 400
           qos: # tosca.datatypes.nfv.NsVirtualLinkQos
             priority: 0
-          service_availability: # tosca.datatypes.nfv.ServiceAvailability
-            level: level1
+          service_availability_level: 1
+          virtual_link_protocol_data: # list of tosca.datatypes.nfv.NsVirtualLinkProtocolData
+            - associated_layer_protocol:
+              l2_protocol_data: # tosca.datatypes.nfv.NsL2ProtocolData
+                name: internal-l2
+                vlan_transparent: false
+                mtu: 1442
+                segmentation_id: "0"
+              l3_protocol_data: #tosca.datatypes.nfv.NsL3ProtocolData
+                name: internal-l3
+                ip_version: ipv4
+                cidr: 10.1.0.0/24
+                ip_allocation_pools: # list of tosca.datatypes.nfv.NsIpAllocationPool
+                  - start_ip_address: 10.1.0.5
+                    end_ip_address: 10.1.0.250
         connectivity_type: # tosca.datatypes.nfv.ConnectivityType
           layer_protocols:
             - ipv4
