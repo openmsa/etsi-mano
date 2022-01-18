@@ -40,7 +40,7 @@
 		<com.ubiqube.swagger3>2.1.11</com.ubiqube.swagger3>
 		<com.ubiqube.mockito.version>3.11.2</com.ubiqube.mockito.version>
 		<com.ubiqube.elasticsearch.version>7.13.2</com.ubiqube.elasticsearch.version>
-		<com.ubiqube.springdoc.version>1.6.3</com.ubiqube.springdoc.version>
+		<com.ubiqube.springdoc.version>1.6.4</com.ubiqube.springdoc.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
