@@ -104,7 +104,7 @@ public class ServerController {
 
 	private static List<Link> makeLinks(final Servers server) {
 		final List<Link> ret = new ArrayList<>();
-		ret.add(linkTo(methodOn(ServerController.class).findById(server.getId())).withRel("server"));
+		ret.add(linkTo(methodOn(ServerController.class).findById(server.getId())).withRel("self"));
 		return ret;
 	}
 
