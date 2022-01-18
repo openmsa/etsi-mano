@@ -26,6 +26,7 @@ import static com.ubiqube.etsi.mano.Constants.getSingleField;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -42,6 +43,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.controller.vnflcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -49,6 +51,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
@@ -58,6 +61,7 @@ import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.rest.ManoClientFactory;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.vnfm.service.VnfBlueprintService;
 import com.ubiqube.etsi.mano.vnfm.service.VnfInstanceService;
@@ -89,9 +93,11 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
+	private final ManoClientFactory manoClientFactory;
+
 	public VnfInstanceLcmImpl(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final MapperFacade mapper, final VnfLcmService vnfLcmService,
 			final VnfInstanceService vnfInstanceService, final VimManager vimManager, final VnfBlueprintService planService, final VnfPackageService vnfPackageService,
-			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
+			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm, final ManoClientFactory manoClientFactory) {
 		super();
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
@@ -102,6 +108,7 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		this.planService = planService;
 		this.vnfPackageService = vnfPackageService;
 		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
+		this.manoClientFactory = manoClientFactory;
 	}
 
 	@Override
@@ -113,7 +120,12 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 	@Override
 	public VnfInstance post(final Servers servers, final String vnfdId, final String vnfInstanceName, final String vnfInstanceDescription) {
-		final VnfPackage vnfPkgInfo = vnfPackageService.findByVnfdId(UUID.fromString(vnfdId));
+		VnfPackage vnfPkgInfo;
+		try {
+			vnfPkgInfo = vnfPackageService.findByVnfdId(UUID.fromString(vnfdId));
+		} catch (final NotFoundException e) {
+			vnfPkgInfo = onboardPackage(vnfdId);
+		}
 		ensureIsOnboarded(vnfPkgInfo);
 		ensureIsEnabled(vnfPkgInfo);
 		VnfInstance vnfInstance = VnfLcmFactory.createVnfInstance(vnfInstanceName, vnfInstanceDescription, vnfPkgInfo);
@@ -122,6 +134,17 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 		vnfInstance = vnfInstanceService.save(vnfInstance);
 		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CREATE, vnfInstance.getId());
 		return vnfInstance;
+	}
+
+	private VnfPackage onboardPackage(final String vnfdId) {
+		final VnfPackage vnfPkg = manoClientFactory.getClient().onbardedVnfPackage(UUID.fromString(vnfdId)).find();
+		vnfPkg.setNfvoId(vnfPkg.getId().toString());
+		vnfPkg.setOnboardingState(OnboardingStateType.CREATED);
+		vnfPkg.setUsageState(PackageUsageState.NOT_IN_USE);
+		vnfPkg.setId(null);
+		final VnfPackage nPkg = vnfPackageService.save(vnfPkg);
+		eventManager.sendActionVnfm(ActionType.VNF_PKG_ONBOARD_DOWNLOAD_INSTANTIATE, nPkg.getId(), Map.of());
+		return nPkg;
 	}
 
 	@Transactional

@@ -32,6 +32,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageOnboardingImpl;
@@ -62,6 +63,11 @@ public class NotificationActions {
 		final VnfPackage vnfPkg = vnfmVersionManager.findVnfPkgById(pkgId);
 		VnfPackage localPackage = getPackage(vnfPkg);
 		localPackage = vnfPackageJpa.save(localPackage);
+		downloadToTmpFile(localPackage);
+		vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(localPackage.getId().toString());
+	}
+
+	private void downloadToTmpFile(final VnfPackage localPackage) {
 		try {
 			final Path file = Files.createTempFile(Paths.get("/tmp/"), "mano", "vnfm");
 			vnfmVersionManager.getPackageContent(localPackage.getNfvoId(), file);
@@ -72,7 +78,6 @@ public class NotificationActions {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-		vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(localPackage.getId().toString());
 	}
 
 	private static VnfPackage getPackage(final VnfPackage vnfPkg) {
@@ -82,5 +87,11 @@ public class NotificationActions {
 		localPackage.setOnboardingState(OnboardingStateType.CREATED);
 		localPackage.setOperationalState(PackageOperationalState.DISABLED);
 		return localPackage;
+	}
+
+	public void onPkgOnbardingInstantiate(final UUID objectId) {
+		final VnfPackage pkg = vnfPackageJpa.findById(objectId).orElseThrow(() -> new NotFoundException("Unable to find local vnfPackage: " + objectId));
+		downloadToTmpFile(pkg);
+		vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(pkg.getId().toString());
 	}
 }

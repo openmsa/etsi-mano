@@ -126,4 +126,8 @@ public class ManoClient {
 	public ManoNsPackageId nsPackage(final UUID id) {
 		return new ManoNsPackageId(this, id);
 	}
+
+	public ManoOnboardedVnfPackage onbardedVnfPackage(final UUID id) {
+		return new ManoOnboardedVnfPackage(this, id);
+	}
 }
