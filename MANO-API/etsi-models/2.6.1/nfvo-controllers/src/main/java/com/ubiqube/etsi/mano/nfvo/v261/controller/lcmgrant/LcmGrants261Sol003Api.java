@@ -43,7 +43,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping("/sol005/grant/v1/grants")
+@RequestMapping("/sol003/grant/v1/grants")
 @RolesAllowed({ "ROLE_VNFM" })
 public interface LcmGrants261Sol003Api {
 
