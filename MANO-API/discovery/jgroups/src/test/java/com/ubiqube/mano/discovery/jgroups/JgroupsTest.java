@@ -16,10 +16,12 @@
  */
 package com.ubiqube.mano.discovery.jgroups;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.jgroups.Address;
 import org.jgroups.JChannel;
+import org.jgroups.Receiver;
 import org.jgroups.View;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +31,11 @@ public class JgroupsTest {
 
 	@Test
 	void testName() throws Exception {
-		final JChannel channel = new JChannel();
+		final InputStream is = getClass().getResourceAsStream("/udp.xml");
+		final JChannel channel = new JChannel(is);
+		final Receiver r = new JGroupReceiver(channel);
+		channel.setReceiver(r);
+		channel.setDiscardOwnMessages(true);
 		channel.connect("mano-cluster");
 		for (int round = 0; round < MAX_ROUNDS; round++) {
 			checkLeaderStatus(channel);
