@@ -99,6 +99,9 @@ spring:
         password: admin
         url: http://monitoring.mano.ubiqube.com/monitoring/
         username: admin
+  data:
+    rest:
+      base-path: /api
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:file:~/etsi-mano-nfvo.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
@@ -110,7 +113,7 @@ spring:
         web-allow-others: true
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
-    default-property-inclusion: NON_NULL
+    #default-property-inclusion: NON_NULL
     generator:
       ignore-unknown: false
     serialization:
