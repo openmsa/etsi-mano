@@ -21,6 +21,8 @@ import java.time.OffsetDateTime;
 
 import javax.persistence.Embeddable;
 
+import org.springframework.data.annotation.LastModifiedDate;
+
 @Embeddable
 public class Audit implements Serializable {
 
@@ -29,6 +31,7 @@ public class Audit implements Serializable {
 
 	private OffsetDateTime createdOn;
 
+	@LastModifiedDate
 	private OffsetDateTime updatedOn;
 
 	public OffsetDateTime getCreatedOn() {
