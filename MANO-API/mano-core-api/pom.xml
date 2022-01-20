@@ -238,12 +238,6 @@
 			<artifactId>guava</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-		</dependency>
-		 -->
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>mano-grammar-api</artifactId>
@@ -254,6 +248,11 @@
 			<artifactId>mano-grammar-v1</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano.auth</groupId>
+			<artifactId>auth-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
