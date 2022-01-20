@@ -27,14 +27,18 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 
+import com.ubiqube.etsi.mano.config.SecurityType;
+import com.ubiqube.etsi.mano.config.SecutiryConfig;
 import com.ubiqube.etsi.mano.config.properties.ManoProperties;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamBasic;
@@ -76,14 +80,17 @@ public class CommonActionController {
 	private final List<HttpGateway> httpGateway;
 	private final MapperFacade mapper;
 	private final ManoProperties manoProperties;
+	private final ObjectProvider<SecutiryConfig> secutiryConfig;
 
-	public CommonActionController(final ServersJpa serversJpa, final Environment env, final List<com.ubiqube.etsi.mano.service.HttpGateway> httpGateway, final MapperFacade mapper, final ManoProperties manoProperties) {
+	public CommonActionController(final ServersJpa serversJpa, final Environment env, final List<com.ubiqube.etsi.mano.service.HttpGateway> httpGateway,
+			final MapperFacade mapper, final ManoProperties manoProperties, final ObjectProvider<SecutiryConfig> secutiryConfig) {
 		super();
 		this.serversJpa = serversJpa;
 		this.env = env;
 		this.httpGateway = httpGateway;
 		this.mapper = mapper;
 		this.manoProperties = manoProperties;
+		this.secutiryConfig = secutiryConfig;
 	}
 
 	public Object registerServer(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
@@ -231,9 +238,14 @@ public class CommonActionController {
 		return res.isPresent();
 	}
 
+	@Nullable
 	private AuthentificationInformations createAuthInformation() {
+		final SecutiryConfig sec = secutiryConfig.getIfAvailable();
+		if (sec == null) {
+			return null;
+		}
 		final AuthentificationInformations auth = new AuthentificationInformations();
-		if (null != env.getProperty("keycloak.resource")) {
+		if (sec.getSecurityType() == SecurityType.OAUTH2) {
 			final AuthParamOauth2 oauth2 = AuthParamOauth2.builder()
 					.clientId(env.getProperty("keycloak.resource"))
 					.clientSecret(env.getProperty("keycloak.credentials.secret"))

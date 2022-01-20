@@ -72,4 +72,9 @@ public class KeycloakAuth implements SecutiryConfig {
 				.flows(flows);
 	}
 
+	@Override
+	public SecurityType getSecurityType() {
+		return SecurityType.OAUTH2;
+	}
+
 }
