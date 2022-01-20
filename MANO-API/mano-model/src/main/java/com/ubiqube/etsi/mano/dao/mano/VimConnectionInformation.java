@@ -27,7 +27,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Version;
 
 import org.hibernate.search.mapper.pojo.bridge.builtin.annotation.GeoPointBinding;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
@@ -77,7 +76,9 @@ public class VimConnectionInformation implements Auditable {
 	@GeoPointBinding
 	private GeoPoint geoloc;
 
-	@Version
+	// XXX: There is a bug when activated in vnf instantiate. When saving a
+	// vnfBlueprint.
+	// @Version
 	private long version;
 
 	private Audit audit;
