@@ -20,12 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Set;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
@@ -43,8 +37,13 @@ import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
-import com.ubiqube.etsi.mano.nfvo.service.NsScaleStrategy;
+import com.ubiqube.etsi.mano.service.NsScaleStrategy;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @SuppressWarnings("static-method")
 class VnfScallingTest {
 
@@ -74,6 +73,16 @@ class VnfScallingTest {
 		return Set.of(ssm1, ssm2);
 	}
 
+	private BlueprintParameters getInstantiated() {
+		final BlueprintParameters b = new BlueprintParameters();
+		b.setAspectId("aspect");
+		b.setInstantiationLevelId("aspect2");
+		b.setNumberOfSteps(0);
+		// b.setNsScale(nsScale);
+		// b.setNsScaleStatus(state);
+		return b;
+	}
+
 	@Test
 	void testInstantiate() throws Exception {
 		final NsScaleStrategy nss = new NsScaleStrategy();
@@ -97,6 +106,8 @@ class VnfScallingTest {
 		nsPackageVnfPackage.setStepMapping(getVnfScalingStepMapping());
 		final NsBlueprint blueprint = new NsBlueprint();
 		final NsdInstance nsInstance = new NsdInstance();
+		final BlueprintParameters instantiatedVnfInfo = getInstantiated();
+		nsInstance.setInstantiatedVnfInfo(instantiatedVnfInfo);
 		nsInstance.setNsInstantiationLevelId("1");
 		blueprint.setNsInstance(nsInstance);
 		blueprint.setOperation(PlanOperationType.SCALE);
@@ -124,7 +135,7 @@ class VnfScallingTest {
 		nsPackageVnfPackage.setStepMapping(getVnfScalingStepMapping());
 		final NsBlueprint blueprint = new NsBlueprint();
 		final NsdInstance nsInstance = new NsdInstance();
-		nsInstance.setNsInstantiationLevelId("1");
+		nsInstance.setInstantiatedVnfInfo(getInstantiated());
 		blueprint.setNsInstance(nsInstance);
 		blueprint.setOperation(PlanOperationType.SCALE);
 		final BlueprintParameters parameters = new BlueprintParameters();
@@ -151,11 +162,12 @@ class VnfScallingTest {
 		nsPackageVnfPackage.setStepMapping(getVnfScalingStepMapping());
 		final NsBlueprint blueprint = new NsBlueprint();
 		final NsdInstance nsInstance = new NsdInstance();
+		nsInstance.setInstantiatedVnfInfo(getInstantiated());
 		final NsScaleInfo ns1 = new NsScaleInfo();
 		ns1.setNsScaleLevelId("1");
 		ns1.setNsScalingAspectId("aspect");
 		final Set<NsScaleInfo> nsScaleStatus = Set.of(ns1);
-		nsInstance.setNsScaleStatus(nsScaleStatus);
+		nsInstance.getInstantiatedVnfInfo().setNsScaleStatus(nsScaleStatus);
 		nsInstance.setNsInstantiationLevelId("1");
 		blueprint.setNsInstance(nsInstance);
 		blueprint.setOperation(PlanOperationType.SCALE);
@@ -187,7 +199,8 @@ class VnfScallingTest {
 		ns1.setNsScaleLevelId("1");
 		ns1.setNsScalingAspectId("aspect");
 		final Set<NsScaleInfo> nsScaleStatus = Set.of(ns1);
-		nsInstance.setNsScaleStatus(nsScaleStatus);
+		nsInstance.setInstantiatedVnfInfo(getInstantiated());
+		nsInstance.getInstantiatedVnfInfo().setNsScaleStatus(nsScaleStatus);
 		nsInstance.setNsInstantiationLevelId("1");
 		blueprint.setNsInstance(nsInstance);
 		blueprint.setOperation(PlanOperationType.SCALE);
@@ -196,7 +209,7 @@ class VnfScallingTest {
 		nsScale.setScaleType(ScaleType.NS);
 		final ScaleNsData scaleNsData = new ScaleNsData();
 		final ScaleNsToLevelData scaleNsToLevelData = new ScaleNsToLevelData();
-		scaleNsToLevelData.setNsInstantiationLevel("3");
+		scaleNsToLevelData.setNsInstantiationLevel("aspect");
 		final NsScaleInfo ns2 = new NsScaleInfo();
 		ns2.setNsScaleLevelId("1");
 		ns2.setNsScalingAspectId("aspect");
@@ -207,6 +220,6 @@ class VnfScallingTest {
 		parameters.setNsScale(nsScale);
 		blueprint.setParameters(parameters);
 		final int x = nss.getNumberOfInstances(nsPackageVnfPackage, blueprint);
-		assertEquals(1, x);
+		assertEquals(2, x);
 	}
 }

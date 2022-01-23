@@ -65,6 +65,7 @@ import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsOrchestrationAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsWorkflow;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
+import com.ubiqube.etsi.mano.service.NsScaleStrategy;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.event.AbstractGenericAction;
 import com.ubiqube.etsi.mano.service.event.OrchestrationAdapter;
@@ -83,8 +84,8 @@ public class NfvoActions extends AbstractGenericAction {
 	NsLiveInstanceJpa nsLiveInstanceJpa;
 	ManoClientFactory manoClientFactory;
 
-	public NfvoActions(final NsWorkflow workflow, final VimResourceService vimResourceService, final NsOrchestrationAdapter orchestrationAdapter) {
-		super(workflow, vimResourceService, orchestrationAdapter);
+	public NfvoActions(final NsWorkflow workflow, final VimResourceService vimResourceService, final NsOrchestrationAdapter orchestrationAdapter, final NsScaleStrategy nsScaleStrategy) {
+		super(workflow, vimResourceService, orchestrationAdapter, nsScaleStrategy);
 	}
 
 	@Override
@@ -151,7 +152,7 @@ public class NfvoActions extends AbstractGenericAction {
 	private void nsScaleByStep(final NsBlueprint blueprint, final NsdInstance instance, final ScaleNsData scaleNsData) {
 		final ScaleNsByStepsData scaleData = scaleNsData.getScaleNsByStepsData();
 		final List<NsdPackageVnfPackage> concernedVnf = findConcernedVnf(instance.getNsdInfo(), scaleData.getAspectId());
-		final NsScaleInfo current = findCuurentScaleInfo(instance.getNsScaleStatus(), scaleData.getAspectId());
+		final NsScaleInfo current = findCuurentScaleInfo(instance.getInstantiatedVnfInfo().getNsScaleStatus(), scaleData.getAspectId());
 		final int level = computeLevel(scaleData, Integer.valueOf(current.getNsScaleLevelId()));
 		final List<NsLiveInstance> vi = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfTask.class.getSimpleName());
 		concernedVnf.forEach(x -> {

@@ -38,9 +38,11 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
 import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
+import com.ubiqube.etsi.mano.service.NsScaleStrategy;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.WorkflowEvent;
@@ -56,11 +58,14 @@ public abstract class AbstractGenericAction {
 
 	private final OrchestrationAdapter<?, ?> orchestrationAdapter;
 
-	protected AbstractGenericAction(final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter) {
+	private final NsScaleStrategy nsScaleStrategy;
+
+	protected AbstractGenericAction(final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter, final NsScaleStrategy nsScaleStrategy) {
 		super();
 		this.vnfWorkflow = vnfWorkflow;
 		this.vimResourceService = vimResourceService;
 		this.orchestrationAdapter = orchestrationAdapter;
+		this.nsScaleStrategy = nsScaleStrategy;
 	}
 
 	public final void instantiate(@Nonnull final UUID blueprintId) {
@@ -74,6 +79,9 @@ public abstract class AbstractGenericAction {
 		final PackageBase vnfPkg = orchestrationAdapter.getPackage(vnfInstance);
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
 		final PreExecutionGraph<?> prePlan = vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint);
+		if (!System.getenv().isEmpty()) {
+			// throw new GenericException("");
+		}
 		Blueprint<?, ?> localPlan = orchestrationAdapter.save(blueprint);
 		orchestrationAdapter.fireEvent(WorkflowEvent.INSTANTIATE_PROCESSING, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);
@@ -102,21 +110,31 @@ public abstract class AbstractGenericAction {
 		localPlan.getVimConnections().forEach(vnfInstance::addVimConnectionInfo);
 	}
 
-	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint localPlan, Instance vnfInstance);
+	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint localPlan, Instance instance);
 
-	private static void setInstanceStatus(final Instance vnfInstance, final Blueprint localPlan, final Set<ScaleInfo> newScale) {
-		Optional.ofNullable(localPlan.getParameters().getScaleStatus()).map(x -> x.stream().map(y -> new ScaleInfo(y.getAspectId(), y.getScaleLevel())).collect(Collectors.toSet())).ifPresent(x -> vnfInstance.getInstantiatedVnfInfo().setScaleStatus(x));
+	private void setInstanceStatus(final Instance instance, final Blueprint localPlan, final Set<ScaleInfo> newScale) {
+		Optional.ofNullable(localPlan.getParameters().getScaleStatus())
+				.map(x -> x.stream()
+						.map(y -> new ScaleInfo(y.getAspectId(), y.getScaleLevel()))
+						.collect(Collectors.toSet()))
+				.ifPresent(x -> instance.getInstantiatedVnfInfo().setScaleStatus(x));
+		if (localPlan.getOperation() == PlanOperationType.INSTANTIATE) {
+			instance.getInstantiatedVnfInfo().setNsStepStatus(localPlan.getParameters().getNsStepStatus());
+		}
+		Optional.ofNullable(localPlan.getParameters().getNsScale()).ifPresent(x -> {
+			nsScaleStrategy.remapNsScale(x, instance);
+		});
 		LOG.info("Saving Instance.");
-		vnfInstance.getInstantiatedVnfInfo().setInstantiationLevelId(localPlan.getParameters().getInstantiationLevelId());
+		instance.getInstantiatedVnfInfo().setInstantiationLevelId(localPlan.getParameters().getInstantiationLevelId());
 		if (null != localPlan.getParameters().getFlavourId()) {
-			vnfInstance.getInstantiatedVnfInfo().setFlavourId(localPlan.getParameters().getFlavourId());
+			instance.getInstantiatedVnfInfo().setFlavourId(localPlan.getParameters().getFlavourId());
 		}
 		// XXX Copy new ScaleInfo.
-		removeScaleStatus(vnfInstance, newScale);
+		removeScaleStatus(instance, newScale);
 	}
 
-	private static Set<ScaleInfo> merge(final Blueprint plan, final Instance vnfInstance) {
-		final Set<ScaleInfo> tmp = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
+	private static Set<ScaleInfo> merge(final Blueprint plan, final Instance instance) {
+		final Set<ScaleInfo> tmp = instance.getInstantiatedVnfInfo().getScaleStatus().stream()
 				.filter(x -> notIn(x.getAspectId(), plan.getParameters().getScaleStatus()))
 				.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
 				.collect(Collectors.toSet());

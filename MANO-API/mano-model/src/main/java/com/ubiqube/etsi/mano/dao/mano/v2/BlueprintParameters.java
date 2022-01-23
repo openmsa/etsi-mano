@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfMonitoringParameter;
 import com.ubiqube.etsi.mano.dao.mano.VnfcResourceInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsHeal;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScaleInfo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -63,15 +64,18 @@ public class BlueprintParameters implements Serializable {
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private Set<ScaleInfo> scaleStatus = null;
+	private Set<ScaleInfo> scaleStatus;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<NsScaleInfo> nsScaleStatus;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private Set<ScaleInfo> maxScaleLevels;
+	private Set<ScaleInfo> nsStepStatus;
 
 	@Valid
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
+	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
 
 	private Integer numberOfSteps;
 

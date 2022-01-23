@@ -213,8 +213,8 @@ policies:
     type: tosca.policies.nfv.NsScalingAspects
     properties:
       aspects: # map tosca.datatypes.nfv.NsScalingAspect
-        an_aspect:
-          name: an another name
+        aspect:
+          name: aspect
           description: descr
           ns_scale_levels:
             1: # map<Integer, tosca.datatypes.nfv.NsLevels> 
@@ -225,6 +225,7 @@ policies:
     properties:
       aspect: aspect
       number_of_instances: # map<Integer, Integer>
+        0: 0
         1: 1
         2: 2
         3: 3
@@ -233,17 +234,25 @@ policies:
   ns instantiation_level:
     type: tosca.policies.nfv.NsInstantiationLevels
     properties:
+      default_level: level_1
       ns_levels: # map<tosca.datatypes.nfv.NsLevels>
-        level:
-          description: descr
+        level_1:
+          description: Level 1
+        level_2:
+          description: Level 2
+        level_3:
+          description: level 3
+        level_4:
+          description: level 4
 
   vnf_to_inst_level:
     type: tosca.policies.nfv.VnfToInstantiationLevelMapping
     properties:
       number_of_instances: # map<String, Integer>
-        1: 1
-        2: 2
-        3: 3
+        level_1: 0
+        level_2: 1
+        level_3: 2
+        level_4: 3
     targets: [ vnf_1 ]
 
   vl_to_inst:

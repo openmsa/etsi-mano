@@ -33,6 +33,17 @@ topology_template:
           level1: 1
       requirements:
         - virtual_link: vl # tosca.nodes.nfv.NsVirtualLink
+      interfaces:
+        Nslcm: # tosca.interfaces.nfv.Nslcm
+          operations:
+            scale:
+              inputs:
+                scale_ns_by_steps_data: # tosca.datatypes.nfv.scaleNsByStepsData
+                scale_ns_to_level_data: # tosca.datatypes.nfv.scaleNsToLevelData
+                  instantiation_level: string
+                  ns_scale_info: # Map<String, Integer>
+                    label_1: 1
+                    label_2: 2
 
     database:
       type: tosca.nodes.nfv.NS
@@ -268,7 +279,9 @@ policies:
     type: tosca.policies.nfv.NsInstantiationLevels
     properties:
       ns_levels: # map<tosca.datatypes.nfv.NsLevels>
-        level:
+        level_1:
+          description: descr
+        level_2:
           description: descr
 
   vnf_to_inst_level:
@@ -276,6 +289,7 @@ policies:
     properties:
       number_of_instances: # map<String, Integer>
         inst_lvl: 5
+        level_2: 2
     targets: #[ tosca.nodes.nfv.VNF ]
 
   ns_to_inst_level:
@@ -350,7 +364,7 @@ policies:
             2:
               description: descr of 2nd level.
         database:
-          name: aspect_1
+          name: database
           description: descr 1
           ns_scale_levels: # Map<Integer, tosca.datatypes.nfv.NsLevels>
             1:

@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service;
+package com.ubiqube.etsi.mano.service;
 
 import java.util.Comparator;
 import java.util.List;
@@ -25,10 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.Levelable;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScaleLevel;
@@ -74,6 +76,13 @@ public class NsScaleStrategy {
 		return 0;
 	}
 
+	/**
+	 * Find default number of instance of a given VNF.
+	 *
+	 * @param nsPackageNsPackage
+	 * @param blueprint
+	 * @return number of instances.
+	 */
 	@SuppressWarnings({ "static-method", "boxing" })
 	private int handleInstantiate(final Levelable<? extends NsScleStepMapping, ? extends NsScaleLevel> nsPackageNsPackage, final NsBlueprint blueprint) {
 		final String defaultInstLevel = getInstantiateLevel(blueprint);
@@ -116,11 +125,22 @@ public class NsScaleStrategy {
 	}
 
 	private static int getByLevel(final ScaleNsToLevelData scaleNsToLevelData, final Levelable<? extends NsScleStepMapping, ? extends NsScaleLevel> vnfPackage) {
+		if (scaleNsToLevelData.getNsInstantiationLevel() != null) {
+			return byInstantiationLevel(scaleNsToLevelData.getNsInstantiationLevel(), vnfPackage);
+		}
 		final List<? extends NsScaleLevel> inPkg = vnfPackage.getLevelMapping().stream().filter(x -> containsScaleInfo(x.getAspectId(), scaleNsToLevelData.getNsScaleInfo())).toList();
 		if (inPkg.isEmpty()) {
 			throw new GenericException("");
 		}
 		return inPkg.get(0).getNumberOfInstance();
+	}
+
+	private static int byInstantiationLevel(final String nsInstantiationLevel, final Levelable<? extends NsScleStepMapping, ? extends NsScaleLevel> vnfPackage) {
+		final List<? extends NsScaleLevel> l = vnfPackage.getLevelMapping().stream().filter(x -> x.getAspectId().equals(nsInstantiationLevel)).toList();
+		if (l.isEmpty()) {
+			throw new GenericException("Unable to find level " + nsInstantiationLevel);
+		}
+		return l.get(0).getNumberOfInstance();
 	}
 
 	private static boolean containsScaleInfo(final String aspectId, final Set<NsScaleInfo> nsScaleInfo) {
@@ -129,13 +149,12 @@ public class NsScaleStrategy {
 
 	@SuppressWarnings("boxing")
 	private static int getByStepData(final ScaleNsByStepsData scaleNsByStepsData, final Levelable<? extends NsScleStepMapping, ? extends NsScaleLevel> vnfPackage, final NsdInstance instance) {
-		final Set<NsScaleInfo> instanceCurrentScale = instance.getNsScaleStatus();
-		final int baseStep = getBaseStep(instance, instanceCurrentScale, scaleNsByStepsData.getAspectId());
-
+		final int baseStep = getBaseStep(instance, scaleNsByStepsData.getAspectId());
 		final Optional<? extends NsScleStepMapping> stepMapping = vnfPackage.getStepMapping().stream()
 				.filter(x -> x.getAspectId().equals(scaleNsByStepsData.getAspectId()))
 				.findFirst();
 		if (stepMapping.isEmpty()) {
+			// XXX: is it wrong ? if no match we should evaluate the current level ?
 			return 1;
 		}
 		final int newLevel = computeLevel(scaleNsByStepsData, baseStep);
@@ -143,15 +162,16 @@ public class NsScaleStrategy {
 	}
 
 	@SuppressWarnings("boxing")
-	private static int getBaseStep(final NsdInstance instance, final Set<NsScaleInfo> instanceCurrentScale, final String aspectId) {
-		if (null == instanceCurrentScale) {
+	private static int getBaseStep(final NsdInstance instance, final String aspectId) {
+		final Set<ScaleInfo> nsScale = instance.getInstantiatedVnfInfo().getNsStepStatus();
+		if (null == nsScale) {
 			return 0;
 		}
-		return instance.getNsScaleStatus().stream()
-				.filter(x -> x.getNsScalingAspectId().equals(aspectId))
+		return nsScale.stream()
+				.filter(x -> x.getAspectId().equals(aspectId))
+				.map(ScaleInfo::getScaleLevel)
 				.findFirst()
-				.map(x -> Integer.parseInt(x.getNsScaleLevelId()))
-				.orElseGet(() -> 0);
+				.orElse(0);
 	}
 
 	private static int getStep(final Set<StepMapping> set, final int i) {
@@ -179,4 +199,59 @@ public class NsScaleStrategy {
 		}
 		return base + scaleData.getNumberOfSteps();
 	}
+
+	@SuppressWarnings("static-method")
+	public NsScaleType getScalingType(final NsScale scaleInfo) {
+		if (scaleInfo.getScaleType() == ScaleType.VNF) {
+			return NsScaleType.VNF;
+		}
+		if (null != scaleInfo.getScaleNsData().getScaleNsByStepsData()) {
+			return NsScaleType.NS_SCALE_STEP;
+		}
+		final ScaleNsToLevelData levels = scaleInfo.getScaleNsData().getScaleNsToLevelData();
+		if (null != levels.getNsInstantiationLevel()) {
+			return NsScaleType.NS_SCALE_LEVEL_INST_LEVEL;
+		}
+		return NsScaleType.NS_SCALE_LEVEL_SCALE_INFO;
+	}
+
+	@SuppressWarnings("static-method")
+	public Set<NsScaleInfo> getScaleInfo(final NsScale nsInst) {
+		return nsInst.getScaleNsData().getScaleNsToLevelData().getNsScaleInfo();
+	}
+
+	public void remapNsScale(final NsScale scalingData, final Instance instance) {
+		final NsScaleType type = getScalingType(scalingData);
+		switch (type) {
+		case NS_SCALE_LEVEL_INST_LEVEL -> handleLevelInstLevel(instance, scalingData.getScaleNsData().getScaleNsToLevelData().getNsInstantiationLevel());
+		case NS_SCALE_LEVEL_SCALE_INFO -> handleLevelScaleInfo(instance, scalingData.getScaleNsData().getScaleNsToLevelData().getNsScaleInfo());
+		case NS_SCALE_STEP -> handleStep(instance, scalingData.getScaleNsData().getScaleNsByStepsData());
+		default -> LOG.warn("Type {} is not supported.", type);
+		}
+	}
+
+	private static void handleStep(final Instance instance, final ScaleNsByStepsData scaleNsByStepsData) {
+		final BlueprintParameters instInfo = instance.getInstantiatedVnfInfo();
+		final ScaleInfo oldScaleInfo = instInfo.getNsStepStatus().stream().filter(x -> x.getAspectId().equals(scaleNsByStepsData.getAspectId())).findAny().orElseGet(() -> {
+			final ScaleInfo n = new ScaleInfo(scaleNsByStepsData.getAspectId(), 0);
+			instInfo.getNsStepStatus().add(n);
+			return n;
+		});
+		if (scaleNsByStepsData.getScalingDirection() == ScalingDirectionType.IN) {
+			final int scaleLevel = oldScaleInfo.getScaleLevel() - scaleNsByStepsData.getNumberOfSteps();
+			oldScaleInfo.setScaleLevel(scaleLevel < 0 ? 0 : scaleLevel);
+		} else {
+			final int scaleLevel = oldScaleInfo.getScaleLevel() + scaleNsByStepsData.getNumberOfSteps();
+			oldScaleInfo.setScaleLevel(scaleLevel);
+		}
+	}
+
+	private static void handleLevelScaleInfo(final Instance instance, final Set<NsScaleInfo> nsScaleInfo) {
+		instance.getInstantiatedVnfInfo().setNsScaleStatus(nsScaleInfo);
+	}
+
+	private static void handleLevelInstLevel(final Instance instance, final String nsInstantiationLevel) {
+		instance.getInstantiatedVnfInfo().setInstantiationLevelId(nsInstantiationLevel);
+	}
+
 }
