@@ -212,7 +212,7 @@ public class OrikaMapperVnfm281 implements OrikaMapperFactoryConfigurer {
 				.field("resourceHandle.vimConnectionId", "vimConnectionId")
 				.field("resourceHandle.resourceProviderId", "resourceProviderId")
 				.field("resourceHandle.resourceId", "resourceId")
-				.field("resourceHandle.vimLevelResourceType", "vimLevelResourceType")
+				// .field("resourceHandle.vimLevelResourceType", "vimLevelResourceType")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(ExtManagedVirtualLinkInfo.class, ExtManagedVirtualLinkDataEntity.class)
