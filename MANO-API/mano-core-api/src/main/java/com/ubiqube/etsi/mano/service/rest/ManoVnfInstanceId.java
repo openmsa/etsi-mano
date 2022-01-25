@@ -18,6 +18,9 @@ package com.ubiqube.etsi.mano.service.rest;
 
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
@@ -35,6 +38,8 @@ import com.ubiqube.etsi.mano.service.HttpGateway;
  *
  */
 public class ManoVnfInstanceId {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ManoVnfInstanceId.class);
 
 	private final ManoClient client;
 
@@ -60,11 +65,16 @@ public class ManoVnfInstanceId {
 	}
 
 	public VnfBlueprint terminate(final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
-		client.setFragment("vnf_instances/{id}/terminate");
-		return client.createQuery(httpGateway -> httpGateway.createVnfInstanceTerminate(terminationType, gracefulTerminationTimeout))
-				.setWireOutClass(HttpGateway::getVnfLcmOpOccs)
-				.setOutClass(VnfBlueprint.class)
-				.post();
+		try {
+			client.setFragment("vnf_instances/{id}/terminate");
+			return client.createQuery(httpGateway -> httpGateway.createVnfInstanceTerminate(terminationType, gracefulTerminationTimeout))
+					.setWireOutClass(HttpGateway::getVnfLcmOpOccs)
+					.setOutClass(VnfBlueprint.class)
+					.post();
+		} catch (final RuntimeException e) {
+			LOG.warn("", e);
+			return null;
+		}
 	}
 
 	public VnfBlueprint scaleToLevel(final VnfScaleToLevelRequest scaleVnfToLevelRequest) {

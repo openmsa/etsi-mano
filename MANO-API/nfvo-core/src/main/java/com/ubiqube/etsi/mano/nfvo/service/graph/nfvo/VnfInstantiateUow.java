@@ -16,16 +16,14 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
@@ -33,6 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.ExternalManagedVirtualLink;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
@@ -91,27 +90,28 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 	@Override
 	public String execute(final Context context) {
 		final String inst = context.get(VnfCreateNode.class, task.getToscaName());
-		final Set<ExtVirtualLinkDataEntity> net = task.getExternalNetworks().stream().map(x -> {
+		final List<ExternalManagedVirtualLink> net = task.getExternalNetworks().stream().map(x -> {
 			final String resource = context.get(Network.class, x);
 			if (null == resource) {
+				LOG.warn("Could not find resource {} => {}", x, context);
 				return null;
 			}
-			final ExtVirtualLinkDataEntity ext = new ExtVirtualLinkDataEntity();
+			final ExternalManagedVirtualLink ext = new ExternalManagedVirtualLink();
 			ext.setResourceId(resource);
-			ext.setVimLevelResourceType(x);
+			ext.setExtManagedVirtualLinkId(x);
 			ext.setResourceProviderId("PROVIDER");
-			ext.setVimConnectionId("VIM");
+			ext.setVimId("VIM");
 			return ext;
 		})
 				.filter(Objects::nonNull)
-				.collect(Collectors.toSet());
+				.toList();
 		final VnfInstantiate request = createRequest();
-		request.setExtVirtualLinks(net);
+		request.setExtManagedVirtualLinks(net);
 		final VnfBlueprint res = vnfm.vnfInstatiate(task.getServer(), inst, request);
 		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			final String details = Optional.ofNullable(result.getError()).map(FailureDetails::getDetail).orElse("[No content]");
-			throw new GenericException("VNF LCM Failed: " + details + " With state: " + result.getOperationStatus());
+			throw new GenericException("VNF LCM Failed: " + details + " With state:  " + result.getOperationStatus());
 		}
 		return res.getInstance().getId().toString();
 	}
@@ -139,6 +139,9 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 			return null;
 		}
 		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getServer(), task.getVimResourceId());
+		if (lcm == null) {
+			return null;
+		}
 		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());

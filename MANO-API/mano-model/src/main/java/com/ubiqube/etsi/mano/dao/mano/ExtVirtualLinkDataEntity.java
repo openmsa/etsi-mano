@@ -50,13 +50,13 @@ public class ExtVirtualLinkDataEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id = null;
 
+	private String extVirtualLinkId = null;
+
 	private String vimConnectionId = null;
 
 	private String resourceProviderId = null;
 
 	private String resourceId = null;
-
-	private String vimLevelResourceType;
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

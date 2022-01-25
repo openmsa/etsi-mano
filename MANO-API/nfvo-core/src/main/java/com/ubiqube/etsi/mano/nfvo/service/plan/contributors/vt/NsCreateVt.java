@@ -21,8 +21,8 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdCreateNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 
 /**
  *
@@ -37,7 +37,7 @@ public class NsCreateVt extends NsVtBase<NsdTask> {
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		return getParameters().getVirtualLinks().stream().map(x -> new NamedDependency(NsVlNode.class, getParameters().getToscaName())).toList();
+		return getParameters().getVirtualLinks().stream().map(x -> new NamedDependency(Network.class, x)).toList();
 	}
 
 	@Override

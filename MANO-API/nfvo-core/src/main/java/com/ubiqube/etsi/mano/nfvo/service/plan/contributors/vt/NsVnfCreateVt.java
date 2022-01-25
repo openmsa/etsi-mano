@@ -21,7 +21,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
-import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
@@ -41,8 +40,7 @@ public class NsVnfCreateVt extends NsVtBase<NsVnfTask> {
 	@Override
 	public List<NamedDependency> getNameDependencies() {
 		return Optional.ofNullable(getParameters())
-				.map(NsVnfTask::getNsPackageVnfPackage)
-				.map(NsdPackageVnfPackage::getVirtualLinks)
+				.map(NsVnfTask::getExternalNetworks)
 				.orElseGet(LinkedHashSet::new)
 				.stream()
 				.map(x -> new NamedDependency(Network.class, x))

@@ -33,7 +33,7 @@ import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVirtualLinkVt;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 
 /**
@@ -65,7 +65,7 @@ public class NsVirtualLinkContributor extends AbstractNsContributor<NsVirtualLin
 
 	@Override
 	public Class<? extends Node> getNode() {
-		return NsVlNode.class;
+		return Network.class;
 	}
 
 	@Override

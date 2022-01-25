@@ -21,7 +21,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -32,7 +32,7 @@ public class NsVlUow extends AbstractNsUnitOfWork<NsVirtualLinkTask> {
 	private final VimConnectionInformation vimConnectionInformation;
 
 	public NsVlUow(final VirtualTask<NsVirtualLinkTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
-		super(task, NsVlNode.class);
+		super(task, Network.class);
 		this.task = task.getParameters();
 		this.vim = vim;
 		this.vimConnectionInformation = vimConnectionInformation;

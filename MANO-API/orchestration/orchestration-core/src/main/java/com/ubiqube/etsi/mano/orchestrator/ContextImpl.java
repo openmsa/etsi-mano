@@ -47,7 +47,7 @@ public class ContextImpl implements Context {
 	@Override
 	public String get(final Class<? extends Node> class1, final String toscaName) {
 		final List<String> r = getList(class1, toscaName);
-		if ((null == r) || r.isEmpty()) {
+		if (null == r || r.isEmpty()) {
 			return null;
 		}
 		if (r.size() > 1) {
@@ -78,6 +78,11 @@ public class ContextImpl implements Context {
 		context.computeIfAbsent(class1, x -> new LinkedMultiValueMap<>());
 		final LinkedMultiValueMap<String, String> m = context.get(class1);
 		m.add(key, resourceId);
+	}
+
+	@Override
+	public String toString() {
+		return "ContextImpl [context=" + context + "]";
 	}
 
 }
