@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -135,4 +136,11 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 		return nsInstance;
 	}
 
+	@Override
+	public void addExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+		if (null == extManagedVirtualLinks) {
+			this.extManagedVirtualLinks = new LinkedHashSet<>();
+		}
+		this.extManagedVirtualLinks.addAll(extManagedVirtualLinks);
+	}
 }

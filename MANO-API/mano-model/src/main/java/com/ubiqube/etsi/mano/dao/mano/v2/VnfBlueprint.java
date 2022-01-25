@@ -150,4 +150,12 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> {
 		this.vimConnections.add(vimConnection);
 	}
 
+	@Override
+	public void addExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+		if (null == extManagedVirtualLinks) {
+			this.extManagedVirtualLinks = new LinkedHashSet<>();
+		}
+		this.extManagedVirtualLinks.addAll(extManagedVirtualLinks);
+	}
+
 }

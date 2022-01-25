@@ -64,7 +64,7 @@ public interface Blueprint<U extends Task, V extends Instance> extends BaseEntit
 
 	void setGrantsRequestId(String string);
 
-	void setExtManagedVirtualLinks(Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks);
+	void addExtManagedVirtualLinks(Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks);
 
 	Set<VimConnectionInformation> getVimConnections();
 
