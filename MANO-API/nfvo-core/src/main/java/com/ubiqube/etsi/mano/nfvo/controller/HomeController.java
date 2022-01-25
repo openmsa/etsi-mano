@@ -64,6 +64,7 @@ public class HomeController {
 	}
 
 	@PostMapping(value = "/registerVim")
+	@Deprecated(forRemoval = true, since = "24/01/2022")
 	public ResponseEntity<VimConnectionInformation> registerVim(@RequestBody final VimConnectionInformation body) {
 		if (null == body.getVimId()) {
 			throw new GenericException("'vimId' cannot be [null].");
