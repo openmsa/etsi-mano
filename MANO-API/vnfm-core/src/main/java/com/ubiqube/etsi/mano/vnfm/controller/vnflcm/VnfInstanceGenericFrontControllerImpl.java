@@ -32,7 +32,6 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -142,9 +141,6 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 	public <U> ResponseEntity<U> findById(final UUID vnfInstanceId, final Class<U> clazz, final Consumer<U> makeLink, final String instanceSelfLink) {
 		final VnfInstance vnfInstanceDb = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		final U vnfInstance = mapper.map(vnfInstanceDb, clazz);
-
-		final VnfPackage vnfPackage = vnfPackageService.findById(vnfInstanceDb.getVnfPkg().getId());
-		mapper.map(vnfPackage, vnfInstance);
 		makeLink.accept(vnfInstance);
 		return ResponseEntity.created(URI.create(instanceSelfLink)).body(vnfInstance);
 	}
