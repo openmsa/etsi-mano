@@ -126,14 +126,16 @@ public class VimManager {
 
 	@Transactional(TxType.REQUIRED)
 	public VimConnectionInformation registerIfNeeded(final VimConnectionInformation x) {
-		final Optional<VimConnectionInformation> vim = vimConnectionInformationJpa.findByVimId(x.getVimId());
-		if (vim.isPresent()) {
-			return vim.get();
+		synchronized (this) {
+			final Optional<VimConnectionInformation> vim = vimConnectionInformationJpa.findByVimId(x.getVimId());
+			if (vim.isPresent()) {
+				return vim.get();
+			}
+			final VimConnectionInformation n = vimConnectionInformationJpa.save(x);
+			systemService.registerVim(n);
+			init();
+			return n;
 		}
-		final VimConnectionInformation n = vimConnectionInformationJpa.save(x);
-		systemService.registerVim(n);
-		init();
-		return n;
 	}
 
 	public void deleteVim(final UUID id) {
