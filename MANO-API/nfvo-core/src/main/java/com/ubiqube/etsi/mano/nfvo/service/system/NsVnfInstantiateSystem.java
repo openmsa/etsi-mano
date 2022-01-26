@@ -16,10 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.system;
 
-import org.springframework.stereotype.Service;
-
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfInstantiateTask;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfInstantiateUow;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
@@ -34,8 +32,8 @@ import com.ubiqube.etsi.mano.service.vim.VimManager;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
-public class NsVnfInstantiateSystem extends AbstractVimSystem<NsVnfTask> {
+//@Service
+public class NsVnfInstantiateSystem extends AbstractVimSystem<NsVnfInstantiateTask> {
 	private final VnfmInterface vnfm;
 
 	public NsVnfInstantiateSystem(final VnfmInterface vnfm, final VimManager vimManager) {
@@ -49,7 +47,7 @@ public class NsVnfInstantiateSystem extends AbstractVimSystem<NsVnfTask> {
 	}
 
 	@Override
-	protected SystemBuilder<UnitOfWork<NsVnfTask>> getImplementation(final OrchestrationService<NsVnfTask> orchestrationService, final VirtualTask<NsVnfTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<UnitOfWork<NsVnfInstantiateTask>> getImplementation(final OrchestrationService<NsVnfInstantiateTask> orchestrationService, final VirtualTask<NsVnfInstantiateTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfInstantiateUow(virtualTask, vnfm));
 	}
 

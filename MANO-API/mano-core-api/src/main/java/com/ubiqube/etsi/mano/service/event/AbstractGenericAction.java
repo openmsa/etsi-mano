@@ -209,12 +209,12 @@ public abstract class AbstractGenericAction {
 			final ChangeType ct = rhe.getChangeType();
 			if (ct == ChangeType.ADDED) {
 				final String il = Optional.ofNullable(rhe.getScaleInfo()).map(ScaleInfo::getAspectId).orElse(null);
-				if (null != rhe.getId()) {
+				if (null != rhe.getId() && null != rhe.getVimResourceId()) {
 					orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
 				} else {
-					LOG.warn("Could not store: {}", x.getTask().getTask().getParameters().getToscaName());
+					LOG.warn("No vim resource or database id for: {}", x.getTask().getTask().getParameters().getToscaName());
 				}
-			} else if (ct == ChangeType.REMOVED) {
+			} else if (ct == ChangeType.REMOVED && null != rhe.getId()) {
 				LOG.info("Removing {}", rhe.getId());
 				orchestrationAdapter.deleteLiveInstance(rhe.getRemovedLiveInstance());
 			}

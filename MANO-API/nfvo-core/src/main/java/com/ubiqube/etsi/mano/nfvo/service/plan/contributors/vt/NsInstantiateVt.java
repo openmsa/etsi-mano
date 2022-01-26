@@ -19,14 +19,14 @@ package com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt;
 import java.util.Arrays;
 import java.util.List;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfInstantiateTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdCreateNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdInstantiateNode;
 
-public class NsInstantiateVt extends NsVtBase<NsdTask> {
+public class NsInstantiateVt extends NsVtBase<NsVnfInstantiateTask> {
 
-	public NsInstantiateVt(final NsdTask nt) {
+	public NsInstantiateVt(final NsVnfInstantiateTask nt) {
 		super(nt);
 	}
 

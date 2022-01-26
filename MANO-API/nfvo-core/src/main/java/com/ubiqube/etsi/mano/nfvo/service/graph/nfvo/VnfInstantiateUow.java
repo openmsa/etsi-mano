@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfInstantiateTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.ExternalManagedVirtualLink;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
@@ -45,15 +45,15 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
+public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfInstantiateTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfInstantiateUow.class);
 
 	private final VnfmInterface vnfm;
 
-	private final NsVnfTask task;
+	private final NsVnfInstantiateTask task;
 
-	public VnfInstantiateUow(final VirtualTask<NsVnfTask> task, final VnfmInterface vnfm) {
+	public VnfInstantiateUow(final VirtualTask<NsVnfInstantiateTask> task, final VnfmInterface vnfm) {
 		super(task, VnfInstantiateNode.class);
 		this.task = task.getParameters();
 		this.vnfm = vnfm;
@@ -93,14 +93,14 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 		final List<ExternalManagedVirtualLink> net = task.getExternalNetworks().stream().map(x -> {
 			final String resource = context.get(Network.class, x);
 			if (null == resource) {
-				LOG.warn("Could not find resource {} => {}", x, context);
+				LOG.warn("Could not find network resource {} => {}, not released.", x, context);
 				return null;
 			}
 			final ExternalManagedVirtualLink ext = new ExternalManagedVirtualLink();
 			ext.setResourceId(resource);
 			ext.setExtManagedVirtualLinkId(x);
-			ext.setResourceProviderId("PROVIDER");
-			ext.setVimId("VIM");
+			ext.setResourceProviderId("ETSI-MANO-VNFM");
+			ext.setVimId(task.getServer().getId().toString());
 			return ext;
 		})
 				.filter(Objects::nonNull)
@@ -113,7 +113,7 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 			final String details = Optional.ofNullable(result.getError()).map(FailureDetails::getDetail).orElse("[No content]");
 			throw new GenericException("VNF LCM Failed: " + details + " With state:  " + result.getOperationStatus());
 		}
-		return res.getInstance().getId().toString();
+		return null;
 	}
 
 	private VnfInstantiate createRequest() {

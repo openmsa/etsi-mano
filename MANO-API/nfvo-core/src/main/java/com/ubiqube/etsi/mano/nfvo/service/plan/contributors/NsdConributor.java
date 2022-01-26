@@ -36,7 +36,6 @@ import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsCreateVt;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsInstantiateVt;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVtBase;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdInstantiateNode;
@@ -64,7 +63,7 @@ public class NsdConributor extends AbstractNsContributor<NsdTask, NsVtBase<NsdTa
 		final List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsdTask.class.getSimpleName());
 		insts.stream().forEach(x -> {
 			final NsdTask nt = createDeleteTask(NsdTask::new, x);
-			ret.add(new NsInstantiateVt(nt));
+			ret.add(new NsCreateVt(nt));
 		});
 		return ret;
 	}
@@ -103,7 +102,6 @@ public class NsdConributor extends AbstractNsContributor<NsdTask, NsVtBase<NsdTa
 			nsd.setChangeType(ChangeType.ADDED);
 			nsd.setVirtualLinks(nsPackageNsPackage.getVirtualLinks());
 			ret.add(new NsCreateVt(nsd));
-			ret.add(new NsInstantiateVt(nsd));
 		}
 	}
 
@@ -115,7 +113,6 @@ public class NsdConributor extends AbstractNsContributor<NsdTask, NsVtBase<NsdTa
 			nt.setVimResourceId(task.getVimResourceId());
 			nt.setServer(task.getServer());
 			ret.add(new NsCreateVt(nt));
-			ret.add(new NsInstantiateVt(nt));
 		}
 	}
 

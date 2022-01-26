@@ -47,7 +47,6 @@ import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfCreateVt;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfInstantiateVt;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVtBase;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfInstantiateNode;
@@ -91,7 +90,6 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			nt.setVimResourceId(task.getVimResourceId());
 			nt.setServer(task.getServer());
 			ret.add(new NsVnfCreateVt(nt));
-			ret.add(new NsVnfInstantiateVt(nt));
 		});
 		return ret;
 	}
@@ -139,7 +137,6 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			nt.setVimResourceId(task.getVimResourceId());
 			nt.setServer(task.getServer());
 			ret.add(new NsVnfCreateVt(nt));
-			ret.add(new NsVnfInstantiateVt(nt));
 		}
 	}
 
@@ -157,7 +154,6 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			vnf.setFlavourId("flavour");
 			vnf.setVnfdId(nsPackageVnfPackage.getVnfPackage().getVnfdId());
 			ret.add(new NsVnfCreateVt(vnf));
-			ret.add(new NsVnfInstantiateVt(vnf));
 		}
 	}
 
