@@ -70,7 +70,9 @@ public class ManoQueryBuilder {
 	}
 
 	public void delete() {
-		//
+		final ServerAdapter server = client.getServer();
+		final URI uri = buildUri(server);
+		server.rest().delete(uri, Object.class);
 	}
 
 	public <T> ResponseEntity<T> getRaw() {
