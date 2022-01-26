@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
@@ -100,6 +101,7 @@ public class NsdConributor extends AbstractNsContributor<NsdTask, NsVtBase<NsdTa
 			final NsdTask nsd = createTask(NsdTask::new);
 			nsd.setNsdId(pkg.getId());
 			nsd.setChangeType(ChangeType.ADDED);
+			nsd.setType(ResourceTypeEnum.NSD);
 			nsd.setVirtualLinks(nsPackageNsPackage.getVirtualLinks());
 			ret.add(new NsCreateVt(nsd));
 		}

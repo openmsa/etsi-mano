@@ -33,6 +33,7 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.config.ServerType;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
@@ -89,6 +90,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			nt.setExternalNetworks(nets);
 			nt.setVimResourceId(task.getVimResourceId());
 			nt.setServer(task.getServer());
+			nt.setType(ResourceTypeEnum.VNF);
 			ret.add(new NsVnfCreateVt(nt));
 		});
 		return ret;
@@ -121,7 +123,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 					if (curr > inst) {
 						remove(curr - inst, blueprint.getInstance(), ret);
 					} else if (curr < inst) {
-						add(inst - curr, x, nsPackageVnfPackage, ret);
+						add(inst, inst - curr, x, nsPackageVnfPackage, ret);
 					}
 				});
 		return ret;
@@ -140,8 +142,8 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 		}
 	}
 
-	private void add(final int cnt, final VnfPackage vnfPkg, final NsdPackageVnfPackage nsPackageVnfPackage, final List<NsVtBase<NsVnfTask>> ret) {
-		for (int i = 0; i < cnt; i++) {
+	private void add(final int curr, final int cnt, final VnfPackage vnfPkg, final NsdPackageVnfPackage nsPackageVnfPackage, final List<NsVtBase<NsVnfTask>> ret) {
+		for (int i = curr; i < cnt; i++) {
 			final NsVnfTask vnf = createTask(NsVnfTask::new);
 			vnf.setChangeType(ChangeType.ADDED);
 			final Set<String> nets = getNetworks(vnfPkg);
@@ -149,10 +151,11 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			vnf.setNsPackageVnfPackage(nsPackageVnfPackage);
 			final Servers server = selectServer(vnfPkg);
 			vnf.setServer(server);
-			vnf.setAlias(nsPackageVnfPackage.getToscaName());
+			vnf.setAlias(nsPackageVnfPackage.getToscaName() + "-" + String.format("%04d", i));
 			vnf.setToscaName(nsPackageVnfPackage.getToscaName());
 			vnf.setFlavourId("flavour");
 			vnf.setVnfdId(nsPackageVnfPackage.getVnfPackage().getVnfdId());
+			vnf.setType(ResourceTypeEnum.VNF);
 			ret.add(new NsVnfCreateVt(vnf));
 		}
 	}

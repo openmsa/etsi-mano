@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
@@ -58,6 +59,7 @@ public class NsVirtualLinkContributor extends AbstractNsContributor<NsVirtualLin
 		insts.stream().forEach(x -> {
 			final NsVirtualLinkTask nt = createDeleteTask(NsVirtualLinkTask::new, x);
 			nt.setVimResourceId(x.getResourceId());
+			nt.setType(ResourceTypeEnum.VL);
 			ret.add(new NsVirtualLinkVt(nt));
 		});
 		return ret;
@@ -80,6 +82,7 @@ public class NsVirtualLinkContributor extends AbstractNsContributor<NsVirtualLin
 					final NsVirtualLinkTask nsVl = createTask(NsVirtualLinkTask::new, x);
 					nsVl.setChangeType(ChangeType.ADDED);
 					nsVl.setNsVirtualLink(x);
+					nsVl.setType(ResourceTypeEnum.VL);
 					return new NsVirtualLinkVt(nsVl);
 				}).toList();
 	}
