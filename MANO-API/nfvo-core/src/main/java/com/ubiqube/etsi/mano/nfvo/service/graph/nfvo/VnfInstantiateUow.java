@@ -89,7 +89,7 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfInstantiateTask
 
 	@Override
 	public String execute(final Context context) {
-		final String inst = context.get(VnfCreateNode.class, task.getToscaName());
+		final String inst = context.get(VnfCreateNode.class, task.getAlias());
 		final List<ExternalManagedVirtualLink> net = task.getExternalNetworks().stream().map(x -> {
 			final String resource = context.get(Network.class, x);
 			if (null == resource) {

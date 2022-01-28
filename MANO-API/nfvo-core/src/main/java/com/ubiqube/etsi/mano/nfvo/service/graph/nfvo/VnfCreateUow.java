@@ -16,6 +16,9 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
@@ -26,8 +29,12 @@ import com.ubiqube.etsi.mano.service.VnfmInterface;
 
 /**
  *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
  */
 public class VnfCreateUow extends AbstractNsUnitOfWork<NsVnfTask> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfCreateUow.class);
 
 	private final VnfmInterface vnfm;
 
@@ -49,7 +56,12 @@ public class VnfCreateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 	@Override
 	public String rollback(final Context context) {
 		if (null != task.getVimResourceId()) {
-			vnfm.delete(task.getServer(), task.getVimResourceId());
+			try {
+				vnfm.delete(task.getServer(), task.getVimResourceId());
+			} catch (final RuntimeException e) {
+				LOG.trace("", e);
+				LOG.warn("Could not delete instance {}", task.getVimResourceId());
+			}
 		}
 		return null;
 	}

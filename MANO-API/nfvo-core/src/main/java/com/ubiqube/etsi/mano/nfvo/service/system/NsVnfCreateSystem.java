@@ -62,10 +62,10 @@ public class NsVnfCreateSystem extends AbstractVimSystem<NsVnfTask> {
 		nt.setInstantiationLevelId(p.getInstantiationLevelId());
 		nt.setLocalizationLanguage(p.getLocalizationLanguage());
 		nt.setServer(p.getServer());
-		nt.setToscaName(p.getToscaName());
 		if (p.getChangeType() == ChangeType.REMOVED) {
 			nt.setVimResourceId(p.getVimResourceId());
 		}
+		nt.setToscaName("inst-" + p.getAlias());
 		nt.setType(p.getType());
 		final SystemBuilder s = orchestrationService.createEmptySystemBuilder();
 		s.add(new VnfCreateUow(virtualTask, vnfm), new VnfInstantiateUow(new NsInstantiateVt(nt), vnfm));

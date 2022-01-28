@@ -49,7 +49,7 @@ public class NsVnfCreateVt extends NsVtBase<NsVnfTask> {
 
 	@Override
 	public List<NamedDependency> getNamedProduced() {
-		return Arrays.asList(new NamedDependency(VnfCreateNode.class, getParameters().getToscaName()));
+		return Arrays.asList(new NamedDependency(VnfCreateNode.class, getParameters().getAlias()));
 	}
 
 	@Override

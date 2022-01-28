@@ -83,16 +83,19 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 	private List<NsVtBase<NsVnfTask>> doTerminatePlan(final NsdInstance instance) {
 		final List<NsVtBase<NsVnfTask>> ret = new ArrayList<>();
 		final List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfTask.class.getSimpleName());
-		insts.stream().forEach(x -> {
-			final NsVnfTask task = (NsVnfTask) x.getNsTask();
-			final NsVnfTask nt = createDeleteTask(NsVnfTask::new, x);
+		int i = 0;
+		for (final NsLiveInstance nsLiveInstance : insts) {
+			final NsVnfTask task = (NsVnfTask) nsLiveInstance.getNsTask();
+			final NsVnfTask nt = createDeleteTask(NsVnfTask::new, nsLiveInstance);
 			final Set<String> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
 			nt.setExternalNetworks(nets);
 			nt.setVimResourceId(task.getVimResourceId());
 			nt.setServer(task.getServer());
+			nt.setAlias(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
+			nt.setToscaName(getToscaName(nsLiveInstance.getNsTask().getAlias(), i++));
 			nt.setType(ResourceTypeEnum.VNF);
 			ret.add(new NsVnfCreateVt(nt));
-		});
+		}
 		return ret;
 	}
 
@@ -117,13 +120,13 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 		vnfs.stream()
 				.forEach(x -> {
 					final NsdPackageVnfPackage nsPackageVnfPackage = find(x, bundle.nsPackage().getVnfPkgIds());
-					final int curr = nsInstanceService.countLiveInstanceOfVnf(blueprint.getNsInstance(), nsPackageVnfPackage.getToscaName());
+					final int curr = nsInstanceService.countLiveInstanceOfVnf(blueprint.getNsInstance(), nsPackageVnfPackage.getToscaName() + "%");
 					final int inst = nsScaleStrategy.getNumberOfInstances(nsPackageVnfPackage, blueprint);
 					LOG.info("VNF curr: {} <=> inst: {}", curr, inst);
 					if (curr > inst) {
 						remove(curr - inst, blueprint.getInstance(), ret);
 					} else if (curr < inst) {
-						add(inst, inst - curr, x, nsPackageVnfPackage, ret);
+						add(curr, inst, x, nsPackageVnfPackage, ret);
 					}
 				});
 		return ret;
@@ -137,6 +140,8 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			final Set<String> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
 			nt.setExternalNetworks(nets);
 			nt.setVimResourceId(task.getVimResourceId());
+			nt.setToscaName(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
+			nt.setAlias(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
 			nt.setServer(task.getServer());
 			ret.add(new NsVnfCreateVt(nt));
 		}
@@ -144,6 +149,8 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 
 	private void add(final int curr, final int cnt, final VnfPackage vnfPkg, final NsdPackageVnfPackage nsPackageVnfPackage, final List<NsVtBase<NsVnfTask>> ret) {
 		for (int i = curr; i < cnt; i++) {
+			final String newName = getToscaName(nsPackageVnfPackage.getToscaName(), i);
+			LOG.debug("VNF inst Creating: {}", newName);
 			final NsVnfTask vnf = createTask(NsVnfTask::new);
 			vnf.setChangeType(ChangeType.ADDED);
 			final Set<String> nets = getNetworks(vnfPkg);
@@ -151,13 +158,19 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			vnf.setNsPackageVnfPackage(nsPackageVnfPackage);
 			final Servers server = selectServer(vnfPkg);
 			vnf.setServer(server);
-			vnf.setAlias(nsPackageVnfPackage.getToscaName() + "-" + String.format("%04d", i));
-			vnf.setToscaName(nsPackageVnfPackage.getToscaName());
+			vnf.setAlias(newName);
+			vnf.setToscaName(newName);
 			vnf.setFlavourId("flavour");
 			vnf.setVnfdId(nsPackageVnfPackage.getVnfPackage().getVnfdId());
 			vnf.setType(ResourceTypeEnum.VNF);
 			ret.add(new NsVnfCreateVt(vnf));
+			// final NsVnfInstantiateTask nt = createInstantiateTask(vnf);
+			// ret.add(new NsInstantiateVt(nt));
 		}
+	}
+
+	private static String getToscaName(final String nsPackageVnfPackage, final int instanceNumber) {
+		return nsPackageVnfPackage + "-" + String.format("%04d", instanceNumber);
 	}
 
 	private Servers selectServer(final VnfPackage vnfPackage) {

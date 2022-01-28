@@ -21,33 +21,38 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfInstantiateTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdCreateNode;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdInstantiateNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfInstantiateNode;
 
-public class NsInstantiateVt extends NsVtBase<NsVnfInstantiateTask> {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class NsVnfInstantiateVt extends NsVtBase<NsVnfInstantiateTask> {
 
-	public NsInstantiateVt(final NsVnfInstantiateTask nt) {
+	protected NsVnfInstantiateVt(final NsVnfInstantiateTask nt) {
 		super(nt);
 	}
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		return Arrays.asList(new NamedDependency(NsdCreateNode.class, getParameters().getAlias()));
+		return Arrays.asList(new NamedDependency(VnfCreateNode.class, getParameters().getAlias()));
 	}
 
 	@Override
 	public List<NamedDependency> getNamedProduced() {
-		return Arrays.asList(new NamedDependency(NsdInstantiateNode.class, getParameters().getAlias()));
+		return Arrays.asList(new NamedDependency(VnfInstantiateNode.class, getParameters().getToscaName()));
 	}
 
 	@Override
 	public String getFactoryProviderId() {
-		return "NSD-INSTANTIATE";
+		return "VNF-INST";
 	}
 
 	@Override
 	public String getVimProviderId() {
-		return "NSD-INSTANTIATE";
+		return "VNF-INST";
 	}
 
 }
