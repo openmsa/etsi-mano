@@ -56,10 +56,11 @@ public class GraphTools {
 	}
 
 	public static <U> void dump(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g) {
-		g.edgeSet().forEach(x -> LOG.debug(" {} => {}", x.getSource(), x.getTarget()));
+		g.vertexSet().forEach(x -> LOG.debug("v: {}", x.getTask().getName()));
+		g.edgeSet().forEach(x -> LOG.debug("e: {} => {}", x.getSource(), x.getTarget()));
 	}
 
 	public static <U> void dumpVt(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> g) {
-		g.edgeSet().forEach(x -> LOG.debug(" {} => {}", x.getSource(), x.getTarget()));
+		g.edgeSet().forEach(x -> LOG.debug("vt: {} => {}", x.getSource(), x.getTarget()));
 	}
 }

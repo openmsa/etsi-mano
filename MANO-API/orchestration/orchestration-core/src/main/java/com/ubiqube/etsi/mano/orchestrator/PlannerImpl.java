@@ -144,6 +144,7 @@ public class PlannerImpl<P, U, W> implements Planner<P, U, W> {
 			x.setSystemBuilder(db);
 			db.getIncomingVertex().forEach(ng::addVertex);
 			db.getOutgoingVertex().forEach(ng::addVertex);
+			db.getEdges().forEach(y -> ng.addEdge(y.getSource(), y.getTarget()));
 		});
 		// Connect everything.
 		gf.edgeSet().forEach(x -> {
