@@ -54,7 +54,13 @@ public class VnfEvent {
 	public void onEvent(final UUID vnfPkgId, final String event) {
 		final List<Subscription> res = subscriptionService.selectNotifications(vnfPkgId, event);
 		LOG.info("Event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
-		res.stream().forEach(x -> sendNotification(vnfPkgId, x, event));
+		res.stream().forEach(x -> {
+			try {
+				sendNotification(vnfPkgId, x, event);
+			} catch (final RuntimeException e) {
+				LOG.error("Could not send notfication {}", x.getCallbackUri(), e);
+			}
+		});
 	}
 
 	private void sendNotification(final UUID vnfPkgId, final Subscription subscription, final String event) {
@@ -76,11 +82,7 @@ public class VnfEvent {
 			return;
 		}
 		final var callbackUri = subscription.getCallbackUri();
-		try {
-			notifications.doNotification(object, callbackUri, server);
-		} catch (final RuntimeException e) {
-			LOG.error("Could not send notification.", e);
-		}
+		notifications.doNotification(object, callbackUri, server);
 	}
 
 }
