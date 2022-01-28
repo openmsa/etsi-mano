@@ -39,13 +39,11 @@ import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
@@ -67,17 +65,14 @@ public class GrantAction extends AbstractGrantAction {
 
 	private final VimManager vimManager;
 
-	private final VnfInstanceGatewayService vnfInstanceService;
-
 	private final VnfPackageService vnfPackageService;
 
 	private final Random rnd;
 
-	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VnfInstanceGatewayService vnfInstancesRepository, final VimElection vimElection, final VnfPackageService vnfPackageService) {
+	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final VnfPackageService vnfPackageService) {
 		super(grantJpa, vimManager, vimElection);
 		this.grantJpa = grantJpa;
 		this.vimManager = vimManager;
-		this.vnfInstanceService = vnfInstancesRepository;
 		this.vnfPackageService = vnfPackageService;
 		this.rnd = new Random();
 	}
@@ -85,15 +80,15 @@ public class GrantAction extends AbstractGrantAction {
 	@Override
 	protected Set<VnfCompute> getVnfCompute(final UUID objectId) {
 		final GrantResponse grant = grantJpa.findById(objectId).orElseThrow();
-		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString(grant.getVnfInstanceId()));
-		return vnfPackageService.findByVnfdId(UUID.fromString(vnfInstance.getVnfdId())).getVnfCompute();
+		final VnfPackage pkg = vnfPackageService.findByVnfdId(UUID.fromString(grant.getVnfdId()));
+		return pkg.getVnfCompute();
 	}
 
 	@Override
 	protected Set<VnfStorage> getVnfStorage(final UUID objectId) {
 		final GrantResponse grant = grantJpa.findById(objectId).orElseThrow();
-		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString(grant.getVnfInstanceId()));
-		return vnfPackageService.findByVnfdId(UUID.fromString(vnfInstance.getVnfdId())).getVnfStorage();
+		final VnfPackage pkg = vnfPackageService.findByVnfdId(UUID.fromString(grant.getVnfdId()));
+		return pkg.getVnfStorage();
 	}
 
 	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse, final VnfPackage vnfPackage) {
