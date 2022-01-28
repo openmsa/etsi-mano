@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,15 +151,35 @@ public class NsScaleStrategy {
 	@SuppressWarnings("boxing")
 	private static int getByStepData(final ScaleNsByStepsData scaleNsByStepsData, final Levelable<? extends NsScleStepMapping, ? extends NsScaleLevel> vnfPackage, final NsdInstance instance) {
 		final int baseStep = getBaseStep(instance, scaleNsByStepsData.getAspectId());
-		final Optional<? extends NsScleStepMapping> stepMapping = vnfPackage.getStepMapping().stream()
-				.filter(x -> x.getAspectId().equals(scaleNsByStepsData.getAspectId()))
-				.findFirst();
+		final Optional<? extends NsScleStepMapping> stepMapping = findStepMapping(scaleNsByStepsData.getAspectId(), vnfPackage);
 		if (stepMapping.isEmpty()) {
-			// XXX: is it wrong ? if no match we should evaluate the current level ?
-			return 1;
+			final Set<String> uniqAspect = vnfPackage.getStepMapping().stream().map(NsScleStepMapping::getAspectId).collect(Collectors.toSet());
+			if (uniqAspect.isEmpty()) {
+				return 1;
+			}
+			if (uniqAspect.size() > 1) {
+				LOG.warn("There is multiple aspectId, taking the first one: {}", uniqAspect);
+			}
+			final String currentAspect = uniqAspect.iterator().next();
+			final Optional<ScaleInfo> instanceLevel = instance.getInstantiatedVnfInfo().getNsStepStatus().stream().filter(x -> x.getAspectId().equals(currentAspect)).findFirst();
+			final Optional<? extends NsScleStepMapping> instStep = findStepMapping(currentAspect, vnfPackage);
+			if (instStep.isEmpty()) {
+				LOG.warn("Could not find step mapping for aspectId: {}", currentAspect);
+				return 1;
+			}
+			if (instanceLevel.isEmpty()) {
+				return getStep(instStep.get().getLevels(), 0);
+			}
+			return getStep(instStep.get().getLevels(), instanceLevel.get().getScaleLevel());
 		}
 		final int newLevel = computeLevel(scaleNsByStepsData, baseStep);
 		return getStep(stepMapping.get().getLevels(), newLevel);
+	}
+
+	private static Optional<? extends NsScleStepMapping> findStepMapping(final String aspectId, final Levelable<? extends NsScleStepMapping, ? extends NsScaleLevel> vnfPackage) {
+		return vnfPackage.getStepMapping().stream()
+				.filter(x -> x.getAspectId().equals(aspectId))
+				.findFirst();
 	}
 
 	@SuppressWarnings("boxing")
