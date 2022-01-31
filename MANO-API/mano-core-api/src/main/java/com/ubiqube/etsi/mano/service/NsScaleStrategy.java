@@ -216,7 +216,11 @@ public class NsScaleStrategy {
 	@SuppressWarnings("boxing")
 	private static int computeLevel(final ScaleNsByStepsData scaleData, final Integer base) {
 		if (scaleData.getScalingDirection() == ScalingDirectionType.IN) {
-			return base - scaleData.getNumberOfSteps();
+			final int ret = base - scaleData.getNumberOfSteps();
+			if (ret < 0) {
+				return 0;
+			}
+			return ret;
 		}
 		return base + scaleData.getNumberOfSteps();
 	}
