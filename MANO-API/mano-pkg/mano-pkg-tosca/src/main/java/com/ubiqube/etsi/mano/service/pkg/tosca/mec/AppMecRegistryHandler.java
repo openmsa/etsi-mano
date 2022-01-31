@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 import com.ubiqube.parser.tosca.csar.CsarParser;
 
 /**
@@ -102,9 +101,4 @@ public class AppMecRegistryHandler implements PackageDescriptor<AppToscaProvider
 		return mapper;
 	}
 
-	@Override
-	public ExecutionGraph getBlueprint() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

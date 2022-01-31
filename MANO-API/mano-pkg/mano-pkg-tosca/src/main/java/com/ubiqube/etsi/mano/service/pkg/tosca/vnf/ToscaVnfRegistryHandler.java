@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -33,7 +32,7 @@ public class ToscaVnfRegistryHandler implements PackageDescriptor<VnfPackageRead
 	@Override
 	public boolean isProcessable(final byte[] data) {
 		// P K x03 x04
-		return ((data.length > 10) && ((data[0] == 'P') && (data[1] == 'K')));
+		return data.length > 10 && data[0] == 'P' && data[1] == 'K';
 	}
 
 	@Override
@@ -44,14 +43,6 @@ public class ToscaVnfRegistryHandler implements PackageDescriptor<VnfPackageRead
 	@Override
 	public VnfPackageReader getNewReaderInstance(final byte[] data) {
 		return new ToscaVnfPackageReader(data);
-	}
-
-	@Override
-	public ExecutionGraph getBlueprint() {
-		/*
-		 * return BlueprintBuilder.builder().fork() .from(Storage.class).connect(Compute.class) .from(DnsZone.class).connect(Network.class).then(Compute.class) .fork().from(Monitoring.class).from(DnsHost.class).join() .connect(VnfExtCp.class) .build();
-		 */
-		return null;
 	}
 
 }

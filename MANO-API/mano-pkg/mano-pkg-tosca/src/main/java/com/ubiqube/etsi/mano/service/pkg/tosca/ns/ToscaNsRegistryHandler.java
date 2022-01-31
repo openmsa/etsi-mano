@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -33,7 +32,7 @@ public class ToscaNsRegistryHandler implements PackageDescriptor<NsPackageProvid
 	@Override
 	public boolean isProcessable(final byte[] data) {
 		// P K x03 x04
-		return ((data.length > 10) && ((data[0] == 'P') && (data[1] == 'K')));
+		return data.length > 10 && data[0] == 'P' && data[1] == 'K';
 	}
 
 	@Override
@@ -44,12 +43,6 @@ public class ToscaNsRegistryHandler implements PackageDescriptor<NsPackageProvid
 	@Override
 	public NsPackageProvider getNewReaderInstance(final byte[] data) {
 		return new ToscaNsPackageProvider(data);
-	}
-
-	@Override
-	public ExecutionGraph getBlueprint() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
