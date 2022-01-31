@@ -474,6 +474,13 @@ policies:
     properties:
       scope: nfvi_pop
 
+  anti_affinity_01:
+    type: tosca.policies.nfv.AntiAffinityRule
+    targets: [ vdu01, vl02, server_group_1 ]
+    properties:
+      scope: nfvi_node
+
+
   security:
     type: tosca.policies.nfv.SecurityGroupRule
     properties:

@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
+import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
+import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.tosca.vnf.ToscaVnfPackageReader;
 import com.ubiqube.etsi.mano.test.ZipUtil;
 import com.ubiqube.etsi.mano.test.ZipUtil.Entry;
@@ -168,5 +171,19 @@ public class ToscaPackageProviderTest {
 		assertEquals(1, monParams.size());
 		final MonitoringParams data = monParams.iterator().next();
 		assertEquals("mon01", data.getName());
+	}
+
+	@Test
+	void testAffinityRule() throws Exception {
+		final Set<AffinityRuleAdapater> res = tpp.getAffinityRules(Map.of());
+		assertNotNull(res);
+		assertEquals(2, res.size());
+	}
+
+	@Test
+	void testSecurityGroup() throws Exception {
+		final Set<SecurityGroupAdapter> res = tpp.getSecurityGroups(Map.of());
+		assertNotNull(res);
+		assertEquals(1, res.size());
 	}
 }
