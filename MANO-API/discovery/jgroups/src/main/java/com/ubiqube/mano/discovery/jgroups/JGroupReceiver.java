@@ -50,18 +50,18 @@ public class JGroupReceiver implements Receiver {
 		// Save view if this is the first
 		if (lastView == null) {
 			System.out.println("Received initial view:");
-			newView.forEach(System.out::println);
+			newView.forEach(x -> LOG.debug("{}", x));
 		} else {
 			// Compare to last view
-			System.out.println("Received new view.");
+			LOG.debug("Received new view.");
 
 			final List<Address> newMembers = View.newMembers(lastView, newView);
-			System.out.println("New members: ");
+			LOG.debug("New members: ");
 			newMembers.forEach(this::handleNewMember);
 
 			final List<Address> exMembers = View.leftMembers(lastView, newView);
-			System.out.println("Exited members:");
-			exMembers.forEach(System.out::println);
+			LOG.debug("Exited members:");
+			exMembers.forEach(x -> LOG.debug("{}", x));
 		}
 		lastView = newView;
 	}
@@ -73,7 +73,7 @@ public class JGroupReceiver implements Receiver {
 			final EventMessage msg = EventMessage.builder().action("announce").payload("payload").build();
 			channel.send(addr, mapper.writeValueAsString(msg));
 		} catch (final Exception e) {
-			e.printStackTrace();
+			LOG.error("", e);
 		}
 	}
 }
