@@ -121,9 +121,7 @@ public abstract class AbstractGenericAction {
 		if (localPlan.getOperation() == PlanOperationType.INSTANTIATE) {
 			instance.getInstantiatedVnfInfo().setNsStepStatus(localPlan.getParameters().getNsStepStatus());
 		}
-		Optional.ofNullable(localPlan.getParameters().getNsScale()).ifPresent(x -> {
-			nsScaleStrategy.remapNsScale(x, instance);
-		});
+		Optional.ofNullable(localPlan.getParameters().getNsScale()).ifPresent(x -> nsScaleStrategy.remapNsScale(x, instance));
 		LOG.info("Saving Instance.");
 		instance.getInstantiatedVnfInfo().setInstantiationLevelId(localPlan.getParameters().getInstantiationLevelId());
 		if (null != localPlan.getParameters().getFlavourId()) {

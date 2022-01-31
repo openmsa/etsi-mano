@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.service.vim.VimManager;
 public abstract class AbstractVimSystem<U> implements System<U> {
 	private final VimManager vimManager;
 
-	public AbstractVimSystem(final VimManager vimManager) {
+	protected AbstractVimSystem(final VimManager vimManager) {
 		super();
 		this.vimManager = vimManager;
 	}

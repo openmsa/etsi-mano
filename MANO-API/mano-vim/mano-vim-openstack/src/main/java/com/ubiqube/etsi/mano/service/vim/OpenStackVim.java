@@ -128,7 +128,7 @@ public class OpenStackVim implements Vim {
 		return base.authenticate();
 	}
 
-	private synchronized static OSClientV3 getClient(final VimConnectionInformation vimConnectionInformation) {
+	private static synchronized OSClientV3 getClient(final VimConnectionInformation vimConnectionInformation) {
 		final Map<String, OSClientV3> sess = sessions.get();
 		if (null == sess) {
 			final Map<String, OSClientV3> newSess = new ConcurrentHashMap<>();

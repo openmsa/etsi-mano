@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -40,12 +39,6 @@ public class NsDefaultRegistryHandler implements PackageDescriptor<NsPackageProv
 	@Override
 	public NsPackageProvider getNewReaderInstance(final byte[] data) {
 		return new DefaultNsPackageProvider();
-	}
-
-	@Override
-	public ExecutionGraph getBlueprint() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
