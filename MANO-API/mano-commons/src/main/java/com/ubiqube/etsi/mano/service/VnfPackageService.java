@@ -17,52 +17,17 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
-
-import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
-import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
-import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
-import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 
 public interface VnfPackageService {
 
-	List<VnfComputeAspectDelta> findAspectDeltaByAspectId(final VnfCompute vnfCompute, final String aspectName);
-
-	Optional<VnfStorage> findStorageByName(final VnfPackage vnfPackage, final String name);
-
-	Optional<VnfVl> findVirtualLnkById(final UUID uuid);
-
-	Optional<VnfStorage> findVirtualStorageById(final UUID uuid);
-
-	Optional<VnfCompute> findComputeById(final UUID uuid);
-
-	Optional<VnfExtCp> findExtCpById(final UUID uuid);
-
-	VduInstantiationLevel findByVnfComputeAndInstantiationLevel(final VnfCompute x, final String scaleInfoName);
-
-	@NotNull
-	VnfPackage findById(final VnfPackage vnfPackage);
-
 	@NotNull
 	VnfPackage findById(final UUID vnfPkgId);
-
-	List<VnfInstantiationLevels> findVnfInstantiationLevelsByVnfComputeAndLevel(final VnfPackage vnfPackage, final String level);
-
-	List<VnfInstantiationLevels> findVnfInstantiationLevelsByVnfPacckage(final VnfPackage vnfPackage);
 
 	VnfPackage save(final VnfPackage vnfPackage);
 
@@ -72,11 +37,7 @@ public interface VnfPackageService {
 
 	Optional<VnfPackage> findByDescriptorIdAndSoftwareVersion(final String name, final String version);
 
-	Set<VnfLinkPort> findVnfVirtualLinks(final VnfPackage vnfPackage);
-
 	VnfPackage findByVnfdId(final UUID id);
-
-	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 
 	void delete(UUID id);
 
