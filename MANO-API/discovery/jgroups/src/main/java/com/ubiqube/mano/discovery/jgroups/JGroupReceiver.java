@@ -49,7 +49,7 @@ public class JGroupReceiver implements Receiver {
 	public void viewAccepted(final View newView) {
 		// Save view if this is the first
 		if (lastView == null) {
-			System.out.println("Received initial view:");
+			LOG.debug("Received initial view:");
 			newView.forEach(x -> LOG.debug("{}", x));
 		} else {
 			// Compare to last view
