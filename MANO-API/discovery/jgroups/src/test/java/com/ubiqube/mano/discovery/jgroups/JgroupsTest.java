@@ -25,12 +25,13 @@ import org.jgroups.Address;
 import org.jgroups.JChannel;
 import org.jgroups.Receiver;
 import org.jgroups.View;
+import org.junit.jupiter.api.Test;
 
-public class JgroupsTest {
-	private static final int MAX_ROUNDS = 1_000;
+class JgroupsTest {
+	private static final int MAX_ROUNDS = 100;
 	private static final int SLEEP_TIME_IN_MILLIS = 1000;
 
-	// @Test
+	@Test
 	void testName() throws Exception {
 		assertTrue(true);
 	}
