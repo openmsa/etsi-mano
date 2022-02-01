@@ -160,7 +160,6 @@ public class VnfPackageOnboardingImpl {
 		final Set<VnfVl> vvlNodes = vnfPackageReader.getVnfVirtualLinks(vnfPackage.getUserDefinedData());
 		vnfPackage.setVnfVl(vvlNodes);
 		final Set<VnfLinkPort> vcNodes = vnfPackageReader.getVnfVduCp(vnfPackage.getUserDefinedData());
-		vcNodes.stream().forEach(x -> x.setVnfPackage(vnfPackage));
 		vnfPackage.setVnfLinkPort(vcNodes);
 		remapNetworks(cNodes, vcNodes);
 		vnfPackage.setAdditionalArtifacts(vnfPackageReader.getAdditionalArtefacts(vnfPackage.getUserDefinedData()));
