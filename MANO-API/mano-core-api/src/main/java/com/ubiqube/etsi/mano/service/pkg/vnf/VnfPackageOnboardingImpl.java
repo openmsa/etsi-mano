@@ -206,7 +206,9 @@ public class VnfPackageOnboardingImpl {
 		vnfPackage.setSecurityGroups(res);
 	}
 
-	private static void rebuildVduScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels, final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas, final Set<ScalingAspect> scalingAspects) {
+	@SuppressWarnings("boxing")
+	private static void rebuildVduScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels,
+			final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas, final Set<ScalingAspect> scalingAspects) {
 		// flattern the instantiation levels. levels(demo,premium) -> ScaleInfo(name,
 		// scaleLevel)
 		instantiationLevels.stream()
@@ -222,7 +224,6 @@ public class VnfPackageOnboardingImpl {
 					});
 				});
 		vduInstantiationLevels.forEach(x -> {
-			x.getInternalName();
 			final Set<VduInstantiationLevel> ils = x.getLevels().entrySet().stream().map(y -> {
 				final VduInstantiationLevel vduInstantiationLevel = new VduInstantiationLevel();
 				vduInstantiationLevel.setLevelName(y.getKey());
@@ -238,10 +239,13 @@ public class VnfPackageOnboardingImpl {
 		});
 		vduScalingAspectDeltas.forEach(x -> x.getTargets().forEach(y -> {
 			final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
+			final VduInitialDelta init = findVduInitialDelta(vduInitialDeltas, y);
 			int level = 1;
+			int numInst = init.getInitialDelta().getNumberOfInstances();
 			final ScalingAspect aspect = scalingAspects.stream().filter(z -> z.getName().equals(x.getAspect())).findFirst().orElse(new ScalingAspect());
 			for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
-				vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y));
+				numInst += delta.getValue().getNumberOfInstances();
+				vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y, numInst));
 			}
 		}));
 		// Minimal instance at instantiate time.
@@ -249,6 +253,18 @@ public class VnfPackageOnboardingImpl {
 			final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
 			vnfc.setInitialNumberOfInstance(x.getInitialDelta().getNumberOfInstances());
 		}));
+	}
+
+	private static VduInitialDelta findVduInitialDelta(final List<VduInitialDelta> vduInitialDeltas, final String y) {
+		return vduInitialDeltas.stream().filter(x -> x.getTargets().contains(y)).findFirst().orElseThrow(() -> new GenericException("Could not find initial level for vdu " + y));
+	}
+
+	private static Integer getStepInstance(final List<VduScalingAspectDeltas> vduScalingAspectDeltas, final String aspect, final String deltaName) {
+		return vduScalingAspectDeltas.stream()
+				.filter(z -> z.getAspect().equals(aspect))
+				.map(z -> z.getDeltas().get(deltaName))
+				.map(VduLevel::getNumberOfInstances)
+				.findFirst().orElse(0);
 	}
 
 	@Nonnull
@@ -261,18 +277,18 @@ public class VnfPackageOnboardingImpl {
 
 	private static void remapNetworks(final Set<VnfCompute> cNodes, final Set<VnfLinkPort> vcNodes) {
 		cNodes.forEach(x -> {
-			final Set<String> nodes = filter(vcNodes, x.getToscaName());
+			final Set<VnfLinkPort> nodes = filter(vcNodes, x.getToscaName());
 			if (nodes.isEmpty()) {
 				throw new GenericException("Node " + x.getToscaName() + " must have a network.");
 			}
-			x.setNetworks(nodes);
+			x.setNetworks(nodes.stream().map(VnfLinkPort::getVirtualLink).collect(Collectors.toSet()));
+			x.setPorts(nodes);
 		});
 	}
 
-	private static Set<String> filter(final Set<VnfLinkPort> vcNodes, final String toscaName) {
+	private static Set<VnfLinkPort> filter(final Set<VnfLinkPort> vcNodes, final String toscaName) {
 		return vcNodes.stream()
 				.filter(x -> x.getVirtualBinding().equals(toscaName))
-				.map(VnfLinkPort::getVirtualLink)
 				.collect(Collectors.toSet());
 	}
 

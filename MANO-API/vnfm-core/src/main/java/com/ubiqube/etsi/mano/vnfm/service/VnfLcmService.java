@@ -102,11 +102,15 @@ public class VnfLcmService {
 		lcmOpOccs.getParameters().setNumberOfSteps(scaleVnfRequest.getNumberOfSteps());
 		lcmOpOccs.getParameters().setScaleType(scaleVnfRequest.getType());
 		lcmOpOccs.getParameters().setAspectId(scaleVnfRequest.getAspectId());
-		final Set<ScaleInfo> scaleStatus = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
-				.filter(x -> x.getAspectId().equals(scaleVnfRequest.getAspectId()))
-				.map(x -> new ScaleInfo(x.getAspectId(), addDec(scaleVnfRequest.getType(), scaleVnfRequest.getNumberOfSteps(), x.getScaleLevel())))
-				.collect(Collectors.toSet());
-		lcmOpOccs.getParameters().setScaleStatus(scaleStatus);
+		lcmOpOccs.getParameters().setScaleStatus(scaleVnfRequest.getScaleInfo());
+		lcmOpOccs.getParameters().setInstantiationLevelId(scaleVnfRequest.getInstantiationLevelId());
+		// final Set<ScaleInfo> scaleStatus =
+		// vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
+		// .filter(x -> x.getAspectId().equals(scaleVnfRequest.getAspectId()))
+		// .map(x -> new ScaleInfo(x.getAspectId(), addDec(scaleVnfRequest.getType(),
+		// scaleVnfRequest.getNumberOfSteps(), x.getScaleLevel())))
+		// .collect(Collectors.toSet());
+		// lcmOpOccs.getParameters().setScaleStatus(scaleStatus);
 		return saveLcmOppOcc(lcmOpOccs, vnfInstance);
 	}
 

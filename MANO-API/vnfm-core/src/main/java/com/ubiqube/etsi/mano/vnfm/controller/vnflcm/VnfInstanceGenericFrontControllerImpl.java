@@ -39,7 +39,6 @@ import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
-import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.vnfm.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.vnfm.service.VnfInstanceServiceVnfm;
@@ -55,21 +54,17 @@ import ma.glasnost.orika.MapperFacade;
 public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGenericFrontController {
 	private static final String LOCATION = "Location";
 
-	private final VnfPackageService vnfPackageService;
-
 	private final VnfInstanceLcmImpl vnfInstanceLcm;
 
-	// XXX Duplicate service.
 	private final VnfInstanceService vnfInstancesService;
 
 	private final MapperFacade mapper;
 
 	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
-	public VnfInstanceGenericFrontControllerImpl(final VnfPackageService vnfPackageService, final VnfInstanceLcmImpl vnfInstanceLcm, final VnfInstanceService vnfInstancesService,
-			final MapperFacade mapper, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
+	public VnfInstanceGenericFrontControllerImpl(final VnfInstanceLcmImpl vnfInstanceLcm, final VnfInstanceService vnfInstancesService, final MapperFacade mapper,
+			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super();
-		this.vnfPackageService = vnfPackageService;
 		this.vnfInstanceLcm = vnfInstanceLcm;
 		this.vnfInstancesService = vnfInstancesService;
 		this.mapper = mapper;

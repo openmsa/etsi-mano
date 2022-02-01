@@ -17,7 +17,9 @@
 package com.ubiqube.etsi.mano.model;
 
 import java.util.Map;
+import java.util.Set;
 
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleByStepData;
 
@@ -47,8 +49,12 @@ public class VnfScaleRequest {
 
 	private Map<String, String> additionalParams;
 
-	public static VnfScaleRequest of(final ScaleTypeEnum scaleType, final ScaleByStepData scaleData) {
-		return new VnfScaleRequest(scaleType, scaleData.getAspectId(), scaleData.getNumberOfSteps(), Map.of());
+	private String instantiationLevelId;
+
+	private Set<ScaleInfo> scaleInfo;
+
+	public static VnfScaleRequest of(final ScaleTypeEnum scaleType, final ScaleByStepData scaleData, final Set<ScaleInfo> scaleInfo) {
+		return new VnfScaleRequest(scaleType, scaleData.getAspectId(), scaleData.getNumberOfSteps(), Map.of(), scaleData.getAspectId(), scaleInfo);
 	}
 
 }

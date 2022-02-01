@@ -82,7 +82,7 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 		final Set<ScaleInfo> scaling = merge(blueprint, vnfInstance);
 		final List<ComputeVt> ret = new ArrayList<>();
 		vnfPackage.getVnfCompute().forEach(x -> {
-			final NumberOfCompute numInst = scalingStrategy.getNumberOfCompute(blueprint, vnfPackage, scaling, x);
+			final NumberOfCompute numInst = scalingStrategy.getNumberOfCompute(blueprint, vnfPackage, scaling, x, blueprint.getVnfInstance());
 			if (numInst.getCurrent() < numInst.getWanted()) {
 				ret.addAll(addInstance(x, blueprint, numInst.getScaleInfo(), numInst));
 			} else if (numInst.getCurrent() > numInst.getWanted()) {

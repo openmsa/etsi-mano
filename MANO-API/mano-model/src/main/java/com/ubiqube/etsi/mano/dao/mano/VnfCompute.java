@@ -101,6 +101,9 @@ public class VnfCompute implements ToscaEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> networks;
 
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<VnfLinkPort> ports;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MonitoringParams> monitoringParameters;
 
