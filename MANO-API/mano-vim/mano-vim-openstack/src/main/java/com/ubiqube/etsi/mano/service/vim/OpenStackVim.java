@@ -163,29 +163,32 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData, final List<String> securityGroup, final List<String> affinityRules) {
-		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
+	public String createCompute(final ComputeParameters cp) {
+		final OSClientV3 os = OpenStackVim.getClient(cp.getVimConnectionInformation());
 		final ServerCreateBuilder bs = Builders.server();
-		LOG.debug("Creating server flavor={}, image={}", flavorId, imageId);
-		bs.image(imageId);
-		bs.name(instanceName);
-		bs.flavor(flavorId);
-		if (null != cloudInitData && !cloudInitData.isEmpty()) {
-			bs.userData(Base64.getEncoder().encodeToString(cloudInitData.getBytes(Charset.defaultCharset())));
+		LOG.debug("Creating server: {}", cp);
+		bs.image(cp.getImageId());
+		bs.name(cp.getInstanceName());
+		bs.flavor(cp.getFlavorId());
+		if (cp.getPortsId().isEmpty()) {
+			bs.networks(cp.getNetworks());
+		} else {
+			cp.getPortsId().forEach(bs::addNetworkPort);
 		}
-		bs.networks(networks);
-		if (!affinityRules.isEmpty()) {
-			bs.addSchedulerHint("group", affinityRules.get(0));
+		if (null != cp.getCloudInitData() && !cp.getCloudInitData().isEmpty()) {
+			bs.userData(Base64.getEncoder().encodeToString(cp.getCloudInitData().getBytes(Charset.defaultCharset())));
 		}
-		securityGroup.stream().forEach(bs::addSecurityGroup);
-		for (int i = 0; i < storages.size(); i++) {
+		if (!cp.getAffinityRules().isEmpty()) {
+			bs.addSchedulerHint("group", cp.getAffinityRules().get(0));
+		}
+		cp.getSecurityGroup().stream().forEach(bs::addSecurityGroup);
+		for (int i = 0; i < cp.getStorages().size(); i++) {
 			final BlockDeviceMappingCreate blockDevice = Builders.blockDeviceMapping()
-					.uuid(storages.get(i))
+					.uuid(cp.getStorages().get(i))
 					.bootIndex(i)
 					.build();
 			bs.blockDevice(blockDevice);
 		}
-
 		final Server res = os.compute().servers().boot(bs.build());
 		return res.getId();
 	}

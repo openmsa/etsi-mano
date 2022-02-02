@@ -287,7 +287,16 @@ public class OpenStackTest {
 		vnfc.setName("vdu01");
 		final List<String> networks = new ArrayList<>();
 		final List<String> storages = new ArrayList<>();
-		final String lid = vim.createCompute(vimConnectionInformation, "junit-name", "12745412-08b4-489c-95b0-eb2fd4a98b36", "e5429d68-3f1a-43e6-b46b-f83700d771da", networks, storages, null, List.of(), List.of());
+		final ComputeParameters computeParams = ComputeParameters.builder()
+				.vimConnectionInformation(vimConnectionInformation)
+				.instanceName("junit-name")
+				.flavorId("12745412-08b4-489c-95b0-eb2fd4a98b36")
+				.imageId("e5429d68-3f1a-43e6-b46b-f83700d771da")
+				.networks(networks)
+				.storages(storages)
+				.affinityRules(List.of())
+				.portsId(List.of()).build();
+		final String lid = vim.createCompute(computeParams);
 		assertNotNull(lid);
 	}
 

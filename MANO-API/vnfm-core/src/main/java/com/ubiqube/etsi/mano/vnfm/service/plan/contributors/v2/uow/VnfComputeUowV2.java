@@ -26,7 +26,9 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityGroupNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.vim.ComputeParameters;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 /**
@@ -65,8 +67,23 @@ public class VnfComputeUowV2 extends AbstractUowV2<ComputeTask> {
 				.map(x -> context.getParent(SecurityGroupNode.class, x))
 				.flatMap(List::stream)
 				.toList();
-
-		return vim.createCompute(vimConnectionInformation, t.getAlias(), t.getFlavorId(), t.getImageId(), net, storages, t.getBootData(), security, affinity);
+		final List<String> ports = t.getVnfCompute().getPorts().stream()
+				.map(x -> context.getParent(VnfPortNode.class, x.getToscaName() + "-" + getTask().getAlias()))
+				.flatMap(List::stream)
+				.toList();
+		final ComputeParameters computeParams = ComputeParameters.builder()
+				.vimConnectionInformation(vimConnectionInformation)
+				.instanceName(t.getAlias())
+				.flavorId(t.getFlavorId())
+				.imageId(t.getImageId())
+				.networks(net)
+				.storages(storages)
+				.cloudInitData(t.getBootData())
+				.securityGroup(security)
+				.affinityRules(affinity)
+				.portsId(ports)
+				.build();
+		return vim.createCompute(computeParams);
 	}
 
 	@Override
