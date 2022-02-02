@@ -40,6 +40,18 @@ topology_template:
         - virtual_link: # tosca.nodes.nfv.NsVirtualLink
             node: internal2
 
+    vsrx:
+      type:  tosca.nodes.nfv.VNF
+      properties:
+        flavour_id: flavor01
+        descriptor_id: fadf3699-e4c2-4259-9ef2-e0a137f33624
+      requirements:
+        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
+            node: internal
+        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
+            node: internal2
+
+
     internal:
       type: tosca.nodes.nfv.NsVirtualLink
       properties:
@@ -208,7 +220,6 @@ policies:
     targets:
       - nfp_1 # tosca.nodes.nfv.NFP
 
-
   ns_scaling_aspect:
     type: tosca.policies.nfv.NsScalingAspects
     properties:
@@ -225,10 +236,10 @@ policies:
     properties:
       aspect: aspect
       number_of_instances: # map<Integer, Integer>
-        0: 0
-        1: 1
-        2: 2
-        3: 3
+        0: 1
+        1: 2
+        2: 3
+        3: 4
     targets: [ vnf_1 ]
 
   ns instantiation_level:
@@ -249,11 +260,59 @@ policies:
     type: tosca.policies.nfv.VnfToInstantiationLevelMapping
     properties:
       number_of_instances: # map<String, Integer>
-        level_1: 0
-        level_2: 1
-        level_3: 2
-        level_4: 3
+        level_1: 1
+        level_2: 2
+        level_3: 3
+        level_4: 4
     targets: [ vnf_1 ]
+
+
+################################################################################
+  ns_scaling_aspect_vsrx:
+    type: tosca.policies.nfv.NsScalingAspects
+    properties:
+      aspects: # map tosca.datatypes.nfv.NsScalingAspect
+        vsrx:
+          name: vsrx
+          description: descr
+          ns_scale_levels:
+            1: # map<Integer, tosca.datatypes.nfv.NsLevels> 
+              description: descr
+
+  vnf_to_level_map_vsrx:
+    type: tosca.policies.nfv.VnfToLevelMapping
+    properties:
+      aspect: vsrx
+      number_of_instances: # map<Integer, Integer>
+        0: 1
+        1: 2
+        2: 3
+        3: 4
+    targets: [ vsrx ]
+
+  ns instantiation_level_vsrx:
+    type: tosca.policies.nfv.NsInstantiationLevels
+    properties:
+      default_level: level_1
+      ns_levels: # map<tosca.datatypes.nfv.NsLevels>
+        level_1:
+          description: Level 1
+        level_2:
+          description: Level 2
+        level_3:
+          description: level 3
+        level_4:
+          description: level 4
+
+  vnf_to_inst_level_vsrx:
+    type: tosca.policies.nfv.VnfToInstantiationLevelMapping
+    properties:
+      number_of_instances: # map<String, Integer>
+        level_1: 1
+        level_2: 2
+        level_3: 3
+        level_4: 4
+    targets: [ vsrx ]
 
   vl_to_inst:
     type: tosca.policies.nfv.VirtualLinkToInstantiationLevelMapping
