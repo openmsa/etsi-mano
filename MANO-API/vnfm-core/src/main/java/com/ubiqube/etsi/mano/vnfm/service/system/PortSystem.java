@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.service.system;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfPortTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
@@ -35,7 +35,7 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfPortUowV2;
  *
  */
 @Service
-public class PortSystem extends AbstractVimSystem<ExternalCpTask> {
+public class PortSystem extends AbstractVimSystem<VnfPortTask> {
 
 	private final Vim vim;
 
@@ -50,7 +50,7 @@ public class PortSystem extends AbstractVimSystem<ExternalCpTask> {
 	}
 
 	@Override
-	protected SystemBuilder<UnitOfWork<ExternalCpTask>> getImplementation(final OrchestrationService<ExternalCpTask> orchestrationService, final VirtualTask<ExternalCpTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<UnitOfWork<VnfPortTask>> getImplementation(final OrchestrationService<VnfPortTask> orchestrationService, final VirtualTask<VnfPortTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfPortUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 

@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.Instance;
@@ -57,6 +59,9 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.ComputeVt;
 @Priority(100)
 @Service
 public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTask, ComputeVt> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfV2ComputeContributor.class);
+
 	private final ScalingStrategy scalingStrategy;
 	private final VduNamingStrategy vduNamingStrategy;
 	private final VnfInstanceService vnfInstanceService;
@@ -83,6 +88,7 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 		final List<ComputeVt> ret = new ArrayList<>();
 		vnfPackage.getVnfCompute().forEach(x -> {
 			final NumberOfCompute numInst = scalingStrategy.getNumberOfCompute(blueprint, vnfPackage, scaling, x, blueprint.getVnfInstance());
+			LOG.debug("{} -> {}", x.getToscaName(), numInst);
 			if (numInst.getCurrent() < numInst.getWanted()) {
 				ret.addAll(addInstance(x, blueprint, numInst.getScaleInfo(), numInst));
 			} else if (numInst.getCurrent() > numInst.getWanted()) {
