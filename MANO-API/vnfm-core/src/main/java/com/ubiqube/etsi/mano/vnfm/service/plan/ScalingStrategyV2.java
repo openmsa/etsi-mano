@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
@@ -37,10 +38,23 @@ import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.NsScaleType;
+import com.ubiqube.etsi.mano.vnfm.service.VnfBlueprintService;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Service
 public class ScalingStrategyV2 implements ScalingStrategy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ScalingStrategyV2.class);
+	private final VnfBlueprintService planService;
+
+	public ScalingStrategyV2(final VnfBlueprintService planService) {
+		super();
+		this.planService = planService;
+	}
 
 	@Override
 	public NumberOfCompute getNumberOfCompute(final VnfBlueprint plan, final VnfPackage vnfPackage, final Set<ScaleInfo> scaling, final VnfCompute compute, final VnfInstance instance) {
@@ -53,7 +67,10 @@ public class ScalingStrategyV2 implements ScalingStrategy {
 	private NumberOfCompute handleInstantiate(final VnfBlueprint plan, final VnfPackage vnfPackage, final VnfInstance instance, final VnfCompute compute) {
 		final String level = Optional.ofNullable(plan.getParameters().getInstantiationLevelId()).orElseGet(vnfPackage::getDefaultInstantiationLevel);
 		final Optional<VduInstantiationLevel> newLevel = compute.getInstantiationLevel().stream().filter(x -> x.getLevelName().equals(level)).findFirst();
-		return null;
+		if (newLevel.isPresent()) {
+			return new NumberOfCompute(0, newLevel.get().getNumberOfInstances(), null);
+		}
+		return new NumberOfCompute(0, 1, null);
 	}
 
 	private NumberOfCompute handleScale(final VnfBlueprint plan, final VnfPackage vnfPackage, final VnfCompute compute, final VnfInstance vnfInstance) {
@@ -70,12 +87,13 @@ public class ScalingStrategyV2 implements ScalingStrategy {
 	}
 
 	private NumberOfCompute handleStep(final BlueprintParameters parameters, final VnfPackage vnfPackage, final VnfCompute compute, final VnfInstance instance) {
+		final int currentInst = planService.getNumberOfLiveInstance(instance, compute);
 		final int baseStep = getBaseStep(instance, parameters.getAspectId());
 		final List<VnfComputeAspectDelta> stepMapping = findStepMapping(parameters.getAspectId(), compute);
 		if (stepMapping.isEmpty()) {
 			final Set<String> uniqAspect = vnfPackage.getScaleStatus().stream().map(ScaleInfo::getAspectId).collect(Collectors.toSet());
 			if (uniqAspect.isEmpty()) {
-				return new NumberOfCompute(0, 1, new ScaleInfo(parameters.getAspectId(), 0));
+				return new NumberOfCompute(currentInst, 1, new ScaleInfo(parameters.getAspectId(), 0));
 			}
 			if (uniqAspect.size() > 1) {
 				LOG.warn("There is multiple aspectId, taking the first one: {}", uniqAspect);
@@ -85,18 +103,18 @@ public class ScalingStrategyV2 implements ScalingStrategy {
 			final List<VnfComputeAspectDelta> instStep = findStepMapping(currentAspect, compute);
 			if (instStep.isEmpty()) {
 				LOG.warn("Could not find step mapping for aspectId: {}", currentAspect);
-				return new NumberOfCompute(0, 1, new ScaleInfo(parameters.getAspectId(), 1));
+				return new NumberOfCompute(currentInst, 1, new ScaleInfo(parameters.getAspectId(), 1));
 			}
 			if (instanceLevel.isEmpty()) {
 				final int s = getStep(instStep, 0);
-				return new NumberOfCompute(0, s, new ScaleInfo(parameters.getAspectId(), s));
+				return new NumberOfCompute(currentInst, s, new ScaleInfo(parameters.getAspectId(), s));
 			}
 			final int s = getStep(instStep, instanceLevel.get().getScaleLevel());
-			return new NumberOfCompute(0, s, new ScaleInfo(parameters.getAspectId(), s));
+			return new NumberOfCompute(currentInst, s, new ScaleInfo(parameters.getAspectId(), s));
 		}
 		final int newLevel = computeLevel(parameters, baseStep);
 		final int s = getStep(stepMapping, newLevel);
-		return new NumberOfCompute(0, s, new ScaleInfo(parameters.getAspectId(), s));
+		return new NumberOfCompute(currentInst, s, new ScaleInfo(parameters.getAspectId(), s));
 	}
 
 	@SuppressWarnings("boxing")

@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
@@ -38,7 +37,6 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.vnfm.service.VnfBlueprintService;
 
-@Service
 public class DefaultScalingStrategy implements ScalingStrategy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultScalingStrategy.class);

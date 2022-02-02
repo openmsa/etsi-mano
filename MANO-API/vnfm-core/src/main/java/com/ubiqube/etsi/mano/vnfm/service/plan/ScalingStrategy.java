@@ -24,7 +24,10 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
+import lombok.ToString;
+
 public interface ScalingStrategy {
+	@ToString
 	class NumberOfCompute {
 		private int current;
 		private int wanted;
