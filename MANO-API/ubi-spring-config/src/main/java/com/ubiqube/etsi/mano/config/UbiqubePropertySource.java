@@ -14,23 +14,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/**
- * This copy of Woodstox XML processor is licensed under the
- * Apache (Software) License, version 2.0 ("the License").
- * See the License for details about distribution rights, and the
- * specific rights regarding derivate works.
- *
- * You may obtain a copy of the License at:
- *
- * http://www.apache.org/licenses/
- *
- * A copy is also included in the downloadable source code package
- * containing Woodstox, in file "ASL2.0", under the same directory
- * as this file.
- */
 package com.ubiqube.etsi.mano.config;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.springframework.core.env.EnumerablePropertySource;
@@ -39,9 +26,9 @@ public class UbiqubePropertySource extends EnumerablePropertySource<Map<String, 
 
 	private final Properties props;
 
-	protected UbiqubePropertySource(final String name, final Properties _props) {
+	protected UbiqubePropertySource(final String name, final Properties props) {
 		super(name);
-		props = _props;
+		this.props = props;
 	}
 
 	@Override
@@ -50,16 +37,15 @@ public class UbiqubePropertySource extends EnumerablePropertySource<Map<String, 
 	}
 
 	@Override
-	public Object getProperty(final String _name) {
-		return props.get(_name);
+	public Object getProperty(final String name) {
+		return props.get(name);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
-		result = (prime * result) + ((props == null) ? 0 : props.hashCode());
-		return result;
+		final int result = super.hashCode();
+		return prime * result + (props == null ? 0 : props.hashCode());
 	}
 
 	@Override
@@ -67,18 +53,11 @@ public class UbiqubePropertySource extends EnumerablePropertySource<Map<String, 
 		if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (!super.equals(obj) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		final UbiqubePropertySource other = (UbiqubePropertySource) obj;
-		if (props == null) {
-			if (other.props != null) {
-				return false;
-			}
-		} else if (!props.equals(other.props)) {
+		if (!Objects.equals(props, other.props)) {
 			return false;
 		}
 		return true;

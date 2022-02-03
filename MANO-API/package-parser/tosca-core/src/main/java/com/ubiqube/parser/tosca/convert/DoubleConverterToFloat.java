@@ -18,7 +18,7 @@ package com.ubiqube.parser.tosca.convert;
 
 import com.ubiqube.parser.tosca.ParseException;
 
-public class DoubleConverterToFloat implements Converter {
+public class DoubleConverterToFloat implements Converter<Object> {
 
 	@Override
 	public Object convert(final Object value) {

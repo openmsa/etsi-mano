@@ -24,11 +24,13 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.nsd.PnfFrontController;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.CreatePnfdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.Link;
@@ -42,6 +44,7 @@ import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.PnfdInfoModifications;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class PnfDescriptors281Sol005Controller implements PnfDescriptors281Sol005Api {
 	private final PnfFrontController pnfFrontController;
 
@@ -53,7 +56,8 @@ public class PnfDescriptors281Sol005Controller implements PnfDescriptors281Sol00
 	/**
 	 * Query information about multiple PNF descriptor resources.
 	 *
-	 * \&quot;The GET method queries information about multiple PNF descriptor resources.\&quot;
+	 * \&quot;The GET method queries information about multiple PNF descriptor
+	 * resources.\&quot;
 	 *
 	 */
 	@Override
@@ -65,8 +69,14 @@ public class PnfDescriptors281Sol005Controller implements PnfDescriptors281Sol00
 	/**
 	 * Delete an individual PNF descriptor resource.
 	 *
-	 * The DELETE method deletes an individual PNF descriptor resource. An individual PNF descriptor resource can only be deleted when there is no NS instance using it or there is NSD referencing it. To delete all PNFD versions identified by a particular value of the \&quot;pnfdInvariantId\&quot; attribute, the procedure is to first use the GET method with filter \&quot;pnfdInvariantId\&quot; towards the PNF descriptors resource to find all versions of the PNFD. Then, the client uses the DELETE
-	 * method described in this clause to delete each PNFD version individually.
+	 * The DELETE method deletes an individual PNF descriptor resource. An
+	 * individual PNF descriptor resource can only be deleted when there is no NS
+	 * instance using it or there is NSD referencing it. To delete all PNFD versions
+	 * identified by a particular value of the \&quot;pnfdInvariantId\&quot;
+	 * attribute, the procedure is to first use the GET method with filter
+	 * \&quot;pnfdInvariantId\&quot; towards the PNF descriptors resource to find
+	 * all versions of the PNFD. Then, the client uses the DELETE method described
+	 * in this clause to delete each PNFD version individually.
 	 *
 	 */
 	@Override
@@ -77,7 +87,10 @@ public class PnfDescriptors281Sol005Controller implements PnfDescriptors281Sol00
 	/**
 	 * Read an individual PNFD resource.
 	 *
-	 * The GET method reads information about an individual PNF descriptor. This method shall follow the provisions specified in the Tables 5.4.6.3.2-1 and 5.4.6.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response data structures, and response codes.
+	 * The GET method reads information about an individual PNF descriptor. This
+	 * method shall follow the provisions specified in the Tables 5.4.6.3.2-1 and
+	 * 5.4.6.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response
+	 * data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -88,7 +101,8 @@ public class PnfDescriptors281Sol005Controller implements PnfDescriptors281Sol00
 	/**
 	 * Modify the user defined data of an individual PNF descriptor resource.
 	 *
-	 * The PATCH method modifies the user defined data of an individual PNF descriptor resource.
+	 * The PATCH method modifies the user defined data of an individual PNF
+	 * descriptor resource.
 	 *
 	 */
 	@Override
@@ -99,7 +113,9 @@ public class PnfDescriptors281Sol005Controller implements PnfDescriptors281Sol00
 	/**
 	 * Fetch the content of a PNFD.
 	 *
-	 * The GET method fetches the content of the PNFD. This method shall follow the provisions specified in the Table 5.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes.
+	 * The GET method fetches the content of the PNFD. This method shall follow the
+	 * provisions specified in the Table 5.4.7.3.2-2 for URI query parameters,
+	 * request and response data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -110,7 +126,10 @@ public class PnfDescriptors281Sol005Controller implements PnfDescriptors281Sol00
 	/**
 	 * Upload the content of a PNFD.
 	 *
-	 * The PUT method is used to upload the content of a PNFD. This resource represents the content of the individual PNF descriptor, i.e. PNFD content. The client can use this resource to upload and download the content of the PNFD.
+	 * The PUT method is used to upload the content of a PNFD. This resource
+	 * represents the content of the individual PNF descriptor, i.e. PNFD content.
+	 * The client can use this resource to upload and download the content of the
+	 * PNFD.
 	 *
 	 */
 	@Override

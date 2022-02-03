@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
@@ -55,6 +57,8 @@ import com.ubiqube.etsi.mano.vnfm.service.graph.vnfm.VnfParameters;
 @Service
 public class VnfmActions extends AbstractGenericAction {
 
+	private static final Logger LOG = LoggerFactory.getLogger(VnfmActions.class);
+
 	private final VimManager vimManager;
 
 	private final VnfInstanceService vnfInstancesService;
@@ -65,14 +69,14 @@ public class VnfmActions extends AbstractGenericAction {
 
 	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
-	public VnfmActions(final VimManager _vimManager, final VnfOrchestrationAdapter orchestrationAdapter, final VnfInstanceService _vnfInstancesService,
-			final VnfWorkflow _planner, final VnfBlueprintService _blueprintService, final ManoGrantService _vimResourceService, final VnfLiveInstanceJpa _vnfLiveInstanceJpa,
+	public VnfmActions(final VimManager vimManager, final VnfOrchestrationAdapter orchestrationAdapter, final VnfInstanceService vnfInstancesService,
+			final VnfWorkflow planner, final VnfBlueprintService blueprintService, final ManoGrantService vimResourceService, final VnfLiveInstanceJpa vnfLiveInstanceJpa,
 			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
-		super(_planner, _vimResourceService, orchestrationAdapter);
-		vimManager = _vimManager;
-		vnfInstancesService = _vnfInstancesService;
-		blueprintService = _blueprintService;
-		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+		super(planner, vimResourceService, orchestrationAdapter);
+		this.vimManager = vimManager;
+		this.vnfInstancesService = vnfInstancesService;
+		this.blueprintService = blueprintService;
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 
@@ -115,6 +119,6 @@ public class VnfmActions extends AbstractGenericAction {
 				.flatMap(x -> x.getExtCps().stream())
 				.flatMap(y -> vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId()).stream())
 				.toList();
-		System.out.println("" + vli.get(0).getTask());
+		LOG.debug("{}", vli.get(0).getTask());
 	}
 }

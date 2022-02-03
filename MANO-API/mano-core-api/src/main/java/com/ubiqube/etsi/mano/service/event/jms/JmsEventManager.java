@@ -31,9 +31,9 @@ import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 public class JmsEventManager implements EventManager {
 	private final JmsTemplate jmsTemplate;
 
-	public JmsEventManager(final JmsTemplate _jmsTemplate) {
+	public JmsEventManager(final JmsTemplate jmsTemplate) {
 		super();
-		jmsTemplate = _jmsTemplate;
+		this.jmsTemplate = jmsTemplate;
 	}
 
 	@Override

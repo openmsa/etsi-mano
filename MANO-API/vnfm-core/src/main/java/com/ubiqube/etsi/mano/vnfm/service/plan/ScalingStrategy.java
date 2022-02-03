@@ -29,11 +29,11 @@ public interface ScalingStrategy {
 		private int wanted;
 		private ScaleInfo scaleInfo;
 
-		public NumberOfCompute(final int current, final int wanted, final ScaleInfo _scaleInfo) {
+		public NumberOfCompute(final int current, final int wanted, final ScaleInfo scaleInfo) {
 			super();
 			this.current = current;
 			this.wanted = wanted;
-			scaleInfo = _scaleInfo;
+			this.scaleInfo = scaleInfo;
 		}
 
 		public int getCurrent() {

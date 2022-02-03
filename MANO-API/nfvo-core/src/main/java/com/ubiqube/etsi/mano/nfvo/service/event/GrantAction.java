@@ -86,14 +86,14 @@ public class GrantAction extends AbstractGrantAction {
 	protected Set<VnfCompute> getVnfCompute(final UUID objectId) {
 		final GrantResponse grant = grantJpa.findById(objectId).orElseThrow();
 		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString(grant.getVnfInstanceId()));
-		return vnfPackageService.findById(vnfInstance.getVnfPkg().getId()).getVnfCompute();
+		return vnfPackageService.findByVnfdId(UUID.fromString(vnfInstance.getVnfdId())).getVnfCompute();
 	}
 
 	@Override
 	protected Set<VnfStorage> getVnfStorage(final UUID objectId) {
 		final GrantResponse grant = grantJpa.findById(objectId).orElseThrow();
 		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString(grant.getVnfInstanceId()));
-		return vnfPackageService.findById(vnfInstance.getVnfPkg().getId()).getVnfStorage();
+		return vnfPackageService.findByVnfdId(UUID.fromString(vnfInstance.getVnfdId())).getVnfStorage();
 	}
 
 	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse, final VnfPackage vnfPackage) {

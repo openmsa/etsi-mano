@@ -23,7 +23,9 @@ import javax.persistence.Embeddable;
 import org.hibernate.search.mapper.pojo.bridge.builtin.annotation.Latitude;
 import org.hibernate.search.mapper.pojo.bridge.builtin.annotation.Longitude;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -34,6 +36,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class GeoPoint implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;

@@ -16,15 +16,17 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.service.graph.AbstractTaskUow;
+import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
-public class NsUowExecDeleteTask extends AbstractNsTaskUow {
+public class NsUowExecDeleteTask<U extends Task, P extends GenericExecParams> extends AbstractTaskUow<U, P> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public NsUowExecDeleteTask(final UnitOfWork<NsTask, NsParameters> uaow, final NsParameters params) {
-		super(uaow, false, params);
+	public NsUowExecDeleteTask(final UnitOfWork<U, P> uaow, final P params) {
+		super(uaow, params, false);
 	}
 
 }

@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.service.plan.contributors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -27,22 +26,15 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
-import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
-import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
-import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.SapUow;
+import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsSapVt;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfNode;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
-import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 
 /**
  *
@@ -50,60 +42,45 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
  *
  */
 @Service
-public class SapContributor extends AbstractNsContributor {
+public class SapContributor extends AbstractNsContributor<NsSapTask, NsSapVt> {
 	private final NsBlueprintService blueprintService;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public SapContributor(final NsBlueprintService blueprintService, NsLiveInstanceJpa nsLiveInstanceJpa) {
+	public SapContributor(final NsBlueprintService blueprintService, final NsLiveInstanceJpa nsLiveInstanceJpa) {
 		this.blueprintService = blueprintService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
+	private List<NsSapVt> doTerminate(final NsdInstance instance) {
+		final List<NsSapVt> ret = new ArrayList<>();
+		final List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsSapTask.class.getSimpleName());
+		insts.stream().forEach(x -> {
+			final NsSapTask nt = createDeleteTask(NsSapTask::new, x);
+			nt.setNsSap(((NsSapTask) x.getNsTask()).getNsSap());
+			ret.add(new NsSapVt(nt));
+		});
+		return ret;
+	}
+
 	@Override
-	public Class<? extends Node> getContributionType() {
+	public Class<? extends Node> getNode() {
 		return SapNode.class;
 	}
 
 	@Override
-	public List<NsTask> contribute(final NsdPackage bundle, final NsBlueprint plan, final Set<ScaleInfo> scaling) {
+	protected List<NsSapVt> nsContribute(final NsBundleAdapter bundle, final NsBlueprint plan) {
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminate(plan.getInstance());
 		}
-		final Set<NsSap> saps = bundle.getNsSaps();
+		final Set<NsSap> saps = bundle.nsPackage().getNsSaps();
 		return saps.stream()
 				.filter(x -> 0 == blueprintService.getNumberOfLiveSap(plan.getNsInstance(), x))
 				.map(x -> {
 					final NsSapTask sap = createTask(NsSapTask::new, x);
 					sap.setNsSap(x);
 					sap.setChangeType(ChangeType.ADDED);
-					return sap;
-				}).collect(Collectors.toList());
-	}
-
-	private List<NsTask> doTerminate(NsdInstance instance) {
-		List<NsTask> ret = new ArrayList<>();
-		List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsSapTask.class.getSimpleName());
-		insts.stream().forEach(x -> {
-			NsSapTask nt = createDeleteTask(NsSapTask::new, x);
-			nt.setNsSap(((NsSapTask) x.getNsTask()).getNsSap());
-			ret.add(nt);
-		});
-		return ret;
-	}
-
-	@Override
-	public List<UnitOfWork<NsTask, NsParameters>> convertTasksToExecNode(final Set<NsTask> tasks, final NsBlueprint plan) {
-		final ArrayList<UnitOfWork<NsTask, NsParameters>> ret = new ArrayList<>();
-		tasks.stream()
-				.filter(NsSapTask.class::isInstance)
-				.map(NsSapTask.class::cast)
-				.forEach(x -> ret.add(new SapUow(x)));
-		return ret;
-	}
-
-	@Override
-	public void getDependencies(final DependencyBuilder dependencyBuilder) {
-		dependencyBuilder.connectionFrom(NsdNode.class).connectionFrom(VnfNode.class);
+					return new NsSapVt(sap);
+				}).toList();
 	}
 
 }

@@ -31,6 +31,8 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -54,16 +56,24 @@ import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.FloatConverter;
 import com.ubiqube.parser.tosca.convert.FrequencyConverter;
+import com.ubiqube.parser.tosca.convert.RangeConverter;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
 import com.ubiqube.parser.tosca.convert.TimeConverter;
 import com.ubiqube.parser.tosca.convert.VersionConverter;
 import com.ubiqube.parser.tosca.scalar.Frequency;
+import com.ubiqube.parser.tosca.scalar.Range;
 import com.ubiqube.parser.tosca.scalar.Size;
 import com.ubiqube.parser.tosca.scalar.Time;
 import com.ubiqube.parser.tosca.scalar.Version;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ContextResolver {
+
+	private static final String PROPERTIES = "properties";
+
+	private static final String SET_DESCRIPTION = "setDescription";
+
+	private static final String SET_NAME = "setName";
 
 	private static final Logger LOG = LoggerFactory.getLogger(ContextResolver.class);
 
@@ -73,15 +83,16 @@ public class ContextResolver {
 
 	private final Map<String, String> parameters;
 
-	public ContextResolver(final ToscaContext _root, final Map<String, String> _parameters) {
-		root = _root;
-		parameters = _parameters;
+	public ContextResolver(final ToscaContext inRoot, final Map<String, String> inParameters) {
+		this.root = inRoot;
+		this.parameters = inParameters;
 		conv.register(Size.class.getCanonicalName(), new SizeConverter());
 		conv.register(Time.class.getCanonicalName(), new TimeConverter());
 		conv.register(Double.class.getCanonicalName(), new FloatConverter());
 		conv.register(Float.class.getCanonicalName(), new FloatConverter());
 		conv.register(Frequency.class.getCanonicalName(), new FrequencyConverter());
 		conv.register(Version.class.getCanonicalName(), new VersionConverter());
+		conv.register(Range.class.getCanonicalName(), new RangeConverter());
 	}
 
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
@@ -89,7 +100,7 @@ public class ContextResolver {
 		try {
 			return (List<T>) policies.stream().map(x -> handlePolicy(x, destination, stack)).collect(Collectors.toList());
 		} catch (final RuntimeException e) {
-			throwException("Runtime error.", stack, e);
+			throwException("Policies: Runtime error.", stack, e);
 		}
 		return new ArrayList<>();
 	}
@@ -99,7 +110,7 @@ public class ContextResolver {
 		try {
 			return (List<T>) groups.stream().map(x -> handleGroup(x, destination, stack)).collect(Collectors.toList());
 		} catch (final RuntimeException e) {
-			throwException("Runtime error.", stack, e);
+			throwException("Groups: Runtime error.", stack, e);
 		}
 		return new ArrayList<>();
 	}
@@ -109,12 +120,12 @@ public class ContextResolver {
 		try {
 			return (List<T>) nodes.stream().map(x -> handleObject(x, destination, stack)).collect(Collectors.toList());
 		} catch (final RuntimeException e) {
-			throwException("Runtime error.", stack, e);
+			throwException("Nodes: Runtime error.", stack, e);
 		}
 		return new ArrayList<>();
 	}
 
-	public <T> T resolvValue(final String key, final Class<?> target) {
+	public <T> T resolvValue(final String key) {
 		if (null != parameters.get(key)) {
 			return (T) parameters.get(key);
 		}
@@ -133,22 +144,24 @@ public class ContextResolver {
 		} catch (final IntrospectionException e) {
 			throw new ParseException(e);
 		}
+		stack.push(policy.getName());
 		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
-		LOG.debug("class=>{} --- [{}]", clazz.getName(), Arrays.toString(propsDescr));
+		logClass(clazz.getName(), propsDescr);
 		final Object cls = newInstance(clazz);
 		final Map<String, Object> props = policy.getProperties();
 		if (null != props) {
 			handleMap(props, clazz, propsDescr, cls, null, stack);
 		}
 		// Fixed fields
-		setProperty2(cls, findReadMethod(propsDescr, "targets"), policy.getTargets());
-		setProperty2(cls, findReadMethod(propsDescr, "triggers"), policy.getTriggers());
+		setProperty2(cls, findWriteMethod(propsDescr, "targets"), policy.getTargets());
+		setProperty2(cls, findWriteMethod(propsDescr, "triggers"), policy.getTriggers());
 		// XXX it looks the same ?
 		final ToscaInernalBase tib = (ToscaInernalBase) cls;
 		tib.setInternalName(policy.getName());
 		tib.setInternalDescription(policy.getDescription());
-		setProperty(cls, "setName", policy.getName());
-		setProperty(cls, "setDescription", policy.getDescription());
+		setProperty(cls, SET_NAME, policy.getName());
+		setProperty(cls, SET_DESCRIPTION, policy.getDescription());
+		stack.pop();
 		return cls;
 	}
 
@@ -159,25 +172,27 @@ public class ContextResolver {
 		} catch (final IntrospectionException e) {
 			throw new ParseException(e);
 		}
+		stack.push(group.getName());
 		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
-		LOG.debug("class=>{} --- [{}]", clazz.getName(), Arrays.toString(propsDescr));
+		logClass(clazz.getName(), propsDescr);
 		final Object cls = newInstance(clazz);
 		final Map<String, Object> props = group.getProperties();
 		if (null != props) {
 			handleMap(props, clazz, propsDescr, cls, null, stack);
 		}
 		// Fixed fields
-		setProperty2(cls, findReadMethod(propsDescr, "members"), group.getMembers());
+		setProperty2(cls, findWriteMethod(propsDescr, "members"), group.getMembers());
 		// XXX it looks the same ?
 		final ToscaInernalBase tib = (ToscaInernalBase) cls;
 		tib.setInternalName(group.getName());
 		tib.setInternalDescription(group.getDescription());
-		setProperty(cls, "setName", group.getName());
-		setProperty(cls, "setDescription", group.getDescription());
+		setProperty(cls, SET_NAME, group.getName());
+		setProperty(cls, SET_DESCRIPTION, group.getDescription());
+		stack.pop();
 		return cls;
 	}
 
-	private static Method findReadMethod(final PropertyDescriptor[] propsDescr, final String string) {
+	private static Method findWriteMethod(final PropertyDescriptor[] propsDescr, final String string) {
 		return Arrays.stream(propsDescr)
 				.filter(x -> x.getName().equals(string))
 				.map(PropertyDescriptor::getWriteMethod)
@@ -192,8 +207,9 @@ public class ContextResolver {
 		} catch (final IntrospectionException e) {
 			throw new ParseException(e);
 		}
+		stack.push(node.getName());
 		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
-		LOG.debug("class=>{} --- [{}]", clazz.getName(), Arrays.toString(propsDescr));
+		logClass(clazz.getName(), propsDescr);
 		final Object cls = newInstance(clazz);
 
 		final Object caps = node.getCapabilities();
@@ -204,30 +220,30 @@ public class ContextResolver {
 		}
 		final Map<String, Object> props = node.getProperties();
 		if (null != props) {
-			stack.push("properties");
+			stack.push(PROPERTIES);
 			handleMap(props, clazz, propsDescr, cls, null, stack);
 			stack.pop();
 		}
 		final Object artifacts = node.getArtifacts();
 		if (null != artifacts) {
-			handleArtifacts(artifacts, clazz, propsDescr, cls, null);
+			handleArtifacts(artifacts, propsDescr, cls);
 		}
 		final RequirementDefinition req = node.getRequirements();
-		if ((null != req) && (null != req.getRequirements())) {
-			handleRequirements(req.getRequirements(), clazz, propsDescr, cls, null);
+		if (null != req && null != req.getRequirements()) {
+			handleRequirements(req.getRequirements(), propsDescr, cls);
 		}
 		// XXX it looks the same ?
 		final ToscaInernalBase tib = (ToscaInernalBase) cls;
 		tib.setInternalName(node.getName());
 		tib.setInternalDescription(node.getDescription());
-		setProperty(cls, "setName", node.getName());
-		setProperty(cls, "setDescription", node.getDescription());
+		setProperty(cls, SET_NAME, node.getName());
+		setProperty(cls, SET_DESCRIPTION, node.getDescription());
 		stack.pop();
 		return cls;
 	}
 
-	private static void handleArtifacts(final Object artifacts, final Class clazz, final PropertyDescriptor[] propsDescr, final Object cls, final Object object) {
-		final Method rm = findReadMethod(propsDescr, "artifacts");
+	private static void handleArtifacts(final Object artifacts, final PropertyDescriptor[] propsDescr, final Object cls) {
+		final Method rm = findWriteMethod(propsDescr, "artifacts");
 		methodInvoke(rm, cls, artifacts);
 	}
 
@@ -251,26 +267,36 @@ public class ContextResolver {
 		}
 	}
 
-	private static void handleRequirements(final Map<String, Requirement> requirements, final Class<?> clazz, final PropertyDescriptor[] propsDescr, final Object cls, final Object object) {
-		requirements.forEach((x, y) -> {
-			// XXX I think it could be ONE of Node, caps, Link
-			final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
-			if (props != null) {
-				final Class<?> p = props.getPropertyType();
-				if (p.isAssignableFrom(List.class)) {
-					final List r = methodInvoke(props.getReadMethod(), cls);
-					if (null == r) {
-						final List l = new ArrayList<>();
-						l.add(y.getNode());
-						methodInvoke(props.getWriteMethod(), cls, l);
+	private static void handleRequirements(final List<Map<String, Requirement>> requirements, final PropertyDescriptor[] propsDescr, final Object cls) {
+		requirements.forEach(z -> {
+			z.forEach((x, y) -> {
+				// XXX I think it could be ONE of Node, caps, Link
+				final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
+				if (props != null) {
+					final Class<?> p = props.getPropertyType();
+					if (p.isAssignableFrom(List.class)) {
+						final List r = methodInvoke(props.getReadMethod(), cls);
+						handleReqList(r, y, cls, props);
 					} else {
-						r.add(y.getNode());
+						methodInvoke(props.getWriteMethod(), cls, y.getCapability());
 					}
-				} else {
-					methodInvoke(props.getWriteMethod(), cls, y.getNode());
 				}
-			}
+			});
 		});
+	}
+
+	private static void handleReqList(final List list, final Requirement req, final Object cls, final PropertyDescriptor props) {
+		if (null == list) {
+			final List l = new ArrayList<>();
+			final String value = req.getCapability();
+			Objects.nonNull(value);
+			l.add(value);
+			methodInvoke(props.getWriteMethod(), cls, l);
+		} else {
+			final String value = req.getCapability();
+			Objects.nonNull(value);
+			list.add(value);
+		}
 	}
 
 	private static PropertyDescriptor getPropertyFor(final String x, final PropertyDescriptor[] propsDescr) {
@@ -286,7 +312,7 @@ public class ContextResolver {
 		if (clazz.isAssignableFrom(Map.class)) {
 			LOG.debug("Handling map of {}", generic);
 			final Map map = (Map) cls;
-			handleRealMap(map, generic, caps, props, cls, stack);
+			handleRealMap(map, generic, caps, props, stack);
 			return cls;
 		}
 		caps.entrySet().forEach(x -> {
@@ -308,17 +334,17 @@ public class ContextResolver {
 		return Arrays.stream(props).filter(x -> camelCaseToUnderscore(x.getName()).equals(camelCaseToUnderscore)).findFirst();
 	}
 
-	private void handleRealMap(final Map<Object, Object> map, final Class<?> generic, final Map<String, Object> caps, final PropertyDescriptor[] propsDescr, final Object cls, final Deque<String> stack) {
+	private void handleRealMap(final Map<Object, Object> map, final Class<?> generic, final Map<String, Object> caps, final PropertyDescriptor[] propsDescr, final Deque<String> stack) {
 		caps.forEach((x, y) -> {
 			Object res;
 			try {
 				if (y instanceof Map) {
-					res = handleMap((Map<String, Object>) y, generic, propsDescr, generic.newInstance(), null, stack);
+					res = handleMap((Map<String, Object>) y, generic, propsDescr, generic.getDeclaredConstructor().newInstance(), null, stack);
 					map.put(x, res);
 				} else {
 					map.put(x, y);
 				}
-			} catch (ClassCastException | InstantiationException | IllegalAccessException e) {
+			} catch (ClassCastException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				throw new ParseException(e);
 			}
 
@@ -328,8 +354,8 @@ public class ContextResolver {
 	private void handleCaps(final Object res, final PropertyDescriptor x, final PropertyDescriptor[] propsDescr, final Object cls, final Deque<String> stack) {
 		if (res instanceof Map) {
 			Map<String, Object> caps = (Map<String, Object>) res;
-			if (null != caps.get("properties")) {
-				caps = (Map<String, Object>) caps.get("properties");
+			if (null != caps.get(PROPERTIES)) {
+				caps = (Map<String, Object>) caps.get(PROPERTIES);
 			}
 			LOG.debug("Recursing: {}", caps);
 			final Method rm = x.getReadMethod();
@@ -342,8 +368,7 @@ public class ContextResolver {
 				throw new ParseException(e);
 			}
 			final PropertyDescriptor[] propsDescrNew = beanInfo.getPropertyDescriptors();
-			LOG.debug("class=>{} --- [{}]", zz.getName(), Arrays.toString(propsDescr));
-
+			logClass(zz.getName(), propsDescr);
 			Object ret = null;
 			if (rm.getReturnType().isAssignableFrom(Map.class)) {
 				ret = handleMap(caps, Map.class, propsDescrNew, new HashMap(), zz, stack);
@@ -351,10 +376,10 @@ public class ContextResolver {
 					|| rm.getReturnType().isAssignableFrom(Integer.class)
 					|| rm.getReturnType().isAssignableFrom(Size.class)) {
 				// resolv Scripting Value.
-				ret = resolvValue(rm.getReturnType(), res);
+				ret = resolvValue(res);
 				ret = convertValue(ret, rm.getReturnType());
-				// XXX If you want to resolv values after onboarding you have to do this.
-				// ret = new ScriptingValue();
+				// XXX If you want to resolv values after onboarding you have to do this. Use
+				// ScriptingValue
 			} else {
 				final Object clsNew = newInstance(zz);
 				ret = handleMap((Map<String, Object>) res, zz, propsDescrNew, clsNew, zz, stack);
@@ -374,9 +399,8 @@ public class ContextResolver {
 
 			LOG.debug("Entring List of {}", zz);
 			final PropertyDescriptor[] propsDescrNew = beanInfo.getPropertyDescriptors();
-			LOG.info("class=>{} --- [{}]", zz.getName(), Arrays.toString(propsDescrNew));
-			final Object clsNew = newInstance(zz);
-			final Object ret = handleList((List) res, zz, propsDescrNew, clsNew, zz, stack);
+			logClass(zz.getName(), propsDescr);
+			final Object ret = handleList((List) res, propsDescrNew, zz, stack);
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
 			methodInvoke(meth, cls, ret);
@@ -387,42 +411,53 @@ public class ContextResolver {
 		}
 	}
 
+	private static void logClass(final String name, final PropertyDescriptor[] propsDescr) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("class=>{} --- [{}]", name, Arrays.toString(propsDescr));
+		}
+	}
+
 	private static Object convertValue(final Object ret, final Class<?> returnType) {
 		if (returnType.isAssignableFrom(String.class)) {
 			return ret;
-		} else if (returnType.isAssignableFrom(Integer.class)) {
+		}
+		if (returnType.isAssignableFrom(Integer.class)) {
 			return Integer.parseInt((String) ret);
-		} else if (returnType.isAssignableFrom(Size.class)) {
+		}
+		if (returnType.isAssignableFrom(Size.class)) {
 			return new Size((String) ret);
 		}
 		throw new ParseException("Unable to cast: " + returnType.getName());
 	}
 
-	private Object resolvValue(final Class<?> returnType, final Object res) {
+	private Object resolvValue(final Object res) {
 		Object ret = null;
 		if (res instanceof Map) {
 			final Map<?, ?> map = (Map) res;
 			for (final Map.Entry<?, ?> entry : map.entrySet()) {
-				if ("get_input".equals(entry.getKey())) {
-					final Map<String, InputBean> inputs = root.getTopologies().getInputs();
-					if (null != inputs) {
-						final InputBean input = Optional.ofNullable(inputs.get(entry.getValue())).orElseThrow(() -> new ParseException("Unknown input: " + entry.getValue()));
-						final String value = parameters.get(entry.getValue());
-						if (value != null) {
-							ret = value;
-						} else {
-							ret = input.getDef();
-						}
-					}
-				} else {
-					throw new ParseException("Unknown method: " + entry.getKey());
-				}
+				ret = handleInput(entry);
 			}
 		}
 		return ret;
 	}
 
-	private Object handleList(final List res, final Class<?> zz, final PropertyDescriptor[] propsDescr, final Object clsNew, final Class generic, final Deque<String> stack) {
+	private Object handleInput(final Entry<?, ?> entry) {
+		if (!"get_input".equals(entry.getKey())) {
+			throw new ParseException("Unknown method: " + entry.getKey());
+		}
+		final Map<String, InputBean> inputs = root.getTopologies().getInputs();
+		if (null != inputs) {
+			final InputBean input = Optional.ofNullable(inputs.get(entry.getValue())).orElseThrow(() -> new ParseException("Unknown input: " + entry.getValue()));
+			final String value = parameters.get(entry.getValue());
+			if (value != null) {
+				return value;
+			}
+			return input.getDef();
+		}
+		throw new ParseException("Unknown method: " + entry.getKey());
+	}
+
+	private Object handleList(final List res, final PropertyDescriptor[] propsDescr, final Class generic, final Deque<String> stack) {
 		final ArrayList<Object> ret = new ArrayList<>();
 		final AtomicInteger inc = new AtomicInteger(0);
 		res.forEach(x -> {
@@ -430,8 +465,8 @@ public class ContextResolver {
 			Object elem = null;
 			if (x instanceof Map) {
 				try {
-					elem = handleMap((Map<String, Object>) x, generic, propsDescr, generic.newInstance(), null, stack);
-				} catch (InstantiationException | IllegalAccessException e) {
+					elem = handleMap((Map<String, Object>) x, generic, propsDescr, generic.getDeclaredConstructor().newInstance(), null, stack);
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					throwException("Error in map", stack, e);
 				}
 			} else {
@@ -444,10 +479,7 @@ public class ContextResolver {
 	}
 
 	private Object convert(final Object res, final Class<?> parameterType) {
-		if (res.getClass().equals(parameterType)) {
-			return res;
-		}
-		if (parameterType.isAssignableFrom(res.getClass())) {
+		if (res.getClass().equals(parameterType) || parameterType.isAssignableFrom(res.getClass())) {
 			return res;
 		}
 		LOG.debug("Converting: {} into {}", res.getClass(), parameterType.getName());
@@ -469,7 +501,8 @@ public class ContextResolver {
 	}
 
 	/**
-	 * XXX This is very limited. If tosca use camel case, it's will fail. Maybe consider reading JSONProperty value.
+	 * XXX This is very limited. If tosca use camel case, it's will fail. Maybe
+	 * consider reading JSONProperty value.
 	 *
 	 * @param key
 	 * @return
@@ -482,7 +515,7 @@ public class ContextResolver {
 			m.appendReplacement(sb, "_" + m.group().toLowerCase());
 		}
 		m.appendTail(sb);
-		LOG.trace("Underscore:  {}<=>{}", key, sb.toString());
+		LOG.trace("Underscore:  {}<=>{}", key, sb);
 		return sb.toString();
 	}
 
@@ -502,8 +535,8 @@ public class ContextResolver {
 			if (clazz.isAssignableFrom(Map.class)) {
 				return new HashMap<>();
 			}
-			return clazz.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
+			return clazz.getDeclaredConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			throw new ParseException(e);
 		}
 	}
@@ -521,7 +554,7 @@ public class ContextResolver {
 	}
 
 	private static void throwException(final String string, final Deque<String> stack, final Exception e) {
-		throw new ParseException(string + "\n" + buildError(stack), e);
+		throw new ParseException(string + "\nStackTrace: " + buildError(stack), e);
 	}
 
 	private static String buildError(final Deque<String> stack) {

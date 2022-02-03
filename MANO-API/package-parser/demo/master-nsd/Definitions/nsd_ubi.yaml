@@ -86,8 +86,10 @@ topology_template:
                   number_of_ip_address: 10
         trunk_mode: false
       requirements:
-        # - external_virtual_link:
-        # - internal_virtual_link: # Must be defined
+        - external_virtual_link:
+          node: extvl
+        - internal_virtual_link: # Must be defined
+          node: int_vl
 
 
 policies:

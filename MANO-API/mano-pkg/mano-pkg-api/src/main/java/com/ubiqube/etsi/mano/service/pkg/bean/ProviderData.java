@@ -18,7 +18,10 @@ package com.ubiqube.etsi.mano.service.pkg.bean;
 
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import com.ubiqube.etsi.mano.dao.mano.MonitoringParams;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VnfProfile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,12 +38,21 @@ public class ProviderData {
 	private String vnfProvider;
 
 	private String vnfProductName;
+	/**
+	 * Human readable description of the VNF Product
+	 */
+	private String productInfoDescription;
 
 	private String vnfSoftwareVersion;
 
 	private String vnfVersion;
 
 	private String flavorId;
+	/**
+	 * Human readable description of the DF
+	 */
+	@NotNull
+	private String flavourDescription;
 
 	private String vnfdVersion;
 
@@ -51,4 +63,26 @@ public class ProviderData {
 	private String descriptorVersion;
 
 	private Set<MonitoringParams> monitoringParameters;
+
+	private Set<String> vnfmInfo;
+
+	private VnfProfile vnfProfile;
+
+	/**
+	 * Default localization language that is instantiated if no information about
+	 * selected localization language is available
+	 */
+	private String defaultLocalizationLanguage;
+	/**
+	 * Information about localization languages of the VNF
+	 */
+	private Set<String> localizationLanguages;
+	/**
+	 * Scale status of the VNF, one entry per aspect. Represents for every scaling
+	 * aspect how "big" the VNF has been scaled w.r.t. that aspect.
+	 */
+	@NotNull
+	private Set<ScaleInfo> scaleStatus;
+
+	private String virtualLinkReq;
 }

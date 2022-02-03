@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
-@RequestMapping(value = "/sol003/vnfpkgm/v1", headers = { "Version=2.8.1" })
+@RequestMapping(value = "/sol003/vnfpkgm/v2", headers = { "Version=2.1.0" })
 @RolesAllowed({ "ROLE_VNFM" })
 public interface VnfSubscriptions281Sol003Api {
 

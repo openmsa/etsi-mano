@@ -64,8 +64,6 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 		Optional.ofNullable(l2.getMtu()).ifPresent(bNet::mtu);
 		Optional.ofNullable(l2.getNetworkType()).ifPresent(x2 -> bNet.networkType(NetworkType.valueOf(x2.toUpperCase())));
 		// Don't know how to use vlan_transarent.
-		// Optional.ofNullable(l2.getVlanTransparent()).ifPresent(x ->
-		// bNet.vlanTransparent(x.booleanValue()));
 		Optional.ofNullable(dnsDomain).ifPresent(bNet::dnsDomain);
 		Optional.ofNullable(qosPolicyId).ifPresent(bNet::qosPolicyId);
 		final Network network = os.networking().network().create(bNet.adminStateUp(true).build());
@@ -81,7 +79,7 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 			bSub.addPool(ipAllocationPool.getStartIpAddress(), ipAllocationPool.getEndIpAddress());
 		}
 		bSub.cidr(l3ProtocolData.getCidr())
-				.enableDHCP(l3ProtocolData.isDhcpEnabled())
+				.enableDHCP(Optional.ofNullable(l3ProtocolData.isDhcpEnabled()).orElse(false))
 				.gateway(l3ProtocolData.getGatewayIp())
 				.tenantId(vimConnectionInformation.getAccessInfo().get("projectId"))
 				.ipVersion(convertIpVersion(l3ProtocolData.getIpVersion()))

@@ -20,11 +20,15 @@ import java.io.IOException;
 
 public class ToscaException extends RuntimeException {
 
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	public ToscaException(final IOException e) {
 		super(e);
 	}
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+	public ToscaException(final String message) {
+		super(message);
+	}
 
 }

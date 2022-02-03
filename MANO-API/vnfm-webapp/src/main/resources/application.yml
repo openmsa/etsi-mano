@@ -1,11 +1,11 @@
 debug: true
 keycloak:
   realm: mano-realm
-  auth-server-url: http://10.31.1.245:8090/auth/
+  auth-server-url: https://auth.mano.ubiqube.com/auth/
   ssl-required: external
-  resource: mano-nfvo
+  resource: mano-vnfm
   credentials:
-    secret: ed9aeb6d-3ea5-4392-bb22-835603cf3dfc
+    secret: 50e312ab-9f12-481e-b6a8-c23e0de21628
   use-resource-role-mappings: true
   bearer-only: true
 
@@ -49,24 +49,12 @@ management:
       mode: full
 
 mano:
-  frontend-url: http://172.22.33.1:8090/ubi-etsi-mano/sol003
-  swagger-o-auth2: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/token
+  frontend-url: http://10.8.0.1:8090/ubi-etsi-mano/sol003
+  swagger-o-auth2: https://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/token
   election:
     script-path: /tmp/etsi-mano/election/groovy
   repository:
     phys-root: /tmp/etsi-mano/repository
-  nfvo:
-    vnfm:
-      url: http://bad/
-  vnfm:
-    nfvo:
-      version: "2.6.1"
-      oauth2:
-        oauthUrl: http://10.31.1.245:8090/auth/realms/mano-realm/protocol/openid-connect/token
-        grantType: client_credentials
-        clientId: mano-vnfm
-        clientSecret: 50e312ab-9f12-481e-b6a8-c23e0de21628
-      url: http://10.31.1.29:8100/ubi-etsi-mano/sol003
 
 server:
   error:
@@ -150,8 +138,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://172.22.33.1:8090/auth/realms/mano-realm
-          jwk-set-uri: http://10.31.1.245:8110/auth/realms/mano-realm/protocol/openid-connect/certs
+          issuer-uri: https://auth.mano.ubiqube.com/auth/realms/mano-realm
+          jwk-set-uri: https://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/certs
   servlet:
     multipart:
       max-file-size: 1024MB

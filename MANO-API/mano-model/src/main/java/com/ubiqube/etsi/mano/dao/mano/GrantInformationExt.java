@@ -83,7 +83,7 @@ public class GrantInformationExt implements BaseEntity, Serializable {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("class GrantInformationExt {\n");
-		sb.append("id:" + id);
+		sb.append("    id:" + id).append("\n");
 		sb.append("    type: ").append(toIndentedString(type)).append("\n");
 		sb.append("    vduId: ").append(toIndentedString(vduId)).append("\n");
 		sb.append("    resourceDefinitionId: ").append(toIndentedString(resourceDefinitionId)).append("\n");

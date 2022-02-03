@@ -34,9 +34,9 @@ public class LcmApiVersionsApiController implements LcmApiVersionsApi {
 
 	private final List<EtsiImplementation> implementations;
 
-	public LcmApiVersionsApiController(final List<EtsiImplementation> _implementations, final MapperFacade _mapper) {
-		implementations = _implementations;
-		mapper = _mapper;
+	public LcmApiVersionsApiController(final List<EtsiImplementation> implementations, final MapperFacade mapper) {
+		this.implementations = implementations;
+		this.mapper = mapper;
 	}
 
 	@Override

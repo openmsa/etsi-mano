@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.common;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
@@ -44,7 +46,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiVersion {
+public class ApiVersion implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
@@ -54,5 +59,6 @@ public class ApiVersion {
 	private ApiVersionType type;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn
 	private Set<ApiVersionInformation> apiVersions;
 }

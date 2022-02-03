@@ -64,7 +64,7 @@ public class SecurityGroupContributor extends AbstractContributorV2Base<Security
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(blueprint.getVnfInstance());
 		}
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final VnfInstance vnfInstance = vnfInstanceGatewayService.findById(blueprint.getInstance().getId());
 		final List<SecurityGroupVt> ret = new ArrayList<>();
 		vnfPackage.getSecurityGroups().forEach(x -> {

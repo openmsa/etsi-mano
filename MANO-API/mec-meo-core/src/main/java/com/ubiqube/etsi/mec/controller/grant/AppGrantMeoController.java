@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mec.meo.event.MeoEventManager;
@@ -47,10 +46,10 @@ public class AppGrantMeoController implements AppGrantController {
 	private final MapperFacade mapper;
 	private final MeoEventManager eventManager;
 
-	public AppGrantMeoController(final GrantsResponseJpa _grantsJpa, final MapperFacade _mapper, final MeoEventManager _eventManager) {
-		grantsResponseJpa = _grantsJpa;
-		mapper = _mapper;
-		eventManager = _eventManager;
+	public AppGrantMeoController(final GrantsResponseJpa grantsJpa, final MapperFacade mapper, final MeoEventManager eventManager) {
+		this.grantsResponseJpa = grantsJpa;
+		this.mapper = mapper;
+		this.eventManager = eventManager;
 	}
 
 	@Override
@@ -60,7 +59,7 @@ public class AppGrantMeoController implements AppGrantController {
 	}
 
 	@Override
-	public GrantResponse post(final VnfGrantsRequest grantRequest) {
+	public GrantResponse post(final GrantResponse grantRequest) {
 		final GrantResponse grants = mapper.map(grantRequest, GrantResponse.class);
 		grants.setAvailable(Boolean.FALSE);
 		final GrantResponse grantsDb = grantsResponseJpa.save(grants);

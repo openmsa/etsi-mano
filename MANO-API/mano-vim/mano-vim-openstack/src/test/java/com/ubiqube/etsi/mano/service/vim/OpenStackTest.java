@@ -53,6 +53,8 @@ import org.openstack4j.model.network.Router;
 import org.openstack4j.model.network.RouterInterface;
 import org.openstack4j.model.network.SecurityGroupRule;
 import org.openstack4j.model.network.Subnet;
+import org.openstack4j.model.network.ext.FlowClassifier;
+import org.openstack4j.model.network.ext.PortPair;
 import org.openstack4j.model.telemetry.gnocchi.MetricCreate;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
@@ -80,6 +82,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 @Tag("Remote")
 //@ExtendWith(MockitoExtension.class)
 //@RunWith(MockitoJUnitRunner.Silent.class)
+@SuppressWarnings("static-method")
 public class OpenStackTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OpenStackTest.class);
@@ -147,7 +150,7 @@ public class OpenStackTest {
 
 	}
 
-	private static void createServer(final OSClientV3 os) {
+	public static void createServer(final OSClientV3 os) {
 		final ServerCreate sc = Builders.server()
 				.name("cirros-ovi")
 				.flavor("1")
@@ -161,11 +164,6 @@ public class OpenStackTest {
 		assertNotNull(server);
 	}
 
-	private void createStack() {
-		// Builders.stack().
-	}
-
-	@Test
 	static void testConn() throws Exception {
 		final Identifier domainIdentifier = Identifier.byId("default");
 		final Identifier projectIdentifier = Identifier.byId("df1f081bf2d345099e6bb53f6b9407ff");
@@ -187,7 +185,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	static void testConn2() throws Exception {
 		final Identifier domainIdentifier = Identifier.byId("default");
 		final Identifier projectIdentifier = Identifier.byId("ede0540276a94b75ae3de044cd7cc235");
@@ -222,7 +219,7 @@ public class OpenStackTest {
 		vnfStorage.setSoftwareImage(softwareImage);
 		vnfStorage.setToscaName("JUnit-test-volume");
 		when(vimJpa.findById(id)).thenReturn(Optional.of(vimConnectionInformation));
-		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
+		final OpenStackVim vim = new OpenStackVim(mapper);
 		final String lid = vim.storage(vimConnectionInformation).createStorage(vnfStorage, "junit-test");
 		assertNotNull(lid);
 	}
@@ -242,7 +239,7 @@ public class OpenStackTest {
 		vl.setL3ProtocolData(l3ProtocolData);
 		LOG.info("==> {}", id);
 
-		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
+		final OpenStackVim vim = new OpenStackVim(mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
 		final String net = vim.network(vimConnectionInformation).createNetwork(vl, "Junit-vl", "mano.junit.net.", null);
 		final IpPool ipPool = new IpPool();
@@ -253,7 +250,7 @@ public class OpenStackTest {
 	}
 
 	public void uploadSoftwareImageTest() {
-		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
+		final OpenStackVim vim = new OpenStackVim(mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
 		final SoftwareImage img = new SoftwareImage();
 		img.setContainerFormat("BARE");
@@ -268,7 +265,7 @@ public class OpenStackTest {
 	}
 
 	void testFlavorGet() throws Exception {
-		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
+		final OpenStackVim vim = new OpenStackVim(mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
 
 		// Get m1.small
@@ -280,7 +277,7 @@ public class OpenStackTest {
 	}
 
 	void testCompute() throws Exception {
-		final OpenStackVim vim = new OpenStackVim(vimJpa, mapper);
+		final OpenStackVim vim = new OpenStackVim(mapper);
 		when(vimJpa.findById(id)).thenReturn(Optional.ofNullable(vimConnectionInformation));
 
 		final VnfCompute vnfc = new VnfCompute();
@@ -322,7 +319,6 @@ public class OpenStackTest {
 				.authenticate();
 	}
 
-	@Test
 	void testTrain() throws Exception {
 		final OSClientV3 os = getVictoriaConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
@@ -334,7 +330,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	void testQueens() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
@@ -346,7 +341,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	static void testDeleteNetwork() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Port> ret = os.networking().port().list();
@@ -355,7 +349,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	static void testDeleteRouter() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final String device = "9f07f44f-3f06-48c8-ad75-5c7afcc46d2e";
@@ -377,7 +370,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	static void testGetPublic() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		os.networking().network().list().forEach(x -> {
@@ -386,7 +378,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	static void testAgentList() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		os.networking().agent().list().forEach(x -> {
@@ -395,7 +386,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	static void testDns01() throws Exception {
 		final OSClientV3 os = getTrainConnection();
 		os.dns().recordsets().list().forEach(x -> {
@@ -404,7 +394,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	public static void testflavor() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final int disk = 20;
@@ -424,7 +413,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	public static void testCreateZone() throws Exception {
 		final OSClientV3 os = getTrainConnection();
 		final Zone zone = Builders.zone().name("aed0bd5a-acf8-463f-9797-9af1af1bab23.mano.com.")
@@ -437,7 +425,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	static void testAddHost() throws Exception {
 		final OSClientV3 os = getTrainConnection();
 		final List<String> records = new ArrayList<>();
@@ -454,7 +441,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	static void testgetIp() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Subnet> l = os.networking().subnet().list();
@@ -464,7 +450,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	public static void testQuotas() {
 		final OSClientV3 os = getQueensConnection();
 		os.compute().quotaSets().listTenantUsages().stream()
@@ -553,5 +538,27 @@ public class OpenStackTest {
 		final org.openstack4j.model.network.SecurityGroup res = os.networking().securitygroup().create(securityGroup);
 		System.out.println("" + res.getId());
 		assertNotNull(os);
+	}
+
+	@Test
+	void testSfc() {
+		final OSClientV3 os = getQueensConnection();
+		Builders.portChain().build();
+		Builders.portPairGroup().build();
+		Builders.portForwarding().build();
+		os.sfc().portchains();
+		os.sfc().portpairgroups();
+		final FlowClassifier flowClassifier = Builders.flowClassifier().build();
+		os.sfc().flowclassifiers().create(flowClassifier);
+		final PortPair portPair = Builders.portPair().build();
+		os.sfc().portpairs().create(portPair);
+		assertTrue(true);
+	}
+
+	void testPort() {
+		final OSClientV3 os = getQueensConnection();
+		final Port port = Builders.port().build();
+		os.networking().port().create(port);
+		assertTrue(true);
 	}
 }

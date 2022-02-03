@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mec.controller.grant;
 import java.util.UUID;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 
 /**
  * Duplicate of NFVO.
@@ -31,6 +30,6 @@ public interface AppGrantController {
 
 	GrantResponse findById(UUID grantId);
 
-	GrantResponse post(VnfGrantsRequest grantRequest);
+	GrantResponse post(GrantResponse grantRequest);
 
 }

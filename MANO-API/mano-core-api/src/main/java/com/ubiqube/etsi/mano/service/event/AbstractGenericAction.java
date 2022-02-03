@@ -54,7 +54,7 @@ public abstract class AbstractGenericAction {
 
 	private final VimResourceService vimResourceService;
 
-	OrchestrationAdapter<?, ?> orchestrationAdapter;
+	private final OrchestrationAdapter<?, ?> orchestrationAdapter;
 
 	protected AbstractGenericAction(final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter) {
 		super();
@@ -64,16 +64,7 @@ public abstract class AbstractGenericAction {
 	}
 
 	public final void instantiate(@Nonnull final UUID blueprintId) {
-		final Blueprint blueprint = orchestrationAdapter.getBluePrint(blueprintId);
-		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getInstance().getId());
-		try {
-			instantiateInnerv2(blueprint, vnfInstance);
-			LOG.info("Instantiate {} Success...", blueprintId);
-			orchestrationAdapter.fireEvent(WorkflowEvent.INSTANTIATE_SUCCESS, blueprintId);
-		} catch (final RuntimeException e) {
-			LOG.error("VNF Instantiate Failed", e);
-			onFailure(WorkflowEvent.INSTANTIATE_FAILED, blueprint, vnfInstance, e);
-		}
+		instantiateShield(blueprintId, WorkflowEvent.INSTANTIATE_SUCCESS, WorkflowEvent.INSTANTIATE_FAILED);
 	}
 
 	private final void instantiateInnerv2(final Blueprint blueprint, final Instance vnfInstance) {
@@ -89,8 +80,7 @@ public abstract class AbstractGenericAction {
 		localPlan = orchestrationAdapter.updateState(localPlan, OperationStatusType.PROCESSING);
 		//
 		vnfWorkflow.refresh(prePlan, localPlan);
-		final OrchExecutionResults res = vnfWorkflow.execute(prePlan, localPlan);
-		localPlan = orchestrationAdapter.getBluePrint(localPlan.getId());
+		final OrchExecutionResults<Task> res = vnfWorkflow.execute(prePlan, localPlan);
 		setLiveSatus(localPlan, vnfInstance, res);
 		//
 		setResultLcmInstance(localPlan, res);
@@ -126,7 +116,10 @@ public abstract class AbstractGenericAction {
 	}
 
 	private static Set<ScaleInfo> merge(final Blueprint plan, final Instance vnfInstance) {
-		final Set<ScaleInfo> tmp = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream().filter(x -> notIn(x.getAspectId(), plan.getParameters().getScaleStatus())).map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel())).collect(Collectors.toSet());
+		final Set<ScaleInfo> tmp = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
+				.filter(x -> notIn(x.getAspectId(), plan.getParameters().getScaleStatus()))
+				.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
+				.collect(Collectors.toSet());
 		tmp.addAll(plan.getParameters().getScaleStatus());
 		return tmp;
 	}
@@ -134,7 +127,7 @@ public abstract class AbstractGenericAction {
 	private static void removeScaleStatus(final Instance localVnfInstance, final Set<ScaleInfo> newScale) {
 		final Set<ScaleInfo> scales = localVnfInstance.getInstantiatedVnfInfo().getScaleStatus();
 		newScale.stream().forEach(x -> find(scales, x.getAspectId()).ifPresent(scales::remove));
-		final List<ScaleInfo> si = newScale.stream().map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel())).collect(Collectors.toList());
+		final List<ScaleInfo> si = newScale.stream().map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel())).toList();
 		newScale.addAll(si);
 	}
 
@@ -156,42 +149,27 @@ public abstract class AbstractGenericAction {
 	}
 
 	public final void terminate(@Nonnull final UUID blueprintId) {
-		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
-		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getInstance().getId());
-		try {
-			instantiateInnerv2(blueprint, vnfInstance);
-			LOG.info("Terminate {} Success...", blueprintId);
-			orchestrationAdapter.fireEvent(WorkflowEvent.TERMINATE_SUCCESS, blueprintId);
-		} catch (final RuntimeException e) {
-			LOG.error("VNF Instantiate Failed", e);
-			orchestrationAdapter.save(vnfInstance);
-			onFailure(WorkflowEvent.TERMINATE_FAILED, blueprint, vnfInstance, e);
-		}
+		instantiateShield(blueprintId, WorkflowEvent.TERMINATE_SUCCESS, WorkflowEvent.TERMINATE_FAILED);
 	}
 
 	public final void scaleToLevel(@NotNull final UUID blueprintId) {
+		instantiateShield(blueprintId, WorkflowEvent.SCALETOLEVEL_SUCCESS, WorkflowEvent.SCALETOLEVEL_FAILED);
+	}
+
+	public final void scale(@NotNull final UUID blueprintId) {
+		instantiateShield(blueprintId, WorkflowEvent.SCALE_SUCCESS, WorkflowEvent.SCALE_FAILED);
+	}
+
+	private void instantiateShield(final UUID blueprintId, final WorkflowEvent success, final WorkflowEvent failure) {
 		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
 		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getInstance().getId());
 		try {
 			instantiateInnerv2(blueprint, vnfInstance);
-			LOG.info("Scale to level {} Success...", blueprintId);
-			orchestrationAdapter.fireEvent(WorkflowEvent.SCALETOLEVEL_SUCCESS, blueprintId);
+			LOG.info("{} {} Success...", success, blueprintId);
+			orchestrationAdapter.fireEvent(success, blueprintId);
 		} catch (final RuntimeException e) {
-			LOG.error("VNF Scale to level Failed", e);
-			onFailure(WorkflowEvent.SCALETOLEVEL_FAILED, blueprint, vnfInstance, e);
-		}
-	}
-
-	public final void scale(@NotNull final UUID blueprintId) {
-		final Blueprint<?, ?> blueprint = orchestrationAdapter.getBluePrint(blueprintId);
-		final Instance vnfInstance = orchestrationAdapter.getInstance(blueprint.getId());
-		try {
-			instantiateInnerv2(blueprint, vnfInstance);
-			LOG.info("Scale to level {} Success...", blueprintId);
-			orchestrationAdapter.fireEvent(WorkflowEvent.SCALE_SUCCESS, blueprintId);
-		} catch (final RuntimeException e) {
-			LOG.error("VNF Scale to level Failed", e);
-			onFailure(WorkflowEvent.SCALE_FAILED, blueprint, vnfInstance, e);
+			LOG.error("{} Failed", failure, e);
+			onFailure(failure, blueprint, vnfInstance, e);
 		}
 	}
 
@@ -212,10 +190,7 @@ public abstract class AbstractGenericAction {
 			final Task rhe = x.getTask().getTask().getParameters();
 			final ChangeType ct = rhe.getChangeType();
 			if (ct == ChangeType.ADDED) {
-				String il = null;
-				if (rhe.getScaleInfo() != null) {
-					il = rhe.getScaleInfo().getAspectId();
-				}
+				final String il = Optional.ofNullable(rhe.getScaleInfo()).map(ScaleInfo::getAspectId).orElse(null);
 				if (null != rhe.getId()) {
 					orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
 				} else {

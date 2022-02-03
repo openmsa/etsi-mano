@@ -49,24 +49,14 @@ public class NfvoActionController {
 
 	public void dispatch(final ActionType eventType, @NotNull final UUID objectId, final Map<String, Object> parameters) {
 		switch (eventType) {
-		case VNF_PKG_ONBOARD_FROM_URI:
-			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("uri"));
-			break;
-		case VNF_PKG_ONBOARD_FROM_BYTES:
-			vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString());
-			break;
-		case NSD_PKG_ONBOARD_FROM_BYTES:
-			nsPackagingManager.nsOnboarding(objectId);
-			break;
-		case NS_INSTANTIATE:
-			nfvoActions.nsInstantiate(objectId);
-			break;
-		case NS_TERMINATE:
-			nfvoActions.nsTerminate(objectId);
-			break;
-		default:
-			LOG.warn("Unknown event: {}", eventType);
-			break;
+		case VNF_PKG_ONBOARD_FROM_URI -> vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("uri"));
+		case VNF_PKG_ONBOARD_FROM_BYTES -> vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString());
+		case NSD_PKG_ONBOARD_FROM_BYTES -> nsPackagingManager.nsOnboarding(objectId);
+		case NS_INSTANTIATE -> nfvoActions.instantiate(objectId);
+		case NS_TERMINATE -> nfvoActions.terminate(objectId);
+		case NS_HEAL -> nfvoActions.heal(objectId);
+		case NS_SCALE -> nfvoActions.scale(objectId);
+		default -> LOG.warn("Unknown event: {}", eventType);
 		}
 	}
 

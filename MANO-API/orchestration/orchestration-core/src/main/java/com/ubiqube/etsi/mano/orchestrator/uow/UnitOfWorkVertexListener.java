@@ -20,30 +20,31 @@ import org.jgrapht.event.GraphEdgeChangeEvent;
 import org.jgrapht.event.GraphListener;
 import org.jgrapht.event.GraphVertexChangeEvent;
 
-public class UnitOfWorkVertexListener implements GraphListener<UnitOfWork<?>, UnitOfWorkConnectivity> {
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
+
+public class UnitOfWorkVertexListener<U> implements GraphListener<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> {
 
 	@Override
-	public void vertexAdded(final GraphVertexChangeEvent<UnitOfWork<?>> e) {
+	public void vertexAdded(final GraphVertexChangeEvent<UnitOfWork<U>> e) {
 		// Nothing.
 	}
 
 	@Override
-	public void vertexRemoved(final GraphVertexChangeEvent<UnitOfWork<?>> e) {
+	public void vertexRemoved(final GraphVertexChangeEvent<UnitOfWork<U>> e) {
 		// Nothing.
 
 	}
 
 	@Override
-	public void edgeAdded(final GraphEdgeChangeEvent<UnitOfWork<?>, UnitOfWorkConnectivity> e) {
-		final UnitOfWorkConnectivity edge = e.getEdge();
+	public void edgeAdded(final GraphEdgeChangeEvent<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> e) {
+		final ConnectivityEdge<UnitOfWork<U>> edge = e.getEdge();
 		edge.setSource(e.getEdgeSource());
 		edge.setTarget(e.getEdgeTarget());
 	}
 
 	@Override
-	public void edgeRemoved(final GraphEdgeChangeEvent<UnitOfWork<?>, UnitOfWorkConnectivity> e) {
+	public void edgeRemoved(final GraphEdgeChangeEvent<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> e) {
 		// Nothing.
-
 	}
 
 }

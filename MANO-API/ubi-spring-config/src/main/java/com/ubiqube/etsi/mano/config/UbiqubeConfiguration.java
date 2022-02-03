@@ -38,8 +38,9 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 public class UbiqubeConfiguration {
 
+	@SuppressWarnings("static-method")
 	@Bean
-	public static UbiqubeSourceLocator getSourceLocator() {
+	public UbiqubeSourceLocator getSourceLocator() {
 		return new UbiqubeSourceLocator();
 	}
 

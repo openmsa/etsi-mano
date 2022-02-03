@@ -36,9 +36,9 @@ public class VnfBlueprintService {
 	private final VnfBlueprintJpa blueprintJpa;
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfBlueprintService(final VnfBlueprintJpa _blueprintJpa, final VnfLiveInstanceJpa _vnfLiveInstanceJpa) {
-		blueprintJpa = _blueprintJpa;
-		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+	public VnfBlueprintService(final VnfBlueprintJpa blueprintJpa, final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
+		this.blueprintJpa = blueprintJpa;
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 	}
 
 	public int getNumberOfLiveVl(final VnfInstance vnfInstance, final VnfVl x) {

@@ -16,6 +16,29 @@
  */
 package com.ubiqube.parser.tosca.scalar;
 
+import com.ubiqube.parser.tosca.ParseException;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class Range {
+	long min;
+	long max;
+
+	public Range(final String value) {
+		final String[] arr = value.split("-");
+		if (arr.length != 2) {
+			throw new ParseException("Range must have two element " + value);
+		}
+		min = Long.parseLong(arr[0].trim());
+		max = Long.parseLong(arr[1].trim());
+	}
+
+	@Override
+	public String toString() {
+		return min + " - " + max;
+	}
 
 }

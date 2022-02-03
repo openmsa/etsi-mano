@@ -56,8 +56,8 @@ public class WfConfiguration {
 	private final Map<Class<? extends Node>, ReplaceBuilder> replacements = new HashMap<>();
 	private final List<? extends PlanContributor> planContributors;
 
-	public WfConfiguration(final List<? extends PlanContributor> _planContributors) {
-		planContributors = _planContributors;
+	public WfConfiguration(final List<? extends PlanContributor> planContributors) {
+		this.planContributors = planContributors;
 	}
 
 	public ListenableGraph<Class<? extends Node>, NodeConnectivity> getConfigurationGraph() {
@@ -185,7 +185,7 @@ public class WfConfiguration {
 	private static List<ConnectivityEdge<Class<? extends Node>>> findOutterVertex(final ReplaceBuilder repl) {
 		return repl.getEdges().stream()
 				.filter(x -> dontHaveSource(repl, x.getTarget()))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()); // No toList.
 	}
 
 	private static boolean dontHaveSource(final ReplaceBuilder repl, final Class<? extends Node> target) {
@@ -209,7 +209,7 @@ public class WfConfiguration {
 	}
 
 	private static List<WfProduce> getAllOf(final List<WfProduce> deps, final Class<? extends Node> target) {
-		return deps.stream().filter(x -> x.getNode() == target).collect(Collectors.toList());
+		return deps.stream().filter(x -> x.getNode() == target).toList();
 	}
 
 	private <U extends Task, P> void connect(final ListenableGraph<UnitOfWork<U, P>, ConnectivityEdge<UnitOfWork<U, P>>> g, final Class<? extends Node> k, final List<UnitOfWork<U, P>> from, final List<UnitOfWork<U, P>> to, final List<DeferedConnection<U, P>> deferedConnetion) {

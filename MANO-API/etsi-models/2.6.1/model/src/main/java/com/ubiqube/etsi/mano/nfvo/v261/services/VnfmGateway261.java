@@ -29,9 +29,9 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
-import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 import com.ubiqube.etsi.mano.service.NfvoFactory;
 import com.ubiqube.etsi.mano.service.VnfmFactory;
@@ -42,6 +42,8 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.OperateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
 /**
  *
@@ -108,6 +110,8 @@ public class VnfmGateway261 implements HttpGateway {
 			return "vrqan/v1/";
 		case SOL003_GRANT:
 			return "grant/v1/";
+		case SOL003_VNFPKGM:
+			return "vnfpkgm/v1/";
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + type);
 		}
@@ -119,11 +123,19 @@ public class VnfmGateway261 implements HttpGateway {
 	}
 
 	@Override
-	public ParameterizedTypeReference<List<?>> getVnfInstanceListParam() {
+	public ParameterizedTypeReference<List<Class<?>>> getVnfInstanceListParam() {
 		final ParameterizedTypeReference<List<VnfInstance>> res = new ParameterizedTypeReference<>() {
 			// Nothing.
 		};
-		return (ParameterizedTypeReference<List<?>>) (Object) res;
+		return (ParameterizedTypeReference<List<Class<?>>>) (Object) res;
+	}
+
+	@Override
+	public ParameterizedTypeReference<List<Class<?>>> getListVnfLcmOpOccs() {
+		final ParameterizedTypeReference<List<VnfLcmOpOcc>> res = new ParameterizedTypeReference<>() {
+			// Nothing.
+		};
+		return (ParameterizedTypeReference<List<Class<?>>>) (Object) res;
 	}
 
 	@Override
@@ -142,12 +154,15 @@ public class VnfmGateway261 implements HttpGateway {
 
 	@Override
 	public Class<?> getVnfLcmOpOccs() {
-		return NsLcmOpOcc.class;
+		return VnfLcmOpOcc.class;
 	}
 
 	@Override
 	public Object createVnfInstanceTerminate(final CancelModeTypeEnum terminationType, final Integer gracefulTerminationTimeout) {
-		return TerminateVnfRequest.class;
+		final TerminateVnfRequest ret = new TerminateVnfRequest();
+		ret.setTerminationType(TerminationTypeEnum.fromValue(terminationType.toString()));
+		ret.setGracefulTerminationTimeout(gracefulTerminationTimeout);
+		return ret;
 	}
 
 	@Override
@@ -196,5 +211,18 @@ public class VnfmGateway261 implements HttpGateway {
 	public Object createNotificationVnfLcmOperationOccurrenceNotification(final UUID subscriptionId, final UUID vnfPkgId) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ParameterizedTypeReference<List<Class<?>>> getVnfPackageClassList() {
+		final ParameterizedTypeReference<List<VnfPackage>> res = new ParameterizedTypeReference<>() {
+			// Nothing.
+		};
+		return (ParameterizedTypeReference<List<Class<?>>>) (Object) res;
+	}
+
+	@Override
+	public String getVersion() {
+		return "2.6.1";
 	}
 }

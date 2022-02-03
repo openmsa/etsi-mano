@@ -39,10 +39,10 @@ public class MonitoringUow extends VnfAbstractUnitOfWork {
 
 	private final MonitoringTask task;
 
-	public MonitoringUow(final MonitoringTask monitoringTask, final VnfCompute _vnfCompute) {
+	public MonitoringUow(final MonitoringTask monitoringTask, final VnfCompute vnfCompute) {
 		super(monitoringTask);
-		vnfCompute = _vnfCompute;
-		task = monitoringTask;
+		this.vnfCompute = vnfCompute;
+		this.task = monitoringTask;
 	}
 
 	@Override

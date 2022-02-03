@@ -39,9 +39,9 @@ import com.ubiqube.etsi.mano.service.event.jms.GrantMessage;
 public class MeoEventManagerImpl implements MeoEventManager {
 	private final JmsTemplate jmsTemplate;
 
-	public MeoEventManagerImpl(final JmsTemplate _jmsTemplate) {
+	public MeoEventManagerImpl(final JmsTemplate jmsTemplate) {
 		super();
-		jmsTemplate = _jmsTemplate;
+		this.jmsTemplate = jmsTemplate;
 	}
 
 	@Override

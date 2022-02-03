@@ -22,8 +22,11 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.vnfm.AffinityRuleTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfAffinityUowV2;
 
 /**
@@ -35,8 +38,8 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfAffinityUo
 public class AffinityRuleSystem extends AbstractVimSystem<AffinityRuleTask> {
 	private final Vim vim;
 
-	public AffinityRuleSystem(final Vim vim) {
-		super();
+	public AffinityRuleSystem(final Vim vim, final VimManager vimManager) {
+		super(vimManager);
 		this.vim = vim;
 	}
 
@@ -46,7 +49,7 @@ public class AffinityRuleSystem extends AbstractVimSystem<AffinityRuleTask> {
 	}
 
 	@Override
-	SystemBuilder getImplementation(final OrchestrationService<AffinityRuleTask> orchestrationService, final VirtualTask<AffinityRuleTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<UnitOfWork<AffinityRuleTask>> getImplementation(final OrchestrationService<AffinityRuleTask> orchestrationService, final VirtualTask<AffinityRuleTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfAffinityUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 

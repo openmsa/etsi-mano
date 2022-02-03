@@ -21,10 +21,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
 import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
 import com.ubiqube.etsi.mano.em.v281.model.vnffm.Alarm;
@@ -40,6 +42,7 @@ import com.ubiqube.etsi.mano.vnfm.fc.vnffm.AlarmFrontController;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class Alarms281Sol002Controller implements Alarms281Sol002Api {
 
 	private final AlarmFrontController alarmFrontController;

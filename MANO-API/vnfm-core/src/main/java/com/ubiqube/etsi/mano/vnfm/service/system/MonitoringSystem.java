@@ -22,7 +22,10 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.MonitoringTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.vnfm.service.VnfMonitoringService;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfMonitoringUow2;
 
@@ -35,8 +38,8 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfMonitoring
 public class MonitoringSystem extends AbstractVimSystem<MonitoringTask> {
 	private final VnfMonitoringService vnfMonitoringService;
 
-	public MonitoringSystem(final VnfMonitoringService vnfMonitoringService) {
-		super();
+	public MonitoringSystem(final VnfMonitoringService vnfMonitoringService, final VimManager vimManager) {
+		super(vimManager);
 		this.vnfMonitoringService = vnfMonitoringService;
 	}
 
@@ -46,7 +49,7 @@ public class MonitoringSystem extends AbstractVimSystem<MonitoringTask> {
 	}
 
 	@Override
-	SystemBuilder getImplementation(final OrchestrationService<MonitoringTask> orchestrationService, final VirtualTask<MonitoringTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<UnitOfWork<MonitoringTask>> getImplementation(final OrchestrationService<MonitoringTask> orchestrationService, final VirtualTask<MonitoringTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfMonitoringUow2(virtualTask, vnfMonitoringService, vimConnectionInformation));
 	}
 

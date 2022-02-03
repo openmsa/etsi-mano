@@ -34,6 +34,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * A part of NSD.
  *
@@ -42,6 +45,8 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @EntityListeners(AuditListener.class)
+@Getter
+@Setter
 public class NsSap implements ToscaEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -78,72 +83,10 @@ public class NsSap implements ToscaEntity, Auditable {
 	private String toscaId;
 
 	private String state;
-
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> virtualLink;
 	@Embedded
 	private Audit audit;
-
-	@Override
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	@Override
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	@Override
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(final String role) {
-		this.role = role;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-	public Set<String> getLayerProtocols() {
-		return layerProtocols;
-	}
-
-	public void setLayerProtocols(final Set<String> layerProtocols) {
-		this.layerProtocols = layerProtocols;
-	}
-
-	public boolean isTrunkMode() {
-		return trunkMode;
-	}
-
-	public void setTrunkMode(final boolean trunkMode) {
-		this.trunkMode = trunkMode;
-	}
-
-	public Set<NsCpProtocolData> getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(final Set<NsCpProtocolData> protocol) {
-		this.protocol = protocol;
-	}
-
-	public Set<SecurityGroup> getSecurityGroups() {
-		return securityGroups;
-	}
 
 	public void addSecurityGroups(final SecurityGroup securityGroup) {
 		if (null == securityGroups) {
@@ -152,61 +95,10 @@ public class NsSap implements ToscaEntity, Auditable {
 		securityGroups.add(securityGroup);
 	}
 
-	public void setSecurityGroups(final Set<SecurityGroup> securityGroup) {
-		securityGroups = securityGroup;
-	}
-
-	public NsdPackage getNsdPackage() {
-		return nsdPackage;
-	}
-
-	public void setNsdPackage(final NsdPackage nsdPackage) {
-		this.nsdPackage = nsdPackage;
-	}
-
-	public String getExternalVirtualLink() {
-		return externalVirtualLink;
-	}
-
-	public void setExternalVirtualLink(final String externalVirtualLink) {
-		this.externalVirtualLink = externalVirtualLink;
-	}
-
-	public String getInternalVirtualLink() {
-		return internalVirtualLink;
-	}
-
-	public void setInternalVirtualLink(final String internalVirtualLink) {
-		this.internalVirtualLink = internalVirtualLink;
-	}
-
-	@Override
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	@Override
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
-	@Override
-	public String getState() {
-		return state;
-	}
-
-	@Override
-	public void setState(final String state) {
-		this.state = state;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
+	public void addVirtualLink(final String name) {
+		if (null == virtualLink) {
+			virtualLink = new HashSet<>();
+		}
+		virtualLink.add(name);
 	}
 }

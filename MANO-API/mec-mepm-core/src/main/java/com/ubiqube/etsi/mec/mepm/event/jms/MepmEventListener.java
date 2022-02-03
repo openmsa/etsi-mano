@@ -40,8 +40,8 @@ public class MepmEventListener {
 
 	private final MepmActionController mepmActionController;
 
-	public MepmEventListener(final MepmActionController _mepmActionController) {
-		mepmActionController = _mepmActionController;
+	public MepmEventListener(final MepmActionController mepmActionController) {
+		this.mepmActionController = mepmActionController;
 	}
 
 	@JmsListener(destination = "system.actions.mepm", concurrency = "5")

@@ -33,12 +33,12 @@ import ma.glasnost.orika.metadata.Type;
 public class OffsetDateTimeToDateConverter extends BidirectionalConverter<OffsetDateTime, Date> {
 
 	@Override
-	public Date convertTo(final OffsetDateTime source, final Type<Date> _destinationType, final MappingContext mappingContext) {
+	public Date convertTo(final OffsetDateTime source, final Type<Date> inDestinationType, final MappingContext mappingContext) {
 		return Date.from(source.toInstant());
 	}
 
 	@Override
-	public OffsetDateTime convertFrom(final Date source, final Type<OffsetDateTime> _destinationType, final MappingContext mappingContext) {
+	public OffsetDateTime convertFrom(final Date source, final Type<OffsetDateTime> inDestinationType, final MappingContext mappingContext) {
 		return OffsetDateTime.from(source.toInstant().atOffset(ZoneOffset.UTC));
 	}
 

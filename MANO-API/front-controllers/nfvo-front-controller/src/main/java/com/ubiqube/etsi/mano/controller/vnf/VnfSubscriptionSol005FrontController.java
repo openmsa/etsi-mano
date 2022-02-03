@@ -41,7 +41,7 @@ public interface VnfSubscriptionSol005FrontController {
 
 	<U> ResponseEntity<List<U>> search(String filters, Class<U> clazz, Consumer<U> makeLinks);
 
-	<U> ResponseEntity<U> create(Object subscriptionsPostQuery, Class<U> clazz, Consumer<U> makeLinks);
+	<U> ResponseEntity<U> create(Object subscriptionsPostQuery, Class<?> version, Class<U> clazz, Consumer<U> makeLinks);
 
 	ResponseEntity<Void> delete(@NotNull String subscriptionId);
 

@@ -25,27 +25,27 @@ import org.jgrapht.event.GraphVertexChangeEvent;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VirtualTaskVertexListener implements GraphListener<VirtualTask<?>, VirtualTaskConnectivity> {
+public class VirtualTaskVertexListener<V> implements GraphListener<VirtualTask<V>, VirtualTaskConnectivity<V>> {
 
 	@Override
-	public void vertexAdded(final GraphVertexChangeEvent<VirtualTask<?>> e) {
+	public void vertexAdded(final GraphVertexChangeEvent<VirtualTask<V>> e) {
 		// Nothing.
 	}
 
 	@Override
-	public void vertexRemoved(final GraphVertexChangeEvent<VirtualTask<?>> e) {
+	public void vertexRemoved(final GraphVertexChangeEvent<VirtualTask<V>> e) {
 		// Nothing.
 	}
 
 	@Override
-	public void edgeAdded(final GraphEdgeChangeEvent<VirtualTask<?>, VirtualTaskConnectivity> e) {
-		final VirtualTaskConnectivity edge = e.getEdge();
+	public void edgeAdded(final GraphEdgeChangeEvent<VirtualTask<V>, VirtualTaskConnectivity<V>> e) {
+		final VirtualTaskConnectivity<V> edge = e.getEdge();
 		edge.setSource(e.getEdgeSource());
 		edge.setTarget(e.getEdgeTarget());
 	}
 
 	@Override
-	public void edgeRemoved(final GraphEdgeChangeEvent<VirtualTask<?>, VirtualTaskConnectivity> e) {
+	public void edgeRemoved(final GraphEdgeChangeEvent<VirtualTask<V>, VirtualTaskConnectivity<V>> e) {
 		// Nothing.
 	}
 

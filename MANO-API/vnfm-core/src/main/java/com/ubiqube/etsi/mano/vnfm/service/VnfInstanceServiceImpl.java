@@ -40,6 +40,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
@@ -70,15 +71,18 @@ public class VnfInstanceServiceImpl extends SearchableService implements VnfInst
 
 	private final EventManager eventManager;
 
-	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa _extVirtualLinkDataEntityJpa, final VnfInstanceJpa _vnfInstanceJpa, final VnfLiveInstanceJpa _vnfLiveInstance,
-			final EntityManager _entityManager, final Patcher _patcher, final EventManager _eventManager, final ManoSearchResponseService _searchService) {
-		super(_searchService, _entityManager, VnfInstance.class);
-		extVirtualLinkDataEntityJpa = _extVirtualLinkDataEntityJpa;
-		vnfInstanceJpa = _vnfInstanceJpa;
-		vnfLiveInstanceJpa = _vnfLiveInstance;
-		entityManager = _entityManager;
-		patcher = _patcher;
-		eventManager = _eventManager;
+	private final GrammarParser grammarParser;
+
+	public VnfInstanceServiceImpl(final ExtVirtualLinkDataEntityJpa extVirtualLinkDataEntityJpa, final VnfInstanceJpa vnfInstanceJpa, final VnfLiveInstanceJpa vnfLiveInstance,
+			final EntityManager entityManager, final Patcher patcher, final EventManager eventManager, final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
+		super(searchService, entityManager, VnfInstance.class, grammarParser);
+		this.extVirtualLinkDataEntityJpa = extVirtualLinkDataEntityJpa;
+		this.vnfInstanceJpa = vnfInstanceJpa;
+		this.vnfLiveInstanceJpa = vnfLiveInstance;
+		this.entityManager = entityManager;
+		this.patcher = patcher;
+		this.eventManager = eventManager;
+		this.grammarParser = grammarParser;
 	}
 
 	@Override
@@ -178,7 +182,7 @@ public class VnfInstanceServiceImpl extends SearchableService implements VnfInst
 
 	@Override
 	public List<VnfInstance> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(entityManager);
+		final SearchQueryer sq = new SearchQueryer(entityManager, grammarParser);
 		return sq.getCriteria(filter, VnfInstance.class);
 	}
 
@@ -189,7 +193,7 @@ public class VnfInstanceServiceImpl extends SearchableService implements VnfInst
 
 	@Override
 	public VnfInstance vnfLcmPatch(final VnfInstance vnfInstance, final String body, final String ifMatch) {
-		if ((ifMatch != null) && !ifMatch.equals(vnfInstance.getVersion() + "")) {
+		if (ifMatch != null && !ifMatch.equals(vnfInstance.getVersion() + "")) {
 			throw new PreConditionException(ifMatch + " does not match " + vnfInstance.getVersion());
 		}
 		patcher.patch(body, vnfInstance);

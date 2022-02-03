@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +32,7 @@ import com.ubiqube.etsi.mano.nfvo.v351.model.nfvici.NfviCapacityInfo;
  *
  */
 @RestController
+@ConditionalOnMissingClass("com.ubiqube.etsi.mano.nfvo.v331.controller.nfvici.NfviCapacityInfos331Sol005Api")
 public class NfviCapacityInfos351Sol005Controller implements NfviCapacityInfos351Sol005Api {
 
 	@Override

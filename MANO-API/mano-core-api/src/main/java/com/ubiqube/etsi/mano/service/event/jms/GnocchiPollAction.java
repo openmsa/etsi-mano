@@ -29,10 +29,10 @@ public class GnocchiPollAction {
 	private String vnfInstanceId;
 	private String metricId;
 
-	public GnocchiPollAction(final VimConnectionInformation _vimConnectionInformation, final String _vnfInstanceId, final String _metricId) {
-		vimConnectionInformation = _vimConnectionInformation;
-		vnfInstanceId = _vnfInstanceId;
-		metricId = _metricId;
+	public GnocchiPollAction(final VimConnectionInformation vimConnectionInformation, final String vnfInstanceId, final String metricId) {
+		this.vimConnectionInformation = vimConnectionInformation;
+		this.vnfInstanceId = vnfInstanceId;
+		this.metricId = metricId;
 	}
 
 	public VimConnectionInformation getVimConnectionInformation() {

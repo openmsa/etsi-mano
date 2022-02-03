@@ -42,6 +42,7 @@ import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsHeal;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.nfvo.factory.LcmFactory;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.nfvo.service.NsdPackageService;
@@ -66,8 +67,9 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 	private final NsBlueprintService nsBlueprintService;
 
 	public NsInstanceControllerServiceImpl(final NsdPackageService nsdPackageService, final NsInstanceService nsInstanceService, final EventManager eventManager,
-			final MapperFacade mapper, final NsBlueprintService nsBlueprintService, final EntityManager em, final ManoSearchResponseService searchService) {
-		super(searchService, em, NsdInstance.class);
+			final MapperFacade mapper, final NsBlueprintService nsBlueprintService, final EntityManager em, final ManoSearchResponseService searchService,
+			final GrammarParser grammarParser) {
+		super(searchService, em, NsdInstance.class, grammarParser);
 		this.nsdPackageService = nsdPackageService;
 		this.nsInstanceService = nsInstanceService;
 		this.eventManager = eventManager;
@@ -76,8 +78,8 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 	}
 
 	@Override
-	public NsdInstance createNsd(final String _nsdId, final String nsName, final String nsDescription) {
-		final NsdPackage nsd = nsdPackageService.findByNsdId(_nsdId);
+	public NsdInstance createNsd(final String nsdId, final String nsName, final String nsDescription) {
+		final NsdPackage nsd = nsdPackageService.findByNsdId(nsdId);
 		ensureIsOnboarded(nsd);
 		ensureIsEnabled(nsd);
 		nsd.setNsdUsageState(PackageUsageState.IN_USE);
@@ -91,10 +93,10 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 		final NsdInstance nsInstanceTmp = nsInstanceService.save(nsInstance);
 
 		final List<NsVnfInstance> vnfInstances = new ArrayList<>();
-
+		// It's strange, we are creating NSD instance but not VNF.
 		nsd.getNestedNsdInfoIds().forEach(x -> {
 			// create nested instance.
-			final NsdInstance nsIn = createNsd(_nsdId, nsName, nsDescription);
+			final NsdInstance nsIn = createNsd(x.getChild().getNsdId(), "Sub NSD of " + nsdId, nsDescription);
 			nsInstanceTmp.addNestedNsInstance(nsIn);
 		});
 		nsInstanceTmp.setVnfInstance(vnfInstances);
@@ -116,10 +118,8 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 
 	@Override
 	public NsBlueprint terminate(final UUID nsInstanceUuid, final OffsetDateTime terminationTime) {
-		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
-		ensureInstantiated(nsInstanceDb);
-		ensureNotLocked(nsInstanceDb);
-		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.TERMINATE);
+		final NsBlueprint nsLcm = lcmForRunningOperation(nsInstanceUuid, PlanOperationType.TERMINATE);
+		nsLcm.setStartTime(terminationTime);
 		nsBlueprintService.save(nsLcm);
 		// XXX we can use quartz cron job for terminationTime.
 		eventManager.sendActionNfvo(ActionType.NS_TERMINATE, nsLcm.getId(), new HashMap<>());
@@ -128,13 +128,26 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 
 	@Override
 	public NsBlueprint heal(final UUID nsInstanceUuid, final NsHeal nsHeal) {
-		// TODO Auto-generated method stub
-		return null;
+		final NsBlueprint nsLcm = lcmForRunningOperation(nsInstanceUuid, PlanOperationType.HEAL);
+		nsLcm.getParameters().setNsHeal(nsHeal);
+		nsBlueprintService.save(nsLcm);
+		eventManager.sendActionNfvo(ActionType.NS_HEAL, nsLcm.getId(), new HashMap<>());
+		return nsLcm;
 	}
 
 	@Override
-	public NsBlueprint heal(final UUID nsInstanceUuid, final NsScale nsInst) {
-		// TODO Auto-generated method stub
-		return null;
+	public NsBlueprint scale(final UUID nsInstanceUuid, final NsScale nsInst) {
+		final NsBlueprint nsLcm = lcmForRunningOperation(nsInstanceUuid, PlanOperationType.SCALE);
+		nsLcm.getParameters().setNsScale(nsInst);
+		nsBlueprintService.save(nsLcm);
+		eventManager.sendActionNfvo(ActionType.NS_SCALE, nsLcm.getId(), new HashMap<>());
+		return nsLcm;
+	}
+
+	private NsBlueprint lcmForRunningOperation(final UUID nsInstanceUuid, final PlanOperationType pt) {
+		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsInstanceUuid);
+		ensureInstantiated(nsInstanceDb);
+		ensureNotLocked(nsInstanceDb);
+		return LcmFactory.createNsLcmOpOcc(nsInstanceDb, pt);
 	}
 }

@@ -20,10 +20,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdChangeType;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,13 +46,13 @@ public class AppGrantRequest implements GrantInterface {
 
 	private NsdChangeType operation;
 
-	private Set<GrantInformation> addResources = new HashSet<>();
+	private Set<GrantInformationExt> addResources = new HashSet<>();
 
-	private Set<GrantInformation> tempResources = new HashSet<>();
+	private Set<GrantInformationExt> tempResources = new HashSet<>();
 
-	private Set<GrantInformation> removeResources = new HashSet<>();
+	private Set<GrantInformationExt> removeResources = new HashSet<>();
 
-	private Set<GrantInformation> updateResources = new HashSet<>();
+	private Set<GrantInformationExt> updateResources = new HashSet<>();
 
 	private GrantVimAssetsEntity vimAssets = null;
 }

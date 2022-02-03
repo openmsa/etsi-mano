@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.dao.mano.pm;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.ElementCollection;
@@ -38,7 +37,10 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class PmJobCriteria {
 	/**
-	 * This defines the types of performance metrics for the specified object instances. Valid values are specified as "Measurement Name" values in clause 7.2 of ETSI GS NFV-IFA 027 [5]). At least one of the two attributes (performance metric or group) shall be present.
+	 * This defines the types of performance metrics for the specified object
+	 * instances. Valid values are specified as "Measurement Name" values in clause
+	 * 7.2 of ETSI GS NFV-IFA 027 [5]). At least one of the two attributes
+	 * (performance metric or group) shall be present.
 	 *
 	 * Cardinaliy: 0..N
 	 */
@@ -46,7 +48,11 @@ public class PmJobCriteria {
 	private Set<String> performanceMetric;
 
 	/**
-	 * Group of performance metrics. A metric group is a pre-defined list of metrics, known to the API producer that it can decompose to individual metrics. Valid values are specified as "Measurement Group" values in clause 7.2 of ETSI GS NFV-IFA 027 [5]). At least one of the two attributes (performance metric or group) shall be present.
+	 * Group of performance metrics. A metric group is a pre-defined list of
+	 * metrics, known to the API producer that it can decompose to individual
+	 * metrics. Valid values are specified as "Measurement Group" values in clause
+	 * 7.2 of ETSI GS NFV-IFA 027 [5]). At least one of the two attributes
+	 * (performance metric or group) shall be present.
 	 *
 	 * Cardinaliy: 0..N
 	 */
@@ -54,19 +60,24 @@ public class PmJobCriteria {
 	private Set<String> performanceMetricGroup;
 
 	/**
-	 * Specifies the periodicity at which the API producer will collect performance information. The unit shall be seconds. See note 1 and note 2.
+	 * Specifies the periodicity at which the API producer will collect performance
+	 * information. The unit shall be seconds. See note 1 and note 2.
 	 */
 	@NotNull
 	private Long collectionPeriod;
 
 	/**
-	 * Specifies the periodicity at which the API producer will report to the API consumer about performance information. The unit shall be seconds. See note 1 and note 2.
+	 * Specifies the periodicity at which the API producer will report to the API
+	 * consumer about performance information. The unit shall be seconds. See note 1
+	 * and note 2.
 	 */
 	@NotNull
 	private Integer reportingPeriod;
 
 	/**
-	 * Identifies a time boundary after which the reporting will stop. The boundary shall allow a single reporting as well as periodic reporting up to the boundary.
+	 * Identifies a time boundary after which the reporting will stop. The boundary
+	 * shall allow a single reporting as well as periodic reporting up to the
+	 * boundary.
 	 */
 	@Null
 	private LocalDateTime reportingBoundary;

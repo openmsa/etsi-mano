@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -52,6 +53,7 @@ public class VimConnectionInformation implements Auditable {
 	private UUID id = null;
 
 	@FullTextField
+	@Column(unique = true)
 	private String vimId = null;
 
 	@FullTextField

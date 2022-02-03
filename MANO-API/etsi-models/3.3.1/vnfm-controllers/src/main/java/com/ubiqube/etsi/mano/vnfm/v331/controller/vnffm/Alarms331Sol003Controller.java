@@ -21,10 +21,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
 import com.ubiqube.etsi.mano.vnfm.fc.vnffm.AlarmFrontController;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.Alarm;
@@ -38,6 +40,7 @@ import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.Link;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class Alarms331Sol003Controller implements Alarms331Sol003Api {
 
 	private final AlarmFrontController alarmFrontController;

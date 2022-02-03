@@ -16,10 +16,6 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,65 +25,34 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
+import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
-import com.ubiqube.etsi.mano.service.graph.WfDependency;
-import com.ubiqube.etsi.mano.service.graph.WfProduce;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NsUow extends AbstractNsUnitOfWork {
+public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsUow.class);
 
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
 	private final NsdTask nsdTask;
 
-	private final transient VnfInstantiate instantiateRequest;
+	private final VnfInstanceLcm nsLcmOpOccsService;
 
-	private final transient VnfInstanceLcm nsLcmOpOccsService;
-
-	public NsUow(final NsdTask task, final VnfInstantiate req, final VnfInstanceLcm nsLcmOpOccsService) {
-		super(task);
-		this.nsdTask = task;
-		this.instantiateRequest = req;
+	public NsUow(final VirtualTask<NsdTask> task, final VnfInstanceLcm nsLcmOpOccsService) {
+		super(task, NsdNode.class);
+		this.nsdTask = task.getParameters();
 		this.nsLcmOpOccsService = nsLcmOpOccsService;
-	}
-
-	@Override
-	public String exec(final NsParameters params) {
-		final VnfBlueprint lcm = nsLcmOpOccsService.instantiate(nsdTask.getNsInstanceId(), instantiateRequest);
-		final VnfBlueprint result = waitLcmCompletion(lcm);
-		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
-			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
-		}
-		return lcm.getId().toString();
-	}
-
-	@Override
-	public String rollback(final NsParameters params) {
-		final VnfBlueprint lcm = nsLcmOpOccsService.terminate(nsdTask.getNsInstanceId(), null, 0);
-		final VnfBlueprint result = waitLcmCompletion(lcm);
-		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
-			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
-		}
-		return lcm.getId().toString();
-	}
-
-	@Override
-	protected String getPrefix() {
-		return "nsd";
 	}
 
 	private VnfBlueprint waitLcmCompletion(final VnfBlueprint lcm) {
 		VnfBlueprint tmp = lcm;
 		OperationStatusType state = tmp.getOperationStatus();
 		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state) {
-			tmp = nsLcmOpOccsService.vnfLcmOpOccsGet(lcm.getId());
+			tmp = nsLcmOpOccsService.vnfLcmOpOccsGet(nsdTask.getServer(), lcm.getId());
 			state = tmp.getOperationStatus();
 			sleepSeconds(1);
 		}
@@ -106,13 +71,39 @@ public class NsUow extends AbstractNsUnitOfWork {
 	}
 
 	@Override
-	public List<WfDependency> getDependencies() {
-		return new ArrayList<>();
+	public String execute(final Context context) {
+		final VnfInstantiate instantiateRequest = createInstantiateRequest();
+		instantiateRequest.setFlavourId(nsdTask.getFlavourId());
+		instantiateRequest.setInstantiationLevelId(nsdTask.getInstantiationLevelId());
+		instantiateRequest.setLocalizationLanguage(nsdTask.getLocalizationLanguage());
+		instantiateRequest.setVimConnectionInfo(nsdTask.getVimConnectionInformations().stream().toList());
+		final VnfBlueprint lcm = nsLcmOpOccsService.instantiate(nsdTask.getServer(), nsdTask.getNsInstanceId(), instantiateRequest);
+		final VnfBlueprint result = waitLcmCompletion(lcm);
+		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
+			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
+		}
+		return lcm.getId().toString();
+	}
+
+	private VnfInstantiate createInstantiateRequest() {
+		final VnfInstantiate inst = new VnfInstantiate();
+		// inst.setExtManagedVirtualLinks(nsdTask.getExtCps());
+		// inst.setExtVirtualLinks(nsdTask.getExtCps());
+		inst.setFlavourId(nsdTask.getFlavourId());
+		inst.setInstantiationLevelId(nsdTask.getInstantiationLevelId());
+		inst.setLocalizationLanguage(nsdTask.getLocalizationLanguage());
+		inst.setVimConnectionInfo(nsdTask.getVimConnectionInformations().stream().toList());
+		return inst;
 	}
 
 	@Override
-	public List<WfProduce> getProduce() {
-		return Arrays.asList(new WfProduce(NsdNode.class, nsdTask.getToscaName(), nsdTask.getId()));
+	public String rollback(final Context context) {
+		final VnfBlueprint lcm = nsLcmOpOccsService.terminate(nsdTask.getServer(), nsdTask.getNsInstanceId(), null, 0);
+		final VnfBlueprint result = waitLcmCompletion(lcm);
+		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
+			throw new GenericException("NSD LCM Failed: " + result.getError().getDetail());
+		}
+		return lcm.getId().toString();
 	}
 
 }

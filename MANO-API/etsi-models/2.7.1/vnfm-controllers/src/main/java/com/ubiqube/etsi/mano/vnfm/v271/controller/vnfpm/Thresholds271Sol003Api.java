@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "thresholds", description = "the thresholds API")
-@RequestMapping(value = "/sol003/vnfpm/v1", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol003/vnfpm/v2", headers = "Version=2.0.0")
 @RolesAllowed({ "ROLE_NFVO" })
 public interface Thresholds271Sol003Api {
 	@ApiOperation(value = "", nickname = "thresholdsGet", notes = "Query Threshold. The API consumer can use this method to query information about thresholds. This method shall follow the provisions specified in the tables 6.4.5.3.2-1 and 6.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", response = Threshold.class, responseContainer = "List", tags = {})

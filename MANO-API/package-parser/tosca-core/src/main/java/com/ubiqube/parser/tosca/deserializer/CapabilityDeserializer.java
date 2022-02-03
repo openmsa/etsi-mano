@@ -68,7 +68,7 @@ public class CapabilityDeserializer extends StdDeserializer<CapabilityDefinition
 		Optional.ofNullable(value.get("properties")).map(x -> getTreeValue(p, x, ToscaProperties.class)).ifPresent(caps::setProperties);
 		Optional.ofNullable(value.get("type")).map(TextNode.class::cast).map(TextNode::asText).ifPresent(caps::setType);
 		Optional.ofNullable(value.get("valid_source_types")).map(x -> getTreeValue(p, x, new TypeReference<List<String>>() {/**/
-		})).ifPresent(caps::setValid_source_types);
+		})).ifPresent(caps::setValidSourceTypes);
 		return caps;
 	}
 

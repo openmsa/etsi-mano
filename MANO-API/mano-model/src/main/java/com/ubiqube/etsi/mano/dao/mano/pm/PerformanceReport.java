@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -39,23 +38,29 @@ public class PerformanceReport {
 	UUID id;
 
 	/**
-	 * Type of the measured object.  The applicable measured object type for a measurement is defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
+	 * Type of the measured object. The applicable measured object type for a
+	 * measurement is defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
 	 */
 	String objectType;
 
 	/**
-	 * Identifier of the measured object instance for which the performance metric is reported.
+	 * Identifier of the measured object instance for which the performance metric
+	 * is reported.
 	 */
 	UUID objectInstanceId;
 
 	/**
-	 * Identifier of the sub-object instance of the measured object instance for which the performance metric is reported. Shall be present if this is required in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured object type. See note.
+	 * Identifier of the sub-object instance of the measured object instance for
+	 * which the performance metric is reported. Shall be present if this is
+	 * required in clause 6.2 of ETSI GS NFV-IFA 027 [5] for the related measured
+	 * object type. See note.
 	 */
 	@Null
 	UUID subObjectInstanceId;
 
 	/**
-	 * Name of the metric collected. This attribute shall contain the related "Measurement Name" value as defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
+	 * Name of the metric collected. This attribute shall contain the related
+	 * "Measurement Name" value as defined in clause 7.2 of ETSI GS NFV-IFA 027 [5].
 	 */
 	String performanceMetric;
 

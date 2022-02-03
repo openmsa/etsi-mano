@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jgrapht.ListenableGraph;
 
@@ -29,31 +28,30 @@ public class PreExecutionGraphImpl<U> implements PreExecutionGraph<U> {
 	/**
 	 * The create VT graps.
 	 */
-	private final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> g;
+	private final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> g;
 
 	/**
 	 * Graph for removal.
 	 */
-	private final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> r;
+	private final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> r;
 
-	public PreExecutionGraphImpl(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> g, final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> r) {
+	public PreExecutionGraphImpl(final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> g, final ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> r) {
 		this.g = g;
 		this.r = r;
 	}
 
-	public ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> getCreateGraph() {
+	public ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> getCreateGraph() {
 		return g;
 	}
 
-	public ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity> getDeleteGraph() {
+	public ListenableGraph<VirtualTask<U>, VirtualTaskConnectivity<U>> getDeleteGraph() {
 		return r;
 	}
 
 	@Override
 	public List<VirtualTask<U>> getPreTasks() {
-		final List<VirtualTask<U>> ret = new ArrayList<>();
-		ret.addAll(g.vertexSet().stream().collect(Collectors.toList()));
-		ret.addAll(r.vertexSet().stream().collect(Collectors.toList()));
+		final List<VirtualTask<U>> ret = new ArrayList<>(g.vertexSet().stream().toList());
+		ret.addAll(r.vertexSet().stream().toList());
 		return ret;
 	}
 

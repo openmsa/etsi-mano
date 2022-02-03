@@ -8,7 +8,7 @@ description: >
 
 imports:
   - etsi_nfv_sol001_nsd_types.yaml
-  - fix_ubiqube.yaml
+  - etsi_nfv_sol001_vnfd_types.yaml
 
 
 topology_template:
@@ -30,15 +30,21 @@ topology_template:
       requirements:
         #- virtual_link: # tosca.nodes.nfv.NsVirtualLink
 
-
-    ubiqube:
-      type: tosca.nodes.nfv.NsTopology
+    ubiVdu.1_0:
+      type: tosca.nodes.nfv.VNF
       properties:
+        descriptor_id: dcd11fbf-c767-41eb-abc9-cec35dd95bca
+        provider: Ubiqube internal.
+        product_name: Integration tests
+        software_version: 1.0.0
+        descriptor_version: 1.0.1
         flavour_id: flavor01
-        vnfd_invariant:
-          - dcd11fbf-c767-41eb-abc9-cec35dd95bca
-        nested_nsd_invariant:
-          - 3b91b199-73a6-439d-b8f1-fb1fa236815e
+        monitoring_parameters: # list tosca.datatypes.nfv.VnfMonitoringParameter
+          mon01:
+            performance_metric: v_disk_usage_peak_vnf
+            collection_period: 1 m
+      requirements:
+        - virtual_link: public
 
 
     vl01:
@@ -61,9 +67,9 @@ topology_template:
           flow_pattern: mesh
         test_access:
           - test
-  
-  
-  
+
+
+
     sap01:
       type: tosca.nodes.nfv.Sap
       properties:

@@ -17,16 +17,37 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingLevelMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingStepMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVnfScalingStepMapping;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
+@Getter
+@NoArgsConstructor
+@Setter
 public class NsdPackageNsdPackage implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -45,55 +66,41 @@ public class NsdPackageNsdPackage implements Serializable {
 
 	private String toscaId;
 
-	public NsdPackageNsdPackage() {
-		// Nothing.
-	}
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> virtualLinks;
 
-	public NsdPackageNsdPackage(final NsdPackage parent, final NsdPackage child, final String toscaName) {
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<NsVnfScalingStepMapping> stepMapping;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<NsScalingLevelMapping> levelMapping;
+
+	public NsdPackageNsdPackage(final NsdPackage parent, final NsdPackage child, final String toscaName, final Set<String> virtualLinks) {
 		super();
 		this.parent = parent;
 		this.child = child;
 		this.toscaName = toscaName;
+		this.virtualLinks = virtualLinks;
 	}
 
-	public UUID getId() {
-		return id;
+	public void addVirtualLink(final String vl) {
+		if (null == virtualLinks) {
+			this.virtualLinks = new HashSet<>();
+		}
+		virtualLinks.add(vl);
 	}
 
-	public void setId(final UUID id) {
-		this.id = id;
+	public void addStepMapping(final NsScalingStepMapping scaling) {
+		if (null == stepMapping) {
+			stepMapping = new HashSet<>();
+		}
+		stepMapping.add(scaling);
 	}
 
-	public NsdPackage getParent() {
-		return parent;
+	public void addLevelMapping(final NsScalingLevelMapping mapping) {
+		if (null == levelMapping) {
+			levelMapping = new HashSet<>();
+		}
+		levelMapping.add(mapping);
 	}
-
-	public void setParent(final NsdPackage parent) {
-		this.parent = parent;
-	}
-
-	public NsdPackage getChild() {
-		return child;
-	}
-
-	public void setChild(final NsdPackage child) {
-		this.child = child;
-	}
-
-	public String getToscaName() {
-		return toscaName;
-	}
-
-	public void setToscaName(final String toscaName) {
-		this.toscaName = toscaName;
-	}
-
-	public String getToscaId() {
-		return toscaId;
-	}
-
-	public void setToscaId(final String toscaId) {
-		this.toscaId = toscaId;
-	}
-
 }

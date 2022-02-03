@@ -37,8 +37,8 @@ import com.ubiqube.etsi.mec.mepm.event.MepmEventManager;
 public class MepmEventManagerJms implements MepmEventManager {
 	private final JmsTemplate jmsTemplate;
 
-	public MepmEventManagerJms(final JmsTemplate _jmsTemplate) {
-		jmsTemplate = _jmsTemplate;
+	public MepmEventManagerJms(final JmsTemplate jmsTemplate) {
+		this.jmsTemplate = jmsTemplate;
 	}
 
 	@Override

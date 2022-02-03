@@ -16,11 +16,13 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -28,6 +30,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -79,6 +82,10 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	@ManyToOne
 	@IndexedEmbedded
 	private NsdInstance nsInstance;
+
+	private String nsInstantiationLevelId;
+
+	private String nsFlavourId;
 	// 3.5.1
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<VnfLcmCoordination> lcmCoordinations;
@@ -89,9 +96,17 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> warnings;
 
-	public NsdInstance getNsInstance() {
-		return nsInstance;
-	}
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<VimConnectionInformation> vimConnections;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<BlueZoneGroupInformation> zoneGroups;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ZoneInfoEntity> zones;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
+	@Embedded
+	@IndexedEmbedded
+	private BlueprintParameters parameters;
 
 	public void setNsInstance(final NsdInstance nsInstance) {
 		this.nsInstance = nsInstance;
@@ -99,61 +114,25 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 
 	@Override
 	public void addVimConnection(final VimConnectionInformation vimConnection) {
-		//
+		if (null == this.vimConnections) {
+			this.vimConnections = new HashSet<>();
+		}
+		this.vimConnections.add(vimConnection);
 	}
 
 	@Override
 	public void addTask(final NsTask task) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public BlueprintParameters getParameters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setVimConnections(final Set<VimConnectionInformation> vimConnections) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setZoneGroups(final Set<BlueZoneGroupInformation> mapAsSet) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setZones(final Set<ZoneInfoEntity> zones) {
-		// TODO Auto-generated method stub
-
+		tasks.add(task);
 	}
 
 	@Override
 	public void setGrantsRequestId(final String string) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Set<VimConnectionInformation> getVimConnections() {
-		// TODO Auto-generated method stub
-		return null;
+		//
 	}
 
 	@Override
 	public NsdInstance getInstance() {
-		// TODO Auto-generated method stub
-		return null;
+		return nsInstance;
 	}
 
 }

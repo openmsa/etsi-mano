@@ -16,24 +16,27 @@
  */
 package com.ubiqube.etsi.mano.service;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
+import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
+import com.ubiqube.etsi.mano.service.event.Notifications;
+import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
@@ -42,17 +45,25 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	private final SubscriptionJpa subscriptionJpa;
 
-	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager em) {
+	private final GrammarParser grammarParser;
+
+	private final Notifications notifications;
+
+	private final ServerService serverService;
+
+	public SubscriptionServiceImpl(final SubscriptionJpa repository, final EntityManager em, final GrammarParser grammarParser, final Notifications notifications, final ServerService serverService) {
 		super();
 		this.subscriptionJpa = repository;
 		this.em = em;
+		this.grammarParser = grammarParser;
+		this.notifications = notifications;
+		this.serverService = serverService;
 	}
 
 	@Override
 	public List<Subscription> query(final String filter, final SubscriptionType type) {
-		final SearchQueryer sq = new SearchQueryer(em);
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		final List<Node<Object>> nodes = (List<Node<Object>>) (Object) astBuilder.getNodes();
+		final SearchQueryer sq = new SearchQueryer(em, grammarParser);
+		final List<Node<Object>> nodes = grammarParser.parse(filter);
 		nodes.add(Node.of("subscriptionType", Operand.EQ, type.toString()));
 		return sq.getCriteria((List<Node<?>>) (Object) nodes, Subscription.class);
 	}
@@ -60,17 +71,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public Subscription save(final Subscription subscription, final SubscriptionType type) {
 		subscription.setSubscriptionType(type);
-		testSubscription(subscription);
+		final List<Subscription> lst = findByApiAndCallbackUriSubscriptionType(subscription.getApi(), subscription.getCallbackUri(), subscription.getSubscriptionType());
+		if (isMatching(subscription, lst)) {
+			throw new GenericException("Subscription already exist.");
+		}
+		final ServerAdapter server = serverService.buildServerAdapter(subscription);
+		notifications.check(server, subscription.getCallbackUri());
 		return subscriptionJpa.save(subscription);
 	}
 
-	private static void testSubscription(final Subscription subscription) {
-		try {
-			final URL url = new URL(subscription.getCallbackUri());
-			url.openConnection();
-		} catch (final IOException e) {
-			throw new GenericException(e);
+	private static boolean isMatching(final Subscription subscription, final List<Subscription> lst) {
+		final List<FilterAttributes> filters = Optional.ofNullable(subscription.getFilters()).orElseGet(List::of);
+		if (filters.isEmpty()) {
+			return lst.stream().anyMatch(x -> x.getFilters().isEmpty());
 		}
+		return lst.stream()
+				.flatMap(x -> x.getFilters().stream())
+				.anyMatch(x -> filters.stream()
+						.anyMatch(y -> y.getAttribute().equals(x.getAttribute()) && y.getValue().equals(x.getValue())));
 	}
 
 	@Override
@@ -86,7 +104,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	public List<Subscription> selectNotifications(final UUID vnfPkgId, final String event) {
-		return subscriptionJpa.findEventAndVnfPkg(event, vnfPkgId.toString());
+		final List<Subscription> lst = subscriptionJpa.findEventAndVnfPkg(event, vnfPkgId.toString());
+		return lst.stream()
+				.filter(x -> x.getFilters().stream().anyMatch(y -> y.getAttribute().startsWith("notificationTypes[") && y.getValue().equals(event)))
+				.toList();
+	}
+
+	@Override
+	public List<Subscription> findByApiAndCallbackUriSubscriptionType(final ApiTypesEnum api, final String callbackUri, final SubscriptionType subscriptionType) {
+		return subscriptionJpa.findByApiAndCallbackUriAndSubscriptionType(api, callbackUri, subscriptionType);
 	}
 
 }

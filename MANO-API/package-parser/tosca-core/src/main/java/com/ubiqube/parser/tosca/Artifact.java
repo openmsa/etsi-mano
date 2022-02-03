@@ -16,15 +16,20 @@
  */
 package com.ubiqube.parser.tosca;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Artifact {
 	private String file;
 	private String type;
 	private String repository;
 	private String description;
-	private String deploy_path;
-	private String artifact_version;
+	@JsonProperty("deploy_path")
+	private String deployPath;
+	@JsonProperty("artifact_version")
+	private String artifactVersion;
 	private String checksum;
-	private String checksum_algorithm;
+	@JsonProperty("checksum_algorithm")
+	private String checksumAlgorithm;
 	private Object properties;
 
 	public String getFile() {
@@ -51,20 +56,20 @@ public class Artifact {
 		this.description = description;
 	}
 
-	public String getDeploy_path() {
-		return deploy_path;
+	public String getDeployPath() {
+		return deployPath;
 	}
 
-	public void setDeploy_path(final String deploy_path) {
-		this.deploy_path = deploy_path;
+	public void setDeployPath(final String deployPath) {
+		this.deployPath = deployPath;
 	}
 
-	public String getArtifact_version() {
-		return artifact_version;
+	public String getArtifactVersion() {
+		return artifactVersion;
 	}
 
-	public void setArtifact_version(final String artifact_version) {
-		this.artifact_version = artifact_version;
+	public void setArtifactVersion(final String artifactVersion) {
+		this.artifactVersion = artifactVersion;
 	}
 
 	public String getChecksum() {
@@ -75,12 +80,12 @@ public class Artifact {
 		this.checksum = checksum;
 	}
 
-	public String getChecksum_algorithm() {
-		return checksum_algorithm;
+	public String getChecksumAlgorithm() {
+		return checksumAlgorithm;
 	}
 
-	public void setChecksum_algorithm(final String checksum_algorithm) {
-		this.checksum_algorithm = checksum_algorithm;
+	public void setChecksumAlgorithm(final String checksumAlgorithm) {
+		this.checksumAlgorithm = checksumAlgorithm;
 	}
 
 	public Object getProperties() {

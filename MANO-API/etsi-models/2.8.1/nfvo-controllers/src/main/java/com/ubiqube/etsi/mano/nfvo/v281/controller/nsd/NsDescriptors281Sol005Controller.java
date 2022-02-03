@@ -24,12 +24,14 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.nsd.NsDescriptorGenericFrontController;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.Link;
@@ -43,6 +45,7 @@ import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdInfoModifications;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class NsDescriptors281Sol005Controller implements NsDescriptors281Sol005Api {
 	private final NsDescriptorGenericFrontController nsDescriptorGenericFrontController;
 

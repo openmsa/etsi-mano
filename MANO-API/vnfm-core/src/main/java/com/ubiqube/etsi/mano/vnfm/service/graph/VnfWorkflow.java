@@ -53,7 +53,6 @@ import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.GraphTools;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
-import com.ubiqube.etsi.mano.vnfm.jpa.VnfTaskJpa;
 import com.ubiqube.etsi.mano.vnfm.service.graph.vnfm.UowTaskCreateProvider;
 import com.ubiqube.etsi.mano.vnfm.service.graph.vnfm.UowTaskDeleteProvider;
 import com.ubiqube.etsi.mano.vnfm.service.graph.vnfm.VnfParameters;
@@ -68,18 +67,18 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.AbstractContribut
 @Service
 public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport, VnfTask> {
 	private final VnfPlanner planner;
-	private final Planner<VnfBlueprint> planv2;
+	private final Planner<VnfBlueprint, VnfTask, VnfTask> planv2;
 	private final VnfPlanExecutor executor;
-	private final VnfTaskJpa vnfTaskJpa;
 	private final List<AbstractContributorV2Base> planContributors;
 	private final OrchestrationService<?> orchestrationService;
 	private final VnfLiveInstanceJpa vnfInstanceJpa;
 
-	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final VnfTaskJpa vnfTaskJpa, final List<AbstractContributorV2Base> _planContributors, final Planner<VnfBlueprint> planv2, final OrchestrationService<?> orchestrationService, final VnfLiveInstanceJpa vnfInstanceJpa) {
+	public VnfWorkflow(final VnfPlanner planner, final VnfPlanExecutor executor, final List<AbstractContributorV2Base> planContributors,
+			final Planner<VnfBlueprint, VnfTask, VnfTask> planv2,
+			final OrchestrationService<?> orchestrationService, final VnfLiveInstanceJpa vnfInstanceJpa) {
 		this.planner = planner;
 		this.executor = executor;
-		planContributors = _planContributors;
-		this.vnfTaskJpa = vnfTaskJpa;
+		this.planContributors = planContributors;
 		this.planv2 = planv2;
 		this.orchestrationService = orchestrationService;
 		this.vnfInstanceJpa = vnfInstanceJpa;
@@ -89,7 +88,6 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	public PreExecutionGraph<VnfTask> setWorkflowBlueprint(final VnfPackage bundle, final VnfBlueprint blueprint) {
 		final List<Class<? extends Node>> planConstituent = new ArrayList<>();
 		// Doesn't works with jdk17 but fine with eclipse.
-		// planContributors.stream().map(AbstractContributorV2Base::getNode).collect(Collectors.toList());
 		for (final AbstractContributorV2Base b : planContributors) {
 			planConstituent.add(b.getNode());
 		}
@@ -107,12 +105,8 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	}
 
 	private void populateExtNetworks(final Context context, final VnfBlueprint parameters) {
-		parameters.getExtVirtualLinks().forEach(x -> {
-			context.add(Network.class, x.getVimLevelResourceType(), x.getResourceId());
-		});
-		parameters.getExtManagedVirtualLinks().forEach(x -> {
-			context.add(Network.class, x.getVnfVirtualLinkDescId(), x.getResourceId());
-		});
+		parameters.getExtVirtualLinks().forEach(x -> context.add(Network.class, x.getVimLevelResourceType(), x.getResourceId()));
+		parameters.getExtManagedVirtualLinks().forEach(x -> context.add(Network.class, x.getVnfVirtualLinkDescId(), x.getResourceId()));
 		final List<VnfLiveInstance> l = vnfInstanceJpa.findByVnfInstance(parameters.getInstance());
 		l.forEach(x -> {
 			switch (x.getTask().getType()) {

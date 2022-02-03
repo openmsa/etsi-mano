@@ -80,6 +80,7 @@ public class NsLiveInstance implements BaseEntity, Auditable {
 		this.nsBlueprint = nsBlueprint;
 		this.nsInstance = nsInstance;
 		this.vimConnectionId = nsTask.getVimConnectionId();
+		this.resourceId = nsTask.getVimResourceId();
 	}
 
 	@Override

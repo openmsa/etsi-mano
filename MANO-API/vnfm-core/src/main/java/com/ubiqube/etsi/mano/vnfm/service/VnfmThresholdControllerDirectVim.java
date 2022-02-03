@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.pm.Threshold;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.ThresholdJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
@@ -51,10 +52,10 @@ public class VnfmThresholdControllerDirectVim extends SearchableService implemen
 
 	private final VimManager vimManager;
 
-	public VnfmThresholdControllerDirectVim(final EntityManager _em, final ThresholdJpa _thresholdJpa, final ManoSearchResponseService searchService, final VnfBlueprintJpa vnfBlueprintJpa,
-			final VimManager vimManager) {
-		super(searchService, _em, PmJob.class);
-		this.thresholdJpa = _thresholdJpa;
+	public VnfmThresholdControllerDirectVim(final EntityManager em, final ThresholdJpa thresholdJpa, final ManoSearchResponseService searchService, final VnfBlueprintJpa vnfBlueprintJpa,
+			final VimManager vimManager, final GrammarParser grammarParser) {
+		super(searchService, em, PmJob.class, grammarParser);
+		this.thresholdJpa = thresholdJpa;
 		this.vnfBlueprintJpa = vnfBlueprintJpa;
 		this.vimManager = vimManager;
 	}

@@ -17,19 +17,20 @@
 package com.ubiqube.parser.tosca;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ubiqube.parser.tosca.deserializer.PropertyDeserializer;
 
 @JsonDeserialize(using = PropertyDeserializer.class)
 public class ToscaProperties {
-	private HashMap<String, ValueObject> properties = new HashMap<>();
+	private Map<String, ValueObject> properties = new HashMap<>();
 
-	public void setProperties(final HashMap<String, ValueObject> properties) {
+	public void setProperties(final Map<String, ValueObject> properties) {
 		this.properties = properties;
 	}
 
-	public HashMap<String, ValueObject> getProperties() {
+	public Map<String, ValueObject> getProperties() {
 		return properties;
 	}
 

@@ -20,13 +20,20 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ubiqube.parser.tosca.ParseException;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 public final class ClassUtils {
-	private final static Pattern PACKAGE_PATTERN = Pattern.compile("(?<package>.*)(?=\\.)\\.(?<clazz>.*)");
+	private static final Pattern PACKAGE_PATTERN = Pattern.compile("(?<package>.*)(?=\\.)\\.(?<clazz>.*)");
+
+	private static final Logger LOG = LoggerFactory.getLogger(ClassUtils.class);
 
 	private ClassUtils() {
 		// Nothing.
@@ -55,6 +62,23 @@ public final class ClassUtils {
 			return m.group("package").toLowerCase(Locale.ROOT) + "." + m.group("clazz");
 		}
 		return derivedFrom;
+	}
+
+	public static Class<?> getClassOf(final String subType) {
+		try {
+			return Class.forName(subType);
+		} catch (final ClassNotFoundException e) {
+			throw new ParseException("Unknown subtype: " + subType, e);
+		}
+	}
+
+	public static Class<?> getExistingClass(final String type) {
+		try {
+			return Class.forName(type);
+		} catch (final ClassNotFoundException e) {
+			LOG.trace("", e);
+		}
+		return null;
 	}
 
 }

@@ -38,13 +38,22 @@ import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 import com.ubiqube.etsi.mano.service.vim.node.Start;
 
-public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? extends Instance>> {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <U>
+ * @param <P>
+ * @param <R> Parameters.
+ * @param <B>
+ */
+public abstract class Planner<U extends Task, P, R, B extends Blueprint<U, ? extends Instance>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Planner.class);
 
-	private final List<? extends PlanContributor<P, B, U, PA>> planContributors;
+	private final List<? extends PlanContributor<P, B, U, R>> planContributors;
 
-	public Planner(final List<? extends PlanContributor<P, B, U, PA>> contributor) {
+	protected Planner(final List<? extends PlanContributor<P, B, U, R>> contributor) {
 		planContributors = contributor;
 	}
 
@@ -65,38 +74,37 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 				}
 			});
 			start.forEach(x -> doPlanInner(bundle, blueprint, x.getTarget(), scaling, connections, cache));
-		} else {
-			if (!cache.contains(clazz.getName())) {
-				contribute(bundle, blueprint, scaling, clazz);
-				cache.add(clazz.getName());
-			}
+		} else if (!cache.contains(clazz.getName())) {
+			contribute(bundle, blueprint, scaling, clazz);
+			cache.add(clazz.getName());
 		}
 	}
 
 	private void contribute(final P bundle, final B blueprint, final Set<ScaleInfo> scaling, final Class<? extends Node> node) {
-		final List<PlanContributor<P, B, U, PA>> contributors = getContributors(node);
+		final List<PlanContributor<P, B, U, R>> contributors = getContributors(node);
 		LOG.debug("Contributors for node {} = {}", node, contributors);
 		blueprint.getTasks().addAll(contributors.stream()
 				.flatMap(x -> x.contribute(bundle, blueprint, scaling).stream())
-				.collect(Collectors.toList()));
+				.toList());
 	}
 
-	private List<PlanContributor<P, B, U, PA>> getContributors(final Class<? extends Node> node) {
+	private List<PlanContributor<P, B, U, R>> getContributors(final Class<? extends Node> node) {
+		// No toList.
 		return planContributors.stream().filter(x -> x.getContributionType() == node).collect(Collectors.toList());
 	}
 
 	private static List<NodeConnectivity> findSourceNodesByType(final List<NodeConnectivity> connections, final Class<? extends Node> class1) {
-		return connections.stream().filter(x -> x.getSource() == class1).collect(Collectors.toList());
+		return connections.stream().filter(x -> x.getSource() == class1).toList();
 	}
 
-	public ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> convertToExecution(final B blueprint, final ChangeType changeType) {
+	public ListenableGraph<UnitOfWork<U, R>, ConnectivityEdge<UnitOfWork<U, R>>> convertToExecution(final B blueprint, final ChangeType changeType) {
 		final Set<U> tasks = blueprint.getTasks().stream().filter(x -> x.getChangeType() == changeType).collect(Collectors.toSet());
-		final List<UnitOfWork<U, PA>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).collect(Collectors.toList());
+		final List<UnitOfWork<U, R>> list = planContributors.stream().flatMap(x -> x.convertTasksToExecNode(tasks, blueprint).stream()).toList();
 		final WfConfiguration wfConfiguration = new WfConfiguration(planContributors);
 		wfConfiguration.getConfigurationGraph();
-		final ListenableGraph<UnitOfWork<U, PA>, ConnectivityEdge<UnitOfWork<U, PA>>> g = wfConfiguration.autoConnect(list);
+		final ListenableGraph<UnitOfWork<U, R>, ConnectivityEdge<UnitOfWork<U, R>>> g = wfConfiguration.autoConnect(list);
 		// Add start
-		final UnitOfWork<U, PA> root = getStartNode();
+		final UnitOfWork<U, R> root = getStartNode();
 		g.addVertex(root);
 		g.vertexSet().stream()
 				.filter(key -> g.incomingEdgesOf(key).isEmpty())
@@ -109,5 +117,5 @@ public abstract class Planner<U extends Task, P, PA, B extends Blueprint<U, ? ex
 		return g;
 	}
 
-	protected abstract UnitOfWork<U, PA> getStartNode();
+	protected abstract UnitOfWork<U, R> getStartNode();
 }

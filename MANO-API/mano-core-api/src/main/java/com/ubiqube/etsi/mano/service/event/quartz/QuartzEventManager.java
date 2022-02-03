@@ -50,10 +50,10 @@ public class QuartzEventManager implements EventManager {
 	private final Scheduler scheduler;
 	private final Class<? extends QuartzJobBean> controller;
 
-	public QuartzEventManager(final Scheduler scheduler, final VnfPackageRepository vnfPackageRepository, final Class<? extends QuartzJobBean> _controller) {
+	public QuartzEventManager(final Scheduler scheduler, final VnfPackageRepository vnfPackageRepository, final Class<? extends QuartzJobBean> controller) {
 		super();
 		this.scheduler = scheduler;
-		controller = _controller;
+		this.controller = controller;
 		try {
 			this.scheduler.getListenerManager().addJobListener(new UriUploadListener(vnfPackageRepository));
 		} catch (final SchedulerException e) {

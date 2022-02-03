@@ -16,7 +16,9 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -50,13 +52,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @EntityListeners(AuditListener.class)
-public class GrantResponse implements BaseEntity, Auditable {
+public class GrantResponse implements BaseEntity, Auditable, GrantInterface {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id = null;
+	private UUID id;
 
 	@Embedded
 	private Audit audit;
@@ -75,64 +77,64 @@ public class GrantResponse implements BaseEntity, Auditable {
 	private String instantiationLevelId;
 
 	// Must be string because VNFM / NFVO are differents.
-	private String vnfInstanceId = null;
+	private String vnfInstanceId;
 
 	// Must be string because VNFM / NFVO are differents.
-	private String vnfLcmOpOccId = null;
+	private String vnfLcmOpOccId;
 
 	@Valid
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<VimConnectionInformation> vimConnections = null;
+	private Set<VimConnectionInformation> vimConnections;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
-	private Set<ZoneInfoEntity> zones = null;
+	private Set<ZoneInfoEntity> zones;
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<ZoneGroupInformation> zoneGroups = null;
+	private Set<ZoneGroupInformation> zoneGroups;
 
-	private String computeReservationId = null;
+	private String computeReservationId;
 
-	private String networkReservationId = null;
+	private String networkReservationId;
 
-	private String storageReservationId = null;
-
-	@Valid
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<GrantInformationExt> addResources = null;
+	private String storageReservationId;
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<GrantInformationExt> tempResources = null;
+	private Set<GrantInformationExt> addResources = new LinkedHashSet<>();
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<GrantInformationExt> removeResources = null;
+	private Set<GrantInformationExt> tempResources = new LinkedHashSet<>();
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<GrantInformationExt> updateResources = null;
+	private Set<GrantInformationExt> removeResources = new LinkedHashSet<>();
+
+	@Valid
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private  Set<GrantInformationExt> updateResources = new LinkedHashSet<>();
 
 	@Embedded
-	private GrantVimAssetsEntity vimAssets = null;
+	private GrantVimAssetsEntity vimAssets;
 
 	@Valid
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = null;
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = new LinkedHashSet<>();
 
 	@Valid
 	@OneToMany(mappedBy = "grants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = null;
+	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = new LinkedHashSet<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<String, String> additionalParams = null;
+	private Map<String, String> additionalParams = new HashMap<>();
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<PlacementConstraint> placementConstraints = null;
+	private Set<PlacementConstraint> placementConstraints = new LinkedHashSet<>();
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<VimConstraint> vimConstraints = null;
+	private Set<VimConstraint> vimConstraints = new LinkedHashSet<>();
 
 	private String instanceLink;
 
@@ -143,20 +145,34 @@ public class GrantResponse implements BaseEntity, Auditable {
 	 */
 	private Boolean available;
 
-	public void addExtManagedVl(final ExtManagedVirtualLinkDataEntity extVl) {
+	public void addExtManagedVl(ExtManagedVirtualLinkDataEntity extVl) {
 		if (null == extManagedVirtualLinks) {
 			extManagedVirtualLinks = new HashSet<>();
 		}
 		extManagedVirtualLinks.add(extVl);
 	}
 
-	public void addZones(final ZoneInfoEntity zone) {
+	public void addZones(ZoneInfoEntity zone) {
 		if (null == zones) {
 			zones = new HashSet<>();
 		}
 		zone.setGrants(this);
 		zones.add(zone);
 
+	}
+
+	public void addAddResources(GrantInformationExt obj) {
+		if (null == addResources) {
+			addResources = new LinkedHashSet<>();
+		}
+		addResources.add(obj);
+	}
+
+	public void addRemoveResources(GrantInformationExt obj) {
+		if (null == removeResources) {
+			removeResources = new LinkedHashSet<>();
+		}
+		removeResources.add(obj);
 	}
 
 }

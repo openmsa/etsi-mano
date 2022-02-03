@@ -21,9 +21,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionSol005FrontController;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscription;
@@ -36,6 +38,7 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscriptionRequest;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class VnfSubscriptions331Sol005Controller implements VnfSubscriptions331Sol005Api {
 	private final VnfSubscriptionSol005FrontController vnfSubscriptionSol03FrontController;
 
@@ -47,7 +50,11 @@ public class VnfSubscriptions331Sol005Controller implements VnfSubscriptions331S
 	/**
 	 * Query multiple subscriptions.
 	 *
-	 * The GET method queries the list of active subscriptions of the functional block that invokes the method. It can be used e.g. for resynchronization after error situations. This method shall follow the provisions specified in the Tables 9.4.7.8.2-1 and 9.4.8.3.2-2 for URI query parameters, request and response data structures, and response codes. ²
+	 * The GET method queries the list of active subscriptions of the functional
+	 * block that invokes the method. It can be used e.g. for resynchronization
+	 * after error situations. This method shall follow the provisions specified in
+	 * the Tables 9.4.7.8.2-1 and 9.4.8.3.2-2 for URI query parameters, request and
+	 * response data structures, and response codes. ²
 	 */
 	@Override
 	public ResponseEntity<List<PkgmSubscription>> subscriptionsGet(final String filter) {
@@ -55,15 +62,27 @@ public class VnfSubscriptions331Sol005Controller implements VnfSubscriptions331S
 	}
 
 	/**
-	 * Subscribe to notifications related to on-boarding and/or changes of VNF packages.
+	 * Subscribe to notifications related to on-boarding and/or changes of VNF
+	 * packages.
 	 *
-	 * The POST method creates a new subscription. This method shall follow the provisions specified in the Tables 9.4.8.3.1-1 and 9.4.8.3.1-2 for URI query parameters, request and response data structures, and response codes. Creation of two subscription resources with the same callbackURI and the same filter can result in performance degradation and will provide duplicates of notifications to the OSS, and might make sense only in very rare use cases. Consequently, the NFVO may either allow
-	 * creating a subscription resource if another subscription resource with the same filter and callbackUri already exists (in which case it shall return the \&quot;201 Created\&quot; response code), or may decide to not create a duplicate subscription resource (in which case it shall return a \&quot;303 See Other\&quot; response code referencing the existing subscription resource with the same filter and callbackUri).
+	 * The POST method creates a new subscription. This method shall follow the
+	 * provisions specified in the Tables 9.4.8.3.1-1 and 9.4.8.3.1-2 for URI query
+	 * parameters, request and response data structures, and response codes.
+	 * Creation of two subscription resources with the same callbackURI and the same
+	 * filter can result in performance degradation and will provide duplicates of
+	 * notifications to the OSS, and might make sense only in very rare use cases.
+	 * Consequently, the NFVO may either allow creating a subscription resource if
+	 * another subscription resource with the same filter and callbackUri already
+	 * exists (in which case it shall return the \&quot;201 Created\&quot; response
+	 * code), or may decide to not create a duplicate subscription resource (in
+	 * which case it shall return a \&quot;303 See Other\&quot; response code
+	 * referencing the existing subscription resource with the same filter and
+	 * callbackUri).
 	 *
 	 */
 	@Override
 	public ResponseEntity<PkgmSubscription> subscriptionsPost(final PkgmSubscriptionRequest subscriptionsPostQuery) {
-		return vnfSubscriptionSol03FrontController.create(subscriptionsPostQuery, PkgmSubscription.class, VnfSubscriptions331Sol005Controller::makeLinks);
+		return vnfSubscriptionSol03FrontController.create(subscriptionsPostQuery, VnfSubscriptions331Sol005Api.class, PkgmSubscription.class, VnfSubscriptions331Sol005Controller::makeLinks);
 	}
 
 	/**
@@ -80,7 +99,8 @@ public class VnfSubscriptions331Sol005Controller implements VnfSubscriptions331S
 	/**
 	 * Read an individual subscription resource.
 	 *
-	 * Query Subscription Information The GET method reads an individual subscription.
+	 * Query Subscription Information The GET method reads an individual
+	 * subscription.
 	 *
 	 */
 	@Override

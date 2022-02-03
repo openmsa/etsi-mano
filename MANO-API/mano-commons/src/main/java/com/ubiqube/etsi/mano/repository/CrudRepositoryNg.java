@@ -19,20 +19,18 @@ package com.ubiqube.etsi.mano.repository;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 public interface CrudRepositoryNg<T> {
-	@Nonnull
-	T get(@Nonnull UUID id);
+	@NotNull
+	T get(@NotNull UUID id);
 
-	void delete(@Nonnull UUID id);
+	void delete(@NotNull UUID id);
 
-	@Nonnull
-	T save(@Nonnull T entity);
+	@NotNull
+	T save(@NotNull T entity);
 
-	@Nonnull
 	@NotNull
 	List<T> query(@Nullable String filter);
 

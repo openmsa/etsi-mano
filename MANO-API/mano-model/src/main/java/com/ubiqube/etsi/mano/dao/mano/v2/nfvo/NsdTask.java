@@ -16,9 +16,22 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+
+import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -26,6 +39,8 @@ import javax.persistence.Entity;
  *
  */
 @Entity
+@Getter
+@Setter
 public class NsdTask extends NsTask {
 
 	/** Serial. */
@@ -35,24 +50,21 @@ public class NsdTask extends NsTask {
 
 	private UUID nsInstanceId;
 
-	public UUID getNsdId() {
-		return nsdId;
-	}
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<NsVirtualLink> virtualLinks;
 
-	public void setNsdId(final UUID nsdId) {
-		this.nsdId = nsdId;
-	}
+	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	private Servers server;
 
-	public UUID getNsInstanceId() {
-		return nsInstanceId;
-	}
+	private String flavourId;
 
-	public void setNsInstanceId(final UUID nsInstanceId) {
-		this.nsInstanceId = nsInstanceId;
-	}
+	private String instantiationLevelId;
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	private Set<VnfExtCp> extCps;
 
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	private Set<VimConnectionInformation> vimConnectionInformations;
+
+	private String localizationLanguage;
 }

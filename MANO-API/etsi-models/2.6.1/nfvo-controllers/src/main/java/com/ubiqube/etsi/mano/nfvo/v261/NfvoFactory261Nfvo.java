@@ -35,7 +35,13 @@ public class NfvoFactory261Nfvo implements NfvoFactory {
 
 	@Override
 	public Object createVnfPackageChangeNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		final var obj = VnfSubscriptionFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId, null, new Sol003Linkable());
+		boolean deleted = false;
+		try {
+			vnfPackageRepository.get(vnfPkgId);
+		} catch (final RuntimeException e) {
+			deleted = true;
+		}
+		final var obj = VnfSubscriptionFactory.createVnfPackageChangeNotification(deleted, subscriptionId, vnfPkgId, null, new Sol003Linkable());
 		obj.setLinks(new Sol005Linkable().createNotificationLink(vnfPkgId, subscriptionId));
 		return obj;
 	}

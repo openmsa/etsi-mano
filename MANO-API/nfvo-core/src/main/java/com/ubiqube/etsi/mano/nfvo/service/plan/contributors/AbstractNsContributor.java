@@ -17,24 +17,28 @@
 package com.ubiqube.etsi.mano.nfvo.service.plan.contributors;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.Supplier;
+
+import javax.transaction.Transactional;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
-import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
-import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
-import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
+import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
+import com.ubiqube.etsi.mano.orchestrator.Bundle;
+import com.ubiqube.etsi.mano.orchestrator.PlanContributor;
+import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class AbstractNsContributor implements PlanContributor<NsdPackage, NsBlueprint, NsTask, NsParameters> {
+public abstract class AbstractNsContributor<U extends NsTask, T extends VirtualTask<U>> implements PlanContributor<U, T, NsBlueprint> {
 	protected AbstractNsContributor() {
 		// Nothing.
 	}
@@ -68,4 +72,16 @@ public abstract class AbstractNsContributor implements PlanContributor<NsdPackag
 		task.setRemovedLiveInstance(vli.getId());
 		return task;
 	}
+
+	@Transactional
+	@Override
+	public final List<T> contribute(final Bundle bundle, final NsBlueprint blueprint) {
+		final List<T> r = nsContribute((NsBundleAdapter) bundle, blueprint);
+		final List<U> rr = r.stream().map(VirtualTask::getParameters).toList();
+		blueprint.getTasks().addAll(rr);
+		return r;
+	}
+
+	protected abstract List<T> nsContribute(final NsBundleAdapter bundle, final NsBlueprint blueprint);
+
 }

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -42,21 +41,21 @@ public class AppComputeUow extends AppAbstractUnitOfWork {
 
 	private final AppComputeTask task;
 
-	public AppComputeUow(final AppComputeTask _computeTask, final VnfCompute _vnfCompute, final Set<VnfLinkPort> _linkPort) {
-		super(_computeTask);
-		task = _computeTask;
-		vnfCompute = _vnfCompute;
-		vnfLinkPort = _linkPort.stream().collect(Collectors.toList());
+	public AppComputeUow(final AppComputeTask computeTask, final VnfCompute vnfCompute, final Set<VnfLinkPort> linkPort) {
+		super(computeTask);
+		this.task = computeTask;
+		this.vnfCompute = vnfCompute;
+		this.vnfLinkPort = linkPort.stream().toList();
 	}
 
 	@Override
 	public String exec(final AppParameters params) {
-		final List<String> storages = vnfCompute.getStorages().stream().map(x -> params.getContext().get(x)).collect(Collectors.toList());
+		final List<String> storages = vnfCompute.getStorages().stream().map(x -> params.getContext().get(x)).toList();
 		final List<String> networks = vnfLinkPort.stream()
 				.filter(x -> x.getVirtualBinding().equals(vnfCompute.getToscaName()))
 				.map(VnfLinkPort::getVirtualLink)
 				.map(x -> params.getContext().get(x))
-				.collect(Collectors.toList());
+				.toList();
 		return params.getVim().createCompute(params.getVimConnectionInformation(), task.getAlias(), task.getFlavorId(), task.getImageId(), networks, storages, vnfCompute.getCloudInit(), List.of(), List.of());
 	}
 
@@ -71,12 +70,12 @@ public class AppComputeUow extends AppAbstractUnitOfWork {
 		final List<WfDependency> ret = new ArrayList<>();
 		final List<WfDependency> storages = vnfCompute.getStorages().stream()
 				.map(x -> new WfDependency(Storage.class, x))
-				.collect(Collectors.toList());
+				.toList();
 		final List<WfDependency> networks = vnfLinkPort.stream()
 				.filter(x -> x.getVirtualBinding().equals(vnfCompute.getToscaName()))
 				.map(VnfLinkPort::getVirtualLink)
 				.map(x -> new WfDependency(Network.class, x))
-				.collect(Collectors.toList());
+				.toList();
 		ret.addAll(networks);
 		ret.addAll(storages);
 		return ret;

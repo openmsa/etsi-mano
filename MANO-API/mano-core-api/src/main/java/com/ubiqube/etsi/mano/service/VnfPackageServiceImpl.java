@@ -38,6 +38,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.VnfComputeAspectDeltaJpa;
 import com.ubiqube.etsi.mano.jpa.VnfComputeJpa;
 import com.ubiqube.etsi.mano.jpa.VnfExtCpJpa;
@@ -79,8 +80,9 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa vnfComputeAspectDeltaJpa, final VnfStorageJpa vnfStorageJpa,
 			final VnfVlJpa vnfVl, final VnfComputeJpa vnfComputeJpa, final VnfExtCpJpa vnfExtCpJpa, final VnfPackageJpa vnfPackageJpa,
 			final VnfInstantiationLevelsJpa vnfInstantiationLevelsJpa, final VnfLinkPortJpa vnfLinkPortJpa, final EntityManager em,
-			final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa, final VnfPackageRepository vnfPackageRepository) {
-		super(searchService, em, VnfPackage.class);
+			final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa, final VnfPackageRepository vnfPackageRepository,
+			final GrammarParser grammarParser) {
+		super(searchService, em, VnfPackage.class, grammarParser);
 		this.vnfComputeAspectDeltaJpa = vnfComputeAspectDeltaJpa;
 		this.vnfStorageJpa = vnfStorageJpa;
 		this.vnfVl = vnfVl;

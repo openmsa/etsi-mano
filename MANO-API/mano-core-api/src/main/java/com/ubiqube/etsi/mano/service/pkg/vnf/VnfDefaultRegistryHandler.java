@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.service.pkg.vnf;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**

@@ -36,8 +36,8 @@ public class VnfPackageManagerImpl implements VnfPackageManager {
 
 	private final List<PackageDescriptor<VnfPackageReader>> providers;
 
-	public VnfPackageManagerImpl(final List<PackageDescriptor<VnfPackageReader>> _providers) {
-		providers = _providers;
+	public VnfPackageManagerImpl(final List<PackageDescriptor<VnfPackageReader>> providers) {
+		this.providers = providers;
 	}
 
 	@Override

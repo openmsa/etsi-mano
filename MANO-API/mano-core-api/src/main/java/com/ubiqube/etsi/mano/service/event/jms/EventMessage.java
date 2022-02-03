@@ -28,9 +28,9 @@ public class EventMessage {
 		// Nothing.
 	}
 
-	public EventMessage(final NotificationEvent _notificationEvent, final UUID _objectId) {
-		notificationEvent = _notificationEvent;
-		objectId = _objectId;
+	public EventMessage(final NotificationEvent notificationEvent, final UUID objectId) {
+		this.notificationEvent = notificationEvent;
+		this.objectId = objectId;
 	}
 
 	public NotificationEvent getNotificationEvent() {

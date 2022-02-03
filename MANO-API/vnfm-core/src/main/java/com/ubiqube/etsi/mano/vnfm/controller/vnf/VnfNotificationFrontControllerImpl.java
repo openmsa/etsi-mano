@@ -18,15 +18,19 @@ package com.ubiqube.etsi.mano.vnfm.controller.vnf;
 
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.PackageChangeType;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.dao.mano.config.RemoteSubscription;
 import com.ubiqube.etsi.mano.jpa.RemoteSubscriptionJpa;
+import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.vnfm.fc.vnf.VnfNotificationFrontController;
@@ -47,14 +51,16 @@ public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontC
 	private final EventManager eventManager;
 	private final MapperFacade mapper;
 	private final RemoteSubscriptionJpa remoteSubscriptionJpa;
+	private final VnfPackageJpa vnfPackageJpa;
 
 	public VnfNotificationFrontControllerImpl(final EventManager eventManager, final MapperFacade mapper, final VnfPackageOnboardingNotificationJpa vnfPackageOnboardingNotificationJpa,
-			final RemoteSubscriptionJpa remoteSubscriptionJpa) {
+			final RemoteSubscriptionJpa remoteSubscriptionJpa, final VnfPackageJpa vnfPackageJpa) {
 		super();
 		this.eventManager = eventManager;
 		this.mapper = mapper;
 		this.vnfPackageOnboardingNotificationJpa = vnfPackageOnboardingNotificationJpa;
 		this.remoteSubscriptionJpa = remoteSubscriptionJpa;
+		this.vnfPackageJpa = vnfPackageJpa;
 	}
 
 	@Override
@@ -73,6 +79,20 @@ public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontC
 		final VnfPackageOnboardingNotification newEvent = vnfPackageOnboardingNotificationJpa.save(event);
 		LOG.info("Event received: {} => Id: {}", newEvent.getNfvoId(), newEvent.getId());
 		eventManager.sendActionVnfm(ActionType.VNF_PKG_ONBOARD_DOWNLOAD, newEvent.getId(), new HashMap<>());
+		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	public ResponseEntity<Void> onChange(final Object body, final String string) {
+		final VnfPackageChangeNotification event = mapper.map(body, VnfPackageChangeNotification.class);
+		final Optional<RemoteSubscription> subscription = remoteSubscriptionJpa.findByRemoteSubscriptionId(event.getId());
+		if (subscription.isEmpty()) {
+			LOG.warn("Unable to find event {} in database.", event.getId());
+			return ResponseEntity.notFound().build();
+		}
+		if (event.getChangeType() == PackageChangeType.PKG_DELETE) {
+			vnfPackageJpa.deleteByVnfdId(UUID.fromString(event.getVnfdId()));
+		}
 		return ResponseEntity.noContent().build();
 	}
 

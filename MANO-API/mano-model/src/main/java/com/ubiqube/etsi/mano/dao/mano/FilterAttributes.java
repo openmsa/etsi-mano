@@ -23,7 +23,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ *
+ * @author ncuser
+ *
+ */
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
 public class FilterAttributes {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,28 +45,13 @@ public class FilterAttributes {
 
 	private String value;
 
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public String getAttribute() {
-		return attribute;
-	}
-
-	public void setAttribute(final String attribute) {
-		this.attribute = attribute;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(final String value) {
+	public FilterAttributes(final String attr, final String value) {
+		this.attribute = attr;
 		this.value = value;
+	}
+
+	public static FilterAttributes of(final String attr, final String value) {
+		return new FilterAttributes(attr, value);
 	}
 
 	@Override

@@ -76,6 +76,10 @@ import ma.glasnost.orika.MapperFacade;
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ *
+ *         This class is need in VNFM, when the NFVO onboard a package, we will
+ *         receive a notification, then we download the new package, and onboard
+ *         it.
  */
 @Service
 public class VnfPackageOnboardingImpl {
@@ -92,12 +96,13 @@ public class VnfPackageOnboardingImpl {
 
 	private final VnfPackageRepository vnfPackageRepository;
 
-	public VnfPackageOnboardingImpl(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final VnfPackageManager packageManager, final MapperFacade _mapper, final VnfPackageService _vnfPackageService) {
+	public VnfPackageOnboardingImpl(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final VnfPackageManager packageManager,
+			final MapperFacade mapper, final VnfPackageService vnfPackageService) {
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
-		mapper = _mapper;
-		vnfPackageService = _vnfPackageService;
+		this.mapper = mapper;
+		this.vnfPackageService = vnfPackageService;
 	}
 
 	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId) {
@@ -129,7 +134,6 @@ public class VnfPackageOnboardingImpl {
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 		} catch (final RuntimeException e) {
 			LOG.error("", e);
-			// XXX It is ERROR in
 			final VnfPackage v2 = vnfPackageService.findById(vnfPackage.getId());
 			v2.setOnboardingState(OnboardingStateType.CREATED);
 			v2.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));
@@ -312,6 +316,7 @@ public class VnfPackageOnboardingImpl {
 	private VnfPackage finishOnboarding(final VnfPackage vnfPackage) {
 		vnfPackage.setOnboardingState(OnboardingStateType.ONBOARDED);
 		vnfPackage.setOperationalState(PackageOperationalState.ENABLED);
+		vnfPackage.setOnboardingFailureDetails(new FailureDetails());
 		return vnfPackageService.save(vnfPackage);
 	}
 

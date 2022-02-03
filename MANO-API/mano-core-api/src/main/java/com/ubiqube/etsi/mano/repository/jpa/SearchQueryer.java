@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.repository.jpa;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -31,17 +30,19 @@ import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsSt
 import org.hibernate.search.mapper.orm.session.SearchSession;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.grammar.AstBuilder;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 
 public class SearchQueryer {
 
 	private final EntityManager entityManager;
+	private final GrammarParser grammarParser;
 
-	public SearchQueryer(final EntityManager entityManager) {
+	public SearchQueryer(final EntityManager entityManager, final GrammarParser grammarParser) {
 		super();
 		this.entityManager = entityManager;
+		this.grammarParser = grammarParser;
 	}
 
 	public <T> List<T> getCriteria(final List<Node<?>> nodes, final Class<T> clazz) {
@@ -58,14 +59,14 @@ public class SearchQueryer {
 	}
 
 	public <T> List<T> getCriteria(final String filter, final Class<T> clazz) {
-		final AstBuilder astBuilder = new AstBuilder(filter);
-		return getCriteria((List<Node<?>>) (Object) astBuilder.getNodes(), clazz);
+		final List<Node<String>> nodes = grammarParser.parse(filter);
+		return getCriteria((List<Node<?>>) (Object) nodes, clazz);
 	}
 
 	private static List<SearchPredicate> convertNodeList(final List<Node<?>> nodes, final SearchPredicateFactory pf) {
 		return nodes.stream()
 				.map(x -> applyOp(x.getName(), x.getOp(), x.getValue(), pf))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static SearchPredicate applyOp(final String name, final Operand op, final Object value, final SearchPredicateFactory pf) {

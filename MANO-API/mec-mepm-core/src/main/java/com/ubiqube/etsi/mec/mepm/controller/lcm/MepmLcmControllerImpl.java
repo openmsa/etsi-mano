@@ -37,8 +37,8 @@ public class MepmLcmControllerImpl implements MepmLcmController {
 
 	private final AppBluePrintJpa appBluePrintJpa;
 
-	public MepmLcmControllerImpl(final AppBluePrintJpa _appBluePrintJpa) {
-		appBluePrintJpa = _appBluePrintJpa;
+	public MepmLcmControllerImpl(final AppBluePrintJpa appBluePrintJpa) {
+		this.appBluePrintJpa = appBluePrintJpa;
 	}
 
 	@Override

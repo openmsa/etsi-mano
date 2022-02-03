@@ -37,13 +37,14 @@ public class AppResourceAllocate implements ResourceAllocate {
 
 	private final AppGrantManagement grantManagement;
 
-	public AppResourceAllocate(final AppGrantManagement _grantManagement) {
-		grantManagement = _grantManagement;
+	public AppResourceAllocate(final AppGrantManagement grantManagement) {
+		this.grantManagement = grantManagement;
 	}
 
 	@Override
 	public GrantResponse sendSyncGrantRequest(final GrantInterface req) {
 		// final GrantsRequest finalReq = mapper.map(req, GrantsRequest.class);
+		LOG.info("Sending grant.");
 		return sendAndWaitGrantRequest(req);
 	}
 

@@ -23,10 +23,12 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.nsd.NsdSubscriptionFrontController;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.Link;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdmSubscription;
@@ -39,6 +41,7 @@ import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdmSubscriptionRequest;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class NsSubscriptions281Sol005Controller implements NsSubscriptions281Sol005Api {
 	private final NsdSubscriptionFrontController nsdSubscriptionFrontController;
 

@@ -16,10 +16,8 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service;
 
-import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.core.env.Environment;
@@ -33,12 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
-import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.ServerService;
-import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
-
-import ma.glasnost.orika.MapperFacade;
+import com.ubiqube.etsi.mano.service.rest.ManoClientFactory;
 
 /**
  *
@@ -47,48 +40,37 @@ import ma.glasnost.orika.MapperFacade;
  */
 @Service
 public class VnfmVersionManager {
-	private final MapperFacade mapper;
 	private final Environment env;
 	private final ManoProperties manoProperties;
-	private final ServerService serverService;
+	private final ManoClientFactory manoClientFactory;
 
-	public VnfmVersionManager(final MapperFacade mapper, final Environment env, final ManoProperties manoProperties, final ServerService serverService) {
+	public VnfmVersionManager(final Environment env, final ManoProperties manoProperties, final ManoClientFactory manoClientFactory) {
 		super();
-		this.mapper = mapper;
 		this.env = env;
 		this.manoProperties = manoProperties;
-		this.serverService = serverService;
+		this.manoClientFactory = manoClientFactory;
 	}
 
 	public VnfPackage findVnfPkgById(final String pkgId) {
-		final ServerAdapter server = serverService.findNearestServer();
-		final Class<?> clazz = server.httpGateway().getVnfPackageClass();
-		final Map<String, Object> uriVariables = Map.of("id", pkgId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFPKGM, "/vnf_packages/{id}", uriVariables);
-		final Object res = server.rest().get(uri, clazz);
-		return mapper.map(res, VnfPackage.class);
+		return manoClientFactory.getClient()
+				.vnfPackage(UUID.fromString(pkgId))
+				.find();
 	}
 
 	public void getPackageContent(final String pkgId, final Path file) {
-		final ServerAdapter server = serverService.findNearestServer();
-		final Map<String, Object> uriVariables = Map.of("id", pkgId);
-		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFPKGM, "/vnf_packages/{id}/package_content", uriVariables);
-		server.rest().download(uri, file);
+		manoClientFactory.getClient()
+				.vnfPackage(UUID.fromString(pkgId))
+				.downloadContent(file);
 	}
 
 	public Subscription subscribe(final Subscription subscription) {
-		final ServerAdapter server = serverService.findNearestServer();
 		subscription.setApi(ApiTypesEnum.SOL003);
 		final AuthentificationInformations auth = createAuthInformation();
 		subscription.setAuthentication(auth);
 		subscription.setCallbackUri(manoProperties.getFrontendUrl() + "/vnfpkgm/v1/notification/onboarding");
-		subscription.setSubscriptionType(SubscriptionType.NSDVNF);
-		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFPKGM, "/subscriptions", Map.of());
-		final Class<?> clazz = server.httpGateway().getVnfPackageSubscriptionClass();
-		final Class<?> clazzWire = server.httpGateway().getPkgmSubscriptionRequest();
-		final Object wire = mapper.map(subscription, clazzWire);
-		final Object res = server.rest().post(uri, wire, clazz);
-		return mapper.map(res, Subscription.class);
+		return manoClientFactory.getClient()
+				.vnfPackage()
+				.subscribe(subscription);
 	}
 
 	private AuthentificationInformations createAuthInformation() {

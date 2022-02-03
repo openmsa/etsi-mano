@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsFrontController;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -61,7 +60,7 @@ public class LcmGrantsFrontControllerImpl implements LcmGrantsFrontController {
 
 	@Override
 	public <U> ResponseEntity<U> grantsPost(@Valid final Object grantRequest, final Class<U> clazz, final Function<U, String> getSelfLink) {
-		final VnfGrantsRequest obj = mapper.map(grantRequest, VnfGrantsRequest.class);
+		final GrantResponse obj = mapper.map(grantRequest, GrantResponse.class);
 		final GrantResponse resp = grantManagement.post(obj);
 		final U res = mapper.map(resp, clazz);
 		final URI location = URI.create(getSelfLink.apply(res));

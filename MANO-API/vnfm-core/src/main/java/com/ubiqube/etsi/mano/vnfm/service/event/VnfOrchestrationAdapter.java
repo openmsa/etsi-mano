@@ -64,13 +64,13 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask, Vn
 	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
 	public VnfOrchestrationAdapter(final VnfInstanceService vnfInstancesService, final VnfBlueprintService blueprintService, final VnfLiveInstanceJpa vnfLiveInstanceJpa,
-			final EventManager eventManager, final VnfPackageService _vnfPackageService, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
+			final EventManager eventManager, final VnfPackageService vnfPackageService, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super();
 		this.vnfInstancesService = vnfInstancesService;
 		this.blueprintService = blueprintService;
 		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 		this.eventManager = eventManager;
-		vnfPackageService = _vnfPackageService;
+		this.vnfPackageService = vnfPackageService;
 		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 

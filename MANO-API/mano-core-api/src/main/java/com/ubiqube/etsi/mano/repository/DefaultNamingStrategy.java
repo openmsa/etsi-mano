@@ -44,13 +44,13 @@ public class DefaultNamingStrategy implements NamingStrategy {
 	}
 
 	@Override
-	public Path getRoot(final Class<?> clazz, final UUID _id) {
-		return Paths.get(root, CP_CONVERTER.convert(clazz), _id.toString());
+	public Path getRoot(final Class<?> clazz, final UUID id) {
+		return Paths.get(root, CP_CONVERTER.convert(clazz), id.toString());
 	}
 
 	@Override
-	public Path getRoot(final Class<?> clazz, final UUID _id, final String _filename) {
-		return Paths.get(root, CP_CONVERTER.convert(clazz), _id.toString(), sanitize(_filename));
+	public Path getRoot(final Class<?> clazz, final UUID id, final String filename) {
+		return Paths.get(root, CP_CONVERTER.convert(clazz), id.toString(), sanitize(filename));
 	}
 
 	@Override

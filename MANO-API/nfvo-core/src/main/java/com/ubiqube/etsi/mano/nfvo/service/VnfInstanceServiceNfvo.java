@@ -16,16 +16,22 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service;
 
+import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
+import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
+import com.ubiqube.etsi.mano.service.HttpGateway;
+import com.ubiqube.etsi.mano.service.ServerService;
 import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
 import com.ubiqube.etsi.mano.service.VnfmService;
+import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -36,15 +42,22 @@ import com.ubiqube.etsi.mano.service.VnfmService;
 @ConditionalOnMissingBean(VnfmService.class)
 public class VnfInstanceServiceNfvo implements VnfInstanceGatewayService {
 
-	private final VnfInstanceJpa vnfInstanceJpa;
+	private final ServerService serverService;
 
-	public VnfInstanceServiceNfvo(final VnfInstanceJpa vnfInstanceJpa) {
-		this.vnfInstanceJpa = vnfInstanceJpa;
+	private final MapperFacade mapper;
+
+	public VnfInstanceServiceNfvo(final ServerService serverService, final MapperFacade mapper) {
+		this.serverService = serverService;
+		this.mapper = mapper;
 	}
 
 	@Override
 	public VnfInstance findById(final UUID id) {
-		return vnfInstanceJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find " + id));
+		final ServerAdapter server = serverService.findNearestServer();
+		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}", Map.of("id", id));
+		final HttpGateway httpGateway = server.httpGateway();
+		final Object resp = server.rest().get(uri, httpGateway.getVnfInstanceClass());
+		return mapper.map(resp, VnfInstance.class);
 	}
 
 }

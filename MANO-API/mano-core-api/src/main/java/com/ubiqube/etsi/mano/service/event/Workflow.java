@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.service.event;
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
 import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
@@ -39,7 +38,7 @@ public interface Workflow<P extends PackageBase, B extends Blueprint, R extends 
 
 	R execCreate(B localPlan, GenericExecParams params);
 
-	OrchExecutionResults execute(final PreExecutionGraph<VnfTask> plan, final B parameters);
+	OrchExecutionResults<T> execute(final PreExecutionGraph<T> plan, final B parameters);
 
 	void refresh(PreExecutionGraph<T> prePlan, Blueprint<T, ?> localPlan);
 }

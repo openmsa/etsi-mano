@@ -18,29 +18,29 @@ package com.ubiqube.etsi.mano.orchestrator;
 
 import org.jgrapht.ListenableGraph;
 
+import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWorkConnectivity;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ExecutionGraphImpl implements ExecutionGraph {
+public class ExecutionGraphImpl<U> implements ExecutionGraph {
 
-	private final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g;
-	private final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> r;
+	private final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g;
+	private final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> r;
 
-	public ExecutionGraphImpl(final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> g, final ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> nr) {
+	public ExecutionGraphImpl(final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> g, final ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> nr) {
 		this.g = g;
 		this.r = nr;
 	}
 
-	public ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> getCreateImplementation() {
+	public ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> getCreateImplementation() {
 		return g;
 	}
 
-	public ListenableGraph<UnitOfWork<?>, UnitOfWorkConnectivity> getDeleteImplementation() {
+	public ListenableGraph<UnitOfWork<U>, ConnectivityEdge<UnitOfWork<U>>> getDeleteImplementation() {
 		return r;
 	}
 

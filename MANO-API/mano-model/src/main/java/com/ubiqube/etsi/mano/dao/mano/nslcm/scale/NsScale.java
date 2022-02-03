@@ -16,12 +16,15 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,18 +43,22 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class NsScale {
+public class NsScale implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	@Enumerated(EnumType.STRING)
 	private ScaleType scaleType;
 
 	@OneToOne
 	private ScaleNsData scaleNsData;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<ScaleVnfData> scaleVnfData;
+	private Set<ScaleVnfData> scaleVnfData;
 
 	private OffsetDateTime scaleTime;
 }

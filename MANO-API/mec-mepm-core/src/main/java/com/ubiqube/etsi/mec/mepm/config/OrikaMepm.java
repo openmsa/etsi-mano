@@ -18,9 +18,10 @@ package com.ubiqube.etsi.mec.mepm.config;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mec.dto.AppGrantRequest;
 import com.ubiqube.etsi.mano.dao.mec.lcm.AppBlueprint;
+import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 
 import ma.glasnost.orika.MapperFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
@@ -35,13 +36,13 @@ public class OrikaMepm implements OrikaMapperFactoryConfigurer {
 
 	@Override
 	public void configure(final MapperFactory orikaMapperFactory) {
-		orikaMapperFactory.classMap(AppGrantRequest.class, VnfGrantsRequest.class)
+		orikaMapperFactory.classMap(AppGrantRequest.class, GrantResponse.class)
 				.field("appInstanceId", "vnfInstance.id")
 				.field("appLcmOpOccId", "vnfLcmOpOccs.id")
 				.field("appDId", "vnfdId")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(AppBlueprint.class, VnfGrantsRequest.class)
+		orikaMapperFactory.classMap(AppBlueprint.class, GrantsResponseJpa.class)
 				.field("appInstance", "vnfInstance")
 				.field("id", "vnfLcmOpOccs.id")
 				.field("appInstance.appPkg.appDId", "vnfdId")

@@ -54,6 +54,6 @@ public class NfvoRegisterService implements CommandLineRunner {
 	@Override
 	public void run(final String... args) throws Exception {
 		final List<Servers> servers = serversJpa.findByServerStatusIn(Arrays.asList(PlanStatusType.FAILED));
-		servers.forEach(x -> eventManager.sendAction(ActionType.REGISTER_NFVO, x.getId()));
+		servers.forEach(x -> eventManager.sendAction(ActionType.REGISTER_SERVER, x.getId()));
 	}
 }

@@ -53,28 +53,28 @@ public class JsonFilter {
 	 * @param _astBuilder An AST Builder.
 	 * @return
 	 */
-	public boolean apply(@Nonnull final Object _object, @Nonnull final AstBuilder _astBuilder) {
-		final Node<String> node = _astBuilder.getNodes().stream()
-				.filter(x -> !apply(_object, x))
+	public boolean apply(@Nonnull final Object object, @Nonnull final List<Node<String>> node) {
+		final Node<String> selectedNode = node.stream()
+				.filter(x -> !apply(object, x))
 				.findFirst()
 				.orElse(null);
-		return (null != node) ? false : true;
+		return null == selectedNode;
 	}
 
-	private boolean apply(@Nonnull final Object _object, @Nonnull final Node<String> _node) {
-		final Map<String, JsonBeanProperty> props = jsonBeanUtil.getProperties(_object);
-		final JsonBeanProperty realProperty = props.get(_node.getName());
+	private boolean apply(@Nonnull final Object object, @Nonnull final Node<String> node) {
+		final Map<String, JsonBeanProperty> props = jsonBeanUtil.getProperties(object);
+		final JsonBeanProperty realProperty = props.get(node.getName());
 		if (realProperty == null) {
-			LOG.warn("Object of class {} doesn't have a {} property.", _object.getClass(), _node.getName());
+			LOG.warn("Object of class {} doesn't have a {} property.", object.getClass(), node.getName());
 			return true;
 		}
-		final DocumentStatus documentStatus = invokeGetter(_object, realProperty, 0, _node);
+		final DocumentStatus documentStatus = invokeGetter(object, realProperty, 0, node);
 		return documentStatus.getStatus() == DocumentStatus.Status.VALIDATED;
 	}
 
-	private static DocumentStatus invokeGetter(final Object _object, final JsonBeanProperty realProperty, final int index, final Node<String> _node) {
+	private static DocumentStatus invokeGetter(final Object object, final JsonBeanProperty realProperty, final int index, final Node<String> node) {
 		final List<JsonBeanProperty> access = realProperty.getListAccessors();
-		Object temp = _object;
+		Object temp = object;
 		for (int i = index; i < access.size(); i++) {
 			final JsonBeanProperty jsonBeanProperty = access.get(i);
 			final Method readMethod = jsonBeanProperty.getPropertyDescriptor().getReadMethod();
@@ -89,7 +89,7 @@ public class JsonFilter {
 			}
 			if (List.class.isAssignableFrom(temp.getClass())) {
 				final List<?> list = (List<?>) temp;
-				final DocumentStatus status = exploreList(list, realProperty, i, _node);
+				final DocumentStatus status = exploreList(list, realProperty, i, node);
 				if (status.getStatus() != DocumentStatus.Status.NOSTATE) {
 					return status;
 				}
@@ -98,16 +98,16 @@ public class JsonFilter {
 			}
 		}
 		// Normally we should have the latest value.
-		if (decide((String) temp, _node.getValue(), _node.getOp())) {
+		if (decide((String) temp, node.getValue(), node.getOp())) {
 			return new DocumentStatus(DocumentStatus.Status.VALIDATED);
 		}
 		return new DocumentStatus(DocumentStatus.Status.REFUSED);
 	}
 
-	private static DocumentStatus exploreList(final List<?> list, final JsonBeanProperty realProperty, final int index, final Node<String> _node) {
+	private static DocumentStatus exploreList(final List<?> list, final JsonBeanProperty realProperty, final int index, final Node<String> node) {
 		LOG.debug("Exploring sub list.");
 		for (final Object object : list) {
-			final DocumentStatus status = invokeGetter(object, realProperty, index + 1, _node);
+			final DocumentStatus status = invokeGetter(object, realProperty, index + 1, node);
 			if (status.getStatus() == DocumentStatus.Status.NOSTATE) {
 				continue;
 			}
@@ -116,29 +116,29 @@ public class JsonFilter {
 		return new DocumentStatus(DocumentStatus.Status.NOSTATE);
 	}
 
-	private static boolean decide(final String _objectValue, final String _value, final Operand _operand) {
-		if (null == _operand) {
+	private static boolean decide(final String objectValue, final String value, final Operand operand) {
+		if (null == operand) {
 			return true;
 		}
-		if (Operand.EQ == _operand) {
-			return _value.equals(_objectValue);
+		if (Operand.EQ == operand) {
+			return value.equals(objectValue);
 		}
-		if (Operand.NEQ == _operand) {
-			return !_value.equals(_objectValue);
+		if (Operand.NEQ == operand) {
+			return !value.equals(objectValue);
 		}
 		// GT LT GTE LTE are numerical so cast everything in integer
-		final int left = Integer.parseInt(_objectValue);
-		final int right = Integer.parseInt(_value);
-		if (Operand.GT == _operand) {
+		final int left = Integer.parseInt(objectValue);
+		final int right = Integer.parseInt(value);
+		if (Operand.GT == operand) {
 			return left > right;
 		}
-		if (Operand.LT == _operand) {
+		if (Operand.LT == operand) {
 			return left < right;
 		}
-		if (Operand.GTE == _operand) {
+		if (Operand.GTE == operand) {
 			return left >= right;
 		}
-		if (Operand.LTE == _operand) {
+		if (Operand.LTE == operand) {
 			return left <= right;
 		}
 		return false;

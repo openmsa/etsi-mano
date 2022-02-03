@@ -47,7 +47,7 @@ public class MonitoringTask implements VirtualTask<MonitoringTask> {
 	@Override
 	public List<NamedDependency> getNamedProduced() {
 		// TODO Auto-generated method stub
-		return null;
+		return List.of();
 	}
 
 	@Override

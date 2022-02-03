@@ -16,220 +16,211 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.event;
 
-import java.time.OffsetDateTime;
-import java.util.HashMap;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
-import org.jgrapht.ListenableGraph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.github.dexecutor.core.task.ExecutionResults;
-import com.ubiqube.etsi.mano.dao.mano.ChangeType;
-import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
-import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.PackageBase;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
-import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
-import com.ubiqube.etsi.mano.dao.mano.v2.Task;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVnfScalingStepMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleByStepData;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleNsByStepsData;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleNsData;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleNsToLevelData;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleToLevelData;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleType;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScaleVnfData;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.ScalingDirectionType;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.StepMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScaleType;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.VnfScaleRequest;
+import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
-import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
-import com.ubiqube.etsi.mano.nfvo.service.graph.NsPlanExecutor;
+import com.ubiqube.etsi.mano.nfvo.service.graph.NsOrchestrationAdapter;
+import com.ubiqube.etsi.mano.nfvo.service.graph.NsWorkflow;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
-import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.UowNsTaskCreateProvider;
-import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.UowNsTaskDeleteProvider;
-import com.ubiqube.etsi.mano.nfvo.service.plan.NsPlanner;
-import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
-import com.ubiqube.etsi.mano.repository.NsdRepository;
-import com.ubiqube.etsi.mano.service.NsBlueprintService;
-import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
-import com.ubiqube.etsi.mano.service.graph.GraphTools;
-import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
+import com.ubiqube.etsi.mano.service.VimResourceService;
+import com.ubiqube.etsi.mano.service.event.AbstractGenericAction;
+import com.ubiqube.etsi.mano.service.event.OrchestrationAdapter;
+import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
-import com.ubiqube.etsi.mano.service.vim.VimManager;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Service
-public class NfvoActions {
+public class NfvoActions extends AbstractGenericAction {
+	private OrchestrationAdapter<?, ?> orchestrationAdapter;
+	NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	private static final Logger LOG = LoggerFactory.getLogger(NfvoActions.class);
-
-	private final NsInstanceService nsInstanceRepository;
-	private final NsdRepository nsdRepository;
-	private final VimManager vimManager;
-	private final EventManager eventManager;
-
-	private final NsLiveInstanceJpa nsLiveInstanceJpa;
-	private final NsPlanExecutor executor;
-
-	private final NsPlanner nsPlanner;
-	private final NsBlueprintService nsBlueprintService;
-
-	public NfvoActions(final NsInstanceService nsInstanceRepository, final NsdRepository nsdRepository, final VimManager vimManager, final EventManager eventManager,
-			final NsPlanner nsPlanner, final NsPlanExecutor executor, final NsLiveInstanceJpa nsLiveInstanceJpa, final NsBlueprintService nsBlueprintService) {
-		super();
-		this.nsInstanceRepository = nsInstanceRepository;
-		this.nsdRepository = nsdRepository;
-		this.vimManager = vimManager;
-		this.eventManager = eventManager;
-		this.nsPlanner = nsPlanner;
-		this.executor = executor;
-		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
-		this.nsBlueprintService = nsBlueprintService;
+	public NfvoActions(final NsWorkflow workflow, final VimResourceService vimResourceService, final NsOrchestrationAdapter orchestrationAdapter) {
+		super(workflow, vimResourceService, orchestrationAdapter);
 	}
 
-	public void nsTerminate(@Nonnull final UUID lcmOpOccsId) {
-		Thread.currentThread().setName(lcmOpOccsId + "-NT");
-		final NsBlueprint lcmOpOccs = nsBlueprintService.findById(lcmOpOccsId);
-		final NsdInstance nsInstance = nsInstanceRepository.findById(lcmOpOccs.getNsInstance().getId());
-		try {
-			nsTerminateInner(lcmOpOccs, nsInstance);
-		} catch (final RuntimeException e) {
-			LOG.error("NS Instantiate fail.", e);
-			lcmOpOccs.setOperationStatus(OperationStatusType.FAILED);
-			nsInstanceRepository.save(nsInstance);
-			lcmOpOccs.setError(new FailureDetails(500L, e.getMessage()));
-			lcmOpOccs.setStateEnteredTime(OffsetDateTime.now());
-			nsBlueprintService.save(lcmOpOccs);
-			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
-		}
+	@Override
+	protected GenericExecParams buildContext(final VimConnectionInformation vimConnection, final Vim vim, final Blueprint blueprint, final Instance vnfInstance) {
+		final Map<String, String> context = blueprint.getParameters().getExtManagedVirtualLinks().stream()
+				.collect(Collectors.toMap(ExtManagedVirtualLinkDataEntity::getVnfVirtualLinkDescId, ExtManagedVirtualLinkDataEntity::getResourceId));
+		// Add all present VL if any.
+		return new NsParameters(vim, vimConnection, context, null);
 	}
 
-	private void nsTerminateInner(final NsBlueprint blueprint, final NsdInstance nsInstance) {
-		// XXX This is not the correct way/
-		final VimConnectionInformation vimInfo = electVim(null, null);
-
-		final NsdPackage nsdInfo = nsdRepository.get(nsInstance.getNsdInfo().getId());
-		final NsConnections nsConn = new NsConnections();
-		nsPlanner.doPlan(nsdInfo, blueprint, null, nsConn.getConnections());
-		final NsBlueprint localPlan = nsBlueprintService.save(blueprint);
-		final Vim vim = vimManager.getVimById(vimInfo.getId());
-		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localPlan, ChangeType.REMOVED);
-		GraphTools.exportGraph(executionPlane, nsdInfo.getId(), nsInstance, "delete", nsdRepository);
-
-		final NsParameters params = new NsParameters(vim, vimInfo, new HashMap<>(), null);
-		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execDelete(executionPlane, () -> new UowNsTaskDeleteProvider(params));
-		setResultLcmInstance(localPlan, results);
-		setLiveStatus(localPlan, results);
-		LOG.info("VNF instance {} / LCM {} Finished.", nsInstance.getId(), blueprint.getId());
-	}
-
-	public void nsInstantiate(@Nonnull final UUID blueprintId) {
-		Thread.currentThread().setName(blueprintId + "-NI");
-		final NsBlueprint nsBlueprint = nsBlueprintService.findById(blueprintId);
-		final NsdInstance nsInstance = nsInstanceRepository.findById(nsBlueprint.getNsInstance().getId());
-
-		try {
-			nsInstantiateInner(nsBlueprint, nsInstance);
-		} catch (final RuntimeException e) {
-			LOG.error("NS Instantiate fail.", e);
-			// We can't save here, we must do an atomic update.
-			nsBlueprint.setOperationStatus(OperationStatusType.FAILED);
-			nsBlueprint.setError(new FailureDetails(500L, e.getMessage()));
-			nsBlueprint.setStateEnteredTime(OffsetDateTime.now());
-			nsBlueprintService.save(nsBlueprint);
-			eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
-		}
-	}
-
-	public void nsInstantiateInner(@Nonnull final NsBlueprint blueprint, final NsdInstance nsInstance) {
-		final UUID nsdId = nsInstance.getNsdInfo().getId();
-		final NsdPackage nsdInfo = nsdRepository.get(nsdId);
-		// Make plan in lcmOpOccs
-		final NsConnections nsConn = new NsConnections();
-		nsPlanner.doPlan(nsdInfo, blueprint, null, nsConn.getConnections());
-		NsBlueprint localBlueprint = nsBlueprintService.save(blueprint);
+	public void nsInstantiate(final UUID objectId) {
 		//
-		final VimConnectionInformation vimInfo = electVim(null, null);
-		final Vim vim = vimManager.getVimById(vimInfo.getId());
-		// Create Ns.
-		final Map<String, String> userData = nsdInfo.getUserDefinedData();
-		// XXX elect vim?
-		final Map<String, String> pubNet = vim.network(vimInfo).getPublicNetworks();
-		final NsParameters params = new NsParameters(vim, vimInfo, pubNet, null);
-		setVimInformations(localBlueprint, vimInfo);
-		final ListenableGraph<UnitOfWork<NsTask, NsParameters>, ConnectivityEdge<UnitOfWork<NsTask, NsParameters>>> executionPlane = nsPlanner.convertToExecution(localBlueprint, ChangeType.ADDED);
-		final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results = executor.execCreate(executionPlane, () -> new UowNsTaskCreateProvider(params));
-		setLiveStatus(localBlueprint, results);
-		setResultLcmInstance(localBlueprint, results);
-		LOG.debug("Done, Saving ...");
-		localBlueprint = nsBlueprintService.save(localBlueprint);
-		// XXX Send COMPLETED event.
-		LOG.info("NSD instance {} / LCM {} Finished.", nsdId, localBlueprint.getId());
-		eventManager.sendNotification(NotificationEvent.NS_INSTANTIATE, nsInstance.getId());
 	}
 
-	private static void setVimInformations(final NsBlueprint localBlueprint, final VimConnectionInformation vimInfo) {
-		localBlueprint.getTasks().forEach(x -> {
-			x.setVimConnectionId(vimInfo.getVimId());
-			x.setVimResourceId(vimInfo.getVimType());
-		});
+	public void nsInstantiateInner(final NsBlueprint blueprint, final NsdInstance instance) {
+		final BlueprintParameters params = instance.getInstantiatedVnfInfo();
+		final PackageBase vnfPkg = orchestrationAdapter.getPackage(instance);
+		final Set<ScaleInfo> newScale = nsMerge(blueprint, instance);
 	}
 
-	private static void setResultLcmInstance(@NotNull final NsBlueprint blueprint, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {
-		if (results.getErrored().isEmpty()) {
-			blueprint.setOperationStatus(OperationStatusType.COMPLETED);
-		} else {
-			blueprint.setOperationStatus(OperationStatusType.FAILED);
+	private Set<ScaleInfo> nsMerge(final NsBlueprint blueprint, final NsdInstance instance) {
+		final BlueprintParameters params = blueprint.getParameters();
+		final NsScale nsScale = params.getNsScale();
+		if (ScaleType.NS == nsScale.getScaleType()) {
+			return nsScale(blueprint, instance, nsScale.getScaleNsData());
 		}
-		blueprint.setStateEnteredTime(OffsetDateTime.now());
+		return vnfScale(blueprint, instance, nsScale.getScaleVnfData());
 	}
 
-	private void setLiveStatus(final NsBlueprint blueprint, final ExecutionResults<UnitOfWork<NsTask, NsParameters>, String> results) {
-		results.getSuccess().forEach(x -> {
-			final Task rhe = x.getId().getTaskEntity();
-			final ChangeType ct = rhe.getChangeType();
-			if (ct == ChangeType.ADDED) {
-				if (null != rhe.getId()) {
-					final NsLiveInstance vli = new NsLiveInstance(rhe.getVimResourceId(), (NsTask) rhe, blueprint, blueprint.getNsInstance());
-					nsLiveInstanceJpa.save(vli);
-				} else {
-					LOG.warn("Could not store: {}", x.getId().getName());
-				}
-			} else if (ct == ChangeType.REMOVED) {
-				LOG.info("Removing {}", rhe.getId());
-				final Optional<NsLiveInstance> vli = nsLiveInstanceJpa.findById(rhe.getRemovedLiveInstance());
-				if (!vli.isPresent()) {
-					LOG.warn("Could not find a VLI for task {}", rhe.getRemovedLiveInstance());
-					return;
-				}
-				nsLiveInstanceJpa.deleteById(vli.get().getId());
+	private Set<ScaleInfo> vnfScale(final NsBlueprint blueprint, final NsdInstance instance, final Set<ScaleVnfData> scaleVnfData) {
+		scaleVnfData.forEach(x -> {
+			final NsLiveInstance inst = nsLiveInstanceJpa.findById(UUID.fromString(x.getVnfInstanceId())).orElseThrow(() -> new GenericException("Could not find VNF instance: " + x.getVnfInstanceId()));
+			// OUT, IN, TO_INSTANTIATION_LEVEL, TO_SCALE_LEVEL_S_
+			if (x.getScaleVnfType() == VnfScaleType.OUT || x.getScaleVnfType() == VnfScaleType.IN) {
+				final ScaleTypeEnum type = x.getScaleVnfType() == VnfScaleType.OUT ? ScaleTypeEnum.OUT : ScaleTypeEnum.IN;
+				vnfScaleStep(type, x.getScaleByStepData());
 			}
+			vnfScaleLevel(x.getScaleToLevelData());
 		});
-		final NsdInstance inst = blueprint.getNsInstance();
-		final long c = nsLiveInstanceJpa.countByNsInstance(inst);
-		inst.setInstantiationState(c > 0 ? InstantiationState.INSTANTIATED : InstantiationState.NOT_INSTANTIATED);
-		LOG.info("Saving NS LCM.");
-		nsBlueprintService.save(blueprint);
+		return null;
 	}
 
-	private VimConnectionInformation electVim(final String vimId, final Set<GrantInformationExt> set) {
-		// XXX: Do some real elections.
-		final Set<VimConnectionInformation> vims;
-		if (null != vimId) {
-			LOG.debug("Getting MSA 2.x VIM");
-			vims = vimManager.getVimByType("MSA_20");
+	private void vnfScaleLevel(final ScaleToLevelData scaleData) {
+
+		VnfScaleToLevelRequest.of(scaleData);
+	}
+
+	private void vnfScaleStep(final ScaleTypeEnum scaleType, final ScaleByStepData scaleData) {
+		final VnfScaleRequest req = VnfScaleRequest.of(scaleType, scaleData);
+	}
+
+	private Set<ScaleInfo> nsScale(final NsBlueprint blueprint, final NsdInstance instance, final ScaleNsData scaleNsData) {
+		final ScaleNsByStepsData stepData = scaleNsData.getScaleNsByStepsData();
+		if (null == stepData) {
+			nsScaleByLevel(blueprint, instance, scaleNsData);
+		}
+		nsScaleByStep(blueprint, instance, scaleNsData);
+		final ScaleNsByStepsData step = scaleNsData.getScaleNsByStepsData();
+
+		return null;
+	}
+
+	private void nsScaleByStep(final NsBlueprint blueprint, final NsdInstance instance, final ScaleNsData scaleNsData) {
+		final ScaleNsByStepsData scaleData = scaleNsData.getScaleNsByStepsData();
+		final List<NsdPackageVnfPackage> concernedVnf = findConcernedVnf(instance.getNsdInfo(), scaleData.getAspectId());
+		final NsScaleInfo current = findCuurentScaleInfo(instance.getNsScaleStatus(), scaleData.getAspectId());
+		final int level = computeLevel(scaleData, Integer.valueOf(current.getNsScaleLevelId()));
+		final List<NsLiveInstance> vi = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfTask.class.getSimpleName());
+		concernedVnf.forEach(x -> {
+			final int wanted = getNumberOfInstance(x, scaleData.getAspectId(), level);
+			final List<NsVnfTask> liveInstances = vi.stream().map(NsLiveInstance::getNsTask).map(NsVnfTask.class::cast).filter(y -> y.getNsPackageVnfPackage().getId() == x.getId()).toList();
+			if (wanted == liveInstances.size()) {
+				return;
+			}
+
+		});
+		final List<NsdPackageNsdPackage> concernedNS = findConcernedNs(instance.getNsdInfo(), scaleData.getAspectId());
+		concernedNS.forEach(x -> {
+			final int wanted = getNumberOfInstance(x, scaleData.getAspectId(), level);
+			final List<NsdTask> liveInstances = vi.stream().map(NsLiveInstance::getNsTask).map(NsdTask.class::cast).filter(y -> y.getNsdId() == x.getId()).toList();
+			if (wanted == liveInstances.size()) {
+				return;
+			}
+
+		});
+		findConcernedVl(instance.getNsdInfo(), scaleData.getAspectId());
+	}
+
+	private static int getNumberOfInstance(final NsdPackageNsdPackage pck, final String aspectId, final int level) {
+		final NsVnfScalingStepMapping scalingStep = pck.getStepMapping().stream().filter(x -> x.getAspectId().equals(aspectId)).findFirst().orElseThrow();
+		final List<StepMapping> p = scalingStep.getLevels().stream().filter(x -> x.getName() <= level).sorted(Comparator.comparingInt(StepMapping::getName).reversed()).toList();
+		return p.get(0).getNumberOfInstance();
+	}
+
+	private static int getNumberOfInstance(final NsdPackageVnfPackage vnfPackage, final String aspectId, final int level) {
+		final VnfScalingStepMapping scalingStep = vnfPackage.getStepMapping().stream().filter(x -> x.getAspectId().equals(aspectId)).findFirst().orElseThrow();
+		final List<StepMapping> p = scalingStep.getLevels().stream().filter(x -> x.getName() <= level).sorted(Comparator.comparingInt(StepMapping::getName).reversed()).toList();
+		return p.get(0).getNumberOfInstance();
+	}
+
+	private static NsScaleInfo findCuurentScaleInfo(final Set<NsScaleInfo> nsScaleStatus, final String aspectId) {
+		return nsScaleStatus.stream().filter(x -> x.getNsScalingAspectId().equals(aspectId)).findFirst().orElseGet(() -> new NsScaleInfo(null, aspectId, "0"));
+	}
+
+	private static int computeLevel(final ScaleNsByStepsData scaleData, final Integer base) {
+		if (scaleData.getScalingDirection() == ScalingDirectionType.IN) {
+			return base - scaleData.getNumberOfSteps();
+		}
+		return base + scaleData.getNumberOfSteps();
+	}
+
+	private static List<NsVirtualLink> findConcernedVl(final NsdPackage nsdInfo, final String aspectId) {
+		return nsdInfo.getNsVirtualLinks().stream().filter(x -> x.getStepMapping().stream().anyMatch(y -> y.getAspectId().equals(aspectId))).toList();
+	}
+
+	private static List<NsdPackageNsdPackage> findConcernedNs(final NsdPackage nsdInfo, final String aspectId) {
+		return nsdInfo.getNestedNsdInfoIds().stream().filter(x -> x.getStepMapping().stream().anyMatch(y -> y.getAspectId().equals(aspectId))).toList();
+	}
+
+	private static List<NsdPackageVnfPackage> findConcernedVnf(final NsdPackage nsdInfo, final String aspectId) {
+		return nsdInfo.getVnfPkgIds().stream().filter(x -> x.getStepMapping().stream().anyMatch(y -> y.getAspectId().equals(aspectId))).toList();
+	}
+
+	private void nsScaleByLevel(final NsBlueprint blueprint, final NsdInstance instance, final ScaleNsData scaleNsData) {
+		final ScaleNsToLevelData level = scaleNsData.getScaleNsToLevelData();
+		if (level.getNsInstantiationLevel() != null) {
+
 		} else {
-			LOG.debug("Getting OS v3 VIM");
-			vims = vimManager.getVimByType("OPENSTACK_V3");
+			level.getNsScaleInfo().forEach(x -> {
+				x.getNsScaleLevelId();
+				x.getNsScalingAspectId();
+			});
 		}
-		if (vims.isEmpty()) {
-			throw new GenericException("Couldn't find a VIM.");
-		}
-		return vims.iterator().next();
+
+	}
+
+	public void heal(@NotNull final UUID objectId) {
+		// TODO Auto-generated method stub
 	}
 
 }

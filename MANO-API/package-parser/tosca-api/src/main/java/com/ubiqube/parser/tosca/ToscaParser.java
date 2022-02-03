@@ -48,7 +48,7 @@ public class ToscaParser {
 			csar = new CsarParser(filename);
 			resolver = csar.getResolver();
 		} else {
-			resolver = new Resolver();
+			resolver = new Resolver(filename);
 		}
 		try {
 			final ToscaRoot root = loadToscaBase();

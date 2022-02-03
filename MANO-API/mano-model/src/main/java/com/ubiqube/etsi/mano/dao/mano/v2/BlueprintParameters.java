@@ -27,6 +27,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 
@@ -40,6 +41,8 @@ import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
 import com.ubiqube.etsi.mano.dao.mano.VirtualStorageResourceInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfMonitoringParameter;
 import com.ubiqube.etsi.mano.dao.mano.VnfcResourceInfoEntity;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsHeal;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -72,11 +75,18 @@ public class BlueprintParameters implements Serializable {
 
 	private Integer numberOfSteps;
 
+	@Enumerated(EnumType.STRING)
 	private ScaleTypeEnum scaleType;
 
 	private String aspectId;
 
 	private String flavourId;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private NsScale nsScale;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private NsHeal nsHeal;
 
 	@Enumerated(EnumType.STRING)
 	private OperationalStateType state;

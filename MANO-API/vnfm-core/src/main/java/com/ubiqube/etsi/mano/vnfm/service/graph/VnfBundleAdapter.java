@@ -19,15 +19,11 @@ package com.ubiqube.etsi.mano.vnfm.service.graph;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.orchestrator.Bundle;
 
-public class VnfBundleAdapter implements Bundle {
-
-	private final VnfPackage vnfPackage;
-
-	public VnfBundleAdapter(final VnfPackage vnfPackage) {
-		this.vnfPackage = vnfPackage;
-	}
-
-	public VnfPackage getVnfPackage() {
-		return vnfPackage;
-	}
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public record VnfBundleAdapter(VnfPackage vnfPackage) implements Bundle {
+	// Nothing.
 }

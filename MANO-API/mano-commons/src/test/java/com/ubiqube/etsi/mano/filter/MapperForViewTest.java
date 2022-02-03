@@ -30,13 +30,13 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.json.MapperForView;
 import com.ubiqube.etsi.mano.test.TestTools;
 
-public class MapperForViewTest {
+@SuppressWarnings("static-method")
+class MapperForViewTest {
 	@Test
 	void simpleExcludeTest() throws Exception {
 		final ObjectMapper desMapper = new ObjectMapper();
 		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
 		final HashSet<String> exclude = new HashSet<>(Arrays.asList("_links"));
-		final String fields = null;
 		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, new HashSet<>());
 		final String res = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vnfPkgInfo);
 		assertEquals(-1, res.indexOf("_links"), "_links should not been found");
@@ -59,7 +59,6 @@ public class MapperForViewTest {
 		final ObjectMapper desMapper = new ObjectMapper();
 		final VnfPkgInfo vnfPkgInfo = desMapper.readValue(TestTools.readFile("/VnfPkgInfo.json"), VnfPkgInfo.class);
 		final Set<String> exclude = null;
-		final String fields = "id";
 		final ObjectMapper mapper = MapperForView.getMapperForView(exclude, new HashSet<>());
 		final String res = mapper.writerFor(vnfPkgInfo.getClass()).writeValueAsString(vnfPkgInfo);
 		System.out.println(res);

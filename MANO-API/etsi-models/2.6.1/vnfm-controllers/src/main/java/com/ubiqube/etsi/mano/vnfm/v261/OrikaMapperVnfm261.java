@@ -46,7 +46,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedStorage;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
@@ -55,7 +54,6 @@ import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
-import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscription;
@@ -196,11 +194,6 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("operationParams", "parameters")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(GrantRequest.class, VnfGrantsRequest.class)
-				.field("vnfInstanceId", "vnfInstance.id")
-				.field("vnfLcmOpOccId", "vnfLcmOpOccs.id")
-				.byDefault()
-				.register();
 		orikaMapperFactory.classMap(ExtManagedVirtualLinkData.class, ExtManagedVirtualLinkDataEntity.class)
 				.field("vmfVirtualLinkDescId", "vnfVirtualLinkDescId")
 				.field("vimId", "vimConnectionId")
@@ -238,8 +231,8 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformationExt.class)
-				.exclude("id")
-				.field("id", "resourceDefinitionId")
+				.field("id", "id")
+				// .field("id", "resourceDefinitionId")
 				.field("type", "type")
 				.field("vduId", "vduId")
 				.field("resource.vimConnectionId", "vimConnectionId")

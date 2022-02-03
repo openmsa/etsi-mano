@@ -55,7 +55,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "pm_jobs", description = "the pm_jobs API")
-@RequestMapping(value = "/sol005/nspm/v1/pm_jobs", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol005/nspm/v2/pm_jobs", headers = "Version=2.0.0")
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface PmJobs271Sol005Api {
 

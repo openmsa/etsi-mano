@@ -20,9 +20,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.PerformanceReport;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.PmJob;
@@ -34,6 +36,7 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.PmJobModifications;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class PmJobs331Sol005Controller implements PmJobs331Sol005Api {
 
 	@Override

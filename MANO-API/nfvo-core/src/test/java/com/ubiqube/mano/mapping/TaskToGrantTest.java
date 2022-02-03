@@ -26,10 +26,10 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.dao.mano.Audit;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
@@ -58,7 +58,7 @@ public class TaskToGrantTest {
 		final VnfCompute vnfCompute = new VnfCompute();
 		vnfCompute.setId(UUID.fromString("aa65150e-1e02-42e0-9d74-ce43da1ef82f"));
 		task.setVnfCompute(vnfCompute);
-		final GrantInformation grant = mapper.map(task, GrantInformation.class);
+		final GrantInformationExt grant = mapper.map(task, GrantInformationExt.class);
 		System.out.println("");
 		assertNotNull(grant);
 	}
@@ -70,7 +70,7 @@ public class TaskToGrantTest {
 		final VnfVl vnfVl = new VnfVl();
 		vnfVl.setId(UUID.fromString("aa65150e-1e02-42e0-9d74-ce43da1ef82f"));
 		task.setVnfVl(vnfVl);
-		final GrantInformation grant = mapper.map(task, GrantInformation.class);
+		final GrantInformationExt grant = mapper.map(task, GrantInformationExt.class);
 		System.out.println("");
 		assertNotNull(grant);
 	}

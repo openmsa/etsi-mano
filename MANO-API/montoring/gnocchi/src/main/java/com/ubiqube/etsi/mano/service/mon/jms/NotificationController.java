@@ -39,9 +39,9 @@ public class NotificationController {
 	private final GnocchiSubTelemetry gnocchiSubTelemetry;
 	private final JmsTemplate jmsTopicTemplate;
 
-	public NotificationController(final VimManager _vimManager, final GnocchiSubTelemetry _gnocchiSubTelemetry, @Qualifier("jmsTopicTemplate") final JmsTemplate jmsTopicTemplate) {
-		vimManager = _vimManager;
-		gnocchiSubTelemetry = _gnocchiSubTelemetry;
+	public NotificationController(final VimManager vimManager, final GnocchiSubTelemetry gnocchiSubTelemetry, @Qualifier("jmsTopicTemplate") final JmsTemplate jmsTopicTemplate) {
+		this.vimManager = vimManager;
+		this.gnocchiSubTelemetry = gnocchiSubTelemetry;
 		this.jmsTopicTemplate = jmsTopicTemplate;
 	}
 

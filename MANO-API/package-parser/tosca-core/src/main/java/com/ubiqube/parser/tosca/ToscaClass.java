@@ -24,7 +24,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ToscaClass extends ToscaBasePropertiesEntity {
 
 	private Map<String, ValueObject> attributes;
+	@JsonProperty("mime_type")
 	private String mimeType;
+	@JsonProperty("file_ext")
 	private List<String> fileExt;
 	private RequirementDefinition requirements;
 	private InterfaceType interfaces;
@@ -32,43 +34,37 @@ public class ToscaClass extends ToscaBasePropertiesEntity {
 	private Map<String, CapabilityDefinition> capabilities;
 	private Map<String, Artifact> artifacts;
 	// Used in relation ship only
-	private List<String> valid_target_types;
+	@JsonProperty("valid_target_types")
+	private List<String> validTargetTypes;
 
-	public void setMimeType(final String _mimeType) {
-		mimeType = _mimeType;
+	public void setMimeType(final String mimeType) {
+		this.mimeType = mimeType;
 	}
 
-	public void setFileExt(final List<String> _fileExt) {
-		fileExt = _fileExt;
+	public void setFileExt(final List<String> fileExt) {
+		this.fileExt = fileExt;
 	}
 
-	public void setRequirement(final RequirementDefinition _requirements) {
-		requirements = _requirements;
+	public void setRequirement(final RequirementDefinition requirements) {
+		this.requirements = requirements;
 	}
 
-	public void setCapabilities(final Map<String, CapabilityDefinition> _capabilities) {
-		capabilities = _capabilities;
-
+	public void setCapabilities(final Map<String, CapabilityDefinition> capabilities) {
+		this.capabilities = capabilities;
 	}
 
-	public void setArtifacts(final Map<String, Artifact> _artifacts) {
-		artifacts = _artifacts;
+	public void setArtifacts(final Map<String, Artifact> artifacts) {
+		this.artifacts = artifacts;
 	}
 
 	public RequirementDefinition getRequirements() {
 		return requirements;
 	}
 
-	public void setRequirements(final RequirementDefinition requirements) {
-		this.requirements = requirements;
-	}
-
-	@JsonProperty("mime_type")
 	public String getMimeType() {
 		return mimeType;
 	}
 
-	@JsonProperty("file_ext")
 	public List<String> getFileExt() {
 		return fileExt;
 	}
@@ -97,12 +93,12 @@ public class ToscaClass extends ToscaBasePropertiesEntity {
 		return attributes;
 	}
 
-	public List<String> getValid_target_types() {
-		return valid_target_types;
+	public List<String> getValidTargetTypes() {
+		return validTargetTypes;
 	}
 
-	public void setValid_target_types(final List<String> valid_target_types) {
-		this.valid_target_types = valid_target_types;
+	public void setValidTargetTypes(final List<String> validTargetTypes) {
+		this.validTargetTypes = validTargetTypes;
 	}
 
 	@Override
@@ -134,8 +130,8 @@ public class ToscaClass extends ToscaBasePropertiesEntity {
 			sb.append("artifacts=" + artifacts + ", ");
 		}
 
-		if (null != valid_target_types) {
-			sb.append("valid_target_types=" + valid_target_types + ", ");
+		if (null != validTargetTypes) {
+			sb.append("valid_target_types=" + validTargetTypes + ", ");
 		}
 		sb.append("]");
 		return sb.toString();

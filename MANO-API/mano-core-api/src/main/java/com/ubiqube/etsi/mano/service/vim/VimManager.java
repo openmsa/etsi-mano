@@ -25,6 +25,8 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.search.engine.search.predicate.SearchPredicate;
@@ -40,6 +42,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.service.SystemService;
 
 /**
  *
@@ -57,11 +60,14 @@ public class VimManager {
 
 	private final EntityManager entityManager;
 
-	public VimManager(final List<Vim> vims, final VimConnectionInformationJpa vimConnectionInformationJpa, final EntityManager entityManager) {
+	private final SystemService systemService;
+
+	public VimManager(final List<Vim> vims, final VimConnectionInformationJpa vimConnectionInformationJpa, final EntityManager entityManager, final SystemService systemService) {
 		this.vims = vims;
 		this.vimAssociation = new HashMap<>();
 		this.vimConnectionInformationJpa = vimConnectionInformationJpa;
 		this.entityManager = entityManager;
+		this.systemService = systemService;
 		init();
 	}
 
@@ -116,5 +122,23 @@ public class VimManager {
 		final SearchPredicateFactory pf = session.scope(VimConnectionInformation.class).predicate();
 		final SearchPredicate pr = pf.spatial().within().fields("").circle(point.getLat(), point.getLng(), 10000).toPredicate();
 		ss.where(pr);
+	}
+
+	@Transactional(TxType.REQUIRED)
+	public VimConnectionInformation registerIfNeeded(final VimConnectionInformation x) {
+		final Optional<VimConnectionInformation> vim = vimConnectionInformationJpa.findByVimId(x.getVimId());
+		if (vim.isPresent()) {
+			return vim.get();
+		}
+		final VimConnectionInformation n = vimConnectionInformationJpa.save(x);
+		systemService.registerVim(n);
+		init();
+		return n;
+	}
+
+	public void deleteVim(final UUID id) {
+		vimConnectionInformationJpa.deleteById(id);
+		systemService.deleteById(id);
+		rebuildCache();
 	}
 }

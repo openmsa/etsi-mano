@@ -37,15 +37,19 @@ public class ToStringUtil {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToStringUtil.class);
 
+	private ToStringUtil() {
+		// Nothing.
+	}
+
 	public static String toString(final Object o) {
 		try {
 			return toStringInernal(o);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | IntrospectionException | NoSuchFieldException | SecurityException e) {
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | IntrospectionException | SecurityException e) {
 			return e.toString();
 		}
 	}
 
-	private static String toStringInernal(final Object o) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
+	private static String toStringInernal(final Object o) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException {
 		final StringBuilder sb = new StringBuilder("class ");
 		sb.append(o.getClass().getSimpleName()).append(" {\n");
 		final BeanInfo cls = Introspector.getBeanInfo(o.getClass());
@@ -94,7 +98,7 @@ public class ToStringUtil {
 			}
 			final StringBuilder sb = new StringBuilder("[\n    ");
 			l.forEach(x -> {
-				if (x.getClass().isPrimitive() || (x.getClass() == String.class)) {
+				if (x.getClass().isPrimitive() || x.getClass() == String.class) {
 					sb.append(toIndentedString(x));
 				} else {
 					sb.append(toIndentedString(toString(x)));

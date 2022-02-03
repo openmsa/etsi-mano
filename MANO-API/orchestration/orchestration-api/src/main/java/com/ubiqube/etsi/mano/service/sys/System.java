@@ -19,17 +19,19 @@ package com.ubiqube.etsi.mano.service.sys;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
- * @param <P> Task parameter.
+ * @param <U> Task Dao.
+ * @param <V> UnitOfWork.
  */
-public interface System<P> {
+public interface System<U> {
 
 	String getProviderId();
 
-	SystemBuilder getImplementation(OrchestrationService orchestrationService, VirtualTask<P> virtualTask, SystemConnections vim);
+	SystemBuilder<UnitOfWork<U>> getImplementation(OrchestrationService<U> orchestrationService, VirtualTask<U> virtualTask, SystemConnections vim);
 }

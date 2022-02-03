@@ -50,6 +50,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.pkg.PackageSecurityOptionType;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VnfProfile;
 import com.ubiqube.etsi.mano.utils.ToStringIgnore;
 import com.ubiqube.etsi.mano.utils.ToStringUtil;
 
@@ -95,11 +96,32 @@ public class VnfPackage implements PackageBase, Auditable {
 	@FullTextField
 	private String flavorId;
 
+	private String flavourDescription;
+
 	@FullTextField
 	private String descriptorId;
 
 	@FullTextField
 	private String descriptorVersion;
+
+	private String productInfoDescription;
+
+	private String defaultLocalizationLanguage;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> localizationLanguages;
+
+	private String virtualLink;
+	private String virtualLink1;
+	private String virtualLink2;
+	private String virtualLink3;
+	private String virtualLink4;
+	private String virtualLink5;
+	private String virtualLink6;
+	private String virtualLink7;
+	private String virtualLink8;
+	private String virtualLink9;
+	private String virtualLink10;
 
 	@Embedded
 	@IndexedEmbedded
@@ -197,8 +219,16 @@ public class VnfPackage implements PackageBase, Auditable {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<SecurityGroup> securityGroups;
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<AffinityRule> affinityRules;
+
+	@Embedded
+	private VnfProfile vnfProfile;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<ScaleInfo> scaleStatus;
+
 	@Version
 	private long version;
 

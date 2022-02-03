@@ -29,10 +29,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.controller.nslcm.NsLcmSubscriptionsGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.service.ServerService;
 import com.ubiqube.etsi.mano.service.SubscriptionService;
-import com.ubiqube.etsi.mano.service.event.Notifications;
-import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -47,16 +44,9 @@ public class NsLcmSubscriptionsGenericFrontControllerImpl implements NsLcmSubscr
 
 	private final MapperFacade mapper;
 
-	private final Notifications notifications;
-
-	private final ServerService serverService;
-
-	public NsLcmSubscriptionsGenericFrontControllerImpl(final SubscriptionService subscriptionService, final MapperFacade mapper, final Notifications notifications,
-			final ServerService serverService) {
+	public NsLcmSubscriptionsGenericFrontControllerImpl(final SubscriptionService subscriptionService, final MapperFacade mapper) {
 		this.subscriptionService = subscriptionService;
 		this.mapper = mapper;
-		this.notifications = notifications;
-		this.serverService = serverService;
 	}
 
 	/**
@@ -96,8 +86,6 @@ public class NsLcmSubscriptionsGenericFrontControllerImpl implements NsLcmSubscr
 	@Override
 	public <U> ResponseEntity<U> create(final Object lccnSubscriptionRequest, final Class<U> clazz, final Consumer<U> makeLink, final Function<U, String> setLink) {
 		Subscription subscription = mapper.map(lccnSubscriptionRequest, Subscription.class);
-		final ServerAdapter server = serverService.findNearestServer();
-		notifications.check(server, subscription.getCallbackUri());
 		subscription = subscriptionService.save(subscription, SubscriptionType.NSLCM);
 		final U pkgmSubscription = mapper.map(subscription, clazz);
 		makeLink.accept(pkgmSubscription);

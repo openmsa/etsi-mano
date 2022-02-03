@@ -65,7 +65,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  *
  */
 @Api(value = "vnf_packages", description = "the vnf_packages API")
-@RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=3.5.1" })
+@RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=2.2.0" })
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface VnfPackages351Sol005Api {
 

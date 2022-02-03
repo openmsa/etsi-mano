@@ -88,6 +88,8 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.field("flavorId", "flavourId")
 				.field("monitoringParameters{}", "monitoringParameters{value}")
 				.field("monitoringParameters{name}", "monitoringParameters{key}")
+				.field("scaleStatus{}", "scaleStatus{value}")
+				.field("scaleStatus{name}", "scaleStatus{key}")
 				.byDefault()
 				.register();
 		mapperFactory.classMap(ArtefactInformations.class, AdditionalArtifact.class)

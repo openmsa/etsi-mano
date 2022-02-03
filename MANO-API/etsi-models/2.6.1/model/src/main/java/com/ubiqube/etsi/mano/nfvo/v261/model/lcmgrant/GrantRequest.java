@@ -31,13 +31,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-
 /**
  * This type represents a grant request.
  */
 @Schema(description = "This type represents a grant request. ")
 @Validated
-
 
 public class GrantRequest {
 	@JsonProperty("vnfInstanceId")
@@ -501,10 +499,7 @@ public class GrantRequest {
 	 * @return links
 	 **/
 	@Schema(required = true, description = "")
-	@NotNull
-
 	@Valid
-
 	public GrantRequestLinks getLinks() {
 		return links;
 	}
@@ -518,7 +513,7 @@ public class GrantRequest {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final GrantRequest grantRequest = (GrantRequest) o;

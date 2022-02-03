@@ -28,22 +28,22 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class DeleteTaskProvider implements TaskProvider<UnitOfWork<?>, String> {
+public class DeleteTaskProvider<U> implements TaskProvider<UnitOfWork<U>, String> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DeleteTaskProvider.class);
 	private final Context context;
-	private final OrchExecutionListener<?> listener;
+	private final OrchExecutionListener<U> listener;
 
-	public DeleteTaskProvider(final Context context, final OrchExecutionListener<?> listener) {
+	public DeleteTaskProvider(final Context context, final OrchExecutionListener<U> listener) {
 		super();
 		this.context = context;
 		this.listener = listener;
 	}
 
 	@Override
-	public Task<UnitOfWork<?>, String> provideTask(final UnitOfWork uaow) {
+	public Task<UnitOfWork<U>, String> provideTask(final UnitOfWork<U> uaow) {
 		LOG.debug("Called with: {}", uaow);
-		return new UowExecDeleteTask(listener, uaow, context);
+		return new UowExecDeleteTask<>(listener, uaow, context);
 	}
 
 }

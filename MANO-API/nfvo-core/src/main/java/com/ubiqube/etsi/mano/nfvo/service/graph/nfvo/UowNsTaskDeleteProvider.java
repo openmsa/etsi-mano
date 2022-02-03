@@ -21,22 +21,22 @@ import org.slf4j.LoggerFactory;
 
 import com.github.dexecutor.core.task.Task;
 import com.github.dexecutor.core.task.TaskProvider;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
-public class UowNsTaskDeleteProvider implements TaskProvider<UnitOfWork<NsTask, NsParameters>, String> {
+public class UowNsTaskDeleteProvider<U extends com.ubiqube.etsi.mano.dao.mano.v2.Task, P extends GenericExecParams> implements TaskProvider<UnitOfWork<U, P>, String> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UowNsTaskDeleteProvider.class);
 
-	private final NsParameters params;
+	private final P params;
 
-	public UowNsTaskDeleteProvider(final NsParameters params) {
+	public UowNsTaskDeleteProvider(final P params) {
 		super();
 		this.params = params;
 	}
 
 	@Override
-	public Task<UnitOfWork<NsTask, NsParameters>, String> provideTask(final UnitOfWork<NsTask, NsParameters> uaow) {
+	public Task<UnitOfWork<U, P>, String> provideTask(final UnitOfWork<U, P> uaow) {
 		LOG.debug("Called with: {}", uaow);
 		return new NsUowExecDeleteTask(uaow, params);
 	}

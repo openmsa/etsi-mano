@@ -18,8 +18,6 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.Set;
 
-import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
-
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -27,21 +25,21 @@ import com.ubiqube.etsi.mano.dao.mano.dto.GrantInformation;
  */
 public interface GrantInterface {
 
-	Set<GrantInformation> getAddResources();
+	Set<GrantInformationExt> getAddResources();
 
-	void setAddResources(final Set<GrantInformation> addResources);
+	void setAddResources(final Set<GrantInformationExt> addResources);
 
-	Set<GrantInformation> getTempResources();
+	Set<GrantInformationExt> getTempResources();
 
-	void setTempResources(final Set<GrantInformation> tempResources);
+	void setTempResources(final Set<GrantInformationExt> tempResources);
 
-	Set<GrantInformation> getRemoveResources();
+	Set<GrantInformationExt> getRemoveResources();
 
-	void setRemoveResources(final Set<GrantInformation> removeResources);
+	void setRemoveResources(final Set<GrantInformationExt> removeResources);
 
-	Set<GrantInformation> getUpdateResources();
+	Set<GrantInformationExt> getUpdateResources();
 
-	void setUpdateResources(final Set<GrantInformation> updateResources);
+	void setUpdateResources(final Set<GrantInformationExt> updateResources);
 
 	GrantVimAssetsEntity getVimAssets();
 

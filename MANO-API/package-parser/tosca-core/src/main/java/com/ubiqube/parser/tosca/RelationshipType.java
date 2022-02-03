@@ -19,11 +19,14 @@ package com.ubiqube.parser.tosca;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RelationshipType extends ToscaBaseEntity {
 	private ToscaProperties properties;
 	private Map<String, ValueObject> attributes;
 	private Object interfaces;
-	private List<String> valid_target_types;
+	@JsonProperty("valid_target_types")
+	private List<String> validTargetTypes;
 
 	public ToscaProperties getProperties() {
 		return properties;
@@ -49,12 +52,12 @@ public class RelationshipType extends ToscaBaseEntity {
 		this.interfaces = interfaces;
 	}
 
-	public List<String> getValid_target_types() {
-		return valid_target_types;
+	public List<String> getValidTargetTypes() {
+		return validTargetTypes;
 	}
 
-	public void setValid_target_types(final List<String> valid_target_types) {
-		this.valid_target_types = valid_target_types;
+	public void setValidTargetTypes(final List<String> validTargetTypes) {
+		this.validTargetTypes = validTargetTypes;
 	}
 
 }

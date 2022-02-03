@@ -31,8 +31,8 @@ import com.ubiqube.etsi.mec.repositories.AppPkgJpa;
 public class AppPackageService {
 	private final AppPkgJpa appPkgJpa;
 
-	public AppPackageService(final AppPkgJpa _appPkgJpa) {
-		appPkgJpa = _appPkgJpa;
+	public AppPackageService(final AppPkgJpa appPkgJpa) {
+		this.appPkgJpa = appPkgJpa;
 	}
 
 	/**

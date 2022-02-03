@@ -17,6 +17,7 @@
 package com.ubiqube.parser.tosca;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ import tosca.nodes.nfv.vdu.Compute;
 import tosca.policies.nfv.VduScalingAspectDeltas;
 import tosca.policies.nfv.VnfIndicator;
 
-public class UbiToscaTest {
+class UbiToscaTest {
 	private final Map<String, String> parameters = new HashMap<>();
 
 	@Test
@@ -43,15 +44,14 @@ public class UbiToscaTest {
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 		final ToscaParser toscaParser = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = toscaParser.getContext();
-		final ToscaApi toscaApi = new ToscaApi();
 
-		final List<VnfVirtualLink> list = toscaApi.getObjects(root, parameters, VnfVirtualLink.class);
+		final List<VnfVirtualLink> list = ToscaApi.getObjects(root, parameters, VnfVirtualLink.class);
 		assertEquals(3, list.size());
 		final VnfVirtualLink elem = list.get(0);
 		assertEquals("leftVl01", elem.getInternalName());
 		assertEquals("192.168.0.100", elem.getVlProfile().getVirtualLinkProtocolData().get(0).getL3ProtocolData().getIpAllocationPools().get(0).getStartIpAddress());
 
-		final List<VnfIndicator> l2 = toscaApi.getObjects(root, parameters, VnfIndicator.class);
+		final List<VnfIndicator> l2 = ToscaApi.getObjects(root, parameters, VnfIndicator.class);
 		assertEquals(2, l2.size());
 	}
 
@@ -61,13 +61,13 @@ public class UbiToscaTest {
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 		final ToscaParser toscaParser = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = toscaParser.getContext();
-		final ToscaApi toscaApi = new ToscaApi();
 
-		final List<Compute> list = toscaApi.getObjects(root, parameters, Compute.class);
+		final List<Compute> list = ToscaApi.getObjects(root, parameters, Compute.class);
 		System.out.println("" + list);
-		final List<VnfExtCp> extCp = toscaApi.getObjects(root, parameters, VnfExtCp.class);
+		final List<VnfExtCp> extCp = ToscaApi.getObjects(root, parameters, VnfExtCp.class);
 		System.out.println("" + extCp);
-		final List<VduScalingAspectDeltas> vsad = toscaApi.getObjects(root, parameters, VduScalingAspectDeltas.class);
+		final List<VduScalingAspectDeltas> vsad = ToscaApi.getObjects(root, parameters, VduScalingAspectDeltas.class);
 		System.out.println("vsad " + vsad);
+		assertNotNull(vsad);
 	}
 }

@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
-@RequestMapping(value = "/sol002/vnffm/v1/subscriptions", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol002/vnffm/v1/subscriptions", headers = "Version=1.3.0")
 @RolesAllowed({ "ROLE_EM" })
 public interface AlarmsSubscriptions271Sol002Api {
 

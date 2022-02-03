@@ -30,8 +30,8 @@ import ma.glasnost.orika.MapperFacade;
 @Service
 public class MeoGrantService extends AbstractGrantService {
 
-	public MeoGrantService(final MapperFacade _mapper, final AppResourceAllocate _nfvo) {
-		super(_mapper, _nfvo);
+	public MeoGrantService(final MapperFacade mapper, final AppResourceAllocate nfvo) {
+		super(mapper, nfvo, null);
 	}
 
 }

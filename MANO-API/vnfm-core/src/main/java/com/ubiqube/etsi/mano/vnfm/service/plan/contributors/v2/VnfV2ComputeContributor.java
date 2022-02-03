@@ -63,12 +63,12 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
-	public VnfV2ComputeContributor(final ScalingStrategy _scalingStrategy, final VduNamingStrategy _vduNamingStrategy, final VnfInstanceService _vnfInstanceService,
-			final VnfLiveInstanceJpa _vnfLiveInstanceJpa, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
-		scalingStrategy = _scalingStrategy;
-		vduNamingStrategy = _vduNamingStrategy;
-		vnfInstanceService = _vnfInstanceService;
-		vnfLiveInstanceJpa = _vnfLiveInstanceJpa;
+	public VnfV2ComputeContributor(final ScalingStrategy scalingStrategy, final VduNamingStrategy vduNamingStrategy, final VnfInstanceService vnfInstanceService,
+			final VnfLiveInstanceJpa vnfLiveInstanceJpa, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
+		this.scalingStrategy = scalingStrategy;
+		this.vduNamingStrategy = vduNamingStrategy;
+		this.vnfInstanceService = vnfInstanceService;
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
 		this.vnfInstanceServiceVnfm = vnfInstanceServiceVnfm;
 	}
 
@@ -77,7 +77,7 @@ public class VnfV2ComputeContributor extends AbstractContributorV2Base<ComputeTa
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(blueprint.getVnfInstance());
 		}
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final Instance vnfInstance = vnfInstanceServiceVnfm.findById(blueprint.getInstance().getId());
 		final Set<ScaleInfo> scaling = merge(blueprint, vnfInstance);
 		final List<ComputeVt> ret = new ArrayList<>();

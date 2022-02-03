@@ -33,9 +33,9 @@ public class VnfExtCpUow extends VnfAbstractUnitOfWork {
 
 	private final ExternalCpTask task;
 
-	public VnfExtCpUow(final ExternalCpTask _ExternalCpTask) {
-		super(_ExternalCpTask);
-		task = _ExternalCpTask;
+	public VnfExtCpUow(final ExternalCpTask externalCpTask) {
+		super(externalCpTask);
+		task = externalCpTask;
 		extCp = task.getVnfExtCp();
 	}
 

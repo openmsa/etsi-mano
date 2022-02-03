@@ -53,7 +53,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "alarms", description = "the alarms API")
-@RequestMapping(value = "/sol002/vnffm/v1/alarms", headers = "Version=2.8.1")
+@RequestMapping(value = "/sol002/vnffm/v1/alarms", headers = "Version=1.3.0")
 @RolesAllowed({ "ROLE_EM" })
 public interface Alarms281Sol002Api {
 

@@ -33,14 +33,14 @@ public abstract class AppAbstractUnitOfWork implements UnitOfWork<AppTask, AppPa
 
 	private final AppTask task;
 
-	public AppAbstractUnitOfWork(final String name, final AppTask task) {
+	protected AppAbstractUnitOfWork(final String name, final AppTask task) {
 		super();
 		this.name = name;
 		this.task = task;
 	}
 
-	public AppAbstractUnitOfWork(final AppTask _computeTask) {
-		task = _computeTask;
+	protected AppAbstractUnitOfWork(final AppTask computeTask) {
+		this.task = computeTask;
 		name = task.getToscaName();
 	}
 

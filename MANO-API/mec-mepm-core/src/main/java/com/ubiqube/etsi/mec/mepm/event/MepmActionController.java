@@ -39,8 +39,8 @@ public class MepmActionController {
 
 	private final MepmActions mepmActions;
 
-	public MepmActionController(final MepmActions _mepmActions) {
-		mepmActions = _mepmActions;
+	public MepmActionController(final MepmActions mepmActions) {
+		this.mepmActions = mepmActions;
 	}
 
 	public void dispatch(@NotNull final ActionType actionType, @NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {

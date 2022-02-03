@@ -23,9 +23,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.em.v281.controller.vnflcm.VnfInstances281Sol002Api;
 import com.ubiqube.etsi.mano.em.v281.model.vnfind.Link;
 import com.ubiqube.etsi.mano.em.v281.model.vnfind.VnfIndicator;
@@ -38,6 +40,7 @@ import com.ubiqube.etsi.mano.vnfm.fc.vnfind.IndicatorsFrontController;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class Indicators281Sol002Controller implements Indicators281Sol002Api {
 	private final IndicatorsFrontController indicatorsFrontController;
 

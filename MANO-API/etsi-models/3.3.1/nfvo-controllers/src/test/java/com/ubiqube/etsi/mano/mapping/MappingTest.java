@@ -24,11 +24,13 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.nfvo.v331.OrikaConfigurationNfvo331;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.test.TestHelper;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.GrantRequest;
 
@@ -86,6 +88,15 @@ public class MappingTest extends TestHelper {
 		ignore.add("getMonitoringParameter");
 		ignore.add("getNsScaleStatus");
 		doTest(NsInstance.class, NsdInstance.class, ignore);
+	}
+
+	@Test
+	void testVnfPkgInfoNfvo() throws Exception {
+		final Set<String> ignore = new HashSet<>();
+		ignore.add("getSoftwareImages");
+		ignore.add("getLinks");
+		ignore.add("getChecksum");
+		doTest(VnfPkgInfo.class, VnfPackage.class, ignore);
 	}
 
 }

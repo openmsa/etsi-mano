@@ -23,12 +23,12 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class UowExecDeleteTask extends DexecutorTask {
+public class UowExecDeleteTask<U> extends DexecutorTask<U> {
 
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public UowExecDeleteTask(final OrchExecutionListener<?> listener, final UnitOfWork<?> uaow, final Context context) {
+	public UowExecDeleteTask(final OrchExecutionListener<U> listener, final UnitOfWork<U> uaow, final Context context) {
 		super(listener, uaow, context, false);
 	}
 

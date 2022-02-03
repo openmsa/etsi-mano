@@ -75,7 +75,7 @@ public class MepSecurityRules extends AbstractAppPlanContributor {
 	@Override
 	public List<UnitOfWork<AppTask, AppParameters>> convertTasksToExecNode(final Set<AppTask> tasks, final AppBlueprint blueprint) {
 		return tasks.stream()
-				.filter(x -> x instanceof MepSecurityRulesTask)
+				.filter(MepSecurityRulesTask.class::isInstance)
 				.map(MepSecurityRulesTask.class::cast)
 				.map(AppMepSecurityRulesUow::new).collect(Collectors.toList());
 	}

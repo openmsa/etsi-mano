@@ -28,11 +28,22 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Resolver implements IResolver {
+
+	private static final Logger LOG = LoggerFactory.getLogger(Resolver.class);
+
 	private final File cacheDir = new File(".cache");
 
-	public Resolver() {
+	private String last;
+
+	public Resolver(final File filename) {
 		cacheDir.mkdir();
+		if (null != filename) {
+			last = filename.getParent();
+		}
 	}
 
 	@Override
@@ -42,11 +53,31 @@ public class Resolver implements IResolver {
 		if (cacheFile.exists()) {
 			return getContents(cacheFile);
 		}
+		final URL rUrl = getUrl(url);
+		// Maybe we probably need to store `last`
+		final String content = getContent(rUrl);
+		saveContent(cacheFile, content);
+		return content;
+	}
+
+	private URL getUrl(final String url) {
 		try {
-			final URL rUrl = new URL(url);
-			final String content = getContent(rUrl);
-			saveContent(cacheFile, content);
-			return content;
+			return new URL(url);
+		} catch (final MalformedURLException e) {
+			LOG.trace("Not an URL: " + url, e);
+		}
+		LOG.info("Opening: {}", url);
+		final URL classpath = this.getClass().getClassLoader().getResource(url);
+		if (classpath != null) {
+			return classpath;
+		}
+		// Try as a normal file.
+		if (last == null) {
+			throw new ParseException("Could not find: " + url + " last:" + last);
+		}
+		final File f = new File(last, url);
+		try {
+			return f.toURI().toURL();
 		} catch (final MalformedURLException e) {
 			throw new ParseException(e);
 		}

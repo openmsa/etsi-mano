@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 import lombok.AllArgsConstructor;
@@ -30,7 +32,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class AuthParamBasic {
+public class AuthParamBasic implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	private String userName;
 	private String password;
 

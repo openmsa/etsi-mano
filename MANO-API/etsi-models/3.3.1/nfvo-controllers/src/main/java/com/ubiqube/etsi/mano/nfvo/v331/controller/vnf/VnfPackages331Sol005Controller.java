@@ -25,6 +25,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.ExternalArtifactsAccessConfig;
@@ -46,6 +48,7 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.VnfPkgInfoLinks;
  *
  */
 @RestController
+@Conditional(SingleControllerCondition.class)
 public class VnfPackages331Sol005Controller implements VnfPackages331Sol005Api {
 	private final VnfPackageFrontController frontController;
 

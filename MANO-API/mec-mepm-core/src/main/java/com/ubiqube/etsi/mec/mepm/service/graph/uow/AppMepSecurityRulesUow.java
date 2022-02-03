@@ -38,9 +38,9 @@ public class AppMepSecurityRulesUow extends AppAbstractUnitOfWork {
 
 	private final MepSecurityRulesTask task;
 
-	public AppMepSecurityRulesUow(final MepSecurityRulesTask _computeTask) {
-		super(_computeTask);
-		task = _computeTask;
+	public AppMepSecurityRulesUow(final MepSecurityRulesTask computeTask) {
+		super(computeTask);
+		task = computeTask;
 	}
 
 	/** Serial. */

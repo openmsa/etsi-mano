@@ -40,8 +40,8 @@ public class MeoActionListener {
 	private static final Logger LOG = LoggerFactory.getLogger(MeoActionListener.class);
 	private final MeoActionContoller meoActionContoller;
 
-	public MeoActionListener(final MeoActionContoller _meoActionContoller) {
-		meoActionContoller = _meoActionContoller;
+	public MeoActionListener(final MeoActionContoller meoActionContoller) {
+		this.meoActionContoller = meoActionContoller;
 	}
 
 	@JmsListener(destination = "system.actions.meo", concurrency = "5")

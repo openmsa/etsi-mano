@@ -98,7 +98,7 @@ public abstract class AbstractRest implements NfvoRest {
 		return restTemplate;
 	}
 
-	private final <T, Tbody> T call(final URI uri, final HttpMethod method, final HttpEntity<Tbody> request, final Class<T> clazz) {
+	private final <T, B> T call(final URI uri, final HttpMethod method, final HttpEntity<B> request, final Class<T> clazz) {
 		final ResponseEntity<T> resp = restTemplate.exchange(uri, method, request, clazz);
 		return resp.getBody();
 	}

@@ -30,11 +30,11 @@ public class WfProduce {
 	private final UUID uuid;
 	private final String name;
 
-	public WfProduce(final Class<? extends Node> node, final String _name, final UUID _uuid) {
+	public WfProduce(final Class<? extends Node> node, final String name, final UUID uuid) {
 		super();
 		this.node = node;
-		uuid = _uuid;
-		name = _name;
+		this.uuid = uuid;
+		this.name = name;
 	}
 
 	public UUID getUuid() {

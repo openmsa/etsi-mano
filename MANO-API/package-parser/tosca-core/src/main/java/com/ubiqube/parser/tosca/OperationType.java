@@ -16,16 +16,19 @@
  */
 package com.ubiqube.parser.tosca;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class OperationType {
-	private String derived_from;
+	@JsonProperty("derived_from")
+	private String derivedFrom;
 	private String description;
 
-	public String getDerived_from() {
-		return derived_from;
+	public String getDerivedFrom() {
+		return derivedFrom;
 	}
 
-	public void setDerived_from(final String derived_from) {
-		this.derived_from = derived_from;
+	public void setDerivedFrom(final String derivedFrom) {
+		this.derivedFrom = derivedFrom;
 	}
 
 	public String getDescription() {

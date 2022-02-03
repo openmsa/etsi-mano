@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.rest;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
@@ -50,11 +51,15 @@ public class ServerAdapter {
 	}
 
 	public URI getUriFor(final ApiVersionType type, final String urlPart, final Map<String, Object> params) {
-		final String url = httpGateway.getUrlFor(type) + urlPart;
+		final String url = new File(httpGateway.getUrlFor(type), urlPart).toString();
 		return rest.uriBuilder().pathSegment(url).buildAndExpand(params).toUri();
 	}
 
 	public FluxRest rest() {
 		return rest;
+	}
+
+	public URI getUriFor(final ApiVersionType type, final String urlPart) {
+		return getUriFor(type, urlPart, Map.of());
 	}
 }

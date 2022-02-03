@@ -43,6 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ubiqube.etsi.mano.dao.mano.config.ServerDto;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.service.ServerService;
+import com.ubiqube.etsi.mano.service.event.ActionType;
+import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -57,17 +59,21 @@ import ma.glasnost.orika.MapperFacade;
 public class ServerController {
 	private final ServerService serverService;
 	private final MapperFacade mapper;
+	private final EventManager eventManager;
 
-	public ServerController(final ServerService serverService, final MapperFacade mapper) {
+	public ServerController(final ServerService serverService, final MapperFacade mapper, final EventManager eventManager) {
 		super();
 		this.serverService = serverService;
 		this.mapper = mapper;
+		this.eventManager = eventManager;
 	}
 
 	@PostMapping
 	public ResponseEntity<Void> createServer(@Valid @RequestBody final ServerDto serversDto) {
 		final Servers servers = mapper.map(serversDto, Servers.class);
 		final Servers newServer = serverService.createServer(servers);
+		// Move that elsewhere, there is transaction problem.
+		eventManager.sendAction(ActionType.REGISTER_SERVER, newServer.getId());
 		final URI location = linkTo(methodOn(ServerController.class).findById(newServer.getId())).withSelfRel().toUri();
 		return ResponseEntity.accepted().location(location).build();
 	}
@@ -98,7 +104,7 @@ public class ServerController {
 
 	private static List<Link> makeLinks(final Servers server) {
 		final List<Link> ret = new ArrayList<>();
-		ret.add(linkTo(methodOn(ServerController.class).findById(server.getId())).withRel("account"));
+		ret.add(linkTo(methodOn(ServerController.class).findById(server.getId())).withRel("server"));
 		return ret;
 	}
 

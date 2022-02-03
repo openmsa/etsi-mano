@@ -41,6 +41,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.ArchiveSecurityOptionEnumType;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsArchiveArtifactInfo;
+import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 
 import lombok.Getter;
@@ -56,7 +57,7 @@ import lombok.Setter;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class NsdPackage implements BaseEntity, Auditable {
+public class NsdPackage implements PackageBase, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -92,6 +93,8 @@ public class NsdPackage implements BaseEntity, Auditable {
 	private int maxNumberOfInstance;
 
 	private String flavorId;
+
+	private Integer serviceAvailabilityLevel;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "nsdPackage")
 	private Set<NsdPackageVnfPackage> vnfPkgIds;
@@ -133,6 +136,7 @@ public class NsdPackage implements BaseEntity, Auditable {
 	@OneToMany(cascade = CascadeType.DETACH)
 	@JoinColumn
 	private Set<NsdInstance> nsInstance;
+
 	// 2.7.1
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<NsArchiveArtifactInfo> artifacts;
@@ -141,4 +145,24 @@ public class NsdPackage implements BaseEntity, Auditable {
 	// 2.7.1
 	@Enumerated(EnumType.STRING)
 	private ArchiveSecurityOptionEnumType archiveSecurityOption;
+	// Probably 3.5.1
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<VnffgDescriptor> vnffgs;
+
+	private boolean autoHealEnabled;
+
+	@Override
+	public PackageOperationalState getOperationalState() {
+		return this.nsdOperationalState;
+	}
+
+	@Override
+	public OnboardingStateType getOnboardingState() {
+		return this.nsdOnboardingState;
+	}
+
+	@Override
+	public PackageUsageState getUsageState() {
+		return this.nsdUsageState;
+	}
 }

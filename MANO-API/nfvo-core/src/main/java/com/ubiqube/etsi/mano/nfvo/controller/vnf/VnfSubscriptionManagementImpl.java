@@ -57,6 +57,9 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 	@Override
 	public Subscription subscriptionsPost(@Nonnull final Subscription subscription, final ApiTypesEnum api) {
 		subscription.setApi(api);
+		subscription.setSubscriptionType(SubscriptionType.VNF);
+		final ServerAdapter server = serverService.buildServerAdapter(subscription);
+		notifications.check(server, subscription.getCallbackUri());
 		return subscriptionService.save(subscription, SubscriptionType.VNF);
 	}
 
@@ -66,8 +69,7 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 
 		final Subscription subscriptionsRepository = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
 		final String callbackUri = subscriptionsRepository.getCallbackUri();
-		final ServerAdapter server = serverService.findNearestServer();
-		// There is a version, problem.
+		final ServerAdapter server = serverService.buildServerAdapter(subscriptionsRepository);
 		notifications.doNotification(notificationsMessage, callbackUri, server);
 	}
 
@@ -76,8 +78,7 @@ public class VnfSubscriptionManagementImpl implements VnfSubscriptionManagement 
 		final UUID subscriptionId = UUID.fromString(notificationsMessage.getSubscriptionId());
 		final Subscription subscription = subscriptionService.findById(subscriptionId, SubscriptionType.VNF);
 		final String cbUrl = subscription.getCallbackUri();
-		final ServerAdapter server = serverService.findNearestServer();
-		// Version problem.
+		final ServerAdapter server = serverService.buildServerAdapter(subscription);
 		notifications.doNotification(notificationsMessage, cbUrl, server);
 	}
 

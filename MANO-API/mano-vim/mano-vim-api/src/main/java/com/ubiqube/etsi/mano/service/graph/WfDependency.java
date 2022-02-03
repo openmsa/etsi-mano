@@ -28,9 +28,9 @@ public class WfDependency {
 	private Class<? extends Node> node;
 	private String name;
 
-	public WfDependency(final Class<? extends Node> _node, final String _name) {
-		node = _node;
-		name = _name;
+	public WfDependency(final Class<? extends Node> node, final String name) {
+		this.node = node;
+		this.name = name;
 	}
 
 	public Class<? extends Node> getNode() {
@@ -51,7 +51,7 @@ public class WfDependency {
 
 	public boolean isMatching(final UnitOfWork<?, ?> unitOfWork) {
 		for (final WfProduce produce : unitOfWork.getProduce()) {
-			if ((node == produce.getNode())
+			if (node == produce.getNode()
 					&& getName().equals(unitOfWork.getToscaName())) {
 				return true;
 			}

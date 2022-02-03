@@ -53,7 +53,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol005/nsfm/v1/subscriptions", headers = { "Version=2.6.1" })
+@RequestMapping(value = "/sol005/nsfm/v1/subscriptions")
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsfmSubscriptions261Sol005Api {
 

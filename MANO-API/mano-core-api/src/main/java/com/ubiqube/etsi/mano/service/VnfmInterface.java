@@ -22,22 +22,22 @@ import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 
 public interface VnfmInterface {
 
-	VnfInstance createVnfInstance(final VnfPackage vnf, String vnfInstanceDescription, String vnfInstanceName);
+	VnfInstance createVnfInstance(Servers servers, String vnfdId, String vnfInstanceDescription, String vnfInstanceName);
 
-	VnfBlueprint vnfInstatiate(@Nonnull String vnfInstanceId, VnfInstantiate instantiateVnfRequest, UUID vnfId);
+	VnfBlueprint vnfInstatiate(Servers servers, @Nonnull String vnfInstanceId, VnfInstantiate instantiateVnfRequest);
 
-	VnfBlueprint vnfLcmOpOccsGet(@NotNull UUID id);
+	VnfBlueprint vnfLcmOpOccsGet(Servers servers, @NotNull UUID id);
 
-	VnfBlueprint vnfTerminate(@Nonnull String nsInstanceId);
+	VnfBlueprint vnfTerminate(Servers servers, @Nonnull String nsInstanceId);
 
-	VnfInstance getVnfInstance(String vnfInstance);
+	VnfInstance getVnfInstance(Servers servers, String vnfInstance);
 
-	void delete(String vnfInstance);
+	void delete(Servers servers, String vnfInstance);
 
 }

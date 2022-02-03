@@ -64,6 +64,7 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 		ensureDisabled(vnfPackage);
 		ensureNotInUse(vnfPackage);
 		vnfPackageService.delete(id);
+		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONDELETION, id);
 	}
 
 	@Override

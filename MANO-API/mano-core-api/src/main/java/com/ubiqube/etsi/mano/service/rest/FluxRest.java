@@ -24,6 +24,8 @@ import java.util.UUID;
 
 import javax.net.ssl.SSLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -47,6 +49,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
 import org.springframework.web.reactive.function.client.WebClient.RequestBodySpec;
 import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
+import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
@@ -66,6 +69,9 @@ import reactor.netty.http.client.HttpClient;
  *
  */
 public class FluxRest {
+
+	private static final Logger LOG = LoggerFactory.getLogger(FluxRest.class);
+
 	private final WebClient webClient;
 	private final String rootUrl;
 	private final String id = UUID.randomUUID().toString();
@@ -152,7 +158,13 @@ public class FluxRest {
 				.retrieve()
 				.toEntity(clazz);
 		return resp.block();
+	}
 
+	public final <T> ResponseEntity<T> deleteWithReturn(final URI uri, final Object body) {
+		final ResponseSpec resp = makeBaseQuery(uri, HttpMethod.DELETE, body)
+				.accept(MediaType.APPLICATION_JSON)
+				.retrieve();
+		return (ResponseEntity<T>) resp.toBodilessEntity().block();
 	}
 
 	public final <T> T post(final URI uri, final Class<T> clazz) {
@@ -168,18 +180,18 @@ public class FluxRest {
 	}
 
 	public final <T> T call(final URI uri, final HttpMethod method, final Class<T> clazz) {
-		return _call(uri, method, null, clazz);
+		return innerCall(uri, method, null, clazz);
 	}
 
 	public final <T> T call(final URI uri, final HttpMethod method, final Object body, final Class<T> clazz) {
-		return _call(uri, method, body, clazz);
+		return innerCall(uri, method, body, clazz);
 	}
 
 	public <T> T get(final URI uri, final ParameterizedTypeReference<T> myBean) {
 		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.GET, null)
 				.retrieve()
 				.toEntity(myBean);
-		return getBlockingResult(resp);
+		return getBlockingResult(resp, null);
 	}
 
 	public UriComponentsBuilder uriBuilder() {
@@ -203,18 +215,23 @@ public class FluxRest {
 		return wc;
 	}
 
-	private final <T> T _call(final URI uri, final HttpMethod method, final Object requestObject, final Class<T> clazz) {
+	private final <T> T innerCall(final URI uri, final HttpMethod method, final Object requestObject, final Class<T> clazz) {
 		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, method, requestObject)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.toEntity(clazz);
-		return getBlockingResult(resp);
+		return getBlockingResult(resp, clazz);
 	}
 
-	private static <T> T getBlockingResult(final Mono<ResponseEntity<T>> resp) {
+	private <T> T getBlockingResult(final Mono<ResponseEntity<T>> resp, final Class<T> clazz) {
 		final ResponseEntity<T> resp2 = resp.block();
 		if (null == resp2) {
 			return null;
+		}
+		final Optional<URI> uri = Optional.ofNullable(resp2.getHeaders().getLocation()).filter(x -> !x.toString().isEmpty());
+		if (uri.isPresent()) {
+			LOG.info("Location: {}", uri);
+			return innerCall(uri.get(), HttpMethod.GET, null, clazz);
 		}
 		return resp2.getBody();
 	}

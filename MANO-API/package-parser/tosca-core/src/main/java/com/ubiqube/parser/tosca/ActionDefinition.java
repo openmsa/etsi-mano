@@ -18,7 +18,6 @@ package com.ubiqube.parser.tosca;
 
 import java.util.Map;
 
-// TODO rename activityDefinition
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>

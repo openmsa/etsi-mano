@@ -52,7 +52,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@RequestMapping(value = "/sol005/nsd/v1", headers = { "Version=2.2.0" })
+@RequestMapping(value = "/sol005/nsd/v2", headers = { "Version=2.2.0" })
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface PnfDescriptors351Sol005Api {
 	@Operation(summary = "", description = "The GET method queries information about multiple PNF descriptor resources. See clause 5.4.5.3.2. ", tags = {})

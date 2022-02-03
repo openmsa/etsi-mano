@@ -35,7 +35,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
-import com.ubiqube.etsi.mano.dao.mano.dto.VnfGrantsRequest;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInfoModificationsDto;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtLinkPort;
@@ -46,7 +45,6 @@ import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.em.v351.model.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.em.v351.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
-import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.ResourceDefinition;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnf.VnfPackageArtifactInfo;
@@ -203,11 +201,7 @@ public class OrikaMapperVnfm351 implements OrikaMapperFactoryConfigurer {
 				.field("operationParams", "parameters")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(GrantRequest.class, VnfGrantsRequest.class)
-				.field("vnfInstanceId", "vnfInstance.id")
-				.field("vnfLcmOpOccId", "vnfLcmOpOccs.id")
-				.byDefault()
-				.register();
+
 		orikaMapperFactory.classMap(ExtManagedVirtualLinkData.class, ExtManagedVirtualLinkDataEntity.class)
 				.byDefault()
 				.register();

@@ -25,14 +25,15 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 
-public interface PlanContributor<P, B, U extends Task, PA> {
+@Deprecated(forRemoval = true)
+public interface PlanContributor<P, B, U extends Task, R> {
 
 	Class<? extends Node> getContributionType();
 
 	// XXX: Why do we have a scaleInfo here ???
 	List<U> contribute(P bundle, B blueprint, Set<ScaleInfo> scaling);
 
-	List<UnitOfWork<U, PA>> convertTasksToExecNode(Set<U> tasks, B blueprint);
+	List<UnitOfWork<U, R>> convertTasksToExecNode(Set<U> tasks, B blueprint);
 
 	void getDependencies(DependencyBuilder dependencyBuilder);
 }

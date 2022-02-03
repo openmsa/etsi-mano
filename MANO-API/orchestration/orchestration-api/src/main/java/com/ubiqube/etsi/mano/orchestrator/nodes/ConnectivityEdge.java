@@ -25,9 +25,9 @@ public class ConnectivityEdge<U> {
 		// Nothing.
 	}
 
-	public ConnectivityEdge(final U _source, final U _target) {
-		source = _source;
-		target = _target;
+	public ConnectivityEdge(final U source, final U target) {
+		this.source = source;
+		this.target = target;
 	}
 
 	public U getSource() {

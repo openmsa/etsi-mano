@@ -37,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.dto.ParamsForNestedNsd;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.ParamsForVnf;
 import com.ubiqube.etsi.mano.dao.mano.nsd.wan.WanConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 
 import lombok.Getter;
@@ -80,7 +81,8 @@ public class NsdInstance extends Instance {
 	@OneToMany
 	private List<NsdInstance> nestedNsInstance = null;
 
-	// XXX Add nsScaleStatus
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<NsScaleInfo> nsScaleStatus;
 
 	// XXX Add additionalAffinityOrAntiAffinityRule
 
@@ -106,7 +108,7 @@ public class NsdInstance extends Instance {
 	@JoinColumn
 	private Set<ParamsForVnf> additionalParamsForVnf;
 	// 3.3.1
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private Set<WanConnectionInformation> wanConnectionInfo;
 	// 3.3.1
 	@ElementCollection(fetch = FetchType.EAGER)

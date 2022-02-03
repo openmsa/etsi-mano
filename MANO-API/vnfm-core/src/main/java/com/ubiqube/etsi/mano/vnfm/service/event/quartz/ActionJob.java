@@ -43,9 +43,9 @@ public class ActionJob extends QuartzJobBean {
 
 	private final VnfmActionController actionController;
 
-	public ActionJob(final VnfmActionController _actionController) {
+	public ActionJob(final VnfmActionController actionController) {
 		super();
-		actionController = _actionController;
+		this.actionController = actionController;
 	}
 
 	@Override

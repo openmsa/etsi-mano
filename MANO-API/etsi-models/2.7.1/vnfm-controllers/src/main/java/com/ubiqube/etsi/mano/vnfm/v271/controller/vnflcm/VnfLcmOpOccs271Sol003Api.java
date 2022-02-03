@@ -47,7 +47,7 @@ import io.swagger.annotations.ApiResponses;
  * @version 1.4.0
  */
 @Api(value = "vnf_lcm_op_occs", description = "the vnf_lcm_op_occs API")
-@RequestMapping(value = "/sol003/vnflcm/v1/vnf_lcm_op_occs", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol003/vnflcm/v1/vnf_lcm_op_occs", headers = "Version=1.4.0")
 @RolesAllowed({ "ROLE_NFVO" })
 public interface VnfLcmOpOccs271Sol003Api {
 

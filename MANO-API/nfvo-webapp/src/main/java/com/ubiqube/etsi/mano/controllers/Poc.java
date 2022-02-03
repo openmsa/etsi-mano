@@ -47,9 +47,9 @@ public class Poc {
 	private final OpenStackVim osv;
 	private final VimConnectionInformationJpa vimConnectionInformationJpa;
 
-	public Poc(final OpenStackVim _osv, final VimConnectionInformationJpa _vimConnectionInformationJpa) {
-		osv = _osv;
-		vimConnectionInformationJpa = _vimConnectionInformationJpa;
+	public Poc(final OpenStackVim osv, final VimConnectionInformationJpa vimConnectionInformationJpa) {
+		this.osv = osv;
+		this.vimConnectionInformationJpa = vimConnectionInformationJpa;
 	}
 
 	@GetMapping(value = "/test/{id}")

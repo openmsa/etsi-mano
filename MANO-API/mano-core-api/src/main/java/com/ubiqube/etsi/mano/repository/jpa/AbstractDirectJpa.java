@@ -20,11 +20,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.CrudRepositoryNg;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
@@ -33,15 +36,19 @@ public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBi
 
 	private final EntityManager em;
 	private final org.springframework.data.repository.CrudRepository<U, UUID> repository;
+	private final GrammarParser grammarParser;
 
-	protected AbstractDirectJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository, final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy) {
+	protected AbstractDirectJpa(final EntityManager em, final org.springframework.data.repository.CrudRepository<U, UUID> repository,
+			final ContentManager contentManager, final ObjectMapper jsonMapper, final NamingStrategy namingStrategy, final GrammarParser grammarParser) {
 		super(contentManager, jsonMapper, namingStrategy);
 		this.em = em;
 		this.repository = repository;
+		this.grammarParser = grammarParser;
 	}
 
 	@Override
-	public final U get(final UUID id) {
+	@NotNull
+	public final U get(@NotNull final UUID id) {
 		final Optional<U> entity = repository.findById(id);
 		return entity.orElseThrow(() -> new NotFoundException(getFrontClass().getSimpleName() + " entity " + id + " not found."));
 	}
@@ -50,21 +57,23 @@ public abstract class AbstractDirectJpa<U extends BaseEntity> extends AbstractBi
 	protected abstract Class<U> getFrontClass();
 
 	@Override
-	public final void delete(final UUID id) {
+	public final void delete(@NotNull final UUID id) {
 		repository.deleteById(id);
 		super.delete(id);
 	}
 
 	@Override
-	public final U save(final U entity) {
+	@NotNull
+	public final U save(@NotNull final U entity) {
 		final U res = repository.save(entity);
 		mkdir(res.getId());
 		return res;
 	}
 
 	@Override
-	public final List<U> query(final String filter) {
-		final SearchQueryer sq = new SearchQueryer(em);
+	@NotNull
+	public final List<U> query(@Nullable final String filter) {
+		final SearchQueryer sq = new SearchQueryer(em, grammarParser);
 		return sq.getCriteria(filter, getFrontClass());
 	}
 

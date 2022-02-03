@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "ns_lcm_op_occs", description = "the ns_lcm_op_occs API")
-@RequestMapping(value = "/sol005/nslcm/v1", headers = "Version=2.8.1")
+@RequestMapping(value = "/sol005/nslcm/v1", headers = "Version=1.4.0")
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface NsLcmOpOccs281Sol005Api {
 

@@ -26,9 +26,13 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsBlueprintJpa;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
@@ -47,8 +51,9 @@ public class NsBlueprintServiceImpl extends SearchableService implements NsBluep
 
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	public NsBlueprintServiceImpl(final NsBlueprintJpa nsBlueprintJpa, final NsLiveInstanceJpa nsLiveInstanceJpa, final EntityManager em, final ManoSearchResponseService searchService) {
-		super(searchService, em, NsBlueprint.class);
+	public NsBlueprintServiceImpl(final NsBlueprintJpa nsBlueprintJpa, final NsLiveInstanceJpa nsLiveInstanceJpa, final EntityManager em, final ManoSearchResponseService searchService,
+			final GrammarParser grammarParser) {
+		super(searchService, em, NsBlueprint.class, grammarParser);
 		this.nsBlueprintJpa = nsBlueprintJpa;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
@@ -73,6 +78,12 @@ public class NsBlueprintServiceImpl extends SearchableService implements NsBluep
 	@Override
 	public NsBlueprint save(final NsBlueprint nsBlueprint) {
 		return nsBlueprintJpa.save(nsBlueprint);
+	}
+
+	@Override
+	public Blueprint<NsTask, NsdInstance> updateState(final NsBlueprint plan, final OperationStatusType processing) {
+		plan.setOperationStatus(processing);
+		return save(plan);
 	}
 
 }

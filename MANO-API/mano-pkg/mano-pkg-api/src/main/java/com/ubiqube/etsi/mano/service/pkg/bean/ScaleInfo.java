@@ -16,19 +16,22 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.bean;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class ScaleInfo {
+	private String name;
 	/**
 	 * The scale level for a particular aspect
-	 * 
+	 *
 	 */
 	private Integer scaleLevel;
-
-	public Integer getScaleLevel() {
-		return scaleLevel;
-	}
-
-	public void setScaleLevel(final Integer scaleLevel) {
-		this.scaleLevel = scaleLevel;
-	}
 
 }

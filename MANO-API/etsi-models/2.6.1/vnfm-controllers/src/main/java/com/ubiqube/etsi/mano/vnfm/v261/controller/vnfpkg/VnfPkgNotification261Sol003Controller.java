@@ -21,9 +21,12 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v261.controller.vnfpkg;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.vnfm.fc.vnf.VnfNotificationFrontController;
 
@@ -44,6 +47,16 @@ public class VnfPkgNotification261Sol003Controller implements VnfPkgNotification
 	@Override
 	public ResponseEntity<Void> onboardingAction(final VnfPackageOnboardingNotification body) {
 		return fc.onNotification(body, "2.6.1");
+	}
+
+	@Override
+	public ResponseEntity<Void> changeCheck() {
+		return fc.check();
+	}
+
+	@Override
+	public ResponseEntity<Void> changeAction(@Valid final VnfPackageChangeNotification body) {
+		return fc.onChange(body, "2.6.1");
 	}
 
 }

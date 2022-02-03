@@ -28,31 +28,44 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.common.v261.services.Linkable;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class VnfSubscriptionFactory {
+	private VnfSubscriptionFactory() {
+		// Nothing.
+	}
+
 	@Nonnull
-	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final UUID _subscriptionId, @Nonnull final UUID _vnfPkgId, final String _vnfdId, final Linkable links) {
+	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final boolean deleted, final UUID subscriptionId, @Nonnull final UUID vnfPkgId, final String vnfdId, final Linkable links) {
 		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
-		ret.setChangeType(PackageChangeType.OP_STATE_CHANGE);
+		if (deleted) {
+			ret.setChangeType(PackageChangeType.PKG_DELETE);
+		} else {
+			ret.setChangeType(PackageChangeType.OP_STATE_CHANGE);
+		}
 		ret.setNotificationType("VnfPackageChangeNotification");
 		ret.setOperationalState(PackageOperationalStateType.DISABLED);
-		ret.setSubscriptionId(_subscriptionId.toString());
+		ret.setSubscriptionId(subscriptionId.toString());
 		ret.setTimeStamp(OffsetDateTime.now());
-		ret.setVnfdId(_vnfdId);
-		ret.setVnfPkgId(_vnfPkgId.toString());
-		ret.setLinks(links.createNotificationLink(_vnfPkgId, _subscriptionId));
+		ret.setVnfdId(vnfdId);
+		ret.setVnfPkgId(vnfPkgId.toString());
+		ret.setLinks(links.createNotificationLink(vnfPkgId, subscriptionId));
 		return ret;
 	}
 
 	@Nonnull
-	public static VnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final UUID _subscriptionId, @Nonnull final UUID _vnfPkgId, final String _vnfdId, final Linkable links) {
+	public static VnfPackageOnboardingNotification createNotificationVnfPackageOnboardingNotification(final UUID subscriptionId, @Nonnull final UUID vnfPkgId, final String vnfdId, final Linkable links) {
 		final VnfPackageOnboardingNotification ret = new VnfPackageOnboardingNotification();
-		ret.setId(_subscriptionId.toString());
+		ret.setId(subscriptionId.toString());
 		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setNotificationType("VnfPackageOnboardingNotification");
-		ret.setSubscriptionId(_subscriptionId.toString());
-		ret.setVnfPkgId(_vnfPkgId.toString());
-		ret.setVnfdId(_vnfdId);
-		ret.setLinks(links.createVnfPackageOnboardingNotificationLinks(_vnfPkgId, _subscriptionId));
+		ret.setSubscriptionId(subscriptionId.toString());
+		ret.setVnfPkgId(vnfPkgId.toString());
+		ret.setVnfdId(vnfdId);
+		ret.setLinks(links.createVnfPackageOnboardingNotificationLinks(vnfPkgId, subscriptionId));
 		return ret;
 	}
 }

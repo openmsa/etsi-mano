@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiResponses;
  * @version 1.4.0
  */
 @Api(value = "subscriptions", description = "the subscriptions API")
-@RequestMapping(value = { "/sol003/vnflcm/v1/subscriptions" }, headers = "Version=2.7.1")
+@RequestMapping(value = { "/sol003/vnflcm/v1/subscriptions" }, headers = "Version=1.4.0")
 @RolesAllowed({ "ROLE_NFVO" })
 public interface VnfLcmSubscriptions271Sol003Api {
 

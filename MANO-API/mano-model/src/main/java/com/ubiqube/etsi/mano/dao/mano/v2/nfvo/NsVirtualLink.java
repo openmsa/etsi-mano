@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -38,6 +40,8 @@ import com.ubiqube.etsi.mano.dao.mano.NsVlConnectivityType;
 import com.ubiqube.etsi.mano.dao.mano.NsVlProfile;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.ToscaEntity;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVlLevelMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVlStepMapping;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -75,7 +79,37 @@ public class NsVirtualLink implements ToscaEntity, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> testAccess;
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> vnffg;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<NsVlStepMapping> stepMapping;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<NsVlLevelMapping> levelMapping;
+
 	@Embedded
 	private Audit audit;
+
+	public void addVnffg(final String name) {
+		if (null == vnffg) {
+			vnffg = new HashSet<>();
+		}
+		vnffg.add(name);
+	}
+
+	public void addStepMapping(final NsVlStepMapping mapping) {
+		if (null == stepMapping) {
+			stepMapping = new HashSet<>();
+		}
+		stepMapping.add(mapping);
+	}
+
+	public void addLevelMapping(final NsVlLevelMapping mapping) {
+		if (null == levelMapping) {
+			levelMapping = new HashSet<>();
+		}
+		levelMapping.add(mapping);
+	}
 
 }

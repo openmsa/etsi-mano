@@ -27,6 +27,8 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsNsd;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -46,7 +48,9 @@ public class ToscaNsdTest {
 		System.setProperty(OrikaSystemProperties.WRITE_SOURCE_FILES_TO_PATH, "/tmp/orika-test");
 		ZipUtil.makeToscaZip("/tmp/ubi-nsd-tosca.csar", Entry.of("ubi-nsd-tosca/Definitions/nsd_ubi.yaml", "Definitions/nsd_ubi.yaml"),
 				Entry.of("ubi-nsd-tosca/Definitions/etsi_nfv_sol001_nsd_types.yaml", "Definitions/etsi_nfv_sol001_nsd_types.yaml"),
-				Entry.of("ubi-nsd-tosca/Definitions/fix_ubiqube.yaml", "Definitions/fix_ubiqube.yaml"),
+				Entry.of("ubi-nsd-tosca/Definitions/etsi_nfv_sol001_vnfd_types.yaml", "Definitions/etsi_nfv_sol001_vnfd_types.yaml"),
+				Entry.of("ubi-nsd-tosca/Definitions/etsi_nfv_sol001_pnfd_types.yaml", "Definitions/etsi_nfv_sol001_pnfd_types.yaml"),
+				Entry.of("ubi-nsd-tosca/Definitions/etsi_nfv_sol001_common_types.yaml", "Definitions/etsi_nfv_sol001_common_types.yaml"),
 				Entry.of("ubi-nsd-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 		final byte[] data = Files.readAllBytes(Path.of("/tmp/ubi-nsd-tosca.csar"));
 		tpp = new ToscaNsPackageProvider(data);
@@ -85,13 +89,13 @@ public class ToscaNsdTest {
 
 	@Test
 	void testUbiqube01() throws Exception {
-		final Set<String> list = tpp.getVnfd(new HashMap<String, String>());
+		final Set<NsVnf> list = tpp.getVnfd(new HashMap<String, String>());
 		assertEquals(1, list.size());
 	}
 
 	@Test
 	void testUbiqube02() throws Exception {
-		final Set<String> list = tpp.getNestedNsd(new HashMap<String, String>());
-		assertEquals(1, list.size());
+		final Set<NsNsd> list = tpp.getNestedNsd(new HashMap<String, String>());
+		assertEquals(0, list.size());
 	}
 }

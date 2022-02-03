@@ -60,7 +60,10 @@ public class ExtCpInfo implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<CpProtocolDataEntity> cpProtocolInfo = null;
 
-	@Deprecated
+	/**
+	 * @deprecated Duplicate with 271.
+	 */
+	@Deprecated(forRemoval = false)
 	@OneToOne
 	private CpProtocolDataEntity extLinkPortId = null;
 	// 2.7.1 Type change

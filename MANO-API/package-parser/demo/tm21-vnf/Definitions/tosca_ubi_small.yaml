@@ -93,12 +93,11 @@ topology_template:
           compute_requirements: # map string
             req: requirement
           virtual_memory: # tosca.datatypes.nfv.VirtualMemory
-            properties:
-              virtual_mem_size: 512 MiB
-              virtual_mem_oversubscription_policy: what
-              vdu_mem_requirements:
-                read: openstack
-              numa_enabled: true
+            virtual_mem_size: 512 MiB
+            virtual_mem_oversubscription_policy: what
+            vdu_mem_requirements:
+              read: openstack
+            numa_enabled: true
           virtual_cpu: # tosca.datatypes.nfv.VirtualCpu
             cpu_architecture: x86_64
             num_virtual_cpu: 1
@@ -130,10 +129,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: internal
-        - virtual_binding:
-            node: vsrx
+        - virtual_link: internal
+        - virtual_binding: vsrx
 
     cpLc02:
       type: tosca.nodes.nfv.VduCp
@@ -149,10 +146,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: internal2
-        - virtual_binding:
-            node: vsrx
+        - virtual_link: internal2
+        - virtual_binding: vsrx
 
     cpLc03:
       type: tosca.nodes.nfv.VduCp
@@ -168,10 +163,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: public
-        - virtual_binding:
-            node: vsrx
+        - virtual_link: public
+        - virtual_binding: vsrx
 
     cpLc04:
       type: tosca.nodes.nfv.VduCp
@@ -187,11 +180,25 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: mngt
-        - virtual_binding:
-            node: vsrx
+        - virtual_link: mngt
+        - virtual_binding: vsrx
 
+    block01:
+      type: tosca.nodes.nfv.Vdu.VirtualBlockStorage
+      properties:
+        virtual_block_storage_data:
+          size_of_storage: 6 GB
+        sw_image_data:
+          name: cirros
+          version: 1.0.0
+          checksum:
+            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+            algorithm: SHA-256
+          container_format: BARE
+          disk_format: QCOW2
+          min_disk: 6 GB
+          min_ram: 2 GB
+          operating_system: centos8
 
 
 

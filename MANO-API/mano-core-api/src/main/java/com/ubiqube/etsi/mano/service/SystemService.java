@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -59,31 +61,68 @@ public class SystemService {
 		final Systems sys = new Systems();
 		SystemConnections sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("COMPUTE");
+		sc.setId(null);
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("NETWORK");
+		sc.setId(null);
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("DNS");
+		sc.setId(null);
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("MONITORING");
+		sc.setId(null);
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("VNFEXTCP");
+		sc.setId(null);
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("PORT");
+		sc.setId(null);
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("STORAGE");
+		sc.setId(null);
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("AFFINITY");
+		sc.setId(null);
 		sys.add(sc);
 		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("SECURITY-GROUP");
+		sc.setId(null);
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("NSD");
+		sc.setId(null);
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("SAP");
+		sc.setId(null);
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("NSNETWORK");
+		sc.setId(null);
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("VNF");
+		sc.setId(null);
+		sys.add(sc);
+		sc = mapper.map(vimConnectionInformation, SystemConnections.class);
+		sc.setVimType("VNF-CREATE");
+		sc.setId(null);
 		sys.add(sc);
 		return systemJpa.save(sys);
+	}
+
+	public Iterable<Systems> findAll() {
+		return systemJpa.findAll();
+	}
+
+	public void deleteById(final UUID id) {
+		systemJpa.deleteById(id);
 	}
 }

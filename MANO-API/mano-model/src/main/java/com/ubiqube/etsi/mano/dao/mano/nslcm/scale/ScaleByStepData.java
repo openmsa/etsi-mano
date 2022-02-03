@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,7 +37,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class ScaleByStepData {
+public class ScaleByStepData implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;

@@ -31,8 +31,8 @@ public abstract class VnfAbstractUnitOfWork extends VnfmUnitOfWork {
 
 	private final VnfTask task;
 
-	public VnfAbstractUnitOfWork(final VnfTask _task) {
-		task = _task;
+	protected VnfAbstractUnitOfWork(final VnfTask task) {
+		this.task = task;
 		name = task.getToscaName();
 	}
 

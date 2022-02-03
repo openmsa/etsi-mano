@@ -39,7 +39,7 @@ public class GraphTest {
 	}
 
 	@Test
-	static void testName() throws Exception {
+	void testName() throws Exception {
 		final ListenableGraph<UnitOfWork, ConnectivityEdge<UnitOfWork>> g = createGraph();
 		g.addGraphListener(new EdgeListener<UnitOfWork>());
 		final UnitOfWork vduA = new TestUnitOfWork("A");

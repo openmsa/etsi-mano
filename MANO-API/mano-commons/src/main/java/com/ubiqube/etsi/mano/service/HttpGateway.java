@@ -33,6 +33,8 @@ public interface HttpGateway {
 
 	Class<?> getVnfPackageClass();
 
+	ParameterizedTypeReference<List<Class<?>>> getVnfPackageClassList();
+
 	Class<?> getVnfPackageSubscriptionClass();
 
 	Class<?> getPkgmSubscriptionRequest();
@@ -47,7 +49,9 @@ public interface HttpGateway {
 
 	Class<?> getVnfInstanceClass();
 
-	ParameterizedTypeReference<List<?>> getVnfInstanceListParam();
+	ParameterizedTypeReference<List<Class<?>>> getVnfInstanceListParam();
+
+	ParameterizedTypeReference<List<Class<?>>> getListVnfLcmOpOccs();
 
 	Object createVnfInstanceRequest(String vnfdId, String vnfInstanceName, String vnfInstanceDescription);
 
@@ -74,4 +78,6 @@ public interface HttpGateway {
 	Object createNotificationVnfIdentifierDeletionNotification(UUID subscriptionId, UUID vnfInstanceId);
 
 	Object createNotificationVnfLcmOperationOccurrenceNotification(UUID subscriptionId, UUID vnfLcmOpOccsId);
+
+	String getVersion();
 }

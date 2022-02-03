@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.JsonFilter;
 import com.ubiqube.etsi.mano.repository.Low;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
@@ -33,8 +34,8 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 @Service
 public class VnfPackagePhys extends AbstractGenericBinaryRepository<VnfPackage> implements VnfPackageRepository {
 
-	public VnfPackagePhys(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low low, final NamingStrategy namingStrategy) {
-		super(objectMapper, jsonFilter, low, namingStrategy);
+	public VnfPackagePhys(final ObjectMapper objectMapper, final JsonFilter jsonFilter, final Low low, final NamingStrategy namingStrategy, final GrammarParser grammarParser) {
+		super(objectMapper, jsonFilter, low, namingStrategy, grammarParser);
 	}
 
 	@Override

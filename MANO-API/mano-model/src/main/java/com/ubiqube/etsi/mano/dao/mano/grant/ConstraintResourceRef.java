@@ -26,8 +26,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.dao.mano.IdTypeEnum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -56,40 +55,5 @@ public class ConstraintResourceRef implements Serializable {
 	private String vimConnectionId = null;
 
 	private String resourceProviderId = null;
-
-	/**
-	 * The type of the identifier. Permitted values: * RES_MGMT:
-	 * Resource-management-level identifier; this identifier is managed by the VIM
-	 * in the direct mode of VNF-related resource management, and is managed by the
-	 * NFVO in the indirect mode) * GRANT: Reference to the identifier of a
-	 * \"ResourceDefinition\" structure in the \"GrantRequest\" structure.
-	 */
-	public enum IdTypeEnum {
-		RES_MGMT("RES_MGMT"),
-
-		GRANT("GRANT");
-
-		private final String value;
-
-		IdTypeEnum(final String value) {
-			this.value = value;
-		}
-
-		@Override
-		@JsonValue
-		public String toString() {
-			return String.valueOf(value);
-		}
-
-		@JsonCreator
-		public static IdTypeEnum fromValue(final String text) {
-			for (final IdTypeEnum b : IdTypeEnum.values()) {
-				if (String.valueOf(b.value).equals(text)) {
-					return b;
-				}
-			}
-			return null;
-		}
-	}
 
 }

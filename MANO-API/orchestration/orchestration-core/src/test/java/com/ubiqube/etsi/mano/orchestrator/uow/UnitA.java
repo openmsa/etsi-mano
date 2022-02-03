@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.orchestrator.uow;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.Task;
 
-public class UnitA implements UnitOfWork {
+public class UnitA implements UnitOfWork<Object> {
 
 	@Override
 	public Task getTask() {

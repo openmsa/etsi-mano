@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
@@ -63,7 +62,7 @@ public abstract class AbstractContributorV2Base<U extends VnfTask, T extends Vir
 	@Override
 	public final List<T> contribute(final Bundle bundle, final VnfBlueprint blueprint) {
 		final List<T> r = vnfContribute(bundle, blueprint);
-		final List<U> rr = r.stream().map(VirtualTask::getParameters).collect(Collectors.toList());
+		final List<U> rr = r.stream().map(VirtualTask::getParameters).toList();
 		blueprint.getTasks().addAll(rr);
 		return r;
 	}

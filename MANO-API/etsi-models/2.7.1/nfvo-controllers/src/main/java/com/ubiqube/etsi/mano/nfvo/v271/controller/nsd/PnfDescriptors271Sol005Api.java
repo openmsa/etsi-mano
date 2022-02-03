@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiResponses;
  *
  */
 @Api(value = "pnf_descriptors", description = "the pnf_descriptors API")
-@RequestMapping(value = "/sol005/nsd/v1/pnf_descriptors", headers = "Version=2.7.1")
+@RequestMapping(value = "/sol005/nsd/v2/pnf_descriptors", headers = "Version=2.0.0")
 @RolesAllowed({ "ROLE_OSSBSS" })
 public interface PnfDescriptors271Sol005Api {
 

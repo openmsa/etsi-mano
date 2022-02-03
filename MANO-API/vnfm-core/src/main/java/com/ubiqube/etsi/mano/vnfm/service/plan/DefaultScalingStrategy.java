@@ -44,8 +44,8 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 
 	private final VnfBlueprintService planService;
 
-	public DefaultScalingStrategy(final VnfBlueprintService _planService) {
-		planService = _planService;
+	public DefaultScalingStrategy(final VnfBlueprintService planService) {
+		this.planService = planService;
 	}
 
 	@Override
@@ -71,7 +71,8 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 					.collect(Collectors.toSet());
 			if (myscalings.size() > 1) {
 				throw new GenericException("VDU " + vnfCompute.getToscaName() + " have multiple scalings.");
-			} else if (!myscalings.isEmpty()) {
+			}
+			if (!myscalings.isEmpty()) {
 				myscaling = myscalings.iterator().next();
 			}
 		}
@@ -95,7 +96,7 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 	private static boolean match(final VnfCompute vnfCompute, final ScaleInfo scaleInfo) {
 		return !vnfCompute.getScalingAspectDeltas().stream()
 				.filter(x -> x.getAspectName().equals(scaleInfo.getAspectId()))
-				.collect(Collectors.toList()).isEmpty();
+				.toList().isEmpty();
 	}
 
 	public static int getNumberOfInstance(final Set<VnfInstantiationLevels> vnfInstantiationLevels, final VnfCompute vnfCompute, final String instantiationLevel, final ScaleInfo myscaling) {
@@ -113,7 +114,7 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfCompute.getScalingAspectDeltas()) {
 			final List<VnfInstantiationLevels> instLev = vnfInstantiationLevels.stream()
 					.filter(y -> vnfComputeAspectDelta.getAspectName().equals(y.getScaleInfoName()))
-					.collect(Collectors.toList());
+					.toList();
 			if (instLev.isEmpty()) {
 				continue;
 			}
@@ -143,6 +144,6 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 		}
 		return !vnfCompute.getScalingAspectDeltas().stream()
 				.filter(x -> x.getAspectName().equals(vil.getScaleInfoName()))
-				.collect(Collectors.toList()).isEmpty();
+				.toList().isEmpty();
 	}
 }

@@ -22,74 +22,120 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.ubiqube.parser.tosca.api.ContextResolver;
 import com.ubiqube.parser.tosca.api.ToscaApi;
 
-public class ToscaParserTest {
+class ToscaParserTest {
 
-	/// TODO remote URL use some tosca 1.0 @Test
-	void testName() throws Exception {
+	/// Remote URL use some tosca 1.0 @Test
+	@SuppressWarnings("static-method")
+	void testName() {
 		final ToscaParser tp = new ToscaParser(new File("src/test/resources/web_mysql_tosca.yaml"));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
-		final ToscaApi api = new ToscaApi();
-		api.getObjects(root, new HashMap<>(), String.class);
+		ToscaApi.getObjects(root, new HashMap<>(), String.class);
 		final ContextResolver ctx = new ContextResolver(root, new HashMap<String, String>());
 		final List<PolicyDefinition> policies = new ArrayList<>();
 		policies.add(new PolicyDefinition());
-		ctx.resolvValue("", String.class);
+		ctx.resolvValue("");
 		ctx.mapPoliciesToClass(policies, Bean.class);
 	}
 
+	@SuppressWarnings("static-method")
 	@Test
-	void testName2() throws Exception {
-		final ToscaParser tp = new ToscaParser(new File("src/test/resources/tosca-vnffgd-sample.yaml"));
+	void testToscaResolver() {
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/ubi-tosca/Definitions/tosca_ubi.yaml"));
+		final ToscaContext root = tp.getContext();
+		assertNotNull(root);
+		final ContextResolver ctx = new ContextResolver(root, new HashMap<String, String>());
+		final List<GroupDefinition> groups = getGroups();
+		ctx.mapGroupsToClass(groups, Bean.class);
+		final List<PolicyDefinition> policies = getPolicies();
+		ctx.mapPoliciesToClass(policies, Bean.class);
+		final List<NodeTemplate> nodes = gestNodes();
+		ctx.mapToscaToClass(nodes, Bean.class);
+	}
+
+	private static List<NodeTemplate> gestNodes() {
+		final List<NodeTemplate> nodes = new ArrayList<>();
+		final NodeTemplate nt = new NodeTemplate();
+		final Map<String, Artifact> artifacts = new HashMap<>();
+		nt.setArtifacts(artifacts);
+		final Map<String, ValueObject> attributes = new HashMap<>();
+		nt.setAttributes(attributes);
+		final Object capabilities = new HashMap<>();
+		nt.setCapabilities(capabilities);
+		nt.setDescription("descr");
+		final Map<String, InterfaceType> interfaces = new HashMap<>();
+		nt.setInterfaces(interfaces);
+		nt.setName("name");
+		final Map<String, Object> properties = new HashMap<>();
+		nt.setProperties(properties);
+		final RequirementDefinition requirements = getRequirement();
+		nt.setRequirements(requirements);
+		nt.setType("unk");
+		nodes.add(nt);
+		return nodes;
+	}
+
+	private static RequirementDefinition getRequirement() {
+		final List<Map<String, Requirement>> reqMap = new ArrayList<>();
+		return new RequirementDefinition(reqMap);
+	}
+
+	private static List<PolicyDefinition> getPolicies() {
+		final List<PolicyDefinition> policies = new ArrayList<>();
+		final PolicyDefinition pd = new PolicyDefinition();
+		pd.setDescription("descr");
+		final Map<String, String> metadata = new HashMap<>();
+		pd.setMetadata(metadata);
+		pd.setName("name");
+		final Map<String, Object> properties = new HashMap<>();
+		pd.setProperties(properties);
+		final List<String> targets = new ArrayList<>();
+		pd.setTargets(targets);
+		final Map<String, TriggerDefinition> triggers = new HashMap<>();
+		pd.setTriggers(triggers);
+		pd.setType("unk");
+		policies.add(pd);
+		return policies;
+	}
+
+	private static List<GroupDefinition> getGroups() {
+		final List<GroupDefinition> groups = new ArrayList<>();
+		final GroupDefinition gd = new GroupDefinition();
+		gd.setDescription("descr");
+		final List<String> members = new ArrayList<>();
+		gd.setMembers(members);
+		gd.setName("name");
+		final Map<String, Object> properties = new HashMap<>();
+		gd.setProperties(properties);
+		gd.setType("com.ubiqube.groups.Root");
+		groups.add(gd);
+		return groups;
+	}
+
+	@SuppressWarnings("static-method")
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"src/test/resources/tosca-vnffgd-sample.yaml",
+			"src/test/resources/tacker_nfv_defs.yaml",
+			"src/test/resources/TOSCA_mec_definition_1_0_0.yaml",
+			"src/test/resources/TOSCA_nfv_definition_1_0_0.yaml",
+			"src/test/resources/etsi_nfv_sol001_nsd_types.yaml",
+			"src/test/resources/etsi_nfv_sol001_pnfd_types.yaml",
+			"src/test/resources/etsi_nfv_sol001_vnfd_types.yaml"
+	})
+	void parametrizedTest(final String file) {
+		final ToscaParser tp = new ToscaParser(new File(file));
 		final ToscaContext root = tp.getContext();
 		assertNotNull(root);
 	}
 
-	@Test
-	void testName3() throws Exception {
-		final ToscaParser tp = new ToscaParser(new File("src/test/resources/tacker_nfv_defs.yaml"));
-		final ToscaContext root = tp.getContext();
-		assertNotNull(root);
-	}
-
-	@Test
-	void testName4() throws Exception {
-		final ToscaParser tp = new ToscaParser(new File("src/test/resources/TOSCA_mec_definition_1_0_0.yaml"));
-		final ToscaContext root = tp.getContext();
-		assertNotNull(root);
-	}
-
-	@Test
-	void testName5() throws Exception {
-		final ToscaParser tp = new ToscaParser(new File("src/test/resources/TOSCA_nfv_definition_1_0_0.yaml"));
-		final ToscaContext root = tp.getContext();
-		assertNotNull(root);
-	}
-
-	@Test
-	void testName6() throws Exception {
-		final ToscaParser tp = new ToscaParser(new File("src/test/resources/etsi_nfv_sol001_nsd_types.yaml"));
-		final ToscaContext root = tp.getContext();
-		assertNotNull(root);
-	}
-
-	@Test
-	void testName7() throws Exception {
-		final ToscaParser tp = new ToscaParser(new File("src/test/resources/etsi_nfv_sol001_pnfd_types.yaml"));
-		final ToscaContext root = tp.getContext();
-		assertNotNull(root);
-	}
-
-	@Test
-	void testName8() throws Exception {
-		final ToscaParser tp = new ToscaParser(new File("src/test/resources/etsi_nfv_sol001_vnfd_types.yaml"));
-		final ToscaContext root = tp.getContext();
-		assertNotNull(root);
-	}
 }

@@ -22,8 +22,11 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
+import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
 import com.ubiqube.etsi.mano.service.vim.Vim;
+import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow.VnfStorageUowV2;
 
 /**
@@ -36,8 +39,8 @@ public class StorageVimSystem extends AbstractVimSystem<StorageTask> {
 
 	private final Vim vim;
 
-	public StorageVimSystem(final Vim vim) {
-		super();
+	public StorageVimSystem(final Vim vim, final VimManager vimManager) {
+		super(vimManager);
 		this.vim = vim;
 	}
 
@@ -47,7 +50,7 @@ public class StorageVimSystem extends AbstractVimSystem<StorageTask> {
 	}
 
 	@Override
-	SystemBuilder getImplementation(final OrchestrationService<StorageTask> orchestrationService, final VirtualTask<StorageTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+	protected SystemBuilder<UnitOfWork<StorageTask>> getImplementation(final OrchestrationService<StorageTask> orchestrationService, final VirtualTask<StorageTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
 		return orchestrationService.systemBuilderOf(new VnfStorageUowV2(virtualTask, vim, vimConnectionInformation));
 	}
 

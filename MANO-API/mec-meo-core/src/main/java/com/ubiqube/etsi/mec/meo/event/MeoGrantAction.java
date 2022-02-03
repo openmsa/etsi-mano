@@ -51,11 +51,12 @@ public class MeoGrantAction extends AbstractGrantAction {
 
 	private final AppPkgJpa appPkgJpa;
 
-	protected MeoGrantAction(final GrantsResponseJpa _grantJpa, final VimManager _vimManager, final VimElection _vimElection, final AppInstanceJpa _appInstanceJpa, final AppPkgJpa _appPkgJpa) {
-		super(_grantJpa, _vimManager, _vimElection);
-		grantJpa = _grantJpa;
-		appInstanceJpa = _appInstanceJpa;
-		appPkgJpa = _appPkgJpa;
+	protected MeoGrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final AppInstanceJpa appInstanceJpa,
+			final AppPkgJpa appPkgJpa) {
+		super(grantJpa, vimManager, vimElection);
+		this.grantJpa = grantJpa;
+		this.appInstanceJpa = appInstanceJpa;
+		this.appPkgJpa = appPkgJpa;
 	}
 
 	@Override

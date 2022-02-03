@@ -42,7 +42,7 @@ import com.ubiqube.etsi.mano.mapper.SpelWriter;
 
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
-public class BeanWalkerTest {
+class BeanWalkerTest {
 
 	private final DefaultMapperFactory mapperFactory;
 
@@ -51,7 +51,7 @@ public class BeanWalkerTest {
 	}
 
 	@Test
-	void testName() throws Exception {
+	void testName() {
 		final PkgmSubscription subsJson = new PkgmSubscription();
 		subsJson.setCallbackUri("http://callbackUri/");
 		final PkgmNotificationsFilter filter = new PkgmNotificationsFilter();
@@ -89,7 +89,7 @@ public class BeanWalkerTest {
 	}
 
 	@Test
-	void testHashMap() throws Exception {
+	void testHashMap() {
 		final VnfPkgInfo subsJson = new VnfPkgInfo();
 		final Map<String, String> userDefinedData = new HashMap<>();
 		userDefinedData.put("test", "value");

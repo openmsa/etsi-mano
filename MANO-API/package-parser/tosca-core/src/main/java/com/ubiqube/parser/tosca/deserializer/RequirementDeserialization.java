@@ -17,8 +17,10 @@
 package com.ubiqube.parser.tosca.deserializer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -48,19 +50,19 @@ public class RequirementDeserialization extends StdDeserializer<RequirementDefin
 
 	@Override
 	public RequirementDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		final Map<String, Requirement> reqMap = new HashMap<>();
+		final List<Map<String, Requirement>> reqMap = new ArrayList<>();
 		final ArrayNode value = p.getCodec().readTree(p);
 		final Iterator<JsonNode> ite = value.iterator();
 		while (ite.hasNext()) {
 			final ObjectNode node = (ObjectNode) ite.next();
 			final Map<String, Requirement> req = handle(node, p.getCodec());
-			reqMap.putAll(req);
+			reqMap.add(req);
 		}
 
 		return new RequirementDefinition(reqMap);
 	}
 
-	private Map<String, Requirement> handle(final ObjectNode value, final ObjectCodec objectCodec) {
+	private static Map<String, Requirement> handle(final ObjectNode value, final ObjectCodec objectCodec) {
 		final Map<String, Requirement> reqMap = new HashMap<>();
 		final Iterator<Entry<String, JsonNode>> fields = value.fields();
 		while (fields.hasNext()) {

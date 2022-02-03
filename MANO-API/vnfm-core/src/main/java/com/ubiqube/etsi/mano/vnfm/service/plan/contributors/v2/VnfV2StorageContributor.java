@@ -36,6 +36,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.orchestrator.Bundle;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
@@ -63,7 +64,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 		if (plan.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminatePlan(plan.getVnfInstance());
 		}
-		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).getVnfPackage();
+		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final List<StorageVt> ret = new ArrayList<>();
 		plan.getTasks().stream()
 				.filter(ComputeTask.class::isInstance)
@@ -121,7 +122,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 		final List<VnfLiveInstance> vs = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(vnfInstance, StorageTask.class.getSimpleName());
 		int i = 0;
 		for (final VnfLiveInstance vnfLiveInstance : vs) {
-			if (vnfLiveInstance.getTask()instanceof final StorageTask t && t.getParentAlias().equals(computeAlias)) {
+			if (vnfLiveInstance.getTask() instanceof final StorageTask t && t.getParentAlias().equals(computeAlias)) {
 				i++;
 			}
 		}
@@ -143,7 +144,7 @@ public class VnfV2StorageContributor extends AbstractContributorV2Base<StorageTa
 		return vnfStorage.stream()
 				.filter(x -> x.getToscaName().equals(toscaName))
 				.findAny()
-				.orElseThrow();
+				.orElseThrow(() -> new GenericException("Could not find storage [" + toscaName + "] in: " + vnfStorage));
 	}
 
 	@Override

@@ -89,7 +89,7 @@ public class OsDns implements Dns {
 	@Override
 	public void deleteDnsRecordSet(final String resourceId, final String zoneId, final Set<String> ips) {
 		final Recordset rr = os.dns().recordsets().get(zoneId, resourceId);
-		final List<String> recs = rr.getRecords().stream().filter(x -> !ips.contains(x)).collect(Collectors.toList());
+		final List<String> recs = rr.getRecords().stream().filter(x -> !ips.contains(x)).toList();
 		if (recs.isEmpty()) {
 			os.dns().recordsets().delete(zoneId, resourceId);
 		} else {

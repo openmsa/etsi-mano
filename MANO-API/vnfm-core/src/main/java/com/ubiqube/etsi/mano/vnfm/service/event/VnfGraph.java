@@ -25,11 +25,16 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.vnfm.service.graph.vnfm.VnfParameters;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class VnfGraph {
 	private final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> graph;
 
-	public VnfGraph(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> _graph) {
-		graph = _graph;
+	public VnfGraph(final ListenableGraph<UnitOfWork<VnfTask, VnfParameters>, ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>>> graph) {
+		this.graph = graph;
 	}
 
 	public ConnectivityEdge<UnitOfWork<VnfTask, VnfParameters>> addEdge(final UnitOfWork<VnfTask, VnfParameters> sourceVertex, final UnitOfWork<VnfTask, VnfParameters> targetVertex) {
