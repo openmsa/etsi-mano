@@ -28,7 +28,7 @@
  * containing Woodstox, in file "ASL2.0", under the same directory
  * as this file.
  */
-package com.ubiqube.etsi.mano.vnfm.fc.vnflcm;
+package com.ubiqube.etsi.mano.vnfm.controller.vnflcm;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -37,6 +37,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+
+import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfSnapshotsFrontController;
 
 /**
  *
