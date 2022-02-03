@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.common.NicType;
 
 public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	private static final Logger LOG = LoggerFactory.getLogger(OsNetwork.class);
@@ -138,12 +139,13 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	}
 
 	@Override
-	public String createPort(final String name, final String networkId, final String deviceId, final String macAddress) {
+	public String createPort(final String name, final String networkId, final String deviceId, final String macAddress, final NicType nicType) {
 		final Port port = Builders.port()
 				.networkId(networkId)
 				.macAddress(macAddress)
 				.name(name)
 				.deviceId(deviceId)
+				.vNicType(nicType.toString())
 				.build();
 		final Port p = os.networking().port().create(port);
 		return p.getId();

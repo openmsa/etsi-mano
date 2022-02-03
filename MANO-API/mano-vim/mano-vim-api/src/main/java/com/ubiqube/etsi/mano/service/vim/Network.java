@@ -24,6 +24,7 @@ import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.common.NicType;
 
 /**
  *
@@ -46,7 +47,7 @@ public interface Network {
 	@Nonnull
 	Map<String, String> getPublicNetworks();
 
-	String createPort(final String name, final String networkId, final String deviceId, String macAddress);
+	String createPort(final String name, final String networkId, final String deviceId, String macAddress, NicType nicType);
 
 	void deletePort(final String uuid);
 
