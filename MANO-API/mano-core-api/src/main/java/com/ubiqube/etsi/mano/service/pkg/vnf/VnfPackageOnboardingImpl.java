@@ -173,9 +173,22 @@ public class VnfPackageOnboardingImpl {
 		rebuildVduScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas, scalingAspects);
 		final Set<SecurityGroupAdapter> sgAdapters = vnfPackageReader.getSecurityGroups(userData);
 		handleSecurityGroups(sgAdapters, vnfPackage, vnfExtCp);
-
+		fixExternalPoint(vnfPackage, vnfExtCp);
 		final Set<AffinityRuleAdapater> ar = vnfPackageReader.getAffinityRules(vnfPackage.getUserDefinedData());
 		handleAffinity(ar, vnfPackage);
+	}
+
+	private static void fixExternalPoint(final VnfPackage vnfPackage, final Set<VnfExtCp> vnfExtCp) {
+		vnfExtCp.forEach(x -> {
+			if (isComputeNode(vnfPackage, x.getInternalVirtualLink())) {
+				x.setComputeNode(true);
+			}
+		});
+	}
+
+	private static boolean isComputeNode(final VnfPackage vnfPackage, final String internalVirtualLink) {
+		final Optional<VnfCompute> res = vnfPackage.getVnfCompute().stream().filter(x -> x.getToscaName().equals(internalVirtualLink)).findFirst();
+		return res.isPresent();
 	}
 
 	private void handleAffinity(final Set<AffinityRuleAdapater> ar, final VnfPackage vnfPackage) {
