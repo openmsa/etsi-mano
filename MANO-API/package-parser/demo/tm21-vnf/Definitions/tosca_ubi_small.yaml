@@ -43,7 +43,10 @@ topology_template:
           min_number_of_instances: 1
           max_number_of_instances: 10
       requirements:
-        - virtual_link: public
+        - virtual_link: cp_public
+        - virtual_link_1: cp_mngt
+        - virtual_link_2: cp_internal
+        - virtual_link_3: cp_internal2
 
 
 
@@ -115,7 +118,54 @@ topology_template:
                 read: openstack
               rdma_enabled: false
 
-    cpLc01:
+    dummy:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type: # tosca.datatypes.nfv.ConnectivityType
+          layer_protocols:
+            - ipv4
+          flow_pattern: line
+        description: Description of VL 01
+        test_access:
+          - passive_monitoring
+        monitoring_parameters:
+          Usage:
+            collection_period: 60 s
+            performance_metric: v_cpu_usage_mean_vnf
+        vl_profile: # tosca.datatypes.nfv.VlProfile
+          max_bitrate_requirements:
+            root: 10
+            leaf: 15
+          min_bitrate_requirements:
+            root: 11
+            leaf: 16
+          virtual_link_protocol_data: # list tosca.datatypes.nfv.VirtualLinkProtocolData
+            - associated_layer_protocol: ipv4
+              l2_protocol_data: # tosca.datatypes.nfv.L2ProtocolData
+                name: vl01L2
+                vlan_transparent: true
+                #network_type: VXLAN
+                mtu: 1442
+                segmentation_id: "0"
+              l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
+                dhcp_enabled: true
+                cidr: 192.168.0.0/24
+                gateway_ip: 192.168.0.12
+                ip_version: ipv4
+                name: vl01L3
+                ipv6_address_mode: dhcpv6-stateful
+                ip_allocation_pools: # list tosca.datatypes.nfv.IpAllocationPool
+                  - start_ip_address: 192.168.0.100
+                    end_ip_address: 192.168.0.254
+          qos: # tosca.datatypes.nfv.Qos
+            latency: 5 ms
+            packet_delay_variation: 1 s
+            packet_loss_ratio: 0.01
+      capabilities:
+        # virtual_linkable: test
+
+
+    cp_dummy:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
@@ -127,60 +177,73 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link: internal
+        - virtual_link: dummy
         - virtual_binding: vsrx
 
-    cpLc02:
+    cp_internal:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
         virtual_network_interface_requirements:
-          - name: vl02
+          - name: vl01
             description: descr
             support_mandatory: false
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link: internal2
         - virtual_binding: vsrx
 
-    cpLc03:
+    cp_internal2:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
         virtual_network_interface_requirements:
-          - name: vl02
+          - name: vl01
             description: descr
             support_mandatory: false
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link: public
         - virtual_binding: vsrx
 
-    cpLc04:
+    cp_mngt:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
         virtual_network_interface_requirements:
-          - name: vl02
+          - name: vl01
             description: descr
             support_mandatory: false
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link: mngt
+        - virtual_binding: vsrx
+
+    cp_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        bitrate_requirement: 5
+        virtual_network_interface_requirements:
+          - name: vl01
+            description: descr
+            support_mandatory: false
+            network_interface_requirements: # map
+            nic_io_requirements:
+              logical_node_requirements: #map
+        order: 5
+        vnic_type: normal
+      requirements:
         - virtual_binding: vsrx
 
     block01:

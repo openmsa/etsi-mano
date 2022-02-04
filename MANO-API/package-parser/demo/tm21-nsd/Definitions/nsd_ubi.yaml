@@ -35,10 +35,10 @@ topology_template:
         flavour_id: flavor01
         descriptor_id: d0bd6d65-0302-4922-8c4d-73282cfcfc08
       requirements:
-        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
-            node: internal
-        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
-            node: internal2
+        - virtual_link: public
+        - virtual_link_1: mngt
+        - virtual_link_2: internal
+        - virtual_link_3: internal2
 
     vsrx:
       type:  tosca.nodes.nfv.VNF
@@ -46,10 +46,10 @@ topology_template:
         flavour_id: flavor01
         descriptor_id: fadf3699-e4c2-4259-9ef2-e0a137f33624
       requirements:
-        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
-            node: internal
-        - virtual_link: # tosca.nodes.nfv.NsVirtualLink
-            node: internal2
+        - virtual_link: public
+        - virtual_link_1: mngt
+        - virtual_link_2: internal
+        - virtual_link_3: internal2
 
 
     internal:

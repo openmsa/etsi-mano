@@ -14,25 +14,18 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
+package com.ubiqube.etsi.mano.dao.mano.common;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.io.Serializable;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
-import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -40,48 +33,21 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Entity
 @Getter
 @Setter
-@Entity
-public class NsVnfTask extends NsTask {
-
+@NoArgsConstructor
+public class ListKeyPair implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+	private int idx;
+	private String value;
 
-	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-	private NsdPackageVnfPackage nsPackageVnfPackage;
-
-	private String description;
-
-	private String vnfdId;
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<ExternalPortRecord> externalNetworks = new LinkedHashSet<>();
-
-	/**
-	 * VNFM to use if any.
-	 */
-	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-	private Servers server;
-
-	private String flavourId;
-
-	private String instantiationLevelId;
-
-	private String localizationLanguage;
-
-	@Override
-	public UUID getId() {
-		return id;
+	public ListKeyPair(final String value, int idx) {
+		this.value = value;
+		this.idx = idx;
 	}
-
-	@Override
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
 }

@@ -20,10 +20,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 
 import lombok.Getter;
@@ -47,8 +48,8 @@ public class NsVnfInstantiateTask extends NsTask {
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private Servers server;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> externalNetworks = new LinkedHashSet<>();
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ExternalPortRecord> externalNetworks = new LinkedHashSet<>();
 
 	private String flavourId;
 
@@ -56,4 +57,5 @@ public class NsVnfInstantiateTask extends NsTask {
 
 	private String localizationLanguage;
 
+	private Set<ListKeyPair> virtualLinks;
 }

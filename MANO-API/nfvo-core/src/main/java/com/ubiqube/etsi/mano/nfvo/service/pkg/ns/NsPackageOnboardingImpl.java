@@ -39,6 +39,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingStepMapping;
@@ -149,7 +150,7 @@ public class NsPackageOnboardingImpl {
 					nsdPackageVnfPackage.setNsdPackage(nsPackage);
 					nsdPackageVnfPackage.setToscaName(x.getName());
 					nsdPackageVnfPackage.setVnfPackage(vnfPackage);
-					nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink());
+					mapVirtualLinks(nsdPackageVnfPackage, x);
 					vnfPackage.addNsdPackage(nsdPackageVnfPackage);
 					vnfPackageService.save(vnfPackage);
 					return nsdPackageVnfPackage;
@@ -175,6 +176,20 @@ public class NsPackageOnboardingImpl {
 		final NsScaling nsScaling = packageProvider.getNsScaling(userData);
 		remapScaling(nsPackage, nsScaling);
 		verifyCircularDependencies(nsPackage, new ArrayDeque<>());
+	}
+
+	private static void mapVirtualLinks(final NsdPackageVnfPackage nsdPackageVnfPackage, final NsVnf x) {
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink1());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink2());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink3());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink4());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink5());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink6());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink7());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink8());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink9());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink10());
 	}
 
 	private void verifyCircularDependencies(final NsdPackage nsPackage, final Deque<UUID> stack) {

@@ -35,10 +35,12 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.dao.mano.config.ServerType;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.ExternalPortRecord;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -76,8 +78,11 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 		this.nsScaleStrategy = nsScaleStrategy;
 	}
 
-	private static Set<String> getNetworks(final VnfPackage x) {
-		return x.getVnfCompute().stream().flatMap(y -> y.getNetworks().stream()).collect(Collectors.toSet());
+	private static Set<ExternalPortRecord> getNetworks(final VnfPackage vnfPackage) {
+		return vnfPackage.getVnfCompute().stream()
+				.flatMap(y -> y.getNetworks().stream())
+				.map(y -> new ExternalPortRecord(y, null))
+				.collect(Collectors.toSet());
 	}
 
 	private List<NsVtBase<NsVnfTask>> doTerminatePlan(final NsdInstance instance) {
@@ -87,7 +92,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 		for (final NsLiveInstance nsLiveInstance : insts) {
 			final NsVnfTask task = (NsVnfTask) nsLiveInstance.getNsTask();
 			final NsVnfTask nt = createDeleteTask(NsVnfTask::new, nsLiveInstance);
-			final Set<String> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
+			final Set<ExternalPortRecord> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
 			nt.setExternalNetworks(nets);
 			nt.setVimResourceId(task.getVimResourceId());
 			nt.setServer(task.getServer());
@@ -137,7 +142,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 		for (int i = 0; i < cnt; i++) {
 			final NsVnfTask task = (NsVnfTask) insts.get(i).getNsTask();
 			final NsVnfTask nt = createDeleteTask(NsVnfTask::new, insts.get(i));
-			final Set<String> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
+			final Set<ExternalPortRecord> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
 			nt.setExternalNetworks(nets);
 			nt.setVimResourceId(task.getVimResourceId());
 			nt.setToscaName(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
@@ -153,7 +158,8 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			LOG.debug("VNF inst Creating: {}", newName);
 			final NsVnfTask vnf = createTask(NsVnfTask::new);
 			vnf.setChangeType(ChangeType.ADDED);
-			final Set<String> nets = getNetworks(vnfPkg);
+			final Set<ExternalPortRecord> nets = getNetworks(vnfPkg);
+			nets.addAll(getVl(nsPackageVnfPackage));
 			vnf.setExternalNetworks(nets);
 			vnf.setNsPackageVnfPackage(nsPackageVnfPackage);
 			final Servers server = selectServer(vnfPkg);
@@ -164,9 +170,21 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			vnf.setVnfdId(nsPackageVnfPackage.getVnfPackage().getVnfdId());
 			vnf.setType(ResourceTypeEnum.VNF);
 			ret.add(new NsVnfCreateVt(vnf));
-			// final NsVnfInstantiateTask nt = createInstantiateTask(vnf);
-			// ret.add(new NsInstantiateVt(nt));
 		}
+	}
+
+	private static Set<ExternalPortRecord> getVl(final NsdPackageVnfPackage nsPackageVnfPackage) {
+		return nsPackageVnfPackage.getVirtualLinks().stream()
+				.filter(x -> x.getValue() != null)
+				.map(x -> new ExternalPortRecord(x.getValue(), getVlName(x)))
+				.collect(Collectors.toSet());
+	}
+
+	private static String getVlName(final ListKeyPair x) {
+		if (x.getIdx() == 0) {
+			return "virtual_link";
+		}
+		return "virtual_link_" + x.getIdx();
 	}
 
 	private static String getToscaName(final String nsPackageVnfPackage, final int instanceNumber) {

@@ -29,6 +29,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.ExternalPortRecord;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfInstantiateTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.ExternalManagedVirtualLink;
@@ -91,17 +92,12 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfInstantiateTask
 	public String execute(final Context context) {
 		final String inst = context.get(VnfCreateNode.class, task.getAlias());
 		final List<ExternalManagedVirtualLink> net = task.getExternalNetworks().stream().map(x -> {
-			final String resource = context.get(Network.class, x);
+			final String resource = context.get(Network.class, x.getToscaName());
 			if (null == resource) {
 				LOG.warn("Could not find network resource {} => {}, not released.", x, context);
 				return null;
 			}
-			final ExternalManagedVirtualLink ext = new ExternalManagedVirtualLink();
-			ext.setResourceId(resource);
-			ext.setExtManagedVirtualLinkId(x);
-			ext.setResourceProviderId("ETSI-MANO-VNFM");
-			ext.setVimId(task.getServer().getId().toString());
-			return ext;
+			return createExmvl(x, resource);
 		})
 				.filter(Objects::nonNull)
 				.toList();
@@ -114,6 +110,15 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfInstantiateTask
 			throw new GenericException("VNF LCM Failed: " + details + " With state:  " + result.getOperationStatus());
 		}
 		return null;
+	}
+
+	private ExternalManagedVirtualLink createExmvl(final ExternalPortRecord linkId, final String vimResource) {
+		final ExternalManagedVirtualLink ext = new ExternalManagedVirtualLink();
+		ext.setResourceId(vimResource);
+		ext.setExtManagedVirtualLinkId(linkId.getVirtualLinkPort());
+		ext.setResourceProviderId("ETSI-MANO-VNFM");
+		ext.setVimId(task.getServer().getId().toString());
+		return ext;
 	}
 
 	private VnfInstantiate createRequest() {
@@ -148,5 +153,4 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfInstantiateTask
 		}
 		return result.getId().toString();
 	}
-
 }

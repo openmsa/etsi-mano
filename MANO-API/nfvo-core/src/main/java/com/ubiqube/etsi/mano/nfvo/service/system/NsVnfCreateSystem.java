@@ -67,6 +67,9 @@ public class NsVnfCreateSystem extends AbstractVimSystem<NsVnfTask> {
 		}
 		nt.setToscaName("inst-" + p.getAlias());
 		nt.setType(p.getType());
+		if (p.getChangeType() != ChangeType.REMOVED) {
+			nt.setVirtualLinks(p.getNsPackageVnfPackage().getVirtualLinks());
+		}
 		final SystemBuilder s = orchestrationService.createEmptySystemBuilder();
 		s.add(new VnfCreateUow(virtualTask, vnfm), new VnfInstantiateUow(new NsInstantiateVt(nt), vnfm));
 		return s;

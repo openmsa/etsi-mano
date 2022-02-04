@@ -170,8 +170,27 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		final List<VNF> sgr = getObjects(VNF.class, userData);
 		return sgr.stream()
 				.filter(x -> x.getDescriptorId() != null)
-				.map(x -> new NsVnf(x.getDescriptorId(), x.getInternalName(), x.getFlavourId(), x.getVirtualLinkReq()))
+				.map(ToscaNsPackageProvider::map)
 				.collect(Collectors.toSet());
+	}
+
+	private static NsVnf map(final VNF x) {
+		final NsVnf o = new NsVnf();
+		o.setVnfdId(x.getDescriptorId());
+		o.setName(x.getInternalName());
+		o.setFlavourId(x.getFlavourId());
+		o.setVirtualLink(x.getVirtualLinkReq());
+		o.setVirtualLink1(x.getVirtualLink1Req());
+		o.setVirtualLink2(x.getVirtualLink2Req());
+		o.setVirtualLink3(x.getVirtualLink3Req());
+		o.setVirtualLink4(x.getVirtualLink4Req());
+		o.setVirtualLink5(x.getVirtualLink5Req());
+		o.setVirtualLink6(x.getVirtualLink6Req());
+		o.setVirtualLink7(x.getVirtualLink7Req());
+		o.setVirtualLink8(x.getVirtualLink8Req());
+		o.setVirtualLink9(x.getVirtualLink9Req());
+		o.setVirtualLink10(x.getVirtualLink10Req());
+		return o;
 	}
 
 	/**

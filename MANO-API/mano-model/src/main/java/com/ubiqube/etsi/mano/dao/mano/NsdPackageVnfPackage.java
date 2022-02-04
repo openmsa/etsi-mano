@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -31,7 +30,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
 
@@ -68,21 +69,15 @@ public class NsdPackageVnfPackage implements Levelable<VnfScalingStepMapping, Vn
 
 	private String toscaId;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> virtualLinks;
-
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfScalingStepMapping> stepMapping;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfScalingLevelMapping> levelMapping;
 
-	public void addVirtualLink(final String vl) {
-		if (null == virtualLinks) {
-			this.virtualLinks = new HashSet<>();
-		}
-		virtualLinks.add(vl);
-	}
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OrderColumn
+	private Set<ListKeyPair> virtualLinks;
 
 	public void addStepMapping(final VnfScalingStepMapping scaling) {
 		if (null == stepMapping) {
@@ -96,5 +91,12 @@ public class NsdPackageVnfPackage implements Levelable<VnfScalingStepMapping, Vn
 			levelMapping = new HashSet<>();
 		}
 		levelMapping.add(mapping);
+	}
+
+	public void addVirtualLink(final String name) {
+		if (null == virtualLinks) {
+			virtualLinks = new HashSet<>();
+		}
+		virtualLinks.add(new ListKeyPair(name, virtualLinks.size()));
 	}
 }

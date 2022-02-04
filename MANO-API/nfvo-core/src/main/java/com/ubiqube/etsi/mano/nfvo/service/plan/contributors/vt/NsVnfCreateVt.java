@@ -43,7 +43,7 @@ public class NsVnfCreateVt extends NsVtBase<NsVnfTask> {
 				.map(NsVnfTask::getExternalNetworks)
 				.orElseGet(LinkedHashSet::new)
 				.stream()
-				.map(x -> new NamedDependency(Network.class, x))
+				.map(x -> new NamedDependency(Network.class, x.getToscaName()))
 				.toList();
 	}
 

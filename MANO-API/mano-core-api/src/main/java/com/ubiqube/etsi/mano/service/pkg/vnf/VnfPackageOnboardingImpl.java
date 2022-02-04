@@ -152,6 +152,7 @@ public class VnfPackageOnboardingImpl {
 			throw new GenericException("Package " + x.getDescriptorId() + " already onboarded in " + x.getId() + ".");
 		});
 		mapper.map(pd, vnfPackage);
+		additionalMapping(pd, vnfPackage);
 		final Map<String, String> userData = vnfPackage.getUserDefinedData();
 		final Set<VnfCompute> cNodes = vnfPackageReader.getVnfComputeNodes(vnfPackage.getUserDefinedData());
 		vnfPackage.setVnfCompute(cNodes);
@@ -176,6 +177,20 @@ public class VnfPackageOnboardingImpl {
 		fixExternalPoint(vnfPackage, vnfExtCp);
 		final Set<AffinityRuleAdapater> ar = vnfPackageReader.getAffinityRules(vnfPackage.getUserDefinedData());
 		handleAffinity(ar, vnfPackage);
+	}
+
+	private static void additionalMapping(final ProviderData pd, final VnfPackage vnfPackage) {
+		vnfPackage.setVirtualLink(pd.getVirtualLinkReq());
+		vnfPackage.setVirtualLink1(pd.getVirtualLink1Req());
+		vnfPackage.setVirtualLink2(pd.getVirtualLink2Req());
+		vnfPackage.setVirtualLink3(pd.getVirtualLink3Req());
+		vnfPackage.setVirtualLink4(pd.getVirtualLink4Req());
+		vnfPackage.setVirtualLink5(pd.getVirtualLink5Req());
+		vnfPackage.setVirtualLink6(pd.getVirtualLink6Req());
+		vnfPackage.setVirtualLink7(pd.getVirtualLink7Req());
+		vnfPackage.setVirtualLink8(pd.getVirtualLink8Req());
+		vnfPackage.setVirtualLink9(pd.getVirtualLink9Req());
+		vnfPackage.setVirtualLink10(pd.getVirtualLink10Req());
 	}
 
 	private static void fixExternalPoint(final VnfPackage vnfPackage, final Set<VnfExtCp> vnfExtCp) {
@@ -291,7 +306,7 @@ public class VnfPackageOnboardingImpl {
 		cNodes.forEach(x -> {
 			final Set<VnfLinkPort> nodes = filter(vcNodes, x.getToscaName());
 			if (nodes.isEmpty()) {
-				throw new GenericException("Node " + x.getToscaName() + " must have a network.");
+				LOG.warn("Node {} have no network.", x.getToscaName());
 			}
 			x.setNetworks(nodes.stream().map(VnfLinkPort::getVirtualLink).collect(Collectors.toSet()));
 			x.setPorts(nodes);
