@@ -21,6 +21,9 @@ import javax.transaction.Transactional.TxType;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfPortTask;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.AbstractGrantService;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
@@ -38,5 +41,20 @@ public class ManoGrantService extends AbstractGrantService {
 
 	public ManoGrantService(final MapperFacade mapper, final VnfResourceAllocate nfvo, final VimManager vimManager) {
 		super(mapper, nfvo, vimManager);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void check(final Blueprint plan) {
+		plan.getTasks().stream()
+				.filter(x -> x.getClass().isAssignableFrom(VnfPortTask.class))
+				.map(VnfPortTask.class::cast)
+				.forEach(x -> {
+					final VnfPortTask t = (VnfPortTask) x;
+					if ((t.getVnfLinkPort().getVirtualLink() == null) && (t.getExternal() == null)) {
+						throw new GenericException("Unable to find VL for port: " + t.getToscaName());
+					}
+				});
+
 	}
 }
