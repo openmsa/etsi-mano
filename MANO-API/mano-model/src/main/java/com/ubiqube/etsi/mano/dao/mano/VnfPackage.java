@@ -37,6 +37,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.Fetch;
@@ -49,6 +50,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.dao.mano.pkg.PackageSecurityOptionType;
 import com.ubiqube.etsi.mano.dao.mano.pkg.VnfProfile;
 import com.ubiqube.etsi.mano.utils.ToStringIgnore;
@@ -111,17 +113,9 @@ public class VnfPackage implements PackageBase, Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> localizationLanguages;
 
-	private String virtualLink;
-	private String virtualLink1;
-	private String virtualLink2;
-	private String virtualLink3;
-	private String virtualLink4;
-	private String virtualLink5;
-	private String virtualLink6;
-	private String virtualLink7;
-	private String virtualLink8;
-	private String virtualLink9;
-	private String virtualLink10;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OrderColumn
+	private Set<ListKeyPair> virtualLinks;
 
 	@Embedded
 	@IndexedEmbedded
@@ -245,6 +239,13 @@ public class VnfPackage implements PackageBase, Auditable {
 			nsdPackages = new HashSet<>();
 		}
 		nsdPackages.add(nsdPackage);
+	}
+
+	public void addVirtualLink(final String name) {
+		if (null == virtualLinks) {
+			virtualLinks = new HashSet<>();
+		}
+		virtualLinks.add(new ListKeyPair(name, virtualLinks.size()));
 	}
 
 	@Override

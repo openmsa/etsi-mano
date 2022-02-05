@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
@@ -121,7 +123,7 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 		return ret;
 	}
 
-	private ExternalCpTask addTask(final com.ubiqube.etsi.mano.dao.mano.VnfExtCp vnfExtCp, final String toscaName) {
+	private static ExternalCpTask addTask(final com.ubiqube.etsi.mano.dao.mano.VnfExtCp vnfExtCp, final String toscaName) {
 		final ExternalCpTask task = createTask(ExternalCpTask::new);
 		task.setToscaName(vnfExtCp.getToscaName());
 		task.setAlias(toscaName + "-" + vnfExtCp.getToscaName());
@@ -131,41 +133,19 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 		return task;
 	}
 
-	private Optional<String> findVl(final VnfPackage vnfPackage, final String externalVirtualLink) {
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink())) {
-			return Optional.of("virtual_link");
+	private static Optional<String> findVl(final VnfPackage vnfPackage, final String externalVirtualLink) {
+		return vnfPackage.getVirtualLinks().stream()
+				.filter(Objects::nonNull)
+				.filter(x -> x.getValue().equals(externalVirtualLink))
+				.map(VnfExtCpContributor::getVl)
+				.findFirst();
+	}
+
+	private static String getVl(final ListKeyPair kp) {
+		if (kp.getIdx() == 0) {
+			return "virtual_link";
 		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink1())) {
-			return Optional.of("virtual_link_1");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink2())) {
-			return Optional.of("virtual_link_2");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink3())) {
-			return Optional.of("virtual_link_3");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink4())) {
-			return Optional.of("virtual_link_4");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink5())) {
-			return Optional.of("virtual_link_5");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink6())) {
-			return Optional.of("virtual_link_6");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink7())) {
-			return Optional.of("virtual_link_7");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink8())) {
-			return Optional.of("virtual_link_8");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink9())) {
-			return Optional.of("virtual_link_9");
-		}
-		if (externalVirtualLink.equals(vnfPackage.getVirtualLink10())) {
-			return Optional.of("virtual_link_10");
-		}
-		return Optional.empty();
+		return "virtual_link_" + kp.getIdx();
 	}
 
 	private static boolean have(final List<VnfLiveInstance> instances, final String toscaName) {
@@ -181,7 +161,7 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 
 	private static Object deleteVli(final VnfLiveInstance x) {
 		final ExternalCpTask extCp = (ExternalCpTask) x.getTask();
-		if ((extCp.getPort() != null) && extCp.getPort()) {
+		if (extCp.getPort() != null && extCp.getPort()) {
 			final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
 			task.setType(ResourceTypeEnum.LINKPORT);
 			task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());

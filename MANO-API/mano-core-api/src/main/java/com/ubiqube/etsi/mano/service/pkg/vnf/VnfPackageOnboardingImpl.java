@@ -180,17 +180,17 @@ public class VnfPackageOnboardingImpl {
 	}
 
 	private static void additionalMapping(final ProviderData pd, final VnfPackage vnfPackage) {
-		vnfPackage.setVirtualLink(pd.getVirtualLinkReq());
-		vnfPackage.setVirtualLink1(pd.getVirtualLink1Req());
-		vnfPackage.setVirtualLink2(pd.getVirtualLink2Req());
-		vnfPackage.setVirtualLink3(pd.getVirtualLink3Req());
-		vnfPackage.setVirtualLink4(pd.getVirtualLink4Req());
-		vnfPackage.setVirtualLink5(pd.getVirtualLink5Req());
-		vnfPackage.setVirtualLink6(pd.getVirtualLink6Req());
-		vnfPackage.setVirtualLink7(pd.getVirtualLink7Req());
-		vnfPackage.setVirtualLink8(pd.getVirtualLink8Req());
-		vnfPackage.setVirtualLink9(pd.getVirtualLink9Req());
-		vnfPackage.setVirtualLink10(pd.getVirtualLink10Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLinkReq());
+		vnfPackage.addVirtualLink(pd.getVirtualLink1Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink2Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink3Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink4Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink5Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink6Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink7Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink8Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink9Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink10Req());
 	}
 
 	private static void fixExternalPoint(final VnfPackage vnfPackage, final Set<VnfExtCp> vnfExtCp) {
