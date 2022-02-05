@@ -16,12 +16,14 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.nslcm.scale;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface NsScaleLevel {
+public interface NsScaleLevel extends Serializable {
 
 	String getAspectId();
 

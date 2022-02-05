@@ -90,13 +90,16 @@ public abstract class AbstractPackageReader {
 	@Nonnull
 	protected <T, U> List<U> getListOf(final Class<T> toscaClass, final Class<U> to, final Map<String, String> parameters) {
 		final List<T> obj = ToscaApi.getObjects(root, parameters, toscaClass);
+		LOG.debug("Found {} {} node in TOSCA model", obj.size(), toscaClass.getSimpleName());
 		return mapper.mapAsList(obj, to);
 	}
 
 	@SuppressWarnings("null")
 	@Nonnull
 	protected <U> List<U> getObjects(final Class<U> toscaClass, final Map<String, String> parameters) {
-		return ToscaApi.getObjects(root, parameters, toscaClass);
+		final List<U> obj = ToscaApi.getObjects(root, parameters, toscaClass);
+		LOG.debug("Found {} {} node in TOSCA model", obj.size(), toscaClass.getSimpleName());
+		return obj;
 	}
 
 	@Nonnull
