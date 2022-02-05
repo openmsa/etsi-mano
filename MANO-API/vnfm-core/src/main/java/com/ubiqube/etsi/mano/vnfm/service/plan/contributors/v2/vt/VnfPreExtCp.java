@@ -16,53 +16,41 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt;
 
-import java.util.Arrays;
-
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-
 import java.util.List;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfPortTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author ncuser
  *
  */
-public class VnfPortVt extends VnfVtBase<VnfPortTask> {
+public class VnfPreExtCp extends VnfVtBase<ExternalCpTask> {
 
-	public VnfPortVt(final VnfPortTask nt) {
+	public VnfPreExtCp(final ExternalCpTask nt) {
 		super(nt);
 	}
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		if (getParameters().getExternal() != null) {
-			return List.of();
-		}
-		return Arrays.asList(new NamedDependency(Network.class, getParameters().getVnfLinkPort().getVirtualLink()));
+		return List.of();
 	}
 
 	@Override
 	public List<NamedDependency> getNamedProduced() {
-		return Arrays.asList(new NamedDependency(VnfPortNode.class, getParameters().getToscaName()));
+		return List.of(new NamedDependency(VnfPortNode.class, getName()));
 	}
 
 	@Override
 	public String getFactoryProviderId() {
-		return "PORT";
+		return "VNFEXTCP";
 	}
 
 	@Override
 	public String getVimProviderId() {
-		return "PORT";
+		return "VNFEXTCP";
 	}
 
 }

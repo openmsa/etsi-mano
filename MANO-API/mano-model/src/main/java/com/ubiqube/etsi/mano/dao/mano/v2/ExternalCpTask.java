@@ -42,4 +42,8 @@ public class ExternalCpTask extends VnfTask {
 
 	private Boolean port;
 
+	/**
+	 * The vim resource ID if concerning a pre ExtCp.
+	 */
+	private String preExtCpResourceId;
 }

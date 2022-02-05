@@ -21,6 +21,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 
 import lombok.Getter;
@@ -41,4 +42,6 @@ public class VnfPortTask extends VnfTask {
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private VnfLinkPort vnfLinkPort;
 
+	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	private ExtManagedVirtualLinkDataEntity external;
 }

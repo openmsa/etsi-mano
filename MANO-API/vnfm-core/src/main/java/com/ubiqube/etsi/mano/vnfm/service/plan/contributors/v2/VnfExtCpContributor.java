@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -45,6 +46,7 @@ import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
 import com.ubiqube.etsi.mano.vnfm.service.graph.VnfBundleAdapter;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.PortVt;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.VnfExtCpVt;
+import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.VnfPreExtCp;
 
 /**
  *
@@ -75,41 +77,95 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 		final List<VnfLiveInstance> instances = vnfLiveInstanceJpa.findByVnfInstanceIdAndClass(plan.getVnfInstance(), ExternalCpTask.class.getSimpleName());
 		final VnfPackage vnfPackage = ((VnfBundleAdapter) bundle).vnfPackage();
 		final List ret = new ArrayList<>();
-		vnfPackage.getVnfExtCp().stream().forEach(x -> {
-			if (!have(instances, x.getToscaName())) {
+		vnfPackage.getVnfExtCp().stream().forEach(vnfExtCp -> {
+			if (!have(instances, vnfExtCp.getToscaName())) {
 				final Optional<VnfVl> vl = vnfPackage.getVnfVl().stream()
-						.filter(y -> y.getToscaName().equals(x.getInternalVirtualLink()))
+						.filter(y -> y.getToscaName().equals(vnfExtCp.getInternalVirtualLink()))
 						.findFirst();
 				if (vl.isPresent()) {
-					final VnfVl y = vl.get();
-					final ExternalCpTask task = createTask(ExternalCpTask::new);
-					task.setToscaName(x.getToscaName());
-					task.setAlias(y.getToscaName() + "-" + x.getToscaName());
-					task.setChangeType(ChangeType.ADDED);
-					task.setType(ResourceTypeEnum.LINKPORT);
-					task.setVnfExtCp(x);
+					final ExternalCpTask task = addTask(vnfExtCp, vl.get().getToscaName());
 					ret.add(new VnfExtCpVt(task));
+				} else {
+					final Optional<String> vlName = findVl(vnfPackage, vnfExtCp.getToscaName());
+					if (vlName.isPresent()) {
+						// Early VnfExCp, informations will came from InstantiateRequest.
+						final Set<ExtManagedVirtualLinkDataEntity> extVl = plan.getExtManagedVirtualLinks();
+						final Optional<ExtManagedVirtualLinkDataEntity> ex = extVl.stream()
+								.filter(z -> z.getVnfVirtualLinkDescId().equals(vlName.get()))
+								.findFirst();
+						if (ex.isPresent()) {
+							//
+							final ExternalCpTask t = addTask(vnfExtCp, ex.get().getVnfVirtualLinkDescId());
+							t.setPreExtCpResourceId(ex.get().getResourceId());
+							ret.add(new VnfPreExtCp(t));
+						}
+					}
 				}
 			} else {
 				final Optional<VnfCompute> compute = vnfPackage.getVnfCompute().stream()
-						.filter(y -> {
-							LOG.debug(" '" + y.getToscaName() + "' = '" + x.getInternalVirtualLink() + "' => " + y.getToscaName().equals(x.getInternalVirtualLink()));
-							return y.getToscaName().equals(x.getInternalVirtualLink());
-						})
+						.peek(y -> LOG.debug(" '{}' = '{}' => {}", y.getToscaName(), vnfExtCp.getInternalVirtualLink(), y.getToscaName().equals(vnfExtCp.getInternalVirtualLink())))
+						.filter(y -> y.getToscaName().equals(vnfExtCp.getInternalVirtualLink()))
 						.findFirst();
 				compute.ifPresent(y -> {
 					final ExternalCpTask task = createTask(ExternalCpTask::new);
-					task.setToscaName(x.getToscaName());
-					task.setAlias(y.getToscaName() + "-" + x.getToscaName());
+					task.setToscaName(vnfExtCp.getToscaName());
+					task.setAlias(y.getToscaName() + "-" + vnfExtCp.getToscaName());
 					task.setChangeType(ChangeType.ADDED);
 					task.setType(ResourceTypeEnum.LINKPORT);
-					task.setVnfExtCp(x);
+					task.setVnfExtCp(vnfExtCp);
 					task.setPort(true);
 					ret.add(new PortVt(task));
 				});
 			}
 		});
 		return ret;
+	}
+
+	private ExternalCpTask addTask(final com.ubiqube.etsi.mano.dao.mano.VnfExtCp vnfExtCp, final String toscaName) {
+		final ExternalCpTask task = createTask(ExternalCpTask::new);
+		task.setToscaName(vnfExtCp.getToscaName());
+		task.setAlias(toscaName + "-" + vnfExtCp.getToscaName());
+		task.setChangeType(ChangeType.ADDED);
+		task.setType(ResourceTypeEnum.LINKPORT);
+		task.setVnfExtCp(vnfExtCp);
+		return task;
+	}
+
+	private Optional<String> findVl(final VnfPackage vnfPackage, final String externalVirtualLink) {
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink())) {
+			return Optional.of("virtual_link");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink1())) {
+			return Optional.of("virtual_link_1");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink2())) {
+			return Optional.of("virtual_link_2");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink3())) {
+			return Optional.of("virtual_link_3");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink4())) {
+			return Optional.of("virtual_link_4");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink5())) {
+			return Optional.of("virtual_link_5");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink6())) {
+			return Optional.of("virtual_link_6");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink7())) {
+			return Optional.of("virtual_link_7");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink8())) {
+			return Optional.of("virtual_link_8");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink9())) {
+			return Optional.of("virtual_link_9");
+		}
+		if (externalVirtualLink.equals(vnfPackage.getVirtualLink10())) {
+			return Optional.of("virtual_link_10");
+		}
+		return Optional.empty();
 	}
 
 	private static boolean have(final List<VnfLiveInstance> instances, final String toscaName) {
@@ -125,7 +181,7 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 
 	private static Object deleteVli(final VnfLiveInstance x) {
 		final ExternalCpTask extCp = (ExternalCpTask) x.getTask();
-		if (extCp.getPort() != null && extCp.getPort()) {
+		if ((extCp.getPort() != null) && extCp.getPort()) {
 			final ExternalCpTask task = createDeleteTask(ExternalCpTask::new, x);
 			task.setType(ResourceTypeEnum.LINKPORT);
 			task.setVnfExtCp(((ExternalCpTask) x.getTask()).getVnfExtCp());

@@ -21,9 +21,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
@@ -49,6 +52,9 @@ import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.VnfPortVt;
  */
 @Service
 public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, VnfPortVt> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfPortContributor.class);
+
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
 	public VnfPortContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
@@ -71,7 +77,7 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 					if (x.getChangeType() == ChangeType.REMOVED) {
 						removePort(ret, x, vnfPackage, plan.getInstance());
 					} else {
-						createPort(ret, x, vnfPackage);
+						createPort(ret, x, vnfPackage, plan);
 					}
 				});
 		return ret;
@@ -97,7 +103,7 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 		});
 	}
 
-	private static void createPort(final List<VnfPortVt> ret, final ComputeTask compute, final VnfPackage vnfPackage) {
+	private static void createPort(final List<VnfPortVt> ret, final ComputeTask compute, final VnfPackage vnfPackage, final VnfBlueprint plan) {
 		final List<VnfLinkPort> l = findPorts(compute.getToscaName(), vnfPackage.getVnfLinkPort());
 		l.stream().forEach(y -> {
 			final String toscaName = y.getToscaName() + "-" + compute.getAlias();
@@ -106,17 +112,92 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 			task.setAlias(toscaName + RandomStringUtils.random(5, true, true));
 			task.setChangeType(ChangeType.ADDED);
 			task.setType(ResourceTypeEnum.LINKPORT);
-			task.setVnfLinkPort(findVnfLink(vnfPackage, compute.getToscaName()));
+			task.setVnfLinkPort(findVnfLink(vnfPackage, compute.getToscaName(), plan, y));
+			if (task.getVnfLinkPort().getVirtualLink() == null) {
+				final String vlName = findVlName(vnfPackage, y.getToscaName());
+				if (null == vlName) {
+					return;
+				}
+				final ExtManagedVirtualLinkDataEntity external = findExtManagedInfo(plan, vlName);
+				if (null == external) {
+					LOG.warn("Impossible to find VL {}, will try after GrantRequest", vlName);
+				}
+				task.setExternal(external);
+			}
 			ret.add(new VnfPortVt(task));
 		});
+	}
+
+	private static ExtManagedVirtualLinkDataEntity findExtManagedInfo(final VnfBlueprint plan, final String vlName) {
+		return plan.getExtManagedVirtualLinks().stream()
+				.filter(x -> x.getVnfVirtualLinkDescId().equals(vlName))
+				.findFirst()
+				.orElse(null);
+	}
+
+	private static String findVlName(final VnfPackage vnfPackage, final String toscaName) {
+		if (toscaName.equals(vnfPackage.getVirtualLink())) {
+			return "virtual_link";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink1())) {
+			return "virtual_link_1";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink2())) {
+			return "virtual_link_2";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink3())) {
+			return "virtual_link_3";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink4())) {
+			return "virtual_link_4";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink5())) {
+			return "virtual_link_5";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink6())) {
+			return "virtual_link_6";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink7())) {
+			return "virtual_link_7";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink8())) {
+			return "virtual_link_8";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink9())) {
+			return "virtual_link_9";
+		}
+		if (toscaName.equals(vnfPackage.getVirtualLink10())) {
+			return "virtual_link_10";
+		}
+		return null;
 	}
 
 	private static List<VnfLinkPort> findPorts(final String toscaName, final Set<VnfLinkPort> vnfLinkPort) {
 		return vnfLinkPort.stream().filter(x -> x.getVirtualBinding().equals(toscaName)).toList();
 	}
 
-	private static VnfLinkPort findVnfLink(final VnfPackage vnfPackage, final String vdu) {
-		return vnfPackage.getVnfLinkPort().stream().filter(x -> x.getVirtualBinding().equals(vdu)).findFirst().orElseThrow(() -> new GenericException("Unable to find VL " + vdu));
+	private static VnfLinkPort findVnfLink(final VnfPackage vnfPackage, final String vdu, final VnfBlueprint plan, final VnfLinkPort y) {
+		return vnfPackage.getVnfLinkPort().stream()
+				.filter(x -> x.getVirtualBinding().equals(vdu))
+				.findFirst()
+				.orElseThrow(() -> new GenericException("Unable to find VL " + vdu));
+	}
+
+	private static String getCpNameFromVl(final VnfPackage vnfPackage, final String vnfVirtualLinkDescId) {
+		switch (vnfVirtualLinkDescId) {
+		case "virtual_link" -> vnfPackage.getVirtualLink();
+		case "virtual_link1" -> vnfPackage.getVirtualLink1();
+		case "virtual_link2" -> vnfPackage.getVirtualLink2();
+		case "virtual_link3" -> vnfPackage.getVirtualLink3();
+		case "virtual_link4" -> vnfPackage.getVirtualLink4();
+		case "virtual_link5" -> vnfPackage.getVirtualLink5();
+		case "virtual_link6" -> vnfPackage.getVirtualLink6();
+		case "virtual_link7" -> vnfPackage.getVirtualLink7();
+		case "virtual_link8" -> vnfPackage.getVirtualLink8();
+		case "virtual_link9" -> vnfPackage.getVirtualLink9();
+		case "virtual_link10" -> vnfPackage.getVirtualLink10();
+		}
+		return null;
 	}
 
 	private List<VnfPortVt> doTerminatePlan(final VnfInstance vnfInstance) {

@@ -106,7 +106,10 @@ public abstract class AbstractGrantService implements VimResourceService {
 		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
 		fixUnknownTask(plan.getTasks(), plan.getVimConnections());
 		plan.setVimConnections(fixVimConnections(plan.getVimConnections()));
+		check(plan);
 	}
+
+	protected abstract void check(Blueprint plan);
 
 	private Set<VimConnectionInformation> fixVimConnections(final Set<VimConnectionInformation> vimConnections) {
 		return vimConnections.stream().map(x -> {

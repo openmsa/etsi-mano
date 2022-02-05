@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.common.NicType;
@@ -43,7 +44,12 @@ public class VnfPortUowV2 extends AbstractUowV2<VnfPortTask> {
 
 	@Override
 	public String execute(final Context context) {
-		final VnfLinkPort extCp = getTask().getParameters().getVnfLinkPort();
+		final VnfPortTask p = getTask().getParameters();
+		if (p.getExternal() != null) {
+			final ExtManagedVirtualLinkDataEntity ext = p.getExternal();
+			return vim.network(vimConnectionInformation).createPort(getTask().getAlias(), ext.getResourceId(), null, null, NicType.fromValue(getTask().getParameters().getVnfLinkPort().getVnicType()));
+		}
+		final VnfLinkPort extCp = p.getVnfLinkPort();
 		final String extNetwork = context.get(Network.class, extCp.getVirtualLink());
 		return vim.network(vimConnectionInformation).createPort(getTask().getAlias(), extNetwork, null, null, NicType.fromValue(getTask().getParameters().getVnfLinkPort().getVnicType()));
 	}
