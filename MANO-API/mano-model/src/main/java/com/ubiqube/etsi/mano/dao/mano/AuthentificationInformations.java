@@ -19,11 +19,11 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Lob;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
@@ -56,7 +56,7 @@ public class AuthentificationInformations implements Serializable {
 	private AuthParamBasic authParamBasic;
 	private AuthParamOauth2 authParamOath2;
 
-	@Lob
+	@Column(length = 5000)
 	private String authTlsCert;
 
 }

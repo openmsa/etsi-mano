@@ -18,10 +18,10 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Lob;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +46,6 @@ public class AuthParamOauth2 implements Serializable {
 	private Boolean o2IgnoreSsl;
 	@Enumerated(EnumType.STRING)
 	private OAuth2GrantType grantType;
-	@Lob
+	@Column(length = 5000)
 	private String o2AuthTlsCert;
 }

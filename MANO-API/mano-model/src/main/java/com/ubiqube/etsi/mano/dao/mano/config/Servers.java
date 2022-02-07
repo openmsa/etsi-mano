@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -31,7 +32,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
@@ -78,7 +78,7 @@ public class Servers implements Auditable, Serializable {
 
 	private boolean ignoreSsl;
 
-	@Lob
+	@Column(length = 5000)
 	private String tlsCert;
 
 	private String version;
