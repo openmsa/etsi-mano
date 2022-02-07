@@ -54,6 +54,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
@@ -176,7 +177,33 @@ public class VnfPackageOnboardingImpl {
 		handleSecurityGroups(sgAdapters, vnfPackage, vnfExtCp);
 		fixExternalPoint(vnfPackage, vnfExtCp);
 		final Set<AffinityRuleAdapater> ar = vnfPackageReader.getAffinityRules(vnfPackage.getUserDefinedData());
+		mapVlToCp(vnfPackage);
 		handleAffinity(ar, vnfPackage);
+	}
+
+	private void mapVlToCp(final VnfPackage vnfPackage) {
+		vnfPackage.getVnfCompute().stream()
+				.flatMap(x -> x.getPorts().stream())
+				.filter(x -> x.getVirtualLink() == null)
+				.forEach(x -> {
+					x.setVirtualLink(findVl(x.getToscaName(), vnfPackage.getVirtualLinks()));
+				});
+		;
+	}
+
+	private String findVl(final String toscaName, final Set<ListKeyPair> virtualLinks) {
+		final ListKeyPair vl = virtualLinks.stream()
+				.filter(x -> x.getValue() != null)
+				.filter(x -> x.getValue().equals(toscaName))
+				.findFirst().orElseThrow();
+		return vlToString(vl);
+	}
+
+	private String vlToString(final ListKeyPair vl) {
+		if (0 == vl.getIdx()) {
+			return "virtual_link";
+		}
+		return "virtual_link_" + vl.getIdx();
 	}
 
 	private static void additionalMapping(final ProviderData pd, final VnfPackage vnfPackage) {
@@ -191,6 +218,8 @@ public class VnfPackageOnboardingImpl {
 		vnfPackage.addVirtualLink(pd.getVirtualLink8Req());
 		vnfPackage.addVirtualLink(pd.getVirtualLink9Req());
 		vnfPackage.addVirtualLink(pd.getVirtualLink10Req());
+		final Set<ListKeyPair> nl = vnfPackage.getVirtualLinks().stream().filter(x -> x.getValue() != null).collect(Collectors.toSet());
+		vnfPackage.setVirtualLinks(nl);
 	}
 
 	private static void fixExternalPoint(final VnfPackage vnfPackage, final Set<VnfExtCp> vnfExtCp) {
