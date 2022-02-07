@@ -89,6 +89,7 @@ public abstract class AbstractGenericAction {
 		//
 		vnfWorkflow.refresh(prePlan, localPlan);
 		final OrchExecutionResults<Task> res = vnfWorkflow.execute(prePlan, localPlan);
+		localPlan = orchestrationAdapter.getBluePrint(localPlan.getId());
 		setLiveSatus(localPlan, vnfInstance, res);
 		//
 		setResultLcmInstance(localPlan, res);
@@ -208,7 +209,7 @@ public abstract class AbstractGenericAction {
 			if (ct == ChangeType.ADDED) {
 				final String il = Optional.ofNullable(rhe.getScaleInfo()).map(ScaleInfo::getAspectId).orElse(null);
 				if (null != rhe.getId() && null != rhe.getVimResourceId()) {
-					orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
+					// orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
 				} else {
 					LOG.warn("No vim resource or database id for: {}", x.getTask().getTask().getParameters().getToscaName());
 				}

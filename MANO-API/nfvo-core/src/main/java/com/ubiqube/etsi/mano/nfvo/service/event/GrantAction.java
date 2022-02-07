@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -33,20 +34,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
+import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
+import com.ubiqube.etsi.mano.service.vim.NetworkObject;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -69,11 +76,15 @@ public class GrantAction extends AbstractGrantAction {
 
 	private final Random rnd;
 
-	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final VnfPackageService vnfPackageService) {
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
+
+	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final VnfPackageService vnfPackageService,
+			final NsLiveInstanceJpa nsLiveInstanceJpa) {
 		super(grantJpa, vimManager, vimElection);
 		this.grantJpa = grantJpa;
 		this.vimManager = vimManager;
 		this.vnfPackageService = vnfPackageService;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 		this.rnd = new Random();
 	}
 
@@ -173,6 +184,41 @@ public class GrantAction extends AbstractGrantAction {
 		} catch (final FileSystemException e) {
 			throw new GenericException(e);
 		}
+	}
+
+	@Override
+	protected void getUnmanagedNetworks(final GrantResponse grants, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
+		final String vnfInstanceId = grants.getVnfInstanceId();
+		final NsLiveInstance res = nsLiveInstanceJpa.findByResourceId(vnfInstanceId);
+		final NsVnfTask inst = (NsVnfTask) res.getNsTask();
+		final List<ListKeyPair> vl = inst.getNsPackageVnfPackage().getVirtualLinks().stream().filter(x -> x.getValue() != null).toList();
+		final List<NetworkObject> vlList = vim.network(vimConnectionInformation)
+				.searchByName(vl.stream()
+						.map(ListKeyPair::getValue)
+						.filter(Objects::nonNull)
+						.toList());
+		vlList.forEach(x -> grants.getExtVirtualLinks().add(createVl(x, vl, vimConnectionInformation)));
+	}
+
+	private static ExtVirtualLinkDataEntity createVl(final NetworkObject x, final List<ListKeyPair> vl, final VimConnectionInformation vimConnectionInformation) {
+		final ExtVirtualLinkDataEntity ret = new ExtVirtualLinkDataEntity();
+		ret.setExtVirtualLinkId(mapToVl(x, vl));
+		ret.setResourceId(x.name());
+		ret.setResourceProviderId(vimConnectionInformation.getVimType());
+		ret.setVimConnectionId(vimConnectionInformation.getVimId());
+		return ret;
+	}
+
+	private static String mapToVl(final NetworkObject no, final List<ListKeyPair> vl) {
+		final ListKeyPair kp = vl.stream().filter(x -> x.getValue().equals(no.id())).findFirst().orElseThrow();
+		if (kp.getIdx() == 0) {
+			return "virtual_link";
+		}
+		return "virtual_link_" + kp.getIdx();
+	}
+
+	private static List<ListKeyPair> gatherExtVl(final VnfPackage vnfPkg) {
+		return vnfPkg.getVirtualLinks().stream().filter(x -> x.getValue() != null).toList();
 	}
 
 }

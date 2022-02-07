@@ -114,7 +114,7 @@ public class NsWorkflow implements Workflow<NsdPackage, NsBlueprint, NsReport, N
 		final ExecutionGraph impl = planv2.implement(plan);
 		final Context context = orchestrationService.createEmptyContext();
 		populateContext(context, parameters);
-		return planv2.execute(impl, context, new NsOrchListenetImpl());
+		return planv2.execute(impl, context, new NsOrchListenetImpl(nsLiveInstanceJpa, parameters));
 	}
 
 	private void populateContext(final Context context, final NsBlueprint parameters) {
