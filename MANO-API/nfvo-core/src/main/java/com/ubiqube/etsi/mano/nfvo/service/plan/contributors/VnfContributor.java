@@ -92,7 +92,10 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 		for (final NsLiveInstance nsLiveInstance : insts) {
 			final NsVnfTask task = (NsVnfTask) nsLiveInstance.getNsTask();
 			final NsVnfTask nt = createDeleteTask(NsVnfTask::new, nsLiveInstance);
-			final Set<ExternalPortRecord> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
+			final Set<ExternalPortRecord> nets = task.getNsPackageVnfPackage().getVirtualLinks().stream()
+					.filter(x -> x.getValue() != null)
+					.map(x -> new ExternalPortRecord(x.getValue(), null))
+					.collect(Collectors.toSet());
 			nt.setExternalNetworks(nets);
 			nt.setVimResourceId(nsLiveInstance.getResourceId());
 			nt.setServer(task.getServer());
