@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.vim;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -58,4 +59,6 @@ public interface Network {
 	String createSecurityGroup(String name);
 
 	void deleteSecurityGroup(String vimResourceId);
+
+	List<NetworkObject> searchByName(List<String> vl);
 }
