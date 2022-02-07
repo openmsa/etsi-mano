@@ -190,6 +190,10 @@ public class GrantAction extends AbstractGrantAction {
 	protected void getUnmanagedNetworks(final GrantResponse grants, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
 		final String vnfInstanceId = grants.getVnfInstanceId();
 		final NsLiveInstance res = nsLiveInstanceJpa.findByResourceId(vnfInstanceId);
+		if (null == res) {
+			LOG.warn("No NS instance found " + vnfInstanceId);
+			return;
+		}
 		final NsVnfTask inst = (NsVnfTask) res.getNsTask();
 		final List<ListKeyPair> vl = inst.getNsPackageVnfPackage().getVirtualLinks().stream().filter(x -> x.getValue() != null).toList();
 		final List<NetworkObject> vlList = vim.network(vimConnectionInformation)
