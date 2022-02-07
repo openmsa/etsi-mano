@@ -21,12 +21,16 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchExecutionListener;
 import com.ubiqube.etsi.mano.orchestrator.Task;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
 
 /**
  *
@@ -36,6 +40,14 @@ import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 public class OrchListenetImpl implements OrchExecutionListener<VnfTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OrchListenetImpl.class);
+	private final VnfBlueprint blueprint;
+	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+
+	public OrchListenetImpl(final VnfBlueprint blueprint, final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
+		super();
+		this.blueprint = blueprint;
+		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
+	}
 
 	@Override
 	public void onSuccess(final Task<VnfTask> task) {
@@ -65,6 +77,11 @@ public class OrchListenetImpl implements OrchExecutionListener<VnfTask> {
 	public void onTerminate(final UnitOfWork<VnfTask> uaow, final String res) {
 		LOG.info("Terminate {} => {}", uaow.getTask(), res);
 		uaow.getTask().getParameters().setVimResourceId(res);
+		final VnfTask resource = uaow.getTask().getParameters();
+		if ((resource.getChangeType() == ChangeType.ADDED) && (res != null) && (resource.getId() != null)) {
+			final VnfLiveInstance vli = new VnfLiveInstance(blueprint.getInstance(), null, resource, blueprint, resource.getVimResourceId(), resource.getVimConnectionId());
+			vnfLiveInstanceJpa.save(vli);
+		}
 	}
 
 }
