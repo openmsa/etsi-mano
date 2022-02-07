@@ -181,7 +181,7 @@ public class VnfPackageOnboardingImpl {
 		handleAffinity(ar, vnfPackage);
 	}
 
-	private void mapVlToCp(final VnfPackage vnfPackage) {
+	private static void mapVlToCp(final VnfPackage vnfPackage) {
 		vnfPackage.getVnfCompute().stream()
 				.flatMap(x -> x.getPorts().stream())
 				.filter(x -> x.getVirtualLink() == null)
@@ -191,7 +191,7 @@ public class VnfPackageOnboardingImpl {
 		;
 	}
 
-	private String findVl(final String toscaName, final Set<ListKeyPair> virtualLinks) {
+	private static String findVl(final String toscaName, final Set<ListKeyPair> virtualLinks) {
 		final ListKeyPair vl = virtualLinks.stream()
 				.filter(x -> x.getValue() != null)
 				.filter(x -> x.getValue().equals(toscaName))
@@ -199,7 +199,7 @@ public class VnfPackageOnboardingImpl {
 		return vlToString(vl);
 	}
 
-	private String vlToString(final ListKeyPair vl) {
+	private static String vlToString(final ListKeyPair vl) {
 		if (0 == vl.getIdx()) {
 			return "virtual_link";
 		}

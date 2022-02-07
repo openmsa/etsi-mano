@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.nfvo.jpa;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -49,5 +51,7 @@ public interface NsLiveInstanceJpa extends CrudRepository<NsLiveInstance, UUID> 
 	List<NsLiveInstance> findByNsdInstanceAndClass(NsdInstance instance, String simpleName);
 
 	long countByNsInstance(NsdInstance nsInstance);
+
+	NsLiveInstance findByResourceId(@NotNull String safeUUID);
 
 }
