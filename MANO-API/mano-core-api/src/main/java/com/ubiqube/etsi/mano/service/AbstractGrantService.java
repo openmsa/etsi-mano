@@ -102,6 +102,7 @@ public abstract class AbstractGrantService implements VimResourceService {
 		plan.setZoneGroups(mapper.mapAsSet(grantsResp.getZoneGroups(), BlueZoneGroupInformation.class));
 		plan.setZones(grantsResp.getZones());
 		plan.addExtManagedVirtualLinks(grantsResp.getExtManagedVirtualLinks());
+		plan.addExtVirtualLinks(grantsResp.getExtVirtualLinks());
 		plan.setGrantsRequestId(grantsResp.getId().toString());
 		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
 		fixUnknownTask(plan.getTasks(), plan.getVimConnections());

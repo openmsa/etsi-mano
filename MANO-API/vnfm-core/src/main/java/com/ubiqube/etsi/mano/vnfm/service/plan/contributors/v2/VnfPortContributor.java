@@ -18,7 +18,6 @@ package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -115,7 +114,7 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 			task.setAlias(toscaName + RandomStringUtils.random(5, true, true));
 			task.setChangeType(ChangeType.ADDED);
 			task.setType(ResourceTypeEnum.LINKPORT);
-			task.setVnfLinkPort(findVnfLink(vnfPackage, compute.getToscaName()));
+			task.setVnfLinkPort(y);
 			if (task.getVnfLinkPort().getVirtualLink() == null) {
 				final Optional<String> vlName = findVlName(vnfPackage, y.getToscaName());
 				if (vlName.isEmpty()) {
@@ -140,7 +139,7 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 
 	private static Optional<String> findVlName(final VnfPackage vnfPackage, final String toscaName) {
 		return vnfPackage.getVirtualLinks().stream()
-				.filter(Objects::nonNull)
+				.filter(x -> x.getValue() != null)
 				.filter(x -> x.getValue().equals(toscaName))
 				.map(VnfPortContributor::getVl)
 				.findFirst();

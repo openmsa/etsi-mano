@@ -158,4 +158,12 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> {
 		this.extManagedVirtualLinks.addAll(extManagedVirtualLinks);
 	}
 
+	@Override
+	public void addExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		if (this.extVirtualLinks == null) {
+			this.extVirtualLinks = new LinkedHashSet<>();
+		}
+		this.extVirtualLinks.addAll(extVirtualLinks);
+	}
+
 }

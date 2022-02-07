@@ -42,6 +42,6 @@ public class VnfPortTask extends VnfTask {
 	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private VnfLinkPort vnfLinkPort;
 
-	@OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private ExtManagedVirtualLinkDataEntity external;
 }

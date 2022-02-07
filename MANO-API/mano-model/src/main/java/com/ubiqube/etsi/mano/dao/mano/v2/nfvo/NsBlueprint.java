@@ -44,6 +44,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
@@ -142,5 +143,11 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 			this.extManagedVirtualLinks = new LinkedHashSet<>();
 		}
 		this.extManagedVirtualLinks.addAll(extManagedVirtualLinks);
+	}
+
+	@Override
+	public void addExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		// TODO Auto-generated method stub
+
 	}
 }

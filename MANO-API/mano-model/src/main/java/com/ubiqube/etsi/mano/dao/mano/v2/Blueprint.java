@@ -24,6 +24,7 @@ import javax.persistence.ManyToOne;
 import com.ubiqube.etsi.mano.dao.mano.BaseEntity;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
@@ -71,4 +72,6 @@ public interface Blueprint<U extends Task, V extends Instance> extends BaseEntit
 	V getInstance();
 
 	void addVimConnection(VimConnectionInformation vimConnection);
+
+	void addExtVirtualLinks(Set<ExtVirtualLinkDataEntity> extVirtualLinks);
 }
