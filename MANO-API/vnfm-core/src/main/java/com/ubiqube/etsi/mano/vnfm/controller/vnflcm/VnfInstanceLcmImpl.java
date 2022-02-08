@@ -45,7 +45,9 @@ import com.ubiqube.etsi.mano.controller.vnflcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
@@ -191,10 +193,21 @@ public class VnfInstanceLcmImpl implements VnfInstanceLcm {
 
 		VnfBlueprint blueprint = vnfLcmService.createIntatiateOpOcc(vnfInstance);
 		mapper.map(instantiateVnfRequest, blueprint);
+		blueprint.getParameters().setScaleStatus(extractScaleStaus(vnfPkg));
 		blueprint = planService.save(blueprint);
 		eventManager.sendActionVnfm(ActionType.VNF_INSTANTIATE, blueprint.getId(), new HashMap<>());
 		LOG.info("VNF Instantiation Event Sucessfully sent. {}", blueprint.getId());
 		return blueprint;
+	}
+
+	private Set<ScaleInfo> extractScaleStaus(final VnfPackage vnfPkg) {
+		return vnfPkg.getVnfCompute().stream()
+				.flatMap(x -> x.getScalingAspectDeltas().stream())
+				.map(VnfComputeAspectDelta::getAspectName)
+				.collect(Collectors.toSet())
+				.stream()
+				.map(x -> new ScaleInfo(x, 0))
+				.collect(Collectors.toSet());
 	}
 
 	@Override
