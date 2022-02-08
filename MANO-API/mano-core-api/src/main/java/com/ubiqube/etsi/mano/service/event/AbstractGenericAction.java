@@ -34,6 +34,7 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
@@ -113,14 +114,22 @@ public abstract class AbstractGenericAction {
 
 	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint localPlan, Instance instance);
 
+	/**
+	 * Move this function to scale strategy.
+	 *
+	 * @param instance
+	 * @param localPlan
+	 * @param newScale
+	 */
 	private void setInstanceStatus(final Instance instance, final Blueprint localPlan, final Set<ScaleInfo> newScale) {
 		Optional.ofNullable(localPlan.getParameters().getScaleStatus())
 				.map(x -> x.stream()
 						.map(y -> new ScaleInfo(y.getAspectId(), y.getScaleLevel()))
 						.collect(Collectors.toSet()))
-				.ifPresent(x -> instance.getInstantiatedVnfInfo().setScaleStatus(x));
+				.ifPresent(x -> setScaleStatus(instance, x, localPlan.getParameters().getScaleType()));
 		if (localPlan.getOperation() == PlanOperationType.INSTANTIATE) {
 			instance.getInstantiatedVnfInfo().setNsStepStatus(copy(localPlan.getParameters().getNsStepStatus()));
+			instance.getInstantiatedVnfInfo().setScaleStatus(copy(localPlan.getParameters().getScaleStatus()));
 		}
 		Optional.ofNullable(localPlan.getParameters().getNsScale()).ifPresent(x -> nsScaleStrategy.remapNsScale(x, instance));
 		LOG.info("Saving Instance.");
@@ -128,8 +137,25 @@ public abstract class AbstractGenericAction {
 		if (null != localPlan.getParameters().getFlavourId()) {
 			instance.getInstantiatedVnfInfo().setFlavourId(localPlan.getParameters().getFlavourId());
 		}
-		// XXX Copy new ScaleInfo.
-		// removeScaleStatus(instance, newScale);
+	}
+
+	private Object setScaleStatus(final Instance instance, final Set<ScaleInfo> si, final ScaleTypeEnum scaleTypeEnum) {
+		si.stream().forEach(x -> {
+			instance.getInstantiatedVnfInfo().getScaleStatus().stream()
+					.filter(y -> y.getAspectId().equals(x.getAspectId()))
+					.findFirst()
+					.ifPresent(y -> y.setScaleLevel(getNewStep(scaleTypeEnum, y.getScaleLevel(), x.getScaleLevel())));
+		});
+
+		return null;
+	}
+
+	private int getNewStep(final ScaleTypeEnum scaleTypeEnum, final int orig, final int adder) {
+		if (scaleTypeEnum == ScaleTypeEnum.IN) {
+			final int i = orig - adder;
+			return (i < 0) ? 0 : i;
+		}
+		return orig + adder;
 	}
 
 	private static Set<ScaleInfo> copy(final Set<ScaleInfo> nsStepStatus) {

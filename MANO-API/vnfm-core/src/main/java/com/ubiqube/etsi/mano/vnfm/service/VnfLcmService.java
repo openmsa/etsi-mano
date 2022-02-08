@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,6 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
-import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
@@ -41,7 +39,6 @@ import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
@@ -104,25 +101,9 @@ public class VnfLcmService {
 		lcmOpOccs.getParameters().setAspectId(scaleVnfRequest.getAspectId());
 		lcmOpOccs.getParameters().setScaleStatus(scaleVnfRequest.getScaleInfo());
 		lcmOpOccs.getParameters().setInstantiationLevelId(scaleVnfRequest.getInstantiationLevelId());
-		// final Set<ScaleInfo> scaleStatus =
-		// vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
-		// .filter(x -> x.getAspectId().equals(scaleVnfRequest.getAspectId()))
-		// .map(x -> new ScaleInfo(x.getAspectId(), addDec(scaleVnfRequest.getType(),
-		// scaleVnfRequest.getNumberOfSteps(), x.getScaleLevel())))
-		// .collect(Collectors.toSet());
-		// lcmOpOccs.getParameters().setScaleStatus(scaleStatus);
+		final Set<ScaleInfo> scaleStatus = Set.of(new ScaleInfo(scaleVnfRequest.getAspectId(), scaleVnfRequest.getNumberOfSteps()));
+		lcmOpOccs.getParameters().setScaleStatus(scaleStatus);
 		return saveLcmOppOcc(lcmOpOccs, vnfInstance);
-	}
-
-	private static int addDec(@NotNull final ScaleTypeEnum type, final int numberOfSteps, final int scaleLevel) {
-		switch (type) {
-		case IN:
-			return Math.max(0, scaleLevel - numberOfSteps);
-		case OUT:
-			return scaleLevel + numberOfSteps;
-		default:
-			throw new GenericException("Scaling value is incorrect: " + type);
-		}
 	}
 
 	public VnfBlueprint createOperateOpOcc(final VnfInstance vnfInstance, final VnfOperateRequest operateVnfRequest) {
