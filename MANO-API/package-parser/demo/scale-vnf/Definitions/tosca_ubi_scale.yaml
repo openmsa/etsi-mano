@@ -13,12 +13,12 @@ topology_template:
       properties:
         descriptor_id: 6eaecaf6-e64f-441c-8b55-c153da817217
         provider: Ubiqube internal.
-        product_name: small_integration_test_aspect
+        product_name: scale_integration_test_aspect
         software_version: 1.0.0
         descriptor_version: 1.0.5
         flavour_id: flavor01
         flavour_description: Descr.
-        product_info_name: Product info name.
+        product_info_name: Scaling demo.
         product_info_description: product info descr.
         vnfm_info:
           - etsivnfm:v2.6.1
@@ -398,7 +398,7 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
         - virtual_link: leftVl01
         - virtual_binding: webserver
@@ -416,7 +416,7 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
         - virtual_link: leftVl01
         - virtual_binding: database
@@ -450,7 +450,7 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
         - virtual_link: leftVl01
         - virtual_binding: lbaas
@@ -622,6 +622,8 @@ policies:
       aspect: webserver
       deltas:
         delta_1:
+          number_of_instances: 1
+        delta_2:
           number_of_instances: 2
 
 

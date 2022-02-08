@@ -24,7 +24,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -299,9 +298,12 @@ public class VnfPackageOnboardingImpl {
 			int level = 1;
 			int numInst = init.getInitialDelta().getNumberOfInstances();
 			final ScalingAspect aspect = scalingAspects.stream().filter(z -> z.getName().equals(x.getAspect())).findFirst().orElse(new ScalingAspect());
-			for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
-				numInst += delta.getValue().getNumberOfInstances();
-				vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y, numInst));
+			vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), "initial_delta", init.getInitialDelta().getNumberOfInstances(), 0, aspect.getMaxScaleLevel(), y, numInst));
+			// Missing 0 => initial inst level.
+			for (final String delta : aspect.getStepDeltas()) {
+				final VduLevel step = x.getDeltas().get(delta);
+				numInst += step.getNumberOfInstances();
+				vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta, step.getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y, numInst));
 			}
 		}));
 		// Minimal instance at instantiate time.
