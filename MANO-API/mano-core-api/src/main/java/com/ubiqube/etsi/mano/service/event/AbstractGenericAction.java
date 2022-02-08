@@ -120,7 +120,7 @@ public abstract class AbstractGenericAction {
 						.collect(Collectors.toSet()))
 				.ifPresent(x -> instance.getInstantiatedVnfInfo().setScaleStatus(x));
 		if (localPlan.getOperation() == PlanOperationType.INSTANTIATE) {
-			instance.getInstantiatedVnfInfo().setNsStepStatus(localPlan.getParameters().getNsStepStatus());
+			instance.getInstantiatedVnfInfo().setNsStepStatus(copy(localPlan.getParameters().getNsStepStatus()));
 		}
 		Optional.ofNullable(localPlan.getParameters().getNsScale()).ifPresent(x -> nsScaleStrategy.remapNsScale(x, instance));
 		LOG.info("Saving Instance.");
@@ -130,6 +130,10 @@ public abstract class AbstractGenericAction {
 		}
 		// XXX Copy new ScaleInfo.
 		removeScaleStatus(instance, newScale);
+	}
+
+	private static Set<ScaleInfo> copy(final Set<ScaleInfo> nsStepStatus) {
+		return nsStepStatus.stream().map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel())).collect(Collectors.toSet());
 	}
 
 	private static Set<ScaleInfo> merge(final Blueprint plan, final Instance instance) {

@@ -73,7 +73,8 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfInstantiateTask
 		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state || OperationStatusType.NOT_STARTED == state) {
 			tmp = vnfm.vnfLcmOpOccsGet(task.getServer(), vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
-			sleepSeconds(1);
+			LOG.debug("Instantiate polling: {} => {}", tmp.getId(), state);
+			sleepSeconds(3);
 		}
 		LOG.info("VNF Lcm complete with state: {}", state);
 		return tmp;

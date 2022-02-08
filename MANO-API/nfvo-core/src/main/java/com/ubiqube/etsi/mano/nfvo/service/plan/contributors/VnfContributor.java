@@ -147,7 +147,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			final NsVnfTask nt = createDeleteTask(NsVnfTask::new, insts.get(i));
 			final Set<ExternalPortRecord> nets = getNetworks(task.getNsPackageVnfPackage().getVnfPackage());
 			nt.setExternalNetworks(nets);
-			nt.setVimResourceId(task.getVimResourceId());
+			nt.setVimResourceId(insts.get(i).getResourceId());
 			nt.setToscaName(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
 			nt.setAlias(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
 			nt.setServer(task.getServer());
