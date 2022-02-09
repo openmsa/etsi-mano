@@ -83,8 +83,13 @@ public class NsVirtualLinkContributor extends AbstractNsContributor<NsVirtualLin
 					nsVl.setChangeType(ChangeType.ADDED);
 					nsVl.setNsVirtualLink(x);
 					nsVl.setType(ResourceTypeEnum.VL);
+					nsVl.setAlias(buildAlias(plan, nsVl.getToscaName(), 0));
 					return new NsVirtualLinkVt(nsVl);
 				}).toList();
 	}
 
+	private static String buildAlias(final NsBlueprint plan, final String toscaName, final int count) {
+		final String vnfInstanceId = plan.getInstance().getId().toString();
+		return vnfInstanceId.substring(0, 8) + '-' + toscaName + '-' + String.format("%04d", count);
+	}
 }

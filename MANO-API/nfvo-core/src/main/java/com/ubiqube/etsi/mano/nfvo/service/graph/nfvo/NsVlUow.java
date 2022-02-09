@@ -45,7 +45,7 @@ public class NsVlUow extends AbstractNsUnitOfWork<NsVirtualLinkTask> {
 
 	@Override
 	public String execute(final Context context) {
-		final String ret = vim.network(vimConnectionInformation).createNetwork(vlProtocolData, task.getToscaName(), null, null);
+		final String ret = vim.network(vimConnectionInformation).createNetwork(vlProtocolData, task.getAlias(), null, null);
 		final IpPool ipAllocationPool = null;
 		vim.network(vimConnectionInformation).createSubnet(vlProtocolData.getL3ProtocolData(), ipAllocationPool, ret);
 		return ret;
