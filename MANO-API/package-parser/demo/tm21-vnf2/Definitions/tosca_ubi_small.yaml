@@ -13,11 +13,11 @@ topology_template:
       properties:
         descriptor_id: fadf3699-e4c2-4259-9ef2-e0a137f33624
         provider: Ubiqube internal.
-        product_name: small_integration_test_aspect
+        product_name: tm21_vwaf
         software_version: 1.0.0
         descriptor_version: 1.0.2
         flavour_id: flavor01
-        flavour_description: Descr.>
+        flavour_description: VWAF tm21 vnf.
         product_info_name: Product info name.
         product_info_description: product info descr.
         vnfm_info:
