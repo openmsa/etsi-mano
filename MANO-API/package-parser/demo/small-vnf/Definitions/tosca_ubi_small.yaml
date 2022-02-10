@@ -17,7 +17,7 @@ topology_template:
         software_version: 1.0.0
         descriptor_version: 1.0.2
         flavour_id: flavor01
-        flavour_description: Descr.
+        flavour_description: VNF small demonstrration.
         product_info_name: Product info name.
         product_info_description: product info descr.
         vnfm_info:
@@ -196,7 +196,7 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
         - virtual_link: leftVl01
         - virtual_binding: webserver
