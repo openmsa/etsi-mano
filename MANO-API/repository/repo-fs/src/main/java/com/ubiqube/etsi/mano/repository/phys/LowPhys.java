@@ -19,19 +19,21 @@ package com.ubiqube.etsi.mano.repository.phys;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.RepositoryException;
 
 @Service
 public class LowPhys implements Low {
@@ -51,7 +53,7 @@ public class LowPhys implements Low {
 		try {
 			Files.write(Paths.get(path), content);
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new RepositoryException(e);
 		}
 
 	}
@@ -61,7 +63,7 @@ public class LowPhys implements Low {
 		try {
 			Files.copy(stream, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new RepositoryException(e);
 		}
 	}
 
@@ -70,7 +72,7 @@ public class LowPhys implements Low {
 		try {
 			return Files.readAllBytes(Paths.get(path));
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new RepositoryException(e);
 		}
 	}
 
@@ -78,12 +80,12 @@ public class LowPhys implements Low {
 	public void delete(final String path) {
 		boolean result;
 		try {
-			result = FileSystemUtils.deleteRecursively(Paths.get(path));
+			result = deleteRecursively(Paths.get(path));
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new RepositoryException(e);
 		}
 		if (!result) {
-			throw new GenericException("Unable to delete " + path);
+			throw new RepositoryException("Unable to delete " + path);
 		}
 	}
 
@@ -95,7 +97,7 @@ public class LowPhys implements Low {
 					.map(Path::toString)
 					.toList();
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new RepositoryException(e);
 		}
 	}
 
@@ -113,8 +115,28 @@ public class LowPhys implements Low {
 			}
 			return Arrays.copyOfRange(bytes, min, max.intValue());
 		} catch (final IOException e) {
-			throw new GenericException(e);
+			throw new RepositoryException(e);
 		}
 	}
 
+	private static boolean deleteRecursively(final Path root) throws IOException {
+		if ((root == null) || !Files.exists(root)) {
+			return false;
+		}
+
+		Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+				Files.delete(file);
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
+				Files.delete(dir);
+				return FileVisitResult.CONTINUE;
+			}
+		});
+		return true;
+	}
 }

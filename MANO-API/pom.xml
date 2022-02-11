@@ -34,6 +34,8 @@
 		<module>mano-pkg</module>
 		<module>mano-grammar</module>
 		<module>discovery</module>
+		<module>montoring</module>
+		<module>repository</module>
 	</modules>
 	<properties>
 		<sonar.jacoco.xmlReportPaths>${project.basedir}/../target/site/jacoco-aggregate/jacoco.xml</sonar.jacoco.xmlReportPaths>
@@ -44,13 +46,12 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.7</version>
-				<executions>
+				 <executions>
 					<execution>
-						<id>report</id>
+						<id>prepare-agent</id>
 						<goals>
-							<goal>report-aggregate</goal>
+							<goal>prepare-agent</goal>
 						</goals>
-						<phase>verify</phase>
 					</execution>
 				</executions>
 			</plugin>
