@@ -14,22 +14,51 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
+package com.ubiqube.etsi.mano.repository;
 
-import javax.annotation.Nullable;
-
-import com.ubiqube.etsi.mano.repository.ManoResource;
-import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface NsPackageManager {
+public class ManoUrlResource implements ManoResource {
+	private long size;
+	private String fileName;
 
-	@Nullable
-	PackageDescriptor<NsPackageProvider> getProviderFor(ManoResource data);
+	public ManoUrlResource(final long size, final String fileName) {
+		super();
+		this.size = size;
+		this.fileName = fileName;
+	}
 
+	@Override
+	public InputStream getInputStream() {
+		try {
+			return new URL(fileName).openStream();
+		} catch (final IOException e) {
+			throw new RepositoryException(e);
+		}
+	}
+
+	@Override
+	public long getSize() {
+		return size;
+	}
+
+	public void setSize(final long size) {
+		this.size = size;
+	}
+
+	@Override
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(final String fileName) {
+		this.fileName = fileName;
+	}
 }

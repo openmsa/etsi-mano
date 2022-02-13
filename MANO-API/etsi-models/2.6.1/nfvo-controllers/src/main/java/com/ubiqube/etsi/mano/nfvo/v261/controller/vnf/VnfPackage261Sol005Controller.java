@@ -19,13 +19,10 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,9 +39,17 @@ import com.ubiqube.etsi.mano.nfvo.v261.services.Sol005Linkable;
  * SOL005 - VNF Package Management Interface
  *
  * <p>
- * SOL005 - VNF Package Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
+ * SOL005 - VNF Package Management Interface IMPORTANT: Please note that this
+ * file might be not aligned to the current version of the ETSI Group
+ * Specification it refers to and has not been approved by the ETSI NFV ISG. In
+ * case of discrepancies the published ETSI Group Specification takes
+ * precedence. Please report bugs to
+ * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
- * NOTE: Normaly we should receive object in methods but Genson seems to be on the classpath and is unable to unserialize objects. So we use a string2Object to do So. Note same problems occurred when returning object some times genson could be here and not Jackson, in this case you can use object2String.
+ * NOTE: Normaly we should receive object in methods but Genson seems to be on
+ * the classpath and is unable to unserialize objects. So we use a string2Object
+ * to do So. Note same problems occurred when returning object some times genson
+ * could be here and not Jackson, in this case you can use object2String.
  *
  */
 @RestController
@@ -63,8 +68,8 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfdId, final HttpServletRequest request, final String accept, final String range) {
-		return vnfPackageFrontController.getArtifact(request, getSafeUUID(vnfdId), range, null);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfdId, final HttpServletRequest request, final String accept) {
+		return vnfPackageFrontController.getArtifact(request, getSafeUUID(vnfdId), null);
 	}
 
 	@Override
@@ -73,8 +78,8 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String accept, final String range) {
-		return vnfPackageFrontController.getContent(getSafeUUID(vnfPkgId), range);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String accept) {
+		return vnfPackageFrontController.getContent(getSafeUUID(vnfPkgId));
 	}
 
 	@Override
@@ -107,7 +112,10 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	/**
 	 * Update information about an individual VNF package.
 	 *
-	 * \&quot;The PATCH method updates the information of a VNF package.\&quot; \&quot;This method shall follow the provisions specified in the Tables 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response data structures, and response codes.\&quot;
+	 * \&quot;The PATCH method updates the information of a VNF package.\&quot;
+	 * \&quot;This method shall follow the provisions specified in the Tables
+	 * 9.4.3.3.4-1 and 9.4.3.3.4-2 for URI query parameters, request and response
+	 * data structures, and response codes.\&quot;
 	 *
 	 */
 	@Override
@@ -118,7 +126,9 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	/**
 	 * Upload a VNF package by providing the content of the VNF package.
 	 *
-	 * The PUT method uploads the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI query parameters, request and response data structures, and response codes.
+	 * The PUT method uploads the content of a VNF package. This method shall follow
+	 * the provisions specified in the Tables 9.4.5.3.3-1 and 9.4.5.3.3-2 for URI
+	 * query parameters, request and response data structures, and response codes.
 	 *
 	 */
 	@Override
@@ -129,7 +139,10 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	/**
 	 * Upload a VNF package by providing the address information of the VNF package.
 	 *
-	 * The POST method provides the information for the NFVO to get the content of a VNF package. This method shall follow the provisions specified in the Tables 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response data structures, and response codes.
+	 * The POST method provides the information for the NFVO to get the content of a
+	 * VNF package. This method shall follow the provisions specified in the Tables
+	 * 9.4.6.3.1-1 and 9.4.6.3.1-2 for URI query parameters, request and response
+	 * data structures, and response codes.
 	 *
 	 */
 	@Override

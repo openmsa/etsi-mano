@@ -19,13 +19,11 @@ package com.ubiqube.etsi.mano.nfvo.v281.controller.nsd;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
 import org.springframework.context.annotation.Conditional;
-import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,8 +68,8 @@ public class NsDescriptors281Sol005Controller implements NsDescriptors281Sol005A
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
-		return nsDescriptorGenericFrontController.getNsdContent(nsdInfoId, accept, range);
+	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
+		return nsDescriptorGenericFrontController.getNsdContent(nsdInfoId, accept);
 	}
 
 	@Override
@@ -92,12 +90,12 @@ public class NsDescriptors281Sol005Controller implements NsDescriptors281Sol005A
 	}
 
 	@Override
-	public ResponseEntity<Void> nsDescriptorsNsdInfoIdManifestGet(final String nsdInfoId, @Valid final String includeSignatures) {
+	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdManifestGet(final String nsdInfoId, @Valid final String includeSignatures) {
 		return nsDescriptorGenericFrontController.getManifest(nsdInfoId, includeSignatures);
 	}
 
 	@Override
-	public ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdGet(final String nsdInfoId, @Valid final String includeSignatures) {
+	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdGet(final String nsdInfoId, @Valid final String includeSignatures) {
 		return nsDescriptorGenericFrontController.getNsd(nsdInfoId, includeSignatures);
 	}
 

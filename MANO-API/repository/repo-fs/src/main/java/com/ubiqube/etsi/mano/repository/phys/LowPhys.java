@@ -26,13 +26,13 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.RepositoryException;
 
 @Service
@@ -68,12 +68,9 @@ public class LowPhys implements Low {
 	}
 
 	@Override
-	public byte[] get(final String path) {
-		try {
-			return Files.readAllBytes(Paths.get(path));
-		} catch (final IOException e) {
-			throw new RepositoryException(e);
-		}
+	public ManoResource get(final String path) {
+		final Path p = Paths.get(path);
+		return new PhysResource(p.toFile().length(), path);
 	}
 
 	@Override
@@ -107,20 +104,13 @@ public class LowPhys implements Low {
 	}
 
 	@Override
-	public byte[] get(final String path, final int min, final Long max) {
-		try {
-			final byte[] bytes = Files.readAllBytes(Paths.get(path));
-			if (null == max) {
-				return bytes;
-			}
-			return Arrays.copyOfRange(bytes, min, max.intValue());
-		} catch (final IOException e) {
-			throw new RepositoryException(e);
-		}
+	public ManoResource get(final String path, final int min, final Long max) {
+		final Path p = Paths.get(path);
+		return new PhysResource(p.toFile().length(), path);
 	}
 
 	private static boolean deleteRecursively(final Path root) throws IOException {
-		if ((root == null) || !Files.exists(root)) {
+		if (root == null || !Files.exists(root)) {
 			return false;
 		}
 

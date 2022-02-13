@@ -21,15 +21,12 @@
  */
 package com.ubiqube.etsi.mano.vnfm.v351.controller.vnf;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
@@ -94,7 +91,7 @@ public interface VnfPackages351Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/artifacts/{artifactPath}", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(
 			@Parameter(in = ParameterIn.PATH, description = "SequenceFor an artifact contained as a file in the VNF package, this variable shall contain a sequence of one or more path segments representing the path of the artifact within the VNF package, relative to the root of the package.  EXAMPLE: foo/bar/m%40ster.sh  For an external artifact represented as a URI in the VNF package manifest, this variable shall contain a sequence of one or more path segments as synthesized by the NFVO (see clause 10.5.3.3), representing this artifact.  Since multiple path segments are allowed to be contained in this variable, the \"/\" character that separates these segments is not percent-encoded. Each individual segment is percent-encoded if necessary as defined in clause 4.1 of ETSI GS NFV-SOL 013. ", required = true, schema = @Schema()) @PathVariable("artifactPath") HttpServletRequest request,
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId,
 			@Parameter(in = ParameterIn.HEADER, description = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the VNF package file. This can be used to continue an aborted transmission.  If the \"Range\" header is present in the request and the NFVO does not support responding to range requests with a 206 response, it shall return a 200 OK response instead. ", schema = @Schema()) @RequestHeader(value = "Range", required = false) String range,
@@ -116,7 +113,7 @@ public interface VnfPackages351Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/artifacts", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsGet(final HttpServletRequest request,
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsGet(final HttpServletRequest request,
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId,
 			@Parameter(in = ParameterIn.HEADER, description = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the VNF package file. This can be used to continue an aborted transmission.  If the \"Range\" header is present in the request and the NFVO does not support responding to range requests with a 206 response, it shall return a 200 OK response instead. ", schema = @Schema()) @RequestHeader(value = "Range", required = false) String range);
 
@@ -172,7 +169,7 @@ public interface VnfPackages351Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/package_content", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") String vnfPkgId,
 			@Parameter(in = ParameterIn.HEADER, description = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the VNF package file. This can be used to continue an aborted transmission.  If the \"Range\" header is present in the request and the NFVO does not support responding to range requests with a 206 response, it shall return a 200 OK response instead. ", schema = @Schema()) @RequestHeader(value = "Range", required = false) String range);
 

@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service.pkg.vnf;
 
 import javax.annotation.Nullable;
 
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 
 /**
@@ -27,5 +28,5 @@ import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
  */
 public interface VnfPackageManager {
 	@Nullable
-	PackageDescriptor<VnfPackageReader> getProviderFor(byte[] data);
+	PackageDescriptor<VnfPackageReader> getProviderFor(ManoResource data);
 }

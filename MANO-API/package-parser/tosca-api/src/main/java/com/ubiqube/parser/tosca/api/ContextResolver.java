@@ -22,6 +22,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayDeque;
@@ -226,11 +227,11 @@ public class ContextResolver {
 		}
 		final Object artifacts = node.getArtifacts();
 		if (null != artifacts) {
-			handleArtifacts(artifacts, propsDescr, cls);
+			handleArtifacts(artifacts, propsDescr, cls, stack);
 		}
 		final RequirementDefinition req = node.getRequirements();
 		if (null != req && null != req.getRequirements()) {
-			handleRequirements(req.getRequirements(), propsDescr, cls);
+			handleRequirements(req.getRequirements(), propsDescr, cls, stack);
 		}
 		// XXX it looks the same ?
 		final ToscaInernalBase tib = (ToscaInernalBase) cls;
@@ -242,9 +243,9 @@ public class ContextResolver {
 		return cls;
 	}
 
-	private static void handleArtifacts(final Object artifacts, final PropertyDescriptor[] propsDescr, final Object cls) {
+	private static void handleArtifacts(final Object artifacts, final PropertyDescriptor[] propsDescr, final Object cls, final Deque stack) {
 		final Method rm = findWriteMethod(propsDescr, "artifacts");
-		methodInvoke(rm, cls, artifacts);
+		methodInvoke(rm, cls, stack, artifacts);
 	}
 
 	private static void setProperty2(final Object cls, final Method write, final Object value) {
@@ -267,7 +268,7 @@ public class ContextResolver {
 		}
 	}
 
-	private static void handleRequirements(final List<Map<String, Requirement>> requirements, final PropertyDescriptor[] propsDescr, final Object cls) {
+	private static void handleRequirements(final List<Map<String, Requirement>> requirements, final PropertyDescriptor[] propsDescr, final Object cls, final Deque stack) {
 		requirements.forEach(z -> {
 			z.forEach((x, y) -> {
 				// XXX I think it could be ONE of Node, caps, Link
@@ -275,23 +276,23 @@ public class ContextResolver {
 				if (props != null) {
 					final Class<?> p = props.getPropertyType();
 					if (p.isAssignableFrom(List.class)) {
-						final List r = methodInvoke(props.getReadMethod(), cls);
-						handleReqList(r, y, cls, props);
+						final List r = (List) methodInvoke(props.getReadMethod(), cls, stack);
+						handleReqList(r, y, cls, props, stack);
 					} else {
-						methodInvoke(props.getWriteMethod(), cls, y.getCapability());
+						methodInvoke(props.getWriteMethod(), cls, stack, y.getCapability());
 					}
 				}
 			});
 		});
 	}
 
-	private static void handleReqList(final List list, final Requirement req, final Object cls, final PropertyDescriptor props) {
+	private static void handleReqList(final List list, final Requirement req, final Object cls, final PropertyDescriptor props, final Deque stack) {
 		if (null == list) {
 			final List l = new ArrayList<>();
 			final String value = req.getCapability();
 			Objects.nonNull(value);
 			l.add(value);
-			methodInvoke(props.getWriteMethod(), cls, l);
+			methodInvoke(props.getWriteMethod(), cls, stack, l);
 		} else {
 			final String value = req.getCapability();
 			Objects.nonNull(value);
@@ -386,7 +387,7 @@ public class ContextResolver {
 			}
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
-			methodInvoke(meth, cls, ret);
+			methodInvoke(meth, cls, stack, ret);
 		} else if (res instanceof List) {
 			final Method rm = x.getReadMethod();
 			final Class zz = getReturnType(rm);
@@ -403,11 +404,11 @@ public class ContextResolver {
 			final Object ret = handleList((List) res, propsDescrNew, zz, stack);
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
-			methodInvoke(meth, cls, ret);
+			methodInvoke(meth, cls, stack, ret);
 
 		} else {
 			final Method writeMethod = x.getWriteMethod();
-			methodInvoke(writeMethod, cls, convert(res, writeMethod.getParameterTypes()[0]));
+			methodInvoke(writeMethod, cls, stack, convert(res, writeMethod.getParameterTypes()[0]));
 		}
 	}
 
@@ -541,11 +542,30 @@ public class ContextResolver {
 		}
 	}
 
-	private static <U> U methodInvoke(final Method method, final Object instance, final Object... paramter) {
+	private static <U> U methodInvoke(final Method method, final Object instance, final Deque<String> stack, final Object... paramter) {
 		try {
+			checkParameters(method, paramter, stack);
 			return (U) method.invoke(instance, paramter);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new ParseException("Could not invoke: " + method + " with parameters of type :" + paramter.getClass(), e);
+		}
+	}
+
+	private static void checkParameters(final Method method, final Object[] parameter, final Deque<String> stack) {
+		final Parameter[] p = method.getParameters();
+		if (p.length != parameter.length) {
+			throwException("", stack);
+		}
+		for (int i = 0; i < p.length; i++) {
+			final Object tgt = parameter[i];
+			if (null == tgt) {
+				continue;
+			}
+			final Parameter orig = p[i];
+			final Class<? extends Object> clz = tgt.getClass();
+			if (!orig.getType().isAssignableFrom(clz)) {
+				throwException(orig.getType() + " doesn't match " + clz, stack);
+			}
 		}
 	}
 

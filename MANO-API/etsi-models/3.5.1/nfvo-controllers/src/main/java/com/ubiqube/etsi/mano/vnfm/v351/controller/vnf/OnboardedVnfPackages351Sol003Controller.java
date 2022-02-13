@@ -18,14 +18,12 @@ package com.ubiqube.etsi.mano.vnfm.v351.controller.vnf;
 
 import static com.ubiqube.etsi.mano.nfvo.fc.controller.NfvoConstants.getSafeUUID;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,13 +52,13 @@ public class OnboardedVnfPackages351Sol003Controller implements OnboardedVnfPack
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfdId, final String range, @Valid final String includeSignature) {
-		return vnfPackageFrontController.onboardedGetArtifact(request, getSafeUUID(vnfdId), range, includeSignature);
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfdId, final String range, @Valid final String includeSignature) {
+		return vnfPackageFrontController.onboardedGetArtifact(request, getSafeUUID(vnfdId), includeSignature);
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsGet(final String vnfdId, final String range) {
-		return vnfPackageFrontController.onboardedGetVnfdByVnfdId(getSafeUUID(vnfdId), range);
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsGet(final String vnfdId, final String range) {
+		return vnfPackageFrontController.onboardedGetVnfdByVnfdId(getSafeUUID(vnfdId));
 	}
 
 	@Override
@@ -74,8 +72,8 @@ public class OnboardedVnfPackages351Sol003Controller implements OnboardedVnfPack
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String range) {
-		return vnfPackageFrontController.onboardedGetContentByVnfdId(vnfdId, range);
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String range) {
+		return vnfPackageFrontController.onboardedGetContentByVnfdId(vnfdId);
 	}
 
 	@Override

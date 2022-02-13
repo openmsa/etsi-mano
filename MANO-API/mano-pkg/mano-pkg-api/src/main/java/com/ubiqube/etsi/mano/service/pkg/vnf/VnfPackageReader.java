@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
+import java.io.Closeable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +43,7 @@ import com.ubiqube.etsi.mano.service.pkg.bean.VduScalingAspectDeltas;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface VnfPackageReader {
+public interface VnfPackageReader extends Closeable {
 
 	@Nonnull
 	ProviderData getProviderPadata();

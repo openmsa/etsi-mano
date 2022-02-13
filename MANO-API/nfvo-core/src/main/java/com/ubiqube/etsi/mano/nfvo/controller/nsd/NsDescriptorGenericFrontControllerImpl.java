@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -29,17 +28,19 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.controller.MetaStreamResource;
 import com.ubiqube.etsi.mano.controller.nsd.NsDescriptorGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.utils.SpringUtil;
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.MetaStream;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -133,9 +134,12 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	 *
 	 */
 	@Override
-	public ResponseEntity<List<ResourceRegion>> getNsdContent(final String nsdInfoId, final String accept, final String range) {
-		final byte[] bytes = nsdController.nsDescriptorsNsdInfoIdNsdContentGet(UUID.fromString(nsdInfoId));
-		return SpringUtil.handleBytes(bytes, range);
+	public ResponseEntity<Resource> getNsdContent(final String nsdInfoId, final String accept) {
+		final ManoResource inputStream = nsdController.nsDescriptorsNsdInfoIdNsdContentGet(UUID.fromString(nsdInfoId));
+		final MetaStreamResource body = new MetaStreamResource(new MetaStream(inputStream.getInputStream(), 350, "hh"));
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(body);
 	}
 
 	/**
@@ -208,19 +212,19 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	}
 
 	@Override
-	public ResponseEntity<Void> getArtifact(final String nsdInfoId, final String artifactPath, final String range, final String includeSignatures) {
+	public ResponseEntity<Resource> getArtifact(final String nsdInfoId, final String artifactPath, final String includeSignatures) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ResponseEntity<Void> getManifest(final String nsdInfoId, final String includeSignatures) {
+	public ResponseEntity<Resource> getManifest(final String nsdInfoId, final String includeSignatures) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ResponseEntity<Void> getNsd(final String nsdInfoId, final String includeSignatures) {
+	public ResponseEntity<Resource> getNsd(final String nsdInfoId, final String includeSignatures) {
 		// TODO Auto-generated method stub
 		return null;
 	}

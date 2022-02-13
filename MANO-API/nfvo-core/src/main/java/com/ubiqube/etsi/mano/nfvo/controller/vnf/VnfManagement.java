@@ -16,9 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.controller.vnf;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -29,26 +27,26 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 
+import com.ubiqube.etsi.mano.controller.MetaStreamResource;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.MetaStream;
+import com.ubiqube.etsi.mano.repository.ResetOnCloseInputStream;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
-import com.ubiqube.etsi.mano.utils.MimeType;
-import com.ubiqube.etsi.mano.utils.SpringUtil;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -60,7 +58,6 @@ import ma.glasnost.orika.MapperFacade;
  */
 @Service
 public class VnfManagement extends SearchableService implements VnfPackageManagement {
-	private static final String APPLICATION_ZIP = "application/zip";
 	private static final Logger LOG = LoggerFactory.getLogger(VnfManagement.class);
 
 	private final VnfPackageRepository vnfPackageRepository;
@@ -101,13 +98,12 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	 * @param rangeHeader
 	 * @return
 	 */
+	@SuppressWarnings("resource")
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final UUID vnfPkgId, final String artifactPath, final String rangeHeader) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final UUID vnfPkgId, final String artifactPath) {
 		vnfPackageRepository.get(vnfPkgId);
-		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
-
-		final InputStream bis = new ByteArrayInputStream(content);
-		final ZipInputStream zis = new ZipInputStream(bis);
+		final ManoResource content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
+		final ZipInputStream zis = new ZipInputStream(content.getInputStream());
 		ZipEntry entry = null;
 		try {
 			while ((entry = zis.getNextEntry()) != null) {
@@ -115,7 +111,11 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 					continue;
 				}
 				if (entry.getName().equals(artifactPath)) {
-					return handleArtifact(zis, rangeHeader);
+					final ResetOnCloseInputStream is = new ResetOnCloseInputStream(zis);
+					final MetaStreamResource res = new MetaStreamResource(new MetaStream(is, 350, "hh"));
+					return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+							.contentType(MediaTypeFactory.getMediaType(res).orElse(MediaType.APPLICATION_OCTET_STREAM))
+							.body(res);
 
 				}
 			}
@@ -126,38 +126,28 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 				.append(vnfPkgId).append(" artifactPath: ").append(artifactPath).toString());
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final boolean includeSignature) {
 		vnfPackageRepository.get(vnfPkgId);
-
-		final byte[] content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
-		final String mime = MimeType.findMatch(content);
-		final InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(content));
-		final BodyBuilder bodyBuilder = ResponseEntity.ok();
-		handleMimeType(bodyBuilder, mime);
-		return bodyBuilder.body(resource);
+		final ManoResource content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
+		final MetaStreamResource res = new MetaStreamResource(new MetaStream(content.getInputStream(), 350, "hh"));
+		return ResponseEntity.status(HttpStatus.OK)
+				.contentType(MediaTypeFactory
+						.getMediaType(res)
+						.orElse(MediaType.APPLICATION_OCTET_STREAM))
+				.body(res);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final UUID vnfPkgId, final String range) {
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final UUID vnfPkgId) {
 		vnfPackageRepository.get(vnfPkgId);
-		final byte[] bytes = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
-		return SpringUtil.handleBytes(bytes, range);
-	}
-
-	private static ResponseEntity<List<ResourceRegion>> handleArtifact(final ZipInputStream zis, final String range) throws IOException {
-		final byte[] zcontent = StreamUtils.copyToByteArray(zis);
-		return SpringUtil.handleBytes(zcontent, range);
-	}
-
-	private static void handleMimeType(final BodyBuilder bodyBuilder, final String mime) {
-		if (MediaType.APPLICATION_JSON_VALUE.contentEquals(mime)) {
-			bodyBuilder.contentType(MediaType.APPLICATION_JSON);
-		} else if (APPLICATION_ZIP.equals(mime)) {
-			bodyBuilder.header("Content-Type", mime);
-		} else {
-			bodyBuilder.contentType(MediaType.APPLICATION_OCTET_STREAM);
-		}
+		final ManoResource content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
+		final MetaStreamResource res = new MetaStreamResource(new MetaStream(content.getInputStream(), 350, "hh"));
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaTypeFactory
+				.getMediaType(res).orElse(MediaType.APPLICATION_OCTET_STREAM))
+				.body(res);
 	}
 
 	@Override
@@ -167,9 +157,9 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(final UUID vnfdId, final String artifactPath, final String range) {
+	public ResponseEntity<Resource> vnfPackagesVnfdIdArtifactsArtifactPathGet(final UUID vnfdId, final String artifactPath) {
 		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
-		return vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPackage.getId(), artifactPath, range);
+		return vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPackage.getId(), artifactPath);
 	}
 
 	@Override
@@ -179,9 +169,9 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdPackageContentGet(final UUID vnfdId, final String range) {
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(final UUID vnfdId) {
 		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(vnfdId);
-		return vnfPackagesVnfPkgIdPackageContentGet(vnfPackage.getId(), range);
+		return vnfPackagesVnfPkgIdPackageContentGet(vnfPackage.getId());
 	}
 
 	@Override
@@ -203,7 +193,7 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsGet(final UUID vnfdId, final String range) {
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsGet(final UUID vnfdId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

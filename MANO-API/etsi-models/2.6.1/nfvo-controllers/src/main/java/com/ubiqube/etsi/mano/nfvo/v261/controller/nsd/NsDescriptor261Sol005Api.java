@@ -18,13 +18,12 @@
 package com.ubiqube.etsi.mano.nfvo.v261.controller.nsd;
 
 import java.net.URISyntaxException;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
-import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -58,7 +57,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
  * SOL005 - NSD Management Interface
  *
  * <p>
- * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
+ * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might
+ * be not aligned to the current version of the ETSI Group Specification it
+ * refers to and has not been approved by the ETSI NFV ISG. In case of
+ * discrepancies the published ETSI Group Specification takes precedence. Please
+ * report bugs to
+ * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
 @RequestMapping("/sol005/nsd/v1/ns_descriptors")
@@ -127,9 +131,8 @@ public interface NsDescriptor261Sol005Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@GetMapping(value = "/{nsdInfoId}/nsd_content", produces = { "application/json", "application/zip", "text/plain" })
-	ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(@Nonnull @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("nsdInfoId") String nsdInfoId,
-			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema(allowableValues = { "text/plain", "application/zip" })) @RequestHeader(value = "Accept", required = true) String accept,
-			@Parameter(in = ParameterIn.HEADER, description = "\"The request may contain a \"Range\" HTTP header to obtain single range of bytes from the NSD file. This can be used to continue an aborted transmission.If the NFVO does not support range requests, the NFVO shall ignore the 'Range\" header, process the GET request, and return the whole NSD file with a 200 OK response (rather than returning a 4xx error status code).\" ", schema = @Schema()) @RequestHeader(value = "Range", required = false) String rang);
+	ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(@Nonnull @Parameter(in = ParameterIn.PATH, description = "", required = true, schema = @Schema()) @PathVariable("nsdInfoId") String nsdInfoId,
+			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema(allowableValues = { "text/plain", "application/zip" })) @RequestHeader(value = "Accept", required = true) String accept);
 
 	@Operation(summary = "Upload the content of a NSD.", description = "The PUT method is used to upload the content of a NSD. The NSD to be uploaded can be implemented as a single file or as a collection of multiple files, as defined in clause 5.4.4.3.2. If the NSD is implemented in the form of multiple files, a ZIP file embedding these files shall be uploaded. If the NSD is implemented as a single file, either that file or a ZIP file embedding that file shall be uploaded. ETSI 47 ETSI GS NFV-SOL 005 V2.6.1 (2019-04) The \"Content-Type\" HTTP header in the PUT request shall be set accordingly based on the format selection of the NSD: • If the NSD to be uploaded is a text file, the \"Content-Type\" header is set to \"text/plain\". • If the NSD to be uploaded is a zip file, the \"Content-Type\" header is set to \"application/zip\". ", tags = {})
 	@ApiResponses(value = {

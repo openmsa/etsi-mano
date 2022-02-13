@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -71,7 +72,7 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaVnfPackageReader.class);
 
-	public ToscaVnfPackageReader(final byte[] data) {
+	public ToscaVnfPackageReader(final InputStream data) {
 		super(data);
 	}
 

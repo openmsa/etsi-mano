@@ -21,12 +21,10 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v351.controller.nsd;
 
-import java.util.List;
-
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
-import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -93,7 +91,7 @@ public interface NsDescriptors351Sol005Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}/artifacts/{artifactPath}", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<Void> nsDescriptorsNsdInfoIdArtifactsArtifactPathGet(
+	ResponseEntity<Resource> nsDescriptorsNsdInfoIdArtifactsArtifactPathGet(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the individual NS descriptor resource. ", required = true, schema = @Schema()) @PathVariable("nsdInfoId") final String nsdInfoId,
 			@Parameter(in = ParameterIn.PATH, description = "For an artifact contained as a file in the NSD archive, this variable shall  contain a sequence of one or path segments representing the path of the  artifact within the NSD archive, relative to the root of the package.  EXAMPLE: foo/bar/m%40ster.sh  For an external artifact represented as a URI in the NSD archive manifest,  this variable shall contain the URI as provided in the NS archive.  This identifier can be retrieved from the \"artifactPath\" attribute of the  applicable \"artifacts\" entry in the body of the response to a GET request  querying the \"Individual NSD\" resource.  Since multiple path segments are allowed to be contained in this variable,  the \"/\" character that separates these segments is not percent-encoded.  Each individual segment is percent-encoded if necessary as defined in  clause 4.1 of ETSI GS NFV-SOL 013. ", required = true, schema = @Schema()) @PathVariable("artifactPath") final String artifactPath,
 			@Parameter(in = ParameterIn.HEADER, description = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the resource file. This can be used to continue an aborted transmission. If the NFVO does not support range requests, it should return the whole file with a 200 OK response instead. ", schema = @Schema()) @RequestHeader(value = "Range", required = false) final String range,
@@ -145,7 +143,7 @@ public interface NsDescriptors351Sol005Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}/manifest", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<Void> nsDescriptorsNsdInfoIdManifestGet(
+	ResponseEntity<Resource> nsDescriptorsNsdInfoIdManifestGet(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the individual NS descriptor resource. ", required = true, schema = @Schema()) @PathVariable("nsdInfoId") final String nsdInfoId,
 			@Parameter(in = ParameterIn.QUERY, description = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ", schema = @Schema()) @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
@@ -164,7 +162,7 @@ public interface NsDescriptors351Sol005Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}/nsd_content", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(
+	ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the individual NS descriptor resource. ", required = true, schema = @Schema()) @PathVariable("nsdInfoId") final String nsdInfoId,
 			@Parameter(in = ParameterIn.HEADER, description = "The request shall contain the appropriate entries in the \"Accept\" HTTP header. ", required = true, schema = @Schema(allowableValues = { "text/plain", "application/zip" })) @RequestHeader(value = "Accept", required = true) final String accept,
 			@Parameter(in = ParameterIn.HEADER, description = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the resource file. This can be used to continue an aborted transmission. If the NFVO does not support range requests, it should return the whole file with a 200 OK response instead. ", schema = @Schema()) @RequestHeader(value = "Range", required = false) final String range);
@@ -203,7 +201,7 @@ public interface NsDescriptors351Sol005Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))),
 			@ApiResponse(responseCode = "504", description = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}/nsd", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdGet(
+	ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdGet(
 			@Parameter(in = ParameterIn.PATH, description = "Identifier of the individual NS descriptor resource. ", required = true, schema = @Schema()) @PathVariable("nsdInfoId") final String nsdInfoId,
 			@Parameter(in = ParameterIn.QUERY, description = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ", schema = @Schema()) @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 

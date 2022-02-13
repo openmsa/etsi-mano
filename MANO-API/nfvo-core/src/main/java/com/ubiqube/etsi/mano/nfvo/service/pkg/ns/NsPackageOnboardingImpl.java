@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
@@ -54,10 +56,12 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.nfvo.service.pkg.PackageVersion;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -121,10 +125,14 @@ public class NsPackageOnboardingImpl {
 	}
 
 	public void nsOnboardingInternal(@NotNull final NsdPackage nsPackage) {
-		final byte[] data = nsdRepository.getBinary(nsPackage.getId(), "nsd");
-		final NsPackageProvider packageProvider = packageManager.getProviderFor(data);
+		final ManoResource data = nsdRepository.getBinary(nsPackage.getId(), "nsd");
+		final PackageDescriptor<NsPackageProvider> packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
-			mapNsPackage(packageProvider, nsPackage);
+			try (InputStream is = data.getInputStream()) {
+				mapNsPackage(packageProvider.getNewReaderInstance(is), nsPackage);
+			} catch (final IOException e) {
+				throw new GenericException(e);
+			}
 		}
 	}
 

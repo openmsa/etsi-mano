@@ -21,12 +21,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URISyntaxException;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.validation.Valid;
 
-import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +41,12 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfoLinks;
  * SOL005 - NSD Management Interface
  *
  * <p>
- * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might be not aligned to the current version of the ETSI Group Specification it refers to and has not been approved by the ETSI NFV ISG. In case of discrepancies the published ETSI Group Specification takes precedence. Please report bugs to https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
+ * SOL005 - NSD Management Interface IMPORTANT: Please note that this file might
+ * be not aligned to the current version of the ETSI Group Specification it
+ * refers to and has not been approved by the ETSI NFV ISG. In case of
+ * discrepancies the published ETSI Group Specification takes precedence. Please
+ * report bugs to
+ * https://forge.etsi.org/bugzilla/buglist.cgi?component=Nfv-Openapis
  *
  */
 @RestController
@@ -70,8 +74,8 @@ public class NsDescriptor261Sol005Controller implements NsDescriptor261Sol005Api
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept, final String range) {
-		return nsDescriptorGenericFrontController.getNsdContent(nsdInfoId, accept, range);
+	public ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(final String nsdInfoId, final String accept) {
+		return nsDescriptorGenericFrontController.getNsdContent(nsdInfoId, accept);
 	}
 
 	@Override
@@ -101,7 +105,7 @@ public class NsDescriptor261Sol005Controller implements NsDescriptor261Sol005Api
 		nsdSelf.setHref(_self);
 		ret.setSelf(nsdSelf);
 
-		final String _nsdContent = linkTo(methodOn(NsDescriptor261Sol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "", "")).withSelfRel().getHref();
+		final String _nsdContent = linkTo(methodOn(NsDescriptor261Sol005Api.class).nsDescriptorsNsdInfoIdNsdContentGet(id, "")).withSelfRel().getHref();
 		final Link nsdContent = new Link();
 		nsdContent.setHref(_nsdContent);
 		ret.setNsdContent(nsdContent);

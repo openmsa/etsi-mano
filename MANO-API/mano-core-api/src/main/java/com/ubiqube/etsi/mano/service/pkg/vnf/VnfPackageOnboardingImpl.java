@@ -16,10 +16,9 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -34,7 +33,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
@@ -56,6 +54,8 @@ import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.ManoUrlResource;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -106,7 +106,7 @@ public class VnfPackageOnboardingImpl {
 	}
 
 	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId) {
-		final byte[] data = vnfPackageRepository.getBinary(UUID.fromString(vnfPkgId), "vnfd");
+		final ManoResource data = vnfPackageRepository.getBinary(UUID.fromString(vnfPkgId), "vnfd");
 		VnfPackage vnfPpackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		vnfPpackage = startOnboarding(vnfPpackage);
 		return uploadAndFinishOnboarding(vnfPpackage, data);
@@ -116,22 +116,19 @@ public class VnfPackageOnboardingImpl {
 		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		startOnboarding(vnfPackage);
 		LOG.info("Async. Download of {}", url);
-		final byte[] data = getUrlContent(url);
+		final ManoResource data = new ManoUrlResource(0, url);
 		return uploadAndFinishOnboarding(vnfPackage, data);
 	}
 
-	private VnfPackage uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
+	private VnfPackage uploadAndFinishOnboarding(final VnfPackage vnfPackage, final ManoResource data) {
 		VnfPackage ret = vnfPackage;
 		try {
-			vnfPackage.setChecksum(getChecksum(data));
-			vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
 			final PackageDescriptor<VnfPackageReader> packageProvider = packageManager.getProviderFor(data);
-			if (null != packageProvider) {
-				mapVnfPackage(packageProvider.getNewReaderInstance(data), vnfPackage);
-			}
+			mapVnfPackage(vnfPackage, data, packageProvider);
 			ret = finishOnboarding(vnfPackage);
+			buildChecksum(vnfPackage, data);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
-		} catch (final RuntimeException e) {
+		} catch (final RuntimeException | NoSuchAlgorithmException | IOException e) {
 			LOG.error("", e);
 			final VnfPackage v2 = vnfPackageService.findById(vnfPackage.getId());
 			v2.setOnboardingState(OnboardingStateType.ERROR);
@@ -139,6 +136,26 @@ public class VnfPackageOnboardingImpl {
 			ret = vnfPackageService.save(v2);
 		}
 		return ret;
+	}
+
+	private static void buildChecksum(final VnfPackage vnfPackage, final ManoResource data) throws NoSuchAlgorithmException, IOException {
+		final DigestInputStream dis = new DigestInputStream(data.getInputStream(), MessageDigest.getInstance(Constants.HASH_ALGORITHM));
+		try (InputStream stream = data.getInputStream()) {
+			stream.readAllBytes();
+			vnfPackage.setChecksum(getChecksum(dis));
+		}
+	}
+
+	private void mapVnfPackage(final VnfPackage vnfPackage, final ManoResource data, final PackageDescriptor<VnfPackageReader> packageProvider) {
+		if (null == packageProvider) {
+			return;
+		}
+		try (InputStream stream = data.getInputStream();
+				final VnfPackageReader reader = packageProvider.getNewReaderInstance(stream)) {
+			mapVnfPackage(reader, vnfPackage);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	private void mapVnfPackage(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
@@ -183,10 +200,7 @@ public class VnfPackageOnboardingImpl {
 		vnfPackage.getVnfCompute().stream()
 				.flatMap(x -> x.getPorts().stream())
 				.filter(x -> x.getVirtualLink() == null)
-				.forEach(x -> {
-					x.setVirtualLink(findVl(x.getToscaName(), vnfPackage.getVirtualLinks()));
-				});
-		;
+				.forEach(x -> x.setVirtualLink(findVl(x.getToscaName(), vnfPackage.getVirtualLinks())));
 	}
 
 	private static String findVl(final String toscaName, final Set<ListKeyPair> virtualLinks) {
@@ -316,14 +330,6 @@ public class VnfPackageOnboardingImpl {
 		return vduInitialDeltas.stream().filter(x -> x.getTargets().contains(y)).findFirst().orElseThrow(() -> new GenericException("Could not find initial level for vdu " + y));
 	}
 
-	private static Integer getStepInstance(final List<VduScalingAspectDeltas> vduScalingAspectDeltas, final String aspect, final String deltaName) {
-		return vduScalingAspectDeltas.stream()
-				.filter(z -> z.getAspect().equals(aspect))
-				.map(z -> z.getDeltas().get(deltaName))
-				.map(VduLevel::getNumberOfInstances)
-				.findFirst().orElse(0);
-	}
-
 	@Nonnull
 	private static VnfCompute findVnfCompute(final VnfPackage vnfPackage, final String y) {
 		return vnfPackage.getVnfCompute().stream()
@@ -349,23 +355,8 @@ public class VnfPackageOnboardingImpl {
 				.collect(Collectors.toSet());
 	}
 
-	private static byte[] getUrlContent(final String uri) {
-		try {
-			final URL url = new URL(uri);
-			return StreamUtils.copyToByteArray((InputStream) url.getContent());
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	private static PkgChecksum getChecksum(final byte[] bytes) {
-		MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
-		} catch (final NoSuchAlgorithmException e) {
-			throw new GenericException(e);
-		}
-		final byte[] hashbytes = digest.digest(bytes);
+	private static PkgChecksum getChecksum(final DigestInputStream digest) {
+		final byte[] hashbytes = digest.getMessageDigest().digest();
 		final String sha3_256hex = bytesToHex(hashbytes);
 		final PkgChecksum checksum = new PkgChecksum();
 

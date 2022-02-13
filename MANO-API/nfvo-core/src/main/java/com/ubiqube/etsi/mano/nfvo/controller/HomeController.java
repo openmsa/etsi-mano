@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.controller;
 
+import java.io.InputStream;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.nfvo.service.TemporaryDownloadService;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.service.SystemService;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
@@ -76,9 +78,9 @@ public class HomeController {
 	}
 
 	@GetMapping(value = "/download/{id}")
-	public ResponseEntity<byte[]> downloadAnonymous(@PathVariable("id") final String id) {
-		final byte[] res = temporaryDownloadService.getDocument(id);
-		return ResponseEntity.ok(res);
+	public ResponseEntity<InputStream> downloadAnonymous(@PathVariable("id") final String id) {
+		final ManoResource res = temporaryDownloadService.getDocument(id);
+		return ResponseEntity.ok(res.getInputStream());
 	}
 
 	@PostMapping(value = "/expose/{objectType}/{id}")

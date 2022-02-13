@@ -22,11 +22,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
@@ -60,30 +58,30 @@ public interface VnfPackageManagement {
 	 * @param rangeHeader
 	 * @return
 	 */
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull UUID vnfPkgId, @Nonnull String artifactPath, @Nullable String rangeHeader);
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull UUID vnfPkgId, @Nonnull String artifactPath);
 
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull UUID vnfPkgId, boolean includeSignature);
 
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull UUID vnfPkgId, @Nullable String range);
+	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull UUID vnfPkgId);
 
-	ResponseEntity<Void> getPackageManifest(UUID vnfPkgId, String includeSignatures);
+	ResponseEntity<Void> getPackageManifest(@Nonnull UUID vnfPkgId, String includeSignatures);
 
-	ResponseEntity<List<ResourceRegion>> vnfPackagesVnfdIdArtifactsArtifactPathGet(UUID vnfPkgId, String artifactPath, String range);
+	ResponseEntity<Resource> vnfPackagesVnfdIdArtifactsArtifactPathGet(@Nonnull UUID vnfPkgId, String artifactPath);
 
-	ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(UUID vnfdId, @Valid String includeSignatures);
+	ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(@Nonnull UUID vnfdId, String includeSignatures);
 
-	ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdPackageContentGet(UUID vnfdId, String range);
+	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(@Nonnull UUID vnfdId);
 
-	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(UUID vnfdId, @Valid String includeSignatures);
+	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(@Nonnull UUID vnfdId, String includeSignatures);
 
-	<U> U onboardedVnfPackagesVnfdIdGet(UUID vnfdId, Class<U> clazz);
+	<U> U onboardedVnfPackagesVnfdIdGet(@Nonnull UUID vnfdId, Class<U> clazz);
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 
-	ResponseEntity<Resource> onboardedGetManifestByVnfd(UUID vnfdId, @Valid String includeSignature);
+	ResponseEntity<Resource> onboardedGetManifestByVnfd(@Nonnull UUID vnfdId, @Valid String includeSignature);
 
-	ResponseEntity<List<ResourceRegion>> onboardedVnfPackagesVnfdIdArtifactsGet(UUID vnfdId, String range);
+	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsGet(@Nonnull UUID vnfdId);
 
-	<U> U vnfPackagesVnfPkgVnfdIdGet(UUID vnfPkgId, Class<U> clazz);
+	<U> U vnfPackagesVnfPkgVnfdIdGet(@Nonnull UUID vnfPkgId, Class<U> clazz);
 
 }

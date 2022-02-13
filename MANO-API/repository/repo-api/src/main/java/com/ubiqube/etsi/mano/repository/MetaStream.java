@@ -14,22 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
+package com.ubiqube.etsi.mano.repository;
 
-import javax.annotation.Nullable;
-
-import com.ubiqube.etsi.mano.repository.ManoResource;
-import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
+import java.io.InputStream;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface NsPackageManager {
-
-	@Nullable
-	PackageDescriptor<NsPackageProvider> getProviderFor(ManoResource data);
-
+public record MetaStream(InputStream is, int size, String mimeType) {
+	//
 }

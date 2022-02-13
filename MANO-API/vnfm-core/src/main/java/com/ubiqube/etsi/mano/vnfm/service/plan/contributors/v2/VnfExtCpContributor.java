@@ -81,28 +81,7 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 		final List ret = new ArrayList<>();
 		vnfPackage.getVnfExtCp().stream().forEach(vnfExtCp -> {
 			if (!have(instances, vnfExtCp.getToscaName())) {
-				final Optional<VnfVl> vl = vnfPackage.getVnfVl().stream()
-						.filter(y -> y.getToscaName().equals(vnfExtCp.getInternalVirtualLink()))
-						.findFirst();
-				if (vl.isPresent()) {
-					final ExternalCpTask task = addTask(vnfExtCp, vl.get().getToscaName());
-					ret.add(new VnfExtCpVt(task));
-				} else {
-					final Optional<String> vlName = findVl(vnfPackage, vnfExtCp.getToscaName());
-					if (vlName.isPresent()) {
-						// Early VnfExCp, informations will came from InstantiateRequest.
-						final Set<ExtManagedVirtualLinkDataEntity> extVl = plan.getExtManagedVirtualLinks();
-						final Optional<ExtManagedVirtualLinkDataEntity> ex = extVl.stream()
-								.filter(z -> z.getVnfVirtualLinkDescId().equals(vlName.get()))
-								.findFirst();
-						if (ex.isPresent()) {
-							//
-							final ExternalCpTask t = addTask(vnfExtCp, ex.get().getVnfVirtualLinkDescId());
-							t.setPreExtCpResourceId(ex.get().getResourceId());
-							ret.add(new VnfPreExtCp(t));
-						}
-					}
-				}
+				handleExtCp(plan, vnfPackage, ret, vnfExtCp);
 			} else {
 				final Optional<VnfCompute> compute = vnfPackage.getVnfCompute().stream()
 						.peek(y -> LOG.debug(" '{}' = '{}' => {}", y.getToscaName(), vnfExtCp.getInternalVirtualLink(), y.getToscaName().equals(vnfExtCp.getInternalVirtualLink())))
@@ -121,6 +100,31 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 			}
 		});
 		return ret;
+	}
+
+	private static void handleExtCp(final VnfBlueprint plan, final VnfPackage vnfPackage, final List ret, final com.ubiqube.etsi.mano.dao.mano.VnfExtCp vnfExtCp) {
+		final Optional<VnfVl> vl = vnfPackage.getVnfVl().stream()
+				.filter(y -> y.getToscaName().equals(vnfExtCp.getInternalVirtualLink()))
+				.findFirst();
+		if (vl.isPresent()) {
+			final ExternalCpTask task = addTask(vnfExtCp, vl.get().getToscaName());
+			ret.add(new VnfExtCpVt(task));
+		} else {
+			final Optional<String> vlName = findVl(vnfPackage, vnfExtCp.getToscaName());
+			if (vlName.isPresent()) {
+				// Early VnfExCp, informations will came from InstantiateRequest.
+				final Set<ExtManagedVirtualLinkDataEntity> extVl = plan.getExtManagedVirtualLinks();
+				final Optional<ExtManagedVirtualLinkDataEntity> ex = extVl.stream()
+						.filter(z -> z.getVnfVirtualLinkDescId().equals(vlName.get()))
+						.findFirst();
+				if (ex.isPresent()) {
+					//
+					final ExternalCpTask t = addTask(vnfExtCp, ex.get().getVnfVirtualLinkDescId());
+					t.setPreExtCpResourceId(ex.get().getResourceId());
+					ret.add(new VnfPreExtCp(t));
+				}
+			}
+		}
 	}
 
 	private static ExternalCpTask addTask(final com.ubiqube.etsi.mano.dao.mano.VnfExtCp vnfExtCp, final String toscaName) {

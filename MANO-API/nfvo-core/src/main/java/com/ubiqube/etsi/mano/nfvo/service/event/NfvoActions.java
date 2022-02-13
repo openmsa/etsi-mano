@@ -28,16 +28,13 @@ import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
-import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsOrchestrationAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsWorkflow;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
 import com.ubiqube.etsi.mano.service.NsScaleStrategy;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.event.AbstractGenericAction;
-import com.ubiqube.etsi.mano.service.event.OrchestrationAdapter;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
-import com.ubiqube.etsi.mano.service.rest.ManoClientFactory;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
 /**
@@ -47,10 +44,6 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  */
 @Service
 public class NfvoActions extends AbstractGenericAction {
-	private OrchestrationAdapter<?, ?> orchestrationAdapter;
-	NsLiveInstanceJpa nsLiveInstanceJpa;
-	ManoClientFactory manoClientFactory;
-
 	public NfvoActions(final NsWorkflow workflow, final VimResourceService vimResourceService, final NsOrchestrationAdapter orchestrationAdapter, final NsScaleStrategy nsScaleStrategy) {
 		super(workflow, vimResourceService, orchestrationAdapter, nsScaleStrategy);
 	}

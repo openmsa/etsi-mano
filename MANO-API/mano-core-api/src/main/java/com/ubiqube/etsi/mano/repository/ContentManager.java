@@ -23,7 +23,7 @@ public interface ContentManager {
 
 	void store(Path _filename, InputStream _stream);
 
-	InputStream load(Path _filename, int start, Long end);
+	ManoResource load(Path filename);
 
 	void mkdir(Path _path);
 

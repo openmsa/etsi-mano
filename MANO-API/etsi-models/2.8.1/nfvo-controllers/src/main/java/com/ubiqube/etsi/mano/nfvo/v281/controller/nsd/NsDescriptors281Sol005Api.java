@@ -21,13 +21,11 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v281.controller.nsd;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
-import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -120,7 +118,7 @@ public interface NsDescriptors281Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}/manifest", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<Void> nsDescriptorsNsdInfoIdManifestGet(
+	ResponseEntity<Resource> nsDescriptorsNsdInfoIdManifestGet(
 			@ApiParam(value = "Identifier of the individual NS descriptor. This identifier can be retrieved from the resource referenced by the \"Location\" HTTP header in the response to a POST request creating a new NS descriptor resource. It can also be retrieved from the \"id\" attribute in the payload body of that response. ", required = true) @PathVariable("nsdInfoId") String nsdInfoId,
 			@ApiParam(value = "If this parameter is provided, the NFVO shall return the manifest and related security information (signature and certificate) either in a single text file if the signature and certificate are included in the manifest file, or in a zip file containing the manifest and the certificate file, if this is provided as a separate file in the NSD archive. If this parameter is not given, the NFVO shall provide only a copy of the manifest file, as onboarded. If the security information is included in the onboarded manifest, it shall also be included in the returned copy. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) String includeSignatures);
 
@@ -140,7 +138,7 @@ public interface NsDescriptors281Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}/nsd_content", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<List<ResourceRegion>> nsDescriptorsNsdInfoIdNsdContentGet(@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") String nsdInfoId,
+	ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdContentGet(@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") String nsdInfoId,
 			@ApiParam(value = "Content-Types that are acceptable for the response. ", required = true, allowableValues = "text/plain, application/zip") @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "The request may contain a \"Range\" HTTP header to obtain single range of bytes from the NSD archive. This can be used to continue an aborted transmission. If the Range header is present in the request and the NFVO does not support responding to range requests with a 206 response, it shall return a 200 OK response instead as defined below. ") @RequestHeader(value = "Range", required = false) String range);
 
@@ -178,7 +176,7 @@ public interface NsDescriptors281Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class),
 			@ApiResponse(code = 504, message = "504 GATEWAY TIMEOUT If the API producer encounters a timeout while waiting for a response from an upstream server (i.e. a server that the API producer communicates with when fulfilling a request), it should respond with this response code. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/ns_descriptors/{nsdInfoId}/nsd", produces = { "application/json" }, method = RequestMethod.GET)
-	ResponseEntity<Void> nsDescriptorsNsdInfoIdNsdGet(
+	ResponseEntity<Resource> nsDescriptorsNsdInfoIdNsdGet(
 			@ApiParam(value = "", required = true) @PathVariable("nsdInfoId") String nsdInfoId,
 			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP file the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) String includeSignatures);
 

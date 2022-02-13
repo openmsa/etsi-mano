@@ -11,8 +11,8 @@
 	</parent>
 	<groupId>com.ubiqube.mano.service.mon</groupId>
 	<artifactId>mano-mon-aggregator</artifactId>
-	<description>Build document for ETSI-MANO Monitoring</description>
 	<packaging>pom</packaging>
+	<description>Build document for ETSI-MANO Monitoring</description>
 
 	<modules>
 		<module>gnocchi</module>

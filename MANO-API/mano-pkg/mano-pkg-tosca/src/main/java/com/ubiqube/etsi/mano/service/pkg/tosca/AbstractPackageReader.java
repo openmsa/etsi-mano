@@ -16,7 +16,11 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +48,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public abstract class AbstractPackageReader {
+public abstract class AbstractPackageReader implements Closeable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractPackageReader.class);
 
@@ -53,8 +57,10 @@ public abstract class AbstractPackageReader {
 
 	private final ToscaParser toscaParser;
 
-	protected AbstractPackageReader(final byte[] data) {
-		final File tempFile = PkgUtils.fetchData(data);
+	private final File tempFile;
+
+	protected AbstractPackageReader(final InputStream data) {
+		tempFile = PkgUtils.fetchData(data);
 		toscaParser = new ToscaParser(tempFile);
 		root = toscaParser.getContext();
 		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
@@ -128,4 +134,10 @@ public abstract class AbstractPackageReader {
 	protected MapperFacade getMapper() {
 		return mapper;
 	}
+
+	@Override
+	public void close() throws IOException {
+		Files.delete(tempFile.toPath());
+	}
+
 }

@@ -43,6 +43,8 @@ public class KeycloakAuth implements SecutiryConfig {
 
 	/**
 	 * All request must be authenticated, No login page.
+	 *
+	 * @throws Exception
 	 */
 	@Override
 	public void configure(final ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry http) throws Exception {

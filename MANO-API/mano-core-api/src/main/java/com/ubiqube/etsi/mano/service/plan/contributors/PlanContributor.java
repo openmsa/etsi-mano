@@ -25,6 +25,16 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 import com.ubiqube.etsi.mano.service.graph.wfe2.DependencyBuilder;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ * @param <P>
+ * @param <B>
+ * @param <U>
+ * @param <R>
+ * @deprecated Use orchestration module.
+ */
 @Deprecated(forRemoval = true)
 public interface PlanContributor<P, B, U extends Task, R> {
 

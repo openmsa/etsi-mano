@@ -27,9 +27,9 @@ public interface BinaryRepository {
 
 	void storeBinary(@NotNull UUID id, @NotNull String filename, InputStream stream);
 
-	byte[] getBinary(@NotNull UUID id, @NotNull String filename);
+	ManoResource getBinary(@NotNull UUID id, @NotNull String filename);
 
-	byte[] getBinary(@NotNull UUID id, @NotNull String filename, int min, Long max);
+	ManoResource getBinary(@NotNull UUID id, @NotNull String filename, int min, Long max);
 
 	void delete(@NotNull UUID id, @NotNull String filename);
 

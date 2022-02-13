@@ -16,6 +16,11 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.ns;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
@@ -29,10 +34,20 @@ import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 @Service
 public class ToscaNsRegistryHandler implements PackageDescriptor<NsPackageProvider> {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ToscaNsRegistryHandler.class);
+
 	@Override
-	public boolean isProcessable(final byte[] data) {
+	public boolean isProcessable(final InputStream data) {
 		// P K x03 x04
-		return data.length > 10 && data[0] == 'P' && data[1] == 'K';
+		try {
+			if (data.read() != 'P' || data.read() != 'K') {
+				return false;
+			}
+		} catch (final IOException e) {
+			LOG.trace("", e);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -41,7 +56,7 @@ public class ToscaNsRegistryHandler implements PackageDescriptor<NsPackageProvid
 	}
 
 	@Override
-	public NsPackageProvider getNewReaderInstance(final byte[] data) {
+	public NsPackageProvider getNewReaderInstance(final InputStream data) {
 		return new ToscaNsPackageProvider(data);
 	}
 

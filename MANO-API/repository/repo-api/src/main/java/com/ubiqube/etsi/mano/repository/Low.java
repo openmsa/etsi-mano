@@ -90,7 +90,7 @@ public interface Low {
 	 * @param max  End offset.
 	 * @return The content of the file.
 	 */
-	byte[] get(String path, int min, Long max);
+	ManoResource get(String path, int min, Long max);
 
 	/**
 	 * Convenient method for retrieving a file.
@@ -98,5 +98,5 @@ public interface Low {
 	 * @param _pathThe filename.
 	 * @return The content of the file.
 	 */
-	byte[] get(String path);
+	ManoResource get(String path);
 }

@@ -16,6 +16,11 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
@@ -29,10 +34,20 @@ import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 @Service
 public class ToscaVnfRegistryHandler implements PackageDescriptor<VnfPackageReader> {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ToscaVnfRegistryHandler.class);
+
 	@Override
-	public boolean isProcessable(final byte[] data) {
+	public boolean isProcessable(final InputStream data) {
 		// P K x03 x04
-		return data.length > 10 && data[0] == 'P' && data[1] == 'K';
+		try {
+			if (data.read() != 'P' || data.read() != 'K') {
+				return false;
+			}
+		} catch (final IOException e) {
+			LOG.trace("", e);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -41,7 +56,7 @@ public class ToscaVnfRegistryHandler implements PackageDescriptor<VnfPackageRead
 	}
 
 	@Override
-	public VnfPackageReader getNewReaderInstance(final byte[] data) {
+	public VnfPackageReader getNewReaderInstance(final InputStream data) {
 		return new ToscaVnfPackageReader(data);
 	}
 

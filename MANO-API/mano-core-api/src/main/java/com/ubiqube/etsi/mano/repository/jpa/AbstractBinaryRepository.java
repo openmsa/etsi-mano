@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.repository.jpa;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -25,13 +24,12 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.util.StreamUtils;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.ContentManager;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 
 public abstract class AbstractBinaryRepository implements BinaryRepository {
@@ -71,18 +69,14 @@ public abstract class AbstractBinaryRepository implements BinaryRepository {
 	}
 
 	@Override
-	public final byte[] getBinary(@NotNull final UUID id, @NotNull final String filename) {
+	public final ManoResource getBinary(@NotNull final UUID id, @NotNull final String filename) {
 		return getBinary(id, filename, 0, null);
 	}
 
 	@Override
-	public final byte[] getBinary(@NotNull final UUID id, @NotNull final String filename, final int min, final Long max) {
+	public final ManoResource getBinary(@NotNull final UUID id, @NotNull final String filename, final int min, final Long max) {
 		final Path path = namingStrategy.getRoot(getFrontClass(), id, filename);
-		try (InputStream os = contentManager.load(path, min, max)) {
-			return StreamUtils.copyToByteArray(os);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
+		return contentManager.load(path);
 	}
 
 	@Override

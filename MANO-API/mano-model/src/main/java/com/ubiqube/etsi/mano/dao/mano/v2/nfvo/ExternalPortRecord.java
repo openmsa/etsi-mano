@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -38,7 +39,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExternalPortRecord {
+public class ExternalPortRecord implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;

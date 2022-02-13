@@ -139,21 +139,18 @@ public abstract class AbstractGenericAction {
 		}
 	}
 
-	private Object setScaleStatus(final Instance instance, final Set<ScaleInfo> si, final ScaleTypeEnum scaleTypeEnum) {
-		si.stream().forEach(x -> {
-			instance.getInstantiatedVnfInfo().getScaleStatus().stream()
-					.filter(y -> y.getAspectId().equals(x.getAspectId()))
-					.findFirst()
-					.ifPresent(y -> y.setScaleLevel(getNewStep(scaleTypeEnum, y.getScaleLevel(), x.getScaleLevel())));
-		});
-
+	private static Object setScaleStatus(final Instance instance, final Set<ScaleInfo> si, final ScaleTypeEnum scaleTypeEnum) {
+		si.stream().forEach(x -> instance.getInstantiatedVnfInfo().getScaleStatus().stream()
+				.filter(y -> y.getAspectId().equals(x.getAspectId()))
+				.findFirst()
+				.ifPresent(y -> y.setScaleLevel(getNewStep(scaleTypeEnum, y.getScaleLevel(), x.getScaleLevel()))));
 		return null;
 	}
 
-	private int getNewStep(final ScaleTypeEnum scaleTypeEnum, final int orig, final int adder) {
+	private static int getNewStep(final ScaleTypeEnum scaleTypeEnum, final int orig, final int adder) {
 		if (scaleTypeEnum == ScaleTypeEnum.IN) {
 			final int i = orig - adder;
-			return (i < 0) ? 0 : i;
+			return i < 0 ? 0 : i;
 		}
 		return orig + adder;
 	}
@@ -238,12 +235,12 @@ public abstract class AbstractGenericAction {
 			final ChangeType ct = rhe.getChangeType();
 			if (ct == ChangeType.ADDED) {
 				final String il = Optional.ofNullable(rhe.getScaleInfo()).map(ScaleInfo::getAspectId).orElse(null);
-				if ((null != rhe.getId()) && (null != rhe.getVimResourceId())) {
+				if (null != rhe.getId() && null != rhe.getVimResourceId()) {
 					// orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
 				} else {
 					LOG.warn("No vim resource or database id for: {}", x.getTask().getTask().getParameters().getToscaName());
 				}
-			} else if ((ct == ChangeType.REMOVED) && (null != rhe.getId())) {
+			} else if (ct == ChangeType.REMOVED && null != rhe.getId()) {
 				LOG.info("Removing {}", rhe.getId());
 				orchestrationAdapter.deleteLiveInstance(rhe.getRemovedLiveInstance());
 			}

@@ -14,33 +14,44 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
+package com.ubiqube.etsi.mano.repository;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
-import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NsDefaultRegistryHandler implements PackageDescriptor<NsPackageProvider> {
+public class ResetOnCloseInputStream extends InputStream {
 
-	@Override
-	public boolean isProcessable(final InputStream data) {
-		return false;
+	private static final Logger LOG = LoggerFactory.getLogger(ResetOnCloseInputStream.class);
+
+	private final InputStream decorated;
+
+	public ResetOnCloseInputStream(final InputStream anInputStream) {
+		if (!anInputStream.markSupported()) {
+			LOG.warn("Packing {} into a buffered InputStream", anInputStream);
+			final BufferedInputStream bis = new BufferedInputStream(anInputStream);
+			this.decorated = bis;
+		} else {
+			this.decorated = anInputStream;
+		}
+		anInputStream.mark(1 << 24);
 	}
 
 	@Override
-	public String getProviderName() {
-		return "NSD default package processor.";
+	public void close() throws IOException {
+		decorated.reset();
 	}
 
 	@Override
-	public NsPackageProvider getNewReaderInstance(final InputStream data) {
-		return new DefaultNsPackageProvider();
+	public int read() throws IOException {
+		return decorated.read();
 	}
-
 }

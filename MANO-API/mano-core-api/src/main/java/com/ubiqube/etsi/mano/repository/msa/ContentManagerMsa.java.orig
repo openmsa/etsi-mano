@@ -14,35 +14,45 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg.vnf;
+package com.ubiqube.etsi.mano.repository.msa;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.repository.ContentManager;
+import com.ubiqube.etsi.mano.repository.Low;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
 @Service
-public class VnfDefaultRegistryHandler implements PackageDescriptor<VnfPackageReader> {
+public class ContentManagerMsa implements ContentManager {
+	private final Low lowDriver;
 
-	@Override
-	public boolean isProcessable(final InputStream data) {
-		return false;
+	public ContentManagerMsa(final Low lowDriver) {
+		super();
+		this.lowDriver = lowDriver;
 	}
 
 	@Override
-	public String getProviderName() {
-		return "UBI-DEFAULT";
+	public void store(final Path filename, final InputStream stream) {
+		lowDriver.add(filename.toString(), stream);
 	}
 
 	@Override
-	public VnfPackageReader getNewReaderInstance(final InputStream data) {
-		return new DefaultVnfPackageReader();
+	public InputStream load(final Path filename, final int start, final Long end) {
+		final byte[] bytes = lowDriver.get(filename.toString(), start, end);
+		return new ByteArrayInputStream(bytes);
+	}
+
+	@Override
+	public void mkdir(final Path path) {
+		lowDriver.mkdir(path.toString());
+	}
+
+	@Override
+	public void delete(final Path path) {
+		lowDriver.delete(path.toString());
 	}
 
 }

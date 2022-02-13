@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.ns;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -78,7 +79,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaNsPackageProvider.class);
 
-	public ToscaNsPackageProvider(final byte[] data) {
+	public ToscaNsPackageProvider(final InputStream data) {
 		super(data);
 	}
 

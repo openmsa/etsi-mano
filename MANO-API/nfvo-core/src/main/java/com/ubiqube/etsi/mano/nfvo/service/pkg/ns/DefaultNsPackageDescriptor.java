@@ -16,9 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
-import javax.annotation.Nullable;
+import java.io.InputStream;
 
-import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 
@@ -27,9 +26,22 @@ import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface NsPackageManager {
+public class DefaultNsPackageDescriptor implements PackageDescriptor<NsPackageProvider> {
 
-	@Nullable
-	PackageDescriptor<NsPackageProvider> getProviderFor(ManoResource data);
+	@Override
+	public String getProviderName() {
+		return "DEFAULT NSD";
+	}
+
+	@Override
+	public boolean isProcessable(final InputStream data) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public NsPackageProvider getNewReaderInstance(final InputStream data) {
+		return null;
+	}
 
 }

@@ -14,37 +14,56 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg;
+package com.ubiqube.etsi.mano.repository.phys;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.RepositoryException;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class PkgUtils {
-	private PkgUtils() {
-		// Nothing.
+public class PhysResource implements ManoResource {
+	private long size;
+	private String fileName;
+
+	public PhysResource(final long size, final String fileName) {
+		super();
+		this.size = size;
+		this.fileName = fileName;
 	}
 
-	public static File fetchData(final InputStream data) {
-		File tempFile;
+	@Override
+	public InputStream getInputStream() {
 		try {
-			tempFile = File.createTempFile("tosca", ".zip");
+			return Files.newInputStream(Paths.get(fileName));
 		} catch (final IOException e) {
-			throw new ToscaException(e);
+			throw new RepositoryException(e);
 		}
-		try (final OutputStream os = new FileOutputStream(tempFile)) {
-			data.transferTo(os);
-		} catch (final IOException e) {
-			throw new ToscaException(e);
-		}
-		return tempFile;
+	}
+
+	@Override
+	public long getSize() {
+		return size;
+	}
+
+	public void setSize(final long size) {
+		this.size = size;
+	}
+
+	@Override
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(final String fileName) {
+		this.fileName = fileName;
 	}
 
 }

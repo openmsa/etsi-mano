@@ -29,6 +29,7 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.RepositoryException;
 
 /**
@@ -80,24 +81,24 @@ public class LowGridFs implements Low {
 		return false;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
-	public byte[] get(final String path, final int min, final Long max) {
+	public ManoResource get(final String path, final int min, final Long max) {
 		final GridFsResource file = gridFsTemplate.getResource(path);
-		try (InputStream stream = file.getContent()) {
-			stream.skip(min);
-			return stream.readAllBytes();
-		} catch (final IOException e) {
+		try {
+			return new ManoGridFsResource(file.contentLength(), file.getContent(), file.getFilename());
+		} catch (IllegalStateException | IOException e) {
 			throw new RepositoryException(e);
 		}
-
 	}
 
+	@SuppressWarnings("resource")
 	@Override
-	public byte[] get(final String path) {
+	public ManoResource get(final String path) {
 		final GridFsResource file = gridFsTemplate.getResource(path);
-		try (InputStream stream = file.getContent()) {
-			return stream.readAllBytes();
-		} catch (final IOException e) {
+		try {
+			return new ManoGridFsResource(file.contentLength(), file.getContent(), file.getFilename());
+		} catch (IllegalStateException | IOException e) {
 			throw new RepositoryException(e);
 		}
 	}

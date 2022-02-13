@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ubiqube.parser.tosca.ZipUtil.Entry;
 import com.ubiqube.parser.tosca.csar.CsarParser;
+import com.ubiqube.parser.tosca.csar.CsarParserImpl;
 
 class CsarTest {
 
@@ -41,7 +42,7 @@ class CsarTest {
 	void testGetFiles() throws IOException {
 		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
-		final CsarParser csar = new CsarParser(new File("/tmp/ubi-tosca.csar"));
+		final CsarParser csar = new CsarParserImpl(new File("/tmp/ubi-tosca.csar"));
 		final List<?> list = csar.getFiles();
 		assertNotNull(list);
 		final String def = csar.getEntryDefinition();
@@ -60,7 +61,7 @@ class CsarTest {
 				Entry.of("csar_elk/Definitions/rsyslog.yaml", "Definitions/rsyslog.yaml"),
 				Entry.of("csar_elk/Definitions/tosca_elk.yaml", "Definitions/tosca_elk.yaml"),
 				Entry.of("csar_elk/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
-		final CsarParser csar = new CsarParser(new File("/tmp/ubi-tosca.csar"));
+		final CsarParser csar = new CsarParserImpl(new File("/tmp/ubi-tosca.csar"));
 		final List<?> list = csar.getFiles();
 		assertNotNull(list);
 	}

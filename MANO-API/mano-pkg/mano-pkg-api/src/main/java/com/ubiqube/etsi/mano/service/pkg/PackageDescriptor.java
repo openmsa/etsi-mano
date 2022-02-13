@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.pkg;
 
+import java.io.InputStream;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -25,7 +27,7 @@ public interface PackageDescriptor<U> {
 
 	String getProviderName();
 
-	boolean isProcessable(byte[] data);
+	boolean isProcessable(InputStream data);
 
-	U getNewReaderInstance(byte[] data);
+	U getNewReaderInstance(InputStream data);
 }

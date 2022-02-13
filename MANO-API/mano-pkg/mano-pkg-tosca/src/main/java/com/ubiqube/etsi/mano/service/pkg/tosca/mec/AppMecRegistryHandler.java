@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.service.pkg.tosca.mec;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
 import com.ubiqube.parser.tosca.csar.CsarParser;
+import com.ubiqube.parser.tosca.csar.CsarParserImpl;
 
 /**
  *
@@ -44,15 +46,15 @@ public class AppMecRegistryHandler implements PackageDescriptor<AppToscaProvider
 	private static final Logger LOG = LoggerFactory.getLogger(AppMecRegistryHandler.class);
 
 	@Override
-	public boolean isProcessable(final byte[] data) {
+	public boolean isProcessable(final InputStream data) {
 		final ObjectMapper mapper = getMapper();
 		try {
-			if (data.length <= 10 || data[0] != 'P' || data[1] != 'K') {
+			if (data.read() != 'P' || data.read() != 'K') {
 				LOG.debug("Not a Zip File.");
 				return false;
 			}
 			final File filename = PkgUtils.fetchData(data);
-			final CsarParser cp = new CsarParser(filename);
+			final CsarParser cp = new CsarParserImpl(filename);
 			final String ep = cp.getEntryDefinition();
 
 			final JsonNode tree = mapper.readTree(ep.getBytes());
@@ -88,7 +90,7 @@ public class AppMecRegistryHandler implements PackageDescriptor<AppToscaProvider
 	}
 
 	@Override
-	public AppToscaProvider getNewReaderInstance(final byte[] data) {
+	public AppToscaProvider getNewReaderInstance(final InputStream data) {
 		return new AppToscaProvider(data);
 	}
 

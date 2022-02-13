@@ -22,7 +22,6 @@ import static com.ubiqube.etsi.mano.Constants.VNF_SEARCH_MANDATORY_FIELDS;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -31,7 +30,6 @@ import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -67,9 +65,9 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> getArtifact(final HttpServletRequest request, final UUID vnfPkgId, final String range, final String includeSignature) {
+	public ResponseEntity<Resource> getArtifact(final HttpServletRequest request, final UUID vnfPkgId, final String includeSignature) {
 		final String artifactPath = SpringUtils.extractParams(request);
-		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath, range);
+		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath);
 	}
 
 	@Override
@@ -94,8 +92,8 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> getContent(final UUID vnfPkgId, final String range) {
-		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId, range);
+	public ResponseEntity<Resource> getContent(final UUID vnfPkgId) {
+		return vnfManagement.vnfPackagesVnfPkgIdPackageContentGet(vnfPkgId);
 	}
 
 	@Override
@@ -104,7 +102,7 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> getSelectArtifacts(final HttpServletRequest request, final UUID vnfPkgId, final String range) {
+	public ResponseEntity<Resource> getSelectArtifacts(final HttpServletRequest request, final UUID vnfPkgId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -167,7 +165,7 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> searchArtifact(final UUID safeUUID, final String range, final String includeSignatures, final String excludeAllManoArtifacts, final String excludeAllNonManoArtifacts, final String selectNonManoArtifactSets) {
+	public ResponseEntity<Resource> searchArtifact(final UUID safeUUID, final String includeSignatures, final String excludeAllManoArtifacts, final String excludeAllNonManoArtifacts, final String selectNonManoArtifactSets) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -179,7 +177,7 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedGetContentByVnfdId(final String vnfdId, final String range) {
+	public ResponseEntity<Resource> onboardedGetContentByVnfdId(final String vnfdId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -191,7 +189,7 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedGetArtifact(final HttpServletRequest request, final UUID safeUUID, final String range, final String includeSignatures) {
+	public ResponseEntity<Resource> onboardedGetArtifact(final HttpServletRequest request, final UUID safeUUID, final String includeSignatures) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -204,7 +202,7 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> onboardedGetVnfdByVnfdId(final UUID safeUUID, final String range) {
+	public ResponseEntity<Resource> onboardedGetVnfdByVnfdId(final UUID safeUUID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

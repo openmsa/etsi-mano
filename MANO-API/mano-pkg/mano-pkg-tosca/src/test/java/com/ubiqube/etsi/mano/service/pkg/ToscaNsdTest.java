@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.pkg;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class ToscaNsdTest {
 				Entry.of("ubi-nsd-tosca/Definitions/etsi_nfv_sol001_pnfd_types.yaml", "Definitions/etsi_nfv_sol001_pnfd_types.yaml"),
 				Entry.of("ubi-nsd-tosca/Definitions/etsi_nfv_sol001_common_types.yaml", "Definitions/etsi_nfv_sol001_common_types.yaml"),
 				Entry.of("ubi-nsd-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
-		final byte[] data = Files.readAllBytes(Path.of("/tmp/ubi-nsd-tosca.csar"));
+		final InputStream data = Files.newInputStream(Path.of("/tmp/ubi-nsd-tosca.csar"));
 		tpp = new ToscaNsPackageProvider(data);
 	}
 

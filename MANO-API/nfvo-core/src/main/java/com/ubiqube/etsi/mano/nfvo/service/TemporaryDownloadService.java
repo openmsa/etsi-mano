@@ -35,6 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload.ObjectType;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.nfvo.jpa.TemporaryDownloadJpa;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
@@ -61,7 +62,7 @@ public class TemporaryDownloadService {
 		return temporaryJpa.save(td);
 	}
 
-	public byte[] getDocument(final String id) {
+	public ManoResource getDocument(final String id) {
 		final Optional<TemporaryDownload> odoc = temporaryJpa.findByIdAndExpirationDateAfter(id, new Date());
 		final TemporaryDownload doc = odoc.orElseThrow(() -> new NotFoundException("No temporary download available with id: " + id));
 		final String objectId = doc.getObjectId().toString();
