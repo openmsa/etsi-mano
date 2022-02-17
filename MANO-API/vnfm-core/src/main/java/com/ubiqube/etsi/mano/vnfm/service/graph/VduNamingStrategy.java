@@ -16,7 +16,9 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service.graph;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 public interface VduNamingStrategy {
@@ -26,4 +28,6 @@ public interface VduNamingStrategy {
 	String nameVdu(VnfBlueprint plan, String toscaName, int count);
 
 	String nameSingleResource(VnfBlueprint blueprint, String toscaName);
+
+	String nameConnectionPort(VnfLinkPort linkPort, ComputeTask compute);
 }

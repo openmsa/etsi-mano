@@ -18,7 +18,9 @@ package com.ubiqube.etsi.mano.vnfm.service.graph;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
+import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 @Service
@@ -40,6 +42,11 @@ public class DefaultVduNamingStrategy implements VduNamingStrategy {
 	public String nameSingleResource(final VnfBlueprint blueprint, final String toscaName) {
 		final String vnfInstanceId = blueprint.getVnfInstance().getId().toString();
 		return vnfInstanceId.substring(0, 8) + '-' + toscaName;
+	}
+
+	@Override
+	public String nameConnectionPort(final VnfLinkPort linkPort, final ComputeTask compute) {
+		return linkPort.getToscaName() + "-" + compute.getAlias();
 	}
 
 }
