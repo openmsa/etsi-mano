@@ -44,28 +44,60 @@ public class VnfcResourceInfoEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String id = null;
+	private String id;
 
-	private String vduId = null;
+	/**
+	 * IdentifierInVnfd: Reference to the applicable VDU in the VNFD. See note 1.
+	 */
+	private String vduId;
 
-	// 3.3.1
+	/**
+	 * Identifier of the VNFD. Shall be present in case the value differs from the
+	 * vnfdId attribute of the VnfInstance (e.g. during a "Change current VNF
+	 * package" operation or due to its final failure).
+	 *
+	 * @since 3.3.1
+	 */
 	private String vnfdId;
 
+	/**
+	 * Reference to the VirtualCompute resource.
+	 */
 	@Embedded
-	private VimResource computeResource = null;
+	private VimResource computeResource;
 
-	// 2.7.1
+	/**
+	 * The identifier of the resource zone, as managed by the resource management
+	 * layer (typically, the VIM), where the referenced VirtualCompute resource is
+	 * placed. Shall be provided if this information is available from the VIM.
+	 *
+	 * @since 2.7.1
+	 */
 	private String zoneId;
 
+	/**
+	 * References to the VirtualStorage resources. The value refers to a
+	 * VirtualStorageResourceInfo item in the VnfInstance.
+	 */
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> storageResourceIds = null;
+	private Set<String> storageResourceIds;
 
-	private String reservationId = null;
+	/**
+	 * The reservation identifier applicable to the resource. It shall be present
+	 * when an applicable reservation exists.
+	 */
+	private String reservationId;
 
+	/**
+	 * CPs of the VNFC instance. Shall be present when that particular CP of the
+	 * VNFC instance is exposed as an external CP of the VNF instance or is
+	 * connected to an external CP of the VNF instance. See note 2. May be present
+	 * otherwise.
+	 */
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private Set<VnfcResourceInfoVnfcCpInfoEntity> vnfcCpInfo = null;
+	private Set<VnfcResourceInfoVnfcCpInfoEntity> vnfcCpInfo;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<String, String> metadata = null;
+	private Map<String, String> metadata;
 
 }

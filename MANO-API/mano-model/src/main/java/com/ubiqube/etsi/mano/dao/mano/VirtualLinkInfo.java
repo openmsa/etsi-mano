@@ -50,19 +50,35 @@ public class VirtualLinkInfo extends VnfInstantiatedBase {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id = null;
+	private UUID id;
 
-	private String vnfVirtualLinkDescId = null;
+	/**
+	 * IdentifierInVnfd: Identifier of the VNF Virtual Link Descriptor (VLD) in the
+	 * VNFD.
+	 */
+	private String vnfVirtualLinkDescId;
 
+	/**
+	 * Identifier of the VNFD. Shall be present in case the value differs from the
+	 * vnfdId attribute of the VnfInstance (e.g. during a "Change current VNF
+	 * package" operation or due to its final failure).
+	 */
+	private String vfndId;
+	/**
+	 * Link ports of this VL.
+	 */
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn
-	private Set<LinkPortInfo> vnfLinkPorts = null;
+	private Set<LinkPortInfo> vnfLinkPorts;
 
+	/**
+	 * Reference to the VirtualNetwork resource providing this VL.
+	 */
 	@Embedded
 	private VimResource networkResource;
 
 	@ElementCollection
-	private Map<String, String> metadata = null;
+	private Map<String, String> metadata;
 
 	@Override
 	public UUID getId() {

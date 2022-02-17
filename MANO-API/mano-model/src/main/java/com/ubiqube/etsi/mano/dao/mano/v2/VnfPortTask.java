@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.dao.mano.v2;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
@@ -44,4 +45,7 @@ public class VnfPortTask extends VnfTask {
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private ExtManagedVirtualLinkDataEntity external;
+
+	@ManyToOne
+	private ComputeTask compute;
 }
