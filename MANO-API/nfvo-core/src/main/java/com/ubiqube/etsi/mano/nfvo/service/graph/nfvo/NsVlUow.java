@@ -23,9 +23,10 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class NsVlUow extends AbstractNsUnitOfWork<NsVirtualLinkTask> {
+public class NsVlUow extends AbstractUnitOfWork<NsVirtualLinkTask> {
 	private final NsVirtualLinkTask task;
 	private final VlProtocolData vlProtocolData;
 	private final Vim vim;

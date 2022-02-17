@@ -40,13 +40,14 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfInstantiateNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfInstantiateTask> {
+public class VnfInstantiateUow extends AbstractUnitOfWork<NsVnfInstantiateTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfInstantiateUow.class);
 

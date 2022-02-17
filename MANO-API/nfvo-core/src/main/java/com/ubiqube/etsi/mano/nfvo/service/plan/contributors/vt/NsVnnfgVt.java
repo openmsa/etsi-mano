@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSfcTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
+import com.ubiqube.etsi.mano.service.graph.vt.NsVtBase;
 
 public class NsVnnfgVt extends NsVtBase<NsSfcTask> {
 

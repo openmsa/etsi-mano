@@ -23,6 +23,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdCreateNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.service.graph.vt.NsVtBase;
 
 /**
  *

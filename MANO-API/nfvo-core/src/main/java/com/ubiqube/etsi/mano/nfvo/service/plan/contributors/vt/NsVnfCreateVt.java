@@ -25,6 +25,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.service.graph.vt.NsVtBase;
 
 /**
  *

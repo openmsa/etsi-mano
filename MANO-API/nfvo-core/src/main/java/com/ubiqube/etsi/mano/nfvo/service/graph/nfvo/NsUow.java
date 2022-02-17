@@ -28,13 +28,14 @@ import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdInstantiateNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
+public class NsUow extends AbstractUnitOfWork<NsdTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsUow.class);
 

@@ -20,13 +20,14 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSapTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.SapNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NsSapUow extends AbstractNsUnitOfWork<NsSapTask> {
+public class NsSapUow extends AbstractUnitOfWork<NsSapTask> {
 	private final NsSapTask nsSapd;
 
 	public NsSapUow(final VirtualTask<NsSapTask> taskEntity) {

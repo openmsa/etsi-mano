@@ -50,10 +50,10 @@ import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVnfCreateVt;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVtBase;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfInstantiateNode;
 import com.ubiqube.etsi.mano.service.NsScaleStrategy;
+import com.ubiqube.etsi.mano.service.graph.vt.NsVtBase;
 
 /**
  *
