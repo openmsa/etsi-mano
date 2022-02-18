@@ -17,9 +17,9 @@
 package com.ubiqube.etsi.mano.orchestrator;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.util.LinkedMultiValueMap;
 
@@ -35,7 +35,7 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 public class ContextImpl implements Context {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-	private final Map<Class<? extends Node>, LinkedMultiValueMap<String, String>> context = new HashMap<>();
+	private final Map<Class<? extends Node>, LinkedMultiValueMap<String, String>> context = new ConcurrentHashMap<>();
 
 	@Override
 	public <U> void add(final UnitOfWork<U> uaow, final String res) {
