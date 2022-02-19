@@ -18,26 +18,18 @@ package com.ubiqube.etsi.mano.nfvo.v271.services;
 
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-
-import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
-import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionLinks;
-import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v271.model.vnf.PkgmLinks;
 
-public interface Linkable {
-	VnfPkgInfoLinks getVnfLinks(@Nonnull String vnfPkgId);
+public class Sol005Linkable {
 
-	PkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(@Nonnull String subscriptionId);
+	public PkgmLinks createVnfPackageOnboardingNotificationLinks(final UUID vnfPkgId, final UUID subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	FrontApiTypesEnum getApi();
+	public PkgmLinks createNotificationLink(final UUID vnfPkgId, final UUID subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	void makeLinks(final VnfPkgInfo vnfPkgInfo);
-
-	String getSelfLink(final VnfPkgInfo vnfPkgInfo);
-
-	PkgmLinks createNotificationLink(UUID vnfPkgId, UUID subscriptionId);
-
-	PkgmLinks createVnfPackageOnboardingNotificationLinks(UUID vnfPkgId, UUID subscriptionId);
 }

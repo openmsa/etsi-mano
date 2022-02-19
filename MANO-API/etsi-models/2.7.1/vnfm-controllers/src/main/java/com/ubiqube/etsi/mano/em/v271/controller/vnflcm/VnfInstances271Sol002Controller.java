@@ -182,4 +182,7 @@ public class VnfInstances271Sol002Controller implements VnfInstances271Sol002Api
 		vnfInstance.setLinks(vnfInstanceLinks);
 	}
 
+	public static String getSelfLink(final String id) {
+		return linkTo(methodOn(VnfInstances271Sol002Api.class).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
+	}
 }
