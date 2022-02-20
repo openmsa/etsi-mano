@@ -67,7 +67,8 @@ public class VnfPkgInfo {
 	private Checksum checksum = null;
 
 	/**
-	 * Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004. Valid values: OPTION_1, OPTION_2
+	 * Signals the security option used by the package as defined in clause 5.1 of
+	 * ETSI GS NFV-SOL 004. Valid values: OPTION_1, OPTION_2
 	 */
 	public enum PackageSecurityOptionEnum {
 		_1("OPTION_1"),
@@ -121,7 +122,7 @@ public class VnfPkgInfo {
 	private PackageUsageStateType usageState = null;
 
 	@JsonProperty("vnfmInfo")
-	private String vnfmInfo = null;
+	private List<String> vnfmInfo = null;
 
 	@JsonProperty("userDefinedData")
 	private Map<String, String> userDefinedData = null;
@@ -138,7 +139,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Identifier of the on-boarded VNF package. This identifier is allocated by the NFVO.
+	 * Identifier of the on-boarded VNF package. This identifier is allocated by the
+	 * NFVO.
 	 *
 	 * @return id
 	 **/
@@ -159,7 +161,10 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * This identifier, which is managed by the VNF provider, identifies the VNF package and the VNFD in a globally unique way. It's copied from the VNFD of the on-boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise.
+	 * This identifier, which is managed by the VNF provider, identifies the VNF
+	 * package and the VNFD in a globally unique way. It's copied from the VNFD of
+	 * the on-boarded VNF package. It shall be present after the VNF package content
+	 * has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfdId
 	 **/
@@ -179,7 +184,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Provider of the VNF package and the VNFD. This information is copied from the VNFD.
+	 * Provider of the VNF package and the VNFD. This information is copied from the
+	 * VNFD.
 	 *
 	 * @return vnfProvider
 	 **/
@@ -199,7 +205,9 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Name to identify the VNF product. Invariant for the VNF product lifetime. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
+	 * Name to identify the VNF product. Invariant for the VNF product lifetime.
+	 * This information is copied from the VNFD. It shall be present after the VNF
+	 * package content has been on-boarded and absent otherwise.
 	 *
 	 * @return vnfProductName
 	 **/
@@ -219,7 +227,10 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Software version of the VNF. This is changed when there is any change to the software included in the VNF package. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
+	 * Software version of the VNF. This is changed when there is any change to the
+	 * software included in the VNF package. This information is copied from the
+	 * VNFD. It shall be present after the VNF package content has been on-boarded
+	 * and absent otherwise.
 	 *
 	 * @return vnfSoftwareVersion
 	 **/
@@ -239,7 +250,9 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * The version of the VNFD. This information is copied from the VNFD. It shall be present after the VNF package content has been on-boarded and absent otherwise.
+	 * The version of the VNFD. This information is copied from the VNFD. It shall
+	 * be present after the VNF package content has been on-boarded and absent
+	 * otherwise.
 	 *
 	 * @return vnfdVersion
 	 **/
@@ -267,7 +280,9 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Indicates which versions of the ETSI GS NFV-SOL 004 specification the package complies to, as defined in the manifest of the package. Each entry shall be formatted as defined in clause 4.3.2 of ETSI GS NFV-SOL 004.
+	 * Indicates which versions of the ETSI GS NFV-SOL 004 specification the package
+	 * complies to, as defined in the manifest of the package. Each entry shall be
+	 * formatted as defined in clause 4.3.2 of ETSI GS NFV-SOL 004.
 	 *
 	 * @return compatibleSpecificationVersions
 	 **/
@@ -287,7 +302,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Checksum of the on-boarded VNF package. It shall be present after the VNF package content has been on-boarded and absent otherwise.
+	 * Checksum of the on-boarded VNF package. It shall be present after the VNF
+	 * package content has been on-boarded and absent otherwise.
 	 *
 	 * @return checksum
 	 **/
@@ -309,7 +325,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Signals the security option used by the package as defined in clause 5.1 of ETSI GS NFV-SOL 004. Valid values: OPTION_1, OPTION_2
+	 * Signals the security option used by the package as defined in clause 5.1 of
+	 * ETSI GS NFV-SOL 004. Valid values: OPTION_1, OPTION_2
 	 *
 	 * @return packageSecurityOption
 	 **/
@@ -330,7 +347,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * The singleton signing certificate if it is included as a file in the VNF package.
+	 * The singleton signing certificate if it is included as a file in the VNF
+	 * package.
 	 *
 	 * @return signingCertificate
 	 **/
@@ -358,7 +376,10 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts that are software images. This attribute shall not be present before the VNF package content is on-boarded. Otherwise, this attribute shall be present unless it has been requested to be excluded per attribute selector.
+	 * Information about VNF package artifacts that are software images. This
+	 * attribute shall not be present before the VNF package content is on-boarded.
+	 * Otherwise, this attribute shall be present unless it has been requested to be
+	 * excluded per attribute selector.
 	 *
 	 * @return softwareImages
 	 **/
@@ -388,8 +409,15 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Information about VNF package artifacts contained in the VNF package that are not software images. Every local and external artifact declared in the manifest shall be included, except the software images and the files that make up the parts of the VNFD (see clause 10.4.4.3.2). Signature files and certificate files are not considered as artifacts, however, the content of the \"Licenses\" and \"Testing\" directories in the VNF package is. This attribute shall not be present before the VNF
-	 * package content is on-boarded. Otherwise, this attribute shall be present if the VNF package contains additional artifacts.
+	 * Information about VNF package artifacts contained in the VNF package that are
+	 * not software images. Every local and external artifact declared in the
+	 * manifest shall be included, except the software images and the files that
+	 * make up the parts of the VNFD (see clause 10.4.4.3.2). Signature files and
+	 * certificate files are not considered as artifacts, however, the content of
+	 * the \"Licenses\" and \"Testing\" directories in the VNF package is. This
+	 * attribute shall not be present before the VNF package content is on-boarded.
+	 * Otherwise, this attribute shall be present if the VNF package contains
+	 * additional artifacts.
 	 *
 	 * @return additionalArtifacts
 	 **/
@@ -433,7 +461,9 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Operational state of the VNF package. If the value of the onboardingState attribute is not equal to \"ONBOARDED\", the value of the operationalState attribute shall be equal to \"DISABLED\".
+	 * Operational state of the VNF package. If the value of the onboardingState
+	 * attribute is not equal to \"ONBOARDED\", the value of the operationalState
+	 * attribute shall be equal to \"DISABLED\".
 	 *
 	 * @return operationalState
 	 **/
@@ -456,7 +486,9 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Usage state of the VNF package. If the value of the onboardingState attribute is not equal to \"ONBOARDED\", the value of the usageState attribute shall be equal to \"NOT_IN_USE\".
+	 * Usage state of the VNF package. If the value of the onboardingState attribute
+	 * is not equal to \"ONBOARDED\", the value of the usageState attribute shall be
+	 * equal to \"NOT_IN_USE\".
 	 *
 	 * @return usageState
 	 **/
@@ -473,13 +505,15 @@ public class VnfPkgInfo {
 		this.usageState = usageState;
 	}
 
-	public VnfPkgInfo vnfmInfo(final String vnfmInfo) {
+	public VnfPkgInfo vnfmInfo(final List<String> vnfmInfo) {
 		this.vnfmInfo = vnfmInfo;
 		return this;
 	}
 
 	/**
-	 * Specifies VNFMs compatible with the VNF. This information is copied from the VNFD. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD based on TOSCA specifications.
+	 * Specifies VNFMs compatible with the VNF. This information is copied from the
+	 * VNFD. ETSI GS NFV-SOL 001 specifies the structure and format of the VNFD
+	 * based on TOSCA specifications.
 	 *
 	 * @return vnfmInfo
 	 **/
@@ -488,11 +522,11 @@ public class VnfPkgInfo {
 
 	@Valid
 
-	public String getVnfmInfo() {
+	public List<String> getVnfmInfo() {
 		return vnfmInfo;
 	}
 
-	public void setVnfmInfo(final String vnfmInfo) {
+	public void setVnfmInfo(final List<String> vnfmInfo) {
 		this.vnfmInfo = vnfmInfo;
 	}
 
@@ -524,7 +558,12 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Failure details of current onboarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure. If \"onboardingState\" is \"ERROR\", this attribute shall be present and contain error information (such as failed onboarding or processing operation, affected artifact etc.), unless it has been requested to be excluded via an attribute selector.
+	 * Failure details of current onboarding procedure. See clause 6.3 of ETSI GS
+	 * NFV-SOL 013 for the details of \"ProblemDetails\" structure. If
+	 * \"onboardingState\" is \"ERROR\", this attribute shall be present and contain
+	 * error information (such as failed onboarding or processing operation,
+	 * affected artifact etc.), unless it has been requested to be excluded via an
+	 * attribute selector.
 	 *
 	 * @return onboardingFailureDetails
 	 **/
@@ -568,7 +607,7 @@ public class VnfPkgInfo {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final VnfPkgInfo vnfPkgInfo = (VnfPkgInfo) o;
@@ -627,7 +666,8 @@ public class VnfPkgInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

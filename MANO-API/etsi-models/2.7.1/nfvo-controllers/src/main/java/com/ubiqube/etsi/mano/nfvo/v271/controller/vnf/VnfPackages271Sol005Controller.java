@@ -62,7 +62,7 @@ public class VnfPackages271Sol005Controller implements VnfPackages271Sol005Api {
 
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesPost(@Valid final CreateVnfPkgInfoRequest body) {
-		return frontController.create(body.getUserDefinedData(), VnfPkgInfo.class, VnfPackages271Sol005Controller::makeLinks, null);
+		return frontController.create(body.getUserDefinedData(), VnfPkgInfo.class, VnfPackages271Sol005Controller::makeLinks, VnfPackages271Sol005Controller::getSelfLink);
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class VnfPackages271Sol005Controller implements VnfPackages271Sol005Api {
 	}
 
 	@Override
-	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(@Valid final String body, final String vnfPkgId, final String ifMatch) {
+	public ResponseEntity<VnfPkgInfo> vnfPackagesVnfPkgIdPatch(final String vnfPkgId, @Valid final String body, final String ifMatch) {
 		return frontController.modify(body, getSafeUUID(vnfPkgId), ifMatch, VnfPkgInfo.class, VnfPackages271Sol005Controller::makeLinks);
 	}
 
@@ -147,4 +147,7 @@ public class VnfPackages271Sol005Controller implements VnfPackages271Sol005Api {
 		vnfPackage.setLinks(links);
 	}
 
+	public static String getSelfLink(final VnfPkgInfo _vnfPkgInfo) {
+		return linkTo(methodOn(VnfPackages271Sol005Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgInfo.getId())).withSelfRel().getHref();
+	}
 }

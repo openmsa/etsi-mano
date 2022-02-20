@@ -256,7 +256,8 @@ public interface VnfPackages271Sol005Api {
 			@ApiResponse(code = 500, message = "500 INTERNAL SERVER ERROR If there is an application error not related to the client's input that cannot be easily mapped to any other HTTP response code (\"catch all error\"), the API producer shall respond with this response code. The \"ProblemDetails\" structure shall be provided, and shall include in the \"detail\" attribute more information about the source of the problem. ", response = ProblemDetails.class),
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/{vnfPkgId}/package_content", produces = { "application/json" }, consumes = { "multipart/form-data" }, method = RequestMethod.PUT)
-	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(@ApiParam(value = "", required = true) @Valid @RequestBody MultipartFile file,
+	ResponseEntity<Void> vnfPackagesVnfPkgIdPackageContentPut(
+			@ApiParam(value = "", required = true) @RequestParam("file") MultipartFile file,
 			@ApiParam(value = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231. ", required = true) @RequestHeader(value = "Accept", required = true) final String accept,
 			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId);
 
