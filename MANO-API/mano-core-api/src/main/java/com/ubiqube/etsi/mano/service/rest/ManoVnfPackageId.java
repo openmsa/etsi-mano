@@ -17,8 +17,13 @@
 package com.ubiqube.etsi.mano.service.rest;
 
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.service.HttpGateway;
@@ -29,6 +34,11 @@ import com.ubiqube.etsi.mano.service.HttpGateway;
  *
  */
 public class ManoVnfPackageId {
+
+	private static final String PACKAGE_CONTENT = "/vnf_packages/{id}/package_content";
+
+	private static final Logger LOG = LoggerFactory.getLogger(ManoVnfPackageId.class);
+
 	private final ManoClient client;
 
 	public ManoVnfPackageId(final ManoClient manoClient, final UUID id) {
@@ -46,7 +56,7 @@ public class ManoVnfPackageId {
 	}
 
 	public void downloadContent(final Path file) {
-		client.setFragment("/vnf_packages/{id}/package_content");
+		client.setFragment(PACKAGE_CONTENT);
 		client.createQuery()
 				.download(file);
 	}
@@ -57,7 +67,32 @@ public class ManoVnfPackageId {
 	}
 
 	public void onboard(final Path path, final String accept) {
+		client.setFragment(PACKAGE_CONTENT);
 		client.createQuery().upload(path, accept);
+	}
+
+	public void waitOnboading() {
+		while (true) {
+			try {
+				Thread.sleep(1000);
+			} catch (final InterruptedException e) {
+				LOG.warn("Interrupted!", e);
+				Thread.currentThread().interrupt();
+			}
+			final VnfPackage pkg = find();
+			final OnboardingStateType state = pkg.getOnboardingState();
+			LOG.debug("state {}", state);
+			if (state == OnboardingStateType.ONBOARDED || state == OnboardingStateType.ERROR) {
+				return;
+			}
+		}
+	}
+
+	public VnfPackage patch(final String ifMatch, final Map<String, Object> patch) {
+		return client.createQuery()
+				.setWireOutClass(HttpGateway::getVnfPackageClass)
+				.setOutClass(VnfPackage.class)
+				.patch(ifMatch, patch);
 	}
 
 }

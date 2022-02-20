@@ -143,7 +143,7 @@ public class CommonActionController {
 			final FluxRest rest = new FluxRest(server);
 			final UriComponents uri = rest.uriBuilder().pathSegment("{fragment}/api_versions")
 					.buildAndExpand(uriVariables);
-			final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class);
+			final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class, null);
 			return mapper.map(res, ApiVersion.class);
 		} catch (final RuntimeException e) {
 			LOG.info("Error fetching " + fragment, e);
@@ -229,7 +229,7 @@ public class CommonActionController {
 
 	private Subscription postSubscription(final FluxRest rest, final URI uri, final Object subsOut, final Class<?> clazzWire, final Class<?> clazz) {
 		final Object wire = mapper.map(subsOut, clazzWire);
-		final Object res = rest.post(uri, wire, clazz);
+		final Object res = rest.post(uri, wire, clazz, null);
 		return mapper.map(res, Subscription.class);
 	}
 
@@ -274,7 +274,7 @@ public class CommonActionController {
 		final FluxRest rest = new FluxRest(server);
 		final UriComponents uri = rest.uriBuilder().pathSegment("{module}/api_versions")
 				.buildAndExpand(uriVariables);
-		final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class);
+		final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class, null);
 		return mapper.map(res, ApiVersion.class);
 	}
 

@@ -56,7 +56,8 @@ public class VnfInstanceServiceNfvo implements VnfInstanceGatewayService {
 		final ServerAdapter server = serverService.findNearestServer();
 		final URI uri = server.getUriFor(ApiVersionType.SOL003_VNFLCM, "vnf_instances/{id}", Map.of("id", id));
 		final HttpGateway httpGateway = server.httpGateway();
-		final Object resp = server.rest().get(uri, httpGateway.getVnfInstanceClass());
+		final String version = httpGateway.getHeaderVersion(ApiVersionType.SOL003_VNFLCM).orElse(null);
+		final Object resp = server.rest().get(uri, httpGateway.getVnfInstanceClass(), version);
 		return mapper.map(resp, VnfInstance.class);
 	}
 

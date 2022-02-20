@@ -71,22 +71,26 @@ public class ManoQueryBuilder {
 
 	public void delete() {
 		final ServerAdapter server = client.getServer();
+		final HttpGateway httpGateway = server.httpGateway();
 		final URI uri = buildUri(server);
-		server.rest().delete(uri, Object.class);
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		server.rest().delete(uri, Object.class, version);
 	}
 
 	public <T> ResponseEntity<T> getRaw() {
 		final ServerAdapter server = client.getServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final URI uri = buildUri(server);
-		return (ResponseEntity<T>) server.rest().getWithReturn(uri, this.wireOutClass.apply(httpGateway));
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		return (ResponseEntity<T>) server.rest().getWithReturn(uri, this.wireOutClass.apply(httpGateway), version);
 	}
 
 	public <T> T getSingle() {
 		final ServerAdapter server = client.getServer();
 		final HttpGateway httpGateway = server.httpGateway();
 		final URI uri = buildUri(server);
-		final ResponseEntity<?> resp = server.rest().getWithReturn(uri, this.wireOutClass.apply(httpGateway));
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		final ResponseEntity<?> resp = server.rest().getWithReturn(uri, this.wireOutClass.apply(httpGateway), version);
 		return (T) mapper.map(resp.getBody(), this.outClass);
 	}
 
@@ -95,7 +99,8 @@ public class ManoQueryBuilder {
 		final URI uri = buildUri(server);
 		final HttpGateway httpGateway = server.httpGateway();
 		final ParameterizedTypeReference<List<Class<?>>> clazz = this.inClassList.apply(httpGateway);
-		final List<?> resp = server.rest().get(uri, clazz);
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		final List<?> resp = server.rest().get(uri, clazz, version);
 		return (List<T>) mapper.mapAsList(resp, this.outClass);
 	}
 
@@ -105,7 +110,8 @@ public class ManoQueryBuilder {
 		final HttpGateway httpGateway = server.httpGateway();
 		final Object reqMap = remapRequest(req);
 		final Class<?> clazz = wireOutClass.apply(httpGateway);
-		final var res = server.rest().post(uri, reqMap, clazz);
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		final var res = server.rest().post(uri, reqMap, clazz, version);
 		return (T) mapper.map(res, this.outClass);
 	}
 
@@ -114,7 +120,8 @@ public class ManoQueryBuilder {
 		final HttpGateway httpGateway = server.httpGateway();
 		final URI uri = buildUri(server);
 		final Object reqMap = remapRequest(req);
-		return (ResponseEntity<T>) server.rest().postWithReturn(uri, reqMap, this.wireOutClass.apply(httpGateway));
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		return (ResponseEntity<T>) server.rest().postWithReturn(uri, reqMap, this.wireOutClass.apply(httpGateway), version);
 	}
 
 	private Object remapRequest(final Object req) {
@@ -132,7 +139,8 @@ public class ManoQueryBuilder {
 		final HttpGateway httpGateway = server.httpGateway();
 		final Object reqMap = client.getRequestObject().apply(httpGateway);
 		final Class<?> clazz = wireOutClass.apply(httpGateway);
-		final var res = server.rest().post(uri, reqMap, clazz);
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		final var res = server.rest().post(uri, reqMap, clazz, version);
 		return (T) mapper.map(res, this.outClass);
 	}
 
@@ -144,13 +152,27 @@ public class ManoQueryBuilder {
 	public void download(final Path file) {
 		final ServerAdapter server = client.getServer();
 		final URI uri = buildUri(server);
-		server.rest().download(uri, file);
+		final HttpGateway httpGateway = server.httpGateway();
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		server.rest().download(uri, file, version);
 	}
 
 	public void upload(final Path path, final String accept) {
 		final ServerAdapter server = client.getServer();
 		final URI uri = buildUri(server);
-		server.rest().upload(uri, path, accept);
+		final HttpGateway httpGateway = server.httpGateway();
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		server.rest().upload(uri, path, accept, version);
+	}
+
+	public <T> T patch(final String ifMatch, final Map<String, Object> patch) {
+		final ServerAdapter server = client.getServer();
+		final URI uri = buildUri(server);
+		final HttpGateway httpGateway = server.httpGateway();
+		final Class<?> clazz = wireOutClass.apply(httpGateway);
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		final Object res = server.rest().patch(uri, clazz, ifMatch, patch, version);
+		return (T) mapper.map(res, this.outClass);
 	}
 
 }
