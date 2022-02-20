@@ -128,14 +128,13 @@ public class VnfPackageOnboardingImpl {
 			final PackageDescriptor<VnfPackageReader> packageProvider = packageManager.getProviderFor(data);
 			if (null != packageProvider) {
 				mapVnfPackage(packageProvider.getNewReaderInstance(data), vnfPackage);
-
 			}
 			ret = finishOnboarding(vnfPackage);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
 		} catch (final RuntimeException e) {
 			LOG.error("", e);
 			final VnfPackage v2 = vnfPackageService.findById(vnfPackage.getId());
-			v2.setOnboardingState(OnboardingStateType.CREATED);
+			v2.setOnboardingState(OnboardingStateType.ERROR);
 			v2.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));
 			ret = vnfPackageService.save(v2);
 		}
