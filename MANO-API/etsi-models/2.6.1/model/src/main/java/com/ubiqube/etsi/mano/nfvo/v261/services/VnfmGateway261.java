@@ -33,12 +33,11 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
-import com.ubiqube.etsi.mano.service.HttpGateway;
+import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
 import com.ubiqube.etsi.mano.service.NfvoFactory;
 import com.ubiqube.etsi.mano.service.VnfmFactory;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
@@ -57,7 +56,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
  *
  */
 @Service
-public class VnfmGateway261 implements HttpGateway {
+public class VnfmGateway261 extends AbstractHttpGateway {
 
 	private final NfvoFactory nfvoFactory;
 	private final VnfmFactory vnfmFactory;
@@ -96,36 +95,6 @@ public class VnfmGateway261 implements HttpGateway {
 	public void makeGrantLinks(final Object manoGrant) {
 		if (manoGrant instanceof final GrantRequest grant) {
 			vnfmFactory.makeGrantRequestLink(grant);
-		}
-	}
-
-	/**
-	 * XXX: v1 should not be present here as it is the server protocol version, it
-	 * will depend on target server.
-	 */
-	@Override
-	public String getUrlFor(final ApiVersionType type) {
-		switch (type) {
-		case SOL003_VNFFM:
-			return "vnffm/v1/";
-		case SOL003_VNFIND:
-			return "vnfind/v1/";
-		case SOL003_VNFPM:
-			return "vnfpm/v1/";
-		case SOL003_VNFSNAPSHOTPKGM:
-			return "vnfsnapshotpkgm/v1/";
-		case SOL003_VNFLCM:
-			return "vnflcm/v1/";
-		case SOL003_VRQAN:
-			return "vrqan/v1/";
-		case SOL003_GRANT:
-			return "grant/v1/";
-		case SOL003_VNFPKGM:
-			return "vnfpkgm/v1/";
-		case SOL005_NSD:
-			return "nsd/v1/";
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + type.name());
 		}
 	}
 

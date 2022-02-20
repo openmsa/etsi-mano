@@ -33,8 +33,8 @@ import com.ubiqube.etsi.mano.common.v261.services.Linkable;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfSubscriptionFactory {
-	private VnfSubscriptionFactory() {
+public class VnfSubscriptionFactory261 {
+	private VnfSubscriptionFactory261() {
 		// Nothing.
 	}
 

@@ -26,9 +26,10 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.controller.Protocol;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstance;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequest;
@@ -38,7 +39,7 @@ import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfo;
-import com.ubiqube.etsi.mano.service.HttpGateway;
+import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.InstantiateVnfRequest;
@@ -55,10 +56,11 @@ import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.VnfLcmOpOcc;
  *
  */
 @Service
-public class HttpGateway271 implements HttpGateway {
-
+public class HttpGateway271 extends AbstractHttpGateway {
 	private final NfvoFactory nfvoFactory;
 	private final VnfmFactory vnfmFactory;
+	private List<Protocol> protocols;
+	private final ObjectMapper mapper = new ObjectMapper();
 
 	public HttpGateway271(final ObjectProvider<VnfmFactory> vnfmFactory, final ObjectProvider<NfvoFactory> nfvoFactory) {
 		this.vnfmFactory = vnfmFactory.getIfAvailable();
@@ -94,36 +96,6 @@ public class HttpGateway271 implements HttpGateway {
 	public void makeGrantLinks(final Object manoGrant) {
 		if (manoGrant instanceof final GrantRequest grant) {
 			vnfmFactory.makeGrantRequestLink(grant);
-		}
-	}
-
-	/**
-	 * XXX: v1 should not be present here as it is the server protocol version, it
-	 * will depend on target server.
-	 */
-	@Override
-	public String getUrlFor(final ApiVersionType type) {
-		switch (type) {
-		case SOL003_VNFFM:
-			return "vnffm/v1/";
-		case SOL003_VNFIND:
-			return "vnfind/v1/";
-		case SOL003_VNFPM:
-			return "vnfpm/v1/";
-		case SOL003_VNFSNAPSHOTPKGM:
-			return "vnfsnapshotpkgm/v1/";
-		case SOL003_VNFLCM:
-			return "vnflcm/v1/";
-		case SOL003_VRQAN:
-			return "vrqan/v1/";
-		case SOL003_GRANT:
-			return "grant/v1/";
-		case SOL003_VNFPKGM:
-			return "vnfpkgm/v1/";
-		case SOL005_NSD:
-			return "nsd/v1/";
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + type.name());
 		}
 	}
 
@@ -237,8 +209,10 @@ public class HttpGateway271 implements HttpGateway {
 	}
 
 	@Override
-	public Class<?> createVnfPackageRequest(final Map<String, String> userDefinedData) {
-		return CreateVnfPkgInfoRequest.class;
+	public Object createVnfPackageRequest(final Map<String, String> userDefinedData) {
+		final CreateVnfPkgInfoRequest req = new CreateVnfPkgInfoRequest();
+		req.setUserDefinedData(userDefinedData);
+		return req;
 	}
 
 	@Override

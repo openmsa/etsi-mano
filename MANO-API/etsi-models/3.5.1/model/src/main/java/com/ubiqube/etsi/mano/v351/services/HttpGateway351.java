@@ -35,7 +35,7 @@ import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.service.HttpGateway;
+import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.ChangeExtVnfConnectivityRequest;
@@ -54,7 +54,7 @@ import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.VnfLcmOpOcc;
  *
  */
 @Service
-public class HttpGateway351 implements HttpGateway {
+public class HttpGateway351 extends AbstractHttpGateway {
 
 	@Override
 	public Class<?> getVnfPackageClass() {
