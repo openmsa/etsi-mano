@@ -39,7 +39,7 @@ public class ContextImpl implements Context {
 
 	@Override
 	public <U> void add(final UnitOfWork<U> uaow, final String res) {
-		context.computeIfAbsent(uaow.getNode(), x -> new LinkedMultiValueMap<>());
+		context.computeIfAbsent(uaow.getNode(), x -> new LinkedMultiValueMap<>(new ConcurrentHashMap<>()));
 		final LinkedMultiValueMap<String, String> m = context.get(uaow.getNode());
 		m.add(uaow.getTask().getName(), res);
 	}
