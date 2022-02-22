@@ -211,6 +211,11 @@
 			<artifactId>mano-grammar25</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ubiqube.mano.repository</groupId>
+			<artifactId>mano-repo-fs</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>${artifactId}</finalName>
