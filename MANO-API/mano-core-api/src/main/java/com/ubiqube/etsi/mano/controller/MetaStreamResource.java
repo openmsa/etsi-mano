@@ -23,13 +23,13 @@ import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.lang.Nullable;
 
-import com.ubiqube.etsi.mano.repository.MetaStream;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 
 public class MetaStreamResource extends AbstractResource {
 
-	private final MetaStream metaStream;
+	private final ManoResource metaStream;
 
-	public MetaStreamResource(final MetaStream ms) {
+	public MetaStreamResource(final ManoResource ms) {
 		this.metaStream = ms;
 	}
 
@@ -56,7 +56,7 @@ public class MetaStreamResource extends AbstractResource {
 
 	@Override
 	public InputStream getInputStream() throws IOException {
-		return metaStream.is();
+		return metaStream.getInputStream();
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class MetaStreamResource extends AbstractResource {
 	@Override
 	public boolean equals(@Nullable final Object other) {
 		return this == other || other instanceof final InputStreamResource ot &&
-				ot.equals(this.metaStream.is());
+				ot.equals(this.metaStream.getInputStream());
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class MetaStreamResource extends AbstractResource {
 	@SuppressWarnings("resource")
 	@Override
 	public int hashCode() {
-		return this.metaStream.is().hashCode();
+		return this.metaStream.getInputStream().hashCode();
 	}
 
 }

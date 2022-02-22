@@ -40,7 +40,6 @@ import com.ubiqube.etsi.mano.controller.nsd.NsDescriptorGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.ManoResource;
-import com.ubiqube.etsi.mano.repository.MetaStream;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -136,7 +135,7 @@ public class NsDescriptorGenericFrontControllerImpl implements NsDescriptorGener
 	@Override
 	public ResponseEntity<Resource> getNsdContent(final String nsdInfoId, final String accept) {
 		final ManoResource inputStream = nsdController.nsDescriptorsNsdInfoIdNsdContentGet(UUID.fromString(nsdInfoId));
-		final MetaStreamResource body = new MetaStreamResource(new MetaStream(inputStream.getInputStream(), 350, "hh"));
+		final MetaStreamResource body = new MetaStreamResource(inputStream);
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(body);

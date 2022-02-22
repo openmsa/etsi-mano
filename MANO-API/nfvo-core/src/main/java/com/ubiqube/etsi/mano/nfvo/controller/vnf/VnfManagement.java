@@ -41,7 +41,6 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.repository.ManoResource;
-import com.ubiqube.etsi.mano.repository.MetaStream;
 import com.ubiqube.etsi.mano.repository.ResetOnCloseInputStream;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
@@ -112,7 +111,7 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 				}
 				if (entry.getName().equals(artifactPath)) {
 					final ResetOnCloseInputStream is = new ResetOnCloseInputStream(zis);
-					final MetaStreamResource res = new MetaStreamResource(new MetaStream(is, 350, "hh"));
+					final MetaStreamResource res = new MetaStreamResource(content);
 					return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
 							.contentType(MediaTypeFactory.getMediaType(res).orElse(MediaType.APPLICATION_OCTET_STREAM))
 							.body(res);
@@ -131,7 +130,7 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final UUID vnfPkgId, final boolean includeSignature) {
 		vnfPackageRepository.get(vnfPkgId);
 		final ManoResource content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
-		final MetaStreamResource res = new MetaStreamResource(new MetaStream(content.getInputStream(), 350, "hh"));
+		final MetaStreamResource res = new MetaStreamResource(content);
 		return ResponseEntity.status(HttpStatus.OK)
 				.contentType(MediaTypeFactory
 						.getMediaType(res)
@@ -144,7 +143,7 @@ public class VnfManagement extends SearchableService implements VnfPackageManage
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final UUID vnfPkgId) {
 		vnfPackageRepository.get(vnfPkgId);
 		final ManoResource content = vnfPackageRepository.getBinary(vnfPkgId, "vnfd");
-		final MetaStreamResource res = new MetaStreamResource(new MetaStream(content.getInputStream(), 350, "hh"));
+		final MetaStreamResource res = new MetaStreamResource(content);
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaTypeFactory
 				.getMediaType(res).orElse(MediaType.APPLICATION_OCTET_STREAM))
 				.body(res);
