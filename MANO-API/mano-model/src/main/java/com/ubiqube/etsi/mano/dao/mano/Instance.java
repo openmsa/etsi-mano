@@ -98,7 +98,7 @@ public class Instance implements BaseEntity, Auditable {
 	 * attribute shall only be supported and present if VNF-related resource
 	 * management in direct mode is applicable. This attribute can be modified with
 	 * the PATCH method.
-	 * 
+	 *
 	 */
 	// 3.3.1 it's a map
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH })
@@ -131,7 +131,7 @@ public class Instance implements BaseEntity, Auditable {
 	 * InstantiateVnfRequest structure. Further, these configurable properties can
 	 * be created, modified or deleted with the PATCH method. In addition, the
 	 * provisions in clause 5.7 shall apply.
-	 * 
+	 *
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> vnfConfigurableProperties;
@@ -151,7 +151,9 @@ public class Instance implements BaseEntity, Auditable {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
-	// private Set<VnfInstantiatedBase> extManagedVirtualLinks;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
+	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
+
 	@Version
 	private long version;
 
