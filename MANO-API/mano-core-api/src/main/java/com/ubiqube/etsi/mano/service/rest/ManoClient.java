@@ -130,4 +130,8 @@ public class ManoClient {
 	public ManoOnboardedVnfPackage onbardedVnfPackage(final UUID id) {
 		return new ManoOnboardedVnfPackage(this, id);
 	}
+
+	public ManoAdmin admin() {
+		return new ManoAdmin(this);
+	}
 }

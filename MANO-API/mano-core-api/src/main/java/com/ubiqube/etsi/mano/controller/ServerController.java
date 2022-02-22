@@ -85,9 +85,9 @@ public class ServerController {
 	}
 
 	@GetMapping("/{id}")
-	public EntityModel<Servers> findById(@PathVariable("id") final UUID id) {
+	public ResponseEntity<Servers> findById(@PathVariable("id") final UUID id) {
 		final Servers ret = serverService.findById(id);
-		return EntityModel.of(ret, makeLinks(ret));
+		return ResponseEntity.ok(ret);
 	}
 
 	@DeleteMapping("/{id}")

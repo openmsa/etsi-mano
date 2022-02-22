@@ -71,7 +71,7 @@ public class ManoVnfPackageId {
 		client.createQuery().upload(path, accept);
 	}
 
-	public void waitOnboading() {
+	public VnfPackage waitOnboading() {
 		while (true) {
 			try {
 				Thread.sleep(1000);
@@ -83,7 +83,7 @@ public class ManoVnfPackageId {
 			final OnboardingStateType state = pkg.getOnboardingState();
 			LOG.debug("state {}", state);
 			if (state == OnboardingStateType.ONBOARDED || state == OnboardingStateType.ERROR) {
-				return;
+				return pkg;
 			}
 		}
 	}
