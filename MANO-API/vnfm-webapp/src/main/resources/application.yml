@@ -144,8 +144,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://auth.mano.ubiqube.com/auth/realms/mano-realm
-          jwk-set-uri: https://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/certs
+          issuer-uri: http://auth.mano.ubiqube.com/auth/realms/mano-realm
+          jwk-set-uri: http://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/certs
   servlet:
     multipart:
       max-file-size: 1024MB
