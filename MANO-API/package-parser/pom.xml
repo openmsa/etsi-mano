@@ -12,7 +12,7 @@
 		<module>tosca-vnfd-class</module>
 		<module>tosca-pnfd-class</module>
 		<module>tosca-nsd-class</module>
-		<module>tosca-mec-class</module>
+		<!--<module>tosca-mec-class</module>-->
 	</modules>
 	<scm>
 		<developerConnection>scm:git:ssh://git@ubibucket.ubiqube.com:7999/~ovi/parser.git</developerConnection>
