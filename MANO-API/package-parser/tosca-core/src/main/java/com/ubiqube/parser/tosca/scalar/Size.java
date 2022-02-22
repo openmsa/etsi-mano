@@ -60,7 +60,7 @@ public class Size {
 		return mul.multiply(sizeBd);
 	}
 
-	public BigDecimal getMultiplier(final String unit2) {
+	public static BigDecimal getMultiplier(final String unit2) {
 		switch (unit2.toLowerCase()) {
 		case "b":
 			return BigDecimal.ONE;
