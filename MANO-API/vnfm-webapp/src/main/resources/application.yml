@@ -80,6 +80,9 @@ spring:
         password: admin
         url: http://localhost:8081
         username: admin
+  data:
+    rest:
+      base-path: /api
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:file:~/etsi-mano-vnfm.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
