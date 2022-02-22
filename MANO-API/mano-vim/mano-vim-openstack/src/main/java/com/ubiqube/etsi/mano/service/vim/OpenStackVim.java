@@ -103,7 +103,7 @@ public class OpenStackVim implements Vim {
 		super.finalize();
 	}
 
-	private static OSClientV3 authenticate(final VimConnectionInformation vci) {
+	private static OSClientV3 internalAuthenticate(final VimConnectionInformation vci) {
 		final Map<String, String> ii = vci.getInterfaceInfo();
 		final V3 base = OSFactory.builderV3()
 				.endpoint(ii.get("endpoint"));
@@ -132,14 +132,14 @@ public class OpenStackVim implements Vim {
 		final Map<String, OSClientV3> sess = sessions.get();
 		if (null == sess) {
 			final Map<String, OSClientV3> newSess = new ConcurrentHashMap<>();
-			final OSClientV3 osv3 = authenticate(vimConnectionInformation);
+			final OSClientV3 osv3 = internalAuthenticate(vimConnectionInformation);
 			newSess.put(vimConnectionInformation.getVimId(), osv3);
 			sessions.set(newSess);
 			return osv3;
 		}
 		final OSClientV3 os = sess.computeIfAbsent(vimConnectionInformation.getVimId(), x -> {
 			LOG.debug("OS connection: {} ", vimConnectionInformation.getVimId());
-			return authenticate(vimConnectionInformation);
+			return internalAuthenticate(vimConnectionInformation);
 		});
 		OSClientSession.set((OSClientSession) os);
 		return os;
@@ -476,6 +476,11 @@ public class OpenStackVim implements Vim {
 	public void deleteServerGroup(final VimConnectionInformation vimConnectionInformation, final String vimResourceId) {
 		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		os.compute().serverGroups().delete(vimResourceId);
+	}
+
+	@Override
+	public void authenticate(final VimConnectionInformation vci) {
+		internalAuthenticate(vci);
 	}
 
 }

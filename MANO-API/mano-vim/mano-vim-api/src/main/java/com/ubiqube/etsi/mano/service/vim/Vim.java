@@ -77,4 +77,6 @@ public interface Vim {
 	String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar);
 
 	void deleteServerGroup(VimConnectionInformation vimConnectionInformation, String vimResourceId);
+
+	void authenticate(VimConnectionInformation vci);
 }
