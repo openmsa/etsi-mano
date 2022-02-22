@@ -28,5 +28,6 @@ import com.ubiqube.etsi.mano.orchestrator.entities.Systems;
  *
  */
 public interface SystemsJpa extends CrudRepository<Systems, UUID> {
-	// Nothing.
+
+	void deleteByVimOrigin(UUID id);
 }

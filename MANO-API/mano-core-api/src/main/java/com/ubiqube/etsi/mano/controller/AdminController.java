@@ -41,7 +41,6 @@ import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.service.Patcher;
-import com.ubiqube.etsi.mano.service.SystemService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -58,18 +57,16 @@ public class AdminController {
 	private final VimConnectionInformationJpa vciJpa;
 	private final MapperFacade mapper;
 	private final VimManager vimManager;
-	private final SystemService systemService;
 	private final EventManager eventManager;
 	private final Patcher patcher;
 	private final GrantsResponseJpa grantJpa;
 
-	public AdminController(final VimConnectionInformationJpa vciJpa, final MapperFacade mapper, final VimManager vimManager, final SystemService systemService, final EventManager eventManager,
+	public AdminController(final VimConnectionInformationJpa vciJpa, final MapperFacade mapper, final VimManager vimManager, final EventManager eventManager,
 			final Patcher patcher, final GrantsResponseJpa grantJpa) {
 		super();
 		this.vciJpa = vciJpa;
 		this.mapper = mapper;
 		this.vimManager = vimManager;
-		this.systemService = systemService;
 		this.eventManager = eventManager;
 		this.patcher = patcher;
 		this.grantJpa = grantJpa;
@@ -77,10 +74,7 @@ public class AdminController {
 
 	@PostMapping(value = "/vim/register")
 	public ResponseEntity<VimConnectionInformation> registerVim(@RequestBody final VimConnectionInformation body) {
-		systemService.registerVim(body);
-		VimConnectionInformation vci = mapper.map(body, VimConnectionInformation.class);
-		vci = vciJpa.save(vci);
-		vimManager.rebuildCache();
+		final VimConnectionInformation vci = vimManager.register(body);
 		return ResponseEntity.ok(mapper.map(vci, VimConnectionInformation.class));
 	}
 
