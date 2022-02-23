@@ -43,11 +43,9 @@ import ma.glasnost.orika.MapperFacade;
 public class ManoGrantService extends AbstractGrantService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ManoGrantService.class);
-	private final MapperFacade mapper;
 
 	public ManoGrantService(final MapperFacade mapper, final VnfResourceAllocate nfvo, final VimManager vimManager) {
 		super(mapper, nfvo, vimManager);
-		this.mapper = mapper;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -69,7 +67,7 @@ public class ManoGrantService extends AbstractGrantService {
 
 	}
 
-	private ExtManagedVirtualLinkDataEntity findVl(final VnfBlueprint plan, final String vl) {
+	private static ExtManagedVirtualLinkDataEntity findVl(final VnfBlueprint plan, final String vl) {
 		return plan.getExtManagedVirtualLinks().stream().filter(x -> x.getVnfVirtualLinkDescId().equals(vl)).findFirst().orElse(null);
 	}
 }
