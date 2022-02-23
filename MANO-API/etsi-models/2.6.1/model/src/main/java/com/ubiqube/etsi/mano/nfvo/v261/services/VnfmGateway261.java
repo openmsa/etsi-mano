@@ -26,14 +26,17 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequestLinks;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
@@ -50,6 +53,8 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
+import ma.glasnost.orika.MapperFacade;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -60,10 +65,12 @@ public class VnfmGateway261 extends AbstractHttpGateway {
 
 	private final NfvoFactory nfvoFactory;
 	private final VnfmFactory vnfmFactory;
+	private final MapperFacade mapper;
 
-	public VnfmGateway261(final ObjectProvider<VnfmFactory> vnfmFactory, final ObjectProvider<NfvoFactory> nfvoFactory) {
+	public VnfmGateway261(final ObjectProvider<VnfmFactory> vnfmFactory, final ObjectProvider<NfvoFactory> nfvoFactory, final MapperFacade mapper) {
 		this.vnfmFactory = vnfmFactory.getIfAvailable();
 		this.nfvoFactory = nfvoFactory.getIfAvailable();
+		this.mapper = mapper;
 	}
 
 	@Override
@@ -228,5 +235,17 @@ public class VnfmGateway261 extends AbstractHttpGateway {
 		final CreateNsdInfoRequest req = new CreateNsdInfoRequest();
 		req.setUserDefinedData(userDefinedData.entrySet().stream().map(x -> Map.entry(x.getKey(), x.getValue().toString())).collect(Collectors.toMap(Entry::getKey, Entry::getValue)));
 		return req;
+	}
+
+	@Override
+	public Object createGrantRequest(final GrantInterface grant) {
+		final GrantRequest g = mapper.map(grant, GrantRequest.class);
+		final GrantRequestLinks links = new GrantRequestLinks();
+		final Link link = new Link();
+		link.setHref("http://");
+		links.setVnfInstance(link);
+		links.setVnfLcmOpOcc(link);
+		g.setLinks(links);
+		return g;
 	}
 }

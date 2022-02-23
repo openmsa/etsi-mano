@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.rest;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,11 +68,12 @@ public class ManoGrant {
 	}
 
 	public GrantResponse create(final GrantInterface grant) {
-		final ResponseEntity<?> resp = client.createQuery()
+		final Function<HttpGateway, Object> request = (final HttpGateway httpGateway) -> httpGateway.createGrantRequest(grant);
+		final ResponseEntity<?> resp = client.createQuery(request)
 				.setWireInClass(HttpGateway::getGrantRequest)
 				.setWireOutClass(HttpGateway::getGrantResponse)
 				.setOutClass(GrantResponse.class)
-				.postRaw(grant);
+				.postRaw();
 		GrantResponse respCreate = handleLocation(resp);
 		final ManoGrant manoId = new ManoGrant(client, respCreate.getId());
 		while (Boolean.FALSE.equals(respCreate.getAvailable())) {

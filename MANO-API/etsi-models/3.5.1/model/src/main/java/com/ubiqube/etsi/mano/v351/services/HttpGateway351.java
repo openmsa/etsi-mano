@@ -26,6 +26,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.CreateNsdInfoRequest;
@@ -38,6 +39,8 @@ import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantRequest;
+import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantRequestLinks;
+import com.ubiqube.etsi.mano.vnfm.v351.model.grant.Link;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.InstantiateVnfRequest;
@@ -48,6 +51,8 @@ import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.VnfLcmOpOcc;
 
+import ma.glasnost.orika.MapperFacade;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -55,6 +60,12 @@ import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.VnfLcmOpOcc;
  */
 @Service
 public class HttpGateway351 extends AbstractHttpGateway {
+	private final MapperFacade mapper;
+
+	public HttpGateway351(final MapperFacade mapper) {
+		super();
+		this.mapper = mapper;
+	}
 
 	@Override
 	public Class<?> getVnfPackageClass() {
@@ -249,4 +260,15 @@ public class HttpGateway351 extends AbstractHttpGateway {
 		return req;
 	}
 
+	@Override
+	public Object createGrantRequest(final GrantInterface grant) {
+		final GrantRequest g = mapper.map(grant, GrantRequest.class);
+		final GrantRequestLinks links = new GrantRequestLinks();
+		final Link vnfLink = new Link();
+		vnfLink.setHref("http://");
+		links.setVnfInstance(vnfLink);
+		links.setVnfLcmOpOcc(vnfLink);
+		g.setLinks(links);
+		return g;
+	}
 }

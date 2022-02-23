@@ -124,6 +124,15 @@ public class ManoQueryBuilder {
 		return (ResponseEntity<T>) server.rest().postWithReturn(uri, reqMap, this.wireOutClass.apply(httpGateway), version);
 	}
 
+	public <T> ResponseEntity<T> postRaw() {
+		final ServerAdapter server = client.getServer();
+		final HttpGateway httpGateway = server.httpGateway();
+		final URI uri = buildUri(server);
+		final Object reqMap = client.getRequestObject().apply(httpGateway);
+		final String version = httpGateway.getHeaderVersion(client.getQueryType()).orElse(null);
+		return (ResponseEntity<T>) server.rest().postWithReturn(uri, reqMap, this.wireOutClass.apply(httpGateway), version);
+	}
+
 	private Object remapRequest(final Object req) {
 		final HttpGateway httpGateway = client.getServer().httpGateway();
 		final Object obj = wireInClass.apply(httpGateway);

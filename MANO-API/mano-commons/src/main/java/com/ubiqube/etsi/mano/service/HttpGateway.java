@@ -24,6 +24,7 @@ import java.util.UUID;
 import org.springframework.core.ParameterizedTypeReference;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 
 /**
@@ -46,6 +47,8 @@ public interface HttpGateway {
 	Class<?> getGrantRequest();
 
 	Class<?> getGrantResponse();
+
+	Object createGrantRequest(GrantInterface grant);
 
 	void makeGrantLinks(Object manoGrant);
 

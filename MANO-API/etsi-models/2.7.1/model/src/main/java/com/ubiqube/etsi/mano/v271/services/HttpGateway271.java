@@ -26,13 +26,13 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.controller.Protocol;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.OperateVnfRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleVnfToLevelRequest;
@@ -42,6 +42,7 @@ import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstance;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequest;
+import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequestLinks;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionRequest;
@@ -49,6 +50,8 @@ import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
+
+import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -59,12 +62,12 @@ import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
 public class HttpGateway271 extends AbstractHttpGateway {
 	private final NfvoFactory nfvoFactory;
 	private final VnfmFactory vnfmFactory;
-	private List<Protocol> protocols;
-	private final ObjectMapper mapper = new ObjectMapper();
+	private final MapperFacade mapper;
 
-	public HttpGateway271(final ObjectProvider<VnfmFactory> vnfmFactory, final ObjectProvider<NfvoFactory> nfvoFactory) {
+	public HttpGateway271(final ObjectProvider<VnfmFactory> vnfmFactory, final ObjectProvider<NfvoFactory> nfvoFactory, final MapperFacade mapper) {
 		this.vnfmFactory = vnfmFactory.getIfAvailable();
 		this.nfvoFactory = nfvoFactory.getIfAvailable();
+		this.mapper = mapper;
 	}
 
 	@Override
@@ -231,6 +234,18 @@ public class HttpGateway271 extends AbstractHttpGateway {
 		final CreateNsdInfoRequest req = new CreateNsdInfoRequest();
 		req.setUserDefinedData(userDefinedData.entrySet().stream().map(x -> Map.entry(x.getKey(), x.getValue().toString())).collect(Collectors.toMap(Entry::getKey, Entry::getValue)));
 		return req;
+	}
+
+	@Override
+	public Object createGrantRequest(final GrantInterface grant) {
+		final GrantRequest g = mapper.map(grant, GrantRequest.class);
+		final GrantRequestLinks links = new GrantRequestLinks();
+		final Link vnfLink = new Link();
+		vnfLink.setHref("http://");
+		links.setVnfInstance(vnfLink);
+		links.setVnfLcmOpOcc(vnfLink);
+		g.setLinks(links);
+		return g;
 	}
 
 }
