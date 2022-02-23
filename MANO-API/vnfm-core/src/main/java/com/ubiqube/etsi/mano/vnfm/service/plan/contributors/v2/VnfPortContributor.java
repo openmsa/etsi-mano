@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,6 +43,7 @@ import com.ubiqube.etsi.mano.orchestrator.Bundle;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.vnfm.service.graph.VduNamingStrategy;
 import com.ubiqube.etsi.mano.vnfm.service.graph.VnfBundleAdapter;
 import com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt.VnfPortVt;
 
@@ -59,9 +59,12 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 
 	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
 
-	public VnfPortContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa) {
+	private final VduNamingStrategy namingStrategy;
+
+	public VnfPortContributor(final VnfLiveInstanceJpa vnfLiveInstanceJpa, final VduNamingStrategy namingStrategy) {
 		super();
 		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;
+		this.namingStrategy = namingStrategy;
 	}
 
 	@Override
@@ -88,7 +91,7 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 	private void removePort(final List<VnfPortVt> ret, final ComputeTask compute, final VnfPackage vnfPackage, final VnfInstance instance) {
 		final List<VnfLinkPort> l = findPorts(compute.getToscaName(), vnfPackage.getVnfLinkPort());
 		l.stream().forEach(x -> {
-			final String toscaName = x.getToscaName() + "-" + compute.getAlias();
+			final String toscaName = namingStrategy.nameConnectionPort(x, compute);
 			final List<VnfLiveInstance> vli = vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(instance, toscaName);
 			if (vli.isEmpty()) {
 				return;
@@ -105,16 +108,17 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 		});
 	}
 
-	private static void createPort(final List<VnfPortVt> ret, final ComputeTask compute, final VnfPackage vnfPackage, final VnfBlueprint plan) {
+	private void createPort(final List<VnfPortVt> ret, final ComputeTask compute, final VnfPackage vnfPackage, final VnfBlueprint plan) {
 		final List<VnfLinkPort> l = findPorts(compute.getToscaName(), vnfPackage.getVnfLinkPort());
 		l.stream().forEach(y -> {
-			final String toscaName = y.getToscaName() + "-" + compute.getAlias();
+			final String toscaName = namingStrategy.nameConnectionPort(y, compute);
 			final VnfPortTask task = createTask(VnfPortTask::new);
 			task.setToscaName(toscaName);
-			task.setAlias(toscaName + RandomStringUtils.random(5, true, true));
+			task.setAlias(toscaName);
 			task.setChangeType(ChangeType.ADDED);
 			task.setType(ResourceTypeEnum.LINKPORT);
 			task.setVnfLinkPort(y);
+			task.setCompute(compute);
 			if (task.getVnfLinkPort().getVirtualLink() == null) {
 				final Optional<String> vlName = findVlName(vnfPackage, y.getToscaName());
 				if (vlName.isEmpty()) {
@@ -154,13 +158,6 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 
 	private static List<VnfLinkPort> findPorts(final String toscaName, final Set<VnfLinkPort> vnfLinkPort) {
 		return vnfLinkPort.stream().filter(x -> x.getVirtualBinding().equals(toscaName)).toList();
-	}
-
-	private static VnfLinkPort findVnfLink(final VnfPackage vnfPackage, final String vdu) {
-		return vnfPackage.getVnfLinkPort().stream()
-				.filter(x -> x.getVirtualBinding().equals(vdu))
-				.findFirst()
-				.orElseThrow(() -> new GenericException("Unable to find VL " + vdu));
 	}
 
 	private List<VnfPortVt> doTerminatePlan(final VnfInstance vnfInstance) {
