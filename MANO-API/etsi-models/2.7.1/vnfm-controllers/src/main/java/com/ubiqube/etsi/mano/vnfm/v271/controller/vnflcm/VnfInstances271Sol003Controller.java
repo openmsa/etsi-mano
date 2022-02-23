@@ -30,19 +30,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ChangeExtVnfConnectivityRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ChangeVnfFlavourRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.HealVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstance;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfInstanceGenericFrontController;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ChangeExtVnfConnectivityRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ChangeVnfFlavourRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.CreateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.HealVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.InstantiateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.Link;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.OperateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ScaleVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ScaleVnfToLevelRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.VnfInstance;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.VnfInstanceLinks;
 
 @RestController
 public class VnfInstances271Sol003Controller implements VnfInstances271Sol003Api {

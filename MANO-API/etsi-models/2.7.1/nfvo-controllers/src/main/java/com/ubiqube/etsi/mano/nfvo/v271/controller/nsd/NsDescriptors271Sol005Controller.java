@@ -30,11 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.etsi.mano.controller.nsd.NsDescriptorGenericFrontController;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfoLinks;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfoModifications;
-import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
 /**
  *

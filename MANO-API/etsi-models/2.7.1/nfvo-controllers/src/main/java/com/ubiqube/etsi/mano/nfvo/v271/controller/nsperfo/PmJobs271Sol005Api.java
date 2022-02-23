@@ -42,11 +42,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.PerformanceReport;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.PmJob;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.PmJobModifications;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.CreatePmJobRequest;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.PerformanceReport;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.PmJob;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.PmJobModifications;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

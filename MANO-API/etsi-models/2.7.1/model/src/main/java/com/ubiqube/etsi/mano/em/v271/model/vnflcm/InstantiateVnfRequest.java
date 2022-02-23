@@ -16,285 +16,299 @@
  */
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * InstantiateVnfRequest
  */
 @Validated
 
-public class InstantiateVnfRequest   {
-  @JsonProperty("flavourId")
-  private String flavourId = null;
+public class InstantiateVnfRequest {
+	@JsonProperty("flavourId")
+	private String flavourId = null;
 
-  @JsonProperty("instantiationLevelId")
-  private String instantiationLevelId = null;
+	@JsonProperty("instantiationLevelId")
+	private String instantiationLevelId = null;
 
-  @JsonProperty("extVirtualLinks")
-  @Valid
-  private List<ExtVirtualLinkData> extVirtualLinks = null;
+	@JsonProperty("extVirtualLinks")
+	@Valid
+	private List<ExtVirtualLinkData> extVirtualLinks = null;
 
-  @JsonProperty("extManagedVirtualLinks")
-  @Valid
-  private List<ExtManagedVirtualLinkData> extManagedVirtualLinks = null;
+	@JsonProperty("extManagedVirtualLinks")
+	@Valid
+	private List<ExtManagedVirtualLinkData> extManagedVirtualLinks = null;
 
-  @JsonProperty("localizationLanguage")
-  private String localizationLanguage = null;
+	@JsonProperty("localizationLanguage")
+	private String localizationLanguage = null;
 
-  @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+	@JsonProperty("additionalParams")
+	private KeyValuePairs additionalParams = null;
 
-  @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+	@JsonProperty("extensions")
+	private KeyValuePairs extensions = null;
 
-  @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+	@JsonProperty("vnfConfigurableProperties")
+	private KeyValuePairs vnfConfigurableProperties = null;
 
-  public InstantiateVnfRequest flavourId(String flavourId) {
-    this.flavourId = flavourId;
-    return this;
-  }
+	public InstantiateVnfRequest flavourId(final String flavourId) {
+		this.flavourId = flavourId;
+		return this;
+	}
 
-  /**
-   * Identifier of the VNF deployment flavour to be instantiated. 
-   * @return flavourId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the VNF deployment flavour to be instantiated. ")
-  @NotNull
+	/**
+	 * Identifier of the VNF deployment flavour to be instantiated.
+	 *
+	 * @return flavourId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the VNF deployment flavour to be instantiated. ")
+	@NotNull
 
+	public String getFlavourId() {
+		return flavourId;
+	}
 
-  public String getFlavourId() {
-    return flavourId;
-  }
+	public void setFlavourId(final String flavourId) {
+		this.flavourId = flavourId;
+	}
 
-  public void setFlavourId(String flavourId) {
-    this.flavourId = flavourId;
-  }
+	public InstantiateVnfRequest instantiationLevelId(final String instantiationLevelId) {
+		this.instantiationLevelId = instantiationLevelId;
+		return this;
+	}
 
-  public InstantiateVnfRequest instantiationLevelId(String instantiationLevelId) {
-    this.instantiationLevelId = instantiationLevelId;
-    return this;
-  }
+	/**
+	 * Identifier of the instantiation level of the deployment flavour to be
+	 * instantiated. If not present, the default instantiation level as declared in
+	 * the VNFD is instantiated.
+	 *
+	 * @return instantiationLevelId
+	 **/
+	@ApiModelProperty(value = "Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
 
-  /**
-   * Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. 
-   * @return instantiationLevelId
-  **/
-  @ApiModelProperty(value = "Identifier of the instantiation level of the deployment flavour to be instantiated. If not present, the default instantiation level as declared in the VNFD is instantiated. ")
+	public String getInstantiationLevelId() {
+		return instantiationLevelId;
+	}
 
+	public void setInstantiationLevelId(final String instantiationLevelId) {
+		this.instantiationLevelId = instantiationLevelId;
+	}
 
-  public String getInstantiationLevelId() {
-    return instantiationLevelId;
-  }
+	public InstantiateVnfRequest extVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
+		this.extVirtualLinks = extVirtualLinks;
+		return this;
+	}
 
-  public void setInstantiationLevelId(String instantiationLevelId) {
-    this.instantiationLevelId = instantiationLevelId;
-  }
+	public InstantiateVnfRequest addExtVirtualLinksItem(final ExtVirtualLinkData extVirtualLinksItem) {
+		if (this.extVirtualLinks == null) {
+			this.extVirtualLinks = new ArrayList<>();
+		}
+		this.extVirtualLinks.add(extVirtualLinksItem);
+		return this;
+	}
 
-  public InstantiateVnfRequest extVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
-    this.extVirtualLinks = extVirtualLinks;
-    return this;
-  }
+	/**
+	 * Information about external VLs to connect the VNF to.
+	 *
+	 * @return extVirtualLinks
+	 **/
+	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
 
-  public InstantiateVnfRequest addExtVirtualLinksItem(ExtVirtualLinkData extVirtualLinksItem) {
-    if (this.extVirtualLinks == null) {
-      this.extVirtualLinks = new ArrayList<>();
-    }
-    this.extVirtualLinks.add(extVirtualLinksItem);
-    return this;
-  }
+	@Valid
 
-  /**
-   * Information about external VLs to connect the VNF to. 
-   * @return extVirtualLinks
-  **/
-  @ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
+	public List<ExtVirtualLinkData> getExtVirtualLinks() {
+		return extVirtualLinks;
+	}
 
-  @Valid
+	public void setExtVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
+		this.extVirtualLinks = extVirtualLinks;
+	}
 
-  public List<ExtVirtualLinkData> getExtVirtualLinks() {
-    return extVirtualLinks;
-  }
+	public InstantiateVnfRequest extManagedVirtualLinks(final List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
+		this.extManagedVirtualLinks = extManagedVirtualLinks;
+		return this;
+	}
 
-  public void setExtVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
-    this.extVirtualLinks = extVirtualLinks;
-  }
+	public InstantiateVnfRequest addExtManagedVirtualLinksItem(final ExtManagedVirtualLinkData extManagedVirtualLinksItem) {
+		if (this.extManagedVirtualLinks == null) {
+			this.extManagedVirtualLinks = new ArrayList<>();
+		}
+		this.extManagedVirtualLinks.add(extManagedVirtualLinksItem);
+		return this;
+	}
 
-  public InstantiateVnfRequest extManagedVirtualLinks(List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
-    this.extManagedVirtualLinks = extManagedVirtualLinks;
-    return this;
-  }
+	/**
+	 * Information about external VLs to connect the VNF to.
+	 *
+	 * @return extManagedVirtualLinks
+	 **/
+	@ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
 
-  public InstantiateVnfRequest addExtManagedVirtualLinksItem(ExtManagedVirtualLinkData extManagedVirtualLinksItem) {
-    if (this.extManagedVirtualLinks == null) {
-      this.extManagedVirtualLinks = new ArrayList<>();
-    }
-    this.extManagedVirtualLinks.add(extManagedVirtualLinksItem);
-    return this;
-  }
+	@Valid
 
-  /**
-   * Information about external VLs to connect the VNF to. 
-   * @return extManagedVirtualLinks
-  **/
-  @ApiModelProperty(value = "Information about external VLs to connect the VNF to. ")
+	public List<ExtManagedVirtualLinkData> getExtManagedVirtualLinks() {
+		return extManagedVirtualLinks;
+	}
 
-  @Valid
+	public void setExtManagedVirtualLinks(final List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
+		this.extManagedVirtualLinks = extManagedVirtualLinks;
+	}
 
-  public List<ExtManagedVirtualLinkData> getExtManagedVirtualLinks() {
-    return extManagedVirtualLinks;
-  }
+	public InstantiateVnfRequest localizationLanguage(final String localizationLanguage) {
+		this.localizationLanguage = localizationLanguage;
+		return this;
+	}
 
-  public void setExtManagedVirtualLinks(List<ExtManagedVirtualLinkData> extManagedVirtualLinks) {
-    this.extManagedVirtualLinks = extManagedVirtualLinks;
-  }
+	/**
+	 * Localization language of the VNF to be instantiated. The value shall comply
+	 * with the format defined in IETF RFC 5646.
+	 *
+	 * @return localizationLanguage
+	 **/
+	@ApiModelProperty(value = "Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. ")
 
-  public InstantiateVnfRequest localizationLanguage(String localizationLanguage) {
-    this.localizationLanguage = localizationLanguage;
-    return this;
-  }
+	public String getLocalizationLanguage() {
+		return localizationLanguage;
+	}
 
-  /**
-   * Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. 
-   * @return localizationLanguage
-  **/
-  @ApiModelProperty(value = "Localization language of the VNF to be instantiated. The value shall comply with the format defined in IETF RFC 5646. ")
+	public void setLocalizationLanguage(final String localizationLanguage) {
+		this.localizationLanguage = localizationLanguage;
+	}
 
+	public InstantiateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+		this.additionalParams = additionalParams;
+		return this;
+	}
 
-  public String getLocalizationLanguage() {
-    return localizationLanguage;
-  }
+	/**
+	 * Additional input parameters for the instantiation process, specific to the
+	 * VNF being instantiated, as declared in the VNFD as part of
+	 * \"InstantiateVnfOpConfig\".
+	 *
+	 * @return additionalParams
+	 **/
+	@ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \"InstantiateVnfOpConfig\". ")
 
-  public void setLocalizationLanguage(String localizationLanguage) {
-    this.localizationLanguage = localizationLanguage;
-  }
+	@Valid
 
-  public InstantiateVnfRequest additionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-    return this;
-  }
+	public KeyValuePairs getAdditionalParams() {
+		return additionalParams;
+	}
 
-  /**
-   * Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \"InstantiateVnfOpConfig\". 
-   * @return additionalParams
-  **/
-  @ApiModelProperty(value = "Additional input parameters for the instantiation process, specific to the VNF being instantiated, as declared in the VNFD as part of \"InstantiateVnfOpConfig\". ")
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
-  @Valid
+	public InstantiateVnfRequest extensions(final KeyValuePairs extensions) {
+		this.extensions = extensions;
+		return this;
+	}
 
-  public KeyValuePairs getAdditionalParams() {
-    return additionalParams;
-  }
+	/**
+	 * If present, this attribute provides values for the \"extensions\" attribute
+	 * in \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same
+	 * key exists in the VnfInstance data structure, the VNFM shall replace its
+	 * value with the value passed in the InstantiateVnfRequest data structure.
+	 *
+	 * @return extensions
+	 **/
+	@ApiModelProperty(value = "If present, this attribute provides values for the \"extensions\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure. ")
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-  }
+	@Valid
 
-  public InstantiateVnfRequest extensions(KeyValuePairs extensions) {
-    this.extensions = extensions;
-    return this;
-  }
+	public KeyValuePairs getExtensions() {
+		return extensions;
+	}
 
-  /**
-   * If present, this attribute provides values for the \"extensions\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure. 
-   * @return extensions
-  **/
-  @ApiModelProperty(value = "If present, this attribute provides values for the \"extensions\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure. ")
+	public void setExtensions(final KeyValuePairs extensions) {
+		this.extensions = extensions;
+	}
 
-  @Valid
+	public InstantiateVnfRequest vnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+		this.vnfConfigurableProperties = vnfConfigurableProperties;
+		return this;
+	}
 
-  public KeyValuePairs getExtensions() {
-    return extensions;
-  }
+	/**
+	 * This parameter provides values for the VNF configurable properties attribute
+	 * in the \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the
+	 * same key exists in the VnfInstance data structure, the VNFM shall replace its
+	 * value with the value passed in the InstantiateVnfRequest data structure.
+	 *
+	 * @return vnfConfigurableProperties
+	 **/
+	@ApiModelProperty(value = "This parameter provides values for the VNF configurable properties attribute in the \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure. ")
 
-  public void setExtensions(KeyValuePairs extensions) {
-    this.extensions = extensions;
-  }
+	@Valid
 
-  public InstantiateVnfRequest vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
-    this.vnfConfigurableProperties = vnfConfigurableProperties;
-    return this;
-  }
+	public KeyValuePairs getVnfConfigurableProperties() {
+		return vnfConfigurableProperties;
+	}
 
-  /**
-   * This parameter provides values for the VNF configurable properties attribute in the \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure. 
-   * @return vnfConfigurableProperties
-  **/
-  @ApiModelProperty(value = "This parameter provides values for the VNF configurable properties attribute in the \"VnfInstance\", as defined in clause 5.5.2.2. If an entry with the same key exists in the VnfInstance data structure, the VNFM shall replace its value with the value passed in the InstantiateVnfRequest data structure. ")
+	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+		this.vnfConfigurableProperties = vnfConfigurableProperties;
+	}
 
-  @Valid
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final InstantiateVnfRequest instantiateVnfRequest = (InstantiateVnfRequest) o;
+		return Objects.equals(this.flavourId, instantiateVnfRequest.flavourId) &&
+				Objects.equals(this.instantiationLevelId, instantiateVnfRequest.instantiationLevelId) &&
+				Objects.equals(this.extVirtualLinks, instantiateVnfRequest.extVirtualLinks) &&
+				Objects.equals(this.extManagedVirtualLinks, instantiateVnfRequest.extManagedVirtualLinks) &&
+				Objects.equals(this.localizationLanguage, instantiateVnfRequest.localizationLanguage) &&
+				Objects.equals(this.additionalParams, instantiateVnfRequest.additionalParams) &&
+				Objects.equals(this.extensions, instantiateVnfRequest.extensions) &&
+				Objects.equals(this.vnfConfigurableProperties, instantiateVnfRequest.vnfConfigurableProperties);
+	}
 
-  public KeyValuePairs getVnfConfigurableProperties() {
-    return vnfConfigurableProperties;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(flavourId, instantiationLevelId, extVirtualLinks, extManagedVirtualLinks, localizationLanguage, additionalParams, extensions, vnfConfigurableProperties);
+	}
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
-    this.vnfConfigurableProperties = vnfConfigurableProperties;
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class InstantiateVnfRequest {\n");
 
+		sb.append("    flavourId: ").append(toIndentedString(flavourId)).append("\n");
+		sb.append("    instantiationLevelId: ").append(toIndentedString(instantiationLevelId)).append("\n");
+		sb.append("    extVirtualLinks: ").append(toIndentedString(extVirtualLinks)).append("\n");
+		sb.append("    extManagedVirtualLinks: ").append(toIndentedString(extManagedVirtualLinks)).append("\n");
+		sb.append("    localizationLanguage: ").append(toIndentedString(localizationLanguage)).append("\n");
+		sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+		sb.append("    extensions: ").append(toIndentedString(extensions)).append("\n");
+		sb.append("    vnfConfigurableProperties: ").append(toIndentedString(vnfConfigurableProperties)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    InstantiateVnfRequest instantiateVnfRequest = (InstantiateVnfRequest) o;
-    return Objects.equals(this.flavourId, instantiateVnfRequest.flavourId) &&
-        Objects.equals(this.instantiationLevelId, instantiateVnfRequest.instantiationLevelId) &&
-        Objects.equals(this.extVirtualLinks, instantiateVnfRequest.extVirtualLinks) &&
-        Objects.equals(this.extManagedVirtualLinks, instantiateVnfRequest.extManagedVirtualLinks) &&
-        Objects.equals(this.localizationLanguage, instantiateVnfRequest.localizationLanguage) &&
-        Objects.equals(this.additionalParams, instantiateVnfRequest.additionalParams) &&
-        Objects.equals(this.extensions, instantiateVnfRequest.extensions) &&
-        Objects.equals(this.vnfConfigurableProperties, instantiateVnfRequest.vnfConfigurableProperties);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(flavourId, instantiationLevelId, extVirtualLinks, extManagedVirtualLinks, localizationLanguage, additionalParams, extensions, vnfConfigurableProperties);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class InstantiateVnfRequest {\n");
-    
-    sb.append("    flavourId: ").append(toIndentedString(flavourId)).append("\n");
-    sb.append("    instantiationLevelId: ").append(toIndentedString(instantiationLevelId)).append("\n");
-    sb.append("    extVirtualLinks: ").append(toIndentedString(extVirtualLinks)).append("\n");
-    sb.append("    extManagedVirtualLinks: ").append(toIndentedString(extManagedVirtualLinks)).append("\n");
-    sb.append("    localizationLanguage: ").append(toIndentedString(localizationLanguage)).append("\n");
-    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
-    sb.append("    extensions: ").append(toIndentedString(extensions)).append("\n");
-    sb.append("    vnfConfigurableProperties: ").append(toIndentedString(vnfConfigurableProperties)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

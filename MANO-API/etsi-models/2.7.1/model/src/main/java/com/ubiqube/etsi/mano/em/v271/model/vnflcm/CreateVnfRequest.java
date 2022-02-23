@@ -17,158 +17,164 @@
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * CreateVnfRequest
  */
 @Validated
 
-public class CreateVnfRequest   {
-  @JsonProperty("vnfdId")
-  private String vnfdId = null;
+public class CreateVnfRequest {
+	@JsonProperty("vnfdId")
+	private String vnfdId = null;
 
-  @JsonProperty("vnfInstanceName")
-  private String vnfInstanceName = null;
+	@JsonProperty("vnfInstanceName")
+	private String vnfInstanceName = null;
 
-  @JsonProperty("vnfInstanceDescription")
-  private String vnfInstanceDescription = null;
+	@JsonProperty("vnfInstanceDescription")
+	private String vnfInstanceDescription = null;
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+	@JsonProperty("metadata")
+	private KeyValuePairs metadata = null;
 
-  public CreateVnfRequest vnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+	public CreateVnfRequest vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-  /**
-   * Identifier that identifies the VNFD which defines the VNF instance to be created. 
-   * @return vnfdId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier that identifies the VNFD which defines the VNF instance to be created. ")
-  @NotNull
+	/**
+	 * Identifier that identifies the VNFD which defines the VNF instance to be
+	 * created.
+	 *
+	 * @return vnfdId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier that identifies the VNFD which defines the VNF instance to be created. ")
+	@NotNull
 
+	public String getVnfdId() {
+		return vnfdId;
+	}
 
-  public String getVnfdId() {
-    return vnfdId;
-  }
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
-  public void setVnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	public CreateVnfRequest vnfInstanceName(final String vnfInstanceName) {
+		this.vnfInstanceName = vnfInstanceName;
+		return this;
+	}
 
-  public CreateVnfRequest vnfInstanceName(String vnfInstanceName) {
-    this.vnfInstanceName = vnfInstanceName;
-    return this;
-  }
+	/**
+	 * Human-readable name of the VNF instance to be created.
+	 *
+	 * @return vnfInstanceName
+	 **/
+	@ApiModelProperty(value = "Human-readable name of the VNF instance to be created. ")
 
-  /**
-   * Human-readable name of the VNF instance to be created. 
-   * @return vnfInstanceName
-  **/
-  @ApiModelProperty(value = "Human-readable name of the VNF instance to be created. ")
+	public String getVnfInstanceName() {
+		return vnfInstanceName;
+	}
 
+	public void setVnfInstanceName(final String vnfInstanceName) {
+		this.vnfInstanceName = vnfInstanceName;
+	}
 
-  public String getVnfInstanceName() {
-    return vnfInstanceName;
-  }
+	public CreateVnfRequest vnfInstanceDescription(final String vnfInstanceDescription) {
+		this.vnfInstanceDescription = vnfInstanceDescription;
+		return this;
+	}
 
-  public void setVnfInstanceName(String vnfInstanceName) {
-    this.vnfInstanceName = vnfInstanceName;
-  }
+	/**
+	 * Human-readable description of the VNF instance to be created.
+	 *
+	 * @return vnfInstanceDescription
+	 **/
+	@ApiModelProperty(value = "Human-readable description of the VNF instance to be created. ")
 
-  public CreateVnfRequest vnfInstanceDescription(String vnfInstanceDescription) {
-    this.vnfInstanceDescription = vnfInstanceDescription;
-    return this;
-  }
+	public String getVnfInstanceDescription() {
+		return vnfInstanceDescription;
+	}
 
-  /**
-   * Human-readable description of the VNF instance to be created. 
-   * @return vnfInstanceDescription
-  **/
-  @ApiModelProperty(value = "Human-readable description of the VNF instance to be created. ")
+	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
+		this.vnfInstanceDescription = vnfInstanceDescription;
+	}
 
+	public CreateVnfRequest metadata(final KeyValuePairs metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  public String getVnfInstanceDescription() {
-    return vnfInstanceDescription;
-  }
+	/**
+	 * If present, this attribute provides values for the \"metadata\" attribute in
+	 * \"VnfInstance\", as defined in clause 5.5.2.2. If a “metadata” entry in this
+	 * CreateVnfRequest data structure has a corresponding default value declared in
+	 * the VNFD, the value in the “metadata” entry in the CreateVnfRequest structure
+	 * takes precedence.
+	 *
+	 * @return metadata
+	 **/
+	@ApiModelProperty(value = "If present, this attribute provides values for the \"metadata\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If a “metadata” entry in this CreateVnfRequest data structure has a corresponding default value declared in the VNFD, the value in the “metadata” entry in the CreateVnfRequest structure takes precedence. ")
 
-  public void setVnfInstanceDescription(String vnfInstanceDescription) {
-    this.vnfInstanceDescription = vnfInstanceDescription;
-  }
+	@Valid
 
-  public CreateVnfRequest metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	public KeyValuePairs getMetadata() {
+		return metadata;
+	}
 
-  /**
-   * If present, this attribute provides values for the \"metadata\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If a “metadata” entry in this CreateVnfRequest data structure has a corresponding default value declared in the VNFD, the value in the “metadata” entry in the CreateVnfRequest structure takes precedence. 
-   * @return metadata
-  **/
-  @ApiModelProperty(value = "If present, this attribute provides values for the \"metadata\" attribute in \"VnfInstance\", as defined in clause 5.5.2.2. If a “metadata” entry in this CreateVnfRequest data structure has a corresponding default value declared in the VNFD, the value in the “metadata” entry in the CreateVnfRequest structure takes precedence. ")
+	public void setMetadata(final KeyValuePairs metadata) {
+		this.metadata = metadata;
+	}
 
-  @Valid
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final CreateVnfRequest createVnfRequest = (CreateVnfRequest) o;
+		return Objects.equals(this.vnfdId, createVnfRequest.vnfdId) &&
+				Objects.equals(this.vnfInstanceName, createVnfRequest.vnfInstanceName) &&
+				Objects.equals(this.vnfInstanceDescription, createVnfRequest.vnfInstanceDescription) &&
+				Objects.equals(this.metadata, createVnfRequest.metadata);
+	}
 
-  public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfdId, vnfInstanceName, vnfInstanceDescription, metadata);
+	}
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class CreateVnfRequest {\n");
 
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    vnfInstanceName: ").append(toIndentedString(vnfInstanceName)).append("\n");
+		sb.append("    vnfInstanceDescription: ").append(toIndentedString(vnfInstanceDescription)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    CreateVnfRequest createVnfRequest = (CreateVnfRequest) o;
-    return Objects.equals(this.vnfdId, createVnfRequest.vnfdId) &&
-        Objects.equals(this.vnfInstanceName, createVnfRequest.vnfInstanceName) &&
-        Objects.equals(this.vnfInstanceDescription, createVnfRequest.vnfInstanceDescription) &&
-        Objects.equals(this.metadata, createVnfRequest.metadata);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfdId, vnfInstanceName, vnfInstanceDescription, metadata);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class CreateVnfRequest {\n");
-    
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    vnfInstanceName: ").append(toIndentedString(vnfInstanceName)).append("\n");
-    sb.append("    vnfInstanceDescription: ").append(toIndentedString(vnfInstanceDescription)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

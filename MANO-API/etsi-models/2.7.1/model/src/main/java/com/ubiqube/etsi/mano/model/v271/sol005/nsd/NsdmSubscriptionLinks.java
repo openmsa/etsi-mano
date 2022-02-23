@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -64,7 +64,7 @@ public class NsdmSubscriptionLinks {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final NsdmSubscriptionLinks nsdmSubscriptionLinks = (NsdmSubscriptionLinks) o;

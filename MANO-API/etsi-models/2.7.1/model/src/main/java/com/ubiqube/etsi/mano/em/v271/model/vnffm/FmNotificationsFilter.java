@@ -16,296 +16,307 @@
  */
 package com.ubiqube.etsi.mano.em.v271.model.vnffm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v271.model.vnffm.EventType;
-import com.ubiqube.etsi.mano.em.v271.model.vnffm.FaultyResourceType;
-import com.ubiqube.etsi.mano.em.v271.model.vnffm.PerceivedSeverityType;
-import com.ubiqube.etsi.mano.em.v271.model.vnffm.VnfInstanceSubscriptionFilter;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstanceSubscriptionFilter;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents a subscription filter related to notifications about VNF faults. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \&quot;and\&quot; between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \&quot;or\&quot; between the values of one filter attribute). 
+ * This type represents a subscription filter related to notifications about VNF
+ * faults. At a particular nesting level in the filter structure, the following
+ * applies: All attributes shall match in order for the filter to match (logical
+ * \&quot;and\&quot; between different filter attributes). If an attribute is an
+ * array, the attribute shall match if at least one of the values in the array
+ * matches (logical \&quot;or\&quot; between the values of one filter
+ * attribute).
  */
 @ApiModel(description = "This type represents a subscription filter related to notifications about VNF faults. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \"and\" between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \"or\" between the values of one filter attribute). ")
 @Validated
 
-public class FmNotificationsFilter   {
-  @JsonProperty("vnfInstanceSubscriptionFilter")
-  private VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter = null;
+public class FmNotificationsFilter {
+	@JsonProperty("vnfInstanceSubscriptionFilter")
+	private VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter = null;
 
-  /**
-   * Gets or Sets notificationTypes
-   */
-  public enum NotificationTypesEnum {
-    ALARMNOTIFICATION("AlarmNotification"),
-    
-    ALARMCLEAREDNOTIFICATION("AlarmClearedNotification"),
-    
-    ALARMLISTREBUILTNOTIFICATION("AlarmListRebuiltNotification");
+	/**
+	 * Gets or Sets notificationTypes
+	 */
+	public enum NotificationTypesEnum {
+		ALARMNOTIFICATION("AlarmNotification"),
 
-    private String value;
+		ALARMCLEAREDNOTIFICATION("AlarmClearedNotification"),
 
-    NotificationTypesEnum(String value) {
-      this.value = value;
-    }
+		ALARMLISTREBUILTNOTIFICATION("AlarmListRebuiltNotification");
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		private final String value;
 
-    @JsonCreator
-    public static NotificationTypesEnum fromValue(String text) {
-      for (NotificationTypesEnum b : NotificationTypesEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		NotificationTypesEnum(final String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("notificationTypes")
-  @Valid
-  private List<NotificationTypesEnum> notificationTypes = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("faultyResourceTypes")
-  @Valid
-  private List<FaultyResourceType> faultyResourceTypes = null;
+		@JsonCreator
+		public static NotificationTypesEnum fromValue(final String text) {
+			for (final NotificationTypesEnum b : NotificationTypesEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("perceivedSeverities")
-  @Valid
-  private List<PerceivedSeverityType> perceivedSeverities = null;
+	@JsonProperty("notificationTypes")
+	@Valid
+	private List<NotificationTypesEnum> notificationTypes = null;
 
-  @JsonProperty("eventTypes")
-  @Valid
-  private List<EventType> eventTypes = null;
+	@JsonProperty("faultyResourceTypes")
+	@Valid
+	private List<FaultyResourceType> faultyResourceTypes = null;
 
-  @JsonProperty("probableCauses")
-  @Valid
-  private List<String> probableCauses = null;
+	@JsonProperty("perceivedSeverities")
+	@Valid
+	private List<PerceivedSeverityType> perceivedSeverities = null;
 
-  public FmNotificationsFilter vnfInstanceSubscriptionFilter(VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter) {
-    this.vnfInstanceSubscriptionFilter = vnfInstanceSubscriptionFilter;
-    return this;
-  }
+	@JsonProperty("eventTypes")
+	@Valid
+	private List<EventType> eventTypes = null;
 
-  /**
-   * Filter criteria to select VNF instances about which to notify.     
-   * @return vnfInstanceSubscriptionFilter
-  **/
-  @ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify.     ")
+	@JsonProperty("probableCauses")
+	@Valid
+	private List<String> probableCauses = null;
 
-  @Valid
+	public FmNotificationsFilter vnfInstanceSubscriptionFilter(final VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter) {
+		this.vnfInstanceSubscriptionFilter = vnfInstanceSubscriptionFilter;
+		return this;
+	}
 
-  public VnfInstanceSubscriptionFilter getVnfInstanceSubscriptionFilter() {
-    return vnfInstanceSubscriptionFilter;
-  }
+	/**
+	 * Filter criteria to select VNF instances about which to notify.
+	 *
+	 * @return vnfInstanceSubscriptionFilter
+	 **/
+	@ApiModelProperty(value = "Filter criteria to select VNF instances about which to notify.     ")
 
-  public void setVnfInstanceSubscriptionFilter(VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter) {
-    this.vnfInstanceSubscriptionFilter = vnfInstanceSubscriptionFilter;
-  }
+	@Valid
 
-  public FmNotificationsFilter notificationTypes(List<NotificationTypesEnum> notificationTypes) {
-    this.notificationTypes = notificationTypes;
-    return this;
-  }
+	public VnfInstanceSubscriptionFilter getVnfInstanceSubscriptionFilter() {
+		return vnfInstanceSubscriptionFilter;
+	}
 
-  public FmNotificationsFilter addNotificationTypesItem(NotificationTypesEnum notificationTypesItem) {
-    if (this.notificationTypes == null) {
-      this.notificationTypes = new ArrayList<>();
-    }
-    this.notificationTypes.add(notificationTypesItem);
-    return this;
-  }
+	public void setVnfInstanceSubscriptionFilter(final VnfInstanceSubscriptionFilter vnfInstanceSubscriptionFilter) {
+		this.vnfInstanceSubscriptionFilter = vnfInstanceSubscriptionFilter;
+	}
 
-  /**
-   * Match particular notification types. Permitted values: * AlarmNotification * AlarmClearedNotification * AlarmListRebuiltNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. 
-   * @return notificationTypes
-  **/
-  @ApiModelProperty(value = "Match particular notification types. Permitted values: * AlarmNotification * AlarmClearedNotification * AlarmListRebuiltNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. ")
+	public FmNotificationsFilter notificationTypes(final List<NotificationTypesEnum> notificationTypes) {
+		this.notificationTypes = notificationTypes;
+		return this;
+	}
 
+	public FmNotificationsFilter addNotificationTypesItem(final NotificationTypesEnum notificationTypesItem) {
+		if (this.notificationTypes == null) {
+			this.notificationTypes = new ArrayList<>();
+		}
+		this.notificationTypes.add(notificationTypesItem);
+		return this;
+	}
 
-  public List<NotificationTypesEnum> getNotificationTypes() {
-    return notificationTypes;
-  }
+	/**
+	 * Match particular notification types. Permitted values: * AlarmNotification *
+	 * AlarmClearedNotification * AlarmListRebuiltNotification The permitted values
+	 * of the \"notificationTypes\" attribute are spelled exactly as the names of
+	 * the notification types to facilitate automated code generation systems.
+	 *
+	 * @return notificationTypes
+	 **/
+	@ApiModelProperty(value = "Match particular notification types. Permitted values: * AlarmNotification * AlarmClearedNotification * AlarmListRebuiltNotification The permitted values of the \"notificationTypes\" attribute are spelled exactly as the names of the notification types to facilitate automated code generation systems. ")
 
-  public void setNotificationTypes(List<NotificationTypesEnum> notificationTypes) {
-    this.notificationTypes = notificationTypes;
-  }
+	public List<NotificationTypesEnum> getNotificationTypes() {
+		return notificationTypes;
+	}
 
-  public FmNotificationsFilter faultyResourceTypes(List<FaultyResourceType> faultyResourceTypes) {
-    this.faultyResourceTypes = faultyResourceTypes;
-    return this;
-  }
+	public void setNotificationTypes(final List<NotificationTypesEnum> notificationTypes) {
+		this.notificationTypes = notificationTypes;
+	}
 
-  public FmNotificationsFilter addFaultyResourceTypesItem(FaultyResourceType faultyResourceTypesItem) {
-    if (this.faultyResourceTypes == null) {
-      this.faultyResourceTypes = new ArrayList<>();
-    }
-    this.faultyResourceTypes.add(faultyResourceTypesItem);
-    return this;
-  }
+	public FmNotificationsFilter faultyResourceTypes(final List<FaultyResourceType> faultyResourceTypes) {
+		this.faultyResourceTypes = faultyResourceTypes;
+		return this;
+	}
 
-  /**
-   * Match VNF alarms with a faulty resource type listed in this attribute. 
-   * @return faultyResourceTypes
-  **/
-  @ApiModelProperty(value = "Match VNF alarms with a faulty resource type listed in this attribute. ")
+	public FmNotificationsFilter addFaultyResourceTypesItem(final FaultyResourceType faultyResourceTypesItem) {
+		if (this.faultyResourceTypes == null) {
+			this.faultyResourceTypes = new ArrayList<>();
+		}
+		this.faultyResourceTypes.add(faultyResourceTypesItem);
+		return this;
+	}
 
-  @Valid
+	/**
+	 * Match VNF alarms with a faulty resource type listed in this attribute.
+	 *
+	 * @return faultyResourceTypes
+	 **/
+	@ApiModelProperty(value = "Match VNF alarms with a faulty resource type listed in this attribute. ")
 
-  public List<FaultyResourceType> getFaultyResourceTypes() {
-    return faultyResourceTypes;
-  }
+	@Valid
 
-  public void setFaultyResourceTypes(List<FaultyResourceType> faultyResourceTypes) {
-    this.faultyResourceTypes = faultyResourceTypes;
-  }
+	public List<FaultyResourceType> getFaultyResourceTypes() {
+		return faultyResourceTypes;
+	}
 
-  public FmNotificationsFilter perceivedSeverities(List<PerceivedSeverityType> perceivedSeverities) {
-    this.perceivedSeverities = perceivedSeverities;
-    return this;
-  }
+	public void setFaultyResourceTypes(final List<FaultyResourceType> faultyResourceTypes) {
+		this.faultyResourceTypes = faultyResourceTypes;
+	}
 
-  public FmNotificationsFilter addPerceivedSeveritiesItem(PerceivedSeverityType perceivedSeveritiesItem) {
-    if (this.perceivedSeverities == null) {
-      this.perceivedSeverities = new ArrayList<>();
-    }
-    this.perceivedSeverities.add(perceivedSeveritiesItem);
-    return this;
-  }
+	public FmNotificationsFilter perceivedSeverities(final List<PerceivedSeverityType> perceivedSeverities) {
+		this.perceivedSeverities = perceivedSeverities;
+		return this;
+	}
 
-  /**
-   * Match VNF alarms with a perceived severity listed in this attribute. 
-   * @return perceivedSeverities
-  **/
-  @ApiModelProperty(value = "Match VNF alarms with a perceived severity listed in this attribute. ")
+	public FmNotificationsFilter addPerceivedSeveritiesItem(final PerceivedSeverityType perceivedSeveritiesItem) {
+		if (this.perceivedSeverities == null) {
+			this.perceivedSeverities = new ArrayList<>();
+		}
+		this.perceivedSeverities.add(perceivedSeveritiesItem);
+		return this;
+	}
 
-  @Valid
+	/**
+	 * Match VNF alarms with a perceived severity listed in this attribute.
+	 *
+	 * @return perceivedSeverities
+	 **/
+	@ApiModelProperty(value = "Match VNF alarms with a perceived severity listed in this attribute. ")
 
-  public List<PerceivedSeverityType> getPerceivedSeverities() {
-    return perceivedSeverities;
-  }
+	@Valid
 
-  public void setPerceivedSeverities(List<PerceivedSeverityType> perceivedSeverities) {
-    this.perceivedSeverities = perceivedSeverities;
-  }
+	public List<PerceivedSeverityType> getPerceivedSeverities() {
+		return perceivedSeverities;
+	}
 
-  public FmNotificationsFilter eventTypes(List<EventType> eventTypes) {
-    this.eventTypes = eventTypes;
-    return this;
-  }
+	public void setPerceivedSeverities(final List<PerceivedSeverityType> perceivedSeverities) {
+		this.perceivedSeverities = perceivedSeverities;
+	}
 
-  public FmNotificationsFilter addEventTypesItem(EventType eventTypesItem) {
-    if (this.eventTypes == null) {
-      this.eventTypes = new ArrayList<>();
-    }
-    this.eventTypes.add(eventTypesItem);
-    return this;
-  }
+	public FmNotificationsFilter eventTypes(final List<EventType> eventTypes) {
+		this.eventTypes = eventTypes;
+		return this;
+	}
 
-  /**
-   * Match VNF alarms with an event type listed in this attribute. 
-   * @return eventTypes
-  **/
-  @ApiModelProperty(value = "Match VNF alarms with an event type listed in this attribute. ")
+	public FmNotificationsFilter addEventTypesItem(final EventType eventTypesItem) {
+		if (this.eventTypes == null) {
+			this.eventTypes = new ArrayList<>();
+		}
+		this.eventTypes.add(eventTypesItem);
+		return this;
+	}
 
-  @Valid
+	/**
+	 * Match VNF alarms with an event type listed in this attribute.
+	 *
+	 * @return eventTypes
+	 **/
+	@ApiModelProperty(value = "Match VNF alarms with an event type listed in this attribute. ")
 
-  public List<EventType> getEventTypes() {
-    return eventTypes;
-  }
+	@Valid
 
-  public void setEventTypes(List<EventType> eventTypes) {
-    this.eventTypes = eventTypes;
-  }
+	public List<EventType> getEventTypes() {
+		return eventTypes;
+	}
 
-  public FmNotificationsFilter probableCauses(List<String> probableCauses) {
-    this.probableCauses = probableCauses;
-    return this;
-  }
+	public void setEventTypes(final List<EventType> eventTypes) {
+		this.eventTypes = eventTypes;
+	}
 
-  public FmNotificationsFilter addProbableCausesItem(String probableCausesItem) {
-    if (this.probableCauses == null) {
-      this.probableCauses = new ArrayList<>();
-    }
-    this.probableCauses.add(probableCausesItem);
-    return this;
-  }
+	public FmNotificationsFilter probableCauses(final List<String> probableCauses) {
+		this.probableCauses = probableCauses;
+		return this;
+	}
 
-  /**
-   * Match VNF alarms with a probable cause listed in this attribute. 
-   * @return probableCauses
-  **/
-  @ApiModelProperty(value = "Match VNF alarms with a probable cause listed in this attribute. ")
+	public FmNotificationsFilter addProbableCausesItem(final String probableCausesItem) {
+		if (this.probableCauses == null) {
+			this.probableCauses = new ArrayList<>();
+		}
+		this.probableCauses.add(probableCausesItem);
+		return this;
+	}
 
+	/**
+	 * Match VNF alarms with a probable cause listed in this attribute.
+	 *
+	 * @return probableCauses
+	 **/
+	@ApiModelProperty(value = "Match VNF alarms with a probable cause listed in this attribute. ")
 
-  public List<String> getProbableCauses() {
-    return probableCauses;
-  }
+	public List<String> getProbableCauses() {
+		return probableCauses;
+	}
 
-  public void setProbableCauses(List<String> probableCauses) {
-    this.probableCauses = probableCauses;
-  }
+	public void setProbableCauses(final List<String> probableCauses) {
+		this.probableCauses = probableCauses;
+	}
 
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final FmNotificationsFilter fmNotificationsFilter = (FmNotificationsFilter) o;
+		return Objects.equals(this.vnfInstanceSubscriptionFilter, fmNotificationsFilter.vnfInstanceSubscriptionFilter) &&
+				Objects.equals(this.notificationTypes, fmNotificationsFilter.notificationTypes) &&
+				Objects.equals(this.faultyResourceTypes, fmNotificationsFilter.faultyResourceTypes) &&
+				Objects.equals(this.perceivedSeverities, fmNotificationsFilter.perceivedSeverities) &&
+				Objects.equals(this.eventTypes, fmNotificationsFilter.eventTypes) &&
+				Objects.equals(this.probableCauses, fmNotificationsFilter.probableCauses);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    FmNotificationsFilter fmNotificationsFilter = (FmNotificationsFilter) o;
-    return Objects.equals(this.vnfInstanceSubscriptionFilter, fmNotificationsFilter.vnfInstanceSubscriptionFilter) &&
-        Objects.equals(this.notificationTypes, fmNotificationsFilter.notificationTypes) &&
-        Objects.equals(this.faultyResourceTypes, fmNotificationsFilter.faultyResourceTypes) &&
-        Objects.equals(this.perceivedSeverities, fmNotificationsFilter.perceivedSeverities) &&
-        Objects.equals(this.eventTypes, fmNotificationsFilter.eventTypes) &&
-        Objects.equals(this.probableCauses, fmNotificationsFilter.probableCauses);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfInstanceSubscriptionFilter, notificationTypes, faultyResourceTypes, perceivedSeverities, eventTypes, probableCauses);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfInstanceSubscriptionFilter, notificationTypes, faultyResourceTypes, perceivedSeverities, eventTypes, probableCauses);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class FmNotificationsFilter {\n");
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class FmNotificationsFilter {\n");
-    
-    sb.append("    vnfInstanceSubscriptionFilter: ").append(toIndentedString(vnfInstanceSubscriptionFilter)).append("\n");
-    sb.append("    notificationTypes: ").append(toIndentedString(notificationTypes)).append("\n");
-    sb.append("    faultyResourceTypes: ").append(toIndentedString(faultyResourceTypes)).append("\n");
-    sb.append("    perceivedSeverities: ").append(toIndentedString(perceivedSeverities)).append("\n");
-    sb.append("    eventTypes: ").append(toIndentedString(eventTypes)).append("\n");
-    sb.append("    probableCauses: ").append(toIndentedString(probableCauses)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+		sb.append("    vnfInstanceSubscriptionFilter: ").append(toIndentedString(vnfInstanceSubscriptionFilter)).append("\n");
+		sb.append("    notificationTypes: ").append(toIndentedString(notificationTypes)).append("\n");
+		sb.append("    faultyResourceTypes: ").append(toIndentedString(faultyResourceTypes)).append("\n");
+		sb.append("    perceivedSeverities: ").append(toIndentedString(perceivedSeverities)).append("\n");
+		sb.append("    eventTypes: ").append(toIndentedString(eventTypes)).append("\n");
+		sb.append("    probableCauses: ").append(toIndentedString(probableCauses)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

@@ -28,10 +28,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.NsLcmGenericFrontController;
-import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.CancelMode;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.CancelMode;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.NsLcmOpOccLinks;
-import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 
 /**
  *

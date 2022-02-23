@@ -17,191 +17,202 @@
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * ScaleVnfRequest
  */
 @Validated
 
-public class ScaleVnfRequest   {
-  /**
-   * Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase   capacity * SCALE_IN: removing VNFC instances from the VNF in order to release   unused capacity. 
-   */
-  public enum TypeEnum {
-    OUT("SCALE_OUT"),
-    
-    IN("SCALE_IN");
+public class ScaleVnfRequest {
+	/**
+	 * Indicates the type of the scale operation requested. Permitted values: *
+	 * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity *
+	 * SCALE_IN: removing VNFC instances from the VNF in order to release unused
+	 * capacity.
+	 */
+	public enum TypeEnum {
+		OUT("SCALE_OUT"),
 
-    private String value;
+		IN("SCALE_IN");
 
-    TypeEnum(String value) {
-      this.value = value;
-    }
+		private final String value;
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		TypeEnum(final String value) {
+			this.value = value;
+		}
 
-    @JsonCreator
-    public static TypeEnum fromValue(String text) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("type")
-  private TypeEnum type = null;
+		@JsonCreator
+		public static TypeEnum fromValue(final String text) {
+			for (final TypeEnum b : TypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("aspectId")
-  private String aspectId = null;
+	@JsonProperty("type")
+	private TypeEnum type = null;
 
-  @JsonProperty("numberOfSteps")
-  private Integer numberOfSteps = null;
+	@JsonProperty("aspectId")
+	private String aspectId = null;
 
-  @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+	@JsonProperty("numberOfSteps")
+	private Integer numberOfSteps = null;
 
-  public ScaleVnfRequest type(TypeEnum type) {
-    this.type = type;
-    return this;
-  }
+	@JsonProperty("additionalParams")
+	private KeyValuePairs additionalParams = null;
 
-  /**
-   * Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase   capacity * SCALE_IN: removing VNFC instances from the VNF in order to release   unused capacity. 
-   * @return type
-  **/
-  @ApiModelProperty(required = true, value = "Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase   capacity * SCALE_IN: removing VNFC instances from the VNF in order to release   unused capacity. ")
-  @NotNull
+	public ScaleVnfRequest type(final TypeEnum type) {
+		this.type = type;
+		return this;
+	}
 
+	/**
+	 * Indicates the type of the scale operation requested. Permitted values: *
+	 * SCALE_OUT: adding additional VNFC instances to the VNF to increase capacity *
+	 * SCALE_IN: removing VNFC instances from the VNF in order to release unused
+	 * capacity.
+	 *
+	 * @return type
+	 **/
+	@ApiModelProperty(required = true, value = "Indicates the type of the scale operation requested. Permitted values: * SCALE_OUT: adding additional VNFC instances to the VNF to increase   capacity * SCALE_IN: removing VNFC instances from the VNF in order to release   unused capacity. ")
+	@NotNull
 
-  public TypeEnum getType() {
-    return type;
-  }
+	public TypeEnum getType() {
+		return type;
+	}
 
-  public void setType(TypeEnum type) {
-    this.type = type;
-  }
+	public void setType(final TypeEnum type) {
+		this.type = type;
+	}
 
-  public ScaleVnfRequest aspectId(String aspectId) {
-    this.aspectId = aspectId;
-    return this;
-  }
+	public ScaleVnfRequest aspectId(final String aspectId) {
+		this.aspectId = aspectId;
+		return this;
+	}
 
-  /**
-   * Identifier of the scaling aspect. 
-   * @return aspectId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the scaling aspect. ")
-  @NotNull
+	/**
+	 * Identifier of the scaling aspect.
+	 *
+	 * @return aspectId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the scaling aspect. ")
+	@NotNull
 
+	public String getAspectId() {
+		return aspectId;
+	}
 
-  public String getAspectId() {
-    return aspectId;
-  }
+	public void setAspectId(final String aspectId) {
+		this.aspectId = aspectId;
+	}
 
-  public void setAspectId(String aspectId) {
-    this.aspectId = aspectId;
-  }
+	public ScaleVnfRequest numberOfSteps(final Integer numberOfSteps) {
+		this.numberOfSteps = numberOfSteps;
+		return this;
+	}
 
-  public ScaleVnfRequest numberOfSteps(Integer numberOfSteps) {
-    this.numberOfSteps = numberOfSteps;
-    return this;
-  }
+	/**
+	 * Number of scaling steps to be executed as part of this Scale VNF operation.
+	 * It shall be a positive number and the default value shall be 1.
+	 *
+	 * @return numberOfSteps
+	 **/
+	@ApiModelProperty(value = "Number of scaling steps to be executed as part of this Scale VNF operation. It shall be a positive number and the default value shall be 1. ")
 
-  /**
-   * Number of scaling steps to be executed as part of this Scale VNF operation. It shall be a positive number and the default value shall be 1. 
-   * @return numberOfSteps
-  **/
-  @ApiModelProperty(value = "Number of scaling steps to be executed as part of this Scale VNF operation. It shall be a positive number and the default value shall be 1. ")
+	public Integer getNumberOfSteps() {
+		return numberOfSteps;
+	}
 
+	public void setNumberOfSteps(final Integer numberOfSteps) {
+		this.numberOfSteps = numberOfSteps;
+	}
 
-  public Integer getNumberOfSteps() {
-    return numberOfSteps;
-  }
+	public ScaleVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+		this.additionalParams = additionalParams;
+		return this;
+	}
 
-  public void setNumberOfSteps(Integer numberOfSteps) {
-    this.numberOfSteps = numberOfSteps;
-  }
+	/**
+	 * Additional parameters passed by the NFVO as input to the scaling process,
+	 * specific to the VNF being scaled, as declared in the VNFD as part of
+	 * \"ScaleVnfOpConfig\".
+	 *
+	 * @return additionalParams
+	 **/
+	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfOpConfig\". ")
 
-  public ScaleVnfRequest additionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-    return this;
-  }
+	@Valid
 
-  /**
-   * Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfOpConfig\". 
-   * @return additionalParams
-  **/
-  @ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfOpConfig\". ")
+	public KeyValuePairs getAdditionalParams() {
+		return additionalParams;
+	}
 
-  @Valid
+	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
-  public KeyValuePairs getAdditionalParams() {
-    return additionalParams;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final ScaleVnfRequest scaleVnfRequest = (ScaleVnfRequest) o;
+		return Objects.equals(this.type, scaleVnfRequest.type) &&
+				Objects.equals(this.aspectId, scaleVnfRequest.aspectId) &&
+				Objects.equals(this.numberOfSteps, scaleVnfRequest.numberOfSteps) &&
+				Objects.equals(this.additionalParams, scaleVnfRequest.additionalParams);
+	}
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, aspectId, numberOfSteps, additionalParams);
+	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class ScaleVnfRequest {\n");
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ScaleVnfRequest scaleVnfRequest = (ScaleVnfRequest) o;
-    return Objects.equals(this.type, scaleVnfRequest.type) &&
-        Objects.equals(this.aspectId, scaleVnfRequest.aspectId) &&
-        Objects.equals(this.numberOfSteps, scaleVnfRequest.numberOfSteps) &&
-        Objects.equals(this.additionalParams, scaleVnfRequest.additionalParams);
-  }
+		sb.append("    type: ").append(toIndentedString(type)).append("\n");
+		sb.append("    aspectId: ").append(toIndentedString(aspectId)).append("\n");
+		sb.append("    numberOfSteps: ").append(toIndentedString(numberOfSteps)).append("\n");
+		sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(type, aspectId, numberOfSteps, additionalParams);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ScaleVnfRequest {\n");
-    
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    aspectId: ").append(toIndentedString(aspectId)).append("\n");
-    sb.append("    numberOfSteps: ").append(toIndentedString(numberOfSteps)).append("\n");
-    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

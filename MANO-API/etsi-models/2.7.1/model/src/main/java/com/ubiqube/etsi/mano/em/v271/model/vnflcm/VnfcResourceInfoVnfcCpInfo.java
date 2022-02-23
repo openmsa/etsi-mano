@@ -16,223 +16,227 @@
  */
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.CpProtocolInfo;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * VnfcResourceInfoVnfcCpInfo
  */
 @Validated
 
-public class VnfcResourceInfoVnfcCpInfo   {
-  @JsonProperty("id")
-  private String id = null;
+public class VnfcResourceInfoVnfcCpInfo {
+	@JsonProperty("id")
+	private String id = null;
 
-  @JsonProperty("cpdId")
-  private String cpdId = null;
+	@JsonProperty("cpdId")
+	private String cpdId = null;
 
-  @JsonProperty("vnfExtCpId")
-  private String vnfExtCpId = null;
+	@JsonProperty("vnfExtCpId")
+	private String vnfExtCpId = null;
 
-  @JsonProperty("cpProtocolInfo")
-  @Valid
-  private List<CpProtocolInfo> cpProtocolInfo = null;
+	@JsonProperty("cpProtocolInfo")
+	@Valid
+	private List<CpProtocolInfo> cpProtocolInfo = null;
 
-  @JsonProperty("vnfLinkPortId")
-  private String vnfLinkPortId = null;
+	@JsonProperty("vnfLinkPortId")
+	private String vnfLinkPortId = null;
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+	@JsonProperty("metadata")
+	private KeyValuePairs metadata = null;
 
-  public VnfcResourceInfoVnfcCpInfo id(String id) {
-    this.id = id;
-    return this;
-  }
+	public VnfcResourceInfoVnfcCpInfo id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  /**
-   * Identifier of this VNFC CP instance and the associated array entry. 
-   * @return id
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of this VNFC CP instance and the associated array entry. ")
-  @NotNull
+	/**
+	 * Identifier of this VNFC CP instance and the associated array entry.
+	 *
+	 * @return id
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of this VNFC CP instance and the associated array entry. ")
+	@NotNull
 
+	public String getId() {
+		return id;
+	}
 
-  public String getId() {
-    return id;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public VnfcResourceInfoVnfcCpInfo cpdId(final String cpdId) {
+		this.cpdId = cpdId;
+		return this;
+	}
 
-  public VnfcResourceInfoVnfcCpInfo cpdId(String cpdId) {
-    this.cpdId = cpdId;
-    return this;
-  }
+	/**
+	 * Identifier of the VDU CPD, cpdId, in the VNFD.
+	 *
+	 * @return cpdId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the VDU CPD, cpdId, in the VNFD. ")
+	@NotNull
 
-  /**
-   * Identifier of the VDU CPD, cpdId, in the VNFD. 
-   * @return cpdId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the VDU CPD, cpdId, in the VNFD. ")
-  @NotNull
+	public String getCpdId() {
+		return cpdId;
+	}
 
+	public void setCpdId(final String cpdId) {
+		this.cpdId = cpdId;
+	}
 
-  public String getCpdId() {
-    return cpdId;
-  }
+	public VnfcResourceInfoVnfcCpInfo vnfExtCpId(final String vnfExtCpId) {
+		this.vnfExtCpId = vnfExtCpId;
+		return this;
+	}
 
-  public void setCpdId(String cpdId) {
-    this.cpdId = cpdId;
-  }
+	/**
+	 * When the VNFC CP is exposed as external CP of the VNF, the identifier of this
+	 * external VNF CP.
+	 *
+	 * @return vnfExtCpId
+	 **/
+	@ApiModelProperty(value = "When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. ")
 
-  public VnfcResourceInfoVnfcCpInfo vnfExtCpId(String vnfExtCpId) {
-    this.vnfExtCpId = vnfExtCpId;
-    return this;
-  }
+	public String getVnfExtCpId() {
+		return vnfExtCpId;
+	}
 
-  /**
-   * When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. 
-   * @return vnfExtCpId
-  **/
-  @ApiModelProperty(value = "When the VNFC CP is exposed as external CP of the VNF, the identifier of this external VNF CP. ")
+	public void setVnfExtCpId(final String vnfExtCpId) {
+		this.vnfExtCpId = vnfExtCpId;
+	}
 
+	public VnfcResourceInfoVnfcCpInfo cpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
+		this.cpProtocolInfo = cpProtocolInfo;
+		return this;
+	}
 
-  public String getVnfExtCpId() {
-    return vnfExtCpId;
-  }
+	public VnfcResourceInfoVnfcCpInfo addCpProtocolInfoItem(final CpProtocolInfo cpProtocolInfoItem) {
+		if (this.cpProtocolInfo == null) {
+			this.cpProtocolInfo = new ArrayList<>();
+		}
+		this.cpProtocolInfo.add(cpProtocolInfoItem);
+		return this;
+	}
 
-  public void setVnfExtCpId(String vnfExtCpId) {
-    this.vnfExtCpId = vnfExtCpId;
-  }
+	/**
+	 * Network protocol information for this CP.
+	 *
+	 * @return cpProtocolInfo
+	 **/
+	@ApiModelProperty(value = "Network protocol information for this CP. ")
 
-  public VnfcResourceInfoVnfcCpInfo cpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
-    this.cpProtocolInfo = cpProtocolInfo;
-    return this;
-  }
+	@Valid
 
-  public VnfcResourceInfoVnfcCpInfo addCpProtocolInfoItem(CpProtocolInfo cpProtocolInfoItem) {
-    if (this.cpProtocolInfo == null) {
-      this.cpProtocolInfo = new ArrayList<>();
-    }
-    this.cpProtocolInfo.add(cpProtocolInfoItem);
-    return this;
-  }
+	public List<CpProtocolInfo> getCpProtocolInfo() {
+		return cpProtocolInfo;
+	}
 
-  /**
-   * Network protocol information for this CP. 
-   * @return cpProtocolInfo
-  **/
-  @ApiModelProperty(value = "Network protocol information for this CP. ")
+	public void setCpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
+		this.cpProtocolInfo = cpProtocolInfo;
+	}
 
-  @Valid
+	public VnfcResourceInfoVnfcCpInfo vnfLinkPortId(final String vnfLinkPortId) {
+		this.vnfLinkPortId = vnfLinkPortId;
+		return this;
+	}
 
-  public List<CpProtocolInfo> getCpProtocolInfo() {
-    return cpProtocolInfo;
-  }
+	/**
+	 * Identifier of the \"vnfLinkPorts\" structure in the
+	 * \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is
+	 * associated to a link port.
+	 *
+	 * @return vnfLinkPortId
+	 **/
+	@ApiModelProperty(value = "Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
 
-  public void setCpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
-    this.cpProtocolInfo = cpProtocolInfo;
-  }
+	public String getVnfLinkPortId() {
+		return vnfLinkPortId;
+	}
 
-  public VnfcResourceInfoVnfcCpInfo vnfLinkPortId(String vnfLinkPortId) {
-    this.vnfLinkPortId = vnfLinkPortId;
-    return this;
-  }
+	public void setVnfLinkPortId(final String vnfLinkPortId) {
+		this.vnfLinkPortId = vnfLinkPortId;
+	}
 
-  /**
-   * Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. 
-   * @return vnfLinkPortId
-  **/
-  @ApiModelProperty(value = "Identifier of the \"vnfLinkPorts\" structure in the \"VnfVirtualLinkResourceInfo\" structure. Shall be present if the CP is associated to a link port. ")
+	public VnfcResourceInfoVnfcCpInfo metadata(final KeyValuePairs metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
+	/**
+	 * Metadata about this CP.
+	 *
+	 * @return metadata
+	 **/
+	@ApiModelProperty(value = "Metadata about this CP. ")
 
-  public String getVnfLinkPortId() {
-    return vnfLinkPortId;
-  }
+	@Valid
 
-  public void setVnfLinkPortId(String vnfLinkPortId) {
-    this.vnfLinkPortId = vnfLinkPortId;
-  }
+	public KeyValuePairs getMetadata() {
+		return metadata;
+	}
 
-  public VnfcResourceInfoVnfcCpInfo metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	public void setMetadata(final KeyValuePairs metadata) {
+		this.metadata = metadata;
+	}
 
-  /**
-   * Metadata about this CP. 
-   * @return metadata
-  **/
-  @ApiModelProperty(value = "Metadata about this CP. ")
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final VnfcResourceInfoVnfcCpInfo vnfcResourceInfoVnfcCpInfo = (VnfcResourceInfoVnfcCpInfo) o;
+		return Objects.equals(this.id, vnfcResourceInfoVnfcCpInfo.id) &&
+				Objects.equals(this.cpdId, vnfcResourceInfoVnfcCpInfo.cpdId) &&
+				Objects.equals(this.vnfExtCpId, vnfcResourceInfoVnfcCpInfo.vnfExtCpId) &&
+				Objects.equals(this.cpProtocolInfo, vnfcResourceInfoVnfcCpInfo.cpProtocolInfo) &&
+				Objects.equals(this.vnfLinkPortId, vnfcResourceInfoVnfcCpInfo.vnfLinkPortId) &&
+				Objects.equals(this.metadata, vnfcResourceInfoVnfcCpInfo.metadata);
+	}
 
-  @Valid
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, cpdId, vnfExtCpId, cpProtocolInfo, vnfLinkPortId, metadata);
+	}
 
-  public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfcResourceInfoVnfcCpInfo {\n");
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    cpdId: ").append(toIndentedString(cpdId)).append("\n");
+		sb.append("    vnfExtCpId: ").append(toIndentedString(vnfExtCpId)).append("\n");
+		sb.append("    cpProtocolInfo: ").append(toIndentedString(cpProtocolInfo)).append("\n");
+		sb.append("    vnfLinkPortId: ").append(toIndentedString(vnfLinkPortId)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    VnfcResourceInfoVnfcCpInfo vnfcResourceInfoVnfcCpInfo = (VnfcResourceInfoVnfcCpInfo) o;
-    return Objects.equals(this.id, vnfcResourceInfoVnfcCpInfo.id) &&
-        Objects.equals(this.cpdId, vnfcResourceInfoVnfcCpInfo.cpdId) &&
-        Objects.equals(this.vnfExtCpId, vnfcResourceInfoVnfcCpInfo.vnfExtCpId) &&
-        Objects.equals(this.cpProtocolInfo, vnfcResourceInfoVnfcCpInfo.cpProtocolInfo) &&
-        Objects.equals(this.vnfLinkPortId, vnfcResourceInfoVnfcCpInfo.vnfLinkPortId) &&
-        Objects.equals(this.metadata, vnfcResourceInfoVnfcCpInfo.metadata);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, cpdId, vnfExtCpId, cpProtocolInfo, vnfLinkPortId, metadata);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfcResourceInfoVnfcCpInfo {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    cpdId: ").append(toIndentedString(cpdId)).append("\n");
-    sb.append("    vnfExtCpId: ").append(toIndentedString(vnfExtCpId)).append("\n");
-    sb.append("    cpProtocolInfo: ").append(toIndentedString(cpProtocolInfo)).append("\n");
-    sb.append("    vnfLinkPortId: ").append(toIndentedString(vnfLinkPortId)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

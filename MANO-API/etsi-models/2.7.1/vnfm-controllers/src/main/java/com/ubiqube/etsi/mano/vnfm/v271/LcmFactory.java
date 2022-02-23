@@ -18,8 +18,8 @@ package com.ubiqube.etsi.mano.vnfm.v271;
 
 import javax.annotation.Nonnull;
 
-import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfInstanceLinks;
-import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstanceLinks;
 
 public class LcmFactory {
 

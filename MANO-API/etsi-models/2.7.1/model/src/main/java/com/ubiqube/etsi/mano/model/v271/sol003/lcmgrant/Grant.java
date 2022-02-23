@@ -27,6 +27,9 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ExtVirtualLinkData;
+import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.VimConnectionInfo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,7 +39,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a grant. ")
 @Validated
-
 
 public class Grant {
 	@JsonProperty("id")
@@ -628,7 +630,7 @@ public class Grant {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final Grant grant = (Grant) o;

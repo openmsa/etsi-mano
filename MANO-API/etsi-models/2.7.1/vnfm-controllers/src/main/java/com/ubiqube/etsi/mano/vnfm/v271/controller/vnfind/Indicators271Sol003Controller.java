@@ -26,12 +26,12 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.VnfIndicator;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.VnfIndicatorLinks;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.VnfIndicatorSubscription;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.vnfm.fc.vnfind.IndicatorsFrontController;
 import com.ubiqube.etsi.mano.vnfm.v271.controller.vnflcm.VnfInstances271Sol003Api;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.Link;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicator;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorLinks;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorSubscription;
 
 @RestController
 public class Indicators271Sol003Controller implements Indicators271Sol003Api {

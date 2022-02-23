@@ -30,7 +30,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.controller.Protocol;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ChangeExtVnfConnectivityRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstance;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.CreateVnfPkgInfoRequest;
@@ -40,15 +49,6 @@ import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ChangeExtVnfConnectivityRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.CreateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.InstantiateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.OperateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ScaleVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.ScaleVnfToLevelRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.TerminateVnfRequest.TerminationTypeEnum;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.VnfLcmOpOcc;
 
 /**
  *

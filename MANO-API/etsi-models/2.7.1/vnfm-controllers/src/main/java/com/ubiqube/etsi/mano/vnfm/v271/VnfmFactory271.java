@@ -23,9 +23,9 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.em.v271.controller.vnflcm.VnfInstances271Sol002Api;
 import com.ubiqube.etsi.mano.em.v271.controller.vnflcm.VnfInstances271Sol002Controller;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequestLinks;
-import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
 import com.ubiqube.etsi.mano.v271.services.VnfmFactory;
 
 /**

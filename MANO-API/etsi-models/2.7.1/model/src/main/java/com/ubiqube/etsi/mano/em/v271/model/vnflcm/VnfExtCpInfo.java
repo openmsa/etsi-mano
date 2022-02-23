@@ -16,247 +16,256 @@
  */
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.CpProtocolInfo;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents information about an external CP of a VNF. It shall comply with the provisions defined in table 5.5.3.25 1. 
+ * This type represents information about an external CP of a VNF. It shall
+ * comply with the provisions defined in table 5.5.3.25 1.
  */
 @ApiModel(description = "This type represents information about an external CP of a VNF. It shall comply with the provisions defined in table 5.5.3.25 1. ")
 @Validated
 
-public class VnfExtCpInfo   {
-  @JsonProperty("id")
-  private String id = null;
+public class VnfExtCpInfo {
+	@JsonProperty("id")
+	private String id = null;
 
-  @JsonProperty("cpdId")
-  private String cpdId = null;
+	@JsonProperty("cpdId")
+	private String cpdId = null;
 
-  @JsonProperty("cpProtocolInfo")
-  @Valid
-  private List<CpProtocolInfo> cpProtocolInfo = new ArrayList<>();
+	@JsonProperty("cpProtocolInfo")
+	@Valid
+	private List<CpProtocolInfo> cpProtocolInfo = new ArrayList<>();
 
-  @JsonProperty("extLinkPortId")
-  private String extLinkPortId = null;
+	@JsonProperty("extLinkPortId")
+	private String extLinkPortId = null;
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+	@JsonProperty("metadata")
+	private KeyValuePairs metadata = null;
 
-  @JsonProperty("associatedVnfcCpId")
-  private String associatedVnfcCpId = null;
+	@JsonProperty("associatedVnfcCpId")
+	private String associatedVnfcCpId = null;
 
-  @JsonProperty("associatedVnfVirtualLinkId")
-  private String associatedVnfVirtualLinkId = null;
+	@JsonProperty("associatedVnfVirtualLinkId")
+	private String associatedVnfVirtualLinkId = null;
 
-  public VnfExtCpInfo id(String id) {
-    this.id = id;
-    return this;
-  }
+	public VnfExtCpInfo id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  /**
-   * Identifier of the external CP instance and the related information instance. 
-   * @return id
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the external CP instance and the related information instance. ")
-  @NotNull
+	/**
+	 * Identifier of the external CP instance and the related information instance.
+	 *
+	 * @return id
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the external CP instance and the related information instance. ")
+	@NotNull
 
+	public String getId() {
+		return id;
+	}
 
-  public String getId() {
-    return id;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public VnfExtCpInfo cpdId(final String cpdId) {
+		this.cpdId = cpdId;
+		return this;
+	}
 
-  public VnfExtCpInfo cpdId(String cpdId) {
-    this.cpdId = cpdId;
-    return this;
-  }
+	/**
+	 * Identifier of the external CPD, VnfExtCpd, in the VNFD.
+	 *
+	 * @return cpdId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the external CPD, VnfExtCpd, in the VNFD. ")
+	@NotNull
 
-  /**
-   * Identifier of the external CPD, VnfExtCpd, in the VNFD. 
-   * @return cpdId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the external CPD, VnfExtCpd, in the VNFD. ")
-  @NotNull
+	public String getCpdId() {
+		return cpdId;
+	}
 
+	public void setCpdId(final String cpdId) {
+		this.cpdId = cpdId;
+	}
 
-  public String getCpdId() {
-    return cpdId;
-  }
+	public VnfExtCpInfo cpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
+		this.cpProtocolInfo = cpProtocolInfo;
+		return this;
+	}
 
-  public void setCpdId(String cpdId) {
-    this.cpdId = cpdId;
-  }
+	public VnfExtCpInfo addCpProtocolInfoItem(final CpProtocolInfo cpProtocolInfoItem) {
+		this.cpProtocolInfo.add(cpProtocolInfoItem);
+		return this;
+	}
 
-  public VnfExtCpInfo cpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
-    this.cpProtocolInfo = cpProtocolInfo;
-    return this;
-  }
+	/**
+	 * Network protocol information for this CP.
+	 *
+	 * @return cpProtocolInfo
+	 **/
+	@ApiModelProperty(required = true, value = "Network protocol information for this CP. ")
+	@NotNull
 
-  public VnfExtCpInfo addCpProtocolInfoItem(CpProtocolInfo cpProtocolInfoItem) {
-    this.cpProtocolInfo.add(cpProtocolInfoItem);
-    return this;
-  }
+	@Valid
 
-  /**
-   * Network protocol information for this CP. 
-   * @return cpProtocolInfo
-  **/
-  @ApiModelProperty(required = true, value = "Network protocol information for this CP. ")
-  @NotNull
+	public List<CpProtocolInfo> getCpProtocolInfo() {
+		return cpProtocolInfo;
+	}
 
-  @Valid
+	public void setCpProtocolInfo(final List<CpProtocolInfo> cpProtocolInfo) {
+		this.cpProtocolInfo = cpProtocolInfo;
+	}
 
-  public List<CpProtocolInfo> getCpProtocolInfo() {
-    return cpProtocolInfo;
-  }
+	public VnfExtCpInfo extLinkPortId(final String extLinkPortId) {
+		this.extLinkPortId = extLinkPortId;
+		return this;
+	}
 
-  public void setCpProtocolInfo(List<CpProtocolInfo> cpProtocolInfo) {
-    this.cpProtocolInfo = cpProtocolInfo;
-  }
+	/**
+	 * Identifier of the \"extLinkPortInfo\" structure inside the
+	 * \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to
+	 * a link port.
+	 *
+	 * @return extLinkPortId
+	 **/
+	@ApiModelProperty(value = "Identifier of the \"extLinkPortInfo\" structure inside the \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to a link port. ")
 
-  public VnfExtCpInfo extLinkPortId(String extLinkPortId) {
-    this.extLinkPortId = extLinkPortId;
-    return this;
-  }
+	public String getExtLinkPortId() {
+		return extLinkPortId;
+	}
 
-  /**
-   * Identifier of the \"extLinkPortInfo\" structure inside the \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to a link port. 
-   * @return extLinkPortId
-  **/
-  @ApiModelProperty(value = "Identifier of the \"extLinkPortInfo\" structure inside the \"extVirtualLinkInfo\" structure. Shall be present if the CP is associated to a link port. ")
+	public void setExtLinkPortId(final String extLinkPortId) {
+		this.extLinkPortId = extLinkPortId;
+	}
 
+	public VnfExtCpInfo metadata(final KeyValuePairs metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  public String getExtLinkPortId() {
-    return extLinkPortId;
-  }
+	/**
+	 * Metadata about this external CP.
+	 *
+	 * @return metadata
+	 **/
+	@ApiModelProperty(value = "Metadata about this external CP. ")
 
-  public void setExtLinkPortId(String extLinkPortId) {
-    this.extLinkPortId = extLinkPortId;
-  }
+	@Valid
 
-  public VnfExtCpInfo metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	public KeyValuePairs getMetadata() {
+		return metadata;
+	}
 
-  /**
-   * Metadata about this external CP. 
-   * @return metadata
-  **/
-  @ApiModelProperty(value = "Metadata about this external CP. ")
+	public void setMetadata(final KeyValuePairs metadata) {
+		this.metadata = metadata;
+	}
 
-  @Valid
+	public VnfExtCpInfo associatedVnfcCpId(final String associatedVnfcCpId) {
+		this.associatedVnfcCpId = associatedVnfcCpId;
+		return this;
+	}
 
-  public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	/**
+	 * Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure
+	 * that represents the VNFC CP which is exposed by this external CP instance.
+	 * Shall be present in case this CP instance maps to a VNFC CP. See note.
+	 *
+	 * @return associatedVnfcCpId
+	 **/
+	@ApiModelProperty(value = "Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure that represents the VNFC CP which is exposed by this external CP instance. Shall be present in case this CP instance maps to a VNFC CP. See note. ")
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	public String getAssociatedVnfcCpId() {
+		return associatedVnfcCpId;
+	}
 
-  public VnfExtCpInfo associatedVnfcCpId(String associatedVnfcCpId) {
-    this.associatedVnfcCpId = associatedVnfcCpId;
-    return this;
-  }
+	public void setAssociatedVnfcCpId(final String associatedVnfcCpId) {
+		this.associatedVnfcCpId = associatedVnfcCpId;
+	}
 
-  /**
-   * Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure that represents the VNFC CP which is exposed by this external CP instance. Shall be present in case this CP instance maps to a VNFC CP. See note. 
-   * @return associatedVnfcCpId
-  **/
-  @ApiModelProperty(value = "Identifier of the \"vnfcCpInfo\" structure in \"VnfcResourceInfo\" structure that represents the VNFC CP which is exposed by this external CP instance. Shall be present in case this CP instance maps to a VNFC CP. See note. ")
+	public VnfExtCpInfo associatedVnfVirtualLinkId(final String associatedVnfVirtualLinkId) {
+		this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
+		return this;
+	}
 
+	/**
+	 * Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents
+	 * the internal VL which is exposed by this external CP instance. Shall be
+	 * present in case this CP instance maps to an internal VL. See note.
+	 *
+	 * @return associatedVnfVirtualLinkId
+	 **/
+	@ApiModelProperty(value = "Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents the internal VL which is exposed by this external CP instance. Shall be present in case this CP instance maps to an internal VL. See note. ")
 
-  public String getAssociatedVnfcCpId() {
-    return associatedVnfcCpId;
-  }
+	public String getAssociatedVnfVirtualLinkId() {
+		return associatedVnfVirtualLinkId;
+	}
 
-  public void setAssociatedVnfcCpId(String associatedVnfcCpId) {
-    this.associatedVnfcCpId = associatedVnfcCpId;
-  }
+	public void setAssociatedVnfVirtualLinkId(final String associatedVnfVirtualLinkId) {
+		this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
+	}
 
-  public VnfExtCpInfo associatedVnfVirtualLinkId(String associatedVnfVirtualLinkId) {
-    this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
-    return this;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final VnfExtCpInfo vnfExtCpInfo = (VnfExtCpInfo) o;
+		return Objects.equals(this.id, vnfExtCpInfo.id) &&
+				Objects.equals(this.cpdId, vnfExtCpInfo.cpdId) &&
+				Objects.equals(this.cpProtocolInfo, vnfExtCpInfo.cpProtocolInfo) &&
+				Objects.equals(this.extLinkPortId, vnfExtCpInfo.extLinkPortId) &&
+				Objects.equals(this.metadata, vnfExtCpInfo.metadata) &&
+				Objects.equals(this.associatedVnfcCpId, vnfExtCpInfo.associatedVnfcCpId) &&
+				Objects.equals(this.associatedVnfVirtualLinkId, vnfExtCpInfo.associatedVnfVirtualLinkId);
+	}
 
-  /**
-   * Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents the internal VL which is exposed by this external CP instance. Shall be present in case this CP instance maps to an internal VL. See note. 
-   * @return associatedVnfVirtualLinkId
-  **/
-  @ApiModelProperty(value = "Identifier of the \"VnfVirtualLinkResourceInfo\" structure that represents the internal VL which is exposed by this external CP instance. Shall be present in case this CP instance maps to an internal VL. See note. ")
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, cpdId, cpProtocolInfo, extLinkPortId, metadata, associatedVnfcCpId, associatedVnfVirtualLinkId);
+	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfExtCpInfo {\n");
 
-  public String getAssociatedVnfVirtualLinkId() {
-    return associatedVnfVirtualLinkId;
-  }
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    cpdId: ").append(toIndentedString(cpdId)).append("\n");
+		sb.append("    cpProtocolInfo: ").append(toIndentedString(cpProtocolInfo)).append("\n");
+		sb.append("    extLinkPortId: ").append(toIndentedString(extLinkPortId)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("    associatedVnfcCpId: ").append(toIndentedString(associatedVnfcCpId)).append("\n");
+		sb.append("    associatedVnfVirtualLinkId: ").append(toIndentedString(associatedVnfVirtualLinkId)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  public void setAssociatedVnfVirtualLinkId(String associatedVnfVirtualLinkId) {
-    this.associatedVnfVirtualLinkId = associatedVnfVirtualLinkId;
-  }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    VnfExtCpInfo vnfExtCpInfo = (VnfExtCpInfo) o;
-    return Objects.equals(this.id, vnfExtCpInfo.id) &&
-        Objects.equals(this.cpdId, vnfExtCpInfo.cpdId) &&
-        Objects.equals(this.cpProtocolInfo, vnfExtCpInfo.cpProtocolInfo) &&
-        Objects.equals(this.extLinkPortId, vnfExtCpInfo.extLinkPortId) &&
-        Objects.equals(this.metadata, vnfExtCpInfo.metadata) &&
-        Objects.equals(this.associatedVnfcCpId, vnfExtCpInfo.associatedVnfcCpId) &&
-        Objects.equals(this.associatedVnfVirtualLinkId, vnfExtCpInfo.associatedVnfVirtualLinkId);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, cpdId, cpProtocolInfo, extLinkPortId, metadata, associatedVnfcCpId, associatedVnfVirtualLinkId);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfExtCpInfo {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    cpdId: ").append(toIndentedString(cpdId)).append("\n");
-    sb.append("    cpProtocolInfo: ").append(toIndentedString(cpProtocolInfo)).append("\n");
-    sb.append("    extLinkPortId: ").append(toIndentedString(extLinkPortId)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("    associatedVnfcCpId: ").append(toIndentedString(associatedVnfcCpId)).append("\n");
-    sb.append("    associatedVnfVirtualLinkId: ").append(toIndentedString(associatedVnfVirtualLinkId)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

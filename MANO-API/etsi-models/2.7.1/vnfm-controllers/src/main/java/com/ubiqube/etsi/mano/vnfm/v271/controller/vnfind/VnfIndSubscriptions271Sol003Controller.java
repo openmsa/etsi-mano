@@ -29,10 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.SubscriptionFrontController;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.Link;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorSubscription;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorSubscriptionLinks;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnfind.VnfIndicatorSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.VnfIndicatorSubscription;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.VnfIndicatorSubscriptionLinks;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.VnfIndicatorSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 
 @RestController
 public class VnfIndSubscriptions271Sol003Controller implements VnfIndSubscriptions271Sol003Api {
