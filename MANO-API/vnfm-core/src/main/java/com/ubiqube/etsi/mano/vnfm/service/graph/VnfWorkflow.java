@@ -105,7 +105,8 @@ public class VnfWorkflow implements Workflow<VnfPackage, VnfBlueprint, VnfReport
 	}
 
 	private void populateExtNetworks(final Context context, final VnfBlueprint parameters) {
-		parameters.getExtVirtualLinks().forEach(x -> context.add(Network.class, x.getExtVirtualLinkId(), x.getResourceId()));
+		// parameters.getExtVirtualLinks().forEach(x -> context.add(Network.class,
+		// x.getExtVirtualLinkId(), x.getResourceId()));
 		parameters.getExtManagedVirtualLinks().forEach(x -> context.add(Network.class, x.getVnfVirtualLinkDescId(), x.getResourceId()));
 		final List<VnfLiveInstance> l = vnfInstanceJpa.findByVnfInstance(parameters.getInstance());
 		l.forEach(x -> {

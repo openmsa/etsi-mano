@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
-import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfPortTask;
@@ -62,22 +61,12 @@ public class ManoGrantService extends AbstractGrantService {
 					final String vl = t.getVnfLinkPort().getVirtualLink();
 					final ExtManagedVirtualLinkDataEntity fVl = findVl((VnfBlueprint) plan, vl);
 					if (null == fVl) {
-						final ExtVirtualLinkDataEntity f2Vl = findVl2((VnfBlueprint) plan, vl);
-						if (null != f2Vl) {
-							final ExtManagedVirtualLinkDataEntity obj = mapper.map(f2Vl, ExtManagedVirtualLinkDataEntity.class);
-							obj.setId(null);
-							t.setExternal(obj);
-						}
 						return;
 					}
 					LOG.info("Assigning VL {}", fVl);
 					t.setExternal(fVl);
 				});
 
-	}
-
-	private ExtVirtualLinkDataEntity findVl2(final VnfBlueprint plan, final String vl) {
-		return plan.getExtVirtualLinks().stream().filter(x -> x.getExtVirtualLinkId().equals(vl)).findFirst().orElse(null);
 	}
 
 	private ExtManagedVirtualLinkDataEntity findVl(final VnfBlueprint plan, final String vl) {
