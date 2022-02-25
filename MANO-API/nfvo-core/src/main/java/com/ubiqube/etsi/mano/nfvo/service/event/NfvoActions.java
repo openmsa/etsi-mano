@@ -60,4 +60,10 @@ public class NfvoActions extends AbstractGenericAction {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
+	protected void mergeVirtualLinks(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

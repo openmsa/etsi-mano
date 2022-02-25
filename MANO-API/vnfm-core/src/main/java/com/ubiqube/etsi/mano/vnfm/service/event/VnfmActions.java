@@ -122,4 +122,11 @@ public class VnfmActions extends AbstractGenericAction {
 				.toList();
 		LOG.debug("{}", vli.get(0).getTask());
 	}
+
+	@Override
+	protected void mergeVirtualLinks(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
+		final VnfBlueprint vp = (VnfBlueprint) localPlan;
+		vnfInstance.setExtManagedVirtualLinks(vp.getExtManagedVirtualLinks());
+		vnfInstance.setExtVirtualLinks(vp.getExtVirtualLinks());
+	}
 }

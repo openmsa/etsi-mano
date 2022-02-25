@@ -99,6 +99,7 @@ public abstract class AbstractGenericAction {
 		}
 		// XXX ??? error duplicate key in NSD.
 		copyVimConnections(vnfInstance, localPlan);
+		mergeVirtualLinks(vnfInstance, localPlan);
 		vnfInstance.setLockedBy(null);
 		orchestrationAdapter.save(vnfInstance);
 		LOG.info("Saving LCM OP OCCS.");
@@ -107,12 +108,14 @@ public abstract class AbstractGenericAction {
 		LOG.info("Instance {} / LCM {} Finished.", vnfInstance.getId(), localPlan.getId());
 	}
 
+	protected abstract void mergeVirtualLinks(Instance vnfInstance, Blueprint<?, ?> localPlan);
+
 	private static void copyVimConnections(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
 		vnfInstance.setVimConnectionInfo(new LinkedHashSet<>());
 		localPlan.getVimConnections().forEach(vnfInstance::addVimConnectionInfo);
 	}
 
-	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint localPlan, Instance instance);
+	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint<?, ?> localPlan, Instance instance);
 
 	/**
 	 * Move this function to scale strategy.
@@ -235,12 +238,12 @@ public abstract class AbstractGenericAction {
 			final ChangeType ct = rhe.getChangeType();
 			if (ct == ChangeType.ADDED) {
 				final String il = Optional.ofNullable(rhe.getScaleInfo()).map(ScaleInfo::getAspectId).orElse(null);
-				if (null != rhe.getId() && null != rhe.getVimResourceId()) {
+				if ((null != rhe.getId()) && (null != rhe.getVimResourceId())) {
 					// orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
 				} else {
 					LOG.warn("No vim resource or database id for: {}", x.getTask().getTask().getParameters().getToscaName());
 				}
-			} else if (ct == ChangeType.REMOVED && null != rhe.getId()) {
+			} else if ((ct == ChangeType.REMOVED) && (null != rhe.getId())) {
 				LOG.info("Removing {}", rhe.getId());
 				orchestrationAdapter.deleteLiveInstance(rhe.getRemovedLiveInstance());
 			}
