@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -63,7 +64,7 @@ public class VnfLcmOpOcc {
 	private Boolean isAutomaticInvocation = null;
 
 	@JsonProperty("operationParams")
-	private Object operationParams = null;
+	private Map<String, String> operationParams = null;
 
 	@JsonProperty("isCancelPending")
 	private Boolean isCancelPending = null;
@@ -263,7 +264,7 @@ public class VnfLcmOpOcc {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 	}
 
-	public VnfLcmOpOcc operationParams(final Object operationParams) {
+	public VnfLcmOpOcc operationParams(final Map<String, String> operationParams) {
 		this.operationParams = operationParams;
 		return this;
 	}
@@ -282,11 +283,11 @@ public class VnfLcmOpOcc {
 	 **/
 	@ApiModelProperty(value = "Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between operationType and the data type of this attribute shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR: ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE: TerminateVnfRequest * MODIFY_INFO: VnfInfoModifications ")
 
-	public Object getOperationParams() {
+	public Map<String, String> getOperationParams() {
 		return operationParams;
 	}
 
-	public void setOperationParams(final Object operationParams) {
+	public void setOperationParams(final Map<String, String> operationParams) {
 		this.operationParams = operationParams;
 	}
 
@@ -469,7 +470,7 @@ public class VnfLcmOpOcc {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
 		final VnfLcmOpOcc vnfLcmOpOcc = (VnfLcmOpOcc) o;
