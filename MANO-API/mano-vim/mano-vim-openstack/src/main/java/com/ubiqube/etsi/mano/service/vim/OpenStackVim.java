@@ -34,7 +34,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.Null;
 
@@ -79,12 +78,8 @@ public class OpenStackVim implements Vim {
 
 	private final MapperFacade mapper;
 
-	private final Map<String, String> flavors;
-
 	public OpenStackVim(final MapperFacade mapper) {
 		this.mapper = mapper;
-		this.flavors = Map.of("availability_zone_type", "...");
-
 		LOG.info("Booting Openstack VIM.\n" +
 				"   ___  ___   __   _____ __  __ \n" +
 				"  / _ \\/ __|__\\ \\ / /_ _|  \\/  |\n" +
@@ -215,7 +210,7 @@ public class OpenStackVim implements Vim {
 		return createFlavor(os, name, numVcpu, virtualMemorySize, disk, flavorSpec).getId();
 	}
 
-	private Flavor createFlavor(final OSClientV3 os, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
+	private static Flavor createFlavor(final OSClientV3 os, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
 		final Flavor flavor = os.compute()
 				.flavors()
 				.create(Builders.flavor()
@@ -228,26 +223,19 @@ public class OpenStackVim implements Vim {
 		if (flavorSpec.isEmpty()) {
 			return flavor;
 		}
-		final Map<String, String> newSpec = flavorSpec.entrySet().stream()
-				.map(x -> Map.entry(convert(x.getKey()), x.getValue()))
-				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-		os.compute().flavors().createAndUpdateExtraSpecs(flavor.getId(), newSpec);
+		os.compute().flavors().createAndUpdateExtraSpecs(flavor.getId(), flavorSpec);
 		return flavor;
 	}
 
-	private boolean isMatching(final Map<String, String> flavorSpec, final Map<String, String> specs) {
+	private static boolean isMatching(final Map<String, String> flavorSpec, final Map<String, String> specs) {
 		final Set<Entry<String, String>> entries = flavorSpec.entrySet();
 		for (final Entry<String, String> entry : entries) {
-			final String osEntry = convert(entry.getKey());
+			final String osEntry = entry.getKey();
 			if (specs.get(osEntry) == null) {
 				return false;
 			}
 		}
 		return true;
-	}
-
-	private String convert(final String key) {
-		return flavors.get(key);
 	}
 
 	@Override
