@@ -124,7 +124,7 @@ public class GrantResponse implements BaseEntity, Auditable, GrantInterface {
 	private Set<ExtVirtualLinkDataEntity> extVirtualLinks = new LinkedHashSet<>();
 
 	@Valid
-	@OneToMany(mappedBy = "grants", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks = new LinkedHashSet<>();
 
 	@ElementCollection(fetch = FetchType.EAGER)
