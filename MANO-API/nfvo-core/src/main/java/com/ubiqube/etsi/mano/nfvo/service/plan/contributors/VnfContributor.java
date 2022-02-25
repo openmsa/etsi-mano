@@ -201,7 +201,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 		}
 		final Set<String> vnfmInfos = vnfPackage.getVnfmInfo();
 		if (vnfmInfos.isEmpty()) {
-			return null;
+			return servers.get(rand.nextInt(servers.size()));
 		}
 		final List<Servers> available = servers.stream()
 				.filter(x -> {
