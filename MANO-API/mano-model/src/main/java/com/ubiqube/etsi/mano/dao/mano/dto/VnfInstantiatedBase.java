@@ -45,14 +45,14 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private UUID id = null;
+	private UUID id ;
 
 	private VduInstantiationLevel instantiationLevel;
 
 	/*
 	 * Vnf Compute.
 	 */
-	private UUID vduId = null;
+	private UUID vduId ;
 
 	// 3.3.1
 	private String vnfdId;
@@ -69,28 +69,28 @@ public class VnfInstantiatedBase implements Auditable, BaseEntity {
 	/**
 	 * Grant Info
 	 */
-	private String resourceProviderId = null;
+	private String resourceProviderId ;
 
 	/**
 	 * Grant Info
 	 */
-	private String zoneId = null;
+	private String zoneId ;
 
 	/**
 	 * Grant Info
 	 */
-	private String resourceGroupId = null;
+	private String resourceGroupId ;
 
 	/**
 	 * VIM Resources.
 	 */
 	private VimConnectionInformation vimConnectionInformation;
 
-	private String resourceId = null;
+	private String resourceId ;
 
-	private String vimLevelResourceType = null;
+	private String vimLevelResourceType ;
 
-	private InstantiationStatusType status = InstantiationStatusType.NOT_STARTED;
+	private InstantiationStatusType status = InstantiationStatusType.PROCESSING;
 
 	private ChangeType changeType;
 

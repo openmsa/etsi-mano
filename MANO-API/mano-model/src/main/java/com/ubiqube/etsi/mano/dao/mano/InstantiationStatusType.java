@@ -17,8 +17,6 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 public enum InstantiationStatusType {
-	NOT_STARTED("NOT_STARTED"),
-
 	STARTED("STARTED"),
 	STARTING("STARTING"),
 

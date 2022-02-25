@@ -70,8 +70,8 @@ public class VnfInstantiateUow extends AbstractUnitOfWork<NsVnfInstantiateTask> 
 	 */
 	private VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfBlueprint tmp = vnfLcmOpOccs;
-		OperationStatusType state = OperationStatusType.NOT_STARTED;
-		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state || OperationStatusType.NOT_STARTED == state) {
+		OperationStatusType state = OperationStatusType.PROCESSING;
+		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
 			tmp = vnfm.vnfLcmOpOccsGet(task.getServer(), vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
 			LOG.debug("Instantiate polling: {} => {}", tmp.getId(), state);
