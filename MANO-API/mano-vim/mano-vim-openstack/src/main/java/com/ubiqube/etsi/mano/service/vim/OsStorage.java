@@ -34,6 +34,7 @@ import org.openstack4j.model.image.v2.DiskFormat;
 import org.openstack4j.model.image.v2.Image;
 import org.openstack4j.model.image.v2.builder.ImageBuilder;
 import org.openstack4j.model.storage.block.Volume;
+import org.openstack4j.model.storage.block.Volume.Status;
 import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,7 @@ public class OsStorage implements Storage {
 
 	@Override
 	public void deleteStorage(final String resourceId) {
+		os.blockStorage().volumes().resetState(resourceId, Status.AVAILABLE);
 		checkResult(os.blockStorage().volumes().delete(resourceId));
 	}
 
