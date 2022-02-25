@@ -46,7 +46,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 public interface VnfInstanceGenericFrontController {
 
-	ResponseEntity<Void> terminate(@NotNull UUID vnfInstanceId, CancelModeTypeEnum cancelMode, int timeout, Function<VnfBlueprint, String> getSelfLink);
+	ResponseEntity<Void> terminate(@NotNull UUID vnfInstanceId, CancelModeTypeEnum cancelMode, Integer timeout, Function<VnfBlueprint, String> getSelfLink);
 
 	<U> ResponseEntity<Void> scaleToLevel(@NotNull UUID vnfInstanceId, U body, Function<VnfBlueprint, String> getSelfLink);
 

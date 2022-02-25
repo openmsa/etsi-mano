@@ -72,7 +72,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 	}
 
 	@Override
-	public ResponseEntity<Void> terminate(final UUID vnfInstanceId, final CancelModeTypeEnum cancelMode, final int timeout, final Function<VnfBlueprint, String> getSelfLink) {
+	public ResponseEntity<Void> terminate(final UUID vnfInstanceId, final CancelModeTypeEnum cancelMode, final Integer timeout, final Function<VnfBlueprint, String> getSelfLink) {
 		final VnfBlueprint lcm = vnfInstanceLcm.terminate(null, vnfInstanceId, cancelMode, timeout);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
