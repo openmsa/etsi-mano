@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -54,7 +54,7 @@ public class ChangeVnfFlavourRequest {
 	private List<ExtManagedVirtualLinkData> extManagedVirtualLinks = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public ChangeVnfFlavourRequest newFlavourId(final String newFlavourId) {
 		this.newFlavourId = newFlavourId;
@@ -159,7 +159,7 @@ public class ChangeVnfFlavourRequest {
 		this.extManagedVirtualLinks = extManagedVirtualLinks;
 	}
 
-	public ChangeVnfFlavourRequest additionalParams(final KeyValuePairs additionalParams) {
+	public ChangeVnfFlavourRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -175,11 +175,11 @@ public class ChangeVnfFlavourRequest {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

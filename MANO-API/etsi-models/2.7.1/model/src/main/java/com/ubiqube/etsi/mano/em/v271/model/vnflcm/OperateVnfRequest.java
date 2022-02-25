@@ -28,7 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -83,7 +83,7 @@ public class OperateVnfRequest {
 	private StopTypeEnum stopType = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public OperateVnfRequest vnfcInstanceId(final List<String> vnfcInstanceId) {
 		this.vnfcInstanceId = vnfcInstanceId;
@@ -159,7 +159,7 @@ public class OperateVnfRequest {
 		this.stopType = stopType;
 	}
 
-	public OperateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+	public OperateVnfRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -175,11 +175,11 @@ public class OperateVnfRequest {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

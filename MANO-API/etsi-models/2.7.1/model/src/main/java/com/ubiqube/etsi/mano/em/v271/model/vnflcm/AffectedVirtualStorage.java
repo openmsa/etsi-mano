@@ -26,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -92,7 +92,7 @@ public class AffectedVirtualStorage {
 	private String resourceDefinitionId = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	public AffectedVirtualStorage id(final String id) {
 		this.id = id;
@@ -212,7 +212,7 @@ public class AffectedVirtualStorage {
 		this.resourceDefinitionId = resourceDefinitionId;
 	}
 
-	public AffectedVirtualStorage metadata(final KeyValuePairs metadata) {
+	public AffectedVirtualStorage metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -228,11 +228,11 @@ public class AffectedVirtualStorage {
 
 	@Valid
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

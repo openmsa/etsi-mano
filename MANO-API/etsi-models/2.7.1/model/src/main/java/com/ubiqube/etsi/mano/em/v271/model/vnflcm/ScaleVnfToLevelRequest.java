@@ -25,7 +25,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -46,7 +46,7 @@ public class ScaleVnfToLevelRequest {
 	private List<ScaleInfo> scaleInfo = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public ScaleVnfToLevelRequest instantiationLevelId(final String instantiationLevelId) {
 		this.instantiationLevelId = instantiationLevelId;
@@ -102,7 +102,7 @@ public class ScaleVnfToLevelRequest {
 		this.scaleInfo = scaleInfo;
 	}
 
-	public ScaleVnfToLevelRequest additionalParams(final KeyValuePairs additionalParams) {
+	public ScaleVnfToLevelRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -118,11 +118,11 @@ public class ScaleVnfToLevelRequest {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

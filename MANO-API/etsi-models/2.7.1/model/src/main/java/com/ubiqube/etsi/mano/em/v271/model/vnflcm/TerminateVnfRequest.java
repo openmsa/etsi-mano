@@ -26,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -75,7 +75,7 @@ public class TerminateVnfRequest {
 	private Integer gracefulTerminationTimeout = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	public TerminateVnfRequest terminationType(final TerminationTypeEnum terminationType) {
 		this.terminationType = terminationType;
@@ -100,7 +100,7 @@ public class TerminateVnfRequest {
 		this.terminationType = terminationType;
 	}
 
-	public TerminateVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+	public TerminateVnfRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -116,11 +116,11 @@ public class TerminateVnfRequest {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

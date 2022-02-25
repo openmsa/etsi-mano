@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -41,7 +41,7 @@ public class PerformanceReportPerformanceValues {
 	private Object value = null;
 
 	@JsonProperty("context")
-	private KeyValuePairs context = null;
+	private Map<String, String> context = null;
 
 	public PerformanceReportPerformanceValues timeStamp(final String timeStamp) {
 		this.timeStamp = timeStamp;
@@ -87,7 +87,7 @@ public class PerformanceReportPerformanceValues {
 		this.value = value;
 	}
 
-	public PerformanceReportPerformanceValues context(final KeyValuePairs context) {
+	public PerformanceReportPerformanceValues context(final Map<String, String> context) {
 		this.context = context;
 		return this;
 	}
@@ -103,11 +103,11 @@ public class PerformanceReportPerformanceValues {
 
 	@Valid
 
-	public KeyValuePairs getContext() {
+	public Map<String, String> getContext() {
 		return context;
 	}
 
-	public void setContext(final KeyValuePairs context) {
+	public void setContext(final Map<String, String> context) {
 		this.context = context;
 	}
 

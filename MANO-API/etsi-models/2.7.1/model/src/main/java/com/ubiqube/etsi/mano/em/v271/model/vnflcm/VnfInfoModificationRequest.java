@@ -25,7 +25,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -53,13 +53,13 @@ public class VnfInfoModificationRequest {
 	private String vnfdId = null;
 
 	@JsonProperty("vnfConfigurableProperties")
-	private KeyValuePairs vnfConfigurableProperties = null;
+	private Map<String, String> vnfConfigurableProperties = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	@JsonProperty("extensions")
-	private KeyValuePairs extensions = null;
+	private Map<String, String> extensions = null;
 
 	@JsonProperty("vnfcInfoModifications")
 	@Valid
@@ -132,7 +132,7 @@ public class VnfInfoModificationRequest {
 		this.vnfdId = vnfdId;
 	}
 
-	public VnfInfoModificationRequest vnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public VnfInfoModificationRequest vnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 		return this;
 	}
@@ -148,15 +148,15 @@ public class VnfInfoModificationRequest {
 
 	@Valid
 
-	public KeyValuePairs getVnfConfigurableProperties() {
+	public Map<String, String> getVnfConfigurableProperties() {
 		return vnfConfigurableProperties;
 	}
 
-	public void setVnfConfigurableProperties(final KeyValuePairs vnfConfigurableProperties) {
+	public void setVnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
-	public VnfInfoModificationRequest metadata(final KeyValuePairs metadata) {
+	public VnfInfoModificationRequest metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -172,15 +172,15 @@ public class VnfInfoModificationRequest {
 
 	@Valid
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 
-	public VnfInfoModificationRequest extensions(final KeyValuePairs extensions) {
+	public VnfInfoModificationRequest extensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 		return this;
 	}
@@ -196,11 +196,11 @@ public class VnfInfoModificationRequest {
 
 	@Valid
 
-	public KeyValuePairs getExtensions() {
+	public Map<String, String> getExtensions() {
 		return extensions;
 	}
 
-	public void setExtensions(final KeyValuePairs extensions) {
+	public void setExtensions(final Map<String, String> extensions) {
 		this.extensions = extensions;
 	}
 

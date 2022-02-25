@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -44,7 +44,7 @@ public class CreateVnfRequest {
 	private String vnfInstanceDescription = null;
 
 	@JsonProperty("metadata")
-	private KeyValuePairs metadata = null;
+	private Map<String, String> metadata = null;
 
 	public CreateVnfRequest vnfdId(final String vnfdId) {
 		this.vnfdId = vnfdId;
@@ -108,7 +108,7 @@ public class CreateVnfRequest {
 		this.vnfInstanceDescription = vnfInstanceDescription;
 	}
 
-	public CreateVnfRequest metadata(final KeyValuePairs metadata) {
+	public CreateVnfRequest metadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 		return this;
 	}
@@ -126,11 +126,11 @@ public class CreateVnfRequest {
 
 	@Valid
 
-	public KeyValuePairs getMetadata() {
+	public Map<String, String> getMetadata() {
 		return metadata;
 	}
 
-	public void setMetadata(final KeyValuePairs metadata) {
+	public void setMetadata(final Map<String, String> metadata) {
 		this.metadata = metadata;
 	}
 

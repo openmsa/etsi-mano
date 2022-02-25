@@ -25,7 +25,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -43,7 +43,7 @@ public class HealVnfRequest {
 	private String cause = null;
 
 	@JsonProperty("additionalParams")
-	private KeyValuePairs additionalParams = null;
+	private Map<String, String> additionalParams = null;
 
 	@JsonProperty("healScript")
 	private String healScript = null;
@@ -96,7 +96,7 @@ public class HealVnfRequest {
 		this.cause = cause;
 	}
 
-	public HealVnfRequest additionalParams(final KeyValuePairs additionalParams) {
+	public HealVnfRequest additionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 		return this;
 	}
@@ -112,11 +112,11 @@ public class HealVnfRequest {
 
 	@Valid
 
-	public KeyValuePairs getAdditionalParams() {
+	public Map<String, String> getAdditionalParams() {
 		return additionalParams;
 	}
 
-	public void setAdditionalParams(final KeyValuePairs additionalParams) {
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
 		this.additionalParams = additionalParams;
 	}
 

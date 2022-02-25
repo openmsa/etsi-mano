@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ubiqube.etsi.mano.em.v271.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.nfvo.v271.model.vnf.PackageOperationalStateType;
 
 import io.swagger.annotations.ApiModel;
@@ -41,7 +41,7 @@ public class VnfPkgInfoModifications {
 	private PackageOperationalStateType operationalState = null;
 
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	public VnfPkgInfoModifications operationalState(final PackageOperationalStateType operationalState) {
 		this.operationalState = operationalState;
@@ -64,7 +64,7 @@ public class VnfPkgInfoModifications {
 		this.operationalState = operationalState;
 	}
 
-	public VnfPkgInfoModifications userDefinedData(final KeyValuePairs userDefinedData) {
+	public VnfPkgInfoModifications userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -77,11 +77,11 @@ public class VnfPkgInfoModifications {
 	@ApiModelProperty(value = "")
 
 	@Valid
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 
