@@ -58,6 +58,7 @@ import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.model.ExternalManagedVirtualLink;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.ResourceDefinition;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.Checksum;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionRequest;
@@ -194,6 +195,9 @@ public class OrikaMapperVnfm271 implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(ExtManagedVirtualLinkData.class, ExtManagedVirtualLinkDataEntity.class)
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(ExternalManagedVirtualLink.class, ExtManagedVirtualLinkDataEntity.class)
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfExtCpInfo.class, ExtCpInfo.class)
