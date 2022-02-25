@@ -85,9 +85,9 @@ public abstract class AbstractGrantService implements VimResourceService {
 						grantRequest.addRemoveResources(obj);
 					}
 				});
-		final GrantResponse grantsResp = nfvo.sendSyncGrantRequest(grantRequest);
+		final GrantResponse returnedGrant = nfvo.sendSyncGrantRequest(grantRequest);
 		// Merge resources.
-		Optional.ofNullable(grantsResp.getAddResources()).orElseGet(LinkedHashSet::new)
+		Optional.ofNullable(returnedGrant.getAddResources()).orElseGet(LinkedHashSet::new)
 				.forEach(x -> {
 					// Get VNFM Grant Resource information ID.
 					final UUID grantUuid = UUID.fromString(x.getResourceDefinitionId());
@@ -98,13 +98,13 @@ public abstract class AbstractGrantService implements VimResourceService {
 					task.setResourceProviderId(x.getResourceProviderId());
 					task.setVimConnectionId(x.getVimConnectionId());
 				});
-		grantsResp.getVimConnections().forEach(plan::addVimConnection);
-		plan.setZoneGroups(mapper.mapAsSet(grantsResp.getZoneGroups(), BlueZoneGroupInformation.class));
-		plan.setZones(grantsResp.getZones());
-		plan.addExtManagedVirtualLinks(grantsResp.getExtManagedVirtualLinks());
-		Optional.ofNullable(grantsResp.getExtVirtualLinks()).ifPresent(plan::addExtVirtualLinks);
-		plan.setGrantsRequestId(grantsResp.getId().toString());
-		mapVimAsset(plan.getTasks(), grantsResp.getVimAssets());
+		returnedGrant.getVimConnections().forEach(plan::addVimConnection);
+		plan.setZoneGroups(mapper.mapAsSet(returnedGrant.getZoneGroups(), BlueZoneGroupInformation.class));
+		plan.setZones(returnedGrant.getZones());
+		plan.addExtManagedVirtualLinks(returnedGrant.getExtManagedVirtualLinks());
+		Optional.ofNullable(returnedGrant.getExtVirtualLinks()).ifPresent(plan::addExtVirtualLinks);
+		plan.setGrantsRequestId(returnedGrant.getId().toString());
+		mapVimAsset(plan.getTasks(), returnedGrant.getVimAssets());
 		fixUnknownTask(plan.getTasks(), plan.getVimConnections());
 		plan.setVimConnections(fixVimConnections(plan.getVimConnections()));
 		check(plan);
