@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.model;
 
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +29,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ExternalManagedVirtualLink {
+	private UUID id;
+
 	private String extManagedVirtualLinkId;
 
 	private String vnfVirtualLinkDescId;
