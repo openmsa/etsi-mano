@@ -16,15 +16,18 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v281.model.nsd;
 
+import java.util.Map;
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.KeyValuePairs;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * This type represents attribute modifications for an individual PNF descriptor resource based on the \&quot;PnfdInfo\&quot; data type. The attributes of \&quot;PnfdInfo\&quot; that can be modified are included in the \&quot;PnfdInfoModifications\&quot; data type. 
@@ -34,9 +37,9 @@ import javax.validation.constraints.*;
 
 public class PnfdInfoModifications   {
   @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+  private Map<String, String> userDefinedData = null;
 
-  public PnfdInfoModifications userDefinedData(KeyValuePairs userDefinedData) {
+  public PnfdInfoModifications userDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
     return this;
   }
@@ -50,11 +53,11 @@ public class PnfdInfoModifications   {
 
   @Valid
 
-  public KeyValuePairs getUserDefinedData() {
+  public Map<String, String> getUserDefinedData() {
     return userDefinedData;
   }
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
+  public void setUserDefinedData(Map<String, String> userDefinedData) {
     this.userDefinedData = userDefinedData;
   }
 

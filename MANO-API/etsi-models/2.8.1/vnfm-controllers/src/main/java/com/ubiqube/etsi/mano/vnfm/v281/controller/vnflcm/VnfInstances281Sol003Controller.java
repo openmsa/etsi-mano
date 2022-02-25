@@ -30,19 +30,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ChangeExtVnfConnectivityRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ChangeVnfFlavourRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.HealVnfRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.Link;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfInstance;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfInstanceGenericFrontController;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ChangeExtVnfConnectivityRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ChangeVnfFlavourRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.CreateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.HealVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.InstantiateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.Link;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.OperateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ScaleVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ScaleVnfToLevelRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfInstance;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfInstanceLinks;
 
 /**
  *

@@ -32,8 +32,8 @@ import com.ubiqube.etsi.mano.dao.mano.alarm.PerceivedSeverityType;
 import com.ubiqube.etsi.mano.em.v281.model.vnffm.Alarm;
 import com.ubiqube.etsi.mano.em.v281.model.vnffm.AlarmLinks;
 import com.ubiqube.etsi.mano.em.v281.model.vnffm.AlarmModifications;
-import com.ubiqube.etsi.mano.em.v281.model.vnffm.Link;
 import com.ubiqube.etsi.mano.em.v281.model.vnffm.PerceivedSeverityRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.vnfm.fc.vnffm.AlarmFrontController;
 
 /**

@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nslcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -82,7 +82,7 @@ public class HealNsData   {
   private String healScript = null;
 
   @JsonProperty("additionalParamsforNs")
-  private KeyValuePairs additionalParamsforNs = null;
+  private Map<String, String> additionalParamsforNs = null;
 
   public HealNsData degreeHealing(DegreeHealingEnum degreeHealing) {
     this.degreeHealing = degreeHealing;
@@ -153,7 +153,7 @@ public class HealNsData   {
     this.healScript = healScript;
   }
 
-  public HealNsData additionalParamsforNs(KeyValuePairs additionalParamsforNs) {
+  public HealNsData additionalParamsforNs(Map<String, String> additionalParamsforNs) {
     this.additionalParamsforNs = additionalParamsforNs;
     return this;
   }
@@ -166,11 +166,11 @@ public class HealNsData   {
 
   @Valid
 
-  public KeyValuePairs getAdditionalParamsforNs() {
+  public Map<String, String> getAdditionalParamsforNs() {
     return additionalParamsforNs;
   }
 
-  public void setAdditionalParamsforNs(KeyValuePairs additionalParamsforNs) {
+  public void setAdditionalParamsforNs(Map<String, String> additionalParamsforNs) {
     this.additionalParamsforNs = additionalParamsforNs;
   }
 

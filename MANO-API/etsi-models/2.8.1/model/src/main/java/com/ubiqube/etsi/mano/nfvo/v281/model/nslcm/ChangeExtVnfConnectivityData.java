@@ -16,146 +16,159 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v281.model.nslcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nslcm.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nslcm.KeyValuePairs;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Map;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ExtVirtualLinkData;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type describes the information invoked by the NFVO to change the external VNF connectivity information maintained by the VNFM. The types of changes that this operation supports are: 1) Disconnect the external CPs that are connected to a particular external VL, and connect them to a different external VL. 2) Change the connectivity parameters of the existing external CPs, including changing addresses. NOTE: Depending on the capabilities of the underlying VIM resources, certain changes (e.g. modifying the IP address assignment) might not be supported without deleting the resource and creating another one with the modified configuration. This type shall comply with the provisions defined in Table 6.5.3.33-1. 
+ * This type describes the information invoked by the NFVO to change the
+ * external VNF connectivity information maintained by the VNFM. The types of
+ * changes that this operation supports are: 1) Disconnect the external CPs that
+ * are connected to a particular external VL, and connect them to a different
+ * external VL. 2) Change the connectivity parameters of the existing external
+ * CPs, including changing addresses. NOTE: Depending on the capabilities of the
+ * underlying VIM resources, certain changes (e.g. modifying the IP address
+ * assignment) might not be supported without deleting the resource and creating
+ * another one with the modified configuration. This type shall comply with the
+ * provisions defined in Table 6.5.3.33-1.
  */
 @ApiModel(description = "This type describes the information invoked by the NFVO to change the external VNF connectivity information maintained by the VNFM. The types of changes that this operation supports are: 1) Disconnect the external CPs that are connected to a particular external VL, and connect them to a different external VL. 2) Change the connectivity parameters of the existing external CPs, including changing addresses. NOTE: Depending on the capabilities of the underlying VIM resources, certain changes (e.g. modifying the IP address assignment) might not be supported without deleting the resource and creating another one with the modified configuration. This type shall comply with the provisions defined in Table 6.5.3.33-1. ")
 @Validated
 
-public class ChangeExtVnfConnectivityData   {
-  @JsonProperty("vnfInstanceId")
-  private String vnfInstanceId = null;
+public class ChangeExtVnfConnectivityData {
+	@JsonProperty("vnfInstanceId")
+	private String vnfInstanceId = null;
 
-  @JsonProperty("extVirtualLinks")
-  @Valid
-  private List<ExtVirtualLinkData> extVirtualLinks = new ArrayList<>();
+	@JsonProperty("extVirtualLinks")
+	@Valid
+	private List<ExtVirtualLinkData> extVirtualLinks = new ArrayList<>();
 
-  @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+	@JsonProperty("additionalParams")
+	private Map<String, String> additionalParams = null;
 
-  public ChangeExtVnfConnectivityData vnfInstanceId(String vnfInstanceId) {
-    this.vnfInstanceId = vnfInstanceId;
-    return this;
-  }
+	public ChangeExtVnfConnectivityData vnfInstanceId(final String vnfInstanceId) {
+		this.vnfInstanceId = vnfInstanceId;
+		return this;
+	}
 
-  /**
-   * Identifier of the VNF instance. 
-   * @return vnfInstanceId
-  **/
-  @ApiModelProperty(required = true, value = "Identifier of the VNF instance. ")
-  @NotNull
+	/**
+	 * Identifier of the VNF instance.
+	 *
+	 * @return vnfInstanceId
+	 **/
+	@ApiModelProperty(required = true, value = "Identifier of the VNF instance. ")
+	@NotNull
 
+	public String getVnfInstanceId() {
+		return vnfInstanceId;
+	}
 
-  public String getVnfInstanceId() {
-    return vnfInstanceId;
-  }
+	public void setVnfInstanceId(final String vnfInstanceId) {
+		this.vnfInstanceId = vnfInstanceId;
+	}
 
-  public void setVnfInstanceId(String vnfInstanceId) {
-    this.vnfInstanceId = vnfInstanceId;
-  }
+	public ChangeExtVnfConnectivityData extVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
+		this.extVirtualLinks = extVirtualLinks;
+		return this;
+	}
 
-  public ChangeExtVnfConnectivityData extVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
-    this.extVirtualLinks = extVirtualLinks;
-    return this;
-  }
+	public ChangeExtVnfConnectivityData addExtVirtualLinksItem(final ExtVirtualLinkData extVirtualLinksItem) {
+		this.extVirtualLinks.add(extVirtualLinksItem);
+		return this;
+	}
 
-  public ChangeExtVnfConnectivityData addExtVirtualLinksItem(ExtVirtualLinkData extVirtualLinksItem) {
-    this.extVirtualLinks.add(extVirtualLinksItem);
-    return this;
-  }
+	/**
+	 * Information about external VLs to change (e.g. connect the VNF to).
+	 *
+	 * @return extVirtualLinks
+	 **/
+	@ApiModelProperty(required = true, value = "Information about external VLs to change (e.g. connect the VNF to). ")
+	@NotNull
 
-  /**
-   * Information about external VLs to change (e.g. connect the VNF to). 
-   * @return extVirtualLinks
-  **/
-  @ApiModelProperty(required = true, value = "Information about external VLs to change (e.g. connect the VNF to). ")
-  @NotNull
+	@Valid
 
-  @Valid
+	public List<ExtVirtualLinkData> getExtVirtualLinks() {
+		return extVirtualLinks;
+	}
 
-  public List<ExtVirtualLinkData> getExtVirtualLinks() {
-    return extVirtualLinks;
-  }
+	public void setExtVirtualLinks(final List<ExtVirtualLinkData> extVirtualLinks) {
+		this.extVirtualLinks = extVirtualLinks;
+	}
 
-  public void setExtVirtualLinks(List<ExtVirtualLinkData> extVirtualLinks) {
-    this.extVirtualLinks = extVirtualLinks;
-  }
+	public ChangeExtVnfConnectivityData additionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+		return this;
+	}
 
-  public ChangeExtVnfConnectivityData additionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-    return this;
-  }
+	/**
+	 * Additional parameters passed by the OSS as input to the external connectivity
+	 * change process, specific to the VNF instance being changed.
+	 *
+	 * @return additionalParams
+	 **/
+	@ApiModelProperty(value = "Additional parameters passed by the OSS as input to the external connectivity change process, specific to the VNF instance being changed. ")
 
-  /**
-   * Additional parameters passed by the OSS as input to the external connectivity change process, specific to the VNF instance being changed. 
-   * @return additionalParams
-  **/
-  @ApiModelProperty(value = "Additional parameters passed by the OSS as input to the external connectivity change process, specific to the VNF instance being changed. ")
+	@Valid
 
-  @Valid
+	public Map<String, String> getAdditionalParams() {
+		return additionalParams;
+	}
 
-  public KeyValuePairs getAdditionalParams() {
-    return additionalParams;
-  }
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final ChangeExtVnfConnectivityData changeExtVnfConnectivityData = (ChangeExtVnfConnectivityData) o;
+		return Objects.equals(this.vnfInstanceId, changeExtVnfConnectivityData.vnfInstanceId) &&
+				Objects.equals(this.extVirtualLinks, changeExtVnfConnectivityData.extVirtualLinks) &&
+				Objects.equals(this.additionalParams, changeExtVnfConnectivityData.additionalParams);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfInstanceId, extVirtualLinks, additionalParams);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ChangeExtVnfConnectivityData changeExtVnfConnectivityData = (ChangeExtVnfConnectivityData) o;
-    return Objects.equals(this.vnfInstanceId, changeExtVnfConnectivityData.vnfInstanceId) &&
-        Objects.equals(this.extVirtualLinks, changeExtVnfConnectivityData.extVirtualLinks) &&
-        Objects.equals(this.additionalParams, changeExtVnfConnectivityData.additionalParams);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class ChangeExtVnfConnectivityData {\n");
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfInstanceId, extVirtualLinks, additionalParams);
-  }
+		sb.append("    vnfInstanceId: ").append(toIndentedString(vnfInstanceId)).append("\n");
+		sb.append("    extVirtualLinks: ").append(toIndentedString(extVirtualLinks)).append("\n");
+		sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ChangeExtVnfConnectivityData {\n");
-    
-    sb.append("    vnfInstanceId: ").append(toIndentedString(vnfInstanceId)).append("\n");
-    sb.append("    extVirtualLinks: ").append(toIndentedString(extVirtualLinks)).append("\n");
-    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

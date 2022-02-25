@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.KeyValuePairs;
+import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -87,7 +87,7 @@ public class VnfPackageArtifactInfo   {
   private ArtifactClassificationEnum artifactClassification = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   public VnfPackageArtifactInfo artifactPath(String artifactPath) {
     this.artifactPath = artifactPath;
@@ -212,7 +212,7 @@ public class VnfPackageArtifactInfo   {
     this.artifactClassification = artifactClassification;
   }
 
-  public VnfPackageArtifactInfo metadata(KeyValuePairs metadata) {
+  public VnfPackageArtifactInfo metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -225,11 +225,11 @@ public class VnfPackageArtifactInfo   {
 
   @Valid
 
-  public KeyValuePairs getMetadata() {
+  public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

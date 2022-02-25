@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.em.v281.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.StopType;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfOperationalStateType;
 import io.swagger.annotations.ApiModel;
@@ -51,7 +51,7 @@ public class OperateVnfRequest   {
   private Integer gracefulStopTimeout = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   public OperateVnfRequest vnfcInstanceId(List<String> vnfcInstanceId) {
     this.vnfcInstanceId = vnfcInstanceId;
@@ -144,7 +144,7 @@ public class OperateVnfRequest   {
     this.gracefulStopTimeout = gracefulStopTimeout;
   }
 
-  public OperateVnfRequest additionalParams(KeyValuePairs additionalParams) {
+  public OperateVnfRequest additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -157,11 +157,11 @@ public class OperateVnfRequest   {
 
   @Valid
 
-  public KeyValuePairs getAdditionalParams() {
+  public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

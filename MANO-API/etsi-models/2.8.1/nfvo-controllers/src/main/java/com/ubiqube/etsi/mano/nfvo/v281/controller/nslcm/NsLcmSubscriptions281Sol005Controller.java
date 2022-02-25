@@ -27,10 +27,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.NsLcmSubscriptionsGenericFrontController;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nslcm.LccnSubscription;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nslcm.LccnSubscriptionLinks;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nslcm.LccnSubscriptionRequest;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nslcm.Link;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.LccnSubscription;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.LccnSubscriptionLinks;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.Link;
 
 @RestController
 public class NsLcmSubscriptions281Sol005Controller implements NsLcmSubscriptions281Sol005Api {

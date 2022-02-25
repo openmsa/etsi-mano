@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.em.v281.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ResourceHandle;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,7 +50,7 @@ public class VirtualStorageResourceInfo   {
   private String reservationId = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   public VirtualStorageResourceInfo id(String id) {
     this.id = id;
@@ -156,7 +156,7 @@ public class VirtualStorageResourceInfo   {
     this.reservationId = reservationId;
   }
 
-  public VirtualStorageResourceInfo metadata(KeyValuePairs metadata) {
+  public VirtualStorageResourceInfo metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -169,11 +169,11 @@ public class VirtualStorageResourceInfo   {
 
   @Valid
 
-  public KeyValuePairs getMetadata() {
+  public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

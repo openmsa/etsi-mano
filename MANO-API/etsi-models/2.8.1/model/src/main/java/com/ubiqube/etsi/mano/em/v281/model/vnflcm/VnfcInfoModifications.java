@@ -19,7 +19,7 @@ package com.ubiqube.etsi.mano.em.v281.model.vnflcm;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -37,7 +37,7 @@ public class VnfcInfoModifications   {
   private String id = null;
 
   @JsonProperty("vnfcConfigurableProperties")
-  private KeyValuePairs vnfcConfigurableProperties = null;
+  private Map<String, String> vnfcConfigurableProperties = null;
 
   public VnfcInfoModifications id(String id) {
     this.id = id;
@@ -60,7 +60,7 @@ public class VnfcInfoModifications   {
     this.id = id;
   }
 
-  public VnfcInfoModifications vnfcConfigurableProperties(KeyValuePairs vnfcConfigurableProperties) {
+  public VnfcInfoModifications vnfcConfigurableProperties(Map<String, String> vnfcConfigurableProperties) {
     this.vnfcConfigurableProperties = vnfcConfigurableProperties;
     return this;
   }
@@ -74,11 +74,11 @@ public class VnfcInfoModifications   {
 
   @Valid
 
-  public KeyValuePairs getVnfcConfigurableProperties() {
+  public Map<String, String> getVnfcConfigurableProperties() {
     return vnfcConfigurableProperties;
   }
 
-  public void setVnfcConfigurableProperties(KeyValuePairs vnfcConfigurableProperties) {
+  public void setVnfcConfigurableProperties(Map<String, String> vnfcConfigurableProperties) {
     this.vnfcConfigurableProperties = vnfcConfigurableProperties;
   }
 

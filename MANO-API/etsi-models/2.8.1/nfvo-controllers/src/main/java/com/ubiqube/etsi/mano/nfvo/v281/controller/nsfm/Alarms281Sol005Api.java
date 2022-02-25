@@ -41,9 +41,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails;
 import com.ubiqube.etsi.mano.em.v281.model.vnffm.Alarm;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsfm.AlarmModifications;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsfm.ProblemDetails;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.AlarmModifications;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

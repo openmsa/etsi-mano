@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -74,7 +74,7 @@ public class ScaleVnfRequest   {
   private Integer numberOfSteps = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   public ScaleVnfRequest type(TypeEnum type) {
     this.type = type;
@@ -138,7 +138,7 @@ public class ScaleVnfRequest   {
     this.numberOfSteps = numberOfSteps;
   }
 
-  public ScaleVnfRequest additionalParams(KeyValuePairs additionalParams) {
+  public ScaleVnfRequest additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -151,11 +151,11 @@ public class ScaleVnfRequest   {
 
   @Valid
 
-  public KeyValuePairs getAdditionalParams() {
+  public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

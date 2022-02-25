@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails2;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.GrantRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.grant.ProblemDetails2;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

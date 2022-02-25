@@ -40,8 +40,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.ProblemDetails2;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails2;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.VnfPkgInfo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
