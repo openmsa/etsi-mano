@@ -95,7 +95,7 @@ public class VnfLcmFactory {
 		blueprint.setVnfInstance(vnfInstance);
 		blueprint.setStartTime(OffsetDateTime.now());
 		blueprint.setStateEnteredTime(OffsetDateTime.now());
-		blueprint.setOperationStatus(OperationStatusType.NOT_STARTED);
+		blueprint.setOperationStatus(OperationStatusType.PROCESSING);
 		final BlueprintParameters parameters = new BlueprintParameters();
 		parameters.setState(OperationalStateType.STOPPED);
 		blueprint.setParameters(parameters);
