@@ -61,6 +61,7 @@ import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
@@ -207,7 +208,8 @@ public class VnfPackageOnboardingImpl {
 		final ListKeyPair vl = virtualLinks.stream()
 				.filter(x -> x.getValue() != null)
 				.filter(x -> x.getValue().equals(toscaName))
-				.findFirst().orElseThrow();
+				.findFirst()
+				.orElseThrow(() -> new ToscaException("Could not find VL named " + toscaName + " in " + virtualLinks));
 		return vlToString(vl);
 	}
 
