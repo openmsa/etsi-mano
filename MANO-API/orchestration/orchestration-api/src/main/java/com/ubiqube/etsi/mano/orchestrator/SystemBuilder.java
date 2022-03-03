@@ -37,4 +37,6 @@ public interface SystemBuilder<U> {
 
 	void add(UnitOfWork<U> src, UnitOfWork<U> dest);
 
+	List<UnitOfWork<U>> getVertex();
+
 }
