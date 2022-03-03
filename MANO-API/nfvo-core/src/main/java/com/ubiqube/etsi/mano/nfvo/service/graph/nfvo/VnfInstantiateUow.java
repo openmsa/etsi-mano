@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,9 +117,11 @@ public class VnfInstantiateUow extends AbstractUnitOfWork<NsVnfInstantiateTask> 
 
 	private ExternalManagedVirtualLink createExmvl(final ExternalPortRecord linkId, final String vimResource) {
 		final ExternalManagedVirtualLink ext = new ExternalManagedVirtualLink();
+		ext.setId(UUID.randomUUID());
 		ext.setResourceId(vimResource);
 		ext.setExtManagedVirtualLinkId(linkId.getVirtualLinkPort());
 		ext.setResourceProviderId("ETSI-MANO-VNFM");
+		ext.setVnfVirtualLinkDescId(linkId.getVirtualLinkPort());
 		ext.setVimId(task.getServer().getId().toString());
 		return ext;
 	}
