@@ -32,7 +32,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.version.jackson.databind>2.13.0</project.version.jackson.databind>
+		<project.version.jackson.databind>2.13.1</project.version.jackson.databind>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -64,7 +64,7 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.7.32</version>
+				<version>1.7.36</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -79,7 +79,7 @@
 			<dependency>
 				<groupId>org.hibernate.validator</groupId>
 				<artifactId>hibernate-validator</artifactId>
-				<version>7.0.1.Final</version>
+				<version>7.0.3.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish</groupId>
@@ -95,7 +95,7 @@
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
-				<version>1.2.7</version>
+				<version>1.2.10</version>
 				<scope>test</scope>
 		</dependency>
 		</dependencies>
@@ -205,9 +205,25 @@
 					<dependency>
 						<groupId>org.junit.jupiter</groupId>
 						<artifactId>junit-jupiter-engine</artifactId>
-						<version>5.8.1</version>
+						<version>5.8.2</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<configuration>
+					<rulesUri>file:///${session.executionRootDirectory}/rules.xml</rulesUri>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>display-dependency-updates</goal>
+							<goal>display-plugin-updates</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>
