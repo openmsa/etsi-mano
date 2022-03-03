@@ -39,6 +39,7 @@ public class Classifier implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	private String toscaName;
 	/**
 	 * Indicates a VLAN identifier in an IEEE 802.1Q-2014 tag [14]. Multiple tags
 	 * can be included for QinQ stacking.
@@ -65,14 +66,14 @@ public class Classifier implements Serializable {
 	/**
 	 * Indicates a range of source ports.
 	 */
-	private int sourcePortRangeMin;
-	private int sourcePortRangeMax;
+	private long sourcePortRangeMin;
+	private long sourcePortRangeMax;
 
 	/**
 	 * Indicates a range of destination ports.
 	 */
-	private int destinationPortRangeMin;
-	private int destinationPortRangeMax;
+	private long destinationPortRangeMin;
+	private long destinationPortRangeMax;
 	/**
 	 * Indicates the source IP address range in CIDR format.
 	 */

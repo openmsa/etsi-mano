@@ -17,7 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,6 +33,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 
 import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
+import com.ubiqube.etsi.mano.dao.mano.nsd.ForwarderMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
 
@@ -79,24 +80,34 @@ public class NsdPackageVnfPackage implements Levelable<VnfScalingStepMapping, Vn
 	@OrderColumn
 	private Set<ListKeyPair> virtualLinks;
 
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<ForwarderMapping> forwardMapping;
+
 	public void addStepMapping(final VnfScalingStepMapping scaling) {
 		if (null == stepMapping) {
-			stepMapping = new HashSet<>();
+			stepMapping = new LinkedHashSet<>();
 		}
 		stepMapping.add(scaling);
 	}
 
 	public void addLevelMapping(final VnfScalingLevelMapping mapping) {
 		if (null == levelMapping) {
-			levelMapping = new HashSet<>();
+			levelMapping = new LinkedHashSet<>();
 		}
 		levelMapping.add(mapping);
 	}
 
 	public void addVirtualLink(final String name) {
 		if (null == virtualLinks) {
-			virtualLinks = new HashSet<>();
+			virtualLinks = new LinkedHashSet<>();
 		}
 		virtualLinks.add(new ListKeyPair(name, virtualLinks.size()));
+	}
+
+	public void addForwardMapping(final ForwarderMapping forwarderMapping) {
+		if (null == forwardMapping) {
+			forwardMapping = new LinkedHashSet<>();
+		}
+		forwardMapping.add(forwarderMapping);
 	}
 }

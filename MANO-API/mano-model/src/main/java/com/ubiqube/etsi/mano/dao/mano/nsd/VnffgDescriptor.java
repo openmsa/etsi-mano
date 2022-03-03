@@ -21,13 +21,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -44,22 +46,28 @@ public class VnffgDescriptor implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
+
 	private String name;
-	@NotNull
-	@Size(min = 1)
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> vnfProfileId;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> pnfProfileId;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> nestedNsProfileId;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> virtualLinkProfileId;
+
 	private String description;
-	private String virtualLinkId;
+
 	@Embedded
 	private Classifier classifier;
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<CpPair> pairs;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<NfpDescriptor> nfpd;
 }

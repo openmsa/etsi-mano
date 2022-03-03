@@ -14,38 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.vim.sfc;
+package com.ubiqube.etsi.mano.orchestrator.nodes.nfvo;
 
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSfcTask;
-import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
-import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 
-public class PortUow implements UnitOfWork<NsSfcTask> {
-
-	@Override
-	public VirtualTask<NsSfcTask> getTask() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String execute(final Context context) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String rollback(final Context context) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Class<? extends Node> getNode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface VnffgPostNode extends Node {
+	//
 }

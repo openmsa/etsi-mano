@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.nfvo.service.plan.contributors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -38,6 +39,8 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.dao.mano.config.ServerType;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
+import com.ubiqube.etsi.mano.dao.mano.nsd.CpPair;
+import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.ExternalPortRecord;
@@ -79,10 +82,29 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 	}
 
 	private static Set<ExternalPortRecord> getNetworks(final VnfPackage vnfPackage) {
-		return vnfPackage.getVnfCompute().stream()
+		final Set<ExternalPortRecord> ret = new HashSet<>();
+		final Set<ExternalPortRecord> n = vnfPackage.getVnfCompute().stream()
 				.flatMap(y -> y.getNetworks().stream())
 				.map(y -> new ExternalPortRecord(y, null))
 				.collect(Collectors.toSet());
+		ret.addAll(n);
+		return ret;
+	}
+
+	private static List<CpPair> getForwarder(final Set<VnffgDescriptor> vnffg) {
+		final Set<ExternalPortRecord> ret = new HashSet<>();
+		vnffg.stream()
+				.flatMap(x -> x.getNfpd().stream())
+				.flatMap(x -> x.getInstancces().stream())
+				.flatMap(x -> x.getPairs().stream()).forEach(x -> {
+					if (null != x.getEgressVl()) {
+						ret.add(new ExternalPortRecord(x.getEgressVl(), null));
+					}
+					if (null != x.getIngressVl()) {
+						ret.add(new ExternalPortRecord(x.getIngressVl(), null));
+					}
+				});
+		return List.of();
 	}
 
 	private List<NsVtBase<NsVnfTask>> doTerminatePlan(final NsdInstance instance) {
@@ -134,7 +156,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 					if (curr > inst) {
 						remove(curr - inst, blueprint.getInstance(), ret);
 					} else if (curr < inst) {
-						add(curr, inst, x, nsPackageVnfPackage, ret);
+						add(curr, inst, x, nsPackageVnfPackage, ret, bundle.nsPackage().getVnffgs());
 					}
 				});
 		return ret;
@@ -155,7 +177,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 		}
 	}
 
-	private void add(final int curr, final int cnt, final VnfPackage vnfPkg, final NsdPackageVnfPackage nsPackageVnfPackage, final List<NsVtBase<NsVnfTask>> ret) {
+	private void add(final int curr, final int cnt, final VnfPackage vnfPkg, final NsdPackageVnfPackage nsPackageVnfPackage, final List<NsVtBase<NsVnfTask>> ret, final Set<VnffgDescriptor> vnffg) {
 		for (int i = curr; i < cnt; i++) {
 			final String newName = getToscaName(nsPackageVnfPackage.getToscaName(), i);
 			LOG.debug("VNF inst Creating: {}", newName);

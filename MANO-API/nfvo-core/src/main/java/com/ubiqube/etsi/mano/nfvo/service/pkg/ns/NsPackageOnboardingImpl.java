@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -42,6 +43,7 @@ import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
+import com.ubiqube.etsi.mano.dao.mano.nsd.ForwarderMapping;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingStepMapping;
@@ -271,10 +273,31 @@ public class NsPackageOnboardingImpl {
 	}
 
 	private static void rebuildConnectivity(final Set<VnffgDescriptor> vnffg, final NsdPackage nsPackage) {
-		vnffg.stream().forEach(x -> {
-			final NsVirtualLink vl = findVl(nsPackage, x.getVirtualLinkId());
-			vl.addVnffg(x.getName());
-			x.getPairs().forEach(y -> assignVnnfg(x.getName(), nsPackage));
+		vnffg.stream().flatMap(x -> x.getNfpd().stream())
+				.flatMap(x -> x.getInstancces().stream())
+				.flatMap(x -> x.getPairs().stream())
+				.forEach(x -> {
+					if (null != x.getEgressVl()) {
+						findVnfMatchingVl(nsPackage, x.getEgress(), x.getEgressVl());
+					}
+					if (null != x.getIngressVl()) {
+						findVnfMatchingVl(nsPackage, x.getIngress(), x.getIngressVl());
+					}
+				});
+		nsPackage.getVnfPkgIds().forEach(x -> {
+			x.getVirtualLinks().stream().filter(y -> Objects.nonNull(y.getValue())).forEach(y -> {
+				y.getValue();// Left_vl
+			});
+		});
+	}
+
+	private static void findVnfMatchingVl(final NsdPackage pack, final String forwardName, final String vlName) {
+		pack.getVnfPkgIds().stream().forEach(x -> {
+			x.getVirtualLinks().stream()
+					.filter(y -> Objects.nonNull(y.getValue()))
+					.filter(y -> y.getValue().equals(forwardName))
+					.findFirst()
+					.ifPresent(y -> x.addForwardMapping(new ForwarderMapping(x.getToscaName(), y.getIdx(), forwardName, vlName)));
 		});
 	}
 

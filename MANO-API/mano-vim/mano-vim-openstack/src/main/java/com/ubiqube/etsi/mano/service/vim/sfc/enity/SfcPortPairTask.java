@@ -14,20 +14,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.common;
-
-import java.io.Serializable;
-import java.util.UUID;
+package com.ubiqube.etsi.mano.service.vim.sfc.enity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
-import com.ubiqube.etsi.mano.utils.ToStringUtil;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -38,24 +31,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-public class ListKeyPair implements Serializable {
+public class SfcPortPairTask extends NsTask {
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
-	private int idx;
-	private String value;
 
-	public ListKeyPair(final String value, final int idx) {
-		this.value = value;
-		this.idx = idx;
-	}
-
-	@Override
-	public String toString() {
-		return ToStringUtil.toString(this);
-	}
-
+	private String egressId;
+	private String ingressId;
 }

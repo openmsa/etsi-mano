@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.common;
+package com.ubiqube.etsi.mano.dao.mano.nsd;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -39,23 +39,33 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ListKeyPair implements Serializable {
+public class ForwarderMapping implements Serializable {
+
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
-	private int idx;
-	private String value;
 
-	public ListKeyPair(final String value, final int idx) {
-		this.value = value;
-		this.idx = idx;
+	private String vduName;
+
+	private String forwardingName;
+
+	private String vlName;
+
+	private int vlId;
+
+	public ForwarderMapping(final String vduName, final int vlId, final String forwardingName, final String vlName) {
+		super();
+		this.vduName = vduName;
+		this.vlId = vlId;
+		this.forwardingName = forwardingName;
+		this.vlName = vlName;
 	}
 
 	@Override
 	public String toString() {
 		return ToStringUtil.toString(this);
 	}
-
 }

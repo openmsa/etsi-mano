@@ -14,61 +14,47 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt;
+package com.ubiqube.etsi.mano.service.vim.sfc.vt;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import com.ubiqube.etsi.mano.dao.mano.nsd.CpPair;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSfcTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnffgPostNode;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 import com.ubiqube.etsi.mano.service.graph.vt.NsVtBase;
+import com.ubiqube.etsi.mano.service.vim.sfc.enity.SfcFlowClassifierTask;
+import com.ubiqube.etsi.mano.service.vim.sfc.node.FlowClassifierNode;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NsVnffgPostVt extends NsVtBase<NsSfcTask> {
+public class SfcFlowClassifierVt extends NsVtBase<SfcFlowClassifierTask> {
 
-	public NsVnffgPostVt(final NsSfcTask nt) {
+	private final SfcFlowClassifierTask task;
+
+	public SfcFlowClassifierVt(final SfcFlowClassifierTask nt) {
 		super(nt);
+		this.task = nt;
 	}
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		final ArrayList<NamedDependency> ret = new ArrayList<>();
-		final NsSfcTask task = getParameters();
-		final List<CpPair> cpPairs = task.getVnffg().getNfpd()
-				.stream()
-				.flatMap(x -> x.getInstancces().stream())
-				.flatMap(x -> x.getPairs().stream())
-				.toList();
-		cpPairs.forEach(x -> {
-			Optional.ofNullable(x.getIngress()).ifPresent(y -> ret.add(new NamedDependency(VnfPortNode.class, y)));
-			Optional.ofNullable(x.getEgress()).ifPresent(y -> ret.add(new NamedDependency(VnfPortNode.class, y)));
-		});
-		// ret.add(new NamedDependency(Network.class,
-		// task.getVnffg().getVirtualLinkId()));
-		return ret;
+		return List.of();
 	}
 
 	@Override
 	public List<NamedDependency> getNamedProduced() {
-		return List.of(new NamedDependency(VnffgPostNode.class, getName()));
+		return List.of(new NamedDependency(FlowClassifierNode.class, task.getToscaName()));
 	}
 
 	@Override
 	public String getFactoryProviderId() {
-		return "SFC";
+		return "SFC-FLOW-CLASSIFIER";
 	}
 
 	@Override
 	public String getVimProviderId() {
-		return "NETWORK";
+		return "OPENSTACK_V3";
 	}
 
 }

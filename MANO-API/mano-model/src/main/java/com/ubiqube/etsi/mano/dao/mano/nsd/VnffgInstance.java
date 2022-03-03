@@ -14,20 +14,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.common;
+package com.ubiqube.etsi.mano.dao.mano.nsd;
 
-import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import com.ubiqube.etsi.mano.utils.ToStringUtil;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -38,20 +40,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-public class ListKeyPair implements Serializable {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
+public class VnffgInstance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
-	private int idx;
-	private String value;
 
-	public ListKeyPair(final String value, final int idx) {
-		this.value = value;
-		this.idx = idx;
-	}
+	private String toscaName;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<CpPair> pairs;
 
 	@Override
 	public String toString() {

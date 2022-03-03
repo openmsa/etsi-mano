@@ -21,7 +21,11 @@ import java.util.UUID;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.ubiqube.etsi.mano.utils.ToStringUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,9 +41,19 @@ import lombok.Setter;
 @Setter
 public class CpPair implements Serializable {
 	/** Serial. */
-	@Id
-	private UUID id;
 	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
+	private String toscaName;
 	private String ingress;
+	private String ingressVl;
 	private String egress;
+	private String egressVl;
+
+	@Override
+	public String toString() {
+		return ToStringUtil.toString(this);
+	}
+
 }
