@@ -16,38 +16,30 @@
  */
 package com.ubiqube.parser.tosca;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.junit.jupiter.api.Test;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.ubiqube.parser.tosca.api.ContextResolver;
+import com.ubiqube.parser.tosca.api.ToscaApi;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Getter
-@Setter
-public class TopologyTemplate {
+public class SubstitutionMappingTest {
 
-	private Map<String, InputBean> inputs = new HashMap<>();
-	@JsonProperty("node_templates")
-	private Map<String, NodeTemplate> nodeTemplate = new HashMap<>();
-	private Map<String, GroupDefinition> groups = new HashMap<>();
-	@JsonProperty("substitution_mappings")
-	private SubstitutionMapping substitutionMapping;
-
-	@Override
-	public String toString() {
-		return "TopologyTemplate [inputs=" + inputs + ", nodeTemplate=" + nodeTemplate + "]";
+	@Test
+	void testSubstitutionMapping() throws Exception {
+		final ToscaParser tp = new ToscaParser(new File("src/test/resources/substitution-mapping.yml"));
+		final ToscaContext root = tp.getContext();
+		assertNotNull(root);
+		ToscaApi.getObjects(root, new HashMap<>(), String.class);
+		final ContextResolver ctx = new ContextResolver(root, new HashMap<String, String>());
+		ctx.resolvValue("");
 	}
-
-	public void putAll(final TopologyTemplate topologyTemplate) {
-		nodeTemplate.putAll(topologyTemplate.getNodeTemplate());
-		groups.putAll(topologyTemplate.getGroups());
-	}
-
 }

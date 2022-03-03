@@ -16,38 +16,26 @@
  */
 package com.ubiqube.parser.tosca;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 3.8.11 Requirement mapping
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Getter
 @Setter
-public class TopologyTemplate {
+//@JsonDeserialize(using = RequirementMappingDeserializer.class)
+public class RequirementMapping {
+	// mapping: [ <node_template_name>, <node_template_requirement_name> ]
+	private List<String> mapping;
 
-	private Map<String, InputBean> inputs = new HashMap<>();
-	@JsonProperty("node_templates")
-	private Map<String, NodeTemplate> nodeTemplate = new HashMap<>();
-	private Map<String, GroupDefinition> groups = new HashMap<>();
-	@JsonProperty("substitution_mappings")
-	private SubstitutionMapping substitutionMapping;
+	private Map<String, Object> properties;
 
-	@Override
-	public String toString() {
-		return "TopologyTemplate [inputs=" + inputs + ", nodeTemplate=" + nodeTemplate + "]";
-	}
-
-	public void putAll(final TopologyTemplate topologyTemplate) {
-		nodeTemplate.putAll(topologyTemplate.getNodeTemplate());
-		groups.putAll(topologyTemplate.getGroups());
-	}
-
+	private Map<String, Object> attributes;
 }

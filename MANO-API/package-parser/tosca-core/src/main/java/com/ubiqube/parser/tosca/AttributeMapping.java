@@ -16,10 +16,7 @@
  */
 package com.ubiqube.parser.tosca;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,25 +26,9 @@ import lombok.Setter;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Getter
 @Setter
-public class TopologyTemplate {
+@Getter
+public class AttributeMapping {
 
-	private Map<String, InputBean> inputs = new HashMap<>();
-	@JsonProperty("node_templates")
-	private Map<String, NodeTemplate> nodeTemplate = new HashMap<>();
-	private Map<String, GroupDefinition> groups = new HashMap<>();
-	@JsonProperty("substitution_mappings")
-	private SubstitutionMapping substitutionMapping;
-
-	@Override
-	public String toString() {
-		return "TopologyTemplate [inputs=" + inputs + ", nodeTemplate=" + nodeTemplate + "]";
-	}
-
-	public void putAll(final TopologyTemplate topologyTemplate) {
-		nodeTemplate.putAll(topologyTemplate.getNodeTemplate());
-		groups.putAll(topologyTemplate.getGroups());
-	}
-
+	private List<String> mapping;
 }
