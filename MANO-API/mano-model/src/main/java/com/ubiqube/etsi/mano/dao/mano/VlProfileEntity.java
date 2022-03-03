@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -28,9 +27,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @EntityListeners(AuditListener.class)
+@Getter
+@Setter
 public class VlProfileEntity implements Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -39,7 +49,7 @@ public class VlProfileEntity implements Auditable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@Embedded
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Qos qos;
 
 	private Integer linkBitrateRoot;
@@ -54,71 +64,5 @@ public class VlProfileEntity implements Auditable {
 	private Integer maxBitrateRequirementsLeaf;
 
 	private Audit audit;
-
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(final UUID id) {
-		this.id = id;
-	}
-
-	public Qos getQos() {
-		return qos;
-	}
-
-	public void setQos(final Qos qos) {
-		this.qos = qos;
-	}
-
-	public Set<VlProtocolData> getVirtualLinkProtocolData() {
-		return virtualLinkProtocolData;
-	}
-
-	public void setVirtualLinkProtocolData(final Set<VlProtocolData> virtualLinkProtocolData) {
-		this.virtualLinkProtocolData = virtualLinkProtocolData;
-	}
-
-	public Integer getLinkBitrateRoot() {
-		return linkBitrateRoot;
-	}
-
-	public void setLinkBitrateRoot(final Integer linkBitrateRoot) {
-		this.linkBitrateRoot = linkBitrateRoot;
-	}
-
-	public Integer getLinkBitrateLeaf() {
-		return linkBitrateLeaf;
-	}
-
-	public void setLinkBitrateLeaf(final Integer linkBitrateLeaf) {
-		this.linkBitrateLeaf = linkBitrateLeaf;
-	}
-
-	public Integer getMaxBitrateRequirementsRoot() {
-		return maxBitrateRequirementsRoot;
-	}
-
-	public void setMaxBitrateRequirementsRoot(final Integer maxBitrateRequirementsRoot) {
-		this.maxBitrateRequirementsRoot = maxBitrateRequirementsRoot;
-	}
-
-	public Integer getMaxBitrateRequirementsLeaf() {
-		return maxBitrateRequirementsLeaf;
-	}
-
-	public void setMaxBitrateRequirementsLeaf(final Integer maxBitrateRequirementsLeaf) {
-		this.maxBitrateRequirementsLeaf = maxBitrateRequirementsLeaf;
-	}
-
-	@Override
-	public Audit getAudit() {
-		return audit;
-	}
-
-	@Override
-	public void setAudit(final Audit audit) {
-		this.audit = audit;
-	}
 
 }

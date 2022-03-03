@@ -17,39 +17,36 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
+import java.util.UUID;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Entity
+@Getter
+@Setter
 public class Qos implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private long latency;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
 
-	private long packetLossRatio;
+	private Long latency;
 
-	private long packetDelayVariation;
+	private Long packetLossRatio;
 
-	public long getLatency() {
-		return latency;
-	}
-
-	public void setLatency(final long latency) {
-		this.latency = latency;
-	}
-
-	public long getPacketLossRatio() {
-		return packetLossRatio;
-	}
-
-	public void setPacketLossRatio(final long packetLossRatio) {
-		this.packetLossRatio = packetLossRatio;
-	}
-
-	public long getPacketDelayVariation() {
-		return packetDelayVariation;
-	}
-
-	public void setPacketDelayVariation(final long packetDelayVariation) {
-		this.packetDelayVariation = packetDelayVariation;
-	}
+	private Long packetDelayVariation;
 
 }

@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -28,6 +27,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -49,7 +49,7 @@ public class NsVlProfile implements BaseEntity, Auditable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@Embedded
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Qos qos;
 
 	private Integer linkBitrateRoot;
