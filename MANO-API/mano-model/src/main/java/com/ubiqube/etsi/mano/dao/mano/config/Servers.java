@@ -62,7 +62,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditListener.class)
-public class Servers implements Auditable, Serializable {
+public class Servers implements Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
