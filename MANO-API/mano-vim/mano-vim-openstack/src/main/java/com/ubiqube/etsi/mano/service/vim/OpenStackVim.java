@@ -40,6 +40,7 @@ import javax.validation.constraints.Null;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
+import org.openstack4j.core.transport.Config;
 import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Extension;
 import org.openstack4j.model.common.Identifier;
@@ -110,9 +111,14 @@ public class OpenStackVim implements Vim {
 		} else {
 			base.credentials(ai.get("username"), ai.get("password"));
 		}
+		final Config conf = Config.newConfig();
 		if ("true".equals(ii.get("non-strict-ssl"))) {
-			base.useNonStrictSSLClient(true);
+			conf.withSSLVerificationDisabled();
 		}
+		if (null != ii.get("nat-ip")) {
+			conf.withEndpointNATResolution(ii.get("nat-ip"));
+		}
+		base.withConfig(conf);
 		final String project = ai.get("project");
 		final String projectId = ai.get("projectId");
 		if (null != project) {
