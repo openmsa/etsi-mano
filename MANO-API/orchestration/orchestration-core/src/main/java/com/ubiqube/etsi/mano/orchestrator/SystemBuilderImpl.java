@@ -64,7 +64,11 @@ public class SystemBuilderImpl<U> implements SystemBuilder<U> {
 		return single;
 	}
 
+	@Override
 	public List<UnitOfWork<U>> getVertex() {
+		if (null != single) {
+			return Arrays.asList(single);
+		}
 		return g.vertexSet().stream().toList();
 	}
 
