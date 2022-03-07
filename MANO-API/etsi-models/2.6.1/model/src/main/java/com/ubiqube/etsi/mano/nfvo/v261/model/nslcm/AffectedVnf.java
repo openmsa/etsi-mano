@@ -30,14 +30,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-
 /**
  * This type provides information about added, deleted and modified VNFs. It
  * shall comply with the provisions in Table 6.5.3.2-1.
  */
 @Schema(description = "This type provides information about added, deleted and modified VNFs.  It shall comply with the provisions in Table 6.5.3.2-1. ")
 @Validated
-
 
 public class AffectedVnf {
 	@JsonProperty("vnfInstanceId")
@@ -110,8 +108,6 @@ public class AffectedVnf {
 	 */
 	public enum ChangeResultEnum {
 		COMPLETED("COMPLETED"),
-		SUCCESS("SUCCESS"),
-		NOT_STARTED("NOT_STARTED"),
 		ROLLED_BACK("ROLLED_BACK"),
 
 		FAILED("FAILED");
