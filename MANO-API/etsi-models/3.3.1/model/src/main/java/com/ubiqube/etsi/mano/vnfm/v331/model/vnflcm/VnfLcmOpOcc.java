@@ -19,7 +19,6 @@ package com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -32,7 +31,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type represents a VNF lifecycle management operation occurrence. Shall be set to the value of the \&quot;id\&quot; attribute in the \&quot;Grant\&quot; representing the associated \&quot;Individual Grant\&quot;, if such grant exists.
+ * This type represents a VNF lifecycle management operation occurrence. Shall
+ * be set to the value of the \&quot;id\&quot; attribute in the
+ * \&quot;Grant\&quot; representing the associated \&quot;Individual
+ * Grant\&quot;, if such grant exists.
  */
 @Schema(description = "This type represents a VNF lifecycle management operation occurrence. Shall be set to the value of the \"id\" attribute in the \"Grant\" representing the associated \"Individual Grant\", if such grant exists. ")
 @Validated
@@ -63,7 +65,7 @@ public class VnfLcmOpOcc implements OneOfVnfLcmOpOcc {
 	private Boolean isAutomaticInvocation = null;
 
 	@JsonProperty("operationParams")
-	private Map<String, String> operationParams = null;
+	private Object operationParams = null;
 
 	@JsonProperty("isCancelPending")
 	private Boolean isCancelPending = null;
@@ -264,24 +266,32 @@ public class VnfLcmOpOcc implements OneOfVnfLcmOpOcc {
 		this.isAutomaticInvocation = isAutomaticInvocation;
 	}
 
-	public VnfLcmOpOcc operationParams(final Map<String, String> operationParams) {
+	public VnfLcmOpOcc operationParams(final Object operationParams) {
 		this.operationParams = operationParams;
 		return this;
 	}
 
 	/**
-	 * Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between operationType and the data type of this attribute shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR: ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE:
-	 * TerminateVnfRequest * MODIFY_INFO: VnfInfoModifications * CREATE_SNAPSHOT: CreateVnfSnapshotRequest * REVERT_TO_SNAPSHOT: RevertToVnfSnapshotRequest * CHANGE_VNFPKG: ChangeCurrentVnfPkgRequest
+	 * Input parameters of the LCM operation. This attribute shall be formatted
+	 * according to the request data type of the related LCM operation. The
+	 * following mapping between operationType and the data type of this attribute
+	 * shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest *
+	 * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR:
+	 * ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest *
+	 * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE:
+	 * TerminateVnfRequest * MODIFY_INFO: VnfInfoModifications * CREATE_SNAPSHOT:
+	 * CreateVnfSnapshotRequest * REVERT_TO_SNAPSHOT: RevertToVnfSnapshotRequest *
+	 * CHANGE_VNFPKG: ChangeCurrentVnfPkgRequest
 	 *
 	 * @return operationParams
 	 **/
 	@Schema(description = "Input parameters of the LCM operation. This attribute shall be formatted according to the request data type of the related LCM operation. The following mapping between operationType and the data type of this attribute shall apply: * INSTANTIATE: InstantiateVnfRequest * SCALE: ScaleVnfRequest * SCALE_TO_LEVEL: ScaleVnfToLevelRequest * CHANGE_FLAVOUR: ChangeVnfFlavourRequest * OPERATE: OperateVnfRequest * HEAL: HealVnfRequest * CHANGE_EXT_CONN: ChangeExtVnfConnectivityRequest * TERMINATE: TerminateVnfRequest * MODIFY_INFO: VnfInfoModifications * CREATE_SNAPSHOT: CreateVnfSnapshotRequest * REVERT_TO_SNAPSHOT: RevertToVnfSnapshotRequest * CHANGE_VNFPKG: ChangeCurrentVnfPkgRequest ")
 
-	public Map<String, String> getOperationParams() {
+	public Object getOperationParams() {
 		return operationParams;
 	}
 
-	public void setOperationParams(final Map<String, String> operationParams) {
+	public void setOperationParams(final Object operationParams) {
 		this.operationParams = operationParams;
 	}
 
@@ -404,7 +414,10 @@ public class VnfLcmOpOcc implements OneOfVnfLcmOpOcc {
 	}
 
 	/**
-	 * Information about changed external connectivity, if applicable. This allows the NFVO to obtain the information contained in the latest \"result\" notification if it has not received it due to an error or a wrongly configured subscription filter.
+	 * Information about changed external connectivity, if applicable. This allows
+	 * the NFVO to obtain the information contained in the latest \"result\"
+	 * notification if it has not received it due to an error or a wrongly
+	 * configured subscription filter.
 	 *
 	 * @return changedExtConnectivity
 	 **/
@@ -542,7 +555,8 @@ public class VnfLcmOpOcc implements OneOfVnfLcmOpOcc {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {
