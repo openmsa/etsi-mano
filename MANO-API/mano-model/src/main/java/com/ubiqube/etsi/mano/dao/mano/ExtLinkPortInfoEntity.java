@@ -43,13 +43,21 @@ public class ExtLinkPortInfoEntity implements BaseEntity, Auditable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id = null;
+	private UUID id;
 
 	@Embedded
 	private Audit audit;
 
+	/**
+	 * Reference to the virtualised resource realizing this link port.
+	 */
 	@Embedded
-	private VimResource resourceHandle = null;
+	private VimResource resourceHandle;
 
-	private String cpInstanceId = null;
+	/**
+	 * Identifier of the external CP of the VNF connected to this link port. There
+	 * shall be at most one link port associated with any external connection point
+	 * instance. The value refers to an "extCpInfo" item in the VnfInstance.
+	 */
+	private String cpInstanceId;
 }

@@ -49,14 +49,6 @@ public class VnfLcmResourceChanges implements Serializable {
 
 	private Set<VnfInstantiatedDnsZone> dnsZones;
 
-	public Set<VnfInstantiatedCompute> getAffectedVnfcs() {
-		return affectedVnfcs;
-	}
-
-	public void setAffectedVnfcs(final Set<VnfInstantiatedCompute> affectedVnfcs) {
-		this.affectedVnfcs = affectedVnfcs;
-	}
-
 	public void addAffectedVnfcs(final VnfInstantiatedCompute affectedCompute) {
 		if (null == affectedVnfcs) {
 			affectedVnfcs = new HashSet<>();

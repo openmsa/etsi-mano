@@ -34,6 +34,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * This type represents information about an external VL. It shall comply with
+ * the provisions defined in table 5.5.3.2-1.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
@@ -53,13 +55,24 @@ public class ExtVirtualLinkInfoEntity implements BaseEntity, Auditable {
 	@Embedded
 	private Audit audit;
 
+	/**
+	 * Reference to the resource realizing this VL.
+	 */
 	@Embedded
-	private VimResource resourceHandle = null;
+	private VimResource resourceHandle;
 
+	/**
+	 * Link ports of this VL.
+	 */
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	private Set<ExtLinkPortInfoEntity> extLinkPorts = null;
+	private Set<ExtLinkPortInfoEntity> extLinkPorts;
 
-	// 3.3.1
+	/**
+	 * Allows the API consumer to read the current CP configuration information for
+	 * the connection of external CPs to the external virtual link.
+	 *
+	 * @Since 3.3.1
+	 */
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private Set<VnfExtCpDataEntity> currentVnfExtCpData = new LinkedHashSet<>();
 }
