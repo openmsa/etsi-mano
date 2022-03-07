@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkInfoEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.VimResource;
 import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
@@ -84,8 +85,26 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		extractVl(vnfInfo, vli);
 		extractExtVl(vnfInfo, vli);
 		extractMonitoring(vnfInfo, vli);
+		extractExtVirtualLinkInfo(vnfInfo, vli);
 		inst.setInstantiationState(isLive(id));
 		return inst;
+	}
+
+	private void extractExtVirtualLinkInfo(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
+		final List<VnfLiveInstance> vli = vliAll.stream().filter(x -> x.getTask() instanceof VnfPortTask).toList();
+		final Set<ExtVirtualLinkInfoEntity> obj = vli.stream().map(x -> {
+			final VnfPortTask vpt = (VnfPortTask) x.getTask();
+			final ExtVirtualLinkInfoEntity elie = new ExtVirtualLinkInfoEntity();
+			elie.setId(x.getId());
+			final VimResource handle = new VimResource();
+			handle.setResourceId(x.getResourceId());
+			handle.setResourceProviderId(vpt.getResourceProviderId());
+			handle.setVimConnectionId(x.getVimConnectionId());
+			handle.setVimLevelResourceType(null);
+			elie.setResourceHandle(handle);
+			return elie;
+		}).collect(Collectors.toSet());
+		vnfInfo.setExtVirtualLinkInfo(obj);
 	}
 
 	private void extractMonitoring(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
@@ -160,7 +179,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 			final ExtCpInfo ret = new ExtCpInfo();
 			ret.setId(x.getId());
 			ret.setAssociatedVnfcCpId(null); // This is one
-			ret.setAssociatedVnfVirtualLinkId(vlp.getToscaName());
+			ret.setAssociatedVnfVirtualLinkId(getPort(portVli, vlp.getToscaName()));
 			ret.setCpConfigId(null);
 			ret.setCpdId(vlp.getVirtualLink());
 			ret.setCpProtocolInfo(null);
@@ -168,6 +187,14 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 			return ret;
 		}).collect(Collectors.toSet());
 		vnfInfo.setExtCpInfo(extCp);
+	}
+
+	private String getPort(final List<VnfLiveInstance> portVli, final String toscaName) {
+		return portVli.stream()
+				.filter(x -> toscaName.equals(((VnfPortTask) x.getTask()).getVnfLinkPort().getToscaName()))
+				.findFirst()
+				.map(x -> x.getId().toString())
+				.orElse(null);
 	}
 
 	private void extractCompute(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vli) {
