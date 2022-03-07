@@ -35,6 +35,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
@@ -50,6 +51,7 @@ import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
+import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmResourceChanges;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.dao.mano.vnfm.RejectedLcmCoordination;
 import com.ubiqube.etsi.mano.dao.mano.vnfm.VnfLcmCoordination;
@@ -112,6 +114,15 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
+
+	/**
+	 * Only for views and mapping.
+	 */
+	@Transient
+	private transient Object operationParams;
+
+	@Transient
+	private transient VnfLcmResourceChanges resourceChanges;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private ChangeExtVnfConnRequest changeExtVnfConnRequest;

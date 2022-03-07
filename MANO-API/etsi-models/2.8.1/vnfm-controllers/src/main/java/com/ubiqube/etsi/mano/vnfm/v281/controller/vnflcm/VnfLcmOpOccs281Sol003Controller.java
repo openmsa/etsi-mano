@@ -23,23 +23,15 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
-import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVirtualLink;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVirtualStorage;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVnfc;
+import com.ubiqube.etsi.mano.em.v281.controller.vnflcm.VnfLcmClassMaping281;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfLcmOpOccLinks;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfLcmOpOccResourceChanges;
 import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfLcmOpOccGenericFrontController;
-
-import ma.glasnost.orika.MapperFacade;
 
 /**
  *
@@ -50,12 +42,9 @@ import ma.glasnost.orika.MapperFacade;
 public class VnfLcmOpOccs281Sol003Controller implements VnfLcmOpOccs281Sol003Api {
 	private final VnfLcmOpOccGenericFrontController frontController;
 
-	private final MapperFacade mapper;
-
-	public VnfLcmOpOccs281Sol003Controller(final VnfLcmOpOccGenericFrontController frontController, final MapperFacade _mapper) {
+	public VnfLcmOpOccs281Sol003Controller(final VnfLcmOpOccGenericFrontController frontController) {
 		super();
 		this.frontController = frontController;
-		mapper = _mapper;
 	}
 
 	@Override
@@ -75,24 +64,12 @@ public class VnfLcmOpOccs281Sol003Controller implements VnfLcmOpOccs281Sol003Api
 
 	@Override
 	public ResponseEntity<VnfLcmOpOcc> vnfLcmOpOccsVnfLcmOpOccIdGet(final String vnfLcmOpOccId) {
-		final VnfBlueprint resultDb = frontController.lcmOpOccFindById(UUID.fromString(vnfLcmOpOccId));
-		final VnfLcmOpOcc entity = mapper.map(resultDb, VnfLcmOpOcc.class);
-		final VnfLcmOpOccResourceChanges resourceChanged = new VnfLcmOpOccResourceChanges();
-		resultDb.getTasks().stream()
-				.filter(x -> x.getType() == ResourceTypeEnum.VL)
-				.map(x -> mapper.map(x, AffectedVirtualLink.class))
-				.forEach(resourceChanged::addAffectedVirtualLinksItem);
-		resultDb.getTasks().stream()
-				.filter(x -> x.getType() == ResourceTypeEnum.STORAGE)
-				.map(x -> mapper.map(x, AffectedVirtualStorage.class))
-				.forEach(resourceChanged::addAffectedVirtualStoragesItem);
-		resultDb.getTasks().stream()
-				.filter(x -> x.getType() == ResourceTypeEnum.COMPUTE)
-				.map(x -> mapper.map(x, AffectedVnfc.class))
-				.forEach(resourceChanged::addAffectedVnfcsItem);
-		entity.setResourceChanges(resourceChanged);
-		makeLinks(entity);
-		return new ResponseEntity<>(entity, HttpStatus.OK);
+		return frontController.lcmOpOccFindById(new VnfLcmClassMaping281(), UUID.fromString(vnfLcmOpOccId), VnfLcmOpOcc.class,
+				VnfLcmOpOccs281Sol003Controller::makeLinks, VnfLcmOpOccs281Sol003Controller::setOperationParams);
+	}
+
+	private static void setOperationParams(final VnfLcmOpOcc lcmOpOcc, final Object obj) {
+		lcmOpOcc.setOperationParams(obj);
 	}
 
 	@Override
