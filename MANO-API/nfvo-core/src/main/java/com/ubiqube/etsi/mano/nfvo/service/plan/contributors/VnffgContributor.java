@@ -71,7 +71,7 @@ public class VnffgContributor extends AbstractNsContributor<NsSfcTask, NsVtBase<
 
 	private List<NsVtBase<NsSfcTask>> doTerminatePlan(final NsBlueprint blueprint) {
 		// TODO Auto-generated method stub
-		return null;
+		return List.of();
 	}
 
 }

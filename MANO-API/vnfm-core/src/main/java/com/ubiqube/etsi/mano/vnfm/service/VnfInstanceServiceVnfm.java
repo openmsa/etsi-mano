@@ -90,7 +90,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		return inst;
 	}
 
-	private void extractExtVirtualLinkInfo(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
+	private static void extractExtVirtualLinkInfo(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
 		final List<VnfLiveInstance> vli = vliAll.stream().filter(x -> x.getTask() instanceof VnfPortTask).toList();
 		final Set<ExtVirtualLinkInfoEntity> obj = vli.stream().map(x -> {
 			final VnfPortTask vpt = (VnfPortTask) x.getTask();
@@ -107,7 +107,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		vnfInfo.setExtVirtualLinkInfo(obj);
 	}
 
-	private void extractMonitoring(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
+	private static void extractMonitoring(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
 		final List<VnfLiveInstance> vli = vliAll.stream().filter(x -> x.getTask() instanceof MonitoringTask).toList();
 		final Set<VnfMonitoringParameter> obj = vli.stream().map(x -> {
 			final VnfMonitoringParameter mon = new VnfMonitoringParameter();
@@ -120,7 +120,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		vnfInfo.setVnfMonitoringParameter(obj);
 	}
 
-	private void extractExtVl(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
+	private static void extractExtVl(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
 		final List<VnfLiveInstance> vli = vliAll.stream().filter(x -> x.getTask() instanceof ExternalCpTask).toList();
 		final Set<ExtManagedVirtualLinkDataEntity> obj = vli.stream().map(x -> {
 			final ExtManagedVirtualLinkDataEntity ret = new ExtManagedVirtualLinkDataEntity();
@@ -133,7 +133,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		vnfInfo.setExtManagedVirtualLinks(obj);
 	}
 
-	private void extractVl(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
+	private static void extractVl(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
 		final List<VnfLiveInstance> vli = vliAll.stream().filter(x -> x.getTask() instanceof NetworkTask).toList();
 		final Set<VirtualLinkInfo> obj = vli.stream().map(x -> {
 			final NetworkTask nt = (NetworkTask) x.getTask();
@@ -152,7 +152,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		vnfInfo.setVirtualLinkResourceInfo(obj);
 	}
 
-	private void extractStorage(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vli) {
+	private static void extractStorage(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vli) {
 		final List<VnfLiveInstance> storageVli = vli.stream().filter(x -> x.getTask() instanceof StorageTask).toList();
 		final Set<VirtualStorageResourceInfo> storages = storageVli.stream().map(x -> {
 			final VirtualStorageResourceInfo ret = new VirtualStorageResourceInfo();
@@ -171,7 +171,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		vnfInfo.setVirtualStorageResourceInfo(storages);
 	}
 
-	private void extractExtCp(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vli) {
+	private static void extractExtCp(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vli) {
 		final List<VnfLiveInstance> portVli = vli.stream().filter(x -> x.getTask() instanceof VnfPortTask).toList();
 		final Set<ExtCpInfo> extCp = portVli.stream().map(x -> {
 			final VnfPortTask vpt = (VnfPortTask) x.getTask();
@@ -189,7 +189,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		vnfInfo.setExtCpInfo(extCp);
 	}
 
-	private String getPort(final List<VnfLiveInstance> portVli, final String toscaName) {
+	private static String getPort(final List<VnfLiveInstance> portVli, final String toscaName) {
 		return portVli.stream()
 				.filter(x -> toscaName.equals(((VnfPortTask) x.getTask()).getVnfLinkPort().getToscaName()))
 				.findFirst()
@@ -236,7 +236,7 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 				.collect(Collectors.toSet());
 	}
 
-	private VnfLiveInstance findPort(final List<VnfLiveInstance> vli, final String livePortName) {
+	private static VnfLiveInstance findPort(final List<VnfLiveInstance> vli, final String livePortName) {
 		return vli.stream().filter(x -> x.getTask().getToscaName().equals(livePortName)).findFirst().orElseThrow();
 	}
 
