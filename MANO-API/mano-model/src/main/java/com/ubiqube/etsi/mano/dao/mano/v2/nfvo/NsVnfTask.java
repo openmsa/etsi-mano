@@ -74,6 +74,8 @@ public class NsVnfTask extends NsTask {
 
 	private String localizationLanguage;
 
+	private UUID nsdId;
+
 	@Override
 	public UUID getId() {
 		return id;
