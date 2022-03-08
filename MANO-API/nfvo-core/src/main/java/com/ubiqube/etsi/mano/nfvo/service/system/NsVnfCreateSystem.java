@@ -19,12 +19,18 @@ package com.ubiqube.etsi.mano.nfvo.service.system;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfInstantiateTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.VnfContextExtractorTask;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
+import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfContextExtractorUow;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfCreateUow;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfInstantiateUow;
 import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsInstantiateVt;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.VnfContextExtractorVt;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
@@ -40,10 +46,12 @@ import com.ubiqube.etsi.mano.service.vim.VimManager;
 @Service
 public class NsVnfCreateSystem extends AbstractVimSystem<NsVnfTask> {
 	private final VnfmInterface vnfm;
+	private final NsdPackageJpa nsdPackageJpa;
 
-	public NsVnfCreateSystem(final VnfmInterface vnfm, final VimManager vimManager) {
+	public NsVnfCreateSystem(final VnfmInterface vnfm, final VimManager vimManager, final NsdPackageJpa nsdPackageJpa) {
 		super(vimManager);
 		this.vnfm = vnfm;
+		this.nsdPackageJpa = nsdPackageJpa;
 	}
 
 	@Override
@@ -71,7 +79,15 @@ public class NsVnfCreateSystem extends AbstractVimSystem<NsVnfTask> {
 			nt.setVirtualLinks(p.getNsPackageVnfPackage().getVirtualLinks());
 		}
 		final SystemBuilder s = orchestrationService.createEmptySystemBuilder();
-		s.add(new VnfCreateUow(virtualTask, vnfm), new VnfInstantiateUow(new NsInstantiateVt(nt), vnfm));
+		final VnfInstantiateUow instantiateUow = new VnfInstantiateUow(new NsInstantiateVt(nt), vnfm);
+		s.add(new VnfCreateUow(virtualTask, vnfm), instantiateUow);
+		final VnfContextExtractorTask contextTask = new VnfContextExtractorTask();
+		final NsdPackage pack = nsdPackageJpa.findById(p.getNsdId()).orElseThrow(() -> new GenericException("Unable to find package [" + p.getNsdId() + "]"));
+		contextTask.setToscaName(p.getToscaName());
+		contextTask.setAlias("ext-" + p.getToscaName());
+		contextTask.setVnfdId(p.getVnfdId());
+		contextTask.setNsdPackage(pack);
+		s.add(instantiateUow, new VnfContextExtractorUow(new VnfContextExtractorVt(contextTask), vnfm, pack));
 		return s;
 	}
 
