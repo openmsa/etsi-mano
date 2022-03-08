@@ -17,288 +17,311 @@
 package com.ubiqube.etsi.mano.vnfm.v351.model.grant;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.vnfm.v351.model.grant.ResourceHandle;
-import com.ubiqube.etsi.mano.vnfm.v351.model.grant.SnapshotResourceDefinition;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.ResourceHandle;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type provides information of an existing or proposed resource used by the VNF.  It shall comply with the provisions defined in table 9.5.3.2-1. NOTE 1: The use cases UC#4 and UC#5 in Annex A.4 of ETSI GS NFV-IFA 007 provide examples           for such a configuration. NOTE 2: In the context of an operation that changes the current VNF package, the following applies: If this           ResourceDefinition is related to a resource to be created or modified, the \&quot;vnfdId\&quot; attribute shall           contain the identifier of the destination VNFD. If this ResourceDefinition is related to a resource           to be deleted, the \&quot;vnfdId\&quot; attribute shall contain the identifier of the source VNFD. If this           ResourceDefinition is related to a temporary resource, the \&quot;vnfdId\&quot; attribute shall contain the           identifier of either the source VNFD or the destination VNFD. 
+ * This type provides information of an existing or proposed resource used by
+ * the VNF. It shall comply with the provisions defined in table 9.5.3.2-1. NOTE
+ * 1: The use cases UC#4 and UC#5 in Annex A.4 of ETSI GS NFV-IFA 007 provide
+ * examples for such a configuration. NOTE 2: In the context of an operation
+ * that changes the current VNF package, the following applies: If this
+ * ResourceDefinition is related to a resource to be created or modified, the
+ * \&quot;vnfdId\&quot; attribute shall contain the identifier of the
+ * destination VNFD. If this ResourceDefinition is related to a resource to be
+ * deleted, the \&quot;vnfdId\&quot; attribute shall contain the identifier of
+ * the source VNFD. If this ResourceDefinition is related to a temporary
+ * resource, the \&quot;vnfdId\&quot; attribute shall contain the identifier of
+ * either the source VNFD or the destination VNFD.
  */
 @Schema(description = "This type provides information of an existing or proposed resource used by the VNF.  It shall comply with the provisions defined in table 9.5.3.2-1. NOTE 1: The use cases UC#4 and UC#5 in Annex A.4 of ETSI GS NFV-IFA 007 provide examples           for such a configuration. NOTE 2: In the context of an operation that changes the current VNF package, the following applies: If this           ResourceDefinition is related to a resource to be created or modified, the \"vnfdId\" attribute shall           contain the identifier of the destination VNFD. If this ResourceDefinition is related to a resource           to be deleted, the \"vnfdId\" attribute shall contain the identifier of the source VNFD. If this           ResourceDefinition is related to a temporary resource, the \"vnfdId\" attribute shall contain the           identifier of either the source VNFD or the destination VNFD. ")
 @Validated
 
+public class ResourceDefinition {
+	@JsonProperty("id")
+	private String id = null;
 
-public class ResourceDefinition   {
-  @JsonProperty("id")
-  private String id = null;
+	/**
+	 * Type of the resource definition referenced. Permitted values: * COMPUTE * VL
+	 * * STORAGE * LINKPORT
+	 */
+	public enum TypeEnum {
+		COMPUTE("COMPUTE"),
 
-  /**
-   * Type of the resource definition referenced. Permitted values: * COMPUTE * VL * STORAGE * LINKPORT 
-   */
-  public enum TypeEnum {
-    COMPUTE("COMPUTE"),
-    
-    VL("VL"),
-    
-    STORAGE("STORAGE"),
-    
-    LINKPORT("LINKPORT");
+		VL("VL"),
 
-    private String value;
+		STORAGE("STORAGE"),
 
-    TypeEnum(String value) {
-      this.value = value;
-    }
+		LINKPORT("LINKPORT");
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		private final String value;
 
-    @JsonCreator
-    public static TypeEnum fromValue(String text) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("type")
-  private TypeEnum type = null;
+		TypeEnum(final String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("vduId")
-  private String vduId = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("vnfdId")
-  private String vnfdId = null;
+		@JsonCreator
+		public static TypeEnum fromValue(final String text) {
+			for (final TypeEnum b : TypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("resourceTemplateId")
-  private String resourceTemplateId = null;
+	@JsonProperty("type")
+	private TypeEnum type = null;
 
-  @JsonProperty("secondaryResourceTemplateId")
-  private String secondaryResourceTemplateId = null;
+	@JsonProperty("vduId")
+	private String vduId = null;
 
-  @JsonProperty("resource")
-  private ResourceHandle resource = null;
+	@JsonProperty("vnfdId")
+	private String vnfdId = null;
 
-  @JsonProperty("snapshotResDef")
-  private SnapshotResourceDefinition snapshotResDef = null;
+	@JsonProperty("resourceTemplateId")
+	private String resourceTemplateId = null;
 
-  public ResourceDefinition id(String id) {
-    this.id = id;
-    return this;
-  }
+	@JsonProperty("secondaryResourceTemplateId")
+	private String secondaryResourceTemplateId = null;
 
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	@JsonProperty("resource")
+	private ResourceHandle resource = null;
 
-    public String getId() {
-    return id;
-  }
+	@JsonProperty("snapshotResDef")
+	private SnapshotResourceDefinition snapshotResDef = null;
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public ResourceDefinition id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  public ResourceDefinition type(TypeEnum type) {
-    this.type = type;
-    return this;
-  }
+	/**
+	 * Get id
+	 *
+	 * @return id
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Type of the resource definition referenced. Permitted values: * COMPUTE * VL * STORAGE * LINKPORT 
-   * @return type
-   **/
-  @Schema(required = true, description = "Type of the resource definition referenced. Permitted values: * COMPUTE * VL * STORAGE * LINKPORT ")
-      @NotNull
+	public String getId() {
+		return id;
+	}
 
-    public TypeEnum getType() {
-    return type;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setType(TypeEnum type) {
-    this.type = type;
-  }
+	public ResourceDefinition type(final TypeEnum type) {
+		this.type = type;
+		return this;
+	}
 
-  public ResourceDefinition vduId(String vduId) {
-    this.vduId = vduId;
-    return this;
-  }
+	/**
+	 * Type of the resource definition referenced. Permitted values: * COMPUTE * VL
+	 * * STORAGE * LINKPORT
+	 *
+	 * @return type
+	 **/
+	@Schema(required = true, description = "Type of the resource definition referenced. Permitted values: * COMPUTE * VL * STORAGE * LINKPORT ")
+	@NotNull
 
-  /**
-   * Get vduId
-   * @return vduId
-   **/
-  @Schema(description = "")
-  
-    public String getVduId() {
-    return vduId;
-  }
+	public TypeEnum getType() {
+		return type;
+	}
 
-  public void setVduId(String vduId) {
-    this.vduId = vduId;
-  }
+	public void setType(final TypeEnum type) {
+		this.type = type;
+	}
 
-  public ResourceDefinition vnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+	public ResourceDefinition vduId(final String vduId) {
+		this.vduId = vduId;
+		return this;
+	}
 
-  /**
-   * Get vnfdId
-   * @return vnfdId
-   **/
-  @Schema(description = "")
-  
-    public String getVnfdId() {
-    return vnfdId;
-  }
+	/**
+	 * Get vduId
+	 *
+	 * @return vduId
+	 **/
+	@Schema(description = "")
 
-  public void setVnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	public String getVduId() {
+		return vduId;
+	}
 
-  public ResourceDefinition resourceTemplateId(String resourceTemplateId) {
-    this.resourceTemplateId = resourceTemplateId;
-    return this;
-  }
+	public void setVduId(final String vduId) {
+		this.vduId = vduId;
+	}
 
-  /**
-   * Get resourceTemplateId
-   * @return resourceTemplateId
-   **/
-  @Schema(description = "")
-  
-    public String getResourceTemplateId() {
-    return resourceTemplateId;
-  }
+	public ResourceDefinition vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-  public void setResourceTemplateId(String resourceTemplateId) {
-    this.resourceTemplateId = resourceTemplateId;
-  }
+	/**
+	 * Get vnfdId
+	 *
+	 * @return vnfdId
+	 **/
+	@Schema(description = "")
 
-  public ResourceDefinition secondaryResourceTemplateId(String secondaryResourceTemplateId) {
-    this.secondaryResourceTemplateId = secondaryResourceTemplateId;
-    return this;
-  }
+	public String getVnfdId() {
+		return vnfdId;
+	}
 
-  /**
-   * Get secondaryResourceTemplateId
-   * @return secondaryResourceTemplateId
-   **/
-  @Schema(description = "")
-  
-    public String getSecondaryResourceTemplateId() {
-    return secondaryResourceTemplateId;
-  }
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
-  public void setSecondaryResourceTemplateId(String secondaryResourceTemplateId) {
-    this.secondaryResourceTemplateId = secondaryResourceTemplateId;
-  }
+	public ResourceDefinition resourceTemplateId(final String resourceTemplateId) {
+		this.resourceTemplateId = resourceTemplateId;
+		return this;
+	}
 
-  public ResourceDefinition resource(ResourceHandle resource) {
-    this.resource = resource;
-    return this;
-  }
+	/**
+	 * Get resourceTemplateId
+	 *
+	 * @return resourceTemplateId
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get resource
-   * @return resource
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public ResourceHandle getResource() {
-    return resource;
-  }
+	public String getResourceTemplateId() {
+		return resourceTemplateId;
+	}
 
-  public void setResource(ResourceHandle resource) {
-    this.resource = resource;
-  }
+	public void setResourceTemplateId(final String resourceTemplateId) {
+		this.resourceTemplateId = resourceTemplateId;
+	}
 
-  public ResourceDefinition snapshotResDef(SnapshotResourceDefinition snapshotResDef) {
-    this.snapshotResDef = snapshotResDef;
-    return this;
-  }
+	public ResourceDefinition secondaryResourceTemplateId(final String secondaryResourceTemplateId) {
+		this.secondaryResourceTemplateId = secondaryResourceTemplateId;
+		return this;
+	}
 
-  /**
-   * Get snapshotResDef
-   * @return snapshotResDef
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public SnapshotResourceDefinition getSnapshotResDef() {
-    return snapshotResDef;
-  }
+	/**
+	 * Get secondaryResourceTemplateId
+	 *
+	 * @return secondaryResourceTemplateId
+	 **/
+	@Schema(description = "")
 
-  public void setSnapshotResDef(SnapshotResourceDefinition snapshotResDef) {
-    this.snapshotResDef = snapshotResDef;
-  }
+	public String getSecondaryResourceTemplateId() {
+		return secondaryResourceTemplateId;
+	}
 
+	public void setSecondaryResourceTemplateId(final String secondaryResourceTemplateId) {
+		this.secondaryResourceTemplateId = secondaryResourceTemplateId;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ResourceDefinition resourceDefinition = (ResourceDefinition) o;
-    return Objects.equals(this.id, resourceDefinition.id) &&
-        Objects.equals(this.type, resourceDefinition.type) &&
-        Objects.equals(this.vduId, resourceDefinition.vduId) &&
-        Objects.equals(this.vnfdId, resourceDefinition.vnfdId) &&
-        Objects.equals(this.resourceTemplateId, resourceDefinition.resourceTemplateId) &&
-        Objects.equals(this.secondaryResourceTemplateId, resourceDefinition.secondaryResourceTemplateId) &&
-        Objects.equals(this.resource, resourceDefinition.resource) &&
-        Objects.equals(this.snapshotResDef, resourceDefinition.snapshotResDef);
-  }
+	public ResourceDefinition resource(final ResourceHandle resource) {
+		this.resource = resource;
+		return this;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, type, vduId, vnfdId, resourceTemplateId, secondaryResourceTemplateId, resource, snapshotResDef);
-  }
+	/**
+	 * Get resource
+	 *
+	 * @return resource
+	 **/
+	@Schema(description = "")
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ResourceDefinition {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    vduId: ").append(toIndentedString(vduId)).append("\n");
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    resourceTemplateId: ").append(toIndentedString(resourceTemplateId)).append("\n");
-    sb.append("    secondaryResourceTemplateId: ").append(toIndentedString(secondaryResourceTemplateId)).append("\n");
-    sb.append("    resource: ").append(toIndentedString(resource)).append("\n");
-    sb.append("    snapshotResDef: ").append(toIndentedString(snapshotResDef)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Valid
+	public ResourceHandle getResource() {
+		return resource;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	public void setResource(final ResourceHandle resource) {
+		this.resource = resource;
+	}
+
+	public ResourceDefinition snapshotResDef(final SnapshotResourceDefinition snapshotResDef) {
+		this.snapshotResDef = snapshotResDef;
+		return this;
+	}
+
+	/**
+	 * Get snapshotResDef
+	 *
+	 * @return snapshotResDef
+	 **/
+	@Schema(description = "")
+
+	@Valid
+	public SnapshotResourceDefinition getSnapshotResDef() {
+		return snapshotResDef;
+	}
+
+	public void setSnapshotResDef(final SnapshotResourceDefinition snapshotResDef) {
+		this.snapshotResDef = snapshotResDef;
+	}
+
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final ResourceDefinition resourceDefinition = (ResourceDefinition) o;
+		return Objects.equals(this.id, resourceDefinition.id) &&
+				Objects.equals(this.type, resourceDefinition.type) &&
+				Objects.equals(this.vduId, resourceDefinition.vduId) &&
+				Objects.equals(this.vnfdId, resourceDefinition.vnfdId) &&
+				Objects.equals(this.resourceTemplateId, resourceDefinition.resourceTemplateId) &&
+				Objects.equals(this.secondaryResourceTemplateId, resourceDefinition.secondaryResourceTemplateId) &&
+				Objects.equals(this.resource, resourceDefinition.resource) &&
+				Objects.equals(this.snapshotResDef, resourceDefinition.snapshotResDef);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, type, vduId, vnfdId, resourceTemplateId, secondaryResourceTemplateId, resource, snapshotResDef);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class ResourceDefinition {\n");
+
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    type: ").append(toIndentedString(type)).append("\n");
+		sb.append("    vduId: ").append(toIndentedString(vduId)).append("\n");
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    resourceTemplateId: ").append(toIndentedString(resourceTemplateId)).append("\n");
+		sb.append("    secondaryResourceTemplateId: ").append(toIndentedString(secondaryResourceTemplateId)).append("\n");
+		sb.append("    resource: ").append(toIndentedString(resource)).append("\n");
+		sb.append("    snapshotResDef: ").append(toIndentedString(snapshotResDef)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

@@ -16,166 +16,174 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v351.model.nslcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.KeyValuePairs;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Map;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Maps of routes that are permitted or denied for redistribution. 
+ * Maps of routes that are permitted or denied for redistribution.
  */
 @Schema(description = "Maps of routes that are permitted or denied for redistribution. ")
 @Validated
 
+public class SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution {
+	/**
+	 * The policy to apply to the route distribution. Permitted values: - PERMIT -
+	 * DENY
+	 */
+	public enum PolicyEnum {
+		PERMIT("PERMIT"),
 
-public class SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution   {
-  /**
-   * The policy to apply to the route distribution. Permitted values: - PERMIT - DENY 
-   */
-  public enum PolicyEnum {
-    PERMIT("PERMIT"),
-    
-    DENY("DENY");
+		DENY("DENY");
 
-    private String value;
+		private final String value;
 
-    PolicyEnum(String value) {
-      this.value = value;
-    }
+		PolicyEnum(final String value) {
+			this.value = value;
+		}
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-    @JsonCreator
-    public static PolicyEnum fromValue(String text) {
-      for (PolicyEnum b : PolicyEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("policy")
-  private PolicyEnum policy = null;
+		@JsonCreator
+		public static PolicyEnum fromValue(final String text) {
+			for (final PolicyEnum b : PolicyEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("sequence")
-  private BigDecimal sequence = null;
+	@JsonProperty("policy")
+	private PolicyEnum policy = null;
 
-  @JsonProperty("matchAndSetRule")
-  private KeyValuePairs matchAndSetRule = null;
+	@JsonProperty("sequence")
+	private BigDecimal sequence = null;
 
-  public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution policy(PolicyEnum policy) {
-    this.policy = policy;
-    return this;
-  }
+	@JsonProperty("matchAndSetRule")
+	private Map<String, String> matchAndSetRule = null;
 
-  /**
-   * The policy to apply to the route distribution. Permitted values: - PERMIT - DENY 
-   * @return policy
-   **/
-  @Schema(required = true, description = "The policy to apply to the route distribution. Permitted values: - PERMIT - DENY ")
-      @NotNull
+	public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution policy(final PolicyEnum policy) {
+		this.policy = policy;
+		return this;
+	}
 
-    public PolicyEnum getPolicy() {
-    return policy;
-  }
+	/**
+	 * The policy to apply to the route distribution. Permitted values: - PERMIT -
+	 * DENY
+	 *
+	 * @return policy
+	 **/
+	@Schema(required = true, description = "The policy to apply to the route distribution. Permitted values: - PERMIT - DENY ")
+	@NotNull
 
-  public void setPolicy(PolicyEnum policy) {
-    this.policy = policy;
-  }
+	public PolicyEnum getPolicy() {
+		return policy;
+	}
 
-  public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution sequence(BigDecimal sequence) {
-    this.sequence = sequence;
-    return this;
-  }
+	public void setPolicy(final PolicyEnum policy) {
+		this.policy = policy;
+	}
 
-  /**
-   * Sequence or index number assigned to the route-map. 
-   * @return sequence
-   **/
-  @Schema(required = true, description = "Sequence or index number assigned to the route-map. ")
-      @NotNull
+	public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution sequence(final BigDecimal sequence) {
+		this.sequence = sequence;
+		return this;
+	}
 
-    @Valid
-    public BigDecimal getSequence() {
-    return sequence;
-  }
+	/**
+	 * Sequence or index number assigned to the route-map.
+	 *
+	 * @return sequence
+	 **/
+	@Schema(required = true, description = "Sequence or index number assigned to the route-map. ")
+	@NotNull
 
-  public void setSequence(BigDecimal sequence) {
-    this.sequence = sequence;
-  }
+	@Valid
+	public BigDecimal getSequence() {
+		return sequence;
+	}
 
-  public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution matchAndSetRule(KeyValuePairs matchAndSetRule) {
-    this.matchAndSetRule = matchAndSetRule;
-    return this;
-  }
+	public void setSequence(final BigDecimal sequence) {
+		this.sequence = sequence;
+	}
 
-  /**
-   * Get matchAndSetRule
-   * @return matchAndSetRule
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution matchAndSetRule(final Map<String, String> matchAndSetRule) {
+		this.matchAndSetRule = matchAndSetRule;
+		return this;
+	}
 
-    @Valid
-    public KeyValuePairs getMatchAndSetRule() {
-    return matchAndSetRule;
-  }
+	/**
+	 * Get matchAndSetRule
+	 *
+	 * @return matchAndSetRule
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  public void setMatchAndSetRule(KeyValuePairs matchAndSetRule) {
-    this.matchAndSetRule = matchAndSetRule;
-  }
+	@Valid
+	public Map<String, String> getMatchAndSetRule() {
+		return matchAndSetRule;
+	}
 
+	public void setMatchAndSetRule(final Map<String, String> matchAndSetRule) {
+		this.matchAndSetRule = matchAndSetRule;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution siteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution = (SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution) o;
-    return Objects.equals(this.policy, siteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution.policy) &&
-        Objects.equals(this.sequence, siteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution.sequence) &&
-        Objects.equals(this.matchAndSetRule, siteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution.matchAndSetRule);
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution siteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution = (SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution) o;
+		return Objects.equals(this.policy, siteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution.policy) &&
+				Objects.equals(this.sequence, siteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution.sequence) &&
+				Objects.equals(this.matchAndSetRule, siteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution.matchAndSetRule);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(policy, sequence, matchAndSetRule);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(policy, sequence, matchAndSetRule);
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution {\n");
-    
-    sb.append("    policy: ").append(toIndentedString(policy)).append("\n");
-    sb.append("    sequence: ").append(toIndentedString(sequence)).append("\n");
-    sb.append("    matchAndSetRule: ").append(toIndentedString(matchAndSetRule)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class SiteToWanLayer3ProtocolDataRoutingInfoRouteMapsDistribution {\n");
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+		sb.append("    policy: ").append(toIndentedString(policy)).append("\n");
+		sb.append("    sequence: ").append(toIndentedString(sequence)).append("\n");
+		sb.append("    matchAndSetRule: ").append(toIndentedString(matchAndSetRule)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.grant.ProblemDetails2;
+import com.ubiqube.etsi.mano.vnfm.v351.model.vnfsnapshotpkgm.ProblemDetails2;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

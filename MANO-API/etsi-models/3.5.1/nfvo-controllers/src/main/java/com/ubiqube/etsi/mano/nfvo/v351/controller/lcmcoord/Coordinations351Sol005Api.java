@@ -31,9 +31,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ubiqube.etsi.mano.nfvo.v351.model.lcmcoord.LcmCoord;
-import com.ubiqube.etsi.mano.nfvo.v351.model.lcmcoord.LcmCoordRequest;
-import com.ubiqube.etsi.mano.nfvo.v351.model.lcmcoord.ProblemDetails;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoord;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoordRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnfconfig.ProblemDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

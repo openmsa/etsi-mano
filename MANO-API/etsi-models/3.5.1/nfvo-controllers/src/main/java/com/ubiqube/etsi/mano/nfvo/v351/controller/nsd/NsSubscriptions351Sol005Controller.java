@@ -28,7 +28,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nsd.NsdSubscriptionFrontController;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.Link;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdmSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdmSubscriptionRequest;

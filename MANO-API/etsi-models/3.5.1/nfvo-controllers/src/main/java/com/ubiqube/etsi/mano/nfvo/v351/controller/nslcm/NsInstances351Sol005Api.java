@@ -32,11 +32,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.em.v351.model.vnfconfig.ProblemDetails;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.HealNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.NsInstance;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.ProblemDetails;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.ScaleNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.TerminateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.UpdateNsRequest;

@@ -28,12 +28,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nssp.VnfSnapshotPackagesFrontController;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
 import com.ubiqube.etsi.mano.nfvo.v351.controller.vnf.VnfPackages351Sol005Api;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.BuildVnfSnapshotPkgRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.CancelVnfSnapshotPkgOperationRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.CreateVnfSnapshotPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.ExtractVnfSnapshotPkgRequest;
-import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.Link;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.UploadVnfSnapshotPkgFromUriRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.VnfSnapshotPkgExtArtifactsAccessConfig;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.VnfSnapshotPkgInfo;

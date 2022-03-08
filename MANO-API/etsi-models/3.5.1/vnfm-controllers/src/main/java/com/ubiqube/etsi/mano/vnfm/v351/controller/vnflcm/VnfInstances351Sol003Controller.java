@@ -30,22 +30,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.ChangeCurrentVnfPkgRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.ChangeExtVnfConnectivityRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.ChangeVnfFlavourRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.CreateVnfRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.CreateVnfSnapshotRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.HealVnfRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.OperateVnfRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.RevertToVnfSnapshotRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfInstance;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfInstanceLinks;
 import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfInstanceGenericFrontController;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.ChangeCurrentVnfPkgRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.ChangeExtVnfConnectivityRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.ChangeVnfFlavourRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.CreateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.CreateVnfSnapshotRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.HealVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.InstantiateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.Link;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.OperateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.RevertToVnfSnapshotRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.ScaleVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.ScaleVnfToLevelRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.TerminateVnfRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.VnfInstance;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.VnfInstanceLinks;
 
 /**
  *

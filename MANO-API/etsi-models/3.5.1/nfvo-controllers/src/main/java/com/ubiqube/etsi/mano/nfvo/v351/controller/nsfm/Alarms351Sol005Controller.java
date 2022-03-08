@@ -25,8 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.SingleControllerCondition;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsfm.Alarm;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsfm.AlarmModifications;
+import com.ubiqube.etsi.mano.em.v351.model.vnffm.Alarm;
+import com.ubiqube.etsi.mano.em.v351.model.vnffm.AlarmModifications;
 
 @RestController
 @Conditional(SingleControllerCondition.class)

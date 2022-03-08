@@ -25,8 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.CreateThresholdRequest;
-import com.ubiqube.etsi.mano.em.v351.model.vnfpm.Link;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.Threshold;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.ThresholdLinks;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.ThresholdModifications;

@@ -34,11 +34,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.CreatePmJobRequest;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.PerformanceReport;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.PmJob;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.PmJobModifications;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.ProblemDetails;
+import com.ubiqube.etsi.mano.em.v351.model.vnfconfig.ProblemDetails;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PerformanceReport;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PmJob;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PmJobModifications;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

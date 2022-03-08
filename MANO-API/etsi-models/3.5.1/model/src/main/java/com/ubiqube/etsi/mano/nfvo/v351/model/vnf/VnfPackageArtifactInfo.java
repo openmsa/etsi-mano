@@ -17,262 +17,287 @@
 package com.ubiqube.etsi.mano.nfvo.v351.model.vnf;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.KeyValuePairs;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Map;
+import com.ubiqube.etsi.mano.nfvo.v351.model.vnfsnapshotpkgm.Checksum;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type represents an artifact other than a software image which is contained in or external to a VNF package. It shall comply with provisions defined in Table 9.5.3.3-1. 
+ * This type represents an artifact other than a software image which is
+ * contained in or external to a VNF package. It shall comply with provisions
+ * defined in Table 9.5.3.3-1.
  */
 @Schema(description = "This type represents an artifact other than a software image which is contained in or external to a VNF package. It shall comply with provisions defined in Table 9.5.3.3-1. ")
 @Validated
 
+public class VnfPackageArtifactInfo {
+	@JsonProperty("artifactPath")
+	private String artifactPath = null;
 
-public class VnfPackageArtifactInfo   {
-  @JsonProperty("artifactPath")
-  private String artifactPath = null;
+	@JsonProperty("artifactURI")
+	private String artifactURI = null;
 
-  @JsonProperty("artifactURI")
-  private String artifactURI = null;
+	@JsonProperty("checksum")
+	private Checksum checksum = null;
 
-  @JsonProperty("checksum")
-  private Checksum checksum = null;
+	@JsonProperty("isEncrypted")
+	private Boolean isEncrypted = null;
 
-  @JsonProperty("isEncrypted")
-  private Boolean isEncrypted = null;
+	@JsonProperty("nonManoArtifactSetId")
+	private String nonManoArtifactSetId = null;
 
-  @JsonProperty("nonManoArtifactSetId")
-  private String nonManoArtifactSetId = null;
+	/**
+	 * Marks specific types of artifacts as defined in the VNF package. If none of
+	 * the specific classes listed below applies, the attribute shall not be
+	 * present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in
+	 * ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI
+	 * GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS
+	 * NFV-SOL 004
+	 */
+	public enum ArtifactClassificationEnum {
+		HISTORY("HISTORY"),
 
-  /**
-   * Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004 
-   */
-  public enum ArtifactClassificationEnum {
-    HISTORY("HISTORY"),
-    
-    TESTING("TESTING"),
-    
-    LICENSE("LICENSE");
+		TESTING("TESTING"),
 
-    private String value;
+		LICENSE("LICENSE");
 
-    ArtifactClassificationEnum(String value) {
-      this.value = value;
-    }
+		private final String value;
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		ArtifactClassificationEnum(final String value) {
+			this.value = value;
+		}
 
-    @JsonCreator
-    public static ArtifactClassificationEnum fromValue(String text) {
-      for (ArtifactClassificationEnum b : ArtifactClassificationEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("artifactClassification")
-  private ArtifactClassificationEnum artifactClassification = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+		@JsonCreator
+		public static ArtifactClassificationEnum fromValue(final String text) {
+			for (final ArtifactClassificationEnum b : ArtifactClassificationEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  public VnfPackageArtifactInfo artifactPath(String artifactPath) {
-    this.artifactPath = artifactPath;
-    return this;
-  }
+	@JsonProperty("artifactClassification")
+	private ArtifactClassificationEnum artifactClassification = null;
 
-  /**
-   * Get artifactPath
-   * @return artifactPath
-   **/
-  @Schema(description = "")
-  
-    public String getArtifactPath() {
-    return artifactPath;
-  }
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
-  public void setArtifactPath(String artifactPath) {
-    this.artifactPath = artifactPath;
-  }
+	public VnfPackageArtifactInfo artifactPath(final String artifactPath) {
+		this.artifactPath = artifactPath;
+		return this;
+	}
 
-  public VnfPackageArtifactInfo artifactURI(String artifactURI) {
-    this.artifactURI = artifactURI;
-    return this;
-  }
+	/**
+	 * Get artifactPath
+	 *
+	 * @return artifactPath
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get artifactURI
-   * @return artifactURI
-   **/
-  @Schema(description = "")
-  
-    public String getArtifactURI() {
-    return artifactURI;
-  }
+	public String getArtifactPath() {
+		return artifactPath;
+	}
 
-  public void setArtifactURI(String artifactURI) {
-    this.artifactURI = artifactURI;
-  }
+	public void setArtifactPath(final String artifactPath) {
+		this.artifactPath = artifactPath;
+	}
 
-  public VnfPackageArtifactInfo checksum(Checksum checksum) {
-    this.checksum = checksum;
-    return this;
-  }
+	public VnfPackageArtifactInfo artifactURI(final String artifactURI) {
+		this.artifactURI = artifactURI;
+		return this;
+	}
 
-  /**
-   * Get checksum
-   * @return checksum
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	/**
+	 * Get artifactURI
+	 *
+	 * @return artifactURI
+	 **/
+	@Schema(description = "")
 
-    @Valid
-    public Checksum getChecksum() {
-    return checksum;
-  }
+	public String getArtifactURI() {
+		return artifactURI;
+	}
 
-  public void setChecksum(Checksum checksum) {
-    this.checksum = checksum;
-  }
+	public void setArtifactURI(final String artifactURI) {
+		this.artifactURI = artifactURI;
+	}
 
-  public VnfPackageArtifactInfo isEncrypted(Boolean isEncrypted) {
-    this.isEncrypted = isEncrypted;
-    return this;
-  }
+	public VnfPackageArtifactInfo checksum(final Checksum checksum) {
+		this.checksum = checksum;
+		return this;
+	}
 
-  /**
-   * Reflects whether the artifact is encrypted (true) or not (false). 
-   * @return isEncrypted
-   **/
-  @Schema(required = true, description = "Reflects whether the artifact is encrypted (true) or not (false). ")
-      @NotNull
+	/**
+	 * Get checksum
+	 *
+	 * @return checksum
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-    public Boolean isIsEncrypted() {
-    return isEncrypted;
-  }
+	@Valid
+	public Checksum getChecksum() {
+		return checksum;
+	}
 
-  public void setIsEncrypted(Boolean isEncrypted) {
-    this.isEncrypted = isEncrypted;
-  }
+	public void setChecksum(final Checksum checksum) {
+		this.checksum = checksum;
+	}
 
-  public VnfPackageArtifactInfo nonManoArtifactSetId(String nonManoArtifactSetId) {
-    this.nonManoArtifactSetId = nonManoArtifactSetId;
-    return this;
-  }
+	public VnfPackageArtifactInfo isEncrypted(final Boolean isEncrypted) {
+		this.isEncrypted = isEncrypted;
+		return this;
+	}
 
-  /**
-   * Non-MANO artifact set identifier of the non-MANO artifact set to which the artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004 [5]. Shall be provided if the artifact is a non-MANO artifact, and shall be omitted otherwise. 
-   * @return nonManoArtifactSetId
-   **/
-  @Schema(description = "Non-MANO artifact set identifier of the non-MANO artifact set to which the artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004 [5]. Shall be provided if the artifact is a non-MANO artifact, and shall be omitted otherwise. ")
-  
-    public String getNonManoArtifactSetId() {
-    return nonManoArtifactSetId;
-  }
+	/**
+	 * Reflects whether the artifact is encrypted (true) or not (false).
+	 *
+	 * @return isEncrypted
+	 **/
+	@Schema(required = true, description = "Reflects whether the artifact is encrypted (true) or not (false). ")
+	@NotNull
 
-  public void setNonManoArtifactSetId(String nonManoArtifactSetId) {
-    this.nonManoArtifactSetId = nonManoArtifactSetId;
-  }
+	public Boolean isIsEncrypted() {
+		return isEncrypted;
+	}
 
-  public VnfPackageArtifactInfo artifactClassification(ArtifactClassificationEnum artifactClassification) {
-    this.artifactClassification = artifactClassification;
-    return this;
-  }
+	public void setIsEncrypted(final Boolean isEncrypted) {
+		this.isEncrypted = isEncrypted;
+	}
 
-  /**
-   * Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004 
-   * @return artifactClassification
-   **/
-  @Schema(description = "Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004 ")
-  
-    public ArtifactClassificationEnum getArtifactClassification() {
-    return artifactClassification;
-  }
+	public VnfPackageArtifactInfo nonManoArtifactSetId(final String nonManoArtifactSetId) {
+		this.nonManoArtifactSetId = nonManoArtifactSetId;
+		return this;
+	}
 
-  public void setArtifactClassification(ArtifactClassificationEnum artifactClassification) {
-    this.artifactClassification = artifactClassification;
-  }
+	/**
+	 * Non-MANO artifact set identifier of the non-MANO artifact set to which the
+	 * artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004 [5].
+	 * Shall be provided if the artifact is a non-MANO artifact, and shall be
+	 * omitted otherwise.
+	 *
+	 * @return nonManoArtifactSetId
+	 **/
+	@Schema(description = "Non-MANO artifact set identifier of the non-MANO artifact set to which the artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004 [5]. Shall be provided if the artifact is a non-MANO artifact, and shall be omitted otherwise. ")
 
-  public VnfPackageArtifactInfo metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	public String getNonManoArtifactSetId() {
+		return nonManoArtifactSetId;
+	}
 
-  /**
-   * Get metadata
-   * @return metadata
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	public void setNonManoArtifactSetId(final String nonManoArtifactSetId) {
+		this.nonManoArtifactSetId = nonManoArtifactSetId;
+	}
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	public VnfPackageArtifactInfo artifactClassification(final ArtifactClassificationEnum artifactClassification) {
+		this.artifactClassification = artifactClassification;
+		return this;
+	}
 
+	/**
+	 * Marks specific types of artifacts as defined in the VNF package. If none of
+	 * the specific classes listed below applies, the attribute shall not be
+	 * present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in
+	 * ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI
+	 * GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS
+	 * NFV-SOL 004
+	 *
+	 * @return artifactClassification
+	 **/
+	@Schema(description = "Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004 ")
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    VnfPackageArtifactInfo vnfPackageArtifactInfo = (VnfPackageArtifactInfo) o;
-    return Objects.equals(this.artifactPath, vnfPackageArtifactInfo.artifactPath) &&
-        Objects.equals(this.artifactURI, vnfPackageArtifactInfo.artifactURI) &&
-        Objects.equals(this.checksum, vnfPackageArtifactInfo.checksum) &&
-        Objects.equals(this.isEncrypted, vnfPackageArtifactInfo.isEncrypted) &&
-        Objects.equals(this.nonManoArtifactSetId, vnfPackageArtifactInfo.nonManoArtifactSetId) &&
-        Objects.equals(this.artifactClassification, vnfPackageArtifactInfo.artifactClassification) &&
-        Objects.equals(this.metadata, vnfPackageArtifactInfo.metadata);
-  }
+	public ArtifactClassificationEnum getArtifactClassification() {
+		return artifactClassification;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(artifactPath, artifactURI, checksum, isEncrypted, nonManoArtifactSetId, artifactClassification, metadata);
-  }
+	public void setArtifactClassification(final ArtifactClassificationEnum artifactClassification) {
+		this.artifactClassification = artifactClassification;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfPackageArtifactInfo {\n");
-    
-    sb.append("    artifactPath: ").append(toIndentedString(artifactPath)).append("\n");
-    sb.append("    artifactURI: ").append(toIndentedString(artifactURI)).append("\n");
-    sb.append("    checksum: ").append(toIndentedString(checksum)).append("\n");
-    sb.append("    isEncrypted: ").append(toIndentedString(isEncrypted)).append("\n");
-    sb.append("    nonManoArtifactSetId: ").append(toIndentedString(nonManoArtifactSetId)).append("\n");
-    sb.append("    artifactClassification: ").append(toIndentedString(artifactClassification)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	public VnfPackageArtifactInfo metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Get metadata
+	 *
+	 * @return metadata
+	 **/
+	@Schema(description = "")
+
+	@Valid
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
+
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final VnfPackageArtifactInfo vnfPackageArtifactInfo = (VnfPackageArtifactInfo) o;
+		return Objects.equals(this.artifactPath, vnfPackageArtifactInfo.artifactPath) &&
+				Objects.equals(this.artifactURI, vnfPackageArtifactInfo.artifactURI) &&
+				Objects.equals(this.checksum, vnfPackageArtifactInfo.checksum) &&
+				Objects.equals(this.isEncrypted, vnfPackageArtifactInfo.isEncrypted) &&
+				Objects.equals(this.nonManoArtifactSetId, vnfPackageArtifactInfo.nonManoArtifactSetId) &&
+				Objects.equals(this.artifactClassification, vnfPackageArtifactInfo.artifactClassification) &&
+				Objects.equals(this.metadata, vnfPackageArtifactInfo.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(artifactPath, artifactURI, checksum, isEncrypted, nonManoArtifactSetId, artifactClassification, metadata);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfPackageArtifactInfo {\n");
+
+		sb.append("    artifactPath: ").append(toIndentedString(artifactPath)).append("\n");
+		sb.append("    artifactURI: ").append(toIndentedString(artifactURI)).append("\n");
+		sb.append("    checksum: ").append(toIndentedString(checksum)).append("\n");
+		sb.append("    isEncrypted: ").append(toIndentedString(isEncrypted)).append("\n");
+		sb.append("    nonManoArtifactSetId: ").append(toIndentedString(nonManoArtifactSetId)).append("\n");
+		sb.append("    artifactClassification: ").append(toIndentedString(artifactClassification)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

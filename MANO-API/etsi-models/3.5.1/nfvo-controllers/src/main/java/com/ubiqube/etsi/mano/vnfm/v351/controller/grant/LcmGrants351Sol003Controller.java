@@ -25,10 +25,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsFrontController;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantLinks;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantRequest;
-import com.ubiqube.etsi.mano.vnfm.v351.model.grant.Link;
 
 /**
  *

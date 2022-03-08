@@ -27,7 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClas
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.em.v351.model.vnfind.Link;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
 import com.ubiqube.etsi.mano.em.v351.model.vnfind.VnfIndicator;
 import com.ubiqube.etsi.mano.em.v351.model.vnfind.VnfIndicatorLinks;
 import com.ubiqube.etsi.mano.vnfm.fc.vnfind.IndicatorsFrontController;

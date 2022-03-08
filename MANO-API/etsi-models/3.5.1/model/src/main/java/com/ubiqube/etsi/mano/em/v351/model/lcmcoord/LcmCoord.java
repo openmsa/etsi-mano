@@ -17,312 +17,321 @@
 package com.ubiqube.etsi.mano.em.v351.model.lcmcoord;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.KeyValuePairs;
-import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoordLinks;
-import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoordResultType;
-import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmOperationForCoordType;
-import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.ProblemDetails;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+import com.ubiqube.etsi.mano.em.v351.model.vnfconfig.ProblemDetails;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type represents an LCM coordination result. 
+ * This type represents an LCM coordination result.
  */
 @Schema(description = "This type represents an LCM coordination result. ")
 @Validated
 
+public class LcmCoord {
+	@JsonProperty("id")
+	private String id = null;
 
-public class LcmCoord   {
-  @JsonProperty("id")
-  private String id = null;
+	@JsonProperty("coordinationResult")
+	private LcmCoordResultType coordinationResult = null;
 
-  @JsonProperty("coordinationResult")
-  private LcmCoordResultType coordinationResult = null;
+	@JsonProperty("vnfInstanceId")
+	private String vnfInstanceId = null;
 
-  @JsonProperty("vnfInstanceId")
-  private String vnfInstanceId = null;
+	@JsonProperty("vnfLcmOpOccId")
+	private String vnfLcmOpOccId = null;
 
-  @JsonProperty("vnfLcmOpOccId")
-  private String vnfLcmOpOccId = null;
+	@JsonProperty("lcmOperationType")
+	private LcmOperationForCoordType lcmOperationType = null;
 
-  @JsonProperty("lcmOperationType")
-  private LcmOperationForCoordType lcmOperationType = null;
+	@JsonProperty("coordinationActionName")
+	private String coordinationActionName = null;
 
-  @JsonProperty("coordinationActionName")
-  private String coordinationActionName = null;
+	@JsonProperty("outputParams")
+	private Map<String, String> outputParams = null;
 
-  @JsonProperty("outputParams")
-  private KeyValuePairs outputParams = null;
+	@JsonProperty("warnings")
+	private String warnings = null;
 
-  @JsonProperty("warnings")
-  private String warnings = null;
+	@JsonProperty("error")
+	private ProblemDetails error = null;
 
-  @JsonProperty("error")
-  private ProblemDetails error = null;
+	@JsonProperty("_links")
+	private LcmCoordLinks _links = null;
 
-  @JsonProperty("_links")
-  private LcmCoordLinks _links = null;
+	public LcmCoord id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  public LcmCoord id(String id) {
-    this.id = id;
-    return this;
-  }
+	/**
+	 * Get id
+	 *
+	 * @return id
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getId() {
+		return id;
+	}
 
-    public String getId() {
-    return id;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public LcmCoord coordinationResult(final LcmCoordResultType coordinationResult) {
+		this.coordinationResult = coordinationResult;
+		return this;
+	}
 
-  public LcmCoord coordinationResult(LcmCoordResultType coordinationResult) {
-    this.coordinationResult = coordinationResult;
-    return this;
-  }
+	/**
+	 * Get coordinationResult
+	 *
+	 * @return coordinationResult
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get coordinationResult
-   * @return coordinationResult
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	@Valid
+	public LcmCoordResultType getCoordinationResult() {
+		return coordinationResult;
+	}
 
-    @Valid
-    public LcmCoordResultType getCoordinationResult() {
-    return coordinationResult;
-  }
+	public void setCoordinationResult(final LcmCoordResultType coordinationResult) {
+		this.coordinationResult = coordinationResult;
+	}
 
-  public void setCoordinationResult(LcmCoordResultType coordinationResult) {
-    this.coordinationResult = coordinationResult;
-  }
+	public LcmCoord vnfInstanceId(final String vnfInstanceId) {
+		this.vnfInstanceId = vnfInstanceId;
+		return this;
+	}
 
-  public LcmCoord vnfInstanceId(String vnfInstanceId) {
-    this.vnfInstanceId = vnfInstanceId;
-    return this;
-  }
+	/**
+	 * Get vnfInstanceId
+	 *
+	 * @return vnfInstanceId
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get vnfInstanceId
-   * @return vnfInstanceId
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getVnfInstanceId() {
+		return vnfInstanceId;
+	}
 
-    public String getVnfInstanceId() {
-    return vnfInstanceId;
-  }
+	public void setVnfInstanceId(final String vnfInstanceId) {
+		this.vnfInstanceId = vnfInstanceId;
+	}
 
-  public void setVnfInstanceId(String vnfInstanceId) {
-    this.vnfInstanceId = vnfInstanceId;
-  }
+	public LcmCoord vnfLcmOpOccId(final String vnfLcmOpOccId) {
+		this.vnfLcmOpOccId = vnfLcmOpOccId;
+		return this;
+	}
 
-  public LcmCoord vnfLcmOpOccId(String vnfLcmOpOccId) {
-    this.vnfLcmOpOccId = vnfLcmOpOccId;
-    return this;
-  }
+	/**
+	 * Get vnfLcmOpOccId
+	 *
+	 * @return vnfLcmOpOccId
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get vnfLcmOpOccId
-   * @return vnfLcmOpOccId
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getVnfLcmOpOccId() {
+		return vnfLcmOpOccId;
+	}
 
-    public String getVnfLcmOpOccId() {
-    return vnfLcmOpOccId;
-  }
+	public void setVnfLcmOpOccId(final String vnfLcmOpOccId) {
+		this.vnfLcmOpOccId = vnfLcmOpOccId;
+	}
 
-  public void setVnfLcmOpOccId(String vnfLcmOpOccId) {
-    this.vnfLcmOpOccId = vnfLcmOpOccId;
-  }
+	public LcmCoord lcmOperationType(final LcmOperationForCoordType lcmOperationType) {
+		this.lcmOperationType = lcmOperationType;
+		return this;
+	}
 
-  public LcmCoord lcmOperationType(LcmOperationForCoordType lcmOperationType) {
-    this.lcmOperationType = lcmOperationType;
-    return this;
-  }
+	/**
+	 * Get lcmOperationType
+	 *
+	 * @return lcmOperationType
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get lcmOperationType
-   * @return lcmOperationType
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	@Valid
+	public LcmOperationForCoordType getLcmOperationType() {
+		return lcmOperationType;
+	}
 
-    @Valid
-    public LcmOperationForCoordType getLcmOperationType() {
-    return lcmOperationType;
-  }
+	public void setLcmOperationType(final LcmOperationForCoordType lcmOperationType) {
+		this.lcmOperationType = lcmOperationType;
+	}
 
-  public void setLcmOperationType(LcmOperationForCoordType lcmOperationType) {
-    this.lcmOperationType = lcmOperationType;
-  }
+	public LcmCoord coordinationActionName(final String coordinationActionName) {
+		this.coordinationActionName = coordinationActionName;
+		return this;
+	}
 
-  public LcmCoord coordinationActionName(String coordinationActionName) {
-    this.coordinationActionName = coordinationActionName;
-    return this;
-  }
+	/**
+	 * Indicates the actual LCM coordination action. The coordination actions that a
+	 * VNF supports are declared in the VNFD.
+	 *
+	 * @return coordinationActionName
+	 **/
+	@Schema(required = true, description = "Indicates the actual LCM coordination action. The coordination actions that a VNF supports are declared in the VNFD. ")
+	@NotNull
 
-  /**
-   * Indicates the actual LCM coordination action. The coordination actions that a VNF supports are declared in the VNFD. 
-   * @return coordinationActionName
-   **/
-  @Schema(required = true, description = "Indicates the actual LCM coordination action. The coordination actions that a VNF supports are declared in the VNFD. ")
-      @NotNull
+	public String getCoordinationActionName() {
+		return coordinationActionName;
+	}
 
-    public String getCoordinationActionName() {
-    return coordinationActionName;
-  }
+	public void setCoordinationActionName(final String coordinationActionName) {
+		this.coordinationActionName = coordinationActionName;
+	}
 
-  public void setCoordinationActionName(String coordinationActionName) {
-    this.coordinationActionName = coordinationActionName;
-  }
+	public LcmCoord outputParams(final Map<String, String> outputParams) {
+		this.outputParams = outputParams;
+		return this;
+	}
 
-  public LcmCoord outputParams(KeyValuePairs outputParams) {
-    this.outputParams = outputParams;
-    return this;
-  }
+	/**
+	 * Get outputParams
+	 *
+	 * @return outputParams
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get outputParams
-   * @return outputParams
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getOutputParams() {
-    return outputParams;
-  }
+	@Valid
+	public Map<String, String> getOutputParams() {
+		return outputParams;
+	}
 
-  public void setOutputParams(KeyValuePairs outputParams) {
-    this.outputParams = outputParams;
-  }
+	public void setOutputParams(final Map<String, String> outputParams) {
+		this.outputParams = outputParams;
+	}
 
-  public LcmCoord warnings(String warnings) {
-    this.warnings = warnings;
-    return this;
-  }
+	public LcmCoord warnings(final String warnings) {
+		this.warnings = warnings;
+		return this;
+	}
 
-  /**
-   * Warning messages that were generated while the operation was executing. 
-   * @return warnings
-   **/
-  @Schema(description = "Warning messages that were generated while the operation was executing. ")
-  
-    public String getWarnings() {
-    return warnings;
-  }
+	/**
+	 * Warning messages that were generated while the operation was executing.
+	 *
+	 * @return warnings
+	 **/
+	@Schema(description = "Warning messages that were generated while the operation was executing. ")
 
-  public void setWarnings(String warnings) {
-    this.warnings = warnings;
-  }
+	public String getWarnings() {
+		return warnings;
+	}
 
-  public LcmCoord error(ProblemDetails error) {
-    this.error = error;
-    return this;
-  }
+	public void setWarnings(final String warnings) {
+		this.warnings = warnings;
+	}
 
-  /**
-   * Get error
-   * @return error
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public ProblemDetails getError() {
-    return error;
-  }
+	public LcmCoord error(final ProblemDetails error) {
+		this.error = error;
+		return this;
+	}
 
-  public void setError(ProblemDetails error) {
-    this.error = error;
-  }
+	/**
+	 * Get error
+	 *
+	 * @return error
+	 **/
+	@Schema(description = "")
 
-  public LcmCoord _links(LcmCoordLinks _links) {
-    this._links = _links;
-    return this;
-  }
+	@Valid
+	public ProblemDetails getError() {
+		return error;
+	}
 
-  /**
-   * Get _links
-   * @return _links
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public void setError(final ProblemDetails error) {
+		this.error = error;
+	}
 
-    @Valid
-    public LcmCoordLinks getLinks() {
-    return _links;
-  }
+	public LcmCoord _links(final LcmCoordLinks _links) {
+		this._links = _links;
+		return this;
+	}
 
-  public void setLinks(LcmCoordLinks _links) {
-    this._links = _links;
-  }
+	/**
+	 * Get _links
+	 *
+	 * @return _links
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
+	@Valid
+	public LcmCoordLinks getLinks() {
+		return _links;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    LcmCoord lcmCoord = (LcmCoord) o;
-    return Objects.equals(this.id, lcmCoord.id) &&
-        Objects.equals(this.coordinationResult, lcmCoord.coordinationResult) &&
-        Objects.equals(this.vnfInstanceId, lcmCoord.vnfInstanceId) &&
-        Objects.equals(this.vnfLcmOpOccId, lcmCoord.vnfLcmOpOccId) &&
-        Objects.equals(this.lcmOperationType, lcmCoord.lcmOperationType) &&
-        Objects.equals(this.coordinationActionName, lcmCoord.coordinationActionName) &&
-        Objects.equals(this.outputParams, lcmCoord.outputParams) &&
-        Objects.equals(this.warnings, lcmCoord.warnings) &&
-        Objects.equals(this.error, lcmCoord.error) &&
-        Objects.equals(this._links, lcmCoord._links);
-  }
+	public void setLinks(final LcmCoordLinks _links) {
+		this._links = _links;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, coordinationResult, vnfInstanceId, vnfLcmOpOccId, lcmOperationType, coordinationActionName, outputParams, warnings, error, _links);
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final LcmCoord lcmCoord = (LcmCoord) o;
+		return Objects.equals(this.id, lcmCoord.id) &&
+				Objects.equals(this.coordinationResult, lcmCoord.coordinationResult) &&
+				Objects.equals(this.vnfInstanceId, lcmCoord.vnfInstanceId) &&
+				Objects.equals(this.vnfLcmOpOccId, lcmCoord.vnfLcmOpOccId) &&
+				Objects.equals(this.lcmOperationType, lcmCoord.lcmOperationType) &&
+				Objects.equals(this.coordinationActionName, lcmCoord.coordinationActionName) &&
+				Objects.equals(this.outputParams, lcmCoord.outputParams) &&
+				Objects.equals(this.warnings, lcmCoord.warnings) &&
+				Objects.equals(this.error, lcmCoord.error) &&
+				Objects.equals(this._links, lcmCoord._links);
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class LcmCoord {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    coordinationResult: ").append(toIndentedString(coordinationResult)).append("\n");
-    sb.append("    vnfInstanceId: ").append(toIndentedString(vnfInstanceId)).append("\n");
-    sb.append("    vnfLcmOpOccId: ").append(toIndentedString(vnfLcmOpOccId)).append("\n");
-    sb.append("    lcmOperationType: ").append(toIndentedString(lcmOperationType)).append("\n");
-    sb.append("    coordinationActionName: ").append(toIndentedString(coordinationActionName)).append("\n");
-    sb.append("    outputParams: ").append(toIndentedString(outputParams)).append("\n");
-    sb.append("    warnings: ").append(toIndentedString(warnings)).append("\n");
-    sb.append("    error: ").append(toIndentedString(error)).append("\n");
-    sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, coordinationResult, vnfInstanceId, vnfLcmOpOccId, lcmOperationType, coordinationActionName, outputParams, warnings, error, _links);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class LcmCoord {\n");
+
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    coordinationResult: ").append(toIndentedString(coordinationResult)).append("\n");
+		sb.append("    vnfInstanceId: ").append(toIndentedString(vnfInstanceId)).append("\n");
+		sb.append("    vnfLcmOpOccId: ").append(toIndentedString(vnfLcmOpOccId)).append("\n");
+		sb.append("    lcmOperationType: ").append(toIndentedString(lcmOperationType)).append("\n");
+		sb.append("    coordinationActionName: ").append(toIndentedString(coordinationActionName)).append("\n");
+		sb.append("    outputParams: ").append(toIndentedString(outputParams)).append("\n");
+		sb.append("    warnings: ").append(toIndentedString(warnings)).append("\n");
+		sb.append("    error: ").append(toIndentedString(error)).append("\n");
+		sb.append("    _links: ").append(toIndentedString(_links)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

@@ -19,10 +19,10 @@ package com.ubiqube.etsi.mano.vnfm.v351service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
+import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.VnfPkgInfo;
+import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.VnfPkgInfoLinks;
 import com.ubiqube.etsi.mano.vnfm.v351.controller.vnf.VnfPackages351Sol003Api;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnf.Link;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnf.VnfPkgInfoLinks;
 
 public class LinksSol003 {
 

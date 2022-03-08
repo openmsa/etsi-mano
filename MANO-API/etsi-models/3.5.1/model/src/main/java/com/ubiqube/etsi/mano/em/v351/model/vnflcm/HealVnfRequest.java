@@ -16,164 +16,172 @@
  */
 package com.ubiqube.etsi.mano.em.v351.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.KeyValuePairs;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * HealVnfRequest
  */
 @Validated
 
+public class HealVnfRequest {
+	@JsonProperty("vnfcInstanceId")
+	@Valid
+	private List<String> vnfcInstanceId = null;
 
-public class HealVnfRequest   {
-  @JsonProperty("vnfcInstanceId")
-  @Valid
-  private List<String> vnfcInstanceId = null;
+	@JsonProperty("cause")
+	private String cause = null;
 
-  @JsonProperty("cause")
-  private String cause = null;
+	@JsonProperty("additionalParams")
+	private Map<String, String> additionalParams = null;
 
-  @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+	@JsonProperty("healScript")
+	private String healScript = null;
 
-  @JsonProperty("healScript")
-  private String healScript = null;
+	public HealVnfRequest vnfcInstanceId(final List<String> vnfcInstanceId) {
+		this.vnfcInstanceId = vnfcInstanceId;
+		return this;
+	}
 
-  public HealVnfRequest vnfcInstanceId(List<String> vnfcInstanceId) {
-    this.vnfcInstanceId = vnfcInstanceId;
-    return this;
-  }
+	public HealVnfRequest addVnfcInstanceIdItem(final String vnfcInstanceIdItem) {
+		if (this.vnfcInstanceId == null) {
+			this.vnfcInstanceId = new ArrayList<>();
+		}
+		this.vnfcInstanceId.add(vnfcInstanceIdItem);
+		return this;
+	}
 
-  public HealVnfRequest addVnfcInstanceIdItem(String vnfcInstanceIdItem) {
-    if (this.vnfcInstanceId == null) {
-      this.vnfcInstanceId = new ArrayList<>();
-    }
-    this.vnfcInstanceId.add(vnfcInstanceIdItem);
-    return this;
-  }
+	/**
+	 * List of identifiers of VNFC instances for which a healing action is
+	 * requested. Each identifier references the \"id\" attribute in a \"VnfcInfo\"
+	 * structure. Cardinality can be \"0\" to denote that the request applies to the
+	 * whole VNF and not a specific VNFC instance.
+	 *
+	 * @return vnfcInstanceId
+	 **/
+	@Schema(description = "List of identifiers of VNFC instances for which a healing action is requested. Each identifier references the \"id\" attribute in a \"VnfcInfo\" structure. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance. ")
 
-  /**
-   * List of identifiers of VNFC instances for which a healing action is requested. Each identifier references the \"id\" attribute in a \"VnfcInfo\" structure. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance. 
-   * @return vnfcInstanceId
-   **/
-  @Schema(description = "List of identifiers of VNFC instances for which a healing action is requested. Each identifier references the \"id\" attribute in a \"VnfcInfo\" structure. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance. ")
-  
-    public List<String> getVnfcInstanceId() {
-    return vnfcInstanceId;
-  }
+	public List<String> getVnfcInstanceId() {
+		return vnfcInstanceId;
+	}
 
-  public void setVnfcInstanceId(List<String> vnfcInstanceId) {
-    this.vnfcInstanceId = vnfcInstanceId;
-  }
+	public void setVnfcInstanceId(final List<String> vnfcInstanceId) {
+		this.vnfcInstanceId = vnfcInstanceId;
+	}
 
-  public HealVnfRequest cause(String cause) {
-    this.cause = cause;
-    return this;
-  }
+	public HealVnfRequest cause(final String cause) {
+		this.cause = cause;
+		return this;
+	}
 
-  /**
-   * Indicates the reason why a healing procedure is required. 
-   * @return cause
-   **/
-  @Schema(description = "Indicates the reason why a healing procedure is required. ")
-  
-    public String getCause() {
-    return cause;
-  }
+	/**
+	 * Indicates the reason why a healing procedure is required.
+	 *
+	 * @return cause
+	 **/
+	@Schema(description = "Indicates the reason why a healing procedure is required. ")
 
-  public void setCause(String cause) {
-    this.cause = cause;
-  }
+	public String getCause() {
+		return cause;
+	}
 
-  public HealVnfRequest additionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-    return this;
-  }
+	public void setCause(final String cause) {
+		this.cause = cause;
+	}
 
-  /**
-   * Get additionalParams
-   * @return additionalParams
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getAdditionalParams() {
-    return additionalParams;
-  }
+	public HealVnfRequest additionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+		return this;
+	}
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-  }
+	/**
+	 * Get additionalParams
+	 *
+	 * @return additionalParams
+	 **/
+	@Schema(description = "")
 
-  public HealVnfRequest healScript(String healScript) {
-    this.healScript = healScript;
-    return this;
-  }
+	@Valid
+	public Map<String, String> getAdditionalParams() {
+		return additionalParams;
+	}
 
-  /**
-   * Provides link to a script that should be executed as part of the healing action or a set of rules for healing procedure. 
-   * @return healScript
-   **/
-  @Schema(description = "Provides link to a script that should be executed as part of the healing action or a set of rules for healing procedure. ")
-  
-    public String getHealScript() {
-    return healScript;
-  }
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
-  public void setHealScript(String healScript) {
-    this.healScript = healScript;
-  }
+	public HealVnfRequest healScript(final String healScript) {
+		this.healScript = healScript;
+		return this;
+	}
 
+	/**
+	 * Provides link to a script that should be executed as part of the healing
+	 * action or a set of rules for healing procedure.
+	 *
+	 * @return healScript
+	 **/
+	@Schema(description = "Provides link to a script that should be executed as part of the healing action or a set of rules for healing procedure. ")
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    HealVnfRequest healVnfRequest = (HealVnfRequest) o;
-    return Objects.equals(this.vnfcInstanceId, healVnfRequest.vnfcInstanceId) &&
-        Objects.equals(this.cause, healVnfRequest.cause) &&
-        Objects.equals(this.additionalParams, healVnfRequest.additionalParams) &&
-        Objects.equals(this.healScript, healVnfRequest.healScript);
-  }
+	public String getHealScript() {
+		return healScript;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfcInstanceId, cause, additionalParams, healScript);
-  }
+	public void setHealScript(final String healScript) {
+		this.healScript = healScript;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class HealVnfRequest {\n");
-    
-    sb.append("    vnfcInstanceId: ").append(toIndentedString(vnfcInstanceId)).append("\n");
-    sb.append("    cause: ").append(toIndentedString(cause)).append("\n");
-    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
-    sb.append("    healScript: ").append(toIndentedString(healScript)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final HealVnfRequest healVnfRequest = (HealVnfRequest) o;
+		return Objects.equals(this.vnfcInstanceId, healVnfRequest.vnfcInstanceId) &&
+				Objects.equals(this.cause, healVnfRequest.cause) &&
+				Objects.equals(this.additionalParams, healVnfRequest.additionalParams) &&
+				Objects.equals(this.healScript, healVnfRequest.healScript);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfcInstanceId, cause, additionalParams, healScript);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class HealVnfRequest {\n");
+
+		sb.append("    vnfcInstanceId: ").append(toIndentedString(vnfcInstanceId)).append("\n");
+		sb.append("    cause: ").append(toIndentedString(cause)).append("\n");
+		sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+		sb.append("    healScript: ").append(toIndentedString(healScript)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

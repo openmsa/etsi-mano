@@ -24,8 +24,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClas
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsfm.FmSubscription;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsfm.FmSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnffm.FmSubscription;
+import com.ubiqube.etsi.mano.em.v351.model.vnffm.FmSubscriptionRequest;
 
 /**
  *

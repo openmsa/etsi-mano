@@ -16,282 +16,318 @@
  */
 package com.ubiqube.etsi.mano.em.v351.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.ResourceHandle;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Map;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type provides information about added, deleted, modified and temporary VLs, and added or removed VNF link ports. NOTE: When signalling the addition (LINK_PORT_ADDED) or removal (LINK_PORT_REMOVED) of VNF link ports,        the \&quot;networkResource\&quot; attribute refers to the affected virtual link instance, not the link port        instance. The resource handles of the affected VNF link ports can be found by dereferencing the        identifiers in the \&quot;vnfLinkPortIds\&quot; attribute. 
+ * This type provides information about added, deleted, modified and temporary
+ * VLs, and added or removed VNF link ports. NOTE: When signalling the addition
+ * (LINK_PORT_ADDED) or removal (LINK_PORT_REMOVED) of VNF link ports, the
+ * \&quot;networkResource\&quot; attribute refers to the affected virtual link
+ * instance, not the link port instance. The resource handles of the affected
+ * VNF link ports can be found by dereferencing the identifiers in the
+ * \&quot;vnfLinkPortIds\&quot; attribute.
  */
 @Schema(description = "This type provides information about added, deleted, modified and temporary VLs, and added or removed VNF link ports. NOTE: When signalling the addition (LINK_PORT_ADDED) or removal (LINK_PORT_REMOVED) of VNF link ports,        the \"networkResource\" attribute refers to the affected virtual link instance, not the link port        instance. The resource handles of the affected VNF link ports can be found by dereferencing the        identifiers in the \"vnfLinkPortIds\" attribute. ")
 @Validated
 
+public class AffectedVirtualLink {
+	@JsonProperty("id")
+	private String id = null;
 
-public class AffectedVirtualLink   {
-  @JsonProperty("id")
-  private String id = null;
+	@JsonProperty("vnfVirtualLinkDescId")
+	private String vnfVirtualLinkDescId = null;
 
-  @JsonProperty("vnfVirtualLinkDescId")
-  private String vnfVirtualLinkDescId = null;
+	@JsonProperty("vnfdId")
+	private String vnfdId = null;
 
-  @JsonProperty("vnfdId")
-  private String vnfdId = null;
+	/**
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
+	 * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an
+	 * AffectedVirtualLink structure exists as long as the temporary resource
+	 * exists. When signalling the addition (LINK_PORT_ADDED) or removal
+	 * (LINK_PORT_REMOVED) of VNF link ports, the \"networkResource\" attribute
+	 * refers to the affected virtual link instance, not the link port instance. The
+	 * resource handles of the affected VNF link ports can be found by dereferencing
+	 * the identifiers in the \"vnfLinkPortIds\" attribute.
+	 */
+	public enum ChangeTypeEnum {
+		ADDED("ADDED"),
 
-  /**
-   * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. When signalling the addition (LINK_PORT_ADDED) or removal (LINK_PORT_REMOVED) of VNF link ports, the \"networkResource\" attribute refers to the affected virtual link instance, not the link port instance. The resource handles of the affected VNF link ports can be found by dereferencing the identifiers in the \"vnfLinkPortIds\" attribute. 
-   */
-  public enum ChangeTypeEnum {
-    ADDED("ADDED"),
-    
-    REMOVED("REMOVED"),
-    
-    MODIFIED("MODIFIED"),
-    
-    TEMPORARY("TEMPORARY"),
-    
-    LINK_PORT_ADDED("LINK_PORT_ADDED"),
-    
-    LINK_PORT_REMOVED("LINK_PORT_REMOVED");
+		REMOVED("REMOVED"),
 
-    private String value;
+		MODIFIED("MODIFIED"),
 
-    ChangeTypeEnum(String value) {
-      this.value = value;
-    }
+		TEMPORARY("TEMPORARY"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		LINK_PORT_ADDED("LINK_PORT_ADDED"),
 
-    @JsonCreator
-    public static ChangeTypeEnum fromValue(String text) {
-      for (ChangeTypeEnum b : ChangeTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("changeType")
-  private ChangeTypeEnum changeType = null;
+		LINK_PORT_REMOVED("LINK_PORT_REMOVED");
 
-  @JsonProperty("networkResource")
-  private ResourceHandle networkResource = null;
+		private final String value;
 
-  @JsonProperty("vnfLinkPortIds")
-  @Valid
-  private List<String> vnfLinkPortIds = null;
+		ChangeTypeEnum(final String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  public AffectedVirtualLink id(String id) {
-    this.id = id;
-    return this;
-  }
+		@JsonCreator
+		public static ChangeTypeEnum fromValue(final String text) {
+			for (final ChangeTypeEnum b : ChangeTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	@JsonProperty("changeType")
+	private ChangeTypeEnum changeType = null;
 
-    public String getId() {
-    return id;
-  }
+	@JsonProperty("networkResource")
+	private ResourceHandle networkResource = null;
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	@JsonProperty("vnfLinkPortIds")
+	@Valid
+	private List<String> vnfLinkPortIds = null;
 
-  public AffectedVirtualLink vnfVirtualLinkDescId(String vnfVirtualLinkDescId) {
-    this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
-    return this;
-  }
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
-  /**
-   * Get vnfVirtualLinkDescId
-   * @return vnfVirtualLinkDescId
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public AffectedVirtualLink id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-    public String getVnfVirtualLinkDescId() {
-    return vnfVirtualLinkDescId;
-  }
+	/**
+	 * Get id
+	 *
+	 * @return id
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  public void setVnfVirtualLinkDescId(String vnfVirtualLinkDescId) {
-    this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
-  }
+	public String getId() {
+		return id;
+	}
 
-  public AffectedVirtualLink vnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  /**
-   * Get vnfdId
-   * @return vnfdId
-   **/
-  @Schema(description = "")
-  
-    public String getVnfdId() {
-    return vnfdId;
-  }
+	public AffectedVirtualLink vnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
+		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
+		return this;
+	}
 
-  public void setVnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	/**
+	 * Get vnfVirtualLinkDescId
+	 *
+	 * @return vnfVirtualLinkDescId
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  public AffectedVirtualLink changeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-    return this;
-  }
+	public String getVnfVirtualLinkDescId() {
+		return vnfVirtualLinkDescId;
+	}
 
-  /**
-   * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. When signalling the addition (LINK_PORT_ADDED) or removal (LINK_PORT_REMOVED) of VNF link ports, the \"networkResource\" attribute refers to the affected virtual link instance, not the link port instance. The resource handles of the affected VNF link ports can be found by dereferencing the identifiers in the \"vnfLinkPortIds\" attribute. 
-   * @return changeType
-   **/
-  @Schema(required = true, description = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. When signalling the addition (LINK_PORT_ADDED) or removal (LINK_PORT_REMOVED) of VNF link ports, the \"networkResource\" attribute refers to the affected virtual link instance, not the link port instance. The resource handles of the affected VNF link ports can be found by dereferencing the identifiers in the \"vnfLinkPortIds\" attribute. ")
-      @NotNull
+	public void setVnfVirtualLinkDescId(final String vnfVirtualLinkDescId) {
+		this.vnfVirtualLinkDescId = vnfVirtualLinkDescId;
+	}
 
-    public ChangeTypeEnum getChangeType() {
-    return changeType;
-  }
+	public AffectedVirtualLink vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-  public void setChangeType(ChangeTypeEnum changeType) {
-    this.changeType = changeType;
-  }
+	/**
+	 * Get vnfdId
+	 *
+	 * @return vnfdId
+	 **/
+	@Schema(description = "")
 
-  public AffectedVirtualLink networkResource(ResourceHandle networkResource) {
-    this.networkResource = networkResource;
-    return this;
-  }
+	public String getVnfdId() {
+		return vnfdId;
+	}
 
-  /**
-   * Get networkResource
-   * @return networkResource
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
-    @Valid
-    public ResourceHandle getNetworkResource() {
-    return networkResource;
-  }
+	public AffectedVirtualLink changeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+		return this;
+	}
 
-  public void setNetworkResource(ResourceHandle networkResource) {
-    this.networkResource = networkResource;
-  }
+	/**
+	 * Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED *
+	 * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an
+	 * AffectedVirtualLink structure exists as long as the temporary resource
+	 * exists. When signalling the addition (LINK_PORT_ADDED) or removal
+	 * (LINK_PORT_REMOVED) of VNF link ports, the \"networkResource\" attribute
+	 * refers to the affected virtual link instance, not the link port instance. The
+	 * resource handles of the affected VNF link ports can be found by dereferencing
+	 * the identifiers in the \"vnfLinkPortIds\" attribute.
+	 *
+	 * @return changeType
+	 **/
+	@Schema(required = true, description = "Signals the type of change. Permitted values: * ADDED * REMOVED * MODIFIED * TEMPORARY * LINK_PORT_ADDED * LINK_PORT_REMOVED For a temporary resource, an AffectedVirtualLink structure exists as long as the temporary resource exists. When signalling the addition (LINK_PORT_ADDED) or removal (LINK_PORT_REMOVED) of VNF link ports, the \"networkResource\" attribute refers to the affected virtual link instance, not the link port instance. The resource handles of the affected VNF link ports can be found by dereferencing the identifiers in the \"vnfLinkPortIds\" attribute. ")
+	@NotNull
 
-  public AffectedVirtualLink vnfLinkPortIds(List<String> vnfLinkPortIds) {
-    this.vnfLinkPortIds = vnfLinkPortIds;
-    return this;
-  }
+	public ChangeTypeEnum getChangeType() {
+		return changeType;
+	}
 
-  public AffectedVirtualLink addVnfLinkPortIdsItem(String vnfLinkPortIdsItem) {
-    if (this.vnfLinkPortIds == null) {
-      this.vnfLinkPortIds = new ArrayList<>();
-    }
-    this.vnfLinkPortIds.add(vnfLinkPortIdsItem);
-    return this;
-  }
+	public void setChangeType(final ChangeTypeEnum changeType) {
+		this.changeType = changeType;
+	}
 
-  /**
-   * Identifiers of the link ports of the affected VL related to the change. Each identifier references a  \"VnfLinkPortInfo\" structure. Shall be set when changeType is equal to \"LINK_PORT_ADDED\" or \"LINK_PORT_REMOVED\", and the related  \"VnfLinkPortInfo\" structures are present (case \"added\") or have been present (case \"removed\") in the  \"VnfVirtualLinkResourceInfo\" or \"ExtManagedVirtualLinkInfo\" structures that are represented by the  \"vnfVirtualLinkResourceInfo\" or \"extManagedVirtualLinkInfo\" attribute in the \"VnfInstance\" structure.  See note. 
-   * @return vnfLinkPortIds
-   **/
-  @Schema(description = "Identifiers of the link ports of the affected VL related to the change. Each identifier references a  \"VnfLinkPortInfo\" structure. Shall be set when changeType is equal to \"LINK_PORT_ADDED\" or \"LINK_PORT_REMOVED\", and the related  \"VnfLinkPortInfo\" structures are present (case \"added\") or have been present (case \"removed\") in the  \"VnfVirtualLinkResourceInfo\" or \"ExtManagedVirtualLinkInfo\" structures that are represented by the  \"vnfVirtualLinkResourceInfo\" or \"extManagedVirtualLinkInfo\" attribute in the \"VnfInstance\" structure.  See note. ")
-  
-    public List<String> getVnfLinkPortIds() {
-    return vnfLinkPortIds;
-  }
+	public AffectedVirtualLink networkResource(final ResourceHandle networkResource) {
+		this.networkResource = networkResource;
+		return this;
+	}
 
-  public void setVnfLinkPortIds(List<String> vnfLinkPortIds) {
-    this.vnfLinkPortIds = vnfLinkPortIds;
-  }
+	/**
+	 * Get networkResource
+	 *
+	 * @return networkResource
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  public AffectedVirtualLink metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	@Valid
+	public ResourceHandle getNetworkResource() {
+		return networkResource;
+	}
 
-  /**
-   * Get metadata
-   * @return metadata
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	public void setNetworkResource(final ResourceHandle networkResource) {
+		this.networkResource = networkResource;
+	}
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	public AffectedVirtualLink vnfLinkPortIds(final List<String> vnfLinkPortIds) {
+		this.vnfLinkPortIds = vnfLinkPortIds;
+		return this;
+	}
 
+	public AffectedVirtualLink addVnfLinkPortIdsItem(final String vnfLinkPortIdsItem) {
+		if (this.vnfLinkPortIds == null) {
+			this.vnfLinkPortIds = new ArrayList<>();
+		}
+		this.vnfLinkPortIds.add(vnfLinkPortIdsItem);
+		return this;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AffectedVirtualLink affectedVirtualLink = (AffectedVirtualLink) o;
-    return Objects.equals(this.id, affectedVirtualLink.id) &&
-        Objects.equals(this.vnfVirtualLinkDescId, affectedVirtualLink.vnfVirtualLinkDescId) &&
-        Objects.equals(this.vnfdId, affectedVirtualLink.vnfdId) &&
-        Objects.equals(this.changeType, affectedVirtualLink.changeType) &&
-        Objects.equals(this.networkResource, affectedVirtualLink.networkResource) &&
-        Objects.equals(this.vnfLinkPortIds, affectedVirtualLink.vnfLinkPortIds) &&
-        Objects.equals(this.metadata, affectedVirtualLink.metadata);
-  }
+	/**
+	 * Identifiers of the link ports of the affected VL related to the change. Each
+	 * identifier references a \"VnfLinkPortInfo\" structure. Shall be set when
+	 * changeType is equal to \"LINK_PORT_ADDED\" or \"LINK_PORT_REMOVED\", and the
+	 * related \"VnfLinkPortInfo\" structures are present (case \"added\") or have
+	 * been present (case \"removed\") in the \"VnfVirtualLinkResourceInfo\" or
+	 * \"ExtManagedVirtualLinkInfo\" structures that are represented by the
+	 * \"vnfVirtualLinkResourceInfo\" or \"extManagedVirtualLinkInfo\" attribute in
+	 * the \"VnfInstance\" structure. See note.
+	 *
+	 * @return vnfLinkPortIds
+	 **/
+	@Schema(description = "Identifiers of the link ports of the affected VL related to the change. Each identifier references a  \"VnfLinkPortInfo\" structure. Shall be set when changeType is equal to \"LINK_PORT_ADDED\" or \"LINK_PORT_REMOVED\", and the related  \"VnfLinkPortInfo\" structures are present (case \"added\") or have been present (case \"removed\") in the  \"VnfVirtualLinkResourceInfo\" or \"ExtManagedVirtualLinkInfo\" structures that are represented by the  \"vnfVirtualLinkResourceInfo\" or \"extManagedVirtualLinkInfo\" attribute in the \"VnfInstance\" structure.  See note. ")
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, vnfVirtualLinkDescId, vnfdId, changeType, networkResource, vnfLinkPortIds, metadata);
-  }
+	public List<String> getVnfLinkPortIds() {
+		return vnfLinkPortIds;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class AffectedVirtualLink {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    vnfVirtualLinkDescId: ").append(toIndentedString(vnfVirtualLinkDescId)).append("\n");
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
-    sb.append("    networkResource: ").append(toIndentedString(networkResource)).append("\n");
-    sb.append("    vnfLinkPortIds: ").append(toIndentedString(vnfLinkPortIds)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	public void setVnfLinkPortIds(final List<String> vnfLinkPortIds) {
+		this.vnfLinkPortIds = vnfLinkPortIds;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	public AffectedVirtualLink metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
+
+	/**
+	 * Get metadata
+	 *
+	 * @return metadata
+	 **/
+	@Schema(description = "")
+
+	@Valid
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
+
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final AffectedVirtualLink affectedVirtualLink = (AffectedVirtualLink) o;
+		return Objects.equals(this.id, affectedVirtualLink.id) &&
+				Objects.equals(this.vnfVirtualLinkDescId, affectedVirtualLink.vnfVirtualLinkDescId) &&
+				Objects.equals(this.vnfdId, affectedVirtualLink.vnfdId) &&
+				Objects.equals(this.changeType, affectedVirtualLink.changeType) &&
+				Objects.equals(this.networkResource, affectedVirtualLink.networkResource) &&
+				Objects.equals(this.vnfLinkPortIds, affectedVirtualLink.vnfLinkPortIds) &&
+				Objects.equals(this.metadata, affectedVirtualLink.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, vnfVirtualLinkDescId, vnfdId, changeType, networkResource, vnfLinkPortIds, metadata);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class AffectedVirtualLink {\n");
+
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    vnfVirtualLinkDescId: ").append(toIndentedString(vnfVirtualLinkDescId)).append("\n");
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    changeType: ").append(toIndentedString(changeType)).append("\n");
+		sb.append("    networkResource: ").append(toIndentedString(networkResource)).append("\n");
+		sb.append("    vnfLinkPortIds: ").append(toIndentedString(vnfLinkPortIds)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

@@ -16,268 +16,275 @@
  */
 package com.ubiqube.etsi.mano.em.v351.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfInstance;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfcSnapshotInfo;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type represents a VNF snapshot. 
+ * This type represents a VNF snapshot.
  */
 @Schema(description = "This type represents a VNF snapshot. ")
 @Validated
 
+public class VnfSnapshot {
+	@JsonProperty("id")
+	private String id = null;
 
-public class VnfSnapshot   {
-  @JsonProperty("id")
-  private String id = null;
+	@JsonProperty("vnfInstanceId")
+	private String vnfInstanceId = null;
 
-  @JsonProperty("vnfInstanceId")
-  private String vnfInstanceId = null;
+	@JsonProperty("creationStartedAt")
+	private OffsetDateTime creationStartedAt = null;
 
-  @JsonProperty("creationStartedAt")
-  private OffsetDateTime creationStartedAt = null;
+	@JsonProperty("creationFinishedAt")
+	private OffsetDateTime creationFinishedAt = null;
 
-  @JsonProperty("creationFinishedAt")
-  private OffsetDateTime creationFinishedAt = null;
+	@JsonProperty("vnfdId")
+	private String vnfdId = null;
 
-  @JsonProperty("vnfdId")
-  private String vnfdId = null;
+	@JsonProperty("vnfInstance")
+	private VnfInstance vnfInstance = null;
 
-  @JsonProperty("vnfInstance")
-  private VnfInstance vnfInstance = null;
+	@JsonProperty("vnfcSnapshots")
+	@Valid
+	private List<VnfcSnapshotInfo> vnfcSnapshots = new ArrayList<>();
 
-  @JsonProperty("vnfcSnapshots")
-  @Valid
-  private List<VnfcSnapshotInfo> vnfcSnapshots = new ArrayList<>();
+	@JsonProperty("userDefinedData")
+	private Map<String, String> userDefinedData = null;
 
-  @JsonProperty("userDefinedData")
-  private KeyValuePairs userDefinedData = null;
+	public VnfSnapshot id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  public VnfSnapshot id(String id) {
-    this.id = id;
-    return this;
-  }
+	/**
+	 * Get id
+	 *
+	 * @return id
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getId() {
+		return id;
+	}
 
-    public String getId() {
-    return id;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public VnfSnapshot vnfInstanceId(final String vnfInstanceId) {
+		this.vnfInstanceId = vnfInstanceId;
+		return this;
+	}
 
-  public VnfSnapshot vnfInstanceId(String vnfInstanceId) {
-    this.vnfInstanceId = vnfInstanceId;
-    return this;
-  }
+	/**
+	 * Get vnfInstanceId
+	 *
+	 * @return vnfInstanceId
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get vnfInstanceId
-   * @return vnfInstanceId
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public String getVnfInstanceId() {
+		return vnfInstanceId;
+	}
 
-    public String getVnfInstanceId() {
-    return vnfInstanceId;
-  }
+	public void setVnfInstanceId(final String vnfInstanceId) {
+		this.vnfInstanceId = vnfInstanceId;
+	}
 
-  public void setVnfInstanceId(String vnfInstanceId) {
-    this.vnfInstanceId = vnfInstanceId;
-  }
+	public VnfSnapshot creationStartedAt(final OffsetDateTime creationStartedAt) {
+		this.creationStartedAt = creationStartedAt;
+		return this;
+	}
 
-  public VnfSnapshot creationStartedAt(OffsetDateTime creationStartedAt) {
-    this.creationStartedAt = creationStartedAt;
-    return this;
-  }
+	/**
+	 * Get creationStartedAt
+	 *
+	 * @return creationStartedAt
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get creationStartedAt
-   * @return creationStartedAt
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public OffsetDateTime getCreationStartedAt() {
-    return creationStartedAt;
-  }
+	@Valid
+	public OffsetDateTime getCreationStartedAt() {
+		return creationStartedAt;
+	}
 
-  public void setCreationStartedAt(OffsetDateTime creationStartedAt) {
-    this.creationStartedAt = creationStartedAt;
-  }
+	public void setCreationStartedAt(final OffsetDateTime creationStartedAt) {
+		this.creationStartedAt = creationStartedAt;
+	}
 
-  public VnfSnapshot creationFinishedAt(OffsetDateTime creationFinishedAt) {
-    this.creationFinishedAt = creationFinishedAt;
-    return this;
-  }
+	public VnfSnapshot creationFinishedAt(final OffsetDateTime creationFinishedAt) {
+		this.creationFinishedAt = creationFinishedAt;
+		return this;
+	}
 
-  /**
-   * Get creationFinishedAt
-   * @return creationFinishedAt
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public OffsetDateTime getCreationFinishedAt() {
-    return creationFinishedAt;
-  }
+	/**
+	 * Get creationFinishedAt
+	 *
+	 * @return creationFinishedAt
+	 **/
+	@Schema(description = "")
 
-  public void setCreationFinishedAt(OffsetDateTime creationFinishedAt) {
-    this.creationFinishedAt = creationFinishedAt;
-  }
+	@Valid
+	public OffsetDateTime getCreationFinishedAt() {
+		return creationFinishedAt;
+	}
 
-  public VnfSnapshot vnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+	public void setCreationFinishedAt(final OffsetDateTime creationFinishedAt) {
+		this.creationFinishedAt = creationFinishedAt;
+	}
 
-  /**
-   * Get vnfdId
-   * @return vnfdId
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public VnfSnapshot vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-    public String getVnfdId() {
-    return vnfdId;
-  }
+	/**
+	 * Get vnfdId
+	 *
+	 * @return vnfdId
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  public void setVnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	public String getVnfdId() {
+		return vnfdId;
+	}
 
-  public VnfSnapshot vnfInstance(VnfInstance vnfInstance) {
-    this.vnfInstance = vnfInstance;
-    return this;
-  }
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
-  /**
-   * Get vnfInstance
-   * @return vnfInstance
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public VnfInstance getVnfInstance() {
-    return vnfInstance;
-  }
+	public VnfSnapshot vnfInstance(final VnfInstance vnfInstance) {
+		this.vnfInstance = vnfInstance;
+		return this;
+	}
 
-  public void setVnfInstance(VnfInstance vnfInstance) {
-    this.vnfInstance = vnfInstance;
-  }
+	/**
+	 * Get vnfInstance
+	 *
+	 * @return vnfInstance
+	 **/
+	@Schema(description = "")
 
-  public VnfSnapshot vnfcSnapshots(List<VnfcSnapshotInfo> vnfcSnapshots) {
-    this.vnfcSnapshots = vnfcSnapshots;
-    return this;
-  }
+	@Valid
+	public VnfInstance getVnfInstance() {
+		return vnfInstance;
+	}
 
-  public VnfSnapshot addVnfcSnapshotsItem(VnfcSnapshotInfo vnfcSnapshotsItem) {
-    this.vnfcSnapshots.add(vnfcSnapshotsItem);
-    return this;
-  }
+	public void setVnfInstance(final VnfInstance vnfInstance) {
+		this.vnfInstance = vnfInstance;
+	}
 
-  /**
-   * Information about VNFC snapshots constituting this VNF snapshot. 
-   * @return vnfcSnapshots
-   **/
-  @Schema(required = true, description = "Information about VNFC snapshots constituting this VNF snapshot. ")
-      @NotNull
-    @Valid
-    public List<VnfcSnapshotInfo> getVnfcSnapshots() {
-    return vnfcSnapshots;
-  }
+	public VnfSnapshot vnfcSnapshots(final List<VnfcSnapshotInfo> vnfcSnapshots) {
+		this.vnfcSnapshots = vnfcSnapshots;
+		return this;
+	}
 
-  public void setVnfcSnapshots(List<VnfcSnapshotInfo> vnfcSnapshots) {
-    this.vnfcSnapshots = vnfcSnapshots;
-  }
+	public VnfSnapshot addVnfcSnapshotsItem(final VnfcSnapshotInfo vnfcSnapshotsItem) {
+		this.vnfcSnapshots.add(vnfcSnapshotsItem);
+		return this;
+	}
 
-  public VnfSnapshot userDefinedData(KeyValuePairs userDefinedData) {
-    this.userDefinedData = userDefinedData;
-    return this;
-  }
+	/**
+	 * Information about VNFC snapshots constituting this VNF snapshot.
+	 *
+	 * @return vnfcSnapshots
+	 **/
+	@Schema(required = true, description = "Information about VNFC snapshots constituting this VNF snapshot. ")
+	@NotNull
+	@Valid
+	public List<VnfcSnapshotInfo> getVnfcSnapshots() {
+		return vnfcSnapshots;
+	}
 
-  /**
-   * Get userDefinedData
-   * @return userDefinedData
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getUserDefinedData() {
-    return userDefinedData;
-  }
+	public void setVnfcSnapshots(final List<VnfcSnapshotInfo> vnfcSnapshots) {
+		this.vnfcSnapshots = vnfcSnapshots;
+	}
 
-  public void setUserDefinedData(KeyValuePairs userDefinedData) {
-    this.userDefinedData = userDefinedData;
-  }
+	public VnfSnapshot userDefinedData(final Map<String, String> userDefinedData) {
+		this.userDefinedData = userDefinedData;
+		return this;
+	}
 
+	/**
+	 * Get userDefinedData
+	 *
+	 * @return userDefinedData
+	 **/
+	@Schema(description = "")
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    VnfSnapshot vnfSnapshot = (VnfSnapshot) o;
-    return Objects.equals(this.id, vnfSnapshot.id) &&
-        Objects.equals(this.vnfInstanceId, vnfSnapshot.vnfInstanceId) &&
-        Objects.equals(this.creationStartedAt, vnfSnapshot.creationStartedAt) &&
-        Objects.equals(this.creationFinishedAt, vnfSnapshot.creationFinishedAt) &&
-        Objects.equals(this.vnfdId, vnfSnapshot.vnfdId) &&
-        Objects.equals(this.vnfInstance, vnfSnapshot.vnfInstance) &&
-        Objects.equals(this.vnfcSnapshots, vnfSnapshot.vnfcSnapshots) &&
-        Objects.equals(this.userDefinedData, vnfSnapshot.userDefinedData);
-  }
+	@Valid
+	public Map<String, String> getUserDefinedData() {
+		return userDefinedData;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, vnfInstanceId, creationStartedAt, creationFinishedAt, vnfdId, vnfInstance, vnfcSnapshots, userDefinedData);
-  }
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
+		this.userDefinedData = userDefinedData;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfSnapshot {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    vnfInstanceId: ").append(toIndentedString(vnfInstanceId)).append("\n");
-    sb.append("    creationStartedAt: ").append(toIndentedString(creationStartedAt)).append("\n");
-    sb.append("    creationFinishedAt: ").append(toIndentedString(creationFinishedAt)).append("\n");
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    vnfInstance: ").append(toIndentedString(vnfInstance)).append("\n");
-    sb.append("    vnfcSnapshots: ").append(toIndentedString(vnfcSnapshots)).append("\n");
-    sb.append("    userDefinedData: ").append(toIndentedString(userDefinedData)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final VnfSnapshot vnfSnapshot = (VnfSnapshot) o;
+		return Objects.equals(this.id, vnfSnapshot.id) &&
+				Objects.equals(this.vnfInstanceId, vnfSnapshot.vnfInstanceId) &&
+				Objects.equals(this.creationStartedAt, vnfSnapshot.creationStartedAt) &&
+				Objects.equals(this.creationFinishedAt, vnfSnapshot.creationFinishedAt) &&
+				Objects.equals(this.vnfdId, vnfSnapshot.vnfdId) &&
+				Objects.equals(this.vnfInstance, vnfSnapshot.vnfInstance) &&
+				Objects.equals(this.vnfcSnapshots, vnfSnapshot.vnfcSnapshots) &&
+				Objects.equals(this.userDefinedData, vnfSnapshot.userDefinedData);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, vnfInstanceId, creationStartedAt, creationFinishedAt, vnfdId, vnfInstance, vnfcSnapshots, userDefinedData);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfSnapshot {\n");
+
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    vnfInstanceId: ").append(toIndentedString(vnfInstanceId)).append("\n");
+		sb.append("    creationStartedAt: ").append(toIndentedString(creationStartedAt)).append("\n");
+		sb.append("    creationFinishedAt: ").append(toIndentedString(creationFinishedAt)).append("\n");
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    vnfInstance: ").append(toIndentedString(vnfInstance)).append("\n");
+		sb.append("    vnfcSnapshots: ").append(toIndentedString(vnfcSnapshots)).append("\n");
+		sb.append("    userDefinedData: ").append(toIndentedString(userDefinedData)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

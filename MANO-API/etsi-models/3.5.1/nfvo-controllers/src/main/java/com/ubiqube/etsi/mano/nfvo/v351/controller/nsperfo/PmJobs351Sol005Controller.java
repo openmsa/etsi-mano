@@ -23,10 +23,10 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.CreatePmJobRequest;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.PerformanceReport;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.PmJob;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.PmJobModifications;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.CreatePmJobRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PerformanceReport;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PmJob;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PmJobModifications;
 
 /**
  *

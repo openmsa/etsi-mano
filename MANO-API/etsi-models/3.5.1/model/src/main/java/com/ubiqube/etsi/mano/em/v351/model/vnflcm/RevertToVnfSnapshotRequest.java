@@ -17,153 +17,158 @@
 package com.ubiqube.etsi.mano.em.v351.model.vnflcm;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.KeyValuePairs;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type represents request parameters for the \&quot;Revert-to VNF Snapshot\&quot; operation. 
+ * This type represents request parameters for the \&quot;Revert-to VNF
+ * Snapshot\&quot; operation.
  */
 @Schema(description = "This type represents request parameters for the \"Revert-to VNF Snapshot\" operation. ")
 @Validated
 
+public class RevertToVnfSnapshotRequest {
+	@JsonProperty("vnfSnapshotInfoId")
+	private String vnfSnapshotInfoId = null;
 
-public class RevertToVnfSnapshotRequest   {
-  @JsonProperty("vnfSnapshotInfoId")
-  private String vnfSnapshotInfoId = null;
+	@JsonProperty("vnfcInstanceId")
+	private String vnfcInstanceId = null;
 
-  @JsonProperty("vnfcInstanceId")
-  private String vnfcInstanceId = null;
+	@JsonProperty("vnfcSnapshotInfoId")
+	private String vnfcSnapshotInfoId = null;
 
-  @JsonProperty("vnfcSnapshotInfoId")
-  private String vnfcSnapshotInfoId = null;
+	@JsonProperty("additionalParams")
+	private Map<String, String> additionalParams = null;
 
-  @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+	public RevertToVnfSnapshotRequest vnfSnapshotInfoId(final String vnfSnapshotInfoId) {
+		this.vnfSnapshotInfoId = vnfSnapshotInfoId;
+		return this;
+	}
 
-  public RevertToVnfSnapshotRequest vnfSnapshotInfoId(String vnfSnapshotInfoId) {
-    this.vnfSnapshotInfoId = vnfSnapshotInfoId;
-    return this;
-  }
+	/**
+	 * Get vnfSnapshotInfoId
+	 *
+	 * @return vnfSnapshotInfoId
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get vnfSnapshotInfoId
-   * @return vnfSnapshotInfoId
-   **/
-  @Schema(description = "")
-  
-    public String getVnfSnapshotInfoId() {
-    return vnfSnapshotInfoId;
-  }
+	public String getVnfSnapshotInfoId() {
+		return vnfSnapshotInfoId;
+	}
 
-  public void setVnfSnapshotInfoId(String vnfSnapshotInfoId) {
-    this.vnfSnapshotInfoId = vnfSnapshotInfoId;
-  }
+	public void setVnfSnapshotInfoId(final String vnfSnapshotInfoId) {
+		this.vnfSnapshotInfoId = vnfSnapshotInfoId;
+	}
 
-  public RevertToVnfSnapshotRequest vnfcInstanceId(String vnfcInstanceId) {
-    this.vnfcInstanceId = vnfcInstanceId;
-    return this;
-  }
+	public RevertToVnfSnapshotRequest vnfcInstanceId(final String vnfcInstanceId) {
+		this.vnfcInstanceId = vnfcInstanceId;
+		return this;
+	}
 
-  /**
-   * Get vnfcInstanceId
-   * @return vnfcInstanceId
-   **/
-  @Schema(description = "")
-  
-    public String getVnfcInstanceId() {
-    return vnfcInstanceId;
-  }
+	/**
+	 * Get vnfcInstanceId
+	 *
+	 * @return vnfcInstanceId
+	 **/
+	@Schema(description = "")
 
-  public void setVnfcInstanceId(String vnfcInstanceId) {
-    this.vnfcInstanceId = vnfcInstanceId;
-  }
+	public String getVnfcInstanceId() {
+		return vnfcInstanceId;
+	}
 
-  public RevertToVnfSnapshotRequest vnfcSnapshotInfoId(String vnfcSnapshotInfoId) {
-    this.vnfcSnapshotInfoId = vnfcSnapshotInfoId;
-    return this;
-  }
+	public void setVnfcInstanceId(final String vnfcInstanceId) {
+		this.vnfcInstanceId = vnfcInstanceId;
+	}
 
-  /**
-   * Get vnfcSnapshotInfoId
-   * @return vnfcSnapshotInfoId
-   **/
-  @Schema(description = "")
-  
-    public String getVnfcSnapshotInfoId() {
-    return vnfcSnapshotInfoId;
-  }
+	public RevertToVnfSnapshotRequest vnfcSnapshotInfoId(final String vnfcSnapshotInfoId) {
+		this.vnfcSnapshotInfoId = vnfcSnapshotInfoId;
+		return this;
+	}
 
-  public void setVnfcSnapshotInfoId(String vnfcSnapshotInfoId) {
-    this.vnfcSnapshotInfoId = vnfcSnapshotInfoId;
-  }
+	/**
+	 * Get vnfcSnapshotInfoId
+	 *
+	 * @return vnfcSnapshotInfoId
+	 **/
+	@Schema(description = "")
 
-  public RevertToVnfSnapshotRequest additionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-    return this;
-  }
+	public String getVnfcSnapshotInfoId() {
+		return vnfcSnapshotInfoId;
+	}
 
-  /**
-   * Get additionalParams
-   * @return additionalParams
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getAdditionalParams() {
-    return additionalParams;
-  }
+	public void setVnfcSnapshotInfoId(final String vnfcSnapshotInfoId) {
+		this.vnfcSnapshotInfoId = vnfcSnapshotInfoId;
+	}
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-  }
+	public RevertToVnfSnapshotRequest additionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+		return this;
+	}
 
+	/**
+	 * Get additionalParams
+	 *
+	 * @return additionalParams
+	 **/
+	@Schema(description = "")
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    RevertToVnfSnapshotRequest revertToVnfSnapshotRequest = (RevertToVnfSnapshotRequest) o;
-    return Objects.equals(this.vnfSnapshotInfoId, revertToVnfSnapshotRequest.vnfSnapshotInfoId) &&
-        Objects.equals(this.vnfcInstanceId, revertToVnfSnapshotRequest.vnfcInstanceId) &&
-        Objects.equals(this.vnfcSnapshotInfoId, revertToVnfSnapshotRequest.vnfcSnapshotInfoId) &&
-        Objects.equals(this.additionalParams, revertToVnfSnapshotRequest.additionalParams);
-  }
+	@Valid
+	public Map<String, String> getAdditionalParams() {
+		return additionalParams;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfSnapshotInfoId, vnfcInstanceId, vnfcSnapshotInfoId, additionalParams);
-  }
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class RevertToVnfSnapshotRequest {\n");
-    
-    sb.append("    vnfSnapshotInfoId: ").append(toIndentedString(vnfSnapshotInfoId)).append("\n");
-    sb.append("    vnfcInstanceId: ").append(toIndentedString(vnfcInstanceId)).append("\n");
-    sb.append("    vnfcSnapshotInfoId: ").append(toIndentedString(vnfcSnapshotInfoId)).append("\n");
-    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final RevertToVnfSnapshotRequest revertToVnfSnapshotRequest = (RevertToVnfSnapshotRequest) o;
+		return Objects.equals(this.vnfSnapshotInfoId, revertToVnfSnapshotRequest.vnfSnapshotInfoId) &&
+				Objects.equals(this.vnfcInstanceId, revertToVnfSnapshotRequest.vnfcInstanceId) &&
+				Objects.equals(this.vnfcSnapshotInfoId, revertToVnfSnapshotRequest.vnfcSnapshotInfoId) &&
+				Objects.equals(this.additionalParams, revertToVnfSnapshotRequest.additionalParams);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfSnapshotInfoId, vnfcInstanceId, vnfcSnapshotInfoId, additionalParams);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class RevertToVnfSnapshotRequest {\n");
+
+		sb.append("    vnfSnapshotInfoId: ").append(toIndentedString(vnfSnapshotInfoId)).append("\n");
+		sb.append("    vnfcInstanceId: ").append(toIndentedString(vnfcInstanceId)).append("\n");
+		sb.append("    vnfcSnapshotInfoId: ").append(toIndentedString(vnfcSnapshotInfoId)).append("\n");
+		sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

@@ -27,11 +27,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.dao.mano.alarm.AckState;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
+import com.ubiqube.etsi.mano.em.v351.model.vnffm.Alarm;
+import com.ubiqube.etsi.mano.em.v351.model.vnffm.AlarmLinks;
+import com.ubiqube.etsi.mano.em.v351.model.vnffm.AlarmModifications;
 import com.ubiqube.etsi.mano.vnfm.fc.vnffm.AlarmFrontController;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnffm.Alarm;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnffm.AlarmLinks;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnffm.AlarmModifications;
-import com.ubiqube.etsi.mano.vnfm.v351.model.vnffm.Link;
 
 /**
  *

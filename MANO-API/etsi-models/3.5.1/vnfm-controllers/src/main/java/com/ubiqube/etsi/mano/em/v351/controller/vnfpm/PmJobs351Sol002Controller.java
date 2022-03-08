@@ -16,30 +16,27 @@
  */
 package com.ubiqube.etsi.mano.em.v351.controller.vnfpm;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ubiqube.etsi.mano.em.v351.controller.vnfpm.PmJobs351Sol002Api;
-import com.ubiqube.etsi.mano.em.v351.controller.vnfpm.PmJobs351Sol002Controller;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.UUID;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.Link;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.CreatePmJobRequest;
-import com.ubiqube.etsi.mano.em.v351.model.vnfpm.Link;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PerformanceReport;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PmJob;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PmJobLinks;
 import com.ubiqube.etsi.mano.em.v351.model.vnfpm.PmJobModifications;
 import com.ubiqube.etsi.mano.vnfm.fc.vnfpm.VnfmPmGenericFrontController;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.Optional;
-import java.util.UUID;
 /**
- * 
+ *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
@@ -98,6 +95,5 @@ public class PmJobs351Sol002Controller implements PmJobs351Sol002Api {
 	public ResponseEntity<PmJobModifications> pmJobsPmJobIdPatch(final String pmJobId, final PmJobModifications pmJobModifications, final String ifMatch) {
 		return vnfmPmGenericFrontController.pmJobsPmJobIdPatch(UUID.fromString(pmJobId), pmJobModifications);
 	}
-
 
 }

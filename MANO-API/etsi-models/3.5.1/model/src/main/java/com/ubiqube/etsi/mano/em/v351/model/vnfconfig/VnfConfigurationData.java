@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.em.v351.model.vnfconfig.CpConfiguration;
-import com.ubiqube.etsi.mano.em.v351.model.vnfconfig.KeyValuePairs;
+import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class VnfConfigurationData   {
   private String dhcpServer = null;
 
   @JsonProperty("vnfSpecificData")
-  private KeyValuePairs vnfSpecificData = null;
+  private Map<String, String> vnfSpecificData = null;
 
   public VnfConfigurationData extCpConfig(List<CpConfiguration> extCpConfig) {
     this.extCpConfig = extCpConfig;
@@ -92,7 +92,7 @@ public class VnfConfigurationData   {
     this.dhcpServer = dhcpServer;
   }
 
-  public VnfConfigurationData vnfSpecificData(KeyValuePairs vnfSpecificData) {
+  public VnfConfigurationData vnfSpecificData(Map<String, String> vnfSpecificData) {
     this.vnfSpecificData = vnfSpecificData;
     return this;
   }
@@ -104,11 +104,11 @@ public class VnfConfigurationData   {
   @Schema(description = "")
   
     @Valid
-    public KeyValuePairs getVnfSpecificData() {
+    public Map<String, String> getVnfSpecificData() {
     return vnfSpecificData;
   }
 
-  public void setVnfSpecificData(KeyValuePairs vnfSpecificData) {
+  public void setVnfSpecificData(Map<String, String> vnfSpecificData) {
     this.vnfSpecificData = vnfSpecificData;
   }
 

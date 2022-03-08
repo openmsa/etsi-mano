@@ -16,262 +16,276 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v351.model.nslcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.LcmCoordResultType;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.OffsetDateTime;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.em.v351.model.lcmcoord.LcmCoordResultType;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * NsLcmOpOccLcmCoordinations
  */
 @Validated
 
+public class NsLcmOpOccLcmCoordinations {
+	@JsonProperty("id")
+	private String id = null;
 
-public class NsLcmOpOccLcmCoordinations   {
-  @JsonProperty("id")
-  private String id = null;
+	@JsonProperty("coordinationActionName")
+	private String coordinationActionName = null;
 
-  @JsonProperty("coordinationActionName")
-  private String coordinationActionName = null;
+	@JsonProperty("coordinationResult")
+	private LcmCoordResultType coordinationResult = null;
 
-  @JsonProperty("coordinationResult")
-  private LcmCoordResultType coordinationResult = null;
+	@JsonProperty("startTime")
+	private OffsetDateTime startTime = null;
 
-  @JsonProperty("startTime")
-  private OffsetDateTime startTime = null;
+	@JsonProperty("endTime")
+	private OffsetDateTime endTime = null;
 
-  @JsonProperty("endTime")
-  private OffsetDateTime endTime = null;
+	/**
+	 * The endpoint type used by this coordination action. Valid values: - MGMT:
+	 * coordination with other operation supporting management systems (e.g.
+	 * OSS/BSS)
+	 */
+	public enum EndpointTypeEnum {
+		MGMT("MGMT");
 
-  /**
-   * The endpoint type used by this coordination action. Valid values: - MGMT: coordination with other operation supporting management systems (e.g. OSS/BSS) 
-   */
-  public enum EndpointTypeEnum {
-    MGMT("MGMT");
+		private final String value;
 
-    private String value;
+		EndpointTypeEnum(final String value) {
+			this.value = value;
+		}
 
-    EndpointTypeEnum(String value) {
-      this.value = value;
-    }
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		@JsonCreator
+		public static EndpointTypeEnum fromValue(final String text) {
+			for (final EndpointTypeEnum b : EndpointTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-    @JsonCreator
-    public static EndpointTypeEnum fromValue(String text) {
-      for (EndpointTypeEnum b : EndpointTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("endpointType")
-  private EndpointTypeEnum endpointType = null;
+	@JsonProperty("endpointType")
+	private EndpointTypeEnum endpointType = null;
 
-  @JsonProperty("delay")
-  private OffsetDateTime delay = null;
+	@JsonProperty("delay")
+	private OffsetDateTime delay = null;
 
-  public NsLcmOpOccLcmCoordinations id(String id) {
-    this.id = id;
-    return this;
-  }
+	public NsLcmOpOccLcmCoordinations id(final String id) {
+		this.id = id;
+		return this;
+	}
 
-  /**
-   * Get id
-   * @return id
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	/**
+	 * Get id
+	 *
+	 * @return id
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-    public String getId() {
-    return id;
-  }
+	public String getId() {
+		return id;
+	}
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	public void setId(final String id) {
+		this.id = id;
+	}
 
-  public NsLcmOpOccLcmCoordinations coordinationActionName(String coordinationActionName) {
-    this.coordinationActionName = coordinationActionName;
-    return this;
-  }
+	public NsLcmOpOccLcmCoordinations coordinationActionName(final String coordinationActionName) {
+		this.coordinationActionName = coordinationActionName;
+		return this;
+	}
 
-  /**
-   * Get coordinationActionName
-   * @return coordinationActionName
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	/**
+	 * Get coordinationActionName
+	 *
+	 * @return coordinationActionName
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-    public String getCoordinationActionName() {
-    return coordinationActionName;
-  }
+	public String getCoordinationActionName() {
+		return coordinationActionName;
+	}
 
-  public void setCoordinationActionName(String coordinationActionName) {
-    this.coordinationActionName = coordinationActionName;
-  }
+	public void setCoordinationActionName(final String coordinationActionName) {
+		this.coordinationActionName = coordinationActionName;
+	}
 
-  public NsLcmOpOccLcmCoordinations coordinationResult(LcmCoordResultType coordinationResult) {
-    this.coordinationResult = coordinationResult;
-    return this;
-  }
+	public NsLcmOpOccLcmCoordinations coordinationResult(final LcmCoordResultType coordinationResult) {
+		this.coordinationResult = coordinationResult;
+		return this;
+	}
 
-  /**
-   * Get coordinationResult
-   * @return coordinationResult
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public LcmCoordResultType getCoordinationResult() {
-    return coordinationResult;
-  }
+	/**
+	 * Get coordinationResult
+	 *
+	 * @return coordinationResult
+	 **/
+	@Schema(description = "")
 
-  public void setCoordinationResult(LcmCoordResultType coordinationResult) {
-    this.coordinationResult = coordinationResult;
-  }
+	@Valid
+	public LcmCoordResultType getCoordinationResult() {
+		return coordinationResult;
+	}
 
-  public NsLcmOpOccLcmCoordinations startTime(OffsetDateTime startTime) {
-    this.startTime = startTime;
-    return this;
-  }
+	public void setCoordinationResult(final LcmCoordResultType coordinationResult) {
+		this.coordinationResult = coordinationResult;
+	}
 
-  /**
-   * Get startTime
-   * @return startTime
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	public NsLcmOpOccLcmCoordinations startTime(final OffsetDateTime startTime) {
+		this.startTime = startTime;
+		return this;
+	}
 
-    @Valid
-    public OffsetDateTime getStartTime() {
-    return startTime;
-  }
+	/**
+	 * Get startTime
+	 *
+	 * @return startTime
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  public void setStartTime(OffsetDateTime startTime) {
-    this.startTime = startTime;
-  }
+	@Valid
+	public OffsetDateTime getStartTime() {
+		return startTime;
+	}
 
-  public NsLcmOpOccLcmCoordinations endTime(OffsetDateTime endTime) {
-    this.endTime = endTime;
-    return this;
-  }
+	public void setStartTime(final OffsetDateTime startTime) {
+		this.startTime = startTime;
+	}
 
-  /**
-   * Get endTime
-   * @return endTime
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public OffsetDateTime getEndTime() {
-    return endTime;
-  }
+	public NsLcmOpOccLcmCoordinations endTime(final OffsetDateTime endTime) {
+		this.endTime = endTime;
+		return this;
+	}
 
-  public void setEndTime(OffsetDateTime endTime) {
-    this.endTime = endTime;
-  }
+	/**
+	 * Get endTime
+	 *
+	 * @return endTime
+	 **/
+	@Schema(description = "")
 
-  public NsLcmOpOccLcmCoordinations endpointType(EndpointTypeEnum endpointType) {
-    this.endpointType = endpointType;
-    return this;
-  }
+	@Valid
+	public OffsetDateTime getEndTime() {
+		return endTime;
+	}
 
-  /**
-   * The endpoint type used by this coordination action. Valid values: - MGMT: coordination with other operation supporting management systems (e.g. OSS/BSS) 
-   * @return endpointType
-   **/
-  @Schema(required = true, description = "The endpoint type used by this coordination action. Valid values: - MGMT: coordination with other operation supporting management systems (e.g. OSS/BSS) ")
-      @NotNull
+	public void setEndTime(final OffsetDateTime endTime) {
+		this.endTime = endTime;
+	}
 
-    public EndpointTypeEnum getEndpointType() {
-    return endpointType;
-  }
+	public NsLcmOpOccLcmCoordinations endpointType(final EndpointTypeEnum endpointType) {
+		this.endpointType = endpointType;
+		return this;
+	}
 
-  public void setEndpointType(EndpointTypeEnum endpointType) {
-    this.endpointType = endpointType;
-  }
+	/**
+	 * The endpoint type used by this coordination action. Valid values: - MGMT:
+	 * coordination with other operation supporting management systems (e.g.
+	 * OSS/BSS)
+	 *
+	 * @return endpointType
+	 **/
+	@Schema(required = true, description = "The endpoint type used by this coordination action. Valid values: - MGMT: coordination with other operation supporting management systems (e.g. OSS/BSS) ")
+	@NotNull
 
-  public NsLcmOpOccLcmCoordinations delay(OffsetDateTime delay) {
-    this.delay = delay;
-    return this;
-  }
+	public EndpointTypeEnum getEndpointType() {
+		return endpointType;
+	}
 
-  /**
-   * Get delay
-   * @return delay
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public OffsetDateTime getDelay() {
-    return delay;
-  }
+	public void setEndpointType(final EndpointTypeEnum endpointType) {
+		this.endpointType = endpointType;
+	}
 
-  public void setDelay(OffsetDateTime delay) {
-    this.delay = delay;
-  }
+	public NsLcmOpOccLcmCoordinations delay(final OffsetDateTime delay) {
+		this.delay = delay;
+		return this;
+	}
 
+	/**
+	 * Get delay
+	 *
+	 * @return delay
+	 **/
+	@Schema(description = "")
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    NsLcmOpOccLcmCoordinations nsLcmOpOccLcmCoordinations = (NsLcmOpOccLcmCoordinations) o;
-    return Objects.equals(this.id, nsLcmOpOccLcmCoordinations.id) &&
-        Objects.equals(this.coordinationActionName, nsLcmOpOccLcmCoordinations.coordinationActionName) &&
-        Objects.equals(this.coordinationResult, nsLcmOpOccLcmCoordinations.coordinationResult) &&
-        Objects.equals(this.startTime, nsLcmOpOccLcmCoordinations.startTime) &&
-        Objects.equals(this.endTime, nsLcmOpOccLcmCoordinations.endTime) &&
-        Objects.equals(this.endpointType, nsLcmOpOccLcmCoordinations.endpointType) &&
-        Objects.equals(this.delay, nsLcmOpOccLcmCoordinations.delay);
-  }
+	@Valid
+	public OffsetDateTime getDelay() {
+		return delay;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, coordinationActionName, coordinationResult, startTime, endTime, endpointType, delay);
-  }
+	public void setDelay(final OffsetDateTime delay) {
+		this.delay = delay;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class NsLcmOpOccLcmCoordinations {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    coordinationActionName: ").append(toIndentedString(coordinationActionName)).append("\n");
-    sb.append("    coordinationResult: ").append(toIndentedString(coordinationResult)).append("\n");
-    sb.append("    startTime: ").append(toIndentedString(startTime)).append("\n");
-    sb.append("    endTime: ").append(toIndentedString(endTime)).append("\n");
-    sb.append("    endpointType: ").append(toIndentedString(endpointType)).append("\n");
-    sb.append("    delay: ").append(toIndentedString(delay)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final NsLcmOpOccLcmCoordinations nsLcmOpOccLcmCoordinations = (NsLcmOpOccLcmCoordinations) o;
+		return Objects.equals(this.id, nsLcmOpOccLcmCoordinations.id) &&
+				Objects.equals(this.coordinationActionName, nsLcmOpOccLcmCoordinations.coordinationActionName) &&
+				Objects.equals(this.coordinationResult, nsLcmOpOccLcmCoordinations.coordinationResult) &&
+				Objects.equals(this.startTime, nsLcmOpOccLcmCoordinations.startTime) &&
+				Objects.equals(this.endTime, nsLcmOpOccLcmCoordinations.endTime) &&
+				Objects.equals(this.endpointType, nsLcmOpOccLcmCoordinations.endpointType) &&
+				Objects.equals(this.delay, nsLcmOpOccLcmCoordinations.delay);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, coordinationActionName, coordinationResult, startTime, endTime, endpointType, delay);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class NsLcmOpOccLcmCoordinations {\n");
+
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    coordinationActionName: ").append(toIndentedString(coordinationActionName)).append("\n");
+		sb.append("    coordinationResult: ").append(toIndentedString(coordinationResult)).append("\n");
+		sb.append("    startTime: ").append(toIndentedString(startTime)).append("\n");
+		sb.append("    endTime: ").append(toIndentedString(endTime)).append("\n");
+		sb.append("    endpointType: ").append(toIndentedString(endpointType)).append("\n");
+		sb.append("    delay: ").append(toIndentedString(delay)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

@@ -23,9 +23,9 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.CreateThresholdRequest;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.Threshold;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nsperfo.ThresholdModifications;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.CreateThresholdRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.Threshold;
+import com.ubiqube.etsi.mano.em.v351.model.vnfpm.ThresholdModifications;
 
 /**
  *

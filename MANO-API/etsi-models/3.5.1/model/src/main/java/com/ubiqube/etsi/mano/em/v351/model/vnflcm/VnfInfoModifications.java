@@ -16,336 +16,363 @@
  */
 package com.ubiqube.etsi.mano.em.v351.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfcInfoModifications;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type represents attribute modifications that were performed on an \&quot;Individual VNF instance\&quot; resource. The attributes that can be included consist of those requested to be modified explicitly in the \&quot;VnfInfoModificationRequest\&quot; data structure, and additional attributes of the \&quot;VnfInstance\&quot; data structure that were modified implicitly e.g. when modifying the referenced VNF package. * NOTE: If present, this attribute (which depends on the value of the \&quot;vnfdId\&quot; attribute)           was modified implicitly following a request to modify the \&quot;vnfdId\&quot; attribute, by           copying the value of this attribute from the VNFD in the VNF Package identified           by the \&quot;vnfdId\&quot; attribute. 
+ * This type represents attribute modifications that were performed on an
+ * \&quot;Individual VNF instance\&quot; resource. The attributes that can be
+ * included consist of those requested to be modified explicitly in the
+ * \&quot;VnfInfoModificationRequest\&quot; data structure, and additional
+ * attributes of the \&quot;VnfInstance\&quot; data structure that were modified
+ * implicitly e.g. when modifying the referenced VNF package. * NOTE: If
+ * present, this attribute (which depends on the value of the
+ * \&quot;vnfdId\&quot; attribute) was modified implicitly following a request
+ * to modify the \&quot;vnfdId\&quot; attribute, by copying the value of this
+ * attribute from the VNFD in the VNF Package identified by the
+ * \&quot;vnfdId\&quot; attribute.
  */
 @Schema(description = "This type represents attribute modifications that were performed on an \"Individual VNF instance\" resource. The attributes that can be included consist of those requested to be modified explicitly in the \"VnfInfoModificationRequest\" data structure, and additional attributes of the \"VnfInstance\" data structure that were modified implicitly e.g. when modifying the referenced VNF package. * NOTE: If present, this attribute (which depends on the value of the \"vnfdId\" attribute)           was modified implicitly following a request to modify the \"vnfdId\" attribute, by           copying the value of this attribute from the VNFD in the VNF Package identified           by the \"vnfdId\" attribute. ")
 @Validated
 
+public class VnfInfoModifications {
+	@JsonProperty("vnfInstanceName")
+	private String vnfInstanceName = null;
 
-public class VnfInfoModifications   {
-  @JsonProperty("vnfInstanceName")
-  private String vnfInstanceName = null;
+	@JsonProperty("vnfInstanceDescription")
+	private String vnfInstanceDescription = null;
 
-  @JsonProperty("vnfInstanceDescription")
-  private String vnfInstanceDescription = null;
+	@JsonProperty("vnfConfigurableProperties")
+	private Map<String, String> vnfConfigurableProperties = null;
 
-  @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+	@JsonProperty("extensions")
+	private Map<String, String> extensions = null;
 
-  @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+	@JsonProperty("vnfdId")
+	private String vnfdId = null;
 
-  @JsonProperty("vnfdId")
-  private String vnfdId = null;
+	@JsonProperty("vnfProvider")
+	private String vnfProvider = null;
 
-  @JsonProperty("vnfProvider")
-  private String vnfProvider = null;
+	@JsonProperty("vnfProductName")
+	private String vnfProductName = null;
 
-  @JsonProperty("vnfProductName")
-  private String vnfProductName = null;
+	@JsonProperty("vnfSoftwareVersion")
+	private String vnfSoftwareVersion = null;
 
-  @JsonProperty("vnfSoftwareVersion")
-  private String vnfSoftwareVersion = null;
+	@JsonProperty("vnfdVersion")
+	private String vnfdVersion = null;
 
-  @JsonProperty("vnfdVersion")
-  private String vnfdVersion = null;
+	@JsonProperty("vnfcInfoModifications")
+	@Valid
+	private List<VnfcInfoModifications> vnfcInfoModifications = null;
 
-  @JsonProperty("vnfcInfoModifications")
-  @Valid
-  private List<VnfcInfoModifications> vnfcInfoModifications = null;
+	public VnfInfoModifications vnfInstanceName(final String vnfInstanceName) {
+		this.vnfInstanceName = vnfInstanceName;
+		return this;
+	}
 
-  public VnfInfoModifications vnfInstanceName(String vnfInstanceName) {
-    this.vnfInstanceName = vnfInstanceName;
-    return this;
-  }
+	/**
+	 * If present, this attribute signals modifications of the \"vnfInstanceName\"
+	 * attribute in \"VnfInstance\" as defined in clause 5.5.2.12..
+	 *
+	 * @return vnfInstanceName
+	 **/
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfInstanceName\" attribute in \"VnfInstance\" as defined in clause 5.5.2.12.. ")
 
-  /**
-   * If present, this attribute signals modifications of the \"vnfInstanceName\" attribute in \"VnfInstance\" as defined in clause 5.5.2.12.. 
-   * @return vnfInstanceName
-   **/
-  @Schema(description = "If present, this attribute signals modifications of the \"vnfInstanceName\" attribute in \"VnfInstance\" as defined in clause 5.5.2.12.. ")
-  
-    public String getVnfInstanceName() {
-    return vnfInstanceName;
-  }
+	public String getVnfInstanceName() {
+		return vnfInstanceName;
+	}
 
-  public void setVnfInstanceName(String vnfInstanceName) {
-    this.vnfInstanceName = vnfInstanceName;
-  }
+	public void setVnfInstanceName(final String vnfInstanceName) {
+		this.vnfInstanceName = vnfInstanceName;
+	}
 
-  public VnfInfoModifications vnfInstanceDescription(String vnfInstanceDescription) {
-    this.vnfInstanceDescription = vnfInstanceDescription;
-    return this;
-  }
+	public VnfInfoModifications vnfInstanceDescription(final String vnfInstanceDescription) {
+		this.vnfInstanceDescription = vnfInstanceDescription;
+		return this;
+	}
 
-  /**
-   * If present, this attribute signals modifications of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", as defined in clause 5.5.2.12.. 
-   * @return vnfInstanceDescription
-   **/
-  @Schema(description = "If present, this attribute signals modifications of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", as defined in clause 5.5.2.12.. ")
-  
-    public String getVnfInstanceDescription() {
-    return vnfInstanceDescription;
-  }
+	/**
+	 * If present, this attribute signals modifications of the
+	 * \"vnfInstanceDescription\" attribute in \"VnfInstance\", as defined in clause
+	 * 5.5.2.12..
+	 *
+	 * @return vnfInstanceDescription
+	 **/
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", as defined in clause 5.5.2.12.. ")
 
-  public void setVnfInstanceDescription(String vnfInstanceDescription) {
-    this.vnfInstanceDescription = vnfInstanceDescription;
-  }
+	public String getVnfInstanceDescription() {
+		return vnfInstanceDescription;
+	}
 
-  public VnfInfoModifications vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
-    this.vnfConfigurableProperties = vnfConfigurableProperties;
-    return this;
-  }
+	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
+		this.vnfInstanceDescription = vnfInstanceDescription;
+	}
 
-  /**
-   * Get vnfConfigurableProperties
-   * @return vnfConfigurableProperties
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getVnfConfigurableProperties() {
-    return vnfConfigurableProperties;
-  }
+	public VnfInfoModifications vnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
+		this.vnfConfigurableProperties = vnfConfigurableProperties;
+		return this;
+	}
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
-    this.vnfConfigurableProperties = vnfConfigurableProperties;
-  }
+	/**
+	 * Get vnfConfigurableProperties
+	 *
+	 * @return vnfConfigurableProperties
+	 **/
+	@Schema(description = "")
 
-  public VnfInfoModifications metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	@Valid
+	public Map<String, String> getVnfConfigurableProperties() {
+		return vnfConfigurableProperties;
+	}
 
-  /**
-   * Get metadata
-   * @return metadata
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	public void setVnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
+		this.vnfConfigurableProperties = vnfConfigurableProperties;
+	}
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	public VnfInfoModifications metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  public VnfInfoModifications extensions(KeyValuePairs extensions) {
-    this.extensions = extensions;
-    return this;
-  }
+	/**
+	 * Get metadata
+	 *
+	 * @return metadata
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get extensions
-   * @return extensions
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public KeyValuePairs getExtensions() {
-    return extensions;
-  }
+	@Valid
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
 
-  public void setExtensions(KeyValuePairs extensions) {
-    this.extensions = extensions;
-  }
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
 
-  public VnfInfoModifications vnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+	public VnfInfoModifications extensions(final Map<String, String> extensions) {
+		this.extensions = extensions;
+		return this;
+	}
 
-  /**
-   * Get vnfdId
-   * @return vnfdId
-   **/
-  @Schema(description = "")
-  
-    public String getVnfdId() {
-    return vnfdId;
-  }
+	/**
+	 * Get extensions
+	 *
+	 * @return extensions
+	 **/
+	@Schema(description = "")
 
-  public void setVnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	@Valid
+	public Map<String, String> getExtensions() {
+		return extensions;
+	}
 
-  public VnfInfoModifications vnfProvider(String vnfProvider) {
-    this.vnfProvider = vnfProvider;
-    return this;
-  }
+	public void setExtensions(final Map<String, String> extensions) {
+		this.extensions = extensions;
+	}
 
-  /**
-   * If present, this attribute signals modifications of the \"vnfProvider\" attribute in \"VnfInstance\". See note. 
-   * @return vnfProvider
-   **/
-  @Schema(description = "If present, this attribute signals modifications of the \"vnfProvider\" attribute in \"VnfInstance\". See note. ")
-  
-    public String getVnfProvider() {
-    return vnfProvider;
-  }
+	public VnfInfoModifications vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-  public void setVnfProvider(String vnfProvider) {
-    this.vnfProvider = vnfProvider;
-  }
+	/**
+	 * Get vnfdId
+	 *
+	 * @return vnfdId
+	 **/
+	@Schema(description = "")
 
-  public VnfInfoModifications vnfProductName(String vnfProductName) {
-    this.vnfProductName = vnfProductName;
-    return this;
-  }
+	public String getVnfdId() {
+		return vnfdId;
+	}
 
-  /**
-   * If present, this attribute signals modifications of the \"vnfProductName\" attribute in \"VnfInstance\". See note. 
-   * @return vnfProductName
-   **/
-  @Schema(description = "If present, this attribute signals modifications of the \"vnfProductName\" attribute in \"VnfInstance\". See note. ")
-  
-    public String getVnfProductName() {
-    return vnfProductName;
-  }
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
-  public void setVnfProductName(String vnfProductName) {
-    this.vnfProductName = vnfProductName;
-  }
+	public VnfInfoModifications vnfProvider(final String vnfProvider) {
+		this.vnfProvider = vnfProvider;
+		return this;
+	}
 
-  public VnfInfoModifications vnfSoftwareVersion(String vnfSoftwareVersion) {
-    this.vnfSoftwareVersion = vnfSoftwareVersion;
-    return this;
-  }
+	/**
+	 * If present, this attribute signals modifications of the \"vnfProvider\"
+	 * attribute in \"VnfInstance\". See note.
+	 *
+	 * @return vnfProvider
+	 **/
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfProvider\" attribute in \"VnfInstance\". See note. ")
 
-  /**
-   * Get vnfSoftwareVersion
-   * @return vnfSoftwareVersion
-   **/
-  @Schema(description = "")
-  
-    public String getVnfSoftwareVersion() {
-    return vnfSoftwareVersion;
-  }
+	public String getVnfProvider() {
+		return vnfProvider;
+	}
 
-  public void setVnfSoftwareVersion(String vnfSoftwareVersion) {
-    this.vnfSoftwareVersion = vnfSoftwareVersion;
-  }
+	public void setVnfProvider(final String vnfProvider) {
+		this.vnfProvider = vnfProvider;
+	}
 
-  public VnfInfoModifications vnfdVersion(String vnfdVersion) {
-    this.vnfdVersion = vnfdVersion;
-    return this;
-  }
+	public VnfInfoModifications vnfProductName(final String vnfProductName) {
+		this.vnfProductName = vnfProductName;
+		return this;
+	}
 
-  /**
-   * Get vnfdVersion
-   * @return vnfdVersion
-   **/
-  @Schema(description = "")
-  
-    public String getVnfdVersion() {
-    return vnfdVersion;
-  }
+	/**
+	 * If present, this attribute signals modifications of the \"vnfProductName\"
+	 * attribute in \"VnfInstance\". See note.
+	 *
+	 * @return vnfProductName
+	 **/
+	@Schema(description = "If present, this attribute signals modifications of the \"vnfProductName\" attribute in \"VnfInstance\". See note. ")
 
-  public void setVnfdVersion(String vnfdVersion) {
-    this.vnfdVersion = vnfdVersion;
-  }
+	public String getVnfProductName() {
+		return vnfProductName;
+	}
 
-  public VnfInfoModifications vnfcInfoModifications(List<VnfcInfoModifications> vnfcInfoModifications) {
-    this.vnfcInfoModifications = vnfcInfoModifications;
-    return this;
-  }
+	public void setVnfProductName(final String vnfProductName) {
+		this.vnfProductName = vnfProductName;
+	}
 
-  public VnfInfoModifications addVnfcInfoModificationsItem(VnfcInfoModifications vnfcInfoModificationsItem) {
-    if (this.vnfcInfoModifications == null) {
-      this.vnfcInfoModifications = new ArrayList<>();
-    }
-    this.vnfcInfoModifications.add(vnfcInfoModificationsItem);
-    return this;
-  }
+	public VnfInfoModifications vnfSoftwareVersion(final String vnfSoftwareVersion) {
+		this.vnfSoftwareVersion = vnfSoftwareVersion;
+		return this;
+	}
 
-  /**
-   * If present, this attribute signals modifications of certain entries in the \"vnfcInfo\" attribute array in the \"instantiatedVnfInfo\" attribute of \"VnfInstance\", as defined in clause 5.5.2.12. 
-   * @return vnfcInfoModifications
-   **/
-  @Schema(description = "If present, this attribute signals modifications of certain entries in the \"vnfcInfo\" attribute array in the \"instantiatedVnfInfo\" attribute of \"VnfInstance\", as defined in clause 5.5.2.12. ")
-      @Valid
-    public List<VnfcInfoModifications> getVnfcInfoModifications() {
-    return vnfcInfoModifications;
-  }
+	/**
+	 * Get vnfSoftwareVersion
+	 *
+	 * @return vnfSoftwareVersion
+	 **/
+	@Schema(description = "")
 
-  public void setVnfcInfoModifications(List<VnfcInfoModifications> vnfcInfoModifications) {
-    this.vnfcInfoModifications = vnfcInfoModifications;
-  }
+	public String getVnfSoftwareVersion() {
+		return vnfSoftwareVersion;
+	}
 
+	public void setVnfSoftwareVersion(final String vnfSoftwareVersion) {
+		this.vnfSoftwareVersion = vnfSoftwareVersion;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    VnfInfoModifications vnfInfoModifications = (VnfInfoModifications) o;
-    return Objects.equals(this.vnfInstanceName, vnfInfoModifications.vnfInstanceName) &&
-        Objects.equals(this.vnfInstanceDescription, vnfInfoModifications.vnfInstanceDescription) &&
-        Objects.equals(this.vnfConfigurableProperties, vnfInfoModifications.vnfConfigurableProperties) &&
-        Objects.equals(this.metadata, vnfInfoModifications.metadata) &&
-        Objects.equals(this.extensions, vnfInfoModifications.extensions) &&
-        Objects.equals(this.vnfdId, vnfInfoModifications.vnfdId) &&
-        Objects.equals(this.vnfProvider, vnfInfoModifications.vnfProvider) &&
-        Objects.equals(this.vnfProductName, vnfInfoModifications.vnfProductName) &&
-        Objects.equals(this.vnfSoftwareVersion, vnfInfoModifications.vnfSoftwareVersion) &&
-        Objects.equals(this.vnfdVersion, vnfInfoModifications.vnfdVersion) &&
-        Objects.equals(this.vnfcInfoModifications, vnfInfoModifications.vnfcInfoModifications);
-  }
+	public VnfInfoModifications vnfdVersion(final String vnfdVersion) {
+		this.vnfdVersion = vnfdVersion;
+		return this;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfInstanceName, vnfInstanceDescription, vnfConfigurableProperties, metadata, extensions, vnfdId, vnfProvider, vnfProductName, vnfSoftwareVersion, vnfdVersion, vnfcInfoModifications);
-  }
+	/**
+	 * Get vnfdVersion
+	 *
+	 * @return vnfdVersion
+	 **/
+	@Schema(description = "")
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfInfoModifications {\n");
-    
-    sb.append("    vnfInstanceName: ").append(toIndentedString(vnfInstanceName)).append("\n");
-    sb.append("    vnfInstanceDescription: ").append(toIndentedString(vnfInstanceDescription)).append("\n");
-    sb.append("    vnfConfigurableProperties: ").append(toIndentedString(vnfConfigurableProperties)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("    extensions: ").append(toIndentedString(extensions)).append("\n");
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    vnfProvider: ").append(toIndentedString(vnfProvider)).append("\n");
-    sb.append("    vnfProductName: ").append(toIndentedString(vnfProductName)).append("\n");
-    sb.append("    vnfSoftwareVersion: ").append(toIndentedString(vnfSoftwareVersion)).append("\n");
-    sb.append("    vnfdVersion: ").append(toIndentedString(vnfdVersion)).append("\n");
-    sb.append("    vnfcInfoModifications: ").append(toIndentedString(vnfcInfoModifications)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	public String getVnfdVersion() {
+		return vnfdVersion;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	public void setVnfdVersion(final String vnfdVersion) {
+		this.vnfdVersion = vnfdVersion;
+	}
+
+	public VnfInfoModifications vnfcInfoModifications(final List<VnfcInfoModifications> vnfcInfoModifications) {
+		this.vnfcInfoModifications = vnfcInfoModifications;
+		return this;
+	}
+
+	public VnfInfoModifications addVnfcInfoModificationsItem(final VnfcInfoModifications vnfcInfoModificationsItem) {
+		if (this.vnfcInfoModifications == null) {
+			this.vnfcInfoModifications = new ArrayList<>();
+		}
+		this.vnfcInfoModifications.add(vnfcInfoModificationsItem);
+		return this;
+	}
+
+	/**
+	 * If present, this attribute signals modifications of certain entries in the
+	 * \"vnfcInfo\" attribute array in the \"instantiatedVnfInfo\" attribute of
+	 * \"VnfInstance\", as defined in clause 5.5.2.12.
+	 *
+	 * @return vnfcInfoModifications
+	 **/
+	@Schema(description = "If present, this attribute signals modifications of certain entries in the \"vnfcInfo\" attribute array in the \"instantiatedVnfInfo\" attribute of \"VnfInstance\", as defined in clause 5.5.2.12. ")
+	@Valid
+	public List<VnfcInfoModifications> getVnfcInfoModifications() {
+		return vnfcInfoModifications;
+	}
+
+	public void setVnfcInfoModifications(final List<VnfcInfoModifications> vnfcInfoModifications) {
+		this.vnfcInfoModifications = vnfcInfoModifications;
+	}
+
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final VnfInfoModifications vnfInfoModifications = (VnfInfoModifications) o;
+		return Objects.equals(this.vnfInstanceName, vnfInfoModifications.vnfInstanceName) &&
+				Objects.equals(this.vnfInstanceDescription, vnfInfoModifications.vnfInstanceDescription) &&
+				Objects.equals(this.vnfConfigurableProperties, vnfInfoModifications.vnfConfigurableProperties) &&
+				Objects.equals(this.metadata, vnfInfoModifications.metadata) &&
+				Objects.equals(this.extensions, vnfInfoModifications.extensions) &&
+				Objects.equals(this.vnfdId, vnfInfoModifications.vnfdId) &&
+				Objects.equals(this.vnfProvider, vnfInfoModifications.vnfProvider) &&
+				Objects.equals(this.vnfProductName, vnfInfoModifications.vnfProductName) &&
+				Objects.equals(this.vnfSoftwareVersion, vnfInfoModifications.vnfSoftwareVersion) &&
+				Objects.equals(this.vnfdVersion, vnfInfoModifications.vnfdVersion) &&
+				Objects.equals(this.vnfcInfoModifications, vnfInfoModifications.vnfcInfoModifications);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfInstanceName, vnfInstanceDescription, vnfConfigurableProperties, metadata, extensions, vnfdId, vnfProvider, vnfProductName, vnfSoftwareVersion, vnfdVersion, vnfcInfoModifications);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfInfoModifications {\n");
+
+		sb.append("    vnfInstanceName: ").append(toIndentedString(vnfInstanceName)).append("\n");
+		sb.append("    vnfInstanceDescription: ").append(toIndentedString(vnfInstanceDescription)).append("\n");
+		sb.append("    vnfConfigurableProperties: ").append(toIndentedString(vnfConfigurableProperties)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("    extensions: ").append(toIndentedString(extensions)).append("\n");
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    vnfProvider: ").append(toIndentedString(vnfProvider)).append("\n");
+		sb.append("    vnfProductName: ").append(toIndentedString(vnfProductName)).append("\n");
+		sb.append("    vnfSoftwareVersion: ").append(toIndentedString(vnfSoftwareVersion)).append("\n");
+		sb.append("    vnfdVersion: ").append(toIndentedString(vnfdVersion)).append("\n");
+		sb.append("    vnfcInfoModifications: ").append(toIndentedString(vnfcInfoModifications)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

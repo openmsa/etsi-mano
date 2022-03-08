@@ -30,6 +30,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.em.v351.model.vnfconfig.ProblemDetails;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.CancelModeType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

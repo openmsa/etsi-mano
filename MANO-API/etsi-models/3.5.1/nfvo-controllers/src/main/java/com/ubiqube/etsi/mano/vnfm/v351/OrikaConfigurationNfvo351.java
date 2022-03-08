@@ -33,6 +33,12 @@ import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.em.v351.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.LccnSubscription;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfExtCpInfo;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -40,15 +46,9 @@ import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.AffectedVnf;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.InstantiateNsRequest;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.LccnSubscription;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.NsLcmOpOcc;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.VnfExtCpInfo;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.ConstraintResourceRef;
@@ -198,7 +198,7 @@ public class OrikaConfigurationNfvo351 implements OrikaMapperFactoryConfigurer {
 				.field("clientPassword", "clientSecret")
 				.byDefault()
 				.register();
-		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.ResourceHandle.class, ResourceHandle.class)
+		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.em.v351.model.vnflcm.ResourceHandle.class, ResourceHandle.class)
 				.field("vimId", "vimConnectionId")
 				.byDefault()
 				.register();
