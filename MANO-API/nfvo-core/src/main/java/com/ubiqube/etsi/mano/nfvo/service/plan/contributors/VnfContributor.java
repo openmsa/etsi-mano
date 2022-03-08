@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -124,6 +125,8 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			nt.setAlias(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
 			nt.setToscaName(getToscaName(nsLiveInstance.getNsTask().getAlias(), i++));
 			nt.setType(ResourceTypeEnum.VNF);
+			nt.setNsdId(instance.getNsdInfo().getId());
+			nt.setNsPackageVnfPackage(task.getNsPackageVnfPackage());
 			ret.add(new NsVnfCreateVt(nt));
 		}
 		return ret;
@@ -156,7 +159,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 					if (curr > inst) {
 						remove(curr - inst, blueprint.getInstance(), ret);
 					} else if (curr < inst) {
-						add(curr, inst, x, nsPackageVnfPackage, ret, bundle.nsPackage().getVnffgs());
+						add(curr, inst, x, nsPackageVnfPackage, ret, bundle.nsPackage().getVnffgs(), bundle.nsPackage().getId());
 					}
 				});
 		return ret;
@@ -173,11 +176,12 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			nt.setToscaName(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
 			nt.setAlias(getToscaName(insts.get(i).getNsTask().getToscaName(), i));
 			nt.setServer(task.getServer());
+			nt.setNsdId(instance.getNsdInfo().getId());
 			ret.add(new NsVnfCreateVt(nt));
 		}
 	}
 
-	private void add(final int curr, final int cnt, final VnfPackage vnfPkg, final NsdPackageVnfPackage nsPackageVnfPackage, final List<NsVtBase<NsVnfTask>> ret, final Set<VnffgDescriptor> vnffg) {
+	private void add(final int curr, final int cnt, final VnfPackage vnfPkg, final NsdPackageVnfPackage nsPackageVnfPackage, final List<NsVtBase<NsVnfTask>> ret, final Set<VnffgDescriptor> vnffg, final UUID nsdId) {
 		for (int i = curr; i < cnt; i++) {
 			final String newName = getToscaName(nsPackageVnfPackage.getToscaName(), i);
 			LOG.debug("VNF inst Creating: {}", newName);
@@ -194,6 +198,7 @@ public class VnfContributor extends AbstractNsContributor<NsVnfTask, NsVtBase<Ns
 			vnf.setFlavourId("flavour");
 			vnf.setVnfdId(nsPackageVnfPackage.getVnfPackage().getVnfdId());
 			vnf.setType(ResourceTypeEnum.VNF);
+			vnf.setNsdId(nsdId);
 			ret.add(new NsVnfCreateVt(vnf));
 		}
 	}

@@ -51,8 +51,6 @@ public class NsVnffgPostVt extends NsVtBase<NsSfcTask> {
 			Optional.ofNullable(x.getIngress()).ifPresent(y -> ret.add(new NamedDependency(VnfPortNode.class, y)));
 			Optional.ofNullable(x.getEgress()).ifPresent(y -> ret.add(new NamedDependency(VnfPortNode.class, y)));
 		});
-		// ret.add(new NamedDependency(Network.class,
-		// task.getVnffg().getVirtualLinkId()));
 		return ret;
 	}
 
