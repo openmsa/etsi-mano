@@ -26,7 +26,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.alarm.ResourceHandle;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
@@ -196,10 +195,6 @@ public class OrikaConfigurationNfvo351 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(SubscriptionAuthenticationParamsOauth2ClientCredentials.class, AuthParamOauth2.class)
 				.field("clientPassword", "clientSecret")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.em.v351.model.vnflcm.ResourceHandle.class, ResourceHandle.class)
-				.field("vimId", "vimConnectionId")
 				.byDefault()
 				.register();
 		final var converterFactory = orikaMapperFactory.getConverterFactory();
