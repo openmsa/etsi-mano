@@ -71,22 +71,23 @@ public class OsSfcSystem implements System<NsSfcTask> {
 		chainTask.setPortPairGroups(portPairGroup);
 		chainTask.setFlowClassifier(Set.of(vnffg.getClassifier().getToscaName()));
 		chainTask.setToscaName(vnffg.getName());
+		chainTask.setAlias(vnffg.getName());
 		final SfcPortChainUow chain = new SfcPortChainUow(new SfcPortChainVt(chainTask), vim);
 		builder.add(flowUow, chain);
 		vnffg.getNfpd().forEach(nfp -> {
-			nfp.getInstancces().forEach(x -> {
+			nfp.getInstancces().forEach(inst -> {
 				final SfcPortPairGroupTask ppg = new SfcPortPairGroupTask();
 				final List<String> portPair = new ArrayList<>();
 				ppg.setPortPair(portPair);
-				ppg.setToscaName(x.getToscaName());
+				ppg.setToscaName(inst.getToscaName());
 				final SfcPortPairGroupUow portPairGroupUow = new SfcPortPairGroupUow(new SfcPortPairGroupVt(ppg), vim);
 				portPairGroup.add(ppg.getToscaName());
 				builder.add(chain, portPairGroupUow);
 				LOG.debug("Adding chain: {} -> {}", chain, portPairGroupUow);
-				x.getPairs().forEach(y -> {
+				inst.getPairs().forEach(y -> {
 					final SfcPortPairTask pp = new SfcPortPairTask();
-					pp.setEgressId(y.getEgress());
-					pp.setIngressId(y.getIngress());
+					pp.setEgressId(y.getEgressVl());
+					pp.setIngressId(y.getIngressVl());
 					pp.setToscaName(y.getToscaName());
 					portPair.add(y.getToscaName());
 					final SfcPortPairUow portPairVt = new SfcPortPairUow(new SfcPortPairVt(pp), vim);
