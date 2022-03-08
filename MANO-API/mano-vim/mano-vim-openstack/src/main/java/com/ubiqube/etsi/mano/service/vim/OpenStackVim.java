@@ -116,7 +116,7 @@ public class OpenStackVim implements Vim {
 			conf.withSSLVerificationDisabled();
 		}
 		if (null != ii.get("nat-ip")) {
-			conf.withEndpointNATResolution(ii.get("nat-ip"));
+			conf.withEndpointNATResolution(ii.get("nat-host"));
 		}
 		base.withConfig(conf);
 		final String project = ai.get("project");
