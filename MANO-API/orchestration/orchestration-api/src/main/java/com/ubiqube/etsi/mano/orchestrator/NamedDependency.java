@@ -38,10 +38,7 @@ public class NamedDependency {
 	}
 
 	public boolean match(final NamedDependency y) {
-		if (y.getType() != type) {
-			return false;
-		}
-		if (!y.getName().equals(name)) {
+		if ((y.getType() != type) || !y.getName().equals(name)) {
 			return false;
 		}
 		return true;
@@ -49,7 +46,7 @@ public class NamedDependency {
 
 	@Override
 	public String toString() {
-		return "NamedDependency [name=" + name + ", type=" + type + "]";
+		return "NamedDependency [name=" + name + ", type=" + type.getSimpleName() + "]";
 	}
 
 }

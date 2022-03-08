@@ -72,7 +72,7 @@ public class VnfInstantiateUow extends AbstractUnitOfWork<NsVnfInstantiateTask> 
 	private VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfBlueprint tmp = vnfLcmOpOccs;
 		OperationStatusType state = OperationStatusType.PROCESSING;
-		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
+		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state) {
 			tmp = vnfm.vnfLcmOpOccsGet(task.getServer(), vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
 			LOG.debug("Instantiate polling: {} => {}", tmp.getId(), state);
@@ -97,7 +97,7 @@ public class VnfInstantiateUow extends AbstractUnitOfWork<NsVnfInstantiateTask> 
 		final List<ExternalManagedVirtualLink> net = task.getExternalNetworks().stream().map(x -> {
 			final String resource = context.get(Network.class, x.getToscaName());
 			if (null == resource) {
-				LOG.warn("Could not find network resource {} => {}, not released.", x, context);
+				LOG.warn("Could not find network resource {} => {}, not released.", x.getToscaName(), context);
 				return null;
 			}
 			return createExmvl(x, resource);

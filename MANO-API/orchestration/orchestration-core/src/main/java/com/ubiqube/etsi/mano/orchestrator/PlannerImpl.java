@@ -113,10 +113,10 @@ public class PlannerImpl<P, U, W> implements Planner<P, U, W> {
 		graph.vertexSet().forEach(x -> x.getNameDependencies().forEach(y -> {
 			final VirtualTask<U> dep = findProducer(y, graph);
 			if (null == dep) {
-				LOG.info("Single(dep): {} ", x);
+				LOG.info("Single(dep): {} producer not found {}", x.getName(), y);
 				graph.addVertex(x);
 			} else {
-				LOG.debug("Add edge(dep): {} <-> {}", dep, x);
+				LOG.debug("Add edge(dep): {} <-> {}", dep.getName(), x.getName());
 				graph.addEdge(dep, x);
 			}
 		}));
