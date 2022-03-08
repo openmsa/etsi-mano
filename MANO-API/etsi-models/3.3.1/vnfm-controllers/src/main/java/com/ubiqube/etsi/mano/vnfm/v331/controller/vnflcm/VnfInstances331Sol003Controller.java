@@ -164,6 +164,8 @@ public class VnfInstances331Sol003Controller implements VnfInstances331Sol003Api
 		final String hrefChangeExtConn = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdChangeExtConnPost(id, null)).withSelfRel().getHref();
 		final String hrefSelf = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdGet(id)).withSelfRel().getHref();
 		final String hrefTerminate = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdTerminatePost(id, null)).withSelfRel().getHref();
+		final String hrefCreateSnapshot = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdCreateSnapshotPost(id, null)).withSelfRel().getHref();
+		final String hrefRevertSnapshot = linkTo(methodOn(VnfInstances331Sol003Api.class).vnfInstancesVnfInstanceIdRevertToSnapshotPost(id, null)).withSelfRel().getHref();
 		final VnfInstanceLinks vnfInstanceLinks = new VnfInstanceLinks();
 		final Link self = new Link();
 		self.setHref(hrefSelf);
@@ -204,6 +206,14 @@ public class VnfInstances331Sol003Controller implements VnfInstances331Sol003Api
 		final Link scaleToLevel = new Link();
 		scaleToLevel.setHref(hrefScaleToLevel);
 		vnfInstanceLinks.setScaleToLevel(scaleToLevel);
+
+		final Link createSnapshot = new Link();
+		createSnapshot.setHref(hrefCreateSnapshot);
+		vnfInstanceLinks.setCreateSnapshot(createSnapshot);
+
+		final Link revertSnapshot = new Link();
+		revertSnapshot.setHref(hrefRevertSnapshot);
+		vnfInstanceLinks.setRevertToSnapshot(revertSnapshot);
 		vnfInstance.setLinks(vnfInstanceLinks);
 	}
 }

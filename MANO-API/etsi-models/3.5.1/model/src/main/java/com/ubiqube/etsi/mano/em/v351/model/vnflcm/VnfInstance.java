@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.em.v351.model.vnflcm;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.vnfm.v351.model.grant.VimConnectionInfo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -97,6 +99,10 @@ public class VnfInstance {
 
 	@JsonProperty("vnfConfigurableProperties")
 	private Map<String, String> vnfConfigurableProperties = null;
+
+	@JsonProperty("vimConnectionInfo")
+	@Valid
+	private Map<String, VimConnectionInfo> vimConnectionInfo = null;
 
 	/**
 	 * The instantiation state of the VNF.
@@ -333,6 +339,40 @@ public class VnfInstance {
 		this.vnfConfigurableProperties = vnfConfigurableProperties;
 	}
 
+	public VnfInstance vimConnectionInfo(final Map<String, VimConnectionInfo> vimConnectionInfo) {
+		this.vimConnectionInfo = vimConnectionInfo;
+		return this;
+	}
+
+	public VnfInstance putVimConnectionInfoItem(final String key, final VimConnectionInfo vimConnectionInfoItem) {
+		if (this.vimConnectionInfo == null) {
+			this.vimConnectionInfo = new HashMap<>();
+		}
+		this.vimConnectionInfo.put(key, vimConnectionInfoItem);
+		return this;
+	}
+
+	/**
+	 * Information about VIM connections to be used for managing the resources for
+	 * the VNF instance. The keys of the map, each of which identifies information
+	 * about a particular VIM connection, are managed by the NFVO and referenced
+	 * from other data structures via the \"vimConnectionId\" attribute. This
+	 * attribute shall only be supported and present if VNF-related resource
+	 * management in direct mode is pplicable. This attribute can be modified with
+	 * the PATCH method.
+	 *
+	 * @return vimConnectionInfo
+	 **/
+	@Schema(description = "Information about VIM connections to be used for managing the resources for the VNF instance. The keys of the map, each of which identifies information about a particular VIM connection, are managed by the NFVO and referenced from other data structures via the \"vimConnectionId\" attribute. This attribute shall only be supported and present if VNF-related resource management in direct mode is pplicable. This attribute can be modified with the PATCH method. ")
+	@Valid
+	public Map<String, VimConnectionInfo> getVimConnectionInfo() {
+		return vimConnectionInfo;
+	}
+
+	public void setVimConnectionInfo(final Map<String, VimConnectionInfo> vimConnectionInfo) {
+		this.vimConnectionInfo = vimConnectionInfo;
+	}
+
 	public VnfInstance instantiationState(final InstantiationStateEnum instantiationState) {
 		this.instantiationState = instantiationState;
 		return this;
@@ -402,13 +442,30 @@ public class VnfInstance {
 	}
 
 	/**
-	 * Get extensions
+	 * Additional VNF-specific attributes that affect the lifecycle management of
+	 * this VNF instance. These attributes represent values that are stored
+	 * persistently in the VnfInstance structure for consumption by the VNFM or the
+	 * lifecycle management scripts during the execution of VNF lifecycle management
+	 * operations. All extensions that are allowed for the VNF are declared in the
+	 * VNFD. The declaration of an extension in the VNFD contains information on
+	 * whether its presence is optional or required, and optionally can specify an
+	 * initial value. See notes 2 and 4. The VNFM shall reject requests to write
+	 * extension attributes that are not declared in the VNFD with a \"422
+	 * Unprocessable entity\" error response as defined in clause 6.4 of ETSI GS
+	 * NFV-SOL 013. Modifying the values of these attributes has no direct effect on
+	 * the VNF instance; however, the modified attribute values can be considered
+	 * during subsequent VNF lifecycle management operations, which means that the
+	 * modified values can indirectly affect the configuration of the VNF instance.
+	 * These attributes can be initialized with default values from the VNFD (see
+	 * note 4). These attributes can be modified with values passed in the request
+	 * structures of certain LCM operations, such as the InstantiateVnfRequest
+	 * structure. Further, these attributes can be created, modified or deleted with
+	 * the PATCH method. In addition, the provisions in clause 5.7 shall apply.
 	 *
 	 * @return extensions
 	 **/
-	@Schema(description = "")
+	@Schema(description = "Additional VNF-specific attributes that affect the lifecycle management of this VNF instance. These attributes represent values that are stored persistently in the VnfInstance structure for  consumption by the VNFM or the lifecycle management scripts during the execution of VNF lifecycle  management operations.  All extensions that are allowed for the VNF are declared in the VNFD. The declaration of an extension  in the VNFD contains information on whether its presence is optional or required, and optionally can  specify an initial value. See notes 2 and 4. The VNFM shall reject requests to write extension attributes  that are not declared in the VNFD with a \"422 Unprocessable entity\" error response as defined in clause  6.4 of ETSI GS NFV-SOL 013. Modifying the values of these attributes has no direct effect on the VNF instance; however, the modified  attribute values can be considered during subsequent VNF lifecycle management operations, which means that  the modified values can indirectly affect the configuration of the VNF instance. These attributes can be initialized with default values from the VNFD (see note 4). These attributes can be modified with values passed in the request structures of certain LCM operations,  such as the InstantiateVnfRequest structure. Further, these attributes can be created, modified or deleted with the PATCH method. In addition, the provisions in clause 5.7 shall apply. ")
 
-	@Valid
 	public Map<String, String> getExtensions() {
 		return extensions;
 	}
@@ -427,8 +484,7 @@ public class VnfInstance {
 	 *
 	 * @return _links
 	 **/
-	@Schema(required = true, description = "")
-	@NotNull
+	@Schema(description = "")
 
 	@Valid
 	public VnfInstanceLinks getLinks() {
@@ -444,7 +500,7 @@ public class VnfInstance {
 		if (this == o) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
 		}
 		final VnfInstance vnfInstance = (VnfInstance) o;
@@ -457,6 +513,7 @@ public class VnfInstance {
 				Objects.equals(this.vnfSoftwareVersion, vnfInstance.vnfSoftwareVersion) &&
 				Objects.equals(this.vnfdVersion, vnfInstance.vnfdVersion) &&
 				Objects.equals(this.vnfConfigurableProperties, vnfInstance.vnfConfigurableProperties) &&
+				Objects.equals(this.vimConnectionInfo, vnfInstance.vimConnectionInfo) &&
 				Objects.equals(this.instantiationState, vnfInstance.instantiationState) &&
 				Objects.equals(this.instantiatedVnfInfo, vnfInstance.instantiatedVnfInfo) &&
 				Objects.equals(this.metadata, vnfInstance.metadata) &&
@@ -466,7 +523,7 @@ public class VnfInstance {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, vnfInstanceName, vnfInstanceDescription, vnfdId, vnfProvider, vnfProductName, vnfSoftwareVersion, vnfdVersion, vnfConfigurableProperties, instantiationState, instantiatedVnfInfo, metadata, extensions, _links);
+		return Objects.hash(id, vnfInstanceName, vnfInstanceDescription, vnfdId, vnfProvider, vnfProductName, vnfSoftwareVersion, vnfdVersion, vnfConfigurableProperties, vimConnectionInfo, instantiationState, instantiatedVnfInfo, metadata, extensions, _links);
 	}
 
 	@Override
@@ -483,6 +540,7 @@ public class VnfInstance {
 		sb.append("    vnfSoftwareVersion: ").append(toIndentedString(vnfSoftwareVersion)).append("\n");
 		sb.append("    vnfdVersion: ").append(toIndentedString(vnfdVersion)).append("\n");
 		sb.append("    vnfConfigurableProperties: ").append(toIndentedString(vnfConfigurableProperties)).append("\n");
+		sb.append("    vimConnectionInfo: ").append(toIndentedString(vimConnectionInfo)).append("\n");
 		sb.append("    instantiationState: ").append(toIndentedString(instantiationState)).append("\n");
 		sb.append("    instantiatedVnfInfo: ").append(toIndentedString(instantiatedVnfInfo)).append("\n");
 		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
