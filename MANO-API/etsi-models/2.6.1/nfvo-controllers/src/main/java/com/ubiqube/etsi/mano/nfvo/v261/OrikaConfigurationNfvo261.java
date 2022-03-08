@@ -196,7 +196,7 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("operationState", "operationStatus")
 				.field("isAutomaticInvocation", "automaticInvocation")
 				.field("isCancelPending", "cancelPending")
-				.field("operationParams", "parameters")
+				// .field("operationParams", "parameters")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(NsLcmOpOccs.class, NsLcmOpOcc.class)
