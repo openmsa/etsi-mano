@@ -3,11 +3,11 @@
     <map>
         <entry>
             <key>DISPLAYNAME</key>
-            <value>Task_Apply_configuration.php</value>
+            <value>Task_Get_deployment_name.php</value>
         </entry>
         <entry>
             <key>DATE_MODIFICATION</key>
-            <value>1646754356900</value>
+            <value>1646757496840</value>
         </entry>
         <entry>
             <key>REPOSITORY</key>
@@ -15,7 +15,7 @@
         </entry>
         <entry>
             <key>DATE_CREATION</key>
-            <value>1646754356883</value>
+            <value>1646757496820</value>
         </entry>
         <entry>
             <key>TAG</key>
