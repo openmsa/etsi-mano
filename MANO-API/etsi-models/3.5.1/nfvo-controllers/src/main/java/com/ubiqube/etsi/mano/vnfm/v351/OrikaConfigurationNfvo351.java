@@ -27,7 +27,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsInstantiatedVnf;
-import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
@@ -238,10 +237,6 @@ public class OrikaConfigurationNfvo351 implements OrikaMapperFactoryConfigurer {
 					}
 
 				})
-				.register();
-		orikaMapperFactory.classMap(NsLcmOpOccs.class, NsLcmOpOcc.class)
-				.field("stateEnteredTime", "statusEnteredTime")
-				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(SubscriptionAuthenticationParamsOauth2ClientCredentials.class, AuthParamOauth2.class)
 				.field("clientPassword", "clientSecret")
