@@ -31,12 +31,17 @@ import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.em.v271.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscription;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleVnfRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleVnfToLevelRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOcc;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfVirtualLinkResourceInfo;
@@ -58,7 +63,9 @@ import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.InstantiateNsRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.NsLcmOpOcc;
 
+import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.MappingContext;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 
 /**
@@ -196,8 +203,34 @@ public class OrikaConfigurationNfvo271 implements OrikaMapperFactoryConfigurer {
 				.field("operationState", "operationStatus")
 				.field("isAutomaticInvocation", "automaticInvocation")
 				.field("isCancelPending", "cancelPending")
-				.field("operationParams", "parameters")
 				.byDefault()
+				.customize(new CustomMapper<>() {
+					@Override
+					public void mapBtoA(final VnfBlueprint a, final VnfLcmOpOcc b, final MappingContext context) {
+						if (null == a.getOperation()) {
+							return;
+						}
+						final Object x = switch (a.getOperation()) {
+						case INSTANTIATE -> map(a.getParameters(), InstantiateVnfRequest.class);
+						case SCALE -> map(a.getParameters(), ScaleVnfRequest.class);
+						case SCALE_TO_LEVEL -> map(a.getParameters(), ScaleVnfToLevelRequest.class);
+						case TERMINATE -> map(a.getParameters(), TerminateVnfRequest.class);
+						default -> throw new IllegalArgumentException("Unexpected value: " + a.getOperation());
+						};
+						b.setOperationParams(x);
+					}
+
+					private Object map(final BlueprintParameters parameters, final Class<?> class1) {
+						return mapperFacade.map(parameters, class1);
+					}
+
+					@Override
+					public void mapAtoB(final VnfLcmOpOcc a, final VnfBlueprint b, final MappingContext context) {
+						final Object op = a.getOperationParams();
+						mapperFacade.map(op, b.getParameters());
+					}
+
+				})
 				.register();
 		orikaMapperFactory.classMap(NsLcmOpOccs.class, NsLcmOpOcc.class)
 				.field("stateEnteredTime", "statusEnteredTime")
@@ -205,6 +238,10 @@ public class OrikaConfigurationNfvo271 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(SubscriptionAuthenticationParamsOauth2ClientCredentials.class, AuthParamOauth2.class)
 				.field("clientPassword", "clientSecret")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(InstantiateVnfRequest.class, BlueprintParameters.class)
+				.field("extVirtualLinks", "extVirtualLinkInfo")
 				.byDefault()
 				.register();
 		final var converterFactory = orikaMapperFactory.getConverterFactory();

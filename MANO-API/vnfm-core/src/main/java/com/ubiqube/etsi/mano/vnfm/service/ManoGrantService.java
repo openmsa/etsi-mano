@@ -68,6 +68,6 @@ public class ManoGrantService extends AbstractGrantService {
 	}
 
 	private static ExtManagedVirtualLinkDataEntity findVl(final VnfBlueprint plan, final String vl) {
-		return plan.getExtManagedVirtualLinks().stream().filter(x -> x.getVnfVirtualLinkDescId().equals(vl)).findFirst().orElse(null);
+		return plan.getParameters().getExtManagedVirtualLinks().stream().filter(x -> x.getVnfVirtualLinkDescId().equals(vl)).findFirst().orElse(null);
 	}
 }

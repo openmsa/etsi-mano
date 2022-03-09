@@ -113,7 +113,9 @@ public class VnfExtCpContributor extends AbstractContributorV2Base<ExternalCpTas
 			final Optional<String> vlName = findVl(vnfPackage, vnfExtCp.getToscaName());
 			if (vlName.isPresent()) {
 				// Early VnfExCp, informations will came from InstantiateRequest.
-				final Set<ExtManagedVirtualLinkDataEntity> extVl = plan.getExtManagedVirtualLinks();
+				// XXX: This is not the correct class, it should be a ExtVirtualLinkInfoEntity
+				// class.
+				final Set<ExtManagedVirtualLinkDataEntity> extVl = plan.getParameters().getExtManagedVirtualLinks();
 				final Optional<ExtManagedVirtualLinkDataEntity> ex = extVl.stream()
 						.filter(z -> z.getVnfVirtualLinkDescId().equals(vlName.get()))
 						.findFirst();

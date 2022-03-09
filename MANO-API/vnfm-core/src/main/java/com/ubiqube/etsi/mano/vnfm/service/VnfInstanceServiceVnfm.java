@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
-import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkInfoEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.VimResource;
 import com.ubiqube.etsi.mano.dao.mano.VirtualLinkInfo;
@@ -92,16 +92,14 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 
 	private static void extractExtVirtualLinkInfo(final BlueprintParameters vnfInfo, final List<VnfLiveInstance> vliAll) {
 		final List<VnfLiveInstance> vli = vliAll.stream().filter(x -> x.getTask() instanceof VnfPortTask).toList();
-		final Set<ExtVirtualLinkInfoEntity> obj = vli.stream().map(x -> {
+		final Set<ExtVirtualLinkDataEntity> obj = vli.stream().map(x -> {
 			final VnfPortTask vpt = (VnfPortTask) x.getTask();
-			final ExtVirtualLinkInfoEntity elie = new ExtVirtualLinkInfoEntity();
+			final ExtVirtualLinkDataEntity elie = new ExtVirtualLinkDataEntity();
 			elie.setId(x.getId());
-			final VimResource handle = new VimResource();
-			handle.setResourceId(x.getResourceId());
-			handle.setResourceProviderId(vpt.getResourceProviderId());
-			handle.setVimConnectionId(x.getVimConnectionId());
-			handle.setVimLevelResourceType(null);
-			elie.setResourceHandle(handle);
+			elie.setResourceId(x.getResourceId());
+			elie.setResourceProviderId(vpt.getResourceProviderId());
+			elie.setVimConnectionId(x.getVimConnectionId());
+			elie.setVnfInstance(x.getVnfInstance());
 			return elie;
 		}).collect(Collectors.toSet());
 		vnfInfo.setExtVirtualLinkInfo(obj);

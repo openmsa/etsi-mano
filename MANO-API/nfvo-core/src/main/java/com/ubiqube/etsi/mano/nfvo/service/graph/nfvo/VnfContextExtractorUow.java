@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.VnfContextExtractorTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.mec.VnfContextExtractorNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
@@ -53,7 +54,8 @@ public class VnfContextExtractorUow extends AbstractUnitOfWork<VnfContextExtract
 	@Override
 	public String execute(final Context context) {
 		final VnfContextExtractorTask task = getTask().getParameters();
-		final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), task.getVnfInstanceId());
+		final String vnfInstanceId = context.get(VnfCreateNode.class, task.getToscaName());
+		final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), vnfInstanceId);
 		inst.getExtCpInfo().forEach(x -> {
 			final NsdPackageVnfPackage vnfd = findVnfd(inst.getVnfdId());
 			final int idx = toscaNameToVlId(x.getCpdId());

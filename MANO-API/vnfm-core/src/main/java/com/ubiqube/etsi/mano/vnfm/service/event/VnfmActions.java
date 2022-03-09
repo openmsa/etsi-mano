@@ -126,7 +126,7 @@ public class VnfmActions extends AbstractGenericAction {
 	@Override
 	protected void mergeVirtualLinks(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
 		final VnfBlueprint vp = (VnfBlueprint) localPlan;
-		vnfInstance.setExtManagedVirtualLinks(vp.getExtManagedVirtualLinks());
-		vnfInstance.setExtVirtualLinks(vp.getExtVirtualLinks());
+		vnfInstance.setExtManagedVirtualLinks(vp.getParameters().getExtManagedVirtualLinks());
+		vnfInstance.setExtVirtualLinks(vp.getParameters().getExtVirtualLinkInfo());
 	}
 }

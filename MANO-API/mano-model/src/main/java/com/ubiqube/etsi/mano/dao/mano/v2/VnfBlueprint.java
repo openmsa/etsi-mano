@@ -109,12 +109,6 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> {
 	@IndexedEmbedded
 	private OperateChanges operateChanges = new OperateChanges();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
-
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
-
 	/**
 	 * Only for views and mapping.
 	 */
@@ -163,18 +157,18 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> {
 
 	@Override
 	public void addExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
-		if (null == extManagedVirtualLinks) {
-			this.extManagedVirtualLinks = new LinkedHashSet<>();
+		if (null == parameters.getExtManagedVirtualLinks()) {
+			this.parameters.setExtManagedVirtualLinks(new LinkedHashSet<>());
 		}
-		this.extManagedVirtualLinks.addAll(extManagedVirtualLinks);
+		this.parameters.getExtManagedVirtualLinks().addAll(extManagedVirtualLinks);
 	}
 
 	@Override
 	public void addExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
-		if (this.extVirtualLinks == null) {
-			this.extVirtualLinks = new LinkedHashSet<>();
+		if (this.parameters.getExtVirtualLinkInfo() == null) {
+			this.parameters.setExtVirtualLinkInfo(new LinkedHashSet<>());
 		}
-		this.extVirtualLinks.addAll(extVirtualLinks);
+		this.parameters.getExtVirtualLinkInfo().addAll(extVirtualLinks);
 	}
 
 }

@@ -33,7 +33,7 @@ import javax.validation.Valid;
 
 import com.ubiqube.etsi.mano.dao.mano.ExtCpInfo;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
-import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkInfoEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.OperationalStateType;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
@@ -102,7 +102,7 @@ import lombok.Setter;
  *         VNF-internal connectivity, they shall not be listed in the
  *         "vnfVirtualLinkResourceInfo" attribute as this would be redundant.
  *         </p>
- * 
+ *
  */
 @Getter
 @Setter
@@ -189,7 +189,7 @@ public class BlueprintParameters implements Serializable {
 	 * Information about the external VLs the VNF instance is connected to.
 	 */
 	@Transient
-	private Set<ExtVirtualLinkInfoEntity> extVirtualLinkInfo;
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinkInfo;
 
 	/**
 	 * Information about the external CPs exposed by the VNF instance. When trunking

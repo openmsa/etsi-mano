@@ -38,8 +38,6 @@ public class VnfContextExtractorTask extends NsTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private String vnfInstanceId;
-
 	/**
 	 * VNFM to use if any.
 	 */

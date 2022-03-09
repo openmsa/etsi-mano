@@ -135,7 +135,7 @@ public class VnfPortContributor extends AbstractContributorV2Base<VnfPortTask, V
 	}
 
 	private static ExtManagedVirtualLinkDataEntity findExtManagedInfo(final VnfBlueprint plan, final String vlName) {
-		return plan.getExtManagedVirtualLinks().stream()
+		return plan.getParameters().getExtManagedVirtualLinks().stream()
 				.filter(x -> x.getVnfVirtualLinkDescId().equals(vlName))
 				.findFirst()
 				.orElse(null);
