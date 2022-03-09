@@ -87,6 +87,7 @@ public class NsVnfCreateSystem extends AbstractVimSystem<NsVnfTask> {
 		contextTask.setAlias("ext-" + p.getToscaName());
 		contextTask.setVnfdId(p.getVnfdId());
 		contextTask.setNsdPackage(pack);
+		contextTask.setServer(p.getServer());
 		s.add(instantiateUow, new VnfContextExtractorUow(new VnfContextExtractorVt(contextTask), vnfm, pack));
 		return s;
 	}
