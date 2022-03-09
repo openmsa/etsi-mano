@@ -4,7 +4,7 @@
  * This file is necessary to include to use all the in-built libraries of /opt/fmc_repository/Reference/Common
  */
 require_once '/opt/fmc_repository/Process/Reference/Common/common.php';
-require_once '/opt/fmc_repository/Process/ETSI-MANO/KUBERNETES/utility.php';
+require_once '/opt/fmc_repository/Process/ETSI-MANO/WORKFLOWS/ETSI-MANO/KUBERNETES/utility.php';
 
 /**
  * List all the parameters required by the task
@@ -20,7 +20,7 @@ function list_args()
    *
    * Add as many variables as needed
    */
-  create_var_def('file', 'File');
+  create_var_def('file', 'String');
   create_var_def('namespace', 'String');
   create_var_def('resource', 'String');
   
@@ -41,12 +41,13 @@ if ($context['resource'] == 'services') {
 $response=kubernetes_apply_yaml ("POST", $api, $context['token_id'], $context['file'],"50", "50");
 
 $response = shell_exec($response);
-//$json = json_decode($response, true);
-preg_match('/\"metadata\": {\s+\"name\": \"(.*)\",\s+\"namespace\":/', $response, $matches);
-if(empty($matches[1])){
-task_exit(ENDED, $response);
+
+preg_match('/HTTP_CODE=(?<code>.*)/', $response, $matches);
+
+if ($matches['code'] == '201') {
+  $context['deploy_response'] = $response;
+  task_exit(ENDED, $response);
 }
 
-task_exit(ENDED, $response);
-
+task_exit(FAILED, $response);
 ?>
