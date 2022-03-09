@@ -27,7 +27,9 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ubiqube.etsi.mano.em.v351.model.vnfconfig.ProblemDetails;
+import com.ubiqube.etsi.mano.v351.services.VnfLcmOpOcc351Deserializer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -61,7 +63,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "This type represents a VNF lifecycle management operation occurrence. Shall be set to the value of the \"id\" attribute in the \"Grant\" representing the associated \"Individual Grant\", if such grant exists. * NOTE 1: This allows the API consumer to obtain the information contained in the latest \"result\"           notification if it has not received it due to an error or a wrongly configured subscription filter. * NOTE 2: Not more than one of changedInfo and modificationsTriggeredByVnfPkgChange shall be present. * NOTE 3: For a particular affected VL, there shall be as many \"AffectedVirtualLink\" entries as needed           for signalling the different types of changes, i.e. one per virtual link and change type.           For instance, in the case of signaling affected VL instances involving the addition of a           particular VL instance with links ports, one \"AffectedVirtualLink\" entry signals the addition           of the VL by using the \"changeType\" attribute of \"AffectedVirtualLink\" structure equal to \"ADDED\",           and another \"AffectedVirtualLink\" entry signals the addition of VNF link ports of the VL by using the           \"changeType\" equal to \"LINK_PORT_ADDED\". * NOTE 4: A coordination action has timed out if the VNFM has not been able to read the           \"Individual coordination action\" resource within a timeout interval after requesting the coordination           to be started or to be cancelled. The length of the timeout interval is defined by means outside           the scope of the present document. * NOTE 5: The list of rejected coordinations may be garbage collected if the LCM operation occurrence has           reached a terminal state, i.e. one of \"COMPLETED\", \"FAILED\" and \"ROLLED_BACK\". ")
 @Validated
-
+@JsonDeserialize(using = VnfLcmOpOcc351Deserializer.class)
 public class VnfLcmOpOcc implements OneOfVnfLcmOpOcc {
 	@JsonProperty("id")
 	private String id = null;

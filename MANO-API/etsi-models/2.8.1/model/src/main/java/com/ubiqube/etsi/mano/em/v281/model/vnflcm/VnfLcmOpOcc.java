@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.em.v281.model.vnflcm;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +27,9 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails2;
+import com.ubiqube.etsi.mano.v281.services.VnfLcmOpOcc281Deserializer;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,7 +39,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "This type represents a VNF lifecycle management operation occurrence. ")
 @Validated
-
+@JsonDeserialize(using = VnfLcmOpOcc281Deserializer.class)
 public class VnfLcmOpOcc {
 	@JsonProperty("id")
 	private String id = null;
@@ -45,10 +48,10 @@ public class VnfLcmOpOcc {
 	private LcmOperationStateType operationState = null;
 
 	@JsonProperty("stateEnteredTime")
-	private String stateEnteredTime = null;
+	private OffsetDateTime stateEnteredTime = null;
 
 	@JsonProperty("startTime")
-	private String startTime = null;
+	private OffsetDateTime startTime = null;
 
 	@JsonProperty("vnfInstanceId")
 	private String vnfInstanceId = null;
@@ -131,7 +134,7 @@ public class VnfLcmOpOcc {
 		this.operationState = operationState;
 	}
 
-	public VnfLcmOpOcc stateEnteredTime(final String stateEnteredTime) {
+	public VnfLcmOpOcc stateEnteredTime(final OffsetDateTime stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 		return this;
 	}
@@ -144,15 +147,15 @@ public class VnfLcmOpOcc {
 	@ApiModelProperty(required = true, value = "Date-time when the current state has been entered. ")
 	@NotNull
 
-	public String getStateEnteredTime() {
+	public OffsetDateTime getStateEnteredTime() {
 		return stateEnteredTime;
 	}
 
-	public void setStateEnteredTime(final String stateEnteredTime) {
+	public void setStateEnteredTime(final OffsetDateTime stateEnteredTime) {
 		this.stateEnteredTime = stateEnteredTime;
 	}
 
-	public VnfLcmOpOcc startTime(final String startTime) {
+	public VnfLcmOpOcc startTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 		return this;
 	}
@@ -165,11 +168,11 @@ public class VnfLcmOpOcc {
 	@ApiModelProperty(required = true, value = "Date-time of the start of the operation. ")
 	@NotNull
 
-	public String getStartTime() {
+	public OffsetDateTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(final String startTime) {
+	public void setStartTime(final OffsetDateTime startTime) {
 		this.startTime = startTime;
 	}
 

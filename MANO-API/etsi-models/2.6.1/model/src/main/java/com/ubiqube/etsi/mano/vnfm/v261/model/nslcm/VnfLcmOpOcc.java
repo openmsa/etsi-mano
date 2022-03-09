@@ -41,11 +41,13 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.CancelModeType;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationStateType;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.LcmOperationType;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
+import com.ubiqube.etsi.mano.nfvo.v261.services.VnfLcmOpOcc261Deserializer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -54,6 +56,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "This type represents a VNF lifecycle management operation occurrence. ")
 @Validated
+@JsonDeserialize(using = VnfLcmOpOcc261Deserializer.class)
 public class VnfLcmOpOcc {
 	@JsonProperty("id")
 	private String id = null;
@@ -463,7 +466,7 @@ public class VnfLcmOpOcc {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final VnfLcmOpOcc vnfLcmOpOcc = (VnfLcmOpOcc) o;

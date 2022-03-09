@@ -18,8 +18,15 @@ package com.ubiqube.etsi.mano.mapper;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.nfvo.v261.OrikaConfigurationNfvo261;
@@ -73,5 +80,13 @@ public class OperationParamsTest {
 		vp.setParameters(p);
 		final VnfLcmOpOcc o = mapperFactory.getMapperFacade().map(vp, VnfLcmOpOcc.class);
 		assertNotNull(o);
+	}
+
+	@Test
+	void testJackson() throws StreamReadException, DatabindException, IOException {
+		final ObjectMapper om = new ObjectMapper();
+		om.registerModule(new JavaTimeModule());
+		final InputStream src = this.getClass().getResourceAsStream("/vnflcmopocc.json");
+		final Object res = om.readValue(src, VnfLcmOpOcc.class);
 	}
 }
