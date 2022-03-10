@@ -29,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.ubiqube.etsi.mano.c331.services.VnfLcmOpOcc331Deserializer;
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

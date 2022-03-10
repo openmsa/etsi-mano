@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ubiqube.etsi.mano.vnfm.v331.model.vrqan.ProblemDetails;
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vrqan.VrQuotaAvailSubscription;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vrqan.VrQuotaAvailSubscriptionRequest;
 

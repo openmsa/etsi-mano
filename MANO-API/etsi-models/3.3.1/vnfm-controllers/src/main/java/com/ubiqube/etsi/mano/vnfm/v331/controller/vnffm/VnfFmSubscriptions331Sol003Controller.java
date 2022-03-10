@@ -29,11 +29,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.SingleControllerCondition;
+import com.ubiqube.etsi.mano.em.v331.model.vnffm.FmSubscription;
+import com.ubiqube.etsi.mano.em.v331.model.vnffm.FmSubscriptionLinks;
+import com.ubiqube.etsi.mano.em.v331.model.vnffm.FmSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.vnfm.fc.vnffm.FaultMngtSubscriptionsFrontController;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.FmSubscription;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.FmSubscriptionLinks;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.FmSubscriptionRequest;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnffm.Link;
 
 @RestController
 @Conditional(SingleControllerCondition.class)

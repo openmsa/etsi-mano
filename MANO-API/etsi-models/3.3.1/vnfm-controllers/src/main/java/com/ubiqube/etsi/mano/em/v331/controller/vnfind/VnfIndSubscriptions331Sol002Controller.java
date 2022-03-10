@@ -27,10 +27,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.em.v331.model.vnfind.Link;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.VnfIndicatorSubscription;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.VnfIndicatorSubscriptionLinks;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.VnfIndicatorSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.vnfm.fc.vnfind.VnfIndSubscriptionsFrontController;
 
 /**

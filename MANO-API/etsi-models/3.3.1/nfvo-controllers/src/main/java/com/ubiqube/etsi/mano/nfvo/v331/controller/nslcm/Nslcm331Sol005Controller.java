@@ -26,8 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.NsLcmGenericFrontController;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.CancelMode;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsLcmOpOccLinks;
 

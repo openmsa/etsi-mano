@@ -35,8 +35,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnfsnapshotpkgm.ProblemDetails;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnfsnapshotpkgm.VnfSnapshotPkgInfo;
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
+import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.VnfSnapshotPkgInfo;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

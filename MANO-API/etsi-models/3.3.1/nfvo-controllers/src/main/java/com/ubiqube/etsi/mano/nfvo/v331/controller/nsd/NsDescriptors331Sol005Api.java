@@ -37,10 +37,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdInfoModifications;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.ProblemDetails;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;

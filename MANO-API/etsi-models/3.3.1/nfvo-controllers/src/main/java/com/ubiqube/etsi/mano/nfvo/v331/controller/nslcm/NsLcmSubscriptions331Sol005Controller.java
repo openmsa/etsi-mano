@@ -25,10 +25,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.NsLcmSubscriptionsGenericFrontController;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.LccnSubscription;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.LccnSubscriptionLinks;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.LccnSubscriptionRequest;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.Link;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscription;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscriptionLinks;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 
 /**
  *

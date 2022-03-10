@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
 import com.ubiqube.etsi.mano.or.v331.model.nsium.NsInstanceUsageNotification;
-import com.ubiqube.etsi.mano.or.v331.model.nsium.ProblemDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

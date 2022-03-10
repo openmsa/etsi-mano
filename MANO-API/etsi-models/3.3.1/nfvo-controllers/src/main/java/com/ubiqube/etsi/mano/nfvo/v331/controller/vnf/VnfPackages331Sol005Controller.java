@@ -32,9 +32,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.ExternalArtifactsAccessConfig;
-import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.UploadVnfPkgFromUriRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.VnfPkgInfoLinks;

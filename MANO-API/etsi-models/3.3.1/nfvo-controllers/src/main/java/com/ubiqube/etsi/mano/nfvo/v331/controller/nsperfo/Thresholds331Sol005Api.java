@@ -33,10 +33,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.CreateThresholdRequest;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.ProblemDetails;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.Threshold;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsperfo.ThresholdModifications;
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
+import com.ubiqube.etsi.mano.em.v331.model.vnfind.CreateThresholdRequest;
+import com.ubiqube.etsi.mano.em.v331.model.vnfind.Threshold;
+import com.ubiqube.etsi.mano.em.v331.model.vnfind.ThresholdModifications;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -25,9 +25,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsFrontController;
-import com.ubiqube.etsi.mano.or.v331.model.grants.Grant;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.or.v331.model.grants.GrantNsLifecycleOperationRequest;
-import com.ubiqube.etsi.mano.or.v331.model.grants.Link;
+import com.ubiqube.etsi.mano.vnfm.v331.model.grant.Grant;
 
 /**
  *

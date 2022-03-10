@@ -28,10 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.controller.nslcm.NsInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.CreateNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.HealNsRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.InstantiateNsRequest;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsInstanceLinks;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ScaleNsRequest;

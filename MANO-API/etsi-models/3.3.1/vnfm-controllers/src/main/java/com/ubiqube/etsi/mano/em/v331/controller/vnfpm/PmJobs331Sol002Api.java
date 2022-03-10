@@ -35,11 +35,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.CreatePmJobRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.PerformanceReport;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.PmJob;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.PmJobModifications;
-import com.ubiqube.etsi.mano.em.v331.model.vnfind.ProblemDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

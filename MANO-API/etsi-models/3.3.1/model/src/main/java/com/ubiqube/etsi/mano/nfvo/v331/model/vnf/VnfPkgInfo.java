@@ -29,6 +29,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
+import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.Checksum;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

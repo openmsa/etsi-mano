@@ -35,11 +35,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.BuildVnfSnapshotPkgRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.CancelVnfSnapshotPkgOperationRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.CreateVnfSnapshotPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.ExtractVnfSnapshotPkgRequest;
-import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.ProblemDetails;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.UploadVnfSnapshotPkgFromUriRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.VnfSnapshotPkgInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.VnfSnapshotPkgInfoModifications;

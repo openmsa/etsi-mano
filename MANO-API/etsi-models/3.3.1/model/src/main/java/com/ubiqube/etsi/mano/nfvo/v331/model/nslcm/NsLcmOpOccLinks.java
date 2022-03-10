@@ -17,233 +17,241 @@
 package com.ubiqube.etsi.mano.nfvo.v331.model.nslcm;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.Link;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Links to resources related to this resource. 
+ * Links to resources related to this resource.
  */
 @Schema(description = "Links to resources related to this resource. ")
 @Validated
 
+public class NsLcmOpOccLinks {
+	@JsonProperty("self")
+	private Link self = null;
 
-public class NsLcmOpOccLinks   {
-  @JsonProperty("self")
-  private Link self = null;
+	@JsonProperty("nsInstance")
+	private Link nsInstance = null;
 
-  @JsonProperty("nsInstance")
-  private Link nsInstance = null;
+	@JsonProperty("cancel")
+	private Link cancel = null;
 
-  @JsonProperty("cancel")
-  private Link cancel = null;
+	@JsonProperty("retry")
+	private Link retry = null;
 
-  @JsonProperty("retry")
-  private Link retry = null;
+	@JsonProperty("rollback")
+	private Link rollback = null;
 
-  @JsonProperty("rollback")
-  private Link rollback = null;
+	@JsonProperty("continue")
+	private Link _continue = null;
 
-  @JsonProperty("continue")
-  private Link _continue = null;
+	@JsonProperty("fail")
+	private Link fail = null;
 
-  @JsonProperty("fail")
-  private Link fail = null;
+	public NsLcmOpOccLinks self(final Link self) {
+		this.self = self;
+		return this;
+	}
 
-  public NsLcmOpOccLinks self(Link self) {
-    this.self = self;
-    return this;
-  }
+	/**
+	 * Get self
+	 *
+	 * @return self
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get self
-   * @return self
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	@Valid
+	public Link getSelf() {
+		return self;
+	}
 
-    @Valid
-    public Link getSelf() {
-    return self;
-  }
+	public void setSelf(final Link self) {
+		this.self = self;
+	}
 
-  public void setSelf(Link self) {
-    this.self = self;
-  }
+	public NsLcmOpOccLinks nsInstance(final Link nsInstance) {
+		this.nsInstance = nsInstance;
+		return this;
+	}
 
-  public NsLcmOpOccLinks nsInstance(Link nsInstance) {
-    this.nsInstance = nsInstance;
-    return this;
-  }
+	/**
+	 * Get nsInstance
+	 *
+	 * @return nsInstance
+	 **/
+	@Schema(required = true, description = "")
+	@NotNull
 
-  /**
-   * Get nsInstance
-   * @return nsInstance
-   **/
-  @Schema(required = true, description = "")
-      @NotNull
+	@Valid
+	public Link getNsInstance() {
+		return nsInstance;
+	}
 
-    @Valid
-    public Link getNsInstance() {
-    return nsInstance;
-  }
+	public void setNsInstance(final Link nsInstance) {
+		this.nsInstance = nsInstance;
+	}
 
-  public void setNsInstance(Link nsInstance) {
-    this.nsInstance = nsInstance;
-  }
+	public NsLcmOpOccLinks cancel(final Link cancel) {
+		this.cancel = cancel;
+		return this;
+	}
 
-  public NsLcmOpOccLinks cancel(Link cancel) {
-    this.cancel = cancel;
-    return this;
-  }
+	/**
+	 * Get cancel
+	 *
+	 * @return cancel
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get cancel
-   * @return cancel
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public Link getCancel() {
-    return cancel;
-  }
+	@Valid
+	public Link getCancel() {
+		return cancel;
+	}
 
-  public void setCancel(Link cancel) {
-    this.cancel = cancel;
-  }
+	public void setCancel(final Link cancel) {
+		this.cancel = cancel;
+	}
 
-  public NsLcmOpOccLinks retry(Link retry) {
-    this.retry = retry;
-    return this;
-  }
+	public NsLcmOpOccLinks retry(final Link retry) {
+		this.retry = retry;
+		return this;
+	}
 
-  /**
-   * Get retry
-   * @return retry
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public Link getRetry() {
-    return retry;
-  }
+	/**
+	 * Get retry
+	 *
+	 * @return retry
+	 **/
+	@Schema(description = "")
 
-  public void setRetry(Link retry) {
-    this.retry = retry;
-  }
+	@Valid
+	public Link getRetry() {
+		return retry;
+	}
 
-  public NsLcmOpOccLinks rollback(Link rollback) {
-    this.rollback = rollback;
-    return this;
-  }
+	public void setRetry(final Link retry) {
+		this.retry = retry;
+	}
 
-  /**
-   * Get rollback
-   * @return rollback
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public Link getRollback() {
-    return rollback;
-  }
+	public NsLcmOpOccLinks rollback(final Link rollback) {
+		this.rollback = rollback;
+		return this;
+	}
 
-  public void setRollback(Link rollback) {
-    this.rollback = rollback;
-  }
+	/**
+	 * Get rollback
+	 *
+	 * @return rollback
+	 **/
+	@Schema(description = "")
 
-  public NsLcmOpOccLinks _continue(Link _continue) {
-    this._continue = _continue;
-    return this;
-  }
+	@Valid
+	public Link getRollback() {
+		return rollback;
+	}
 
-  /**
-   * Get _continue
-   * @return _continue
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public Link getContinue() {
-    return _continue;
-  }
+	public void setRollback(final Link rollback) {
+		this.rollback = rollback;
+	}
 
-  public void setContinue(Link _continue) {
-    this._continue = _continue;
-  }
+	public NsLcmOpOccLinks _continue(final Link _continue) {
+		this._continue = _continue;
+		return this;
+	}
 
-  public NsLcmOpOccLinks fail(Link fail) {
-    this.fail = fail;
-    return this;
-  }
+	/**
+	 * Get _continue
+	 *
+	 * @return _continue
+	 **/
+	@Schema(description = "")
 
-  /**
-   * Get fail
-   * @return fail
-   **/
-  @Schema(description = "")
-  
-    @Valid
-    public Link getFail() {
-    return fail;
-  }
+	@Valid
+	public Link getContinue() {
+		return _continue;
+	}
 
-  public void setFail(Link fail) {
-    this.fail = fail;
-  }
+	public void setContinue(final Link _continue) {
+		this._continue = _continue;
+	}
 
+	public NsLcmOpOccLinks fail(final Link fail) {
+		this.fail = fail;
+		return this;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    NsLcmOpOccLinks nsLcmOpOccLinks = (NsLcmOpOccLinks) o;
-    return Objects.equals(this.self, nsLcmOpOccLinks.self) &&
-        Objects.equals(this.nsInstance, nsLcmOpOccLinks.nsInstance) &&
-        Objects.equals(this.cancel, nsLcmOpOccLinks.cancel) &&
-        Objects.equals(this.retry, nsLcmOpOccLinks.retry) &&
-        Objects.equals(this.rollback, nsLcmOpOccLinks.rollback) &&
-        Objects.equals(this._continue, nsLcmOpOccLinks._continue) &&
-        Objects.equals(this.fail, nsLcmOpOccLinks.fail);
-  }
+	/**
+	 * Get fail
+	 *
+	 * @return fail
+	 **/
+	@Schema(description = "")
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(self, nsInstance, cancel, retry, rollback, _continue, fail);
-  }
+	@Valid
+	public Link getFail() {
+		return fail;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class NsLcmOpOccLinks {\n");
-    
-    sb.append("    self: ").append(toIndentedString(self)).append("\n");
-    sb.append("    nsInstance: ").append(toIndentedString(nsInstance)).append("\n");
-    sb.append("    cancel: ").append(toIndentedString(cancel)).append("\n");
-    sb.append("    retry: ").append(toIndentedString(retry)).append("\n");
-    sb.append("    rollback: ").append(toIndentedString(rollback)).append("\n");
-    sb.append("    _continue: ").append(toIndentedString(_continue)).append("\n");
-    sb.append("    fail: ").append(toIndentedString(fail)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	public void setFail(final Link fail) {
+		this.fail = fail;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final NsLcmOpOccLinks nsLcmOpOccLinks = (NsLcmOpOccLinks) o;
+		return Objects.equals(this.self, nsLcmOpOccLinks.self) &&
+				Objects.equals(this.nsInstance, nsLcmOpOccLinks.nsInstance) &&
+				Objects.equals(this.cancel, nsLcmOpOccLinks.cancel) &&
+				Objects.equals(this.retry, nsLcmOpOccLinks.retry) &&
+				Objects.equals(this.rollback, nsLcmOpOccLinks.rollback) &&
+				Objects.equals(this._continue, nsLcmOpOccLinks._continue) &&
+				Objects.equals(this.fail, nsLcmOpOccLinks.fail);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(self, nsInstance, cancel, retry, rollback, _continue, fail);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class NsLcmOpOccLinks {\n");
+
+		sb.append("    self: ").append(toIndentedString(self)).append("\n");
+		sb.append("    nsInstance: ").append(toIndentedString(nsInstance)).append("\n");
+		sb.append("    cancel: ").append(toIndentedString(cancel)).append("\n");
+		sb.append("    retry: ").append(toIndentedString(retry)).append("\n");
+		sb.append("    rollback: ").append(toIndentedString(rollback)).append("\n");
+		sb.append("    _continue: ").append(toIndentedString(_continue)).append("\n");
+		sb.append("    fail: ").append(toIndentedString(fail)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

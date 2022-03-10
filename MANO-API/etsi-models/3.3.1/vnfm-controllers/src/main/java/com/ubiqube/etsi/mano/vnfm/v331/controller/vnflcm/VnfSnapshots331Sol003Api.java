@@ -40,9 +40,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.CreateVnfSnapshotInfoRequest;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.ProblemDetails;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfSnapshotInfo;
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.CreateVnfSnapshotInfoRequest;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfSnapshotInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfSnapshotInfoModificationRequest;
 import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfSnapshotInfoModifications;
 

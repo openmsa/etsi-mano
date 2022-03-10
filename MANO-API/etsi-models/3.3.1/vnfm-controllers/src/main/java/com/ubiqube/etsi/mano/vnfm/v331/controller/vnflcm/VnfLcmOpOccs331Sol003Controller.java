@@ -29,10 +29,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.em.v331.controller.vnflcm.VnfLcmClassMaping331;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfLcmOpOccLinks;
 import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfLcmOpOccGenericFrontController;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.Link;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfLcmOpOccLinks;
 
 /**
  *

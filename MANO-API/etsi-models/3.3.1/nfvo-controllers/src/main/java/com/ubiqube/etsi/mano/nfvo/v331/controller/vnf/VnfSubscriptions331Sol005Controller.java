@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.vnf.VnfSubscriptionSol005FrontController;
-import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.Link;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscriptionRequest;

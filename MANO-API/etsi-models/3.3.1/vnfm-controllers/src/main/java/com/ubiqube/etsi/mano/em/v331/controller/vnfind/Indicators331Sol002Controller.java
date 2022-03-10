@@ -26,9 +26,9 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.em.v331.model.vnfind.Link;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.VnfIndicator;
 import com.ubiqube.etsi.mano.em.v331.model.vnfind.VnfIndicatorLinks;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.vnfm.fc.vnfind.IndicatorsFrontController;
 import com.ubiqube.etsi.mano.vnfm.v331.controller.vnflcm.VnfInstances331Sol003Api;
 

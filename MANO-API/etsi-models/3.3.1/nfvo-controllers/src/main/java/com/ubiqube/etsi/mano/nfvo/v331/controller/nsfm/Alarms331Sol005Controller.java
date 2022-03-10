@@ -23,8 +23,8 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsfm.Alarm;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nsfm.AlarmModifications;
+import com.ubiqube.etsi.mano.em.v331.model.vnffm.Alarm;
+import com.ubiqube.etsi.mano.em.v331.model.vnffm.AlarmModifications;
 
 /**
  *

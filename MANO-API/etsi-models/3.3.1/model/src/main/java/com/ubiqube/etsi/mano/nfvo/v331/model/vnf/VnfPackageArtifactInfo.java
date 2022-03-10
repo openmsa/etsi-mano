@@ -27,11 +27,14 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.nfvo.v331.model.vnfsnapshotpkgm.Checksum;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This type represents an artifact other than a software image which is contained in or external to a VNF package. It shall comply with provisions defined in Table 9.5.3.3-1.
+ * This type represents an artifact other than a software image which is
+ * contained in or external to a VNF package. It shall comply with provisions
+ * defined in Table 9.5.3.3-1.
  */
 @Schema(description = "This type represents an artifact other than a software image which is contained in or external to a VNF package. It shall comply with provisions defined in Table 9.5.3.3-1. ")
 @Validated
@@ -47,7 +50,12 @@ public class VnfPackageArtifactInfo {
 	private Checksum checksum = null;
 
 	/**
-	 * Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 [5] - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 [5] - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004 [5]
+	 * Marks specific types of artifacts as defined in the VNF package. If none of
+	 * the specific classes listed below applies, the attribute shall not be
+	 * present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in
+	 * ETSI GS NFV-SOL 004 [5] - TESTING: a testing artifact as per clause 4.3.4 in
+	 * ETSI GS NFV-SOL 004 [5] - LICENSE: a license artifact as per clause 4.3.5 in
+	 * ETSI GS NFV-SOL 004 [5]
 	 */
 	public enum ArtifactClassificationEnum {
 		HISTORY("HISTORY"),
@@ -159,7 +167,12 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * Marks specific types of artifacts as defined in the VNF package. If none of the specific classes listed below applies, the attribute shall not be present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in ETSI GS NFV-SOL 004 [5] - TESTING: a testing artifact as per clause 4.3.4 in ETSI GS NFV-SOL 004 [5] - LICENSE: a license artifact as per clause 4.3.5 in ETSI GS NFV-SOL 004 [5]
+	 * Marks specific types of artifacts as defined in the VNF package. If none of
+	 * the specific classes listed below applies, the attribute shall not be
+	 * present. Valid values: - HISTORY: a history artifact as per clause 4.3.3 in
+	 * ETSI GS NFV-SOL 004 [5] - TESTING: a testing artifact as per clause 4.3.4 in
+	 * ETSI GS NFV-SOL 004 [5] - LICENSE: a license artifact as per clause 4.3.5 in
+	 * ETSI GS NFV-SOL 004 [5]
 	 *
 	 * @return artifactClassification
 	 **/
@@ -200,7 +213,10 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * Non-MANO artifact set identifier of the non-MANO artifact set to which the artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004 [5]. Shall be provided if the artifact is a non-MANO artifact, and shall be omitted otherwise.
+	 * Non-MANO artifact set identifier of the non-MANO artifact set to which the
+	 * artifact belongs, as defined in clause 4.3.7 of ETSI GS NFV-SOL 004 [5].
+	 * Shall be provided if the artifact is a non-MANO artifact, and shall be
+	 * omitted otherwise.
 	 *
 	 * @return nonManoArtifactSetId
 	 **/
@@ -240,7 +256,7 @@ public class VnfPackageArtifactInfo {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final VnfPackageArtifactInfo vnfPackageArtifactInfo = (VnfPackageArtifactInfo) o;
@@ -275,7 +291,8 @@ public class VnfPackageArtifactInfo {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

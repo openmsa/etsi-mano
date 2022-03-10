@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.FmSubscription;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.FmSubscriptionLinks;
 import com.ubiqube.etsi.mano.em.v331.model.vnffm.FmSubscriptionRequest;
-import com.ubiqube.etsi.mano.em.v331.model.vnffm.Link;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.vnfm.fc.vnffm.FaultMngtSubscriptionsFrontController;
 
 @RestController

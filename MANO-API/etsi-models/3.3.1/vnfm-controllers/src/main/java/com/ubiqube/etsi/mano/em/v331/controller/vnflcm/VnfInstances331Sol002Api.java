@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.em.v331.model.vnfconfig.ProblemDetails;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ChangeCurrentVnfPkgRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ChangeVnfFlavourRequest;
@@ -46,7 +47,6 @@ import com.ubiqube.etsi.mano.em.v331.model.vnflcm.CreateVnfSnapshotRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.HealVnfRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.InstantiateVnfRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.OperateVnfRequest;
-import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ProblemDetails;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.RevertToVnfSnapshotRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ScaleVnfToLevelRequest;

@@ -26,7 +26,6 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.alarm.ResourceHandle;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsInstantiatedVnf;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
@@ -36,11 +35,17 @@ import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.em.v331.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.InstantiateVnfRequest;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscription;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ScaleVnfRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.ScaleVnfToLevelRequest;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.TerminateVnfRequest;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -48,15 +53,9 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nsd.NsdmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.AffectedVnf;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.InstantiateNsRequest;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.LccnSubscription;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsLcmOpOcc;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.VnfExtCpInfo;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.ConstraintResourceRef;
@@ -245,10 +244,6 @@ public class OrikaConfigurationNfvo331 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(SubscriptionAuthenticationParamsOauth2ClientCredentials.class, AuthParamOauth2.class)
 				.field("clientPassword", "clientSecret")
-				.byDefault()
-				.register();
-		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.ResourceHandle.class, ResourceHandle.class)
-				.field("vimId", "vimConnectionId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(InstantiateVnfRequest.class, BlueprintParameters.class)
