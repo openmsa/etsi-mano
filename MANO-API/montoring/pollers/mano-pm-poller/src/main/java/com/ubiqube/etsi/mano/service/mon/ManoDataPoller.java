@@ -63,7 +63,7 @@ public class ManoDataPoller {
 	@Scheduled(fixedRate = 60_000)
 	public void run() {
 		final Iterable<PmJob> ite = pmJobsJpa.findAll();
-		LOG.debug("Polling data");
+		LOG.trace("Polling data");
 		for (final PmJob pmJob : ite) {
 			LOG.info(" - {}", pmJob);
 			monitoringEventManager.sendGetDataEvent(map(pmJob));
