@@ -16,9 +16,11 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow;
 
+import java.util.Comparator;
 import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.v2.ComputeTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.AffinityRuleNode;
@@ -68,6 +70,7 @@ public class VnfComputeUowV2 extends AbstractUowV2<ComputeTask> {
 				.flatMap(List::stream)
 				.toList();
 		final List<String> ports = t.getVnfCompute().getPorts().stream()
+				.sorted(Comparator.comparingInt(VnfLinkPort::getInterfaceOrder))
 				.map(x -> context.getParent(VnfPortNode.class, x.getToscaName() + "-" + getTask().getAlias()))
 				.flatMap(List::stream)
 				.toList();
