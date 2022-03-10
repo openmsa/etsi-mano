@@ -24,12 +24,12 @@ import org.junit.jupiter.api.Test;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfInstance;
+import com.ubiqube.etsi.mano.em.v331.model.vnflcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.test.TestHelper;
 import com.ubiqube.etsi.mano.vnfm.v331.OrikaMapperVnfm331;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.GrantRequest;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfInstance;
-import com.ubiqube.etsi.mano.vnfm.v331.model.vnflcm.VnfLcmOpOcc;
 
 public class MappingTest extends TestHelper {
 
