@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.ubiqube.etsi.mano.common.v261;
+package com.ubiqube.etsi.mano.factory;
 
 import java.util.Map;
 

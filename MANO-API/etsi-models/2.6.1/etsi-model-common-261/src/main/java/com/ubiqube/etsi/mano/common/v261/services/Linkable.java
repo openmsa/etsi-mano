@@ -25,10 +25,10 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
 
 /**
- * This is a technical interface for creating live links from VNF common package.
+ * This is a technical interface for creating live links from VNF common
+ * package.
  *
  * @author Olivier Vignaud <ovi@uniqube.com>
  *
@@ -49,8 +49,6 @@ public interface Linkable {
 	PkgmLinks createVnfPackageOnboardingNotificationLinks(@Nonnull UUID _vnfPkgId, UUID _subscriptionId);
 
 	PkgmSubscriptionLinks createSubscriptionsPkgmSubscriptionLinks(@Nonnull String _subscriptionId);
-
-	FrontApiTypesEnum getApi();
 
 	void makeSubscriptionLink(final PkgmSubscription pkgmSubscription);
 }
