@@ -148,9 +148,15 @@ public class Instance implements BaseEntity, Auditable {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private transient Set<VnfBlueprint> blueprints;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
-	private transient Set<ExtVirtualLinkDataEntity> extVirtualLinks;
+	/**
+	 * Used for storing from instantiation objects.
+	 */
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
+	private Set<ExtVirtualLinkDataEntity> extVirtualLinks;
 
+	/**
+	 * Used for storing from instantiation objects.
+	 */
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "vnfInstance")
 	private Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks;
 

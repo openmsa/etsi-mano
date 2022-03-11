@@ -83,7 +83,8 @@ public class VnfInstanceServiceVnfm implements VnfInstanceGatewayService {
 		extractExtCp(vnfInfo, vli);
 		extractStorage(vnfInfo, vli);
 		extractVl(vnfInfo, vli);
-		extractExtVl(vnfInfo, vli);
+		// This pne will crash if a router is present at terminate time.
+		// extractExtVl(vnfInfo, vli);
 		extractMonitoring(vnfInfo, vli);
 		extractExtVirtualLinkInfo(vnfInfo, vli);
 		inst.setInstantiationState(isLive(id));
