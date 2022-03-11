@@ -23,51 +23,36 @@ import javax.persistence.ManyToOne;
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @EntityListeners(AuditListener.class)
+@Getter
+@Setter
 public class ComputeTask extends VnfTask {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Reference to VnfCompute Id.
+	 */
 	@ManyToOne
 	private VnfCompute vnfCompute;
 
+	/**
+	 * Vim flavour Id.
+	 */
 	private String flavorId;
 
+	/**
+	 * Vim image Id.
+	 */
 	private String imageId;
-
-	private String bootData;
-
-	public VnfCompute getVnfCompute() {
-		return vnfCompute;
-	}
-
-	public void setVnfCompute(final VnfCompute vnfCompute) {
-		this.vnfCompute = vnfCompute;
-	}
-
-	public String getFlavorId() {
-		return flavorId;
-	}
-
-	public void setFlavorId(final String flavorId) {
-		this.flavorId = flavorId;
-	}
-
-	public String getImageId() {
-		return imageId;
-	}
-
-	public void setImageId(final String imageId) {
-		this.imageId = imageId;
-	}
-
-	public String getBootData() {
-		return bootData;
-	}
-
-	public void setBootData(final String bootData) {
-		this.bootData = bootData;
-	}
 
 }

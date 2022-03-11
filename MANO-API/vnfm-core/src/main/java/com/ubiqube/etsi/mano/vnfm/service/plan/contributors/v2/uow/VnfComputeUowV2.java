@@ -81,7 +81,7 @@ public class VnfComputeUowV2 extends AbstractUowV2<ComputeTask> {
 				.imageId(t.getImageId())
 				.networks(net)
 				.storages(storages)
-				.cloudInitData(t.getBootData())
+				.cloudInitData(t.getVnfCompute().getCloudInit())
 				.securityGroup(security)
 				.affinityRules(affinity)
 				.portsId(ports)
