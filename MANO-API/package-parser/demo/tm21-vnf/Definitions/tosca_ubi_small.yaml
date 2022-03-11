@@ -145,7 +145,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 6
         vnic_type: normal
       requirements:
         - virtual_binding: vsrx
@@ -161,7 +161,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 7
         vnic_type: normal
       requirements:
         - virtual_binding: vsrx
@@ -177,7 +177,7 @@ topology_template:
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
-        order: 5
+        order: 8
         vnic_type: normal
       requirements:
         - virtual_binding: vsrx
