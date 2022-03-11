@@ -36,7 +36,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.indicator.VnfIndicatorSubscriptionR
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 @RolesAllowed({ "ROLE_EM" })

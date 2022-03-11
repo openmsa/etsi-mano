@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.services.Sol005Linkable;
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 @RestController

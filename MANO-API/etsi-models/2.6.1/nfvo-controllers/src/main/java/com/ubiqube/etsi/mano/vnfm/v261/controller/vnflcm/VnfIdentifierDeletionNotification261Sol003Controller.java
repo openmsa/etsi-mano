@@ -25,7 +25,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.vnflcm.VnfIdentifierDeletionNotific
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 @RestController

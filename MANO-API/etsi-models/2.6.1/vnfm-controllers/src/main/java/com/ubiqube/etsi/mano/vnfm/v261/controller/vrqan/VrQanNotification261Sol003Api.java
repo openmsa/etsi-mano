@@ -31,7 +31,7 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.vrqan.AlarmNotification;
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 @RequestMapping("/sol003/vrqan/v1/notification")

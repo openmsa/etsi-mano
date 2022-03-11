@@ -65,7 +65,7 @@ public class VnfScaleInfo {
 	}
 
 	/**
-	 * Indicates the scale level. The minimum value shall be 0 and the maximum value shall be <= maxScaleLevel as described in the VNFD.
+	 * Indicates the scale level. The minimum value shall be 0 and the maximum value shall be {@literal <}= maxScaleLevel as described in the VNFD.
 	 *
 	 * @return scaleLevel
 	 **/

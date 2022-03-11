@@ -74,7 +74,7 @@ import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 @Component

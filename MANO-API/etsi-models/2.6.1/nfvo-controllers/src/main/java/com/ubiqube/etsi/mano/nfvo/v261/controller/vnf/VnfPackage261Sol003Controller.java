@@ -104,9 +104,6 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 * provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query
 	 * parameters, request and response data structures, and response codes.
 	 *
-	 * @throws FileNotFoundException
-	 *
-	 *
 	 */
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId) {

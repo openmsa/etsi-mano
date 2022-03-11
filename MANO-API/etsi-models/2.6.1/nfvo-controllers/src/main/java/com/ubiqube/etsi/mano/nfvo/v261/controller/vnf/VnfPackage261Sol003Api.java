@@ -47,7 +47,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 @RolesAllowed({ "ROLE_VNFM" })
@@ -134,10 +134,6 @@ public interface VnfPackage261Sol003Api {
 	 * package identifier allocated by the NFVO. This method shall follow the
 	 * provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query
 	 * parameters, request and response data structures, and response codes.
-	 *
-	 * @throws FileNotFoundException
-	 *
-	 * @throws IOException
 	 *
 	 */
 	@Operation(summary = "Fetch an on-boarded VNF package.", description = "The GET method fetches the content of a VNF package identified by the VNF package identifier allocated by the NFVO. This method shall follow the provisions specified in the Tables 9.4.5.3.2-1 and 9.4.5.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})

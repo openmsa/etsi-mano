@@ -30,17 +30,16 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
  * This is a technical interface for creating live links from VNF common
  * package.
  *
- * @author Olivier Vignaud <ovi@uniqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 public interface Linkable {
 	/**
 	 * Create link for a VNF Package.
 	 *
-	 * @param vnfPkgId A Vnf ID.
-	 * @return The VNF Packages Links object.
+	 * @param vnfPkgInfo A Vnf ID.
 	 */
-	void makeLinks(VnfPkgInfo _vnfPkgInfo);
+	void makeLinks(VnfPkgInfo vnfPkgInfo);
 
 	String getSelfLink(VnfPkgInfo _vnfPkgInfo);
 

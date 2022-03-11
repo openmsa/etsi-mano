@@ -24,7 +24,7 @@ import com.ubiqube.etsi.mano.controller.AbstractEtsiImplementation;
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 @Service
