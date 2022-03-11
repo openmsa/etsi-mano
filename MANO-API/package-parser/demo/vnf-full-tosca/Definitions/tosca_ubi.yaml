@@ -314,7 +314,7 @@ topology_template:
                 name: vl01L2
                 vlan_transparent: true
                 network_type: flat
-                mtu: 1500
+                mtu: 1442
                 segmentation_id: a
               l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
                 dhcp_enabled: true
@@ -358,7 +358,7 @@ topology_template:
                 name: vl01L2
                 vlan_transparent: true
                 network_type: VXLAN
-                mtu: 1500
+                mtu: 1442
               l3_protocol_data:
                 dhcp_enabled: true
                 cidr: 192.168.10.0/24
@@ -394,8 +394,8 @@ topology_template:
             - l2_protocol_data:
                 name: vl01L2
                 vlan_transparent: true
-                network_type: VXLAN
-                mtu: 1500
+                network_type: flat
+                mtu: 1442
               l3_protocol_data:
                 dhcp_enabled: true
                 cidr: 192.168.20.0/24
