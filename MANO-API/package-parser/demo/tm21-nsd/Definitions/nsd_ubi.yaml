@@ -18,7 +18,7 @@ topology_template:
         descriptor_id: 2e5958f9-9bfd-46c6-b8fe-75cf0b3c78ab
         designer: ovi@ubiqube.com
         version: 0.0.1
-        name: Small NSD.
+        name: TM21 demo NSD.
         invariant_id: 2e5958f9-9bfd-46c6-b8fe-75cf0b3c78ab
         flavour_id: flavor01
         ns_profile: # tosca.datatypes.nfv.NsProfile
@@ -29,7 +29,7 @@ topology_template:
       requirements:
         #- virtual_link: # tosca.nodes.nfv.NsVirtualLink
 
-    vnf_1:
+    vnf_vwaf:
       type:  tosca.nodes.nfv.VNF
       properties:
         flavour_id: flavor01
@@ -240,7 +240,7 @@ policies:
         1: 2
         2: 3
         3: 4
-    targets: [ vnf_1 ]
+    targets: [ vnf_vwaf ]
 
   ns instantiation_level:
     type: tosca.policies.nfv.NsInstantiationLevels
@@ -264,7 +264,7 @@ policies:
         level_2: 2
         level_3: 3
         level_4: 4
-    targets: [ vnf_1 ]
+    targets: [ vnf_vwaf ]
 
 
 ################################################################################
