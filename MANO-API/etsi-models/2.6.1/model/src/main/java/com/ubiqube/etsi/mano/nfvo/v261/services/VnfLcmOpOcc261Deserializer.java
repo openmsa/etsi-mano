@@ -119,7 +119,7 @@ public class VnfLcmOpOcc261Deserializer extends StdDeserializer<VnfLcmOpOcc> {
 				throw new IllegalArgumentException("Unexpected value: " + p.currentName());
 			}
 		}
-		return null;
+		return ret;
 	}
 
 	private static Object mapOperation(final LcmOperationType op, final JsonParser p) throws IOException {
