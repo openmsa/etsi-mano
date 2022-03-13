@@ -40,23 +40,23 @@
     "changedExtConnectivity": null,
     "_links": {
         "self": {
-            "href": "http://10.31.1.29:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb"
+            "href": "http://mano-vnfm:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb"
         },
         "vnfInstance": {
-            "href": "http://10.31.1.29:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_instances/0a2d29e0-3e08-47ee-8645-2c45375ea6bb"
+            "href": "http://mano-vnfm:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_instances/0a2d29e0-3e08-47ee-8645-2c45375ea6bb"
         },
         "grant": null,
         "cancel": {
-            "href": "http://10.31.1.29:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb/cancel"
+            "href": "http://mano-vnfm:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb/cancel"
         },
         "retry": {
-            "href": "http://10.31.1.29:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb/retry"
+            "href": "http://mano-vnfm:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb/retry"
         },
         "rollback": {
-            "href": "http://10.31.1.29:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb/rollback"
+            "href": "http://mano-vnfm:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb/rollback"
         },
         "fail": {
-            "href": "http://10.31.1.29:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb/fail"
+            "href": "http://mano-vnfm:8090/ubi-etsi-mano/sol003/vnflcm/v1/vnf_lcm_op_occs/0a2d29e0-3e08-47ee-8645-2c45375ea6bb/fail"
         }
     }
 }
