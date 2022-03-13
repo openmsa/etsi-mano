@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import com.ubiqube.etsi.mano.common.v261.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.common.v261.model.nslcm.ExtVirtualLinkInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfExtCpInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfVirtualLinkResourceInfo;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfcResourceInfo;
@@ -29,6 +30,7 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
@@ -147,6 +149,12 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(ExtManagedVirtualLinkData.class, ExternalManagedVirtualLink.class)
 				.field("vmfVirtualLinkDescId", "vnfVirtualLinkDescId")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(ExtVirtualLinkInfo.class, ExtVirtualLinkDataEntity.class)
+				.field("resourceHandle.vimConnectionId", "vimConnectionId")
+				.field("resourceHandle.resourceProviderId", "resourceProviderId")
+				.field("resourceHandle.resourceId", "resourceId")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(AffectedVnf.class, NsInstantiatedVnf.class)
