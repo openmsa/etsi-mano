@@ -115,7 +115,7 @@ public class OpenStackVim implements Vim {
 		if ("true".equals(ii.get("non-strict-ssl"))) {
 			conf.withSSLVerificationDisabled();
 		}
-		if (null != ii.get("nat-ip")) {
+		if (null != ii.get("nat-host")) {
 			conf.withEndpointNATResolution(ii.get("nat-host"));
 		}
 		base.withConfig(conf);
