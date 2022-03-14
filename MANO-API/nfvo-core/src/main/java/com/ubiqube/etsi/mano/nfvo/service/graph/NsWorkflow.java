@@ -22,6 +22,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.jgrapht.ListenableGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
@@ -62,6 +64,9 @@ import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
  */
 @Service
 public class NsWorkflow implements Workflow<NsdPackage, NsBlueprint, NsReport, NsTask> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(NsWorkflow.class);
+
 	private final NsPlanner planner;
 	private final Planner<NsBlueprint, NsTask, NsTask> planv2;
 	private final NsPlanExecutor executor;
@@ -124,6 +129,7 @@ public class NsWorkflow implements Workflow<NsdPackage, NsBlueprint, NsReport, N
 			case VL -> context.add(Network.class, x.getNsTask().getToscaName(), x.getResourceId());
 			case VNF -> context.add(VnfCreateNode.class, x.getNsTask().getToscaName(), x.getResourceId());
 			case NSD -> context.add(NsdCreateNode.class, x.getNsTask().getToscaName(), x.getResourceId());
+			case VNFFG -> LOG.debug("");
 			default -> throw new GenericException(x.getNsTask().getType() + " is not handled.");
 			}
 		});

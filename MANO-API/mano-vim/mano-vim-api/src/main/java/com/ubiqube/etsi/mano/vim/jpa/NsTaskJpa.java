@@ -14,38 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.vim.sfc.enity;
+package com.ubiqube.etsi.mano.vim.jpa;
 
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import org.springframework.data.repository.CrudRepository;
 
-import com.ubiqube.etsi.mano.dao.mano.nsd.Classifier;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Entity
-@Getter
-@Setter
-public class SfcFlowClassifierTask extends NsTask {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	private UUID id;
-
-	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-	private Classifier classifier;
-
+public interface NsTaskJpa extends CrudRepository<NsTask, UUID> {
+	// Nothing.
 }

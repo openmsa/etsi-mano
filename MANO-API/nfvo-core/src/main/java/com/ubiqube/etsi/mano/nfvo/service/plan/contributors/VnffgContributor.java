@@ -22,8 +22,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSfcTask;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
@@ -64,6 +67,10 @@ public class VnffgContributor extends AbstractNsContributor<NsSfcTask, NsVtBase<
 		return vnffgs.stream().map(x -> {
 			final NsSfcTask task = new NsSfcTask();
 			task.setToscaName(x.getName());
+			task.setAlias(x.getName());
+			task.setType(ResourceTypeEnum.VNFFG);
+			task.setChangeType(ChangeType.ADDED);
+			task.setStatus(PlanStatusType.SUCCESS);
 			task.setVnffg(x);
 			return new NsVnffgPostVt(task);
 		}).collect(Collectors.toList());

@@ -16,18 +16,30 @@
  */
 package com.ubiqube.etsi.mano.service.vim.sfc;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.function.Supplier;
+
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.nsd.Classifier;
+import com.ubiqube.etsi.mano.dao.mano.nsd.CpPair;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
+import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgInstance;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsSfcTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
 import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
@@ -41,6 +53,7 @@ import com.ubiqube.etsi.mano.service.vim.sfc.vt.SfcFlowClassifierVt;
 import com.ubiqube.etsi.mano.service.vim.sfc.vt.SfcPortChainVt;
 import com.ubiqube.etsi.mano.service.vim.sfc.vt.SfcPortPairGroupVt;
 import com.ubiqube.etsi.mano.service.vim.sfc.vt.SfcPortPairVt;
+import com.ubiqube.etsi.mano.vim.jpa.NsTaskJpa;
 
 /**
  *
@@ -52,51 +65,99 @@ public class OsSfcSystem implements System<NsSfcTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OsSfcSystem.class);
 
+	private final NsTaskJpa nsTaskJpa;
+
+	public OsSfcSystem(final NsTaskJpa nsTaskJpa) {
+		this.nsTaskJpa = nsTaskJpa;
+	}
+
 	@Override
 	public String getProviderId() {
 		return "SFC";
 	}
 
+	@Transactional(TxType.NOT_SUPPORTED)
 	@Override
 	public SystemBuilder getImplementation(final OrchestrationService<NsSfcTask> orchestrationService, final VirtualTask<NsSfcTask> virtualTask, final SystemConnections vim) {
 		final SystemBuilder builder = orchestrationService.createEmptySystemBuilder();
-		final VnffgDescriptor vnffg = virtualTask.getParameters().getVnffg();
-		final SfcFlowClassifierTask flowTask = new SfcFlowClassifierTask();
-		final Classifier classifier = vnffg.getClassifier();
-		flowTask.setClassifier(classifier);
-		flowTask.setToscaName(classifier.getToscaName());
+		final NsSfcTask task = virtualTask.getParameters();
+		final VnffgDescriptor vnffg = task.getVnffg();
+		// Classifier.
+		final SfcFlowClassifierTask flowTask = createFlowTask(task, vnffg);
 		final SfcFlowClassifierUow flowUow = new SfcFlowClassifierUow(new SfcFlowClassifierVt(flowTask), vim);
-		final SfcPortChainTask chainTask = new SfcPortChainTask();
-		final Set<String> portPairGroup = new LinkedHashSet<>();
-		chainTask.setPortPairGroups(portPairGroup);
-		chainTask.setFlowClassifier(Set.of(vnffg.getClassifier().getToscaName()));
-		chainTask.setToscaName(vnffg.getName());
-		chainTask.setAlias(vnffg.getName());
+		// Port chain.
+		final SfcPortChainTask chainTask = createChainPortTask(task, vnffg);
+		final Set<String> portPairGroup = chainTask.getPortPairGroups();
 		final SfcPortChainUow chain = new SfcPortChainUow(new SfcPortChainVt(chainTask), vim);
 		builder.add(flowUow, chain);
 		vnffg.getNfpd().forEach(nfp -> {
 			nfp.getInstancces().forEach(inst -> {
-				final SfcPortPairGroupTask ppg = new SfcPortPairGroupTask();
-				final List<String> portPair = new ArrayList<>();
-				ppg.setPortPair(portPair);
-				ppg.setToscaName(inst.getToscaName());
+				final SfcPortPairGroupTask ppg = createPortPairGroup(task, inst);
+				final List<String> portPair = ppg.getPortPair();
 				final SfcPortPairGroupUow portPairGroupUow = new SfcPortPairGroupUow(new SfcPortPairGroupVt(ppg), vim);
 				portPairGroup.add(ppg.getToscaName());
-				builder.add(chain, portPairGroupUow);
+				builder.add(portPairGroupUow, chain);
 				LOG.debug("Adding chain: {} -> {}", chain, portPairGroupUow);
 				inst.getPairs().forEach(y -> {
-					final SfcPortPairTask pp = new SfcPortPairTask();
-					pp.setEgressId(y.getEgressVl());
-					pp.setIngressId(y.getIngressVl());
-					pp.setToscaName(y.getToscaName());
+					final SfcPortPairTask pp = createPortPair(y, task);
 					portPair.add(y.getToscaName());
 					final SfcPortPairUow portPairVt = new SfcPortPairUow(new SfcPortPairVt(pp), vim);
-					builder.add(portPairGroupUow, portPairVt);
-					LOG.debug("Adding port: {} -> {}", portPairGroupUow, portPairVt);
+					builder.add(portPairVt, portPairGroupUow);
+					LOG.debug("Adding port: {} -> {}", portPairVt, portPairGroupUow);
 				});
 			});
 		});
 		return builder;
 	}
 
+	private SfcPortPairGroupTask createPortPairGroup(final NsSfcTask task, final VnffgInstance inst) {
+		final SfcPortPairGroupTask ppg = createTask(SfcPortPairGroupTask::new, task);
+		final List<String> portPair = new ArrayList<>();
+		ppg.setPortPair(portPair);
+		ppg.setToscaName(inst.getToscaName());
+		return nsTaskJpa.save(ppg);
+	}
+
+	private SfcPortChainTask createChainPortTask(final NsSfcTask task, final VnffgDescriptor vnffg) {
+		final SfcPortChainTask chainTask = createTask(SfcPortChainTask::new, task);
+		final Set<String> portPairGroup = new LinkedHashSet<>();
+		chainTask.setPortPairGroups(portPairGroup);
+		chainTask.setFlowClassifier(Set.of(vnffg.getClassifier().getClassifierName()));
+		chainTask.setToscaName(vnffg.getName());
+		chainTask.setAlias(vnffg.getName());
+		chainTask.setType(ResourceTypeEnum.VNFFG);
+		return nsTaskJpa.save(chainTask);
+	}
+
+	private SfcFlowClassifierTask createFlowTask(final NsSfcTask virtualTask, final VnffgDescriptor vnffg) {
+		final SfcFlowClassifierTask task = createTask(SfcFlowClassifierTask::new, virtualTask);
+		task.setId(UUID.randomUUID());
+		final Classifier classifier = vnffg.getClassifier();
+		task.setClassifier(classifier);
+		task.setToscaName(classifier.getClassifierName());
+		task.setAlias(classifier.getClassifierName());
+		task.setType(ResourceTypeEnum.VNFFG);
+		return nsTaskJpa.save(task);
+	}
+
+	private SfcPortPairTask createPortPair(final CpPair y, final NsSfcTask task) {
+		final SfcPortPairTask pp = createTask(SfcPortPairTask::new, task);
+		pp.setEgressId(y.getEgress());
+		pp.setIngressId(y.getIngress());
+		pp.setToscaName(y.getToscaName());
+		pp.setType(ResourceTypeEnum.VNFFG);
+		return nsTaskJpa.save(pp);
+	}
+
+	protected static <U extends NsTask> U createTask(final Supplier<U> newInstance, final NsSfcTask toscaEntity) {
+		final U task = newInstance.get();
+		task.setId(UUID.randomUUID());
+		task.setStartDate(LocalDateTime.now());
+		task.setStatus(PlanStatusType.NOT_STARTED);
+		task.setChangeType(ChangeType.ADDED);
+		task.setToscaName(toscaEntity.getToscaName());
+		task.setAlias(toscaEntity.getToscaName());
+		task.setType(ResourceTypeEnum.VNFFG);
+		return task;
+	}
 }

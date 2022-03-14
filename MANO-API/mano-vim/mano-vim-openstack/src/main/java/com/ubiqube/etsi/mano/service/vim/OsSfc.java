@@ -88,10 +88,10 @@ public class OsSfc {
 		return obj.getId();
 	}
 
-	public String createFlowClassifier(final SystemConnections vci, final Classifier classifier) {
+	public String createFlowClassifier(final SystemConnections vci, final Classifier classifier, final String src, final String dst) {
 		final OSClientV3 os = internalAuthenticate(vci);
 		final FlowClassifier flowClassifier = Builders.flowClassifier()
-				.name(classifier.getToscaName())
+				.name(classifier.getClassifierName())
 				.destinationIpPrefix(classifier.getDestinationIpAddressPrefix())
 				.destinationPortRangeMax(Math.toIntExact(classifier.getDestinationPortRangeMax()))
 				.destinationPortRangeMin(Math.toIntExact(classifier.getDestinationPortRangeMin()))
@@ -100,6 +100,8 @@ public class OsSfc {
 				.sourcePortRangeMax(Math.toIntExact(classifier.getSourcePortRangeMax()))
 				.sourcePortRangeMin(Math.toIntExact(classifier.getSourcePortRangeMin()))
 				.protocol(classifier.getProtocol())
+				.logicalSourcePort(src)
+				.logicalDestinationPort(dst)
 				.build();
 		final FlowClassifier obj = os.sfc().flowclassifiers().create(flowClassifier);
 		return obj.getId();

@@ -16,9 +16,12 @@
  */
 package com.ubiqube.etsi.mano.service.vim.sfc;
 
+import java.util.Optional;
+
 import com.ubiqube.etsi.mano.dao.mano.nsd.Classifier;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.entities.SystemConnections;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.OsSfc;
@@ -46,7 +49,9 @@ public class SfcFlowClassifierUow extends AbstractUnitOfWork<SfcFlowClassifierTa
 	@Override
 	public String execute(final Context context) {
 		final Classifier classifier = task.getClassifier();
-		return sfc.createFlowClassifier(vimConnectionInformation, classifier);
+		final String src = Optional.ofNullable(classifier.getLogicalSourcePort()).map(x -> context.get(VnfPortNode.class, x)).orElse(null);
+		final String dst = Optional.ofNullable(classifier.getLogicalDestinationPort()).map(x -> context.get(VnfPortNode.class, x)).orElse(null);
+		return sfc.createFlowClassifier(vimConnectionInformation, classifier, src, dst);
 	}
 
 	@Override

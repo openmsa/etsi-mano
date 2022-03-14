@@ -297,6 +297,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 			ret.setDestinationPortRangeMin(x.getMin());
 			ret.setDestinationPortRangeMax(x.getMax());
 		});
+		ret.setClassifierName(nr.getInternalName());
 		ret.setDscp(nr.getDscp());
 		ret.setEtherDestinationAddress(nr.getEtherDestinationAddress());
 		ret.setEtherSourceAddress(nr.getEtherSourceAddress());

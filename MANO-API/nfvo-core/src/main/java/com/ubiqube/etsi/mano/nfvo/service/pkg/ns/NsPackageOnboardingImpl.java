@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,8 +44,12 @@ import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
+import com.ubiqube.etsi.mano.dao.mano.nsd.Classifier;
+import com.ubiqube.etsi.mano.dao.mano.nsd.CpPair;
 import com.ubiqube.etsi.mano.dao.mano.nsd.ForwarderMapping;
+import com.ubiqube.etsi.mano.dao.mano.nsd.NfpDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
+import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgInstance;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingStepMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVlLevelMapping;
@@ -179,6 +184,7 @@ public class NsPackageOnboardingImpl {
 				})
 				.collect(Collectors.toSet());
 		final Set<VnffgDescriptor> vnffg = packageProvider.getVnffg(userData);
+		setLogicalPorts(vnffg);
 		nsPackage.setAutoHealEnabled(packageProvider.isAutoHealEnabled());
 		nsPackage.setVnffgs(vnffg);
 		rebuildConnectivity(vnffg, nsPackage);
@@ -186,6 +192,50 @@ public class NsPackageOnboardingImpl {
 		final NsScaling nsScaling = packageProvider.getNsScaling(userData);
 		remapScaling(nsPackage, nsScaling);
 		verifyCircularDependencies(nsPackage, new ArrayDeque<>());
+	}
+
+	private static void setLogicalPorts(final Set<VnffgDescriptor> vnffg) {
+		vnffg.forEach(x -> {
+			final Classifier cla = x.getClassifier();
+			cla.setLogicalSourcePort(getLogicalSourcePort(x));
+			cla.setLogicalDestinationPort(getLogicalDestinationPort(x));
+		});
+
+	}
+
+	private static String getLogicalDestinationPort(final VnffgDescriptor vnffg) {
+		if (vnffg.getNfpd().isEmpty()) {
+			return null;
+		}
+		final List<NfpDescriptor> nfpds = vnffg.getNfpd();
+		final List<VnffgInstance> insts = nfpds.get(nfpds.size() - 1).getInstancces();
+		if (insts.isEmpty()) {
+			return null;
+		}
+		final List<CpPair> pairs = insts.get(insts.size() - 1).getPairs();
+		if (pairs.isEmpty()) {
+			return null;
+		}
+		final CpPair p = pairs.get(pairs.size() - 1);
+		if (p.getEgress() != null) {
+			return p.getEgress();
+		}
+		return p.getIngress();
+	}
+
+	private static String getLogicalSourcePort(final VnffgDescriptor vnffg) {
+		if (vnffg.getNfpd().isEmpty()) {
+			return null;
+		}
+		final List<VnffgInstance> insts = vnffg.getNfpd().get(0).getInstancces();
+		if (insts.isEmpty()) {
+			return null;
+		}
+		final List<CpPair> pairs = insts.get(0).getPairs();
+		if (pairs.isEmpty()) {
+			return null;
+		}
+		return pairs.get(0).getIngress();
 	}
 
 	private static void mapVirtualLinks(final NsdPackageVnfPackage nsdPackageVnfPackage, final NsVnf x) {
