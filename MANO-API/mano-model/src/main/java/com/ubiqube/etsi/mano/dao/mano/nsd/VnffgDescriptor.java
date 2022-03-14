@@ -23,12 +23,12 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -65,7 +65,7 @@ public class VnffgDescriptor implements Serializable {
 
 	private String description;
 
-	@Embedded
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Classifier classifier;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

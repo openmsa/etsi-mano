@@ -18,10 +18,14 @@ package com.ubiqube.etsi.mano.dao.mano.nsd;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,14 +36,18 @@ import lombok.Setter;
  *
  *         Alias NfpRule policy.
  */
-@Embeddable
+@Entity
 @Getter
 @Setter
 public class Classifier implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	private String toscaName;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
+
+	private String classifierName;
 	/**
 	 * Indicates a VLAN identifier in an IEEE 802.1Q-2014 tag [14]. Multiple tags
 	 * can be included for QinQ stacking.
@@ -99,4 +107,13 @@ public class Classifier implements Serializable {
 	 */
 	private String etherSourceAddress;
 
+	/**
+	 * Tosca name of input port
+	 */
+	private String logicalSourcePort;
+
+	/**
+	 * Tosca name of the destination port.
+	 */
+	private String logicalDestinationPort;
 }
