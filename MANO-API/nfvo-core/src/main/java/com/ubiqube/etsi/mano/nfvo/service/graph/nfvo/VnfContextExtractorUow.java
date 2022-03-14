@@ -17,9 +17,11 @@
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
@@ -56,16 +58,23 @@ public class VnfContextExtractorUow extends AbstractUnitOfWork<VnfContextExtract
 		final VnfContextExtractorTask task = getTask().getParameters();
 		final String vnfInstanceId = context.get(VnfCreateNode.class, task.getToscaName());
 		final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), vnfInstanceId);
-		inst.getExtCpInfo().forEach(x -> {
+		inst.getInstantiatedVnfInfo().getExtCpInfo().forEach(x -> {
 			final NsdPackageVnfPackage vnfd = findVnfd(inst.getVnfdId());
 			final int idx = toscaNameToVlId(x.getCpdId());
 			// virtual_link(_x) -> forwardName
 			final ListKeyPair vl = vnfd.getVirtualLinks().stream().filter(y -> y.getIdx() == idx).findFirst().orElseThrow(() -> new GenericException("unable to find index " + idx));
 			// forwad to VL
-			final String extVl = forwardToVl(vl.getValue());
-			context.add(VnfPortNode.class, x.getCpdId(), extVl);
+			final ExtVirtualLinkDataEntity extVl = findExtVl(inst.getInstantiatedVnfInfo().getExtVirtualLinkInfo(), x.getAssociatedVnfVirtualLinkId());
+			context.add(VnfPortNode.class, vl.getValue(), extVl.getResourceId());
 		});
 		return null;
+	}
+
+	private static ExtVirtualLinkDataEntity findExtVl(final Set<ExtVirtualLinkDataEntity> extVirtualLinkInfo, final String associatedVnfVirtualLinkId) {
+		return extVirtualLinkInfo.stream()
+				.filter(x -> x.getId().toString().equals(associatedVnfVirtualLinkId))
+				.findFirst()
+				.orElseThrow(() -> new GenericException("Unable to find " + associatedVnfVirtualLinkId));
 	}
 
 	private String forwardToVl(final String net) {
