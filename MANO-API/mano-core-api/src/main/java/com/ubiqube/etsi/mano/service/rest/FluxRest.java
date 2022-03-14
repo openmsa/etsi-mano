@@ -219,6 +219,8 @@ public class FluxRest {
 
 	private RequestHeadersSpec<?> makeBaseQuery(final URI uri, final HttpMethod method, final Object requestObject, final String version) {
 		final RequestHeadersSpec<?> wc = webClient
+				.mutate()
+				.build()
 				.method(method)
 				.uri(uri)
 				.contentType(MediaType.APPLICATION_JSON);
@@ -276,7 +278,7 @@ public class FluxRest {
 		if (ifMatch != null) {
 			base.header(HttpHeaders.IF_MATCH, ifMatch);
 		}
-		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.PATCH, patch, version)
+		final Mono<ResponseEntity<T>> resp = base
 				.retrieve()
 				.toEntity(clazz);
 		return getBlockingResult(resp, null, version);
