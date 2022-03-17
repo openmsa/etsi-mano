@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.vim.sfc.enity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -41,5 +41,5 @@ public class SfcPortPairGroupTask extends NsTask {
 	private static final long serialVersionUID = 1L;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> portPair;
+	private Set<String> portPair;
 }
