@@ -1,0 +1,154 @@
+
+== Contrail object analysis 
+
+Service Template:
+ - parameters: name
+ - additionals: serviceMode, serviceType, virtualizationType, interface customization.
+
+Service instance:
+ - parameters: serviceTemplate
+ - additionals: portTuples
+
+Port tuple:
+ - parameters: name, serviceInstance
+ - additionals: N/A
+
+Port Link:
+ - parameters: left, right
+ - output: None
+
+Network Policies:
+ - parameters: Vlx, policyRules
+
+
+
+== Mano object analysis
+
+description of `ExtManagedVirtualLinkData` according reference SOL003 v3.5.1 #4.4.1.12
+
+[source, json]
+----
+  "extManagedVirtualLinks": [
+    {
+      "id": "NFVO UUID",
+      "vnfVirtualLinkDescId": "VNFD VL Id",
+      "vimConnectionId": "string",
+      "resourceProviderId": "string",
+      "resourceId": "vim resource Id",
+      "vnfLinkPort": [],
+      "extManagedMultisiteVirtualLinkId": "string"
+    }
+  ]
+----
+
+Description of `VnfLinkPortData` according reference SOL003 v3.5.1 #5.5.3.18
+
+[source, json]
+----
+"vnfLinkPort": [
+        {
+          "vnfLinkPortId": "Vim name",
+          "resourceHandle": {
+            "vimConnectionId": "string",
+            "resourceProviderId": "string",
+            "resourceId": "string",
+            "vimLevelResourceType": "string"
+          }
+        }
+      ]
+----
+
+== Mapping contrail Vs SFC
+*Contrail*
+
+port[] -> port_pair -> pt-link
+
+service-template -> service-instance[] -> 
+
+network-policies
+
+*sfc*
+
+port -> port_tuple
+
+port-pair-group -> port-chain
+
+flow-classifier
+
+== Mano workflow
+
+Configuation: After VNF nodes.
+
+Execution: After VL before VNF
+
+== Tosca Entities
+=== VNFFG
+The VNF Forwarding Graph (VNFFG) group type describes a topology of the NS or a portion of the NS and optionally forwarding rules, applicable to the traffic conveyed over this topology.
+
+=== NfpRule
+The NfpRule policy type represents the NFP rule attribute of the Nfpd information element. OS=Classifier, contrail = NetworkPolicies
+
+targets: [ tosca.nodes.nfv.NFP ]
+
+=== NFP
+The NFP node type associates traffic flow criteria to a list of descriptors associated to the connection points and service access points to be visited by traffic flows matching these criteria. 
+
+nfp_position occurrences: [ 1, UNBOUNDED ]
+
+=== NfpPosition
+The NfpPosition node type describes the reference of one or more NfpPositionElements and rules on how to route traffic flows among VnfExtCp or SAP instances corresponding to these elements. 
+
+Can be represented a Scaling group OS=Port Pair Group, Contrail=Service instance.
+
+element occurrences: [ 1, UNBOUNDED ]
+
+=== NfpPositionElement
+Which describes one or two CPD(s) or SAPD(s) for a given Vnf, Pnf or Ns. 
+
+Can be represented a port pair. Contrail= Service Instance, OS=port pair, Contrail=Port tuple
+
+targets: [ tosca.nodes.nfv.NFP ]
+
+=== Forward
+The Forwarding node type represents a point in the NS topology that can participate as a forwarding target in a network forwarding path. A template of this type is inserted between a virtual link (VirtualLinkable) requirement of a VNF/PNF node template (in effect, an external connection point of the VNF/PNF) or a Sap and the virtual link template satisfying this requirement. 
+
+Can be represented as ports.
+
+forwarding occurrences: [ 1, 2 ]
+
+virtual_link occurrences: 1
+
+=== Contrail 
+
+[source, bash]
+----
+#####
+# Create Service Instance between virtual network left and right
+#####
+curl --location --request POST 'http://10.3.1.12:8082/service-instances' 
+#####
+# Create Port tuple
+#####
+curl --location --request POST 'http://10.3.1.12:8082/port-tuples' \
+#####
+# Update Left Virtual Machine Interface (left neutron port of the VNF - efd75a1e-c936-40df-aa16-3eb07bc8da7b)
+#####
+curl --location --request PUT 'http://10.3.1.12:8082/virtual-machine-interface/efd75a1e-c936-40df-aa16-3eb07bc8da7b' \
+#####
+# Update Right Virtual Machine Interface (right neutron port of the VNF - d2b1a3d5-ecb3-4b8a-9ff0-9cd33aedecde)
+#####
+curl --location --request PUT 'http://10.3.1.12:8082/virtual-machine-interface/d2b1a3d5-ecb3-4b8a-9ff0-9cd33aedecde' \
+#####
+# Create Network Policy
+#####
+curl --location --request POST 'http://10.3.1.12:8082/network-policys' \
+#####
+# Apply Network Policy to Left network (1afa9659-0335-4f2e-97ab-88c0890674ca)
+#####
+curl --location --request PUT 'http://10.3.1.12:8082/virtual-network/1afa9659-0335-4f2e-97ab-88c0890674ca' \
+#####
+# Apply Network Policy to Right network (8e81bc21-4c18-48d8-ad52-5f0d9daba51b)
+#####
+curl --location --request PUT 'http://10.3.1.12:8082/virtual-network/8e81bc21-4c18-48d8-ad52-5f0d9daba51b' \
+
+----
