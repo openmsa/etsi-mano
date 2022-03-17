@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -216,6 +215,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		final List<VNFFG> vnffg = getObjects(VNFFG.class, userData);
 		return vnffg.stream().map(x -> {
 			final VnffgDescriptor vnffgd = new VnffgDescriptor();
+			vnffgd.setName(x.getInternalName());
 			vnffgd.setNfpd(new ArrayList<>());
 			final List<NFP> nfpd = findNfp(nfp, x.getMembers());
 			nfpd.forEach(lNfp -> {
@@ -261,9 +261,9 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		}
 		final String igress = list.get(0);
 		final CpPair cp = new CpPair();
-		cp.setToscaName(UUID.randomUUID().toString());
 		cp.setIngress(igress);
 		final Forwarding fwin = findForwarding(fwList, igress);
+		cp.setToscaName(fwin.getInternalName());
 		cp.setIngressVl(fwin.getVirtualLinkReq());
 		if (list.size() != 2) {
 			return cp;
