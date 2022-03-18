@@ -16,5 +16,6 @@
 	<modules>
 		<module>mano-vim-api</module>
 		<module>mano-vim-openstack</module>
+		<module>mano-vim-contrail</module>
 	</modules>
 </project>
