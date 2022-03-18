@@ -17,9 +17,7 @@
 package com.ubiqube.etsi.mano.service.vim.sfc;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -29,7 +27,6 @@ import javax.transaction.Transactional.TxType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -60,7 +57,7 @@ import com.ubiqube.etsi.mano.vim.jpa.NsTaskJpa;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
+//@Service
 public class OsSfcSystem implements System<NsSfcTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OsSfcSystem.class);
@@ -93,7 +90,7 @@ public class OsSfcSystem implements System<NsSfcTask> {
 		vnffg.getNfpd().forEach(nfp -> {
 			nfp.getInstancces().forEach(inst -> {
 				final SfcPortPairGroupTask ppg = createPortPairGroup(task, inst);
-				final List<String> portPair = ppg.getPortPair();
+				final Set<String> portPair = ppg.getPortPair();
 				final SfcPortPairGroupUow portPairGroupUow = new SfcPortPairGroupUow(new SfcPortPairGroupVt(ppg), vim);
 				portPairGroup.add(ppg.getToscaName());
 				builder.add(portPairGroupUow, chain);
@@ -112,7 +109,7 @@ public class OsSfcSystem implements System<NsSfcTask> {
 
 	private SfcPortPairGroupTask createPortPairGroup(final NsSfcTask task, final VnffgInstance inst) {
 		final SfcPortPairGroupTask ppg = createTask(SfcPortPairGroupTask::new, task);
-		final List<String> portPair = new ArrayList<>();
+		final Set<String> portPair = new LinkedHashSet<>();
 		ppg.setPortPair(portPair);
 		ppg.setToscaName(inst.getToscaName());
 		return nsTaskJpa.save(ppg);
