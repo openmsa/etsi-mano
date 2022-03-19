@@ -42,6 +42,7 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsHeal;
@@ -116,6 +117,11 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsUuid);
 		ensureNotInstantiated(nsInstanceDb);
 		ensureNotLocked(nsInstanceDb);
+		nsInstanceDb.getNsdInfo().getVnfPkgIds().forEach(x -> {
+			final VnfPackage pkg = x.getVnfPackage();
+			ensureIsEnabled(pkg);
+			ensureIsOnboarded(pkg);
+		});
 		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.INSTANTIATE);
 		mapper.map(req, nsLcm);
 		if (req.getNsInstantiationLevelId() == null) {
@@ -131,12 +137,8 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 
 	private static Set<ScaleInfo> requestToScaleInfo(final NsdPackage nsd) {
 		final Set<String> aspects = new HashSet<>();
-		nsd.getVnfPkgIds().stream().forEach(x -> {
-			Optional.ofNullable(x.getStepMapping()).map(Set::iterator).filter(Iterator::hasNext).map(Iterator::next).map(VnfScalingStepMapping::getAspectId).ifPresent(aspects::add);
-		});
-		nsd.getNestedNsdInfoIds().stream().forEach(x -> {
-			Optional.ofNullable(x.getStepMapping()).map(Set::iterator).filter(Iterator::hasNext).map(Iterator::next).map(NsVnfScalingStepMapping::getAspectId).ifPresent(aspects::add);
-		});
+		nsd.getVnfPkgIds().stream().forEach(x -> Optional.ofNullable(x.getStepMapping()).map(Set::iterator).filter(Iterator::hasNext).map(Iterator::next).map(VnfScalingStepMapping::getAspectId).ifPresent(aspects::add));
+		nsd.getNestedNsdInfoIds().stream().forEach(x -> Optional.ofNullable(x.getStepMapping()).map(Set::iterator).filter(Iterator::hasNext).map(Iterator::next).map(NsVnfScalingStepMapping::getAspectId).ifPresent(aspects::add));
 		return aspects.stream().map(x -> new ScaleInfo(x, 0)).collect(Collectors.toSet());
 	}
 
