@@ -18,7 +18,8 @@ package com.ubiqube.etsi.mano.vnfm.controller.vnf;
 
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.UUID;
+
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.PackageChangeType;
+import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageChangeNotification;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackageOnboardingNotification;
 import com.ubiqube.etsi.mano.dao.mano.config.RemoteSubscription;
@@ -71,9 +74,9 @@ public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontC
 	@Override
 	public ResponseEntity<Void> onNotification(final Object body, final String version) {
 		final VnfPackageOnboardingNotification event = mapper.map(body, VnfPackageOnboardingNotification.class);
-		final Optional<RemoteSubscription> subscription = remoteSubscriptionJpa.findByRemoteSubscriptionId(event.getId().toString());
+		final Optional<RemoteSubscription> subscription = remoteSubscriptionJpa.findByRemoteSubscriptionId(event.getSubscriptionId().toString());
 		if (subscription.isEmpty()) {
-			LOG.warn("Unable to find event {} in database.", event.getId());
+			LOG.warn("Unable to find notification event {} in database.", event.getSubscriptionId());
 			return ResponseEntity.notFound().build();
 		}
 		final VnfPackageOnboardingNotification newEvent = vnfPackageOnboardingNotificationJpa.save(event);
@@ -82,16 +85,26 @@ public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontC
 		return ResponseEntity.noContent().build();
 	}
 
+	@Transactional
 	@Override
 	public ResponseEntity<Void> onChange(final Object body, final String string) {
 		final VnfPackageChangeNotification event = mapper.map(body, VnfPackageChangeNotification.class);
-		final Optional<RemoteSubscription> subscription = remoteSubscriptionJpa.findByRemoteSubscriptionId(event.getId());
+		final Optional<RemoteSubscription> subscription = remoteSubscriptionJpa.findByRemoteSubscriptionId(event.getSubscriptionId());
 		if (subscription.isEmpty()) {
-			LOG.warn("Unable to find event {} in database.", event.getId());
+			LOG.warn("Unable to find change event {} in database.", event.getSubscriptionId());
 			return ResponseEntity.notFound().build();
 		}
 		if (event.getChangeType() == PackageChangeType.PKG_DELETE) {
-			vnfPackageJpa.deleteByVnfdId(UUID.fromString(event.getVnfdId()));
+			vnfPackageJpa.deleteByVnfdId(event.getVnfdId());
+		} else {
+			final Optional<VnfPackage> pkg = vnfPackageJpa.findByDescriptorId(event.getVnfdId());
+			if (pkg.isPresent()) {
+				final VnfPackage p = pkg.get();
+				p.setOperationalState(PackageOperationalState.fromValue(event.getOperationalState().toString()));
+				vnfPackageJpa.save(p);
+			} else {
+				LOG.warn("Could not find vnfdId " + event.getVnfdId());
+			}
 		}
 		return ResponseEntity.noContent().build();
 	}
