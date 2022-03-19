@@ -21,6 +21,7 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInstantiated;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -39,12 +40,14 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.nfvo.factory.LcmFactory;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
+import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -56,15 +59,18 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	private final VnfInstanceGatewayService vnfInstancesService;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 	private final NsdPackageJpa nsdPackageJpa;
+	private final EventManager eventManager;
 
 	public NsInstanceControllerImpl(final NsInstanceService nsInstanceService, final NsBlueprintService lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
-			final MapperFacade mapper, final VnfInstanceGatewayService vnfInstancesService, final NsdPackageJpa nsdPackageJpa) {
+			final MapperFacade mapper, final VnfInstanceGatewayService vnfInstancesService, final NsdPackageJpa nsdPackageJpa,
+			final EventManager eventManager) {
 		this.nsInstanceService = nsInstanceService;
 		this.blueprintService = lcmOpOccsService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 		this.mapper = mapper;
 		this.vnfInstancesService = vnfInstancesService;
 		this.nsdPackageJpa = nsdPackageJpa;
+		this.eventManager = eventManager;
 	}
 
 	@Override
@@ -81,6 +87,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 			final NsdPackage nsPkg = nsdPackageJpa.findById(nsInstanceDb.getNsdInfo().getId()).orElseThrow(() -> new GenericException("Could not find NSD " + nsInstanceDb.getNsdInfo().getId()));
 			nsPkg.setNsdUsageState(PackageUsageState.NOT_IN_USE);
 			nsdPackageJpa.save(nsPkg);
+			eventManager.sendNotification(NotificationEvent.NS_INSTANCE_DELETE, id, Map.of());
 		}
 	}
 

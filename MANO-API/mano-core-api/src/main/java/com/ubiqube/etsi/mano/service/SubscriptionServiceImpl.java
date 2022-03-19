@@ -22,6 +22,8 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
@@ -42,6 +44,7 @@ import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
+	private static final Logger LOG = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
 
 	private final EntityManager em;
 
@@ -120,7 +123,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		case NS_PKG_ONBOARDING_FAILURE -> "NsdOnboardingFailureNotification";
 		case NS_PKG_ONCHANGE -> "NsdChangeNotification";
 		case NS_PKG_ONDELETION -> "NsdDeletionNotification";
-		default -> throw new IllegalArgumentException("Unexpected value: " + notificationEvent);
+		case NS_INSTANCE_CREATE -> "NsIdentifierCreationNotification";
+		case NS_INSTANCE_DELETE -> "NsIdentifierDeletionNotification";
+		case VNF_INSTANCE_DELETE -> "VnfIdentifierDeletionNotification";
+		case VNF_INSTANCE_CREATE -> "VnfIdentifierCreationNotification";
+		case VNF_INSTANCE_CHANGED -> "VnfLcmOperationOccurrenceNotification";
+		default -> {
+			LOG.warn("Unexpected value: {}", notificationEvent);
+			yield null;
+		}
 		};
 	}
 
