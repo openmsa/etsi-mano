@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,9 +31,9 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.vrqan.VrQan;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.nfvo.jpa.VrQanJpa;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -77,7 +78,7 @@ public class VrQanService {
 					LOG.info("Send notification for vim: {} with diff {}", x.getId(), diff);
 					copy(pr, vrqan);
 					vrQanJpa.save(vrqan);
-					em.sendNotification(NotificationEvent.VRQAN, x.getId());
+					em.sendNotification(NotificationEvent.VRQAN, x.getId(), Map.of());
 				}
 			} catch (final RuntimeException e) {
 				LOG.error("", e);

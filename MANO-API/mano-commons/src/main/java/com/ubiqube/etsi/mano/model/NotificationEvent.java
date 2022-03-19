@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.event;
+package com.ubiqube.etsi.mano.model;
 
 import java.util.stream.Stream;
 
@@ -40,6 +40,7 @@ public enum NotificationEvent {
 	VNF_INSTANCE_DELETE("VNF_INSTANCE_DELETE"),
 
 	NS_PKG_ONBOARDING("NS_PKG_ONBOARDING"),
+	NS_PKG_ONBOARDING_FAILURE("NS_PKG_ONBOARDING_FAILURE"),
 	NS_PKG_ONCHANGE("NS_PKG_ONCHANGE"),
 	NS_PKG_ONDELETION("NS_PKG_ONDELETION"),
 

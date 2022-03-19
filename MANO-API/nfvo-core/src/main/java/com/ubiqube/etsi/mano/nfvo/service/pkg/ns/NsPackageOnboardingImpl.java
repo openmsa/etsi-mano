@@ -61,13 +61,13 @@ import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.nfvo.service.pkg.PackageVersion;
 import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
@@ -128,7 +128,7 @@ public class NsPackageOnboardingImpl {
 			v2.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));
 			nsdPackageJpa.save(v2);
 		}
-		eventManager.sendNotification(NotificationEvent.NS_PKG_ONBOARDING, nsPackage.getId());
+		eventManager.sendNotification(NotificationEvent.NS_PKG_ONBOARDING, nsPackage.getId(), Map.of());
 	}
 
 	public void nsOnboardingInternal(@NotNull final NsdPackage nsPackage) {

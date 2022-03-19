@@ -17,7 +17,6 @@
 package com.ubiqube.etsi.mano.service.event;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
+import com.ubiqube.etsi.mano.model.EventMessage;
 import com.ubiqube.etsi.mano.service.HttpGateway;
 import com.ubiqube.etsi.mano.service.ServerService;
 import com.ubiqube.etsi.mano.service.SubscriptionService;
@@ -51,38 +51,28 @@ public class VnfEvent {
 		this.serverService = serverService;
 	}
 
-	public void onEvent(final UUID vnfPkgId, final String event) {
-		final List<Subscription> res = subscriptionService.selectNotifications(vnfPkgId, event);
-		LOG.info("Event received: {}/{} with {} elements.", event, vnfPkgId, res.size());
-		res.stream().forEach(x -> {
-			try {
-				sendNotification(vnfPkgId, x, event);
-			} catch (final RuntimeException e) {
-				LOG.error("Could not send notfication {}", x.getCallbackUri(), e);
-			}
-		});
-	}
-
-	private void sendNotification(final UUID vnfPkgId, final Subscription subscription, final String event) {
+	private void sendNotification(final Subscription subscription, final EventMessage event) {
 		final ServerAdapter server = serverService.buildServerAdapter(subscription);
 		final HttpGateway httpGateway = server.httpGateway();
-		Object object;
-		if ("VnfPackageChangeNotification".equals(event)) {
-			object = httpGateway.createVnfPackageChangeNotification(subscription.getId(), vnfPkgId);
-		} else if ("VnfPackageOnboardingNotification".equals(event)) {
-			object = httpGateway.createNotificationVnfPackageOnboardingNotification(subscription.getId(), vnfPkgId);
-		} else if ("VnfLcmOperationOccurrenceNotification".equals(event)) {
-			object = httpGateway.createNotificationVnfLcmOperationOccurrenceNotification(subscription.getId(), vnfPkgId);
-		} else if ("VnfIdentifierCreationNotification".equals(event)) {
-			object = httpGateway.createNotificationVnfIdentifierCreationNotification(subscription.getId(), vnfPkgId);
-		} else if ("VnfIdentifierDeletionNotification".equals(event)) {
-			object = httpGateway.createNotificationVnfIdentifierDeletionNotification(subscription.getId(), vnfPkgId);
-		} else {
-			LOG.warn("Unknown event received: {}", event);
+		final Object object = httpGateway.createEvent(subscription.getId(), event);
+		if (object == null) {
+			LOG.warn("Skippping event {}", event);
 			return;
 		}
 		final var callbackUri = subscription.getCallbackUri();
 		notifications.doNotification(object, callbackUri, server);
+	}
+
+	public void onEvent(final EventMessage ev) {
+		final List<Subscription> res = subscriptionService.selectNotifications(ev);
+		LOG.info("Event received: {}/{} with {} elements.", ev.getNotificationEvent(), ev.getObjectId(), res.size());
+		res.stream().forEach(x -> {
+			try {
+				sendNotification(x, ev);
+			} catch (final RuntimeException e) {
+				LOG.error("Could not send notfication {}", x.getCallbackUri(), e);
+			}
+		});
 	}
 
 }

@@ -40,9 +40,9 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
@@ -112,7 +112,7 @@ public class AdminController {
 
 	@GetMapping(value = "/event/{event}/{id}")
 	public ResponseEntity<Void> sendEvent(@PathVariable("event") final NotificationEvent event, @PathVariable("id") final UUID id) {
-		eventManager.sendNotification(event, id);
+		eventManager.sendNotification(event, id, Map.of());
 		return ResponseEntity.accepted().build();
 	}
 

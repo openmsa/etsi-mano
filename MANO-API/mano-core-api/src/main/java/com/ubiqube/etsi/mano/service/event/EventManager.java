@@ -21,6 +21,8 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.ubiqube.etsi.mano.model.NotificationEvent;
+
 /**
  * Manage Asynchronous Event in the application. Current implementation is using
  * Quartz using it's thread pool, but we ill probably need an entreprise bus.
@@ -35,7 +37,7 @@ public interface EventManager {
 	 * @param notificationEvent The notification event type.
 	 * @param objectId          The Id.
 	 */
-	void sendNotification(@Nonnull NotificationEvent notificationEvent, @Nonnull UUID objectId);
+	void sendNotification(@Nonnull NotificationEvent notificationEvent, @Nonnull UUID objectId, Map<String, String> additionalParameters);
 
 	/**
 	 * Create an asynchronous task VNFM oriented.

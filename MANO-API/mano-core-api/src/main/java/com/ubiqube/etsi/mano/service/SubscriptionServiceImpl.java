@@ -34,6 +34,8 @@ import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.grammar.Node.Operand;
 import com.ubiqube.etsi.mano.jpa.SubscriptionJpa;
+import com.ubiqube.etsi.mano.model.EventMessage;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.service.event.Notifications;
 import com.ubiqube.etsi.mano.service.rest.ServerAdapter;
@@ -103,11 +105,23 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
-	public List<Subscription> selectNotifications(final UUID vnfPkgId, final String event) {
-		final List<Subscription> lst = subscriptionJpa.findEventAndVnfPkg(event, vnfPkgId.toString());
+	public List<Subscription> selectNotifications(final EventMessage ev) {
+		final List<Subscription> lst = subscriptionJpa.findEventAndVnfPkg(ev.getNotificationEvent(), ev.getObjectId().toString());
 		return lst.stream()
-				.filter(x -> x.getFilters().stream().anyMatch(y -> y.getAttribute().startsWith("notificationTypes[") && y.getValue().equals(event)))
+				.filter(x -> x.getFilters().stream().anyMatch(y -> y.getAttribute().startsWith("notificationTypes[") && y.getValue().equals(convert(ev.getNotificationEvent()))))
 				.toList();
+	}
+
+	private static String convert(final NotificationEvent notificationEvent) {
+		return switch (notificationEvent) {
+		case VNF_PKG_ONBOARDING -> "VnfPackageOnboardingNotification";
+		case VNF_PKG_ONCHANGE, VNF_PKG_ONDELETION -> "VnfPackageChangeNotification";
+		case NS_PKG_ONBOARDING -> "NsdOnBoardingNotification";
+		case NS_PKG_ONBOARDING_FAILURE -> "NsdOnboardingFailureNotification";
+		case NS_PKG_ONCHANGE -> "NsdChangeNotification";
+		case NS_PKG_ONDELETION -> "NsdDeletionNotification";
+		default -> throw new IllegalArgumentException("Unexpected value: " + notificationEvent);
+		};
 	}
 
 	@Override

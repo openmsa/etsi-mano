@@ -23,22 +23,26 @@ import java.util.UUID;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.model.EventMessage;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 @Service
 public class JmsEventManager implements EventManager {
 	private final JmsTemplate jmsTemplate;
+	private final EventMessageJpa eventMessageJpa;
 
-	public JmsEventManager(final JmsTemplate jmsTemplate) {
+	public JmsEventManager(final JmsTemplate jmsTemplate, final EventMessageJpa eventMessageJpa) {
 		super();
 		this.jmsTemplate = jmsTemplate;
+		this.eventMessageJpa = eventMessageJpa;
 	}
 
 	@Override
-	public void sendNotification(final NotificationEvent notificationEvent, final UUID objectId) {
-		final EventMessage msg = new EventMessage(notificationEvent, objectId);
+	public void sendNotification(final NotificationEvent notificationEvent, final UUID objectId, final Map<String, String> additionalParameters) {
+		EventMessage msg = new EventMessage(notificationEvent, objectId, additionalParameters);
+		msg = eventMessageJpa.save(msg);
 		jmsTemplate.convertAndSend("system.notifications", msg);
 	}
 

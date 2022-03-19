@@ -54,12 +54,12 @@ import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.ManoUrlResource;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
@@ -128,7 +128,7 @@ public class VnfPackageOnboardingImpl {
 			mapVnfPackage(vnfPackage, data, packageProvider);
 			ret = finishOnboarding(vnfPackage);
 			buildChecksum(vnfPackage, data);
-			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
+			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId(), Map.of());
 		} catch (final RuntimeException | NoSuchAlgorithmException | IOException e) {
 			LOG.error("", e);
 			final VnfPackage v2 = vnfPackageService.findById(vnfPackage.getId());

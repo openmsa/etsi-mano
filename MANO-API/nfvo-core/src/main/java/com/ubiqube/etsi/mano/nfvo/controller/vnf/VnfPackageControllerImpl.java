@@ -29,13 +29,13 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.nfvo.factory.VnfPackageFactory;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 @Service
 public class VnfPackageControllerImpl implements VnfPackageController {
@@ -64,7 +64,9 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 		ensureDisabled(vnfPackage);
 		ensureNotInUse(vnfPackage);
 		vnfPackageService.delete(id);
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONDELETION, id);
+		if (null != vnfPackage.getVnfdId()) {
+			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONDELETION, id, Map.of("vnfdId", vnfPackage.getVnfdId()));
+		}
 	}
 
 	@Override
@@ -74,7 +76,9 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 			throw new PreConditionException(ifMatch + " does not match " + vnfPackage.getVersion());
 		}
 		patcher.patch(body, vnfPackage);
-		eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, id);
+		if (null != vnfPackage.getVnfdId()) {
+			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, id, Map.of("vnfdId", vnfPackage.getVnfdId()));
+		}
 		return vnfPackageService.save(vnfPackage);
 	}
 

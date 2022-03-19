@@ -31,10 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 /**
  * Simple implementation using Quartz.
@@ -62,7 +62,7 @@ public class QuartzEventManager implements EventManager {
 	}
 
 	@Override
-	public void sendNotification(final NotificationEvent notificationEvent, final UUID objectId) {
+	public void sendNotification(final NotificationEvent notificationEvent, final UUID objectId, final Map<String, String> additionalParameters) {
 		LOG.info("Starting sendEvent : {}/{}", notificationEvent, objectId);
 		final JobDataMap jobDataMap = new JobDataMap();
 		jobDataMap.put("eventType", notificationEvent.value());

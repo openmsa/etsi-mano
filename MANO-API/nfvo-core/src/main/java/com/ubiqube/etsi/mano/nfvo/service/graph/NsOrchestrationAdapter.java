@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.nfvo.service.graph;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -36,13 +37,13 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.nfvo.service.NsdPackageService;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.OrchestrationAdapter;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.WorkflowEvent;
@@ -129,7 +130,7 @@ public class NsOrchestrationAdapter implements OrchestrationAdapter<NsTask, NsdI
 	@Override
 	public void fireEvent(final WorkflowEvent instantiateProcessing, final UUID id) {
 		final NotificationEvent notificationEvent = convert(instantiateProcessing);
-		eventManager.sendNotification(notificationEvent, id);
+		eventManager.sendNotification(notificationEvent, id, Map.of());
 	}
 
 	@Nonnull

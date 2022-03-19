@@ -40,6 +40,7 @@ import com.ubiqube.etsi.mano.em.v271.model.vnflcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfInstance;
 import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.model.EventMessage;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.model.v271.sol003.lcmgrant.GrantRequestLinks;
@@ -171,31 +172,12 @@ public class HttpGateway271 extends AbstractHttpGateway {
 	}
 
 	@Override
-	public Object createVnfPackageChangeNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		return nfvoFactory.createVnfPackageChangeNotification(subscriptionId, vnfPkgId);
-	}
-
-	@Override
-	public Object createNotificationVnfPackageOnboardingNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		return nfvoFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, vnfPkgId);
-	}
-
-	@Override
-	public Object createNotificationVnfIdentifierCreationNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object createNotificationVnfIdentifierDeletionNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object createNotificationVnfLcmOperationOccurrenceNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Object createEvent(final UUID subscriptionId, final EventMessage event) {
+		return switch (event.getNotificationEvent()) {
+		case VNF_PKG_ONCHANGE, VNF_PKG_ONDELETION -> nfvoFactory.createVnfPackageChangeNotification(subscriptionId, event);
+		case VNF_PKG_ONBOARDING -> nfvoFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId, event);
+		default -> null;
+		};
 	}
 
 	@Override

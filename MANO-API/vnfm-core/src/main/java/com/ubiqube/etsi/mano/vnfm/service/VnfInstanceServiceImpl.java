@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.vnfm.service;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,12 +43,12 @@ import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.repository.jpa.SearchQueryer;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.vnfm.jpa.ExtVirtualLinkDataEntityJpa;
 import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
 
@@ -197,7 +198,7 @@ public class VnfInstanceServiceImpl extends SearchableService implements VnfInst
 			throw new PreConditionException(ifMatch + " does not match " + vnfInstance.getVersion());
 		}
 		patcher.patch(body, vnfInstance);
-		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CHANGED, vnfInstance.getId());
+		eventManager.sendNotification(NotificationEvent.VNF_INSTANCE_CHANGED, vnfInstance.getId(), Map.of());
 		return vnfInstanceJpa.save(vnfInstance);
 	}
 

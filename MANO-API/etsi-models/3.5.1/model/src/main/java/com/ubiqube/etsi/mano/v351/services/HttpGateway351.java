@@ -40,6 +40,7 @@ import com.ubiqube.etsi.mano.em.v351.model.vnflcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.em.v351.model.vnflcm.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfInstance;
 import com.ubiqube.etsi.mano.em.v351.model.vnflcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.model.EventMessage;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.CreateNsdInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.CreateVnfPkgInfoRequest;
@@ -192,35 +193,9 @@ public class HttpGateway351 extends AbstractHttpGateway {
 	}
 
 	@Override
-	public Object createVnfPackageChangeNotification(final UUID subscriptionId, final UUID vnfPkgId) {
+	public Object createEvent(final UUID subscriptionId, final EventMessage event) {
 		// return nfvoFactory.createVnfPackageChangeNotification(subscriptionId,
 		// vnfPkgId);
-		return null;
-	}
-
-	@Override
-	public Object createNotificationVnfPackageOnboardingNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		// return
-		// nfvoFactory.createNotificationVnfPackageOnboardingNotification(subscriptionId,
-		// vnfPkgId);
-		return null;
-	}
-
-	@Override
-	public Object createNotificationVnfIdentifierCreationNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object createNotificationVnfIdentifierDeletionNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object createNotificationVnfLcmOperationOccurrenceNotification(final UUID subscriptionId, final UUID vnfPkgId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

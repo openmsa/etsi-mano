@@ -14,20 +14,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.service.event.jms;
 
 import java.util.UUID;
+
+import org.springframework.data.repository.CrudRepository;
 
 import com.ubiqube.etsi.mano.model.EventMessage;
 
 /**
  *
- * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
+ * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public interface NfvoFactory {
-
-	Object createNotificationVnfPackageOnboardingNotification(UUID subscriptionId, EventMessage event);
-
-	Object createVnfPackageChangeNotification(UUID subscriptionId, EventMessage event);
+public interface EventMessageJpa extends CrudRepository<EventMessage, UUID> {
+	// Nothing.
 }

@@ -26,12 +26,13 @@ import org.springframework.stereotype.Repository;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.Subscription;
 import com.ubiqube.etsi.mano.dao.mano.subs.SubscriptionType;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 
 @Repository
 public interface SubscriptionJpa extends CrudRepository<Subscription, UUID> {
 
 	@Query("select s from Subscription s")
-	List<Subscription> findEventAndVnfPkg(String notificationTypesEnum, String vnfPkgId);
+	List<Subscription> findEventAndVnfPkg(NotificationEvent notificationTypesEnum, String vnfPkgId);
 
 	List<Subscription> findByApiAndCallbackUriAndSubscriptionType(ApiTypesEnum api, String callbackUri, SubscriptionType subscriptionType);
 }

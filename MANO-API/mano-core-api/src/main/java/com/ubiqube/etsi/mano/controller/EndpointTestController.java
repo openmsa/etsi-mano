@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.service.event.jms.EventMessage;
+import com.ubiqube.etsi.mano.model.EventMessage;
 
 @RestController
 @RequestMapping("/test/")

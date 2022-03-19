@@ -26,6 +26,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
+import com.ubiqube.etsi.mano.model.EventMessage;
 
 /**
  *
@@ -78,15 +79,7 @@ public interface HttpGateway {
 
 	Class<?> getVnfInstanceChangeExtConnRequest();
 
-	Object createVnfPackageChangeNotification(UUID subscriptionId, UUID vnfPkgId);
-
-	Object createNotificationVnfPackageOnboardingNotification(UUID idsubscriptionId, UUID vnfPkgId);
-
-	Object createNotificationVnfIdentifierCreationNotification(UUID subscriptionId, UUID vnfInstanceId);
-
-	Object createNotificationVnfIdentifierDeletionNotification(UUID subscriptionId, UUID vnfInstanceId);
-
-	Object createNotificationVnfLcmOperationOccurrenceNotification(UUID subscriptionId, UUID vnfLcmOpOccsId);
+	Object createEvent(UUID uuid, EventMessage event);
 
 	String getVersion();
 

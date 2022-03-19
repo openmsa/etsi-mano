@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.vnfm.service.event;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -36,9 +37,9 @@ import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.event.OrchestrationAdapter;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.WorkflowEvent;
@@ -133,7 +134,7 @@ public class VnfOrchestrationAdapter implements OrchestrationAdapter<VnfTask, Vn
 	@Override
 	public void fireEvent(final WorkflowEvent instantiateProcessing, final UUID id) {
 		final NotificationEvent notificationEvent = convert(instantiateProcessing);
-		eventManager.sendNotification(notificationEvent, id);
+		eventManager.sendNotification(notificationEvent, id, Map.of());
 	}
 
 	@Nonnull

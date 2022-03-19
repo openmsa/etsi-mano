@@ -38,6 +38,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
+import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
@@ -45,7 +46,6 @@ import com.ubiqube.etsi.mano.service.Patcher;
 import com.ubiqube.etsi.mano.service.SearchableService;
 import com.ubiqube.etsi.mano.service.event.ActionType;
 import com.ubiqube.etsi.mano.service.event.EventManager;
-import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 
 @Service
 public class NsdControllerImpl extends SearchableService implements NsdController {
@@ -70,7 +70,7 @@ public class NsdControllerImpl extends SearchableService implements NsdControlle
 		ensureDisabled(nsdPackage);
 		ensureNotInUse(nsdPackage);
 		nsdRepository.delete(id);
-		eventManager.sendNotification(NotificationEvent.NS_PKG_ONDELETION, id);
+		eventManager.sendNotification(NotificationEvent.NS_PKG_ONDELETION, id, Map.of());
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class NsdControllerImpl extends SearchableService implements NsdControlle
 			throw new PreConditionException(ifMatch + " does not match " + nsdPkgInfo.getVersion());
 		}
 		patcher.patch(body, nsdPkgInfo);
-		eventManager.sendNotification(NotificationEvent.NS_PKG_ONCHANGE, id);
+		eventManager.sendNotification(NotificationEvent.NS_PKG_ONCHANGE, id, Map.of());
 		return nsdRepository.save(nsdPkgInfo);
 	}
 
