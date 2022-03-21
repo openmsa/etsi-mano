@@ -39,7 +39,7 @@ public class VnfSubscriptionFactory261 {
 	}
 
 	@Nonnull
-	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final boolean deleted, final UUID subscriptionId, @Nonnull final UUID vnfPkgId, final UUID eventId, final String vnfdId, final Linkable links) {
+	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final boolean deleted, final UUID subscriptionId, @Nonnull final UUID vnfPkgId, final UUID eventId, final String vnfdId, final PackageOperationalStateType state, final Linkable links) {
 		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
 		if (deleted) {
 			ret.setChangeType(PackageChangeType.PKG_DELETE);
@@ -49,7 +49,7 @@ public class VnfSubscriptionFactory261 {
 		ret.setId(eventId.toString());
 		ret.setVnfdId(vnfdId);
 		ret.setNotificationType("VnfPackageChangeNotification");
-		ret.setOperationalState(PackageOperationalStateType.DISABLED);
+		ret.setOperationalState(state);
 		ret.setSubscriptionId(subscriptionId.toString());
 		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setVnfdId(vnfdId);

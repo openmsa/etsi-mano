@@ -34,7 +34,7 @@ import com.ubiqube.etsi.mano.nfvo.v271.model.vnf.VnfPackageOnboardingNotificatio
 public class VnfSubscriptionFactory271 {
 
 	@Nonnull
-	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final boolean deleted, final UUID subscriptionId, @Nonnull final UUID vnfPkgId, final String vnfdId, final Linkable links) {
+	public static VnfPackageChangeNotification createVnfPackageChangeNotification(final boolean deleted, final UUID subscriptionId, @Nonnull final UUID vnfPkgId, final String vnfdId, final PackageOperationalStateType state, final Linkable links) {
 		final VnfPackageChangeNotification ret = new VnfPackageChangeNotification();
 		if (deleted) {
 			ret.setChangeType(PackageChangeType.PKG_DELETE);
@@ -42,7 +42,7 @@ public class VnfSubscriptionFactory271 {
 			ret.setChangeType(PackageChangeType.OP_STATE_CHANGE);
 		}
 		ret.setNotificationType("VnfPackageChangeNotification");
-		ret.setOperationalState(PackageOperationalStateType.DISABLED);
+		ret.setOperationalState(state);
 		ret.setSubscriptionId(subscriptionId.toString());
 		ret.setTimeStamp(OffsetDateTime.now());
 		ret.setVnfdId(vnfdId);

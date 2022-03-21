@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.model.EventMessage;
+import com.ubiqube.etsi.mano.nfvo.v271.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.v271.services.NfvoFactory;
 
@@ -55,7 +56,8 @@ public class NfvoFactory271 implements NfvoFactory {
 		} catch (final RuntimeException e) {
 			deleted = true;
 		}
-		final var obj = VnfSubscriptionFactory271.createVnfPackageChangeNotification(deleted, subscriptionId, event.getObjectId(), event.getAdditionalParameters().get("vnfdId"), new Sol003Linkable());
+		final var obj = VnfSubscriptionFactory271.createVnfPackageChangeNotification(deleted, subscriptionId, event.getObjectId(), event.getAdditionalParameters().get("vnfdId"),
+				PackageOperationalStateType.fromValue(event.getAdditionalParameters().get("state")), new Sol003Linkable());
 		obj.setLinks(new Sol005Linkable().createNotificationLink(event.getObjectId(), subscriptionId));
 		return obj;
 	}

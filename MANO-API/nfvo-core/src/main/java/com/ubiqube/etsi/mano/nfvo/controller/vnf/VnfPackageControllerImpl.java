@@ -77,7 +77,7 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 		}
 		patcher.patch(body, vnfPackage);
 		if (null != vnfPackage.getVnfdId()) {
-			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, id, Map.of("vnfdId", vnfPackage.getVnfdId()));
+			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONCHANGE, id, Map.of("vnfdId", vnfPackage.getVnfdId(), "state", vnfPackage.getOperationalState().toString()));
 		}
 		return vnfPackageService.save(vnfPackage);
 	}
