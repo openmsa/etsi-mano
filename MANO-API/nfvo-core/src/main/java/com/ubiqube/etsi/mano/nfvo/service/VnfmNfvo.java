@@ -20,6 +20,7 @@ import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 
 import java.util.UUID;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
@@ -29,15 +30,18 @@ import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 
 @Service
 public class VnfmNfvo implements VnfmInterface {
 	private final VnfInstanceLcm lcm;
+	private final GrantsResponseJpa grantsResponseJpa;
 
-	public VnfmNfvo(final VnfInstanceLcm lcm) {
+	public VnfmNfvo(final VnfInstanceLcm lcm, final GrantsResponseJpa grantsResponseJpa) {
 		this.lcm = lcm;
+		this.grantsResponseJpa = grantsResponseJpa;
 	}
 
 	@Override
@@ -65,9 +69,11 @@ public class VnfmNfvo implements VnfmInterface {
 		return lcm.findById(servers, vnfInstance);
 	}
 
+	@Transactional
 	@Override
 	public void delete(final Servers servers, final String vnfInstance) {
 		lcm.delete(servers, getSafeUUID(vnfInstance));
+		grantsResponseJpa.deleteByVnfInstanceId(vnfInstance);
 	}
 
 }

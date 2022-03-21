@@ -22,6 +22,12 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface GrantsResponseJpa extends CrudRepository<GrantResponse, UUID> {
-	// Nothing.
+
+	void deleteByVnfInstanceId(String vnfInstance);
 }
