@@ -224,21 +224,22 @@ public class GrantAction extends AbstractGrantAction {
 		vlList.forEach(x -> grants.getExtManagedVirtualLinks().add(createVl(x, vl, vimConnectionInformation, grants)));
 		final List<NsLiveInstance> vlLive = nsLiveInstanceJpa.findByNsdInstanceAndClass(nsdInstance, NsVirtualLinkTask.class.getSimpleName());
 		vlLive.stream().forEach(x -> {
-			final Optional<ForwarderMapping> fm = find(mappings, x.getNsTask().getToscaName());
+			final List<ForwarderMapping> fm = find(mappings, x.getNsTask().getToscaName());
 			if (fm.isEmpty()) {
 				LOG.warn("No forward ports for {}", x.getNsTask().getToscaName());
 				return;
 			}
-			final ForwarderMapping fmm = fm.get();
-			final ExtManagedVirtualLinkDataEntity extVl = new ExtManagedVirtualLinkDataEntity();
-			extVl.setGrants(grants);
-			extVl.setResourceId(x.getResourceId());
-			extVl.setResourceProviderId(x.getResourceProviderId());
-			extVl.setVimConnectionId(x.getVimConnectionId());
-			extVl.setVimLevelResourceType(x.getVimLevelResourceType());
-			// extVl.setVnfInstance();
-			extVl.setVnfVirtualLinkDescId(mapToVl(fmm.getVlId()));
-			grants.getExtManagedVirtualLinks().add(extVl);
+			fm.forEach(y -> {
+				final ExtManagedVirtualLinkDataEntity extVl = new ExtManagedVirtualLinkDataEntity();
+				extVl.setGrants(grants);
+				extVl.setResourceId(x.getResourceId());
+				extVl.setResourceProviderId(x.getResourceProviderId());
+				extVl.setVimConnectionId(x.getVimConnectionId());
+				extVl.setVimLevelResourceType(x.getVimLevelResourceType());
+				// extVl.setVnfInstance();
+				extVl.setVnfVirtualLinkDescId(mapToVl(y.getVlId()));
+				grants.getExtManagedVirtualLinks().add(extVl);
+			});
 		});
 	}
 
@@ -249,8 +250,8 @@ public class GrantAction extends AbstractGrantAction {
 		return "virtual_link_" + vlId;
 	}
 
-	private static Optional<ForwarderMapping> find(final List<ForwarderMapping> mappings, final String toscaName) {
-		return mappings.stream().filter(x -> x.getVlName().equals(toscaName)).findFirst();
+	private static List<ForwarderMapping> find(final List<ForwarderMapping> mappings, final String toscaName) {
+		return mappings.stream().filter(x -> x.getVlName().equals(toscaName)).toList();
 	}
 
 	private static Optional<ForwarderMapping> findMapping(final List<ForwarderMapping> mappings, final String value) {
