@@ -174,9 +174,9 @@ public class GrantAction extends AbstractGrantAction {
 		return new QuotaNeeded(disk, vcpu, ram);
 	}
 
-	private static VnfCompute findCompute(final VnfPackage vnfPackage, final UUID vduId) {
+	private static VnfCompute findCompute(final VnfPackage vnfPackage, final String vduId) {
 		return vnfPackage.getVnfCompute().stream()
-				.filter(x -> x.getId().compareTo(vduId) == 0)
+				.filter(x -> x.getToscaName().equals(vduId))
 				.findFirst()
 				.orElseThrow(() -> new NotFoundException("VduId not found " + vduId));
 	}

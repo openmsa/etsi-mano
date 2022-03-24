@@ -31,6 +31,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.DnsZoneTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.NetworkTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.StorageTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfPortTask;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -81,12 +82,13 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, ComputeTask.class)
 				.field("id", "id")
-				.field("vduId", "vnfCompute.id")
+				.field("resourceTemplateId", "vnfCompute.toscaName")
+				.field("vduId", "alias")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, NetworkTask.class)
 				.field("id", "id")
-				.field("vduId", "vnfVl.id")
+				.field("resourceTemplateId", "vnfVl.toscaName")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, DnsZoneTask.class)
@@ -94,7 +96,12 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, StorageTask.class)
 				.field("id", "id")
-				.field("vduId", "vnfStorage.id")
+				.field("resourceTemplateId", "vnfStorage.toscaName")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(GrantInformationExt.class, VnfPortTask.class)
+				.field("id", "id")
+				.field("resourceTemplateId", "vnfLinkPort.toscaName")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfInstantiate.class, VnfBlueprint.class)
