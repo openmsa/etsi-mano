@@ -28,34 +28,45 @@ import javax.validation.Valid;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Embeddable
+@Getter
+@Setter
 public class GrantVimAssetsEntity implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Mappings between virtual compute descriptors defined in the VNFD and compute
+	 * resource flavours managed in the VIM.
+	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private Set<VimComputeResourceFlavourEntity> computeResourceFlavours = new HashSet<>();
 
+	/**
+	 * Mappings between software images defined in the VNFD and software images
+	 * managed in the VIM.
+	 */
 	@Valid
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private Set<VimSoftwareImageEntity> softwareImages = new HashSet<>();
 
-	public Set<VimComputeResourceFlavourEntity> getComputeResourceFlavours() {
-		return computeResourceFlavours;
-	}
-
-	public void setComputeResourceFlavours(final Set<VimComputeResourceFlavourEntity> computeResourceFlavours) {
-		this.computeResourceFlavours = computeResourceFlavours;
-	}
-
-	public Set<VimSoftwareImageEntity> getSoftwareImages() {
-		return softwareImages;
-	}
-
-	public void setSoftwareImages(final Set<VimSoftwareImageEntity> softwareImages) {
-		this.softwareImages = softwareImages;
-	}
+	/**
+	 * Mappings between snapshot resources defined in the VNF snapshot package and
+	 * resources managed in the VIM.
+	 */
+	@Valid
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
+	private Set<VimSnapshotResources> snapshotResources;
 
 }
