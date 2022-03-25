@@ -20,7 +20,7 @@ logging:
     org:
       apache:
         http:
-          wire: DEBUG
+          wire: INFO
         activemq:
           audit: WARN
       hibernate:
