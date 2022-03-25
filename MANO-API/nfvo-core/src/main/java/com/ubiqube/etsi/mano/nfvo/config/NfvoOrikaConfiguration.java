@@ -46,6 +46,8 @@ import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 @Component
 public class NfvoOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 
+	private static final String VDU_ID = "vduId";
+
 	@SuppressWarnings("null")
 	@Override
 	public void configure(final MapperFactory orikaMapperFactory) {
@@ -60,7 +62,7 @@ public class NfvoOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfCompute.class, VnfInstantiatedCompute.class)
-				.field("id", "vduId")
+				.field("id", VDU_ID)
 				// Don't save this one.field("id", "computeResource.vduId")
 				// No this is a VIM Image ID .field("softwareImage.id", "imageId")
 				.field("storages", "storageResourceIds")
@@ -78,18 +80,18 @@ public class NfvoOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 
 		orikaMapperFactory.classMap(GrantInformationExt.class, ComputeTask.class)
-				.field("vduId", "vnfCompute.id")
+				.field(VDU_ID, "vnfCompute.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, NetworkTask.class)
-				.field("vduId", "vnfVl.id")
+				.field(VDU_ID, "vnfVl.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, DnsZoneTask.class)
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, StorageTask.class)
-				.field("vduId", "vnfStorage.id")
+				.field(VDU_ID, "vnfStorage.id")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfInstantiate.class, VnfBlueprint.class)
@@ -107,7 +109,7 @@ public class NfvoOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfcResourceInfoEntity.class, ComputeTask.class)
-				.field("vduId", "vnfCompute.toscaName")
+				.field(VDU_ID, "vnfCompute.toscaName")
 				.field("storageResourceIds", "vnfCompute.storages")
 				.byDefault()
 				.register();

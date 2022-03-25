@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.springframework.core.io.AbstractResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.lang.Nullable;
 
 import com.ubiqube.etsi.mano.repository.ManoResource;
@@ -62,11 +61,9 @@ public class MetaStreamResource extends AbstractResource {
 	/**
 	 * This implementation compares the underlying InputStream.
 	 */
-	@SuppressWarnings("resource")
 	@Override
 	public boolean equals(@Nullable final Object other) {
-		return this == other || other instanceof final InputStreamResource ot &&
-				ot.equals(this.metaStream.getInputStream());
+		return this == other;
 	}
 
 	/**

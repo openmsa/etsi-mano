@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.mon.zabbix;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 
 import org.junit.jupiter.api.Test;
@@ -31,5 +33,6 @@ public class ZabbixExportTemplateTest {
 		final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		mapper.registerModule(new JavaTimeModule());
 		mapper.readValue(new File("template_app_docker.yaml"), ZabbixExportTemplate.class);
+		assertTrue(true);
 	}
 }

@@ -26,15 +26,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
+import org.openstack4j.core.transport.Config;
 import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Extension;
 import org.openstack4j.model.common.Identifier;
@@ -482,7 +483,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	void testNetworkExtension() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final List<? extends Extension> exts = os.networking().network().listExtensions();
@@ -490,7 +490,6 @@ public class OpenStackTest {
 		assertTrue(!exts.isEmpty());
 	}
 
-	@Test
 	void testTelemetry() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		os.telemetry().alarms().list();
@@ -500,7 +499,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	void testGnochhiCreate() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final MetricCreate metrics = Builders.gnocchi().metric().archivePolicyName("high").name("test-ovi").resourceId(null).build();
@@ -508,21 +506,18 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	void testGnocchiDelete() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		os.telemetry().gnocchi().metrics().delete("7856e791-c918-4f72-814c-b3f18127190b");
 		assertNotNull(os);
 	}
 
-	@Test
 	void testServerGroup() throws Exception {
 		final OSClientV3 os = getQueensConnection();
 		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(UUID.randomUUID().toString(), "affinity");
 		assertNotNull(os);
 	}
 
-	@Test
 	void testSecurityGroup() throws Exception {
 		final SecurityGroup sg = new SecurityGroup();
 		sg.setDirection("ingress");
@@ -549,7 +544,6 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	@Test
 	void testSfc() {
 		final OSClientV3 os = getQueensConnection();
 		Builders.portChain().build();
@@ -569,5 +563,30 @@ public class OpenStackTest {
 		final Port port = Builders.port().build();
 		os.networking().port().create(port);
 		assertTrue(true);
+	}
+
+	void createFlavor() {
+		final OpenStackVim vim = new OpenStackVim(mapper);
+		final Map<String, String> flavorSpec = Map.of("my-custom-spec", "true");
+		vim.getOrCreateFlavor(vimConnectionInformation, "test-flavor", 5, 512 * 1048576L, 1 * 1024 * 1024 * 1024L, flavorSpec);
+	}
+
+	void testTctsConnection() {
+		final OSClientV3 os = getTctsConnection();
+		os.networking().port().list();
+	}
+
+	void testTest() {
+		assertNotNull("");
+	}
+
+	private static OSClientV3 getTctsConnection() {
+		final Identifier domainIdentifier = Identifier.byName("Default");
+		return OSFactory.builderV3()
+				.withConfig(Config.newConfig().withEndpointNATResolution("192.168.1.36"))
+				.endpoint("http://192.168.1.36:5000/v3")
+				.credentials("admin", "redhat", domainIdentifier)
+				.scopeToProject(Identifier.byId("5d3611f178524b918d0f70ad681b8980"))
+				.authenticate();
 	}
 }

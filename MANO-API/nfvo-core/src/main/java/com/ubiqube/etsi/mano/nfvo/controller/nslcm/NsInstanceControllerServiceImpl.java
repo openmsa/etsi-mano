@@ -114,9 +114,7 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 
 	@Override
 	public NsBlueprint instantiate(final UUID nsUuid, final NsInstantiate req) {
-		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsUuid);
-		ensureNotInstantiated(nsInstanceDb);
-		ensureNotLocked(nsInstanceDb);
+		final NsdInstance nsInstanceDb = findPackageForAction(nsUuid);
 		nsInstanceDb.getNsdInfo().getVnfPkgIds().forEach(x -> {
 			final VnfPackage pkg = x.getVnfPackage();
 			ensureIsEnabled(pkg);
@@ -133,6 +131,13 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 		nsInstanceService.save(nsInstanceDb);
 		eventManager.sendActionNfvo(ActionType.NS_INSTANTIATE, nsLcm.getId(), new HashMap<>());
 		return nsLcm;
+	}
+
+	private NsdInstance findPackageForAction(final UUID nsUuid) {
+		final NsdInstance nsInstanceDb = nsInstanceService.findById(nsUuid);
+		ensureNotInstantiated(nsInstanceDb);
+		ensureNotLocked(nsInstanceDb);
+		return nsInstanceDb;
 	}
 
 	private static Set<ScaleInfo> requestToScaleInfo(final NsdPackage nsd) {

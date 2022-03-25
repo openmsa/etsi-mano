@@ -45,6 +45,8 @@ import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 @Component
 public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 
+	private static final String RESOURCE_TEMPLATE_ID = "resourceTemplateId";
+
 	@SuppressWarnings("null")
 	@Override
 	public void configure(final MapperFactory orikaMapperFactory) {
@@ -82,13 +84,13 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, ComputeTask.class)
 				.field("id", "id")
-				.field("resourceTemplateId", "vnfCompute.toscaName")
+				.field(RESOURCE_TEMPLATE_ID, "vnfCompute.toscaName")
 				.field("vduId", "alias")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, NetworkTask.class)
 				.field("id", "id")
-				.field("resourceTemplateId", "vnfVl.toscaName")
+				.field(RESOURCE_TEMPLATE_ID, "vnfVl.toscaName")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, DnsZoneTask.class)
@@ -96,12 +98,12 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, StorageTask.class)
 				.field("id", "id")
-				.field("resourceTemplateId", "vnfStorage.toscaName")
+				.field(RESOURCE_TEMPLATE_ID, "vnfStorage.toscaName")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(GrantInformationExt.class, VnfPortTask.class)
 				.field("id", "id")
-				.field("resourceTemplateId", "vnfLinkPort.toscaName")
+				.field(RESOURCE_TEMPLATE_ID, "vnfLinkPort.toscaName")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(VnfInstantiate.class, VnfBlueprint.class)
@@ -118,11 +120,6 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("extManagedVirtualLinkId", "vnfVirtualLinkDescId")
 				.byDefault()
 				.register();
-		/*
-		 * orikaMapperFactory.classMap(com.ubiqube.etsi.mano.model.nslcm.VnfInstance.
-		 * class, VnfInstance.class) .field("vimId", "vimConnectionInfo{vimId}")
-		 * .byDefault() .register();
-		 */
 		final ConverterFactory converterFactory = orikaMapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new UuidConverter());
 		converterFactory.registerConverter(new OffsetDateTimeToDateConverter());

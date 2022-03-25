@@ -16,6 +16,8 @@
  */
 package com.ubiqube.test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -35,7 +37,8 @@ public class ZabbixProbe {
 		final Socket socket = new Socket(ip, port);
 
 		final byte[] pkt = buildPayload("agent.version");
-		// final ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+		// final ObjectOutputStream oos = new
+		// ObjectOutputStream(socket.getOutputStream());
 		socket.getOutputStream().write(pkt);
 		socket.getOutputStream().flush();
 		// oos.write(buildPayload("agent.version"));
@@ -53,7 +56,8 @@ public class ZabbixProbe {
 		// final byte[] lengthBuff = new byte[4];
 		// System.arraycopy(header, 5, lengthBuff, 0, 4);
 		// System.out.println(bytesToHex(lengthBuff));
-		// final ByteBuffer wrap = ByteBuffer.wrap(lengthBuff).order(ByteOrder.LITTLE_ENDIAN);
+		// final ByteBuffer wrap =
+		// ByteBuffer.wrap(lengthBuff).order(ByteOrder.LITTLE_ENDIAN);
 		// final int il = wrap.getInt();
 		final int il = getLenght(socket.getInputStream());
 		System.err.println(" > " + il);
@@ -64,6 +68,7 @@ public class ZabbixProbe {
 		// final String message = (String) ois.readObject();
 		// System.out.println(message);
 		socket.close();
+		assertTrue(true);
 	}
 
 	private static List<String> getPayload(final InputStream is, final int size) throws IOException {
@@ -102,19 +107,19 @@ public class ZabbixProbe {
 		for (int j = 0; j < bytes.length; j++) {
 			final int v = bytes[j] & 0xFF;
 			hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-			hexChars[(j * 2) + 1] = HEX_ARRAY[v & 0x0F];
+			hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
 		}
 		return new String(hexChars);
 	}
 
 	private static byte[] buildPayload(final String metric) {
 		final byte[] data = metric.getBytes();
-		final byte[] header = new byte[] {
+		final byte[] header = {
 				'Z', 'B', 'X', 'D', '\1',
 				(byte) (data.length & 0xFF),
-				(byte) ((data.length >> 8) & 0xFF),
-				(byte) ((data.length >> 16) & 0xFF),
-				(byte) ((data.length >> 24) & 0xFF),
+				(byte) (data.length >> 8 & 0xFF),
+				(byte) (data.length >> 16 & 0xFF),
+				(byte) (data.length >> 24 & 0xFF),
 				'\0', '\0', '\0', '\0' };
 
 		final byte[] packet = new byte[header.length + data.length];

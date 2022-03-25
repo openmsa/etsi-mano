@@ -16,6 +16,8 @@
  */
 package com.ubiqube.test;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +34,7 @@ public class CartesianTest {
 		final List<String> b = List.of("1", "2", "3");
 		final List<List<String>> res = product(a, b);
 		System.out.println("" + res);
+		assertNotNull(res);
 	}
 
 	private static List<List<String>> product(final List<String> a, final List<String> b) {
