@@ -113,7 +113,7 @@ public class NsInstanceService {
 
 	@Transactional
 	public NsdInstance findById(final UUID nsUuid) {
-		final NsdInstance inst = nsdInstanceJpa.findById(nsUuid).orElseThrow(() -> new NotFoundException("Not found " + nsUuid));
+		final NsdInstance inst = nsdInstanceJpa.findById(nsUuid).orElseThrow(() -> new NotFoundException("NS instance Not found " + nsUuid));
 		inst.setInstantiationState(isLive(nsUuid));
 		return inst;
 	}
