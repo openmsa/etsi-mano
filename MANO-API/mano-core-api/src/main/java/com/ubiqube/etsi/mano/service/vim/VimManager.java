@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
@@ -143,22 +144,47 @@ public class VimManager {
 		rebuildCache();
 	}
 
+	@Transactional
 	public VimConnectionInformation register(final VimConnectionInformation vci) {
+		checkUniqueness(vci);
 		checkVimConnectivity(vci);
 		return registerVim(vci);
 	}
 
+	private void checkUniqueness(final VimConnectionInformation vci) {
+		vimConnectionInformationJpa.findByVimId(vci.getVimId()).ifPresent(x -> {
+			throw new GenericException("Vim " + x.getVimId() + " is already present.");
+		});
+	}
+
 	private void checkVimConnectivity(final VimConnectionInformation vci) {
-		final Vim vim = vims.stream()
-				.filter(x -> x.getType().equals(vci.getVimType())).findFirst()
-				.orElseThrow(() -> new GenericException("Could not find vim [" + vci.getVimType() + "]"));
+		final Vim vim = findVim(vci);
 		vim.authenticate(vci);
 	}
 
+	private Vim findVim(final VimConnectionInformation vci) {
+		return vims.stream()
+				.filter(x -> x.getType().equals(vci.getVimType())).findFirst()
+				.orElseThrow(() -> new GenericException("Could not find vim [" + vci.getVimType() + "]"));
+	}
+
 	private VimConnectionInformation registerVim(final VimConnectionInformation vci) {
+		extractCapabilities(vci);
 		final VimConnectionInformation n = vimConnectionInformationJpa.save(vci);
 		systemService.registerVim(n);
 		init();
 		return n;
+	}
+
+	private void extractCapabilities(final VimConnectionInformation vci) {
+		final Vim vim = findVim(vci);
+		final List<VimCapability> caps = vim.getCaps(vci);
+		vci.setVimCapabilities(caps.stream().map(VimCapability::toString).collect(Collectors.toSet()));
+	}
+
+	public VimConnectionInformation refresh(final UUID id) {
+		final VimConnectionInformation vci = vimConnectionInformationJpa.findById(id).orElseThrow(() -> new GenericException("Unable to find vim " + id));
+		extractCapabilities(vci);
+		return vimConnectionInformationJpa.save(vci);
 	}
 }

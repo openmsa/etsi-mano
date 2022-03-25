@@ -84,6 +84,12 @@ public class AdminController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@GetMapping(value = "/vim/{id}/refresh")
+	public ResponseEntity<VimConnectionInformation> updateVim(@PathVariable("id") final UUID id) {
+		final VimConnectionInformation vci = vimManager.refresh(id);
+		return ResponseEntity.ok(mapper.map(vci, VimConnectionInformation.class));
+	}
+
 	@PatchMapping(value = "/vim/{id}")
 	public ResponseEntity<VimConnectionInformation> patchVim(@PathVariable("id") final UUID id, @Nullable @RequestBody final String body,
 			@RequestHeader(name = HttpHeaders.IF_MATCH, required = false) final String ifMatch) {

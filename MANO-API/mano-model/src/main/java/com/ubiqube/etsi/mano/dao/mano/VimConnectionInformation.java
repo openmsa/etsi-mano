@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -72,6 +73,13 @@ public class VimConnectionInformation implements Auditable {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extra = null;
+
+	/**
+	 * Capabilities of the vim. Read VimCapabilites Enum to figure out what we can
+	 * do.
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	private Set<String> vimCapabilities;
 
 	@GeoPointBinding
 	private GeoPoint geoloc;
