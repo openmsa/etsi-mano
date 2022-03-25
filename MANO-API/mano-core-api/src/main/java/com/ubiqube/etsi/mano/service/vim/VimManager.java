@@ -41,6 +41,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;

@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.vim;
+package com.ubiqube.etsi.mano.dao.mano.vnfi;
 
 public enum VimCapability {
 	HAVE_DNS,
@@ -26,5 +26,6 @@ public enum VimCapability {
 	HAVE_ROUTER,
 	REQUIRE_SUBNET_ALLOCATION,
 	HAVE_VLAN_TRANSPARENT,
-	HAVE_DHCP
+	HAVE_DHCP,
+	HAVE_TRUNK,
 }

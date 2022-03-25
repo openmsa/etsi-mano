@@ -62,6 +62,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.mon.VimMonitoring;
 
@@ -416,6 +417,10 @@ public class OpenStackVim implements Vim {
 		if ("extra_dhcp_opt".equals(ext.getAlias())) {
 			return VimCapability.HAVE_DHCP;
 		}
+		if ("trunk".equals(ext.getAlias())) {
+			return VimCapability.HAVE_TRUNK;
+		}
+
 		return null;
 	}
 

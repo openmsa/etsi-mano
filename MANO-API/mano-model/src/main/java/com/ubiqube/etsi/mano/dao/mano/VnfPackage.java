@@ -53,6 +53,7 @@ import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.dao.mano.pkg.PackageSecurityOptionType;
 import com.ubiqube.etsi.mano.dao.mano.pkg.VnfProfile;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 import com.ubiqube.etsi.mano.utils.ToStringIgnore;
 import com.ubiqube.etsi.mano.utils.ToStringUtil;
 
@@ -222,6 +223,13 @@ public class VnfPackage implements PackageBase, Auditable {
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<ScaleInfo> scaleStatus;
+
+	/**
+	 * A collection of mandatory Vim capabilities.
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Enumerated(EnumType.STRING)
+	private Set<VimCapability> vimCapabilities;
 
 	@Version
 	private long version;

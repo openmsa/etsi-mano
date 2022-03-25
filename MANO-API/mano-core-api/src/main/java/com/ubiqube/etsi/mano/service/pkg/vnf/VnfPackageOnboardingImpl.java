@@ -21,11 +21,15 @@ import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -42,6 +46,7 @@ import com.ubiqube.etsi.mano.dao.mano.PkgChecksum;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
+import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
@@ -52,6 +57,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.model.NotificationEvent;
@@ -195,6 +201,25 @@ public class VnfPackageOnboardingImpl {
 		final Set<AffinityRuleAdapater> ar = vnfPackageReader.getAffinityRules(vnfPackage.getUserDefinedData());
 		mapVlToCp(vnfPackage);
 		handleAffinity(ar, vnfPackage);
+		setMandatoryVimCapabilities(vnfPackage);
+	}
+
+	private static void setMandatoryVimCapabilities(final VnfPackage vnfPackage) {
+		final Set<VimCapability> vimCapabilities = new HashSet<>();
+		vnfPackage.setVimCapabilities(vimCapabilities);
+		addIfNeeded(VimCapability.HAVE_NET_MTU, vimCapabilities, vnfPackage, x -> x.getL2ProtocolData().getMtu(), Objects::nonNull);
+		addIfNeeded(VimCapability.HAVE_VLAN_TRANSPARENT, vimCapabilities, vnfPackage, x -> x.getL2ProtocolData().getVlanTransparent(), x -> !x.booleanValue());
+		addIfNeeded(VimCapability.HAVE_VXNET, vimCapabilities, vnfPackage, x -> x.getL2ProtocolData().getNetworkType(), x -> !x.equalsIgnoreCase("vxlan"));
+	}
+
+	private static <U> void addIfNeeded(final VimCapability vc, final Set<VimCapability> svc, final VnfPackage vnfPackage, final Function<VlProtocolData, U> tr, final Predicate<U> p) {
+		vnfPackage.getVnfVl().stream()
+				.flatMap(x -> x.getVlProfileEntity().getVirtualLinkProtocolData().stream())
+				.map(tr)
+				.filter(Objects::nonNull)
+				.filter(p)
+				.findFirst()
+				.ifPresent(x -> svc.add(vc));
 	}
 
 	private static void mapVlToCp(final VnfPackage vnfPackage) {
