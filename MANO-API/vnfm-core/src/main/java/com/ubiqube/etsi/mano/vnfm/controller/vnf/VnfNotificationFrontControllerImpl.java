@@ -103,7 +103,7 @@ public class VnfNotificationFrontControllerImpl implements VnfNotificationFrontC
 				p.setOperationalState(PackageOperationalState.fromValue(event.getOperationalState().toString()));
 				vnfPackageJpa.save(p);
 			} else {
-				LOG.warn("Could not find vnfdId " + event.getVnfdId());
+				LOG.warn("Could not find vnfdId {}", event.getVnfdId());
 			}
 		}
 		return ResponseEntity.noContent().build();
