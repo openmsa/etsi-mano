@@ -27,6 +27,7 @@ import javax.transaction.Transactional.TxType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
@@ -57,7 +58,7 @@ import com.ubiqube.etsi.mano.vim.jpa.NsTaskJpa;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-//@Service
+@Service
 public class OsSfcSystem implements System<NsSfcTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OsSfcSystem.class);
