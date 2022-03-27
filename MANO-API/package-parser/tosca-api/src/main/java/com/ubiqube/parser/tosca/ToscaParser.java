@@ -113,4 +113,15 @@ public class ToscaParser {
 		return context;
 	}
 
+	public String getEntryFileName() {
+		return csar.getEntryDefinitionFileName();
+	}
+
+	public String getManifestContent() {
+		return csar.getManifestContent();
+	}
+
+	public byte[] getFileContent(final String fileName) {
+		return csar.getFileContent(fileName);
+	}
 }

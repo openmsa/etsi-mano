@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.vfs2.FileContent;
@@ -81,7 +82,7 @@ public class CsarParserImpl implements CsarParser {
 	}
 
 	private String innerGetEntryDefinition() throws IOException {
-		final String entry = (String) props.get("Entry-Definitions");
+		final String entry = getEntryDefinitionFileName();
 		final FileObject res2 = csar.resolveFile(entry);
 		resolver.setParent(res2.getParent());
 		return res2.getContent().getString(Charset.defaultCharset());
@@ -172,4 +173,31 @@ public class CsarParserImpl implements CsarParser {
 		return hexString.toString();
 	}
 
+	@Override
+	public String getEntryDefinitionFileName() {
+		return (String) Optional.ofNullable(props.get("ETSI-Entry-Definitions"))
+				.orElseGet(() -> props.get("Entry-Definitions"));
+	}
+
+	public String getManifestFileName() {
+		return (String) Optional.ofNullable(props.get("ETSI-Entry-Manifest"))
+				.orElseGet(() -> props.get("Entry-Manifest"));
+	}
+
+	@Override
+	public String getManifestContent() {
+		final String fileName = getManifestFileName();
+		return new String(getFileContent(fileName));
+	}
+
+	@Override
+	public byte[] getFileContent(final String fileName) {
+		FileObject res2;
+		try {
+			res2 = csar.resolveFile(fileName);
+			return res2.getContent().getByteArray();
+		} catch (final IOException e) {
+			throw new ParseException(e);
+		}
+	}
 }

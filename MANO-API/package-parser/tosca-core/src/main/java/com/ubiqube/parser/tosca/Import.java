@@ -32,6 +32,10 @@ public class Import {
 	@JsonProperty("file")
 	private String url;
 	private String name;
+	/**
+	 * Resolved path.
+	 */
+	private String resolved;
 	@JsonProperty("namespace_prefix")
 	private String namespacePrefix;
 	@JsonProperty("namespace_uri")

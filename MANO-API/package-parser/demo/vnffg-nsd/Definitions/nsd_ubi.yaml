@@ -166,7 +166,7 @@ topology_template:
     VNF_left_forward_1:
       type: tosca.nodes.nfv.Forwarding
       requirements:
-        - virtual_link: ext_left_vl
+        - virtual_link: left_vl
 
     VNF_left_forward_2:
       type: tosca.nodes.nfv.Forwarding
@@ -192,7 +192,7 @@ topology_template:
     VNF_middle_forward_4:
       type: tosca.nodes.nfv.Forwarding
       requirements:
-        - virtual_link: right_vl
+        - virtual_link: left_vl
 
     # For VNF_2
     element_2:  # Port pair? port pair group ?
@@ -208,12 +208,12 @@ topology_template:
     VNF_right_forward_5:
       type: tosca.nodes.nfv.Forwarding
       requirements:
-        - virtual_link: right_vl
+        - virtual_link: left_vl
 
     VNF_right_forward_6:
       type: tosca.nodes.nfv.Forwarding
       requirements:
-        - virtual_link: ext_right_vl
+        - virtual_link: left_vl
 
     element_3:  # Port pair? port pair group ?
       type: tosca.nodes.nfv.NfpPositionElement

@@ -87,4 +87,21 @@ public class VfsResolver extends Resolver {
 	public void setParent(final FileObject parent) {
 		this.parent = parent;
 	}
+
+	@Override
+	public String resolvePath(final String path) {
+		if (imported.contains(path) || isUrl(path)) {
+			return path;
+		}
+		if (!path.startsWith("/")) {
+			FileObject child;
+			try {
+				child = parent.resolveFile(path);
+				return child.getName().getPath();
+			} catch (final FileSystemException e) {
+				throw new ParseException(e);
+			}
+		}
+		return path;
+	}
 }

@@ -21,8 +21,6 @@ import java.util.List;
 import com.ubiqube.parser.tosca.IResolver;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
 
-import jakarta.validation.constraints.NotNull;
-
 public interface CsarParser {
 
 	String getEntryDefinition();
@@ -31,4 +29,9 @@ public interface CsarParser {
 
 	List<ArtefactInformations> getFiles();
 
+	String getEntryDefinitionFileName();
+
+	String getManifestContent();
+
+	byte[] getFileContent(String fileName);
 }

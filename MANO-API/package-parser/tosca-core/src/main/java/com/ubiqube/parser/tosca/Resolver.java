@@ -120,4 +120,9 @@ public class Resolver implements IResolver {
 			throw new ParseException(e);
 		}
 	}
+
+	@Override
+	public String resolvePath(final String path) {
+		return path;
+	}
 }

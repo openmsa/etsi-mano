@@ -20,4 +20,5 @@ public interface IResolver {
 
 	String getContent(String url);
 
+	String resolvePath(String path);
 }
