@@ -231,6 +231,11 @@ public class VnfPackage implements PackageBase, Auditable {
 	@Enumerated(EnumType.STRING)
 	private Set<VimCapability> vimCapabilities;
 
+	/**
+	 * Conten type of the generated vnfd file. Either text/plain or application/zip.
+	 */
+	private String vnfdContentType;
+
 	@Version
 	private long version;
 
