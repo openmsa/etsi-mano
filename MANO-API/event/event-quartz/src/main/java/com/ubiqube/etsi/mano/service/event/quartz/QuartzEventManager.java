@@ -32,6 +32,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.EventMessage;
 import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.event.ActionType;
@@ -49,10 +50,12 @@ public class QuartzEventManager implements EventManager {
 	private static final Logger LOG = LoggerFactory.getLogger(QuartzEventManager.class);
 	/** Scheduler instance injection point. */
 	private final Scheduler scheduler;
+	private final EventMessageJpa eventMessageJpa;
 
-	public QuartzEventManager(final Scheduler scheduler, final VnfPackageRepository vnfPackageRepository) {
+	public QuartzEventManager(final Scheduler scheduler, final VnfPackageRepository vnfPackageRepository, final EventMessageJpa eventMessageJpa) {
 		super();
 		this.scheduler = scheduler;
+		this.eventMessageJpa = eventMessageJpa;
 		try {
 			this.scheduler.getListenerManager().addJobListener(new UriUploadListener(vnfPackageRepository));
 		} catch (final SchedulerException e) {
@@ -63,7 +66,9 @@ public class QuartzEventManager implements EventManager {
 	@Override
 	public void sendNotification(final NotificationEvent notificationEvent, final UUID objectId, final Map<String, String> additionalParameters) {
 		LOG.info("Starting notification : {}/{}", notificationEvent, objectId);
-		createJob(additionalParameters, notificationEvent.value(), objectId, NotificationJob.class);
+		EventMessage msg = new EventMessage(notificationEvent, objectId, Map.of());
+		msg = eventMessageJpa.save(msg);
+		createJob(msg.getId(), additionalParameters, notificationEvent.value(), objectId, NotificationJob.class);
 	}
 
 	@Override
@@ -92,7 +97,11 @@ public class QuartzEventManager implements EventManager {
 	}
 
 	private <U> void createJob(final Map<String, U> parameters, final String actionType, final UUID objectId, final Class<? extends QuartzJobBean> controllers) {
-		final JobDataMap jobDataMap = QuartzEventUtils.createJobMap(actionType, objectId, parameters);
+		createJob(UUID.randomUUID(), parameters, actionType, objectId, controllers);
+	}
+
+	private <U> void createJob(final UUID id, final Map<String, U> parameters, final String actionType, final UUID objectId, final Class<? extends QuartzJobBean> controllers) {
+		final JobDataMap jobDataMap = QuartzEventUtils.createJobMap(id, actionType, objectId, parameters);
 		final JobDetail jobDetail = JobBuilder.newJob(controllers)
 				.withIdentity(UUID.randomUUID().toString(), actionType + "-jobs")
 				.withDescription("Action ETSI-MANO")
