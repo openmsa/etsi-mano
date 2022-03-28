@@ -138,7 +138,7 @@ public class VnfSnapshotPackages351Sol005Controller implements VnfSnapshotPackag
 		links.self(self);
 
 		final Link vnfd = new Link();
-		vnfd.setHref(linkTo(methodOn(VnfPackages351Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
+		vnfd.setHref(linkTo(methodOn(VnfPackages351Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null, null)).withSelfRel().getHref());
 		links.setPackageContent(vnfd);
 
 		vnfPackage.setLinks(links);

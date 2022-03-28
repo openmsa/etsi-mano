@@ -29,7 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
+import com.ubiqube.etsi.mano.controller.vnf.OnboardedPackageFrontController;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.nfvo.v271.services.Linkable;
 import com.ubiqube.etsi.mano.nfvo.v271.services.Sol003Linkable;
@@ -41,11 +41,11 @@ import com.ubiqube.etsi.mano.nfvo.v271.services.Sol003Linkable;
  */
 @RestController
 public class OnboardedVnfPackages271Sol003Controller implements OnboardedVnfPackages271Sol003Api {
-	private final VnfPackageFrontController vnfPackageFrontController;
+	private final OnboardedPackageFrontController vnfPackageFrontController;
 	@Nonnull
 	private final Linkable links = new Sol003Linkable();
 
-	public OnboardedVnfPackages271Sol003Controller(final VnfPackageFrontController vnfPackageFrontController) {
+	public OnboardedVnfPackages271Sol003Controller(final OnboardedPackageFrontController vnfPackageFrontController) {
 		super();
 		this.vnfPackageFrontController = vnfPackageFrontController;
 	}
@@ -56,13 +56,8 @@ public class OnboardedVnfPackages271Sol003Controller implements OnboardedVnfPack
 	}
 
 	@Override
-	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfdId, final String range, @Valid final String includeSignature) {
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfdId, @Valid final String includeSignature) {
 		return vnfPackageFrontController.onboardedGetArtifact(request, getSafeUUID(vnfdId), includeSignature);
-	}
-
-	@Override
-	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsGet(final String vnfdId, final String range) {
-		return vnfPackageFrontController.onboardedGetVnfdByVnfdId(getSafeUUID(vnfdId));
 	}
 
 	@Override
@@ -76,8 +71,8 @@ public class OnboardedVnfPackages271Sol003Controller implements OnboardedVnfPack
 	}
 
 	@Override
-	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String range) {
-		return vnfPackageFrontController.onboardedGetContentByVnfdId(vnfdId);
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String accept, final String include) {
+		return vnfPackageFrontController.onboardedGetContentByVnfdId(vnfdId, accept, include);
 	}
 
 	@Override

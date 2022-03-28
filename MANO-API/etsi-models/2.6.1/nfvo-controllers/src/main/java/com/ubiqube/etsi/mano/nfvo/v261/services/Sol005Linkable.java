@@ -42,7 +42,7 @@ public class Sol005Linkable implements Linkable {
 		links.self(self);
 
 		final Link vnfd = new Link();
-		vnfd.setHref(linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId)).withSelfRel().getHref());
+		vnfd.setHref(linkTo(methodOn(VnfPackage261Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
 		links.setVnfd(vnfd);
 
 		final Link packageContent = new Link();

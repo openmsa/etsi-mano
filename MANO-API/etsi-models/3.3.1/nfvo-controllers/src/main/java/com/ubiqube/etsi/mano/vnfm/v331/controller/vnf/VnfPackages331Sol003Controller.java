@@ -52,7 +52,7 @@ public class VnfPackages331Sol003Controller implements VnfPackages331Sol003Api {
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfPkgId, final String range, @Valid final String includeSignature) {
-		return frontController.getArtifact(request, getSafeUUID(vnfPkgId), includeSignature);
+		return frontController.getArtifactPath(request, getSafeUUID(vnfPkgId), includeSignature);
 	}
 
 	@Override
@@ -76,8 +76,8 @@ public class VnfPackages331Sol003Controller implements VnfPackages331Sol003Api {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, @Valid final String includeSignature) {
-		return frontController.getVfnd(getSafeUUID(vnfPkgId), includeSignature);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept, @Valid final String includeSignature) {
+		return frontController.getVfnd(getSafeUUID(vnfPkgId), accept, includeSignature);
 	}
 
 }

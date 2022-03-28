@@ -85,4 +85,10 @@ public interface VnfPackageReader extends Closeable {
 
 	Set<SecurityGroupAdapter> getSecurityGroups(Map<String, String> userData);
 
+	List<String> getImports();
+
+	String getManifestContent();
+
+	byte[] getFileContent(String x);
+
 }

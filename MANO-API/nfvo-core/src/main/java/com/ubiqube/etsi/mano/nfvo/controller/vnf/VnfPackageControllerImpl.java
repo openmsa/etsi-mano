@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.model.NotificationEvent;
@@ -86,7 +87,7 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 	public void vnfPackagesVnfPkgIdPackageContentPut(final UUID id, final InputStream is, final String accept) {
 		final VnfPackage vnfPackage = vnfPackageService.findById(id);
 		ensureNotOnboarded(vnfPackage);
-		vnfPackageRepository.storeBinary(id, "vnfd", is);
+		vnfPackageRepository.storeBinary(id, Constants.REPOSITORY_FILENAME_PACKAGE, is);
 		final Map<String, Object> map = new HashMap<>();
 		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, map);
 	}

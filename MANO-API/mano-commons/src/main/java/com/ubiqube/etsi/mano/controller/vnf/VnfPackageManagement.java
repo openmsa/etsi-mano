@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 
 public interface VnfPackageManagement {
 	/**
@@ -60,27 +61,25 @@ public interface VnfPackageManagement {
 	 */
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(@Nonnull UUID vnfPkgId, @Nonnull String artifactPath);
 
-	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@Nonnull UUID vnfPkgId, boolean includeSignature);
+	ManoResource vnfPackagesVnfPkgIdVnfdGet(@Nonnull UUID vnfPkgId, String contentType, boolean includeSignature);
 
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(@Nonnull UUID vnfPkgId);
 
-	ResponseEntity<Void> getPackageManifest(@Nonnull UUID vnfPkgId, String includeSignatures);
+	ManoResource getPackageManifest(@Nonnull UUID vnfPkgId, @Nonnull String includeSignatures);
 
-	ResponseEntity<Resource> vnfPackagesVnfdIdArtifactsArtifactPathGet(@Nonnull UUID vnfPkgId, String artifactPath);
-
-	ResponseEntity<Void> onboardedVnfPackagesVnfdIdManifestGet(@Nonnull UUID vnfdId, String includeSignatures);
+	ManoResource onboardedVnfPackagesVnfdIdManifestGet(@Nonnull UUID vnfdId, @Nonnull String includeSignatures);
 
 	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(@Nonnull UUID vnfdId);
 
-	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(@Nonnull UUID vnfdId, String includeSignatures);
+	ManoResource onboardedVnfPackagesVnfdIdVnfdGet(@Nonnull UUID vnfdId, String contentType, @Nonnull String includeSignatures);
 
 	<U> U onboardedVnfPackagesVnfdIdGet(@Nonnull UUID vnfdId, Class<U> clazz);
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
 
-	ResponseEntity<Resource> onboardedGetManifestByVnfd(@Nonnull UUID vnfdId, @Valid String includeSignature);
+	ManoResource onboardedGetManifestByVnfd(@Nonnull UUID vnfdId, @Valid @Nonnull String includeSignature);
 
-	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsGet(@Nonnull UUID vnfdId);
+	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsGet(@Nonnull UUID vnfdId, final @Nonnull String artifactPath);
 
 	<U> U vnfPackagesVnfPkgVnfdIdGet(@Nonnull UUID vnfPkgId, Class<U> clazz);
 

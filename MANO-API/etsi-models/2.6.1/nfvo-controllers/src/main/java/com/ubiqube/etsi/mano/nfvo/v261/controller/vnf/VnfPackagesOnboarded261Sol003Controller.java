@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.common.v261.services.Linkable;
-import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
+import com.ubiqube.etsi.mano.controller.vnf.OnboardedPackageFrontController;
 import com.ubiqube.etsi.mano.nfvo.v261.services.Sol003Linkable;
 
 /**
@@ -39,9 +39,9 @@ import com.ubiqube.etsi.mano.nfvo.v261.services.Sol003Linkable;
 @RestController
 public class VnfPackagesOnboarded261Sol003Controller implements VnfPackagesOnboarded261Sol003Api {
 	private final Linkable links = new Sol003Linkable();
-	private final VnfPackageFrontController vnfPackageFrontController;
+	private final OnboardedPackageFrontController vnfPackageFrontController;
 
-	public VnfPackagesOnboarded261Sol003Controller(final VnfPackageFrontController vnfPackageFrontController) {
+	public VnfPackagesOnboarded261Sol003Controller(final OnboardedPackageFrontController vnfPackageFrontController) {
 		this.vnfPackageFrontController = vnfPackageFrontController;
 	}
 
@@ -61,8 +61,8 @@ public class VnfPackagesOnboarded261Sol003Controller implements VnfPackagesOnboa
 	}
 
 	@Override
-	public final ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId) {
-		return vnfPackageFrontController.onboardedGetContentByVnfdId(vnfdId);
+	public final ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String accept, final String includeSignature) {
+		return vnfPackageFrontController.onboardedGetContentByVnfdId(vnfdId, accept, includeSignature);
 	}
 
 	@Override

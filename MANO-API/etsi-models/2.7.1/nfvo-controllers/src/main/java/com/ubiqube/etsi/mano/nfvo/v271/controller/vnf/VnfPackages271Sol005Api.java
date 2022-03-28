@@ -50,6 +50,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  *
@@ -310,6 +313,7 @@ public interface VnfPackages271Sol005Api {
 	@RequestMapping(value = "/{vnfPkgId}/vnfd", produces = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(
 			@ApiParam(value = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 }

@@ -66,7 +66,7 @@ public class VnfPackages331Sol005Controller implements VnfPackages331Sol005Api {
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest requestParams, final String range, @Valid final String includeSignatures) {
-		return frontController.getArtifact(requestParams, getSafeUUID(vnfPkgId), includeSignatures);
+		return frontController.getArtifactPath(requestParams, getSafeUUID(vnfPkgId), includeSignatures);
 	}
 
 	@Override
@@ -120,8 +120,8 @@ public class VnfPackages331Sol005Controller implements VnfPackages331Sol005Api {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, @Valid final String includeSignatures) {
-		return frontController.getVfnd(getSafeUUID(vnfPkgId), includeSignatures);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept, @Valid final String includeSignatures) {
+		return frontController.getVfnd(getSafeUUID(vnfPkgId), null, includeSignatures);
 	}
 
 	private static void makeLinks(final VnfPkgInfo vnfPackage) {
@@ -133,7 +133,7 @@ public class VnfPackages331Sol005Controller implements VnfPackages331Sol005Api {
 		links.self(self);
 
 		final Link vnfd = new Link();
-		vnfd.setHref(linkTo(methodOn(VnfPackages331Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
+		vnfd.setHref(linkTo(methodOn(VnfPackages331Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null, null)).withSelfRel().getHref());
 		links.setVnfd(vnfd);
 
 		final Link packageContent = new Link();

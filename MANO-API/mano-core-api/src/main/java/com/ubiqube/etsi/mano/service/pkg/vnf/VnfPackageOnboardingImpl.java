@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
@@ -31,6 +33,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Nonnull;
 
@@ -66,6 +70,7 @@ import com.ubiqube.etsi.mano.repository.ManoUrlResource;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
+import com.ubiqube.etsi.mano.service.pkg.FileEntry;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
@@ -113,7 +118,7 @@ public class VnfPackageOnboardingImpl {
 	}
 
 	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId) {
-		final ManoResource data = vnfPackageRepository.getBinary(UUID.fromString(vnfPkgId), "vnfd");
+		final ManoResource data = vnfPackageRepository.getBinary(UUID.fromString(vnfPkgId), Constants.REPOSITORY_FILENAME_PACKAGE);
 		VnfPackage vnfPpackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		vnfPpackage = startOnboarding(vnfPpackage);
 		return uploadAndFinishOnboarding(vnfPpackage, data);
@@ -177,18 +182,13 @@ public class VnfPackageOnboardingImpl {
 		mapper.map(pd, vnfPackage);
 		additionalMapping(pd, vnfPackage);
 		final Map<String, String> userData = vnfPackage.getUserDefinedData();
-		final Set<VnfCompute> cNodes = vnfPackageReader.getVnfComputeNodes(vnfPackage.getUserDefinedData());
-		vnfPackage.setVnfCompute(cNodes);
-		final Set<VnfStorage> vboNodes = vnfPackageReader.getVnfStorages(vnfPackage.getUserDefinedData());
-		vnfPackage.setVnfStorage(vboNodes);
-		final Set<VnfVl> vvlNodes = vnfPackageReader.getVnfVirtualLinks(vnfPackage.getUserDefinedData());
-		vnfPackage.setVnfVl(vvlNodes);
-		final Set<VnfLinkPort> vcNodes = vnfPackageReader.getVnfVduCp(vnfPackage.getUserDefinedData());
-		vnfPackage.setVnfLinkPort(vcNodes);
+		final Set<VnfCompute> cNodes = extractComputeNode(vnfPackageReader, vnfPackage);
+		extractStorage(vnfPackageReader, vnfPackage);
+		extractVl(vnfPackageReader, vnfPackage);
+		final Set<VnfLinkPort> vcNodes = extractLinkPort(vnfPackageReader, vnfPackage);
 		remapNetworks(cNodes, vcNodes);
 		vnfPackage.setAdditionalArtifacts(vnfPackageReader.getAdditionalArtefacts(vnfPackage.getUserDefinedData()));
-		final Set<VnfExtCp> vnfExtCp = vnfPackageReader.getVnfExtCp(vnfPackage.getUserDefinedData());
-		vnfPackage.setVnfExtCp(vnfExtCp);
+		final Set<VnfExtCp> vnfExtCp = extractVnfExtCp(vnfPackageReader, vnfPackage);
 		final Set<ScalingAspect> scalingAspects = vnfPackageReader.getScalingAspects(vnfPackage.getUserDefinedData());
 		final List<InstantiationLevels> instantiationLevels = vnfPackageReader.getInstatiationLevels(vnfPackage.getUserDefinedData());
 		final List<VduInstantiationLevels> vduInstantiationLevel = vnfPackageReader.getVduInstantiationLevels(vnfPackage.getUserDefinedData());
@@ -202,6 +202,81 @@ public class VnfPackageOnboardingImpl {
 		mapVlToCp(vnfPackage);
 		handleAffinity(ar, vnfPackage);
 		setMandatoryVimCapabilities(vnfPackage);
+		extractVnfd(vnfPackageReader, vnfPackage);
+		extractedManifest(vnfPackageReader, vnfPackage);
+	}
+
+	private static Set<VnfExtCp> extractVnfExtCp(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		final Set<VnfExtCp> vnfExtCp = vnfPackageReader.getVnfExtCp(vnfPackage.getUserDefinedData());
+		vnfPackage.setVnfExtCp(vnfExtCp);
+		return vnfExtCp;
+	}
+
+	private static Set<VnfLinkPort> extractLinkPort(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		final Set<VnfLinkPort> vcNodes = vnfPackageReader.getVnfVduCp(vnfPackage.getUserDefinedData());
+		vnfPackage.setVnfLinkPort(vcNodes);
+		return vcNodes;
+	}
+
+	private static void extractVl(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		final Set<VnfVl> vvlNodes = vnfPackageReader.getVnfVirtualLinks(vnfPackage.getUserDefinedData());
+		vnfPackage.setVnfVl(vvlNodes);
+	}
+
+	private static void extractStorage(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		final Set<VnfStorage> vboNodes = vnfPackageReader.getVnfStorages(vnfPackage.getUserDefinedData());
+		vnfPackage.setVnfStorage(vboNodes);
+	}
+
+	private static Set<VnfCompute> extractComputeNode(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		final Set<VnfCompute> cNodes = vnfPackageReader.getVnfComputeNodes(vnfPackage.getUserDefinedData());
+		vnfPackage.setVnfCompute(cNodes);
+		return cNodes;
+	}
+
+	private void extractVnfd(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		final List<String> imports = vnfPackageReader.getImports();
+		if (imports.isEmpty()) {
+			return;
+		}
+		final List<FileEntry> ret = convertToFileEntry(vnfPackageReader, imports);
+		if (ret.size() == 1) {
+			final FileEntry fileEntry = ret.get(0);
+			final ByteArrayInputStream stream = new ByteArrayInputStream(fileEntry.content());
+			vnfPackageRepository.storeBinary(vnfPackage.getId(), Constants.REPOSITORY_FILENAME_VNFD, stream);
+			vnfPackage.setVnfdContentType("text/plain");
+			return;
+		}
+		final byte[] newZip = buildZip(ret);
+		final ByteArrayInputStream stream = new ByteArrayInputStream(newZip);
+		vnfPackageRepository.storeBinary(vnfPackage.getId(), Constants.REPOSITORY_FILENAME_VNFD, stream);
+		vnfPackage.setVnfdContentType("application/zip");
+	}
+
+	private static byte[] buildZip(final List<FileEntry> ret) {
+		try (final ByteArrayOutputStream fos = new ByteArrayOutputStream();
+				final ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+			for (final FileEntry srcFile : ret) {
+				try (final ByteArrayInputStream fis = new ByteArrayInputStream(srcFile.content())) {
+					final ZipEntry zipEntry = new ZipEntry(srcFile.fileName());
+					zipOut.putNextEntry(zipEntry);
+					zipOut.write(srcFile.content());
+				}
+			}
+			zipOut.finish();
+			return fos.toByteArray();
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+	}
+
+	private static List<FileEntry> convertToFileEntry(final VnfPackageReader vnfPackageReader, final List<String> imports) {
+		return imports.stream().map(x -> new FileEntry(x, vnfPackageReader.getFileContent(x))).toList();
+	}
+
+	private void extractedManifest(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		final String manifest = vnfPackageReader.getManifestContent();
+		vnfPackageRepository.storeBinary(vnfPackage.getId(), Constants.REPOSITORY_FILENAME_MANIFEST, new ByteArrayInputStream(manifest.getBytes()));
 	}
 
 	private static void setMandatoryVimCapabilities(final VnfPackage vnfPackage) {

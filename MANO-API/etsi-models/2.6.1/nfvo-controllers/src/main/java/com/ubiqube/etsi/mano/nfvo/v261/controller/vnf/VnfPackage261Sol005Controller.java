@@ -69,7 +69,7 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfdId, final HttpServletRequest request, final String accept) {
-		return vnfPackageFrontController.getArtifact(request, getSafeUUID(vnfdId), null);
+		return vnfPackageFrontController.getArtifactPath(request, getSafeUUID(vnfdId), null);
 	}
 
 	@Override
@@ -83,8 +83,8 @@ public class VnfPackage261Sol005Controller implements VnfPackage261Sol005Api {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId) {
-		return vnfPackageFrontController.getVfnd(getSafeUUID(vnfPkgId), null);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
+		return vnfPackageFrontController.getVfnd(getSafeUUID(vnfPkgId), accept, null);
 	}
 
 	/**

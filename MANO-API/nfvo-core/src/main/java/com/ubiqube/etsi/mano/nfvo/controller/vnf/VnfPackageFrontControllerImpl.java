@@ -31,15 +31,20 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ubiqube.etsi.mano.controller.MetaStreamResource;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.utils.SpringUtils;
 
 import ma.glasnost.orika.MapperFacade;
@@ -55,17 +60,21 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 
 	private final VnfPackageController vnfPackageController;
 
+	private final VnfPackageService vnfPackageService;
+
 	private final MapperFacade mapper;
 
-	public VnfPackageFrontControllerImpl(final VnfPackageManagement vnfManagement, final VnfPackageController vnfPackageController, final MapperFacade mapper) {
+	public VnfPackageFrontControllerImpl(final VnfPackageManagement vnfManagement, final VnfPackageController vnfPackageController, final VnfPackageService vnfPackageService,
+			final MapperFacade mapper) {
 		super();
 		this.vnfManagement = vnfManagement;
 		this.vnfPackageController = vnfPackageController;
+		this.vnfPackageService = vnfPackageService;
 		this.mapper = mapper;
 	}
 
 	@Override
-	public ResponseEntity<Resource> getArtifact(final HttpServletRequest request, final UUID vnfPkgId, final String includeSignature) {
+	public ResponseEntity<Resource> getArtifactPath(final HttpServletRequest request, final UUID vnfPkgId, final String includeSignature) {
 		final String artifactPath = SpringUtils.extractParams(request);
 		return vnfManagement.vnfPackagesVnfPkgIdArtifactsArtifactPathGet(vnfPkgId, artifactPath);
 	}
@@ -87,8 +96,11 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 
 	@Override
 	public ResponseEntity<Resource> getManifest(final UUID vnfPkgId, final String includeSignature) {
-		// TODO Auto-generated method stub
-		return null;
+		final ManoResource ms = vnfManagement.getPackageManifest(vnfPkgId, includeSignature);
+		final MetaStreamResource res = new MetaStreamResource(ms);
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaTypeFactory
+				.getMediaType(res).orElse(MediaType.APPLICATION_OCTET_STREAM))
+				.body(res);
 	}
 
 	@Override
@@ -97,13 +109,18 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	}
 
 	@Override
-	public ResponseEntity<Resource> getVfnd(final UUID vnfPkgId, final String includeSignature) {
-		return vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, includeSignature != null);
+	public ResponseEntity<Resource> getVfnd(final UUID vnfPkgId, final String contentType, final String includeSignature) {
+		final ManoResource ms = vnfManagement.vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, contentType, includeSignature != null);
+		final MetaStreamResource res = new MetaStreamResource(ms);
+		return ResponseEntity.status(HttpStatus.OK)
+				.contentType(MediaTypeFactory
+						.getMediaType(res)
+						.orElse(MediaType.APPLICATION_OCTET_STREAM))
+				.body(res);
 	}
 
 	@Override
 	public ResponseEntity<Resource> getSelectArtifacts(final HttpServletRequest request, final UUID vnfPkgId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -166,49 +183,6 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 
 	@Override
 	public ResponseEntity<Resource> searchArtifact(final UUID safeUUID, final String includeSignatures, final String excludeAllManoArtifacts, final String excludeAllNonManoArtifacts, final String selectNonManoArtifactSets) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <U> ResponseEntity<String> onboardedSearch(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final Consumer<U> makeLinks) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResponseEntity<Resource> onboardedGetContentByVnfdId(final String vnfdId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResponseEntity<Resource> onboardedGetVnfdByVnfdId(final String vnfdId, final String includeSignatures) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResponseEntity<Resource> onboardedGetArtifact(final HttpServletRequest request, final UUID safeUUID, final String includeSignatures) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <U> ResponseEntity<U> onboardedFindById(final UUID vnfPkgId, final Class<U> clazz, final Consumer<U> makeLinks) {
-		final U vnfPkgInfo = vnfManagement.vnfPackagesVnfPkgVnfdIdGet(vnfPkgId, clazz);
-		makeLinks.accept(vnfPkgInfo);
-		return new ResponseEntity<>(vnfPkgInfo, HttpStatus.OK);
-	}
-
-	@Override
-	public ResponseEntity<Resource> onboardedGetVnfdByVnfdId(final UUID safeUUID) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResponseEntity<Resource> onboardedGetManifestByVnfd(final UUID fromString, final String includeSignature) {
 		// TODO Auto-generated method stub
 		return null;
 	}

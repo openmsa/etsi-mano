@@ -31,7 +31,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.SingleControllerCondition;
-import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
+import com.ubiqube.etsi.mano.controller.vnf.OnboardedPackageFrontController;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.service.LinksSol003;
 
@@ -44,9 +44,9 @@ import com.ubiqube.etsi.mano.vnfm.v331.service.LinksSol003;
 @RestController
 @Conditional(SingleControllerCondition.class)
 public class OnboardedVnfPackages331Sol003Controller implements OnboardedVnfPackages331Sol003Api {
-	private final VnfPackageFrontController vnfPackageFrontController;
+	private final OnboardedPackageFrontController vnfPackageFrontController;
 
-	public OnboardedVnfPackages331Sol003Controller(final VnfPackageFrontController vnfPackageFrontController) {
+	public OnboardedVnfPackages331Sol003Controller(final OnboardedPackageFrontController vnfPackageFrontController) {
 		super();
 		this.vnfPackageFrontController = vnfPackageFrontController;
 	}
@@ -62,8 +62,8 @@ public class OnboardedVnfPackages331Sol003Controller implements OnboardedVnfPack
 	}
 
 	@Override
-	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsGet(final String vnfdId, final String range) {
-		return vnfPackageFrontController.onboardedGetVnfdByVnfdId(getSafeUUID(vnfdId));
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsGet(final String vnfdId, final String accept) {
+		return vnfPackageFrontController.onboardedGetVnfdByVnfdId(getSafeUUID(vnfdId), accept);
 	}
 
 	@Override
@@ -77,8 +77,8 @@ public class OnboardedVnfPackages331Sol003Controller implements OnboardedVnfPack
 	}
 
 	@Override
-	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String range) {
-		return vnfPackageFrontController.onboardedGetContentByVnfdId(vnfdId);
+	public ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(final String vnfdId, final String accept) {
+		return vnfPackageFrontController.onboardedGetContentByVnfdId(vnfdId, accept, null);
 	}
 
 	@Override

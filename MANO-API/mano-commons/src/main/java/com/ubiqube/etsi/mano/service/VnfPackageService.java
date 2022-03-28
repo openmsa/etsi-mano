@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
+import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 
 public interface VnfPackageService {
@@ -38,6 +39,8 @@ public interface VnfPackageService {
 	Optional<VnfPackage> findByDescriptorIdAndSoftwareVersion(final String name, final String version);
 
 	VnfPackage findByVnfdId(final UUID id);
+
+	VnfPackage findByVnfdIdAndOnboardingState(final UUID id, OnboardingStateType onboardingStateType);
 
 	void delete(UUID id);
 

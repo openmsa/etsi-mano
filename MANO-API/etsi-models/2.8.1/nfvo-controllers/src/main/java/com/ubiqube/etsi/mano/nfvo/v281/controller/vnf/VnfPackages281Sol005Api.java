@@ -51,6 +51,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Api(value = "vnf_packages", description = "the vnf_packages API")
 @RequestMapping(value = "/sol005/vnfpkgm/v2", headers = { "Version=2.1.0" })
@@ -310,6 +313,7 @@ public interface VnfPackages281Sol005Api {
 			@ApiResponse(code = 503, message = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", response = ProblemDetails.class) })
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/vnfd", produces = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(@ApiParam(value = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 }

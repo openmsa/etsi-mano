@@ -48,6 +48,8 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.VnfPkgInfoModifications;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -316,6 +318,7 @@ public interface VnfPackages331Sol005Api {
 	@RequestMapping(value = "/vnf_packages/{vnfPkgId}/vnfd", produces = { "application/json" }, method = RequestMethod.GET)
 	ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(
 			@ApiParam(value = "Identifier of the VNF package. The identifier is allocated by the NFVO. ", required = true) @PathVariable("vnfPkgId") final String vnfPkgId,
+			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. Reference: IETF RFC 7231 ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) String accept,
 			@ApiParam(value = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ") @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 }

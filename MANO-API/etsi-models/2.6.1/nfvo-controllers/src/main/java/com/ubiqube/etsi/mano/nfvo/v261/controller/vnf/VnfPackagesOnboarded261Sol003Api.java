@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -74,7 +75,7 @@ public interface VnfPackagesOnboarded261Sol003Api {
 	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdArtifactsArtifactPathGet(
 			final HttpServletRequest request,
 			@PathVariable("vnfdId") final String vnfdId,
-			@Valid final String includeSignatures);
+			@Parameter(in = ParameterIn.QUERY, description = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ", schema = @Schema()) @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 	@Operation(summary = "Read information about an individual VNF package.", description = "The GET method reads the information of a VNF package. ", tags = {})
 	@ApiResponses(value = {
@@ -108,7 +109,9 @@ public interface VnfPackagesOnboarded261Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@GetMapping(value = "/{vnfdId}/package_content")
 	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdPackageContentGet(
-			@Nonnull @Parameter(in = ParameterIn.PATH, description = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfdId") final String vnfdId);
+			@Nonnull @Parameter(in = ParameterIn.PATH, description = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfdId") final String vnfdId,
+			@Parameter(in = ParameterIn.HEADER, description = "Content-Types that are acceptable for the response. ", required = true, schema = @Schema()) @RequestHeader(value = "Accept", required = true) String acceptt,
+			@Parameter(in = ParameterIn.QUERY, description = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ", schema = @Schema()) @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 	@Operation(summary = "Read VNFD of an on-boarded VNF package.", description = "The GET method reads the content of the VNFD within a VNF package. The VNFD can be implemented as a single file or as a collection of multiple files. If the VNFD is implemented in the form of multiple files, a ZIP file embedding these files shall be returned. If the VNFD is implemented as a single file, either that file or a ZIP file embedding that file shall be returned. The selection of the format is controlled by the \"Accept\" HTTP header passed in the GET request. • If the \"Accept\" header contains only \"text/plain\" and the VNFD is implemented as a single file, the file shall be returned; otherwise, an error message shall be returned. • If the \"Accept\" header contains only \"application/zip\", the single file or the multiple files that make up the VNFD shall be returned embedded in a ZIP file. • If the \"Accept\" header contains both \"text/plain\" and \"application/zip\", it is up to the NFVO to choose the format to return for a single-file VNFD; for a multi-file VNFD, a ZIP file shall be returned. The default format of the ZIP file shall be the one specified in ETSI GS NFV-SOL 004 [5] where only the YAML files representing the VNFD, and information necessary to navigate the ZIP file and to identify the file that is the entry point for parsing the VNFD (such as TOSCA-meta or manifest files or naming conventions) are included. This method shall follow the provisions specified in the Tables 9.4.4.3.2-1 and 9.4.4.3.2-2 for URI query parameters, request and response data structures, and response codes. ", tags = {})
 	@ApiResponses(value = {
@@ -125,6 +128,6 @@ public interface VnfPackagesOnboarded261Sol003Api {
 			@ApiResponse(responseCode = "503", description = "503 SERVICE UNAVAILABLE If the API producer encounters an internal overload situation of itself or of a system it relies on, it should respond with this response code, following the provisions in IETF RFC 7231 for the use of the \"Retry-After\" HTTP header and for the alternative to refuse the connection. The \"ProblemDetails\" structure may be omitted. ", content = @Content(schema = @Schema(implementation = ProblemDetails.class))) })
 	@GetMapping(value = "/{vnfdId}/vnfd")
 	ResponseEntity<Resource> onboardedVnfPackagesVnfdIdVnfdGet(@Nonnull @Parameter(in = ParameterIn.PATH, description = "Identifier of the on-boarded VNF package. The identifier is allocated by the NFVO. This identifier can be retrieved from the \"vnfPkgId\" attribute in the VnfPackageOnboardingNotification or VnfPackageChangeNotification. ", required = true, schema = @Schema()) @PathVariable("vnfPkgId") final String vnfdId,
-			@Valid final String includeSignatures);
+			@Parameter(in = ParameterIn.QUERY, description = "If this parameter is provided, the NFVO shall include in the ZIP archive the security information as specified above. This URI query parameter is a flag, i.e. it shall have no value. The NFVO shall support this parameter. ", schema = @Schema()) @Valid @RequestParam(value = "include_signatures", required = false) final String includeSignatures);
 
 }

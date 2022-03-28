@@ -64,7 +64,7 @@ public class VnfPackages271Sol005Controller implements VnfPackages271Sol005Api {
 
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest requestParams, final String range, @Valid final String includeSignatures) {
-		return frontController.getArtifact(requestParams, getSafeUUID(vnfPkgId), includeSignatures);
+		return frontController.getArtifactPath(requestParams, getSafeUUID(vnfPkgId), includeSignatures);
 	}
 
 	@Override
@@ -117,8 +117,8 @@ public class VnfPackages271Sol005Controller implements VnfPackages271Sol005Api {
 	}
 
 	@Override
-	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, @Valid final String includeSignatures) {
-		return frontController.getVfnd(getSafeUUID(vnfPkgId), includeSignatures);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept, @Valid final String includeSignatures) {
+		return frontController.getVfnd(getSafeUUID(vnfPkgId), accept, includeSignatures);
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public class VnfPackages271Sol005Controller implements VnfPackages271Sol005Api {
 		links.self(self);
 
 		final Link vnfd = new Link();
-		vnfd.setHref(linkTo(methodOn(VnfPackages271Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null)).withSelfRel().getHref());
+		vnfd.setHref(linkTo(methodOn(VnfPackages271Sol005Api.class).vnfPackagesVnfPkgIdVnfdGet(vnfPkgId, null, null)).withSelfRel().getHref());
 		links.setVnfd(vnfd);
 
 		final Link packageContent = new Link();
@@ -144,7 +144,7 @@ public class VnfPackages271Sol005Controller implements VnfPackages271Sol005Api {
 		vnfPackage.setLinks(links);
 	}
 
-	public static String getSelfLink(final VnfPkgInfo _vnfPkgInfo) {
-		return linkTo(methodOn(VnfPackages271Sol005Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgInfo.getId())).withSelfRel().getHref();
+	public static String getSelfLink(final VnfPkgInfo vnfPkgInfo) {
+		return linkTo(methodOn(VnfPackages271Sol005Api.class).vnfPackagesVnfPkgIdGet(vnfPkgInfo.getId())).withSelfRel().getHref();
 	}
 }

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
@@ -95,6 +96,12 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 	@Override
 	public Path getPathByVnfdId(final UUID fromString) {
 		return vnfPackageRepository.getPathByVnfdId(fromString);
+	}
+
+	@Override
+	public VnfPackage findByVnfdIdAndOnboardingState(final UUID id, final OnboardingStateType onboardingStateType) {
+		return vnfPackageJpa.findByVnfdIdAndOnboardingState(id.toString(), onboardingStateType)
+				.orElseThrow(() -> new GenericException("Could not find onboarded Vnf package using vnfdId: " + id));
 	}
 
 }

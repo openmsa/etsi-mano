@@ -21,9 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
+import com.ubiqube.parser.tosca.Import;
+import com.ubiqube.parser.tosca.Imports;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
@@ -140,4 +144,23 @@ public abstract class AbstractPackageReader implements Closeable {
 		Files.delete(tempFile.toPath());
 	}
 
+	public final List<String> getImports() {
+		final Imports imps = this.root.getImports();
+		final String entry = this.toscaParser.getEntryFileName();
+		final List<String> imports = imps.entrySet().stream()
+				.map(Entry::getValue)
+				.map(Import::getResolved)
+				.toList();
+		final ArrayList<String> ret = new ArrayList<>(imports);
+		ret.add(entry);
+		return ret;
+	}
+
+	public final String getManifestContent() {
+		return this.toscaParser.getManifestContent();
+	}
+
+	public byte[] getFileContent(final String fileName) {
+		return toscaParser.getFileContent(fileName);
+	}
 }

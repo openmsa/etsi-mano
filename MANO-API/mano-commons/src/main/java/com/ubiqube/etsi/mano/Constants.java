@@ -73,6 +73,12 @@ public final class Constants {
 
 	public static final String VNFLCM_SEARCH_DEFAULT_EXCLUDE_FIELDS = "error,resourceChanges,changedInfo,changedExtConnectivity";
 
+	public static final String REPOSITORY_FILENAME_MANIFEST = "manifest";
+
+	public static final String REPOSITORY_FILENAME_VNFD = "vnfd";
+
+	public static final String REPOSITORY_FILENAME_PACKAGE = "vnf-package";
+
 	private Constants() {
 		// Nothing.
 	}
@@ -83,7 +89,7 @@ public final class Constants {
 			return null;
 		}
 		final List<String> params = bag.get(parameter);
-		if ((null == params) || params.isEmpty()) {
+		if (null == params || params.isEmpty()) {
 			return null;
 		}
 		if (params.size() > 1) {

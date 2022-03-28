@@ -45,17 +45,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface VnfPackageFrontController {
 
-	ResponseEntity<Resource> getArtifact(HttpServletRequest request, @Nonnull UUID vnfPkgId, String includeSignature);
+	ResponseEntity<Resource> getArtifactPath(HttpServletRequest request, @Nonnull UUID vnfPkgId, String includeSignature);
 
 	<U> ResponseEntity<U> findById(@Nonnull UUID vnfPkgId, Class<U> clazz, Consumer<U> makeLinks);
 
 	<U> ResponseEntity<U> findByIdReadOnly(@Nonnull UUID vnfPkgId, Class<U> clazz, Consumer<U> makeLinks);
 
-	ResponseEntity<Resource> getManifest(UUID vnfPkgId, String includeSignature);
+	ResponseEntity<Resource> getManifest(@Nonnull UUID vnfPkgId, @Nonnull String includeSignature);
 
 	ResponseEntity<Resource> getContent(@Nonnull UUID vnfPkgId);
 
-	ResponseEntity<Resource> getVfnd(@Nonnull UUID vnfPkgId, String includeSignature);
+	ResponseEntity<Resource> getVfnd(@Nonnull UUID vnfPkgId, String contentType, String includeSignature);
 
 	ResponseEntity<Resource> getSelectArtifacts(HttpServletRequest request, UUID vnfPkgId);
 
@@ -76,19 +76,5 @@ public interface VnfPackageFrontController {
 	<U> ResponseEntity<U> modify(String body, UUID vnfPkgId, final String ifMatch, Class<U> clazz, Consumer<U> makeLinks);
 
 	ResponseEntity<Resource> searchArtifact(UUID safeUUID, String includeSignatures, String excludeAllManoArtifacts, String excludeAllNonManoArtifacts, String selectNonManoArtifactSets);
-
-	<U> ResponseEntity<String> onboardedSearch(MultiValueMap<String, String> requestParams, Class<U> clazz, Consumer<U> makeLinks);
-
-	ResponseEntity<Resource> onboardedGetContentByVnfdId(String vnfdId);
-
-	ResponseEntity<Resource> onboardedGetVnfdByVnfdId(String vnfdId, String includeSignatures);
-
-	ResponseEntity<Resource> onboardedGetArtifact(HttpServletRequest request, UUID safeUUID, String includeSignatures);
-
-	<U> ResponseEntity<U> onboardedFindById(UUID safeUUID, Class<U> clazz, Consumer<U> makeLinks);
-
-	ResponseEntity<Resource> onboardedGetVnfdByVnfdId(UUID safeUUID);
-
-	ResponseEntity<Resource> onboardedGetManifestByVnfd(UUID fromString, String includeSignature);
 
 }

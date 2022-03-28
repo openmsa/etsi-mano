@@ -128,4 +128,19 @@ public class DefaultVnfPackageReader implements VnfPackageReader {
 		// Nothing.
 	}
 
+	@Override
+	public List<String> getImports() {
+		return List.of();
+	}
+
+	@Override
+	public String getManifestContent() {
+		return "";
+	}
+
+	@Override
+	public byte[] getFileContent(final String x) {
+		return new byte[0];
+	}
+
 }

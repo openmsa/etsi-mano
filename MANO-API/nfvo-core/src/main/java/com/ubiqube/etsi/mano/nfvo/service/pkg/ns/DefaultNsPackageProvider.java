@@ -33,7 +33,7 @@ public class DefaultNsPackageProvider implements NsPackageProvider {
 
 	@Override
 	public NsInformations getNsInformations(final Map<String, String> userData) {
-		return null;
+		return new NsInformations();
 	}
 
 	@Override

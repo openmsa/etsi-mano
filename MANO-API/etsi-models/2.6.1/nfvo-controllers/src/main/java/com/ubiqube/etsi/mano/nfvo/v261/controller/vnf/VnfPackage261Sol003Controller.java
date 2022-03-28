@@ -19,8 +19,6 @@ package com.ubiqube.etsi.mano.nfvo.v261.controller.vnf;
 
 import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 
-import java.io.FileNotFoundException;
-
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
@@ -82,7 +80,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 */
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final String vnfPkgId, final HttpServletRequest request) {
-		return vnfPackageFrontController.getArtifact(request, getSafeUUID(vnfPkgId), null);
+		return vnfPackageFrontController.getArtifactPath(request, getSafeUUID(vnfPkgId), null);
 	}
 
 	/**
@@ -139,7 +137,7 @@ public class VnfPackage261Sol003Controller implements VnfPackage261Sol003Api {
 	 */
 	@Override
 	public ResponseEntity<Resource> vnfPackagesVnfPkgIdVnfdGet(final String vnfPkgId, final String accept) {
-		return vnfPackageFrontController.getVfnd(getSafeUUID(vnfPkgId), null);
+		return vnfPackageFrontController.getVfnd(getSafeUUID(vnfPkgId), accept, null);
 	}
 
 }
