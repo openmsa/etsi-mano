@@ -49,7 +49,7 @@ public class NfvoActionController {
 
 	public void dispatch(final ActionType eventType, @NotNull final UUID objectId, final Map<String, Object> parameters) {
 		switch (eventType) {
-		case VNF_PKG_ONBOARD_FROM_URI -> vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString(), (String) parameters.get("uri"));
+		case VNF_PKG_ONBOARD_FROM_URI -> vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(objectId.toString());
 		case VNF_PKG_ONBOARD_FROM_BYTES -> vnfPackageOnboarding.vnfPackagesVnfPkgIdPackageContentPut(objectId.toString());
 		case NSD_PKG_ONBOARD_FROM_BYTES -> nsPackagingManager.nsOnboarding(objectId);
 		case NS_INSTANTIATE -> nfvoActions.instantiate(objectId);

@@ -21,7 +21,6 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotInUse;
 import static com.ubiqube.etsi.mano.Constants.ensureNotOnboarded;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.pkg.UploadUriParameters;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.nfvo.factory.VnfPackageFactory;
@@ -88,16 +88,16 @@ public class VnfPackageControllerImpl implements VnfPackageController {
 		final VnfPackage vnfPackage = vnfPackageService.findById(id);
 		ensureNotOnboarded(vnfPackage);
 		vnfPackageRepository.storeBinary(id, Constants.REPOSITORY_FILENAME_PACKAGE, is);
-		final Map<String, Object> map = new HashMap<>();
-		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, map);
+		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_BYTES, id, Map.of());
 	}
 
 	@Override
-	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final UUID id, final String contentType, final String uri) {
+	public void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(final UUID id, final String contentType, final UploadUriParameters params) {
 		final VnfPackage vnfPackage = vnfPackageService.findById(id);
 		ensureNotOnboarded(vnfPackage);
-		final Map<String, Object> params = Map.of("contentType", contentType, "uri", uri);
-		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_URI, id, params);
+		vnfPackage.setUploadUriParameters(params);
+		vnfPackageService.save(vnfPackage);
+		eventManager.sendActionNfvo(ActionType.VNF_PKG_ONBOARD_FROM_URI, id, Map.of());
 
 	}
 }

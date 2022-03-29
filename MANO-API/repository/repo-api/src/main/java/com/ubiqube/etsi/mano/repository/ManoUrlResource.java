@@ -16,9 +16,7 @@
  */
 package com.ubiqube.etsi.mano.repository;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 /**
  *
@@ -28,20 +26,17 @@ import java.net.URL;
 public class ManoUrlResource implements ManoResource {
 	private long size;
 	private String fileName;
+	private final HttpRequestor requestor;
 
-	public ManoUrlResource(final long size, final String fileName) {
-		super();
+	public ManoUrlResource(final long size, final String url, final HttpRequestor requestor) {
 		this.size = size;
-		this.fileName = fileName;
+		this.fileName = url;
+		this.requestor = requestor;
 	}
 
 	@Override
 	public InputStream getInputStream() {
-		try {
-			return new URL(fileName).openStream();
-		} catch (final IOException e) {
-			throw new RepositoryException(e);
-		}
+		return requestor.getInputStream();
 	}
 
 	@Override

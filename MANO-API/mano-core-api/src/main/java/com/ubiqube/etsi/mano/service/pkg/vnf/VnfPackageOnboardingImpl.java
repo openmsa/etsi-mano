@@ -61,6 +61,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
+import com.ubiqube.etsi.mano.dao.mano.pkg.UploadUriParameters;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
@@ -124,12 +125,18 @@ public class VnfPackageOnboardingImpl {
 		return uploadAndFinishOnboarding(vnfPpackage, data);
 	}
 
-	public VnfPackage vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@Nonnull final String vnfPkgId, final String url) {
+	public VnfPackage vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(@Nonnull final String vnfPkgId) {
 		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		startOnboarding(vnfPackage);
-		LOG.info("Async. Download of {}", url);
-		final ManoResource data = new ManoUrlResource(0, url);
-		return uploadAndFinishOnboarding(vnfPackage, data);
+		final UploadUriParameters params = vnfPackage.getUploadUriParameters();
+		LOG.info("Async. Download of {}", params);
+		try (FluxRequestor requestor = new FluxRequestor(vnfPackage.getUploadUriParameters())) {
+			final ManoResource data = new ManoUrlResource(0, vnfPackage.getUploadUriParameters().getAddressInformation(), requestor);
+			return uploadAndFinishOnboarding(vnfPackage, data);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
+
 	}
 
 	private VnfPackage uploadAndFinishOnboarding(final VnfPackage vnfPackage, final ManoResource data) {

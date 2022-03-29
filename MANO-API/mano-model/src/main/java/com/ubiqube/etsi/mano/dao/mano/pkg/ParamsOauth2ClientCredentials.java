@@ -14,25 +14,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.controller.vnf;
+package com.ubiqube.etsi.mano.dao.mano.pkg;
 
-import java.io.InputStream;
-import java.util.Map;
-import java.util.UUID;
+import javax.persistence.Embeddable;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.pkg.UploadUriParameters;
+import lombok.Getter;
+import lombok.Setter;
 
-public interface VnfPackageController {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Embeddable
+@Getter
+@Setter
+public class ParamsOauth2ClientCredentials {
+	private String clientId;
 
-	VnfPackage vnfPackagesPost(Map<String, String> userData);
+	private String clientPassword;
 
-	void vnfPackagesVnfPkgIdDelete(UUID id);
-
-	VnfPackage vnfPackagesVnfPkgIdPatch(UUID id, String body, String ifMatch);
-
-	void vnfPackagesVnfPkgIdPackageContentPut(UUID id, InputStream inputStream, String accept);
-
-	void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(UUID id, String contentType, UploadUriParameters params);
+	private String tokenEndpoint;
 
 }

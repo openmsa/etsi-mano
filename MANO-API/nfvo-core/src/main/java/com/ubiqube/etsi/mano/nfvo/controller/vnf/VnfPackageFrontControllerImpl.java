@@ -41,7 +41,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ubiqube.etsi.mano.controller.MetaStreamResource;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
+import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.pkg.UploadUriParameters;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
@@ -168,8 +170,11 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 
 	@Override
 	public <U> ResponseEntity<Void> uploadFromUri(final U body, final UUID id, final String contentType) {
-		final String uri = ""; // TODO
-		vnfPackageController.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(id, contentType, uri);
+		final UploadUriParameters params = mapper.map(body, UploadUriParameters.class);
+		if (null == params.getAuthType() && params.getUsername() != null) {
+			params.setAuthType(AuthType.BASIC);
+		}
+		vnfPackageController.vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(id, contentType, params);
 		return ResponseEntity.accepted().build();
 	}
 

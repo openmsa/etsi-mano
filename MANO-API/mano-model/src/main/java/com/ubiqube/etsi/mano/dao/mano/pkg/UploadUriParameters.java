@@ -14,25 +14,41 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.controller.vnf;
+package com.ubiqube.etsi.mano.dao.mano.pkg;
 
-import java.io.InputStream;
-import java.util.Map;
 import java.util.UUID;
 
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.pkg.UploadUriParameters;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-public interface VnfPackageController {
+import com.ubiqube.etsi.mano.dao.mano.AuthType;
 
-	VnfPackage vnfPackagesPost(Map<String, String> userData);
+import lombok.Getter;
+import lombok.Setter;
 
-	void vnfPackagesVnfPkgIdDelete(UUID id);
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Entity
+@Getter
+@Setter
+public class UploadUriParameters {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private UUID id;
 
-	VnfPackage vnfPackagesVnfPkgIdPatch(UUID id, String body, String ifMatch);
+	private String addressInformation;
 
-	void vnfPackagesVnfPkgIdPackageContentPut(UUID id, InputStream inputStream, String accept);
+	private AuthType authType;
 
-	void vnfPackagesVnfPkgIdPackageContentUploadFromUriPost(UUID id, String contentType, UploadUriParameters params);
+	private String username;
+
+	private String password;
+
+	private ParamsOauth2ClientCredentials paramsOauth2ClientCredentials;
 
 }
