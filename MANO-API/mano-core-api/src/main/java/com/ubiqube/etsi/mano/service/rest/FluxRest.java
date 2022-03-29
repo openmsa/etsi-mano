@@ -204,6 +204,12 @@ public class FluxRest {
 		return UriComponentsBuilder.fromHttpUrl(rootUrl);
 	}
 
+	/**
+	 *
+	 * @param uri     URI to get the content/
+	 * @param path    Path to store the temporary file.
+	 * @param version Version header to add if needed, null otherwise.
+	 */
 	public void download(final URI uri, final Path path, final String version) {
 		final RequestHeadersSpec<?> wc = webClient
 				.get()
