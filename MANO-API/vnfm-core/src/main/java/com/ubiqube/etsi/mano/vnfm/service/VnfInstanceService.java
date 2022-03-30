@@ -87,4 +87,6 @@ public interface VnfInstanceService {
 	VnfInstance vnfLcmPatch(VnfInstance vnfInstance, String body, String ifMatch);
 
 	<U> ResponseEntity<String> search(final MultiValueMap<String, String> requestParams, final Class<U> clazz, final String excludeDefaults, final Set<String> mandatoryFields, final Consumer<U> makeLink);
+
+	List<VnfLiveInstance> findByResourceIdIn(List<String> objectInstanceIds);
 }

@@ -14,15 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.vnfm.service;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
+import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
 
 /**
  *
@@ -30,26 +30,24 @@ import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
  *
  */
 @Service
-public class VimServiceImpl implements VimService {
-	private final VimConnectionInformationJpa vimConnectionInformationJpa;
+public class PmJobsService {
+	private final PmJobsJpa pmJobsJpa;
 
-	public VimServiceImpl(final VimConnectionInformationJpa vimConnectionInformationJpa) {
-		this.vimConnectionInformationJpa = vimConnectionInformationJpa;
+	public PmJobsService(final PmJobsJpa pmJobsJpa) {
+		super();
+		this.pmJobsJpa = pmJobsJpa;
 	}
 
-	@Override
-	public Optional<VimConnectionInformation> findById(final UUID id) {
-		return vimConnectionInformationJpa.findById(id);
+	public void deleteById(final UUID id) {
+		pmJobsJpa.deleteById(id);
 	}
 
-	@Override
-	public Iterable<VimConnectionInformation> findAll() {
-		return vimConnectionInformationJpa.findAll();
+	public PmJob save(final PmJob res) {
+		return pmJobsJpa.save(res);
 	}
 
-	@Override
-	public VimConnectionInformation save(final VimConnectionInformation body) {
-		return vimConnectionInformationJpa.save(body);
+	public Optional<PmJob> findById(final UUID id) {
+		return pmJobsJpa.findById(id);
 	}
 
 }

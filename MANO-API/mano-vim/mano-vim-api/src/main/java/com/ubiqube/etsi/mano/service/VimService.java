@@ -30,4 +30,8 @@ public interface VimService {
 
 	Optional<VimConnectionInformation> findById(UUID id);
 
+	Iterable<VimConnectionInformation> findAll();
+
+	VimConnectionInformation save(VimConnectionInformation body);
+
 }

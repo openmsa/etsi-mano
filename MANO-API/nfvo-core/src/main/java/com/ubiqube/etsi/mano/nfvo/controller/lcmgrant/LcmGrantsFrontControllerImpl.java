@@ -50,7 +50,7 @@ public class LcmGrantsFrontControllerImpl implements LcmGrantsFrontController {
 	@Override
 	public <U> ResponseEntity<U> grantsGrantIdGet(final String grantId, final Class<U> clazz, final Consumer<U> makeLink) {
 		final GrantResponse grants = grantManagement.get(UUID.fromString(grantId));
-		if (!grants.getAvailable().equals(Boolean.TRUE)) {
+		if (null != grants && !grants.getAvailable().equals(Boolean.TRUE)) {
 			return ResponseEntity.accepted().build();
 		}
 		final U jsonGrant = mapper.map(grants, clazz);

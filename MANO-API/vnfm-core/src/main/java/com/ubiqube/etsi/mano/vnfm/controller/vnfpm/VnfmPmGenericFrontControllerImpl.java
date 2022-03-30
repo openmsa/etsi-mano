@@ -37,7 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.service.VimService;
 import com.ubiqube.etsi.mano.vnfm.fc.vnfpm.VnfmPmGenericFrontController;
-import com.ubiqube.etsi.mano.vnfm.jpa.VnfLiveInstanceJpa;
+import com.ubiqube.etsi.mano.vnfm.service.VnfInstanceService;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -49,11 +49,11 @@ import ma.glasnost.orika.MapperFacade;
 @Service
 public class VnfmPmGenericFrontControllerImpl implements VnfmPmGenericFrontController {
 	private final VnfmPmController vnfmPmController;
-	private final VnfLiveInstanceJpa vnfLiveInstanceJpa;
+	private final VnfInstanceService vnfLiveInstanceJpa;
 	private final MapperFacade mapper;
 	private final VimService vimService;
 
-	public VnfmPmGenericFrontControllerImpl(final VnfmPmController vnfmPmController, final VnfLiveInstanceJpa vnfLiveInstanceJpa, final MapperFacade mapper, final VimService vimService) {
+	public VnfmPmGenericFrontControllerImpl(final VnfmPmController vnfmPmController, final VnfInstanceService vnfLiveInstanceJpa, final MapperFacade mapper, final VimService vimService) {
 		super();
 		this.vnfmPmController = vnfmPmController;
 		this.vnfLiveInstanceJpa = vnfLiveInstanceJpa;

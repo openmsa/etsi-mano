@@ -31,21 +31,21 @@ import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload.ObjectType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.exception.GenericException;
-import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.nfvo.service.TemporaryDownloadService;
 import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.service.SystemService;
+import com.ubiqube.etsi.mano.service.VimService;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 
 @Controller
 //@ApiIgnore
 public class HomeController {
-	private final VimConnectionInformationJpa vciJpa;
+	private final VimService vciJpa;
 	private final TemporaryDownloadService temporaryDownloadService;
 	private final VimManager vimManager;
 	private final SystemService systemService;
 
-	public HomeController(final VimConnectionInformationJpa vciJpa, final TemporaryDownloadService temporaryDownloadService,
+	public HomeController(final VimService vciJpa, final TemporaryDownloadService temporaryDownloadService,
 			final VimManager vimManager, final SystemService systemService) {
 		this.vciJpa = vciJpa;
 		this.temporaryDownloadService = temporaryDownloadService;

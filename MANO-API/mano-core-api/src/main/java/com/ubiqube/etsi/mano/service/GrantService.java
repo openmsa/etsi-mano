@@ -21,8 +21,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 
 /**
  *
@@ -30,26 +30,28 @@ import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
  *
  */
 @Service
-public class VimServiceImpl implements VimService {
-	private final VimConnectionInformationJpa vimConnectionInformationJpa;
+public class GrantService {
+	private final GrantsResponseJpa grantsResponseJpa;
 
-	public VimServiceImpl(final VimConnectionInformationJpa vimConnectionInformationJpa) {
-		this.vimConnectionInformationJpa = vimConnectionInformationJpa;
+	public GrantService(final GrantsResponseJpa grantsResponseJpa) {
+		super();
+		this.grantsResponseJpa = grantsResponseJpa;
 	}
 
-	@Override
-	public Optional<VimConnectionInformation> findById(final UUID id) {
-		return vimConnectionInformationJpa.findById(id);
+	public Iterable<GrantResponse> findAll() {
+		return grantsResponseJpa.findAll();
 	}
 
-	@Override
-	public Iterable<VimConnectionInformation> findAll() {
-		return vimConnectionInformationJpa.findAll();
+	public void delete(final GrantResponse grantResponse) {
+		grantsResponseJpa.delete(grantResponse);
 	}
 
-	@Override
-	public VimConnectionInformation save(final VimConnectionInformation body) {
-		return vimConnectionInformationJpa.save(body);
+	public GrantResponse save(final GrantResponse grants) {
+		return grantsResponseJpa.save(grants);
+	}
+
+	public Optional<GrantResponse> findById(final UUID grantId) {
+		return grantsResponseJpa.findById(grantId);
 	}
 
 }

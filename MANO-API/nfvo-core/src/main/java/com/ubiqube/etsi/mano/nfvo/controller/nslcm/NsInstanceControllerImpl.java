@@ -42,9 +42,8 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.NotificationEvent;
 import com.ubiqube.etsi.mano.nfvo.factory.LcmFactory;
-import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
-import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
+import com.ubiqube.etsi.mano.nfvo.service.NsdPackageService;
 import com.ubiqube.etsi.mano.service.NsBlueprintService;
 import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
@@ -57,16 +56,13 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 	private final NsInstanceService nsInstanceService;
 	private final MapperFacade mapper;
 	private final VnfInstanceGatewayService vnfInstancesService;
-	private final NsLiveInstanceJpa nsLiveInstanceJpa;
-	private final NsdPackageJpa nsdPackageJpa;
+	private final NsdPackageService nsdPackageJpa;
 	private final EventManager eventManager;
 
-	public NsInstanceControllerImpl(final NsInstanceService nsInstanceService, final NsBlueprintService lcmOpOccsService, final NsLiveInstanceJpa nsLiveInstanceJpa,
-			final MapperFacade mapper, final VnfInstanceGatewayService vnfInstancesService, final NsdPackageJpa nsdPackageJpa,
-			final EventManager eventManager) {
+	public NsInstanceControllerImpl(final NsInstanceService nsInstanceService, final NsBlueprintService lcmOpOccsService, final MapperFacade mapper,
+			final VnfInstanceGatewayService vnfInstancesService, final NsdPackageService nsdPackageJpa, final EventManager eventManager) {
 		this.nsInstanceService = nsInstanceService;
 		this.blueprintService = lcmOpOccsService;
-		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 		this.mapper = mapper;
 		this.vnfInstancesService = vnfInstancesService;
 		this.nsdPackageJpa = nsdPackageJpa;
@@ -84,7 +80,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 		ensureNotInstantiated(nsInstanceDb);
 		nsInstanceService.delete(id);
 		if (!nsInstanceService.isInstantiated(nsInstanceDb.getNsdInfo())) {
-			final NsdPackage nsPkg = nsdPackageJpa.findById(nsInstanceDb.getNsdInfo().getId()).orElseThrow(() -> new GenericException("Could not find NSD " + nsInstanceDb.getNsdInfo().getId()));
+			final NsdPackage nsPkg = nsdPackageJpa.findById(nsInstanceDb.getNsdInfo().getId());
 			nsPkg.setNsdUsageState(PackageUsageState.NOT_IN_USE);
 			nsdPackageJpa.save(nsPkg);
 			eventManager.sendNotification(NotificationEvent.NS_INSTANCE_DELETE, id, Map.of());
@@ -97,14 +93,14 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 
 		final NsInstanceDto dto = mapper.map(ret.getNsdInfo(), NsInstanceDto.class);
 		mapper.map(ret, dto);
-		final List<NsLiveInstance> vnfs = nsLiveInstanceJpa.findByNsdInstanceAndClass(ret, NsVnfTask.class.getSimpleName());
+		final List<NsLiveInstance> vnfs = blueprintService.findByNsdInstanceAndClass(ret, NsVnfTask.class.getSimpleName());
 		final List<VnfInstanceDto> vnfInstance = vnfs.stream()
 				.map(x -> vnfInstancesService.findById(UUID.fromString(x.getResourceId())))
 				.map(x -> mapper.map(x, VnfInstanceDto.class))
 				.toList();
 		dto.setVnfInstance(vnfInstance);
 		dto.setNsdInfoId(ret.getNsdInfo().getId().toString());
-		final List<NsLiveInstance> vls = nsLiveInstanceJpa.findByNsdInstanceAndClass(ret, NsVirtualLinkTask.class.getSimpleName());
+		final List<NsLiveInstance> vls = blueprintService.findByNsdInstanceAndClass(ret, NsVirtualLinkTask.class.getSimpleName());
 		final List<NsVirtualLinkInfoDto> vlsDto = vls.stream().map(x -> {
 			final NsVirtualLinkInfoDto vlDto = new NsVirtualLinkInfoDto();
 
@@ -117,7 +113,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 			return vlDto;
 		}).toList();
 		dto.setVirtualLinkInfo(vlsDto);
-		dto.setNsState(nsLiveInstanceJpa.countByNsInstance(ret) > 0 ? InstantiationState.INSTANTIATED : InstantiationState.NOT_INSTANTIATED);
+		dto.setNsState(blueprintService.countByNsInstance(ret) > 0 ? InstantiationState.INSTANTIATED : InstantiationState.NOT_INSTANTIATED);
 		return dto;
 	}
 

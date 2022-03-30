@@ -38,10 +38,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
-import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.model.NotificationEvent;
+import com.ubiqube.etsi.mano.service.GrantService;
 import com.ubiqube.etsi.mano.service.Patcher;
+import com.ubiqube.etsi.mano.service.VimService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -54,22 +54,22 @@ public class AdminController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
 
-	private final VimConnectionInformationJpa vciJpa;
+	private final VimService vimService;
 	private final MapperFacade mapper;
 	private final VimManager vimManager;
 	private final EventManager eventManager;
 	private final Patcher patcher;
-	private final GrantsResponseJpa grantJpa;
+	private final GrantService grantService;
 
-	public AdminController(final VimConnectionInformationJpa vciJpa, final MapperFacade mapper, final VimManager vimManager, final EventManager eventManager,
-			final Patcher patcher, final GrantsResponseJpa grantJpa) {
+	public AdminController(final VimService vciJpa, final MapperFacade mapper, final VimManager vimManager, final EventManager eventManager,
+			final Patcher patcher, final GrantService grantJpa) {
 		super();
-		this.vciJpa = vciJpa;
+		this.vimService = vciJpa;
 		this.mapper = mapper;
 		this.vimManager = vimManager;
 		this.eventManager = eventManager;
 		this.patcher = patcher;
-		this.grantJpa = grantJpa;
+		this.grantService = grantJpa;
 	}
 
 	@PostMapping(value = "/vim/register")
@@ -105,14 +105,14 @@ public class AdminController {
 	@GetMapping(value = "/vim/{id}/connect")
 	public ResponseEntity<Map<String, String>> connectVim(@PathVariable("id") final UUID id) {
 		final Vim vim = vimManager.getVimById(id);
-		final VimConnectionInformation vimconn = vciJpa.findById(id).orElseThrow(() -> new NotFoundException("Could not find vim id " + id));
+		final VimConnectionInformation vimconn = vimService.findById(id).orElseThrow(() -> new NotFoundException("Could not find vim id " + id));
 		final Map<String, String> networks = vim.network(vimconn).getPublicNetworks();
 		return ResponseEntity.ok(networks);
 	}
 
 	@GetMapping(value = "/vim")
 	public ResponseEntity<Iterable<VimConnectionInformation>> listVim() {
-		final Iterable<VimConnectionInformation> vci = vciJpa.findAll();
+		final Iterable<VimConnectionInformation> vci = vimService.findAll();
 		return ResponseEntity.ok(vci);
 	}
 
@@ -124,9 +124,9 @@ public class AdminController {
 
 	@DeleteMapping(value = "/grant/all")
 	public ResponseEntity<Void> deleteAllGrant() {
-		grantJpa.findAll().forEach(x -> {
+		grantService.findAll().forEach(x -> {
 			try {
-				grantJpa.delete(x);
+				grantService.delete(x);
 			} catch (final RuntimeException e) {
 				LOG.trace("", e);
 				LOG.info("Unable to delete: {}", x.getId());

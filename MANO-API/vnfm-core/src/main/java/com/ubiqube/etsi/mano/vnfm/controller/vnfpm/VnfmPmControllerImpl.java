@@ -26,9 +26,9 @@ import com.ubiqube.etsi.mano.dao.mano.pm.PerformanceReport;
 import com.ubiqube.etsi.mano.dao.mano.pm.PmJob;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
-import com.ubiqube.etsi.mano.jpa.PmJobsJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
+import com.ubiqube.etsi.mano.vnfm.service.PmJobsService;
 
 /**
  *
@@ -37,9 +37,9 @@ import com.ubiqube.etsi.mano.service.SearchableService;
  */
 @Service
 public class VnfmPmControllerImpl extends SearchableService implements VnfmPmController {
-	private final PmJobsJpa pmJobsJpa;
+	private final PmJobsService pmJobsJpa;
 
-	public VnfmPmControllerImpl(final PmJobsJpa pmJobsJpa, final EntityManager em, final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
+	public VnfmPmControllerImpl(final PmJobsService pmJobsJpa, final EntityManager em, final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
 		super(searchService, em, PmJob.class, grammarParser);
 		this.pmJobsJpa = pmJobsJpa;
 	}

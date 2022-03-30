@@ -202,4 +202,9 @@ public class VnfInstanceServiceImpl extends SearchableService implements VnfInst
 		return vnfInstanceJpa.save(vnfInstance);
 	}
 
+	@Override
+	public List<VnfLiveInstance> findByResourceIdIn(final List<String> objectInstanceIds) {
+		return vnfLiveInstanceJpa.findByResourceIdIn(objectInstanceIds);
+	}
+
 }

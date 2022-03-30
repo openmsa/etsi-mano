@@ -35,7 +35,7 @@ import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.service.AlarmVnfmController;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
-import com.ubiqube.etsi.mano.vnfm.jpa.AlarmsJpa;
+import com.ubiqube.etsi.mano.vnfm.service.AlarmService;
 
 /**
  *
@@ -45,9 +45,9 @@ import com.ubiqube.etsi.mano.vnfm.jpa.AlarmsJpa;
 @Service
 public class AlarmVnfmControllerImpl extends SearchableService implements AlarmVnfmController {
 
-	private final AlarmsJpa alarmsJpa;
+	private final AlarmService alarmsJpa;
 
-	public AlarmVnfmControllerImpl(final EntityManager em, final AlarmsJpa alarmsJpa, final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
+	public AlarmVnfmControllerImpl(final EntityManager em, final AlarmService alarmsJpa, final ManoSearchResponseService searchService, final GrammarParser grammarParser) {
 		super(searchService, em, Alarms.class, grammarParser);
 		this.alarmsJpa = alarmsJpa;
 	}

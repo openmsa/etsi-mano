@@ -14,15 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service;
+package com.ubiqube.etsi.mano.vnfm.service;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
+import com.ubiqube.etsi.mano.dao.mano.alarm.Alarms;
+import com.ubiqube.etsi.mano.vnfm.jpa.AlarmsJpa;
 
 /**
  *
@@ -30,26 +30,20 @@ import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
  *
  */
 @Service
-public class VimServiceImpl implements VimService {
-	private final VimConnectionInformationJpa vimConnectionInformationJpa;
+public class AlarmService {
+	private final AlarmsJpa alarmsJpa;
 
-	public VimServiceImpl(final VimConnectionInformationJpa vimConnectionInformationJpa) {
-		this.vimConnectionInformationJpa = vimConnectionInformationJpa;
+	public AlarmService(final AlarmsJpa alarmsJpa) {
+		super();
+		this.alarmsJpa = alarmsJpa;
 	}
 
-	@Override
-	public Optional<VimConnectionInformation> findById(final UUID id) {
-		return vimConnectionInformationJpa.findById(id);
+	public Optional<Alarms> findById(final UUID id) {
+		return alarmsJpa.findById(id);
 	}
 
-	@Override
-	public Iterable<VimConnectionInformation> findAll() {
-		return vimConnectionInformationJpa.findAll();
-	}
-
-	@Override
-	public VimConnectionInformation save(final VimConnectionInformation body) {
-		return vimConnectionInformationJpa.save(body);
+	public Alarms save(final Alarms alarm) {
+		return alarmsJpa.save(alarm);
 	}
 
 }

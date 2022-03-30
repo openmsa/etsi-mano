@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.PackageChangeType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
@@ -40,6 +41,7 @@ import com.ubiqube.etsi.mano.vnfm.jpa.VnfPackageOnboardingNotificationJpa;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class VnfNotificationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfNotificationService.class);

@@ -86,4 +86,14 @@ public class NsBlueprintServiceImpl extends SearchableService implements NsBluep
 		return save(plan);
 	}
 
+	@Override
+	public List<NsLiveInstance> findByNsdInstanceAndClass(final NsdInstance ret, final String simpleName) {
+		return nsLiveInstanceJpa.findByNsdInstanceAndClass(ret, simpleName);
+	}
+
+	@Override
+	public long countByNsInstance(final NsdInstance ret) {
+		return nsLiveInstanceJpa.countByNsInstance(ret);
+	}
+
 }

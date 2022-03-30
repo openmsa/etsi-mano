@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.controller.lcmgrant.GrantManagement;
 import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
-import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
+import com.ubiqube.etsi.mano.service.GrantService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 
 import ma.glasnost.orika.MapperFacade;
@@ -49,11 +49,11 @@ public class GrantMngtSol005 implements GrantManagement {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GrantMngtSol005.class);
 
-	private final GrantsResponseJpa grantsResponseJpa;
+	private final GrantService grantsResponseJpa;
 	private final MapperFacade mapper;
 	private final EventManager eventManager;
 
-	public GrantMngtSol005(final GrantsResponseJpa grantsJpa, final MapperFacade mapper, final EventManager eventManager) {
+	public GrantMngtSol005(final GrantService grantsJpa, final MapperFacade mapper, final EventManager eventManager) {
 		this.grantsResponseJpa = grantsJpa;
 		this.mapper = mapper;
 		this.eventManager = eventManager;

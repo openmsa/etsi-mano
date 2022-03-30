@@ -32,9 +32,8 @@ import com.ubiqube.etsi.mano.dao.mano.policy.Policies;
 import com.ubiqube.etsi.mano.dao.mano.policy.PolicyVersion;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
-import com.ubiqube.etsi.mano.jpa.policy.PoliciesJpa;
-import com.ubiqube.etsi.mano.jpa.policy.PolicyVersionJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
+import com.ubiqube.etsi.mano.service.PolicyService;
 import com.ubiqube.etsi.mano.service.SearchableService;
 
 /**
@@ -45,51 +44,48 @@ import com.ubiqube.etsi.mano.service.SearchableService;
 @Service
 public class PolicyControllerImpl extends SearchableService implements PolicyController {
 
-	private final PoliciesJpa policiesJpa;
-	private final PolicyVersionJpa policyVersionJpa;
+	private final PolicyService policyService;
 
-	public PolicyControllerImpl(final ManoSearchResponseService searchService, final EntityManager em, final PoliciesJpa policiesJpa,
-			final PolicyVersionJpa policyVersionJpa, final GrammarParser grammarParser) {
+	public PolicyControllerImpl(final EntityManager em, final ManoSearchResponseService searchService, final PolicyService policyService, final GrammarParser grammarParser) {
 		super(searchService, em, Policies.class, grammarParser);
-		this.policiesJpa = policiesJpa;
-		this.policyVersionJpa = policyVersionJpa;
+		this.policyService = policyService;
 	}
 
 	@Override
 	public void deleteById(final UUID safeUUID) {
-		policiesJpa.deleteById(safeUUID);
+		policyService.deletePoliciesById(safeUUID);
 	}
 
 	@Override
 	public void deleteByIdAndVersion(final UUID safeUUID, final String version) {
-		policiesJpa.deleteByIdAndVersionsVersion(safeUUID, version);
+		policyService.deleteByIdAndVersionsVersion(safeUUID, version);
 	}
 
 	@Override
 	public Policies findById(final UUID uuid) {
-		return policiesJpa.findById(uuid).orElseThrow();
+		return policyService.findPoliciesById(uuid).orElseThrow();
 	}
 
 	@Override
 	public byte[] getContentByPolicyIdAndVersion(final UUID safeUUID, final String version) {
-		final PolicyVersion p = policyVersionJpa.findByPolicyIdAndVersion(safeUUID, version).orElseThrow(() -> new GenericException("Could not find Policy version: " + safeUUID + "/" + version));
+		final PolicyVersion p = policyService.findByPolicyIdAndVersion(safeUUID, version).orElseThrow(() -> new GenericException("Could not find Policy version: " + safeUUID + "/" + version));
 		return p.getContent().getBytes();
 	}
 
 	@Override
 	public byte[] getContentBySelectedVersion(final UUID safeUUID) {
-		final Policies p = policiesJpa.findById(safeUUID).orElseThrow();
-		final PolicyVersion pv = policyVersionJpa.findByPolicyIdAndVersion(safeUUID, p.getSelectedVersion()).orElseThrow();
+		final Policies p = policyService.findPoliciesById(safeUUID).orElseThrow();
+		final PolicyVersion pv = policyService.findByPolicyIdAndVersion(safeUUID, p.getSelectedVersion()).orElseThrow();
 		return pv.getContent().getBytes();
 	}
 
 	@Override
 	public void putContent(final UUID safeUUID, final String version, final InputStream is) {
-		final Policies p = policiesJpa.findById(safeUUID).orElseThrow();
+		final Policies p = policyService.findPoliciesById(safeUUID).orElseThrow();
 		try {
 			final PolicyVersion pv = new PolicyVersion(version, new String(is.readAllBytes()));
 			p.getVersions().add(pv);
-			policiesJpa.save(p);
+			policyService.policiesSave(p);
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
@@ -97,12 +93,12 @@ public class PolicyControllerImpl extends SearchableService implements PolicyCon
 
 	@Override
 	public Policies create(final Policies p) {
-		return policiesJpa.save(p);
+		return policyService.policiesSave(p);
 	}
 
 	@Override
 	public Policies modify(final UUID safeUUID, final PolicyPatchDto patch) {
-		final Policies p = policiesJpa.findById(safeUUID).orElseThrow();
+		final Policies p = policyService.findPoliciesById(safeUUID).orElseThrow();
 		if (null != patch.getRemoveAssociations()) {
 			patch.getRemoveAssociations().forEach(x -> {
 				final List<String> newList = p.getAssociations().stream().filter(y -> y.equals(x)).toList();
@@ -118,7 +114,7 @@ public class PolicyControllerImpl extends SearchableService implements PolicyCon
 		if (null != patch.getSelectedVersion()) {
 			p.setSelectedVersion(patch.getSelectedVersion());
 		}
-		return policiesJpa.save(p);
+		return policyService.policiesSave(p);
 	}
 
 	@Override

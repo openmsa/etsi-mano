@@ -28,9 +28,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
-import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.SearchableService;
+import com.ubiqube.etsi.mano.vnfm.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.vnfm.service.VnfLcmService;
 
 /**
@@ -41,13 +41,13 @@ import com.ubiqube.etsi.mano.vnfm.service.VnfLcmService;
 @Service
 public class VnfLcmControllerImpl extends SearchableService implements VnfLcmController {
 	private final VnfLcmService vnfLcmOpOccsRepository;
-	private final VnfInstanceJpa vnfInstanceJpa;
+	private final VnfInstanceService vnfInstanceService;
 
 	public VnfLcmControllerImpl(final VnfLcmService vnfLcmOpOccsRepository, final EntityManager em, final ManoSearchResponseService searchService,
-			final VnfInstanceJpa vnfInstanceJpa, final GrammarParser grammarParser) {
+			final VnfInstanceService vnfInstanceService, final GrammarParser grammarParser) {
 		super(searchService, em, VnfBlueprint.class, grammarParser);
 		this.vnfLcmOpOccsRepository = vnfLcmOpOccsRepository;
-		this.vnfInstanceJpa = vnfInstanceJpa;
+		this.vnfInstanceService = vnfInstanceService;
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class VnfLcmControllerImpl extends SearchableService implements VnfLcmCon
 		final VnfInstance instance = lcm.getVnfInstance();
 		ensureFailedTemp(lcm);
 		instance.setLockedBy(null);
-		vnfInstanceJpa.save(instance);
+		vnfInstanceService.save(instance);
 		lcm.setOperationStatus(OperationStatusType.FAILED);
 		vnfLcmOpOccsRepository.save(lcm);
 	}
