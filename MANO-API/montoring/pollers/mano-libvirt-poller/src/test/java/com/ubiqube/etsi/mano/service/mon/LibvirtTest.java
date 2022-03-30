@@ -16,16 +16,25 @@
  */
 package com.ubiqube.etsi.mano.service.mon;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.net.InetAddress;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.libvirt.Connect;
 import org.libvirt.Domain;
 import org.libvirt.DomainInfo;
 import org.libvirt.LibvirtException;
+import org.opendaylight.aaa.cert.api.ICertificateManager;
+import org.opendaylight.ovsdb.lib.OvsdbClient;
+import org.opendaylight.ovsdb.lib.impl.NettyBootstrapFactory;
+import org.opendaylight.ovsdb.lib.impl.OvsdbConnectionService;
 
-public class LibvirtTest {
+import com.google.common.util.concurrent.ListenableFuture;
 
-	@Test
-	void testName() throws Exception {
+class LibvirtTest {
+	private Connect connection() {
 		Connect conn = null;
 		try {
 			conn = new Connect("qemu+ssh://root@10.31.1.240/system", true);
@@ -33,6 +42,11 @@ public class LibvirtTest {
 			System.out.println("exception caught:" + e);
 			System.out.println(e.getError());
 		}
+		return conn;
+	}
+
+	void testName() throws Exception {
+		final Connect conn = connection();
 		final String[] doms = conn.listDefinedDomains();
 		for (final String string : doms) {
 			System.out.println(" - " + string);
@@ -53,5 +67,32 @@ public class LibvirtTest {
 		for (final String string : iface) {
 			System.out.println(" - " + string);
 		}
+		assertTrue(true);
+	}
+
+	void test2() throws Exception {
+		final Connect conn = connection();
+		final String[] doms = conn.listDefinedDomains();
+		for (final String string : doms) {
+			System.out.println(" - " + string);
+		}
+		System.out.println("Host: " + conn.getHostName());
+		System.out.println("Caps: " + conn.getCapabilities());
+		System.out.println("Sys info: " + conn.getSysinfo());
+		System.out.println("Type: " + conn.getType());
+		System.out.println("Version: " + conn.getVersion());
+		final ICertificateManager certManagerSrv = null;
+		final NettyBootstrapFactory bootstrapFactory = new NettyBootstrapFactory();
+		final OvsdbConnectionService ovs = new OvsdbConnectionService(bootstrapFactory, certManagerSrv);
+		final OvsdbClient client = ovs.connect(InetAddress.getByName("os-victoria"), 6642);
+		final ListenableFuture<List<String>> db = client.getDatabases();
+		final List<String> list = db.get();
+		System.out.println("" + list);
+		assertTrue(true);
+	}
+
+	@Test
+	void testTest() throws Exception {
+		assertTrue(true);
 	}
 }
