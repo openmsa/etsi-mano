@@ -29,7 +29,6 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfLcmOpOccs;
-import com.ubiqube.etsi.mano.dao.mec.pkg.AppPkg;
 import com.ubiqube.etsi.mano.exception.GenericException;
 
 /**
@@ -53,7 +52,7 @@ public class ClassPathConverter {
 
 		path.put(PnfDescriptor.class, "pnfd");
 
-		path.put(AppPkg.class, "appd");
+		// path.put(AppPkg.class, "appd");
 	}
 
 	public Set<Class<?>> getList() {

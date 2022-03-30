@@ -16,5 +16,7 @@
 	<modules>
 		<module>mano-pkg-api</module>
 		<module>mano-pkg-tosca</module>
+		<module>mano-pkg-mec-api</module>
+		<module>mano-pkg-mec-tosca</module>
 	</modules>
 </project>

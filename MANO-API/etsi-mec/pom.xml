@@ -15,11 +15,8 @@
 	<modules>
 		<module>2.1.1</module>
 		<module>mec-common</module>
-		<module>mec-meo-controller</module>
+		<module>mec-meo-core</module>
 		<module>mec-mepm-core</module>
+		<module>mec-model</module>
 	</modules>
-	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
 </project>

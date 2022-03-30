@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
-import com.ubiqube.etsi.mano.dao.mano.dto.AppPkgDto;
+import com.ubiqube.etsi.mano.dao.mec.dto.AppPkgDto;
 import com.ubiqube.etsi.mano.dao.mec.pkg.AppExternalCpd;
 import com.ubiqube.etsi.mano.dao.mec.pkg.DNSRuleDescriptor;
 import com.ubiqube.etsi.mano.dao.mec.pkg.ServiceDependency;
