@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.service.graph.vnfm.EdgeListener;
 import com.ubiqube.etsi.mano.service.graph.vnfm.UnitOfWork;
 
-public class GraphTest {
+class GraphTest {
 	private static <U> ListenableGraph<U, ConnectivityEdge<U>> createGraph() {
 		final Class<ConnectivityEdge<U>> t = (Class<ConnectivityEdge<U>>) (Object) ConnectivityEdge.class;
 		// Vertex everyThing

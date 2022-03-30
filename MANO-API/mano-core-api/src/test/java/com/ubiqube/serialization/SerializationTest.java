@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PackageOperationalStateType;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 
-public class SerializationTest {
+class SerializationTest {
 	ObjectMapper mapper = new ObjectMapper();
 
 	@Test

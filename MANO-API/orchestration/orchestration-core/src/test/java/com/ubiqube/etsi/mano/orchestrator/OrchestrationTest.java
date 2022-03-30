@@ -53,7 +53,7 @@ import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTaskConnectivity;
 import com.ubiqube.etsi.mano.service.sys.System;
 
 @ExtendWith(MockitoExtension.class)
-public class OrchestrationTest {
+class OrchestrationTest {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OrchestrationTest.class);
 
@@ -68,7 +68,7 @@ public class OrchestrationTest {
 		final List<PlanContributor> contributors = new ArrayList<>();
 		contributors.add(new ContributorA());
 		contributors.add(new ContributorB());
-		return (Planner) new PlannerImpl(contributors, implementationService);
+		return new PlannerImpl(contributors, implementationService);
 	}
 
 	@Test

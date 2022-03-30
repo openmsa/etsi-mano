@@ -33,7 +33,7 @@ import com.ubiqube.etsi.mano.service.SpelPatcher;
 
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
-public class SpelPatcherTest {
+class SpelPatcherTest {
 
 	@Test
 	void testName() throws Exception {

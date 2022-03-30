@@ -31,7 +31,7 @@ import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.grammar.JsonBeanProperty;
 import com.ubiqube.etsi.mano.grammar.JsonBeanUtil;
 
-public class JsonBeanUtilTest {
+class JsonBeanUtilTest {
 
 	@Test
 	void testVnfPkg() throws Exception {

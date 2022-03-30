@@ -35,7 +35,7 @@ import com.ubiqube.etsi.mano.test.TestTools;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.LifecycleChangeNotificationsFilter;
 
-public class SubscriptionFilterTest {
+class SubscriptionFilterTest {
 
 	@Test
 	void testName() throws Exception {

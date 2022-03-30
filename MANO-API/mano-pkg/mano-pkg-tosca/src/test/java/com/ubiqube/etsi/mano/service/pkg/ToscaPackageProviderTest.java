@@ -51,7 +51,7 @@ import com.ubiqube.etsi.mano.test.ZipUtil.Entry;
 import ma.glasnost.orika.OrikaSystemProperties;
 import ma.glasnost.orika.impl.generator.EclipseJdtCompilerStrategy;
 
-public class ToscaPackageProviderTest {
+class ToscaPackageProviderTest {
 	private final ToscaVnfPackageReader tpp;
 
 	public ToscaPackageProviderTest() throws IOException {

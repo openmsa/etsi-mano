@@ -29,7 +29,7 @@ import com.ubiqube.etsi.mano.test.TestTools;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
-public class SpelParserTest {
+class SpelParserTest {
 	private final DefaultMapperFactory mapperFactory;
 
 	public SpelParserTest() {

@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-public class ZabbixExportTemplateTest {
+class ZabbixExportTemplateTest {
 
 	@Test
 	void testName() throws Exception {

@@ -46,7 +46,7 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class SnmpTest {
+class SnmpTest {
 
 	@Test
 	void snmpv2() throws Exception {

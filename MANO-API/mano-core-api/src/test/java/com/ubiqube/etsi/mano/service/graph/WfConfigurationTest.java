@@ -33,7 +33,7 @@ import com.ubiqube.etsi.mano.service.graph.uow.VlUow;
 import com.ubiqube.etsi.mano.service.graph.wfe2.WfConfiguration;
 import com.ubiqube.etsi.mano.service.plan.contributors.PlanContributor;
 
-public class WfConfigurationTest {
+class WfConfigurationTest {
 
 	@Test
 	void testBlankCall01() throws Exception {
