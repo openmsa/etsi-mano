@@ -26,6 +26,7 @@ public class ToscaRoot {
 	private TopologyTemplate topologyTemplate;
 	private String version;
 	private String description;
+	private String namespace;
 	private Map<String, CapabilityTypes> capabilityTypes = new HashMap<>();
 	private Map<String, ToscaClass> artifactTypes = new HashMap<>();
 	private Map<String, RelationshipType> relationshipTypes = new HashMap<>();
@@ -41,6 +42,7 @@ public class ToscaRoot {
 	private Map<String, GroupType> groupTypes;
 	private Map<String, GroupDefinition> groups;
 	private Map<String, String> metadata;
+	private Map<String, RepositoryDefinition> repositories;
 
 	public Imports getImports() {
 		return imports;
@@ -74,6 +76,14 @@ public class ToscaRoot {
 
 	public void setDescription(final String description) {
 		this.description = description;
+	}
+
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(final String namespace) {
+		this.namespace = namespace;
 	}
 
 	@JsonProperty("capability_types")
@@ -166,6 +176,14 @@ public class ToscaRoot {
 
 	public void setPolicies(final Map<String, PolicyDefinition> policies) {
 		this.policies = policies;
+	}
+
+	public Map<String, RepositoryDefinition> getRepositories() {
+		return repositories;
+	}
+
+	public void setRepositories(final Map<String, RepositoryDefinition> repositories) {
+		this.repositories = repositories;
 	}
 
 	@Override

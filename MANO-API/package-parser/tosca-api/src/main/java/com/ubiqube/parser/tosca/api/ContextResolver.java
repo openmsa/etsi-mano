@@ -53,6 +53,8 @@ import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
+import com.ubiqube.parser.tosca.RequirementMapping;
+import com.ubiqube.parser.tosca.SubstitutionMapping;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.FloatConverter;
@@ -116,10 +118,10 @@ public class ContextResolver {
 		return new ArrayList<>();
 	}
 
-	public <T> List<T> mapToscaToClass(final List<NodeTemplate> nodes, final Class<T> destination) {
+	public <T> List<T> mapToscaToClass(final ToscaContext root2, final List<NodeTemplate> nodes, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
 		try {
-			return (List<T>) nodes.stream().map(x -> handleObject(x, destination, stack)).collect(Collectors.toList());
+			return (List<T>) nodes.stream().map(x -> handleObject(x, destination, root2, stack)).collect(Collectors.toList());
 		} catch (final RuntimeException e) {
 			throwException("Nodes: Runtime error.", stack, e);
 		}
@@ -200,7 +202,7 @@ public class ContextResolver {
 				.findFirst().orElseThrow(() -> new ParseException("Method: " + string + " doesn't have a write method."));
 	}
 
-	private Object handleObject(final NodeTemplate node, final Class clazz, final Deque<String> stack) {
+	private Object handleObject(final NodeTemplate node, final Class clazz, final ToscaContext root, final Deque<String> stack) {
 		BeanInfo beanInfo;
 		stack.push(node.getName());
 		try {
@@ -239,8 +241,56 @@ public class ContextResolver {
 		tib.setInternalDescription(node.getDescription());
 		setProperty(cls, SET_NAME, node.getName());
 		setProperty(cls, SET_DESCRIPTION, node.getDescription());
+		applySubstitutionMapping(node, cls, root);
 		stack.pop();
 		return cls;
+	}
+
+	private static void applySubstitutionMapping(final NodeTemplate node, final Object cls, final ToscaContext root2) {
+		final SubstitutionMapping subst = root2.getTopologies().getSubstitutionMapping();
+		if (null == subst || !subst.getNodeType().equals(node.getType())) {
+			return;
+		}
+		final Map<String, RequirementMapping> req = subst.getRequirements();
+		if (null != req) {
+			applySubstitutionProperties(req, cls);
+		}
+	}
+
+	private static void applySubstitutionProperties(final Map<String, RequirementMapping> req, final Object cls) {
+		req.entrySet().forEach(x -> {
+			final RequirementMapping rm = x.getValue();
+			applyIfNeeded(rm, cls);
+		});
+	}
+
+	private static boolean applyIfNeeded(final RequirementMapping rm, final Object cls) {
+		BeanInfo beanInfo;
+		try {
+			beanInfo = Introspector.getBeanInfo(cls.getClass());
+		} catch (final IntrospectionException e) {
+			throw new ParseException(e);
+		}
+		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
+		final Optional<PropertyDescriptor> found = Arrays.stream(propsDescr).filter(x -> match(x.getName(), rm)).findAny();
+		if (!found.isPresent()) {
+			return false;
+		}
+		final PropertyDescriptor prop = found.get();
+		final Method read = prop.getReadMethod();
+		final Object res = safeInvoke(read, cls);
+		if (null != res) {
+			return false;
+		}
+		final Method write = prop.getWriteMethod();
+		safeInvoke(write, cls, rm.getNodeTemplateName());
+		return true;
+	}
+
+	private static boolean match(final String methodName, final RequirementMapping toscaName) {
+		final String toMatch = toscaName.getRequirementName();
+		final String camel = underScoreToCamleCase(toMatch);
+		return camel.equals(methodName) || methodName.equals(camel + "Req");
 	}
 
 	private static void handleArtifacts(final Object artifacts, final PropertyDescriptor[] propsDescr, final Object cls, final Deque stack) {
@@ -579,6 +629,14 @@ public class ContextResolver {
 
 	private static String buildError(final Deque<String> stack) {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(stack.descendingIterator(), Spliterator.ORDERED), false).collect(Collectors.joining(" -> "));
+	}
+
+	private static Object safeInvoke(final Method method, final Object obj, final Object... params) {
+		try {
+			return method.invoke(obj, params);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new ParseException(e);
+		}
 	}
 
 }

@@ -16,9 +16,6 @@
  */
 package com.ubiqube.parser.tosca;
 
-import java.util.List;
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,12 +27,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-//@JsonDeserialize(using = RequirementMappingDeserializer.class)
 public class RequirementMapping {
 	// mapping: [ <node_template_name>, <node_template_requirement_name> ]
-	private List<String> mapping;
+	private String requirementName;
 
-	private Map<String, Object> properties;
+	private String nodeTemplateName;
 
-	private Map<String, Object> attributes;
+	private String nodeTemplateRequirementName;
 }

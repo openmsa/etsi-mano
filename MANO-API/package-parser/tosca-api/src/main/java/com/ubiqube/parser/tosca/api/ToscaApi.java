@@ -59,7 +59,7 @@ public class ToscaApi {
 		final List<NodeTemplate> nodes = getNodeMatching(root, destination);
 		final ContextResolver contextResolver = new ContextResolver(root, parameters);
 		if (!nodes.isEmpty()) {
-			return contextResolver.mapToscaToClass(nodes, destination);
+			return contextResolver.mapToscaToClass(root, nodes, destination);
 		}
 		final List<GroupDefinition> groups = getGroupsMatching(root, destination);
 		if (!groups.isEmpty()) {

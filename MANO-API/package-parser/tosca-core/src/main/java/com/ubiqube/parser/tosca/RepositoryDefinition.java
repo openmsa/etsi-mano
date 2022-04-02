@@ -16,33 +16,17 @@
  */
 package com.ubiqube.parser.tosca;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
-import com.ubiqube.parser.tosca.api.ContextResolver;
-import com.ubiqube.parser.tosca.api.ToscaApi;
-
-import tosca.nodes.nfv.NS;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class SubstitutionMappingTest {
-
-	@Test
-	void testSubstitutionMapping() throws Exception {
-		final ToscaParser tp = new ToscaParser(new File("src/test/resources/substitution-mapping.yml"));
-		final ToscaContext root = tp.getContext();
-		assertNotNull(root);
-		final List<NS> obj = ToscaApi.getObjects(root, new HashMap<>(), NS.class);
-		final ContextResolver ctx = new ContextResolver(root, new HashMap<String, String>());
-		ctx.resolvValue("");
-	}
+@Getter
+@Setter
+public class RepositoryDefinition {
+	private String description;
+	private String url;
 }

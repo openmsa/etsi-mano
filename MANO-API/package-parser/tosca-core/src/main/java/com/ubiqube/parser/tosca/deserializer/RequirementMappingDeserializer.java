@@ -17,13 +17,17 @@
 package com.ubiqube.parser.tosca.deserializer;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ubiqube.parser.tosca.RequirementMapping;
 
@@ -43,8 +47,19 @@ public class RequirementMappingDeserializer extends StdDeserializer<Map<String, 
 
 	@Override
 	public Map<String, RequirementMapping> deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JacksonException {
+		final LinkedHashMap<String, RequirementMapping> ret = new LinkedHashMap<>();
 		final ObjectNode value = p.getCodec().readTree(p);
-		return new HashMap<>();
+		final Iterator<Entry<String, JsonNode>> fields = value.fields();
+		while (fields.hasNext()) {
+			final RequirementMapping rq = new RequirementMapping();
+			final Map.Entry<String, JsonNode> entry = fields.next();
+			rq.setRequirementName(entry.getKey());
+			final ArrayNode v = (ArrayNode) entry.getValue();
+			rq.setNodeTemplateName(v.get(0).asText());
+			rq.setNodeTemplateRequirementName(v.get(1).asText());
+			ret.put(entry.getKey(), rq);
+		}
+		return ret;
 	}
 
 }

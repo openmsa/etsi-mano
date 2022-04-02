@@ -59,7 +59,7 @@ class ToscaParserTest {
 		final List<PolicyDefinition> policies = getPolicies();
 		ctx.mapPoliciesToClass(policies, Bean.class);
 		final List<NodeTemplate> nodes = gestNodes();
-		ctx.mapToscaToClass(nodes, Bean.class);
+		ctx.mapToscaToClass(root, nodes, Bean.class);
 	}
 
 	private static List<NodeTemplate> gestNodes() {
