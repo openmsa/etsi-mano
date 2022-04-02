@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-public class CartesianTest {
+class CartesianTest {
 
 	@Test
 	void testName() throws Exception {

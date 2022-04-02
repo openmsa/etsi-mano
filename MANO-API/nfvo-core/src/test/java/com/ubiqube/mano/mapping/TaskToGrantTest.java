@@ -39,7 +39,7 @@ import com.ubiqube.etsi.mano.nfvo.config.NfvoOrikaConfiguration;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
-public class TaskToGrantTest {
+class TaskToGrantTest {
 
 	private final DefaultMapperFactory mapperFactory;
 	private final MapperFacade mapper;

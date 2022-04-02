@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
 import com.ubiqube.etsi.mano.dao.mano.nsd.Classifier;
 import com.ubiqube.etsi.mano.dao.mano.nsd.CpPair;
@@ -334,21 +335,15 @@ public class NsPackageOnboardingImpl {
 						findVnfMatchingVl(nsPackage, x.getIngress(), x.getIngressVl());
 					}
 				});
-		nsPackage.getVnfPkgIds().forEach(x -> {
-			x.getVirtualLinks().stream().filter(y -> Objects.nonNull(y.getValue())).forEach(y -> {
-				y.getValue();// Left_vl
-			});
-		});
+		nsPackage.getVnfPkgIds().forEach(x -> x.getVirtualLinks().stream().filter(y -> Objects.nonNull(y.getValue())).forEach(ListKeyPair::getValue));
 	}
 
 	private static void findVnfMatchingVl(final NsdPackage pack, final String forwardName, final String vlName) {
-		pack.getVnfPkgIds().stream().forEach(x -> {
-			x.getVirtualLinks().stream()
-					.filter(y -> Objects.nonNull(y.getValue()))
-					.filter(y -> y.getValue().equals(forwardName))
-					.findFirst()
-					.ifPresent(y -> x.addForwardMapping(new ForwarderMapping(x.getToscaName(), y.getIdx(), forwardName, vlName)));
-		});
+		pack.getVnfPkgIds().stream().forEach(x -> x.getVirtualLinks().stream()
+				.filter(y -> Objects.nonNull(y.getValue()))
+				.filter(y -> y.getValue().equals(forwardName))
+				.findFirst()
+				.ifPresent(y -> x.addForwardMapping(new ForwarderMapping(x.getToscaName(), y.getIdx(), forwardName, vlName))));
 	}
 
 	private static void assignVnnfg(final String name, final NsdPackage nsPackage) {
