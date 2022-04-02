@@ -33,6 +33,15 @@ topology_template:
           level1: 1
       requirements:
         - virtual_link: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_1: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_2: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_3: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_4: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_5: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_6: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_7: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_8: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_9: vl # tosca.nodes.nfv.NsVirtualLink
 
     database:
       type: tosca.nodes.nfv.NS
