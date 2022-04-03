@@ -174,11 +174,7 @@ class ToscaApiTest {
 				stack.pop();
 				continue;
 			}
-			if (src instanceof Map) {
-				stack.pop();
-				continue;
-			}
-			if (src instanceof Set) {
+			if ((src instanceof Map) || (src instanceof Set)) {
 				stack.pop();
 				continue;
 			}
@@ -205,6 +201,7 @@ class ToscaApiTest {
 		ignore.add("getArtifacts");
 		ignore.add("getTriggers");
 		ignore.add("getTargets");
+		ignore.add("getVirtualLinkable");
 		checknullInternal(avcDb, ignore, err, new Stack<>());
 		if (!err.isEmpty()) {
 			final String str = err.stream().collect(Collectors.joining("\n"));

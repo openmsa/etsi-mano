@@ -16,6 +16,7 @@
  */
 package com.ubiqube.parser.tosca;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
@@ -34,7 +35,7 @@ import tosca.nodes.nfv.NS;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class SubstitutionMappingTest {
+class SubstitutionMappingTest {
 
 	@Test
 	void testSubstitutionMapping() throws Exception {
@@ -44,5 +45,6 @@ public class SubstitutionMappingTest {
 		final List<NS> obj = ToscaApi.getObjects(root, new HashMap<>(), NS.class);
 		final ContextResolver ctx = new ContextResolver(root, new HashMap<String, String>());
 		ctx.resolvValue("");
+		assertEquals(1, obj.size());
 	}
 }

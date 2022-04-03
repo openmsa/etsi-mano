@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -46,7 +45,7 @@ public class RequirementMappingDeserializer extends StdDeserializer<Map<String, 
 	}
 
 	@Override
-	public Map<String, RequirementMapping> deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JacksonException {
+	public Map<String, RequirementMapping> deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final LinkedHashMap<String, RequirementMapping> ret = new LinkedHashMap<>();
 		final ObjectNode value = p.getCodec().readTree(p);
 		final Iterator<Entry<String, JsonNode>> fields = value.fields();

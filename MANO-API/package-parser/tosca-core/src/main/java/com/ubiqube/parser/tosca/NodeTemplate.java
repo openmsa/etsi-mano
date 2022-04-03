@@ -18,7 +18,7 @@ package com.ubiqube.parser.tosca;
 
 import java.util.Map;
 
-public class NodeTemplate {
+public class NodeTemplate implements ToscaBase {
 	private String type;
 	private String name;
 	private String description;
@@ -85,6 +85,7 @@ public class NodeTemplate {
 		this.interfaces = interfaces;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
@@ -93,6 +94,7 @@ public class NodeTemplate {
 		this.description = description;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

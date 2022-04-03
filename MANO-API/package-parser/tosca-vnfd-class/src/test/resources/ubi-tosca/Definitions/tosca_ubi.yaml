@@ -83,10 +83,16 @@ topology_template:
             scale_level: 1
       requirements:
         - virtual_link: public
-
-
-
-
+        - virtual_link_1: public
+        - virtual_link_2: public
+        - virtual_link_3: public
+        - virtual_link_4: public
+        - virtual_link_5: public
+        - virtual_link_6: public
+        - virtual_link_7: public
+        - virtual_link_8: public
+        - virtual_link_9: public
+        - virtual_link_10: public
 
     ext01:
       type: tosca.nodes.nfv.VnfExtCp
@@ -359,6 +365,7 @@ topology_template:
                 vlan_transparent: true
                 network_type: VXLAN
                 mtu: 1500
+                segmentation_id: a
               l3_protocol_data:
                 dhcp_enabled: true
                 cidr: 192.168.10.0/24
@@ -379,6 +386,13 @@ topology_template:
             - ipv4
           flow_pattern: line
         description: Right of VL 01
+        test_access:
+          - passive_monitoring
+        monitoring_parameters:
+          Usage:
+            name: Usage
+            collection_period: 60 s
+            performance_metric: v_cpu_usage_mean_vnf
         vl_profile:
           max_bitrate_requirements:
             root: 10
@@ -396,6 +410,7 @@ topology_template:
                 vlan_transparent: true
                 network_type: VXLAN
                 mtu: 1500
+                segmentation_id: a
               l3_protocol_data:
                 dhcp_enabled: true
                 cidr: 192.168.20.0/24

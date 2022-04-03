@@ -16,6 +16,22 @@
  */
 package com.ubiqube.parser.tosca;
 
-public class CondictionClause {
+import java.util.Map;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * XXX to do.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
+public class CondictionClause {
+	/**
+	 * Map of Op / Object.
+	 */
+	private Map<String, Object> condition;
 }

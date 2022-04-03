@@ -16,11 +16,17 @@
  */
 package com.ubiqube.parser.tosca;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Getter
+@Setter
 public class InterfaceMapping {
-
+	private String operationName;
+	private String workflowName;
 }

@@ -16,7 +16,7 @@
  */
 package com.ubiqube.parser.tosca;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,10 +33,10 @@ import lombok.Setter;
 @Setter
 public class TopologyTemplate {
 
-	private Map<String, InputBean> inputs = new HashMap<>();
+	private Map<String, InputBean> inputs = new LinkedHashMap<>();
 	@JsonProperty("node_templates")
-	private Map<String, NodeTemplate> nodeTemplate = new HashMap<>();
-	private Map<String, GroupDefinition> groups = new HashMap<>();
+	private Map<String, NodeTemplate> nodeTemplate = new LinkedHashMap<>();
+	private Map<String, GroupDefinition> groups = new LinkedHashMap<>();
 	@JsonProperty("substitution_mappings")
 	private SubstitutionMapping substitutionMapping;
 

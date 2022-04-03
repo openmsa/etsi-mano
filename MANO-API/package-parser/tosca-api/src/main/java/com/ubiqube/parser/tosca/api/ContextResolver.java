@@ -55,6 +55,7 @@ import com.ubiqube.parser.tosca.Requirement;
 import com.ubiqube.parser.tosca.RequirementDefinition;
 import com.ubiqube.parser.tosca.RequirementMapping;
 import com.ubiqube.parser.tosca.SubstitutionMapping;
+import com.ubiqube.parser.tosca.ToscaBase;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.FloatConverter;
@@ -101,7 +102,7 @@ public class ContextResolver {
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
 		try {
-			return (List<T>) policies.stream().map(x -> handlePolicy(x, destination, stack)).collect(Collectors.toList());
+			return policies.stream().map(x -> handlePolicy(x, destination, stack)).collect(Collectors.toList());
 		} catch (final RuntimeException e) {
 			throwException("Policies: Runtime error.", stack, e);
 		}
@@ -118,10 +119,10 @@ public class ContextResolver {
 		return new ArrayList<>();
 	}
 
-	public <T> List<T> mapToscaToClass(final ToscaContext root2, final List<NodeTemplate> nodes, final Class<T> destination) {
+	public <T> List<T> mapToscaToClass(final List<NodeTemplate> nodes, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
 		try {
-			return (List<T>) nodes.stream().map(x -> handleObject(x, destination, root2, stack)).collect(Collectors.toList());
+			return nodes.stream().map(x -> handleObject(x, destination, stack)).collect(Collectors.toList());
 		} catch (final RuntimeException e) {
 			throwException("Nodes: Runtime error.", stack, e);
 		}
@@ -140,59 +141,37 @@ public class ContextResolver {
 		return null;
 	}
 
-	private Object handlePolicy(final PolicyDefinition policy, final Class clazz, final Deque<String> stack) {
-		BeanInfo beanInfo;
-		try {
-			beanInfo = Introspector.getBeanInfo(clazz);
-		} catch (final IntrospectionException e) {
-			throw new ParseException(e);
-		}
+	private <U> U handlePolicy(final PolicyDefinition policy, final Class<U> clazz, final Deque<String> stack) {
 		stack.push(policy.getName());
-		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
-		logClass(clazz.getName(), propsDescr);
+		final PropertyDescriptor[] propsDescr = getPropertyDescriptor(clazz);
 		final Object cls = newInstance(clazz);
-		final Map<String, Object> props = policy.getProperties();
-		if (null != props) {
-			handleMap(props, clazz, propsDescr, cls, null, stack);
-		}
+		Optional.ofNullable(policy.getProperties()).ifPresent(x -> handleMap(x, clazz, propsDescr, cls, null, stack));
 		// Fixed fields
 		setProperty2(cls, findWriteMethod(propsDescr, "targets"), policy.getTargets());
 		setProperty2(cls, findWriteMethod(propsDescr, "triggers"), policy.getTriggers());
-		// XXX it looks the same ?
-		final ToscaInernalBase tib = (ToscaInernalBase) cls;
-		tib.setInternalName(policy.getName());
-		tib.setInternalDescription(policy.getDescription());
-		setProperty(cls, SET_NAME, policy.getName());
-		setProperty(cls, SET_DESCRIPTION, policy.getDescription());
+		setBasicProperties(policy, cls);
+		stack.pop();
+		return (U) cls;
+	}
+
+	private Object handleGroup(final GroupDefinition group, final Class clazz, final Deque<String> stack) {
+		stack.push(group.getName());
+		final PropertyDescriptor[] propsDescr = getPropertyDescriptor(clazz);
+		final Object cls = newInstance(clazz);
+		Optional.ofNullable(group.getProperties()).ifPresent(x -> handleMap(x, clazz, propsDescr, cls, null, stack));
+		// Fixed fields
+		setProperty2(cls, findWriteMethod(propsDescr, "members"), group.getMembers());
+		setBasicProperties(group, cls);
 		stack.pop();
 		return cls;
 	}
 
-	private Object handleGroup(final GroupDefinition group, final Class clazz, final Deque<String> stack) {
-		BeanInfo beanInfo;
-		try {
-			beanInfo = Introspector.getBeanInfo(clazz);
-		} catch (final IntrospectionException e) {
-			throw new ParseException(e);
-		}
-		stack.push(group.getName());
-		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
-		logClass(clazz.getName(), propsDescr);
-		final Object cls = newInstance(clazz);
-		final Map<String, Object> props = group.getProperties();
-		if (null != props) {
-			handleMap(props, clazz, propsDescr, cls, null, stack);
-		}
-		// Fixed fields
-		setProperty2(cls, findWriteMethod(propsDescr, "members"), group.getMembers());
-		// XXX it looks the same ?
+	private static <U extends ToscaBase> void setBasicProperties(final U group, final Object cls) {
 		final ToscaInernalBase tib = (ToscaInernalBase) cls;
 		tib.setInternalName(group.getName());
 		tib.setInternalDescription(group.getDescription());
 		setProperty(cls, SET_NAME, group.getName());
 		setProperty(cls, SET_DESCRIPTION, group.getDescription());
-		stack.pop();
-		return cls;
 	}
 
 	private static Method findWriteMethod(final PropertyDescriptor[] propsDescr, final String string) {
@@ -202,20 +181,12 @@ public class ContextResolver {
 				.findFirst().orElseThrow(() -> new ParseException("Method: " + string + " doesn't have a write method."));
 	}
 
-	private Object handleObject(final NodeTemplate node, final Class clazz, final ToscaContext root, final Deque<String> stack) {
-		BeanInfo beanInfo;
+	private <U> U handleObject(final NodeTemplate node, final Class<U> clazz, final Deque<String> stack) {
 		stack.push(node.getName());
-		try {
-			beanInfo = Introspector.getBeanInfo(clazz);
-		} catch (final IntrospectionException e) {
-			throw new ParseException(e);
-		}
-		stack.push(node.getName());
-		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
-		logClass(clazz.getName(), propsDescr);
-		final Object cls = newInstance(clazz);
-
+		final U cls = newInstance(clazz);
 		final Object caps = node.getCapabilities();
+		final PropertyDescriptor[] propsDescr = getPropertyDescriptor(clazz);
+		logClass(clazz.getName(), propsDescr);
 		if (null != caps) {
 			stack.push("capabilities");
 			handleMap((Map<String, Object>) caps, clazz, propsDescr, cls, null, stack);
@@ -227,20 +198,12 @@ public class ContextResolver {
 			handleMap(props, clazz, propsDescr, cls, null, stack);
 			stack.pop();
 		}
-		final Object artifacts = node.getArtifacts();
-		if (null != artifacts) {
-			handleArtifacts(artifacts, propsDescr, cls, stack);
-		}
+		Optional.ofNullable(node.getArtifacts()).ifPresent(x -> handleArtifacts(x, propsDescr, cls, stack));
 		final RequirementDefinition req = node.getRequirements();
 		if (null != req && null != req.getRequirements()) {
 			handleRequirements(req.getRequirements(), propsDescr, cls, stack);
 		}
-		// XXX it looks the same ?
-		final ToscaInernalBase tib = (ToscaInernalBase) cls;
-		tib.setInternalName(node.getName());
-		tib.setInternalDescription(node.getDescription());
-		setProperty(cls, SET_NAME, node.getName());
-		setProperty(cls, SET_DESCRIPTION, node.getDescription());
+		setBasicProperties(node, cls);
 		applySubstitutionMapping(node, cls, root);
 		stack.pop();
 		return cls;
@@ -265,13 +228,7 @@ public class ContextResolver {
 	}
 
 	private static boolean applyIfNeeded(final RequirementMapping rm, final Object cls) {
-		BeanInfo beanInfo;
-		try {
-			beanInfo = Introspector.getBeanInfo(cls.getClass());
-		} catch (final IntrospectionException e) {
-			throw new ParseException(e);
-		}
-		final PropertyDescriptor[] propsDescr = beanInfo.getPropertyDescriptors();
+		final PropertyDescriptor[] propsDescr = getPropertyDescriptor(cls.getClass());
 		final Optional<PropertyDescriptor> found = Arrays.stream(propsDescr).filter(x -> match(x.getName(), rm)).findAny();
 		if (!found.isPresent()) {
 			return false;
@@ -285,6 +242,21 @@ public class ContextResolver {
 		final Method write = prop.getWriteMethod();
 		safeInvoke(write, cls, rm.getNodeTemplateName());
 		return true;
+	}
+
+	private static BeanInfo getSafeBeanInfo(final Class<?> cls) {
+		try {
+			return Introspector.getBeanInfo(cls);
+		} catch (final IntrospectionException e) {
+			throw new ParseException(e);
+		}
+	}
+
+	private static PropertyDescriptor[] getPropertyDescriptor(final Class<?> obj) {
+		final BeanInfo beanInfo = getSafeBeanInfo(obj);
+		final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
+		logClass(obj.getClass().getName(), props);
+		return props;
 	}
 
 	private static boolean match(final String methodName, final RequirementMapping toscaName) {
@@ -319,21 +291,19 @@ public class ContextResolver {
 	}
 
 	private static void handleRequirements(final List<Map<String, Requirement>> requirements, final PropertyDescriptor[] propsDescr, final Object cls, final Deque stack) {
-		requirements.forEach(z -> {
-			z.forEach((x, y) -> {
-				// XXX I think it could be ONE of Node, caps, Link
-				final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
-				if (props != null) {
-					final Class<?> p = props.getPropertyType();
-					if (p.isAssignableFrom(List.class)) {
-						final List r = (List) methodInvoke(props.getReadMethod(), cls, stack);
-						handleReqList(r, y, cls, props, stack);
-					} else {
-						methodInvoke(props.getWriteMethod(), cls, stack, y.getCapability());
-					}
+		requirements.forEach(z -> z.forEach((x, y) -> {
+			// XXX I think it could be ONE of Node, caps, Link
+			final PropertyDescriptor props = getPropertyFor(underScoreToCamleCase(x) + "Req", propsDescr);
+			if (props != null) {
+				final Class<?> p = props.getPropertyType();
+				if (p.isAssignableFrom(List.class)) {
+					final List r = (List) methodInvoke(props.getReadMethod(), cls, stack);
+					handleReqList(r, y, cls, props, stack);
+				} else {
+					methodInvoke(props.getWriteMethod(), cls, stack, y.getCapability());
 				}
-			});
-		});
+			}
+		}));
 	}
 
 	private static void handleReqList(final List list, final Requirement req, final Object cls, final PropertyDescriptor props, final Deque stack) {
@@ -411,17 +381,9 @@ public class ContextResolver {
 			LOG.debug("Recursing: {}", caps);
 			final Method rm = x.getReadMethod();
 			final Class zz = getReturnType(rm);
-
-			BeanInfo beanInfo;
-			try {
-				beanInfo = Introspector.getBeanInfo(zz);
-			} catch (final IntrospectionException e) {
-				throw new ParseException(e);
-			}
-			final PropertyDescriptor[] propsDescrNew = beanInfo.getPropertyDescriptors();
-			logClass(zz.getName(), propsDescr);
 			Object ret = null;
 			if (rm.getReturnType().isAssignableFrom(Map.class)) {
+				final PropertyDescriptor[] propsDescrNew = getPropertyDescriptor(zz);
 				ret = handleMap(caps, Map.class, propsDescrNew, new HashMap(), zz, stack);
 			} else if (rm.getReturnType().isAssignableFrom(String.class)
 					|| rm.getReturnType().isAssignableFrom(Integer.class)
@@ -433,6 +395,8 @@ public class ContextResolver {
 				// ScriptingValue
 			} else {
 				final Object clsNew = newInstance(zz);
+				final PropertyDescriptor[] propsDescrNew = getPropertyDescriptor(zz);
+				logClass(zz.getName(), propsDescr);
 				ret = handleMap((Map<String, Object>) res, zz, propsDescrNew, clsNew, zz, stack);
 			}
 			LOG.debug("return: {} for property: {}", ret, x.getName());
@@ -441,15 +405,8 @@ public class ContextResolver {
 		} else if (res instanceof List) {
 			final Method rm = x.getReadMethod();
 			final Class zz = getReturnType(rm);
-			BeanInfo beanInfo;
-			try {
-				beanInfo = Introspector.getBeanInfo(zz);
-			} catch (final IntrospectionException e) {
-				throw new ParseException(e);
-			}
-
 			LOG.debug("Entring List of {}", zz);
-			final PropertyDescriptor[] propsDescrNew = beanInfo.getPropertyDescriptors();
+			final PropertyDescriptor[] propsDescrNew = getPropertyDescriptor(zz);
 			logClass(zz.getName(), propsDescr);
 			final Object ret = handleList((List) res, propsDescrNew, zz, stack);
 			LOG.debug("return: {} for property: {}", ret, x.getName());
@@ -498,11 +455,11 @@ public class ContextResolver {
 		}
 		final Map<String, InputBean> inputs = root.getTopologies().getInputs();
 		if (null != inputs) {
-			final InputBean input = Optional.ofNullable(inputs.get(entry.getValue())).orElseThrow(() -> new ParseException("Unknown input: " + entry.getValue()));
 			final String value = parameters.get(entry.getValue());
 			if (value != null) {
 				return value;
 			}
+			final InputBean input = Optional.ofNullable(inputs.get(entry.getValue())).orElseThrow(() -> new ParseException("Unknown input: " + entry.getValue()));
 			return input.getDef();
 		}
 		throw new ParseException("Unknown method: " + entry.getKey());
@@ -581,10 +538,10 @@ public class ContextResolver {
 		return sb.toString();
 	}
 
-	private static Object newInstance(final Class<?> clazz) {
+	private static <U> U newInstance(final Class<U> clazz) {
 		try {
 			if (clazz.isAssignableFrom(Map.class)) {
-				return new HashMap<>();
+				return (U) new HashMap<>();
 			}
 			return clazz.getDeclaredConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {

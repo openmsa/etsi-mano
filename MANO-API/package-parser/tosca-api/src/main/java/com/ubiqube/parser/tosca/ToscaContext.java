@@ -17,6 +17,7 @@
 package com.ubiqube.parser.tosca;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -33,22 +34,22 @@ public class ToscaContext {
 	private String description;
 	private String version;
 	private TopologyTemplate topologies;
-	private Map<String, ToscaClass> nodeType = new HashMap<>();
-	private Map<String, RelationshipType> relationship = new HashMap<>();
-	private Map<String, ToscaClass> artifacts = new HashMap<>();
-	private Map<String, CapabilityTypes> capabilities = new HashMap<>();
-	private Map<String, GroupType> groupType = new HashMap<>();
+	private Map<String, ToscaClass> nodeType = new LinkedHashMap<>();
+	private Map<String, RelationshipType> relationship = new LinkedHashMap<>();
+	private Map<String, ToscaClass> artifacts = new LinkedHashMap<>();
+	private Map<String, CapabilityTypes> capabilities = new LinkedHashMap<>();
+	private Map<String, GroupType> groupType = new LinkedHashMap<>();
 	// Below goes internal Properties.
-	private final Map<String, ToscaClassHolder> classHierarchy = new HashMap<>();
+	private final Map<String, ToscaClassHolder> classHierarchy = new LinkedHashMap<>();
 	private final IResolver resolver;
 
-	private Map<String, DataType> dataTypes = new HashMap<>();
+	private Map<String, DataType> dataTypes = new LinkedHashMap<>();
 
-	private Map<String, GroupDefinition> groupDefinition = new HashMap<>();
+	private Map<String, GroupDefinition> groupDefinition = new LinkedHashMap<>();
 
-	private Map<String, PolicyType> policiesType = new HashMap<>();
+	private Map<String, PolicyType> policiesType = new LinkedHashMap<>();
 
-	private Map<String, PolicyDefinition> policies = new HashMap<>();
+	private Map<String, PolicyDefinition> policies = new LinkedHashMap<>();
 
 	private Map<String, InterfaceType> interfaceTypes;
 

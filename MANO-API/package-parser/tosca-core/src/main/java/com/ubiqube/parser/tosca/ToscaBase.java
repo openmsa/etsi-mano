@@ -16,22 +16,14 @@
  */
 package com.ubiqube.parser.tosca;
 
-import java.util.List;
-import java.util.Map;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Getter
-@Setter
-public class PolicyDefinition extends MetaProperties implements ToscaBase {
+public interface ToscaBase {
+	String getName();
 
-	private List<String> targets;
-	private Map<String, TriggerDefinition> triggers;
+	String getDescription();
 
 }

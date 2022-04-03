@@ -84,6 +84,7 @@ public class ToscaWalker {
 		final Set<Entry<String, InterfaceType>> interEs = inter.entrySet();
 		for (final Entry<String, InterfaceType> entry : interEs) {
 			if (cache.contains(entry.getKey())) {
+				// XXX to do.
 			}
 			generateClass(entry.getKey(), entry.getValue(), listener);
 		}
@@ -375,10 +376,7 @@ public class ToscaWalker {
 	private void handleContainer(final ValueObject valueObject, final ToscaListener listener) {
 		final String subType = valueObject.getEntrySchema().getType();
 		final Class<?> jTy = GenericConverters.convert(subType);
-		if (null != jTy) {
-			return;
-		}
-		if (cache.contains(subType)) {
+		if ((null != jTy) || cache.contains(subType)) {
 			return;
 		}
 		final DataType dType = root.getDataTypes().get(subType);
@@ -493,10 +491,7 @@ public class ToscaWalker {
 	}
 
 	private static boolean isList(final List<String> occ) {
-		if (null == occ) {
-			return false;
-		}
-		if (occ.size() < 2) {
+		if ((null == occ) || (occ.size() < 2)) {
 			return false;
 		}
 		final String indice = occ.get(1);
