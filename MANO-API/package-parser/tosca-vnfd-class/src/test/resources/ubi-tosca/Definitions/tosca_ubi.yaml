@@ -3,7 +3,7 @@ description: >
   Sample VNF for integration testing.
 
 imports:
-  - https://forge.etsi.org/rep/nfv/SOL001/raw/master/etsi_nfv_sol001_vnfd_types.yaml
+  - https://forge.etsi.org/rep/nfv/SOL001/-/raw/Release_4/etsi_nfv_sol001_vnfd_types.yaml
 
 topology_template:
   inputs:
