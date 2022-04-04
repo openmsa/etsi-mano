@@ -17,15 +17,16 @@
 package com.ubiqube.etsi.mano.nfvo.v281.model.nsd;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdmNotificationsFilter;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdmSubscriptionLinks;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * This type represents a subscription related to notifications about NSD management. 

@@ -43,27 +43,14 @@ public class VnfmActionController {
 
 	public void dispatch(final ActionType eventType, @NotNull final UUID objectId, final Map<String, Object> parameters) {
 		switch (eventType) {
-		case VNF_SCALE_TO_LEVEL:
-			vnfmActions.scaleToLevel(objectId);
-			break;
-		case VNF_INSTANTIATE:
-			vnfmActions.instantiate(objectId);
-			break;
-		case VNF_TERMINATE:
-			vnfmActions.terminate(objectId);
-			break;
-		case VNF_OPERATE:
-			vnfmActions.vnfOperate(objectId);
-			break;
-		case VNF_CHANGE_CONN:
-			vnfmActions.vnfChangeVnfConn(objectId);
-			break;
-		case VNF_PKG_ONBOARD_DOWNLOAD:
-			notificationActions.onPkgOnbarding(objectId);
-			break;
-		default:
-			LOG.warn("Unknown event: {}", eventType);
-			break;
+		case VNF_SCALE_TO_LEVEL -> vnfmActions.scaleToLevel(objectId);
+		case VNF_INSTANTIATE -> vnfmActions.instantiate(objectId);
+		case VNF_TERMINATE -> vnfmActions.terminate(objectId);
+		case VNF_OPERATE -> vnfmActions.vnfOperate(objectId);
+		case VNF_CHANGE_CONN -> vnfmActions.vnfChangeVnfConn(objectId);
+		case VNF_PKG_ONBOARD_DOWNLOAD -> notificationActions.onPkgOnbarding(objectId);
+		case VNF_PKG_ONBOARD_DOWNLOAD_INSTANTIATE -> notificationActions.onPkgOnbardingInstantiate(objectId);
+		default -> LOG.warn("Unknown event: {}", eventType);
 		}
 	}
 

@@ -16,12 +16,14 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.uow;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.v2.ExternalCpTask;
+import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
+import com.ubiqube.etsi.mano.dao.mano.common.NicType;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfPortTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
-import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfExtCp;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
@@ -30,27 +32,31 @@ import com.ubiqube.etsi.mano.service.vim.Vim;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfPortUowV2 extends AbstractUowV2<ExternalCpTask> {
+public class VnfPortUowV2 extends AbstractUowV2<VnfPortTask> {
 	private final Vim vim;
 	private final VimConnectionInformation vimConnectionInformation;
 
-	public VnfPortUowV2(final VirtualTask<ExternalCpTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
-		super(task, VnfExtCp.class);
+	public VnfPortUowV2(final VirtualTask<VnfPortTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
+		super(task, VnfPortNode.class);
 		this.vim = vim;
 		this.vimConnectionInformation = vimConnectionInformation;
 	}
 
 	@Override
 	public String execute(final Context context) {
-		final com.ubiqube.etsi.mano.dao.mano.VnfExtCp extCp = getTask().getParameters().getVnfExtCp();
-		final String computeId = context.get(Compute.class, extCp.getInternalVirtualLink());
-		final String extNetwork = context.get(Network.class, extCp.getExternalVirtualLink());
-		return vim.network(vimConnectionInformation).createPort(extCp.getToscaName(), extNetwork, computeId, null);
+		final VnfPortTask p = getTask().getParameters();
+		if (p.getExternal() != null) {
+			final ExtManagedVirtualLinkDataEntity ext = p.getExternal();
+			return vim.network(vimConnectionInformation).createPort(getTask().getAlias(), ext.getResourceId(), null, null, NicType.fromValue(getTask().getParameters().getVnfLinkPort().getVnicType()));
+		}
+		final VnfLinkPort extCp = p.getVnfLinkPort();
+		final String extNetwork = context.get(Network.class, extCp.getVirtualLink());
+		return vim.network(vimConnectionInformation).createPort(getTask().getAlias(), extNetwork, null, null, NicType.fromValue(getTask().getParameters().getVnfLinkPort().getVnicType()));
 	}
 
 	@Override
 	public String rollback(final Context context) {
-		final ExternalCpTask param = getTask().getParameters();
+		final VnfPortTask param = getTask().getParameters();
 		vim.network(vimConnectionInformation).deletePort(param.getVimResourceId());
 		return null;
 	}

@@ -29,9 +29,9 @@ public interface NsdPackageJpa extends CrudRepository<NsdPackage, UUID> {
 	Optional<NsdPackage> findByNsdInvariantId(String nsdInvariantId);
 
 	@Query("select child \n" +
-			" 	from NsdPackageNsdPackage nsdpackage0_\n" +
-			" 	left outer join NsdPackage child on nsdpackage0_.child = child \n" +
-			" 	where parent_id = ?1 ")
+			" from NsdPackageNsdPackage nsdpackage0_\n" +
+			" left outer join NsdPackage child on nsdpackage0_.child = child \n" +
+			" where parent_id = ?1 ")
 	Set<NsdPackage> findByNestedNsdInfoIds_Parent(NsdPackage nsdPackage);
 
 	Optional<NsdPackage> findByNsdId(String nsdId);

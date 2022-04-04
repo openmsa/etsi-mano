@@ -17,21 +17,30 @@
 package com.ubiqube.etsi.mano.v351.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
+import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.CreateNsdInfoRequest;
+import com.ubiqube.etsi.mano.nfvo.v351.model.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.nfvo.v351.model.nslcm.VnfInstance;
+import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.CreateVnfPkgInfoRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v351.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.service.HttpGateway;
+import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantRequest;
+import com.ubiqube.etsi.mano.vnfm.v351.model.grant.GrantRequestLinks;
+import com.ubiqube.etsi.mano.vnfm.v351.model.grant.Link;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.ChangeExtVnfConnectivityRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.CreateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.InstantiateVnfRequest;
@@ -42,13 +51,21 @@ import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.vnfm.v351.model.vnflcm.VnfLcmOpOcc;
 
+import ma.glasnost.orika.MapperFacade;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Service
-public class HttpGateway351 implements HttpGateway {
+public class HttpGateway351 extends AbstractHttpGateway {
+	private final MapperFacade mapper;
+
+	public HttpGateway351(final MapperFacade mapper) {
+		super();
+		this.mapper = mapper;
+	}
 
 	@Override
 	public Class<?> getVnfPackageClass() {
@@ -220,4 +237,38 @@ public class HttpGateway351 implements HttpGateway {
 		return "3.5.1";
 	}
 
+	@Override
+	public Class<?> createVnfPackageRequest(final Map<String, String> userDefinedData) {
+		return CreateVnfPkgInfoRequest.class;
+	}
+
+	@Override
+	public ParameterizedTypeReference<List<Class<?>>> getNsdPackageClassList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<?> getNsdPackageClass() {
+		return NsdInfo.class;
+	}
+
+	@Override
+	public Object createNsdPackageRequest(final Map<String, Object> userDefinedData) {
+		final CreateNsdInfoRequest req = new CreateNsdInfoRequest();
+		req.setUserDefinedData(userDefinedData.entrySet().stream().map(x -> Map.entry(x.getKey(), x.getValue().toString())).collect(Collectors.toMap(Entry::getKey, Entry::getValue)));
+		return req;
+	}
+
+	@Override
+	public Object createGrantRequest(final GrantInterface grant) {
+		final GrantRequest g = mapper.map(grant, GrantRequest.class);
+		final GrantRequestLinks links = new GrantRequestLinks();
+		final Link vnfLink = new Link();
+		vnfLink.setHref("http://");
+		links.setVnfInstance(vnfLink);
+		links.setVnfLcmOpOcc(vnfLink);
+		g.setLinks(links);
+		return g;
+	}
 }

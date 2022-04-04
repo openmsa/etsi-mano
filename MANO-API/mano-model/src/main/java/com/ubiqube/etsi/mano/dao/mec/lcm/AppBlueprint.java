@@ -44,6 +44,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.OperateChanges;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
@@ -83,23 +84,23 @@ public class AppBlueprint extends AbstractBlueprint<AppTask, AppInstance> implem
 	private Set<VimConnectionInformation> vimConnections = null;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
-	private Set<ZoneInfoEntity> zones = null;
+	private final Set<ZoneInfoEntity> zones = null;
 
 	@Valid
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn
-	private Set<BlueZoneGroupInformation> zoneGroups = null;
+	private final Set<BlueZoneGroupInformation> zoneGroups = null;
 
 	@FullTextField
 	private String grantsRequestId;
 
 	@Embedded
 	@IndexedEmbedded
-	private BlueprintParameters parameters = new BlueprintParameters();
+	private final BlueprintParameters parameters = new BlueprintParameters();
 
 	@Embedded
 	@IndexedEmbedded
-	private OperateChanges operateChanges = new OperateChanges();
+	private final OperateChanges operateChanges = new OperateChanges();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@CollectionTable(schema = "mec_meo")
@@ -130,4 +131,29 @@ public class AppBlueprint extends AbstractBlueprint<AppTask, AppInstance> implem
 		this.vimConnections.add(vimConnection);
 	}
 
+	@Override
+	public void addExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+		if (null == extManagedVirtualLinks) {
+			this.extManagedVirtualLinks = new LinkedHashSet<>();
+		}
+		this.extManagedVirtualLinks.addAll(extManagedVirtualLinks);
+	}
+
+	@Override
+	public void setZoneGroups(final Set<BlueZoneGroupInformation> mapAsSet) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setZones(final Set<ZoneInfoEntity> zones) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		// TODO Auto-generated method stub
+
+	}
 }

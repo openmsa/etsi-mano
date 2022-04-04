@@ -16,22 +16,21 @@
  */
 package com.ubiqube.etsi.mano.nfvo.v281.model.nsd;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdOnboardingStateType;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdOperationalStateType;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdUsageStateType;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.PnfdOnboardingStateType;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.PnfdUsageStateType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnfconfig.NsdOperationalStateType;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * This type represents a subscription filter related to notifications about NSD management. It shall comply with the provisions defined in Table 5.5.3.2-1 of GS NFV-SOL 005. At a particular nesting level in the filter structure, the following applies: All attributes shall match in order for the filter to match (logical \&quot;and\&quot; between different filter attributes). If an attribute is an array, the attribute shall match if at least one of the values in the array matches (logical \&quot;or\&quot; between the values of one filter attribute). NOTE 1: The attributes \&quot;nsdId\&quot; and \&quot;nsdInfoId\&quot; are alternatives to reference to a particular NSD in a filter. They should not be used both in the same filter instance, but one alternative should be chosen. NOTE 2: The attributes \&quot;pnfdId\&quot; and \&quot;pnfdInfoId\&quot; are alternatives to reference to a particular PNFD in a filter. They should not be used both in the same filter instance, but one alternative should be chosen. 

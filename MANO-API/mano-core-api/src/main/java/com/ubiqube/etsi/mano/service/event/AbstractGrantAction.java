@@ -187,6 +187,7 @@ public abstract class AbstractGrantAction {
 			extVl.setGrants(grants);
 			grants.addExtManagedVl(extVl);
 		});
+		getUnmanagedNetworks(grants, vim, vimInfo);
 		final String zoneId = futureZone.get();
 		final ZoneGroupInformation zgi = futureSg.get();
 		// XXX It depends on Grant policy GRANT_RESERVE_SINGLE.
@@ -199,6 +200,8 @@ public abstract class AbstractGrantAction {
 		});
 
 	}
+
+	protected abstract void getUnmanagedNetworks(GrantResponse grants, Vim vim, VimConnectionInformation vimInfo);
 
 	private static ZoneInfoEntity mapZone(final String zoneId, final VimConnectionInformation vimInfo) {
 		final ZoneInfoEntity zoneInfoEntity = new ZoneInfoEntity();

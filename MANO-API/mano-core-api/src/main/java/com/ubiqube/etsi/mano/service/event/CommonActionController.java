@@ -27,14 +27,18 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 
+import com.ubiqube.etsi.mano.config.SecurityType;
+import com.ubiqube.etsi.mano.config.SecutiryConfig;
 import com.ubiqube.etsi.mano.config.properties.ManoProperties;
 import com.ubiqube.etsi.mano.dao.mano.ApiTypesEnum;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamBasic;
@@ -76,14 +80,17 @@ public class CommonActionController {
 	private final List<HttpGateway> httpGateway;
 	private final MapperFacade mapper;
 	private final ManoProperties manoProperties;
+	private final ObjectProvider<SecutiryConfig> secutiryConfig;
 
-	public CommonActionController(final ServersJpa serversJpa, final Environment env, final List<com.ubiqube.etsi.mano.service.HttpGateway> httpGateway, final MapperFacade mapper, final ManoProperties manoProperties) {
+	public CommonActionController(final ServersJpa serversJpa, final Environment env, final List<com.ubiqube.etsi.mano.service.HttpGateway> httpGateway,
+			final MapperFacade mapper, final ManoProperties manoProperties, final ObjectProvider<SecutiryConfig> secutiryConfig) {
 		super();
 		this.serversJpa = serversJpa;
 		this.env = env;
 		this.httpGateway = httpGateway;
 		this.mapper = mapper;
 		this.manoProperties = manoProperties;
+		this.secutiryConfig = secutiryConfig;
 	}
 
 	public Object registerServer(@NotNull final UUID objectId, @NotNull final Map<String, Object> parameters) {
@@ -136,7 +143,7 @@ public class CommonActionController {
 			final FluxRest rest = new FluxRest(server);
 			final UriComponents uri = rest.uriBuilder().pathSegment("{fragment}/api_versions")
 					.buildAndExpand(uriVariables);
-			final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class);
+			final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class, null);
 			return mapper.map(res, ApiVersion.class);
 		} catch (final RuntimeException e) {
 			LOG.info("Error fetching " + fragment, e);
@@ -222,7 +229,7 @@ public class CommonActionController {
 
 	private Subscription postSubscription(final FluxRest rest, final URI uri, final Object subsOut, final Class<?> clazzWire, final Class<?> clazz) {
 		final Object wire = mapper.map(subsOut, clazzWire);
-		final Object res = rest.post(uri, wire, clazz);
+		final Object res = rest.post(uri, wire, clazz, null);
 		return mapper.map(res, Subscription.class);
 	}
 
@@ -231,9 +238,14 @@ public class CommonActionController {
 		return res.isPresent();
 	}
 
+	@Nullable
 	private AuthentificationInformations createAuthInformation() {
+		final SecutiryConfig sec = secutiryConfig.getIfAvailable();
+		if (sec == null) {
+			return null;
+		}
 		final AuthentificationInformations auth = new AuthentificationInformations();
-		if (null != env.getProperty("keycloak.resource")) {
+		if (sec.getSecurityType() == SecurityType.OAUTH2) {
 			final AuthParamOauth2 oauth2 = AuthParamOauth2.builder()
 					.clientId(env.getProperty("keycloak.resource"))
 					.clientSecret(env.getProperty("keycloak.credentials.secret"))
@@ -262,7 +274,7 @@ public class CommonActionController {
 		final FluxRest rest = new FluxRest(server);
 		final UriComponents uri = rest.uriBuilder().pathSegment("{module}/api_versions")
 				.buildAndExpand(uriVariables);
-		final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class);
+		final ApiVersionInformation res = rest.get(uri.toUri(), ApiVersionInformation.class, null);
 		return mapper.map(res, ApiVersion.class);
 	}
 

@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.service.pkg;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -31,7 +32,7 @@ public class PkgUtils {
 		// Nothing.
 	}
 
-	public static File fetchData(final byte[] data) {
+	public static File fetchData(final InputStream data) {
 		File tempFile;
 		try {
 			tempFile = File.createTempFile("tosca", ".zip");
@@ -39,7 +40,7 @@ public class PkgUtils {
 			throw new ToscaException(e);
 		}
 		try (final OutputStream os = new FileOutputStream(tempFile)) {
-			os.write(data);
+			data.transferTo(os);
 		} catch (final IOException e) {
 			throw new ToscaException(e);
 		}

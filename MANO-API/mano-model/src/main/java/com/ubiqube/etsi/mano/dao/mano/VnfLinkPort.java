@@ -24,9 +24,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
-import com.ubiqube.etsi.mano.utils.ToStringIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -58,10 +55,6 @@ public class VnfLinkPort implements BaseEntity, Auditable {
 	private Integer bitrateRequirement;
 
 	private String vnicType;
-
-	@ManyToOne
-	@ToStringIgnore
-	private VnfPackage vnfPackage;
 
 	@Embedded
 	private Audit audit;

@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.vim;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,6 +44,7 @@ import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.common.NicType;
 
 public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	private static final Logger LOG = LoggerFactory.getLogger(OsNetwork.class);
@@ -138,12 +140,13 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 	}
 
 	@Override
-	public String createPort(final String name, final String networkId, final String deviceId, final String macAddress) {
+	public String createPort(final String name, final String networkId, final String deviceId, final String macAddress, final NicType nicType) {
 		final Port port = Builders.port()
 				.networkId(networkId)
 				.macAddress(macAddress)
 				.name(name)
 				.deviceId(deviceId)
+				.vNicType(nicType.toString())
 				.build();
 		final Port p = os.networking().port().create(port);
 		return p.getId();
@@ -191,5 +194,17 @@ public class OsNetwork implements com.ubiqube.etsi.mano.service.vim.Network {
 		if (!action.isSuccess() && action.getCode() != 404) {
 			throw new VimException(action.getCode() + " " + action.getFault());
 		}
+	}
+
+	@Override
+	public List<NetworkObject> searchByName(final List<String> vl) {
+		return vl.stream()
+				.flatMap(x -> {
+					final Map<String, String> filteringParams = new HashMap<>();
+					filteringParams.put("name", x);
+					return os.networking().network().list(filteringParams).stream();
+				})
+				.map(x -> new NetworkObject(x.getName(), x.getId()))
+				.toList();
 	}
 }

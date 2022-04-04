@@ -16,8 +16,9 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
+import java.io.InputStream;
+
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -27,22 +28,17 @@ import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 public class DefaultVnfPackageProvider implements PackageDescriptor<VnfPackageReader> {
 
 	@Override
-	public ExecutionGraph getBlueprint() {
-		return null;
-	}
-
-	@Override
 	public String getProviderName() {
 		return "default";
 	}
 
 	@Override
-	public boolean isProcessable(final byte[] data) {
+	public boolean isProcessable(final InputStream data) {
 		return false;
 	}
 
 	@Override
-	public VnfPackageReader getNewReaderInstance(final byte[] data) {
+	public VnfPackageReader getNewReaderInstance(final InputStream data) {
 		return null;
 	}
 

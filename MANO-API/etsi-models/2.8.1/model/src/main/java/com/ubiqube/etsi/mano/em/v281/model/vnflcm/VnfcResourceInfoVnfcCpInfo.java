@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.CpProtocolInfo;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class VnfcResourceInfoVnfcCpInfo   {
   private String vnfLinkPortId = null;
 
   @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+  private Map<String, String> metadata = null;
 
   public VnfcResourceInfoVnfcCpInfo id(String id) {
     this.id = id;
@@ -165,7 +165,7 @@ public class VnfcResourceInfoVnfcCpInfo   {
     this.vnfLinkPortId = vnfLinkPortId;
   }
 
-  public VnfcResourceInfoVnfcCpInfo metadata(KeyValuePairs metadata) {
+  public VnfcResourceInfoVnfcCpInfo metadata(Map<String, String> metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -178,11 +178,11 @@ public class VnfcResourceInfoVnfcCpInfo   {
 
   @Valid
 
-  public KeyValuePairs getMetadata() {
+  public Map<String, String> getMetadata() {
     return metadata;
   }
 
-  public void setMetadata(KeyValuePairs metadata) {
+  public void setMetadata(Map<String, String> metadata) {
     this.metadata = metadata;
   }
 

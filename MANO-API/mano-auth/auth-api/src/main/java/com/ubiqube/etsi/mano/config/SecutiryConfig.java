@@ -42,4 +42,6 @@ public interface SecutiryConfig {
 	default SecurityScheme getSwaggerSecurityScheme(final ManoProperties oauth2Params) {
 		return null;
 	}
+
+	SecurityType getSecurityType();
 }

@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ubiqube.etsi.mano.dao.mano.FilterAttributes;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.mapper.AttrHolder;
-import com.ubiqube.etsi.mano.mapper.CollectNonNullListener;
+import com.ubiqube.etsi.mano.mapper.CollectHashMapListener;
 import com.ubiqube.etsi.mano.mapper.JsonWalker;
 import com.ubiqube.etsi.mano.mapper.SpelWriter;
 
@@ -55,7 +55,7 @@ public class SpelPatcher implements Patcher {
 	@Override
 	public void patch(final String patchDocument, final Object entity) {
 		try {
-			final CollectNonNullListener beanListener = new CollectNonNullListener();
+			final CollectHashMapListener beanListener = new CollectHashMapListener(entity.getClass());
 			final JsonNode patch = mapper.readTree(patchDocument);
 			jsonWalker.walk(patch, beanListener);
 			final List<AttrHolder> attrsHolders = beanListener.getAttrs();

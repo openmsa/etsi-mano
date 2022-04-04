@@ -16,7 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.pkg;
 
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
+import java.io.InputStream;
 
 /**
  *
@@ -25,11 +25,9 @@ import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
  */
 public interface PackageDescriptor<U> {
 
-	ExecutionGraph getBlueprint();
-
 	String getProviderName();
 
-	boolean isProcessable(byte[] data);
+	boolean isProcessable(InputStream data);
 
-	U getNewReaderInstance(byte[] data);
+	U getNewReaderInstance(InputStream data);
 }

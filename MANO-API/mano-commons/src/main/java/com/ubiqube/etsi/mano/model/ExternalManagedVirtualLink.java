@@ -16,55 +16,29 @@
  */
 package com.ubiqube.etsi.mano.model;
 
+import java.util.UUID;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author ncuser
+ *
+ */
+@Getter
+@Setter
 public class ExternalManagedVirtualLink {
-	private String extManagedVirtualLinkId = null;
+	private UUID id;
 
-	private String vmfVirtualLinkDescId = null;
+	private String extManagedVirtualLinkId;
 
-	private String vimId = null;
+	private String vnfVirtualLinkDescId;
 
-	private String resourceProviderId = null;
+	private String vimId;
 
-	private String resourceId = null;
+	private String resourceProviderId;
 
-	public String getExtManagedVirtualLinkId() {
-		return extManagedVirtualLinkId;
-	}
-
-	public void setExtManagedVirtualLinkId(final String extManagedVirtualLinkId) {
-		this.extManagedVirtualLinkId = extManagedVirtualLinkId;
-	}
-
-	public String getVmfVirtualLinkDescId() {
-		return vmfVirtualLinkDescId;
-	}
-
-	public void setVmfVirtualLinkDescId(final String vmfVirtualLinkDescId) {
-		this.vmfVirtualLinkDescId = vmfVirtualLinkDescId;
-	}
-
-	public String getVimId() {
-		return vimId;
-	}
-
-	public void setVimId(final String vimId) {
-		this.vimId = vimId;
-	}
-
-	public String getResourceProviderId() {
-		return resourceProviderId;
-	}
-
-	public void setResourceProviderId(final String resourceProviderId) {
-		this.resourceProviderId = resourceProviderId;
-	}
-
-	public String getResourceId() {
-		return resourceId;
-	}
-
-	public void setResourceId(final String resourceId) {
-		this.resourceId = resourceId;
-	}
+	private String resourceId;
 
 }

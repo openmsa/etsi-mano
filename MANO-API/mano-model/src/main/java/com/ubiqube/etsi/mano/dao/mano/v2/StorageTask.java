@@ -21,7 +21,17 @@ import javax.persistence.ManyToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
+@Getter
+@Setter
 public class StorageTask extends VnfTask {
 	/** Version. */
 	private static final long serialVersionUID = 1L;
@@ -30,21 +40,5 @@ public class StorageTask extends VnfTask {
 	private VnfStorage vnfStorage;
 
 	private String parentAlias;
-
-	public VnfStorage getVnfStorage() {
-		return vnfStorage;
-	}
-
-	public void setVnfStorage(final VnfStorage vnfStorage) {
-		this.vnfStorage = vnfStorage;
-	}
-
-	public String getParentAlias() {
-		return parentAlias;
-	}
-
-	public void setParentAlias(final String parentAlias) {
-		this.parentAlias = parentAlias;
-	}
 
 }

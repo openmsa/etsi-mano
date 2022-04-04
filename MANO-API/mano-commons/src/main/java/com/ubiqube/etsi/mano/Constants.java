@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.util.MultiValueMap;
 
@@ -82,10 +83,7 @@ public final class Constants {
 			return null;
 		}
 		final List<String> params = bag.get(parameter);
-		if (null == params) {
-			return null;
-		}
-		if (params.isEmpty()) {
+		if ((null == params) || params.isEmpty()) {
 			return null;
 		}
 		if (params.size() > 1) {
@@ -185,7 +183,7 @@ public final class Constants {
 	}
 
 	public static void ensureLockedByMyself(final Instance vnfInstance, final UUID lcmOpOccsId) {
-		if ((vnfInstance.getLockedBy() != null) && vnfInstance.getLockedBy().equals(lcmOpOccsId)) {
+		if (vnfInstance.getLockedBy() != null && vnfInstance.getLockedBy().equals(lcmOpOccsId)) {
 			throw new ConflictException("The Instance " + vnfInstance.getId() + " is locked by LCMopOcc: " + vnfInstance.getLockedBy() + ".");
 		}
 	}
@@ -196,6 +194,7 @@ public final class Constants {
 		}
 	}
 
+	@NotNull
 	@Nonnull
 	public static UUID getSafeUUID(final String uuid) {
 		return UUID.fromString(uuid);

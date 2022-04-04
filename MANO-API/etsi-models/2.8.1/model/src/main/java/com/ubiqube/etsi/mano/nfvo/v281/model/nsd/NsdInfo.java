@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.nfvo.v281.model.nsd;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,6 +30,8 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnfconfig.NsdOperationalStateType;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -125,7 +128,7 @@ public class NsdInfo {
 	private NsdUsageStateType nsdUsageState = null;
 
 	@JsonProperty("userDefinedData")
-	private KeyValuePairs userDefinedData = null;
+	private Map<String, String> userDefinedData = null;
 
 	@JsonProperty("_links")
 	private NsdInfoLinks links = null;
@@ -517,7 +520,7 @@ public class NsdInfo {
 		this.nsdUsageState = nsdUsageState;
 	}
 
-	public NsdInfo userDefinedData(final KeyValuePairs userDefinedData) {
+	public NsdInfo userDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 		return this;
 	}
@@ -532,11 +535,11 @@ public class NsdInfo {
 
 	@Valid
 
-	public KeyValuePairs getUserDefinedData() {
+	public Map<String, String> getUserDefinedData() {
 		return userDefinedData;
 	}
 
-	public void setUserDefinedData(final KeyValuePairs userDefinedData) {
+	public void setUserDefinedData(final Map<String, String> userDefinedData) {
 		this.userDefinedData = userDefinedData;
 	}
 

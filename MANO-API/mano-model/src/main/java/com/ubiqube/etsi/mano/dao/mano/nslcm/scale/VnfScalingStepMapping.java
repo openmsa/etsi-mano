@@ -42,7 +42,7 @@ public class VnfScalingStepMapping extends NsVnfScalingStepMapping {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	public VnfScalingStepMapping(final Set<StepMapping> levels, final String aspectId) {
-		super(levels, aspectId);
+	public VnfScalingStepMapping(final Set<StepMapping> stepMapping, final String aspectId) {
+		super(stepMapping, aspectId);
 	}
 }

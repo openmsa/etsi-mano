@@ -17,9 +17,7 @@
 package com.ubiqube.etsi.mano.service;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -28,26 +26,11 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
-import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
-import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
-import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
-import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
-import com.ubiqube.etsi.mano.jpa.VnfComputeAspectDeltaJpa;
-import com.ubiqube.etsi.mano.jpa.VnfComputeJpa;
-import com.ubiqube.etsi.mano.jpa.VnfExtCpJpa;
 import com.ubiqube.etsi.mano.jpa.VnfInstanceJpa;
-import com.ubiqube.etsi.mano.jpa.VnfInstantiationLevelsJpa;
-import com.ubiqube.etsi.mano.jpa.VnfLinkPortJpa;
 import com.ubiqube.etsi.mano.jpa.VnfPackageJpa;
-import com.ubiqube.etsi.mano.jpa.VnfStorageJpa;
-import com.ubiqube.etsi.mano.jpa.VnfVlJpa;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
 /**
@@ -59,80 +42,16 @@ import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 public class VnfPackageServiceImpl extends SearchableService implements VnfPackageService {
 	private final VnfPackageRepository vnfPackageRepository;
 
-	private final VnfComputeAspectDeltaJpa vnfComputeAspectDeltaJpa;
-
-	private final VnfStorageJpa vnfStorageJpa;
-
-	private final VnfVlJpa vnfVl;
-
-	private final VnfComputeJpa vnfComputeJpa;
-
-	private final VnfExtCpJpa vnfExtCpJpa;
-
 	private final VnfPackageJpa vnfPackageJpa;
-
-	private final VnfInstantiationLevelsJpa vnfInstantiationLevelsJpa;
-
-	private final VnfLinkPortJpa vnfLinkPortJpa;
 
 	private final VnfInstanceJpa vnfInstanceJpa;
 
-	public VnfPackageServiceImpl(final VnfComputeAspectDeltaJpa vnfComputeAspectDeltaJpa, final VnfStorageJpa vnfStorageJpa,
-			final VnfVlJpa vnfVl, final VnfComputeJpa vnfComputeJpa, final VnfExtCpJpa vnfExtCpJpa, final VnfPackageJpa vnfPackageJpa,
-			final VnfInstantiationLevelsJpa vnfInstantiationLevelsJpa, final VnfLinkPortJpa vnfLinkPortJpa, final EntityManager em,
-			final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa, final VnfPackageRepository vnfPackageRepository,
-			final GrammarParser grammarParser) {
+	public VnfPackageServiceImpl(final VnfPackageJpa vnfPackageJpa, final EntityManager em, final ManoSearchResponseService searchService, final VnfInstanceJpa vnfInstanceJpa,
+			final GrammarParser grammarParser, final VnfPackageRepository vnfPackageRepository) {
 		super(searchService, em, VnfPackage.class, grammarParser);
-		this.vnfComputeAspectDeltaJpa = vnfComputeAspectDeltaJpa;
-		this.vnfStorageJpa = vnfStorageJpa;
-		this.vnfVl = vnfVl;
-		this.vnfComputeJpa = vnfComputeJpa;
-		this.vnfExtCpJpa = vnfExtCpJpa;
 		this.vnfPackageJpa = vnfPackageJpa;
-		this.vnfInstantiationLevelsJpa = vnfInstantiationLevelsJpa;
-		this.vnfLinkPortJpa = vnfLinkPortJpa;
 		this.vnfInstanceJpa = vnfInstanceJpa;
 		this.vnfPackageRepository = vnfPackageRepository;
-	}
-
-	@Override
-	public List<VnfComputeAspectDelta> findAspectDeltaByAspectId(final VnfCompute vnfCompute, final String aspectName) {
-		return vnfComputeAspectDeltaJpa.findByVnfComputeAndAspectName(vnfCompute, aspectName);
-	}
-
-	@Override
-	public Optional<VnfStorage> findStorageByName(final VnfPackage vnfPackage, final String name) {
-		return vnfStorageJpa.findOneByVnfPackageAndToscaName(vnfPackage, name);
-	}
-
-	@Override
-	public Optional<VnfVl> findVirtualLnkById(final UUID uuid) {
-		return vnfVl.findById(uuid);
-	}
-
-	@Override
-	public Optional<VnfStorage> findVirtualStorageById(final UUID uuid) {
-		return vnfStorageJpa.findById(uuid);
-	}
-
-	@Override
-	public Optional<VnfCompute> findComputeById(final UUID uuid) {
-		return vnfComputeJpa.findById(uuid);
-	}
-
-	@Override
-	public Optional<VnfExtCp> findExtCpById(final UUID uuid) {
-		return vnfExtCpJpa.findById(uuid);
-	}
-
-	@Override
-	public VduInstantiationLevel findByVnfComputeAndInstantiationLevel(final VnfCompute x, final String scaleInfoName) {
-		return vnfComputeJpa.findByIdAndInstantiationLevelLevelName(x.getId(), scaleInfoName);
-	}
-
-	@Override
-	public VnfPackage findById(final VnfPackage vnfPackage) {
-		return findById(vnfPackage.getId());
 	}
 
 	@Override
@@ -141,16 +60,6 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 		final int i = vnfInstanceJpa.countByVnfPkgId(vnfPkgId);
 		ret.setUsageState(i == 0 ? PackageUsageState.NOT_IN_USE : PackageUsageState.IN_USE);
 		return ret;
-	}
-
-	@Override
-	public List<VnfInstantiationLevels> findVnfInstantiationLevelsByVnfComputeAndLevel(final VnfPackage vnfPackage, final String level) {
-		return vnfInstantiationLevelsJpa.findByVnfPackageAndLevelName(vnfPackage, level);
-	}
-
-	@Override
-	public List<VnfInstantiationLevels> findVnfInstantiationLevelsByVnfPacckage(final VnfPackage vnfPackage) {
-		return vnfInstantiationLevelsJpa.findDistinctScaleInfoNameByVnfPackage(vnfPackage);
 	}
 
 	@Override
@@ -171,11 +80,6 @@ public class VnfPackageServiceImpl extends SearchableService implements VnfPacka
 	@Override
 	public Optional<VnfPackage> findByDescriptorIdAndSoftwareVersion(final String name, final String version) {
 		return vnfPackageJpa.findByDescriptorIdAndVnfSoftwareVersion(name, version);
-	}
-
-	@Override
-	public Set<VnfLinkPort> findVnfVirtualLinks(final VnfPackage vnfPackage) {
-		return vnfLinkPortJpa.findByVnfPackage(vnfPackage);
 	}
 
 	@Override

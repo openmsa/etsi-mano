@@ -34,13 +34,16 @@ import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.Instance;
 import com.ubiqube.etsi.mano.dao.mano.PackageBase;
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
+import com.ubiqube.etsi.mano.dao.mano.ScaleTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.Task;
 import com.ubiqube.etsi.mano.orchestrator.OrchExecutionResults;
 import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
+import com.ubiqube.etsi.mano.service.NsScaleStrategy;
 import com.ubiqube.etsi.mano.service.VimResourceService;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.graph.WorkflowEvent;
@@ -56,11 +59,14 @@ public abstract class AbstractGenericAction {
 
 	private final OrchestrationAdapter<?, ?> orchestrationAdapter;
 
-	protected AbstractGenericAction(final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter) {
+	private final NsScaleStrategy nsScaleStrategy;
+
+	protected AbstractGenericAction(final Workflow vnfWorkflow, final VimResourceService vimResourceService, final OrchestrationAdapter<?, ?> orchestrationAdapter, final NsScaleStrategy nsScaleStrategy) {
 		super();
 		this.vnfWorkflow = vnfWorkflow;
 		this.vimResourceService = vimResourceService;
 		this.orchestrationAdapter = orchestrationAdapter;
+		this.nsScaleStrategy = nsScaleStrategy;
 	}
 
 	public final void instantiate(@Nonnull final UUID blueprintId) {
@@ -74,6 +80,9 @@ public abstract class AbstractGenericAction {
 		final PackageBase vnfPkg = orchestrationAdapter.getPackage(vnfInstance);
 		final Set<ScaleInfo> newScale = merge(blueprint, vnfInstance);
 		final PreExecutionGraph<?> prePlan = vnfWorkflow.setWorkflowBlueprint(vnfPkg, blueprint);
+		if (!System.getenv().isEmpty()) {
+			// throw new GenericException("");
+		}
 		Blueprint<?, ?> localPlan = orchestrationAdapter.save(blueprint);
 		orchestrationAdapter.fireEvent(WorkflowEvent.INSTANTIATE_PROCESSING, vnfInstance.getId());
 		vimResourceService.allocate(localPlan);
@@ -81,6 +90,7 @@ public abstract class AbstractGenericAction {
 		//
 		vnfWorkflow.refresh(prePlan, localPlan);
 		final OrchExecutionResults<Task> res = vnfWorkflow.execute(prePlan, localPlan);
+		localPlan = orchestrationAdapter.getBluePrint(localPlan.getId());
 		setLiveSatus(localPlan, vnfInstance, res);
 		//
 		setResultLcmInstance(localPlan, res);
@@ -89,34 +99,71 @@ public abstract class AbstractGenericAction {
 		}
 		// XXX ??? error duplicate key in NSD.
 		copyVimConnections(vnfInstance, localPlan);
+		mergeVirtualLinks(vnfInstance, localPlan);
 		vnfInstance.setLockedBy(null);
 		orchestrationAdapter.save(vnfInstance);
-		LOG.info("Saving VNF LCM OP OCCS.");
+		LOG.info("Saving LCM OP OCCS.");
 		localPlan = orchestrationAdapter.save(localPlan);
 		// XXX Send COMPLETED event.
-		LOG.info("VNF instance {} / LCM {} Finished.", vnfInstance.getId(), localPlan.getId());
+		LOG.info("Instance {} / LCM {} Finished.", vnfInstance.getId(), localPlan.getId());
 	}
+
+	protected abstract void mergeVirtualLinks(Instance vnfInstance, Blueprint<?, ?> localPlan);
 
 	private static void copyVimConnections(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
 		vnfInstance.setVimConnectionInfo(new LinkedHashSet<>());
 		localPlan.getVimConnections().forEach(vnfInstance::addVimConnectionInfo);
 	}
 
-	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint localPlan, Instance vnfInstance);
+	protected abstract GenericExecParams buildContext(VimConnectionInformation vimConnection, Vim vim, Blueprint<?, ?> localPlan, Instance instance);
 
-	private static void setInstanceStatus(final Instance vnfInstance, final Blueprint localPlan, final Set<ScaleInfo> newScale) {
-		Optional.ofNullable(localPlan.getParameters().getScaleStatus()).map(x -> x.stream().map(y -> new ScaleInfo(y.getAspectId(), y.getScaleLevel())).collect(Collectors.toSet())).ifPresent(x -> vnfInstance.getInstantiatedVnfInfo().setScaleStatus(x));
-		LOG.info("Saving VNF Instance.");
-		vnfInstance.getInstantiatedVnfInfo().setInstantiationLevelId(localPlan.getParameters().getInstantiationLevelId());
-		if (null != localPlan.getParameters().getFlavourId()) {
-			vnfInstance.getInstantiatedVnfInfo().setFlavourId(localPlan.getParameters().getFlavourId());
+	/**
+	 * Move this function to scale strategy.
+	 *
+	 * @param instance
+	 * @param localPlan
+	 * @param newScale
+	 */
+	private void setInstanceStatus(final Instance instance, final Blueprint localPlan, final Set<ScaleInfo> newScale) {
+		Optional.ofNullable(localPlan.getParameters().getScaleStatus())
+				.map(x -> x.stream()
+						.map(y -> new ScaleInfo(y.getAspectId(), y.getScaleLevel()))
+						.collect(Collectors.toSet()))
+				.ifPresent(x -> setScaleStatus(instance, x, localPlan.getParameters().getScaleType()));
+		if (localPlan.getOperation() == PlanOperationType.INSTANTIATE) {
+			instance.getInstantiatedVnfInfo().setNsStepStatus(copy(localPlan.getParameters().getNsStepStatus()));
+			instance.getInstantiatedVnfInfo().setScaleStatus(copy(localPlan.getParameters().getScaleStatus()));
 		}
-		// XXX Copy new ScaleInfo.
-		removeScaleStatus(vnfInstance, newScale);
+		Optional.ofNullable(localPlan.getParameters().getNsScale()).ifPresent(x -> nsScaleStrategy.remapNsScale(x, instance));
+		LOG.info("Saving Instance.");
+		instance.getInstantiatedVnfInfo().setInstantiationLevelId(localPlan.getParameters().getInstantiationLevelId());
+		if (null != localPlan.getParameters().getFlavourId()) {
+			instance.getInstantiatedVnfInfo().setFlavourId(localPlan.getParameters().getFlavourId());
+		}
 	}
 
-	private static Set<ScaleInfo> merge(final Blueprint plan, final Instance vnfInstance) {
-		final Set<ScaleInfo> tmp = vnfInstance.getInstantiatedVnfInfo().getScaleStatus().stream()
+	private static Object setScaleStatus(final Instance instance, final Set<ScaleInfo> si, final ScaleTypeEnum scaleTypeEnum) {
+		si.stream().forEach(x -> instance.getInstantiatedVnfInfo().getScaleStatus().stream()
+				.filter(y -> y.getAspectId().equals(x.getAspectId()))
+				.findFirst()
+				.ifPresent(y -> y.setScaleLevel(getNewStep(scaleTypeEnum, y.getScaleLevel(), x.getScaleLevel()))));
+		return null;
+	}
+
+	private static int getNewStep(final ScaleTypeEnum scaleTypeEnum, final int orig, final int adder) {
+		if (scaleTypeEnum == ScaleTypeEnum.IN) {
+			final int i = orig - adder;
+			return i < 0 ? 0 : i;
+		}
+		return orig + adder;
+	}
+
+	private static Set<ScaleInfo> copy(final Set<ScaleInfo> nsStepStatus) {
+		return nsStepStatus.stream().map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel())).collect(Collectors.toSet());
+	}
+
+	private static Set<ScaleInfo> merge(final Blueprint plan, final Instance instance) {
+		final Set<ScaleInfo> tmp = instance.getInstantiatedVnfInfo().getScaleStatus().stream()
 				.filter(x -> notIn(x.getAspectId(), plan.getParameters().getScaleStatus()))
 				.map(x -> new ScaleInfo(x.getAspectId(), x.getScaleLevel()))
 				.collect(Collectors.toSet());
@@ -191,12 +238,12 @@ public abstract class AbstractGenericAction {
 			final ChangeType ct = rhe.getChangeType();
 			if (ct == ChangeType.ADDED) {
 				final String il = Optional.ofNullable(rhe.getScaleInfo()).map(ScaleInfo::getAspectId).orElse(null);
-				if (null != rhe.getId()) {
-					orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
+				if ((null != rhe.getId()) && (null != rhe.getVimResourceId())) {
+					// orchestrationAdapter.createLiveInstance(vnfInstance, il, rhe, blueprint);
 				} else {
-					LOG.warn("Could not store: {}", x.getTask().getTask().getParameters().getToscaName());
+					LOG.warn("No vim resource or database id for: {}", x.getTask().getTask().getParameters().getToscaName());
 				}
-			} else if (ct == ChangeType.REMOVED) {
+			} else if ((ct == ChangeType.REMOVED) && (null != rhe.getId())) {
 				LOG.info("Removing {}", rhe.getId());
 				orchestrationAdapter.deleteLiveInstance(rhe.getRemovedLiveInstance());
 			}

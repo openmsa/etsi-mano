@@ -52,7 +52,7 @@ public interface Vim {
 	@Nonnull
 	String getOrCreateFlavor(VimConnectionInformation vimConnectionInformation, String name, int numVcpu, long virtualMemorySize, long disk, Map<String, String> flavorSpec);
 
-	String createCompute(VimConnectionInformation vimConnectionInformation, String instanceName, String flavorId, String imageId, List<String> networks, List<String> storages, String cloudInitData, List<String> securityGroup, List<String> affinityRules);
+	String createCompute(ComputeParameters computeParameters);
 
 	void deleteCompute(VimConnectionInformation vimConnectionInformation, String resourceId);
 
@@ -77,4 +77,6 @@ public interface Vim {
 	String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar);
 
 	void deleteServerGroup(VimConnectionInformation vimConnectionInformation, String vimResourceId);
+
+	void authenticate(VimConnectionInformation vci);
 }

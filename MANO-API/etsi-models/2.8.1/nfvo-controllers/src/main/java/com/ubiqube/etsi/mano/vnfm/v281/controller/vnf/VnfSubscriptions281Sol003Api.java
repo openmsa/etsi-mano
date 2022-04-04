@@ -33,9 +33,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.PkgmSubscription;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.PkgmSubscriptionRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.ProblemDetails2;
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails2;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.PkgmSubscription;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.PkgmSubscriptionRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -67,6 +67,8 @@ public class VnfExtCp implements Serializable, ToscaEntity {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> securityGroup;
 
+	private boolean computeNode;
+
 	public void addSecurityGroup(final String toscaName2) {
 		if (null == securityGroup) {
 			securityGroup = new LinkedHashSet<>();

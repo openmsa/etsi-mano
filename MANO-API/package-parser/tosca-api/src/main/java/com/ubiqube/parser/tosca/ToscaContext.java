@@ -250,7 +250,11 @@ public class ToscaContext {
 			policiesType.putAll(context.getPoliciesType());
 		}
 		if (null != context.getInterfaceTypes()) {
-			interfaceTypes.putAll(context.getInterfaceTypes());
+			if (null == interfaceTypes) {
+				interfaceTypes = context.getInterfaceTypes();
+			} else {
+				interfaceTypes.putAll(context.getInterfaceTypes());
+			}
 		}
 
 	}

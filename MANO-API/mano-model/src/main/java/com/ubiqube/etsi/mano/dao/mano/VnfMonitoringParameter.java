@@ -48,9 +48,24 @@ public class VnfMonitoringParameter implements Auditable, BaseEntity {
 	@Embedded
 	private Audit audit;
 
-	private String name = null;
-	// 3.3.1
+	/**
+	 * Human readable name of the monitoring parameter, as defined in the VNFD.
+	 * 
+	 */
+	private String name;
+	/**
+	 * Identifier of the VNFD. Shall be present in case the value differs from the
+	 * vnfdId attribute of the VnfInstance (e.g. during a "Change current VNF
+	 * package" operation or due to its final failure).
+	 *
+	 * @since 3.3.1
+	 */
 	private String vnfdId;
 
-	private String performanceMetric = null;
+	/**
+	 * Performance metric that is monitored. This attribute shall contain the
+	 * related "Measurement Name" value as defined in clause 7.2 of ETSI GS NFV-IFA
+	 * 027 [6].
+	 */
+	private String performanceMetric;
 }

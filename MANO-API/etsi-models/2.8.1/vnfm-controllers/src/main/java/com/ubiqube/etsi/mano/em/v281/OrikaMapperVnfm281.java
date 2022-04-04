@@ -42,31 +42,31 @@ import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.em.v281.model.SubscriptionAuthentication;
 import com.ubiqube.etsi.mano.em.v281.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.Alarm;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.FmSubscription;
+import com.ubiqube.etsi.mano.em.v281.model.vnffm.FmSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedExtLinkPort;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVirtualLink;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVirtualStorage;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVnfc;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ExtManagedVirtualLinkInfo;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ExtVirtualLinkInfo;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.LccnSubscription;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfExtCpInfo;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfInstanceInstantiatedVnfInfo;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.Checksum;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.PkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.VnfPackageSoftwareImageInfo;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
+import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.ResourceDefinition;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.Checksum;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.PkgmSubscriptionRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.VnfPackageSoftwareImageInfo;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.VnfPackageSoftwareImageInfo.DiskFormatEnum;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnf.VnfPkgInfo;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnffm.Alarm;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnffm.FmSubscription;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnffm.FmSubscriptionRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.AffectedExtLinkPort;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.AffectedVirtualLink;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.AffectedVirtualStorage;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.AffectedVnfc;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ExtManagedVirtualLinkData;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ExtManagedVirtualLinkInfo;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.ExtVirtualLinkInfo;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.LccnSubscription;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.LccnSubscriptionRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfExtCpInfo;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfInstanceInstantiatedVnfInfo;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfcResourceInfo;
 
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
@@ -84,7 +84,7 @@ public class OrikaMapperVnfm281 implements OrikaMapperFactoryConfigurer {
 
 	@Override
 	public void configure(final MapperFactory orikaMapperFactory) {
-		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfInstance.class, VnfInstance.class)
+		orikaMapperFactory.classMap(com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfInstance.class, VnfInstance.class)
 				.field("instantiatedVnfInfo.extVirtualLinkInfo", "instantiatedVnfInfo.extVirtualLinkInfo")
 				.field("metadata{key}", "metadata{key}")
 				.field("metadata{value}", "metadata{value}")
@@ -142,11 +142,11 @@ public class OrikaMapperVnfm281 implements OrikaMapperFactoryConfigurer {
 							ret.setId(img.getId().toString());
 						}
 						ret.setImagePath(img.getImagePath());
-						ret.setMinDisk(img.getMinDisk());
-						ret.setMinRam(img.getMinRam());
+						ret.setMinDisk((int) img.getMinDisk());
+						ret.setMinRam((int) img.getMinRam());
 						ret.setName(img.getName());
 						ret.setProvider(img.getProvider());
-						ret.setSize(img.getSize());
+						ret.setSize((int) img.getSize());
 						// ret.setUserMetadata(img.get);
 						ret.setVersion(img.getVersion());
 						ret.setCreatedAt(img.getAudit().getCreatedOn());
@@ -212,7 +212,7 @@ public class OrikaMapperVnfm281 implements OrikaMapperFactoryConfigurer {
 				.field("resourceHandle.vimConnectionId", "vimConnectionId")
 				.field("resourceHandle.resourceProviderId", "resourceProviderId")
 				.field("resourceHandle.resourceId", "resourceId")
-				.field("resourceHandle.vimLevelResourceType", "vimLevelResourceType")
+				// .field("resourceHandle.vimLevelResourceType", "vimLevelResourceType")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(ExtManagedVirtualLinkInfo.class, ExtManagedVirtualLinkDataEntity.class)

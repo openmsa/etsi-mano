@@ -16,10 +16,11 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
+import java.io.InputStream;
+
 import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -30,7 +31,7 @@ import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 public class VnfDefaultRegistryHandler implements PackageDescriptor<VnfPackageReader> {
 
 	@Override
-	public boolean isProcessable(final byte[] data) {
+	public boolean isProcessable(final InputStream data) {
 		return false;
 	}
 
@@ -40,14 +41,8 @@ public class VnfDefaultRegistryHandler implements PackageDescriptor<VnfPackageRe
 	}
 
 	@Override
-	public VnfPackageReader getNewReaderInstance(final byte[] data) {
+	public VnfPackageReader getNewReaderInstance(final InputStream data) {
 		return new DefaultVnfPackageReader();
-	}
-
-	@Override
-	public ExecutionGraph getBlueprint() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

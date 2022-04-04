@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
 import com.ubiqube.parser.tosca.csar.CsarParser;
+import com.ubiqube.parser.tosca.csar.CsarParserImpl;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -45,7 +46,7 @@ public class ToscaParser {
 
 		IResolver resolver;
 		if (isZip(filename)) {
-			csar = new CsarParser(filename);
+			csar = new CsarParserImpl(filename);
 			resolver = csar.getResolver();
 		} else {
 			resolver = new Resolver(filename);

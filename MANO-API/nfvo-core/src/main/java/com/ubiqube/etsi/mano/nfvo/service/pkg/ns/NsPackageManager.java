@@ -18,11 +18,18 @@ package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
 import javax.annotation.Nullable;
 
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface NsPackageManager {
 
 	@Nullable
-	NsPackageProvider getProviderFor(byte[] data);
+	PackageDescriptor<NsPackageProvider> getProviderFor(ManoResource data);
 
 }

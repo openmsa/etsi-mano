@@ -17,22 +17,30 @@
 package com.ubiqube.etsi.mano.nfvo.v261.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.common.v261.model.Link;
 import com.ubiqube.etsi.mano.common.v261.model.lcmgrant.Grant;
 import com.ubiqube.etsi.mano.common.v261.model.nslcm.VnfInstance;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.PkgmSubscriptionRequest;
 import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
+import com.ubiqube.etsi.mano.dao.mano.GrantInterface;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
-import com.ubiqube.etsi.mano.dao.mano.common.ApiVersionType;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
-import com.ubiqube.etsi.mano.service.HttpGateway;
+import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequestLinks;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.CreateNsdInfoRequest;
+import com.ubiqube.etsi.mano.nfvo.v261.model.nsd.sol005.NsdInfo;
+import com.ubiqube.etsi.mano.nfvo.v261.model.vnf.CreateVnfPkgInfoRequest;
+import com.ubiqube.etsi.mano.service.AbstractHttpGateway;
 import com.ubiqube.etsi.mano.service.NfvoFactory;
 import com.ubiqube.etsi.mano.service.VnfmFactory;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.ChangeExtVnfConnectivityRequest;
@@ -45,20 +53,24 @@ import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.TerminateVnfRequest.TerminationTypeEnum;
 import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
+import ma.glasnost.orika.MapperFacade;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Service
-public class VnfmGateway261 implements HttpGateway {
+public class VnfmGateway261 extends AbstractHttpGateway {
 
 	private final NfvoFactory nfvoFactory;
 	private final VnfmFactory vnfmFactory;
+	private final MapperFacade mapper;
 
-	public VnfmGateway261(final ObjectProvider<VnfmFactory> vnfmFactory, final ObjectProvider<NfvoFactory> nfvoFactory) {
+	public VnfmGateway261(final ObjectProvider<VnfmFactory> vnfmFactory, final ObjectProvider<NfvoFactory> nfvoFactory, final MapperFacade mapper) {
 		this.vnfmFactory = vnfmFactory.getIfAvailable();
 		this.nfvoFactory = nfvoFactory.getIfAvailable();
+		this.mapper = mapper;
 	}
 
 	@Override
@@ -90,30 +102,6 @@ public class VnfmGateway261 implements HttpGateway {
 	public void makeGrantLinks(final Object manoGrant) {
 		if (manoGrant instanceof final GrantRequest grant) {
 			vnfmFactory.makeGrantRequestLink(grant);
-		}
-	}
-
-	@Override
-	public String getUrlFor(final ApiVersionType type) {
-		switch (type) {
-		case SOL003_VNFFM:
-			return "vnffm/v1/";
-		case SOL003_VNFIND:
-			return "vnfind/v1/";
-		case SOL003_VNFPM:
-			return "vnfpm/v1/";
-		case SOL003_VNFSNAPSHOTPKGM:
-			return "vnfsnapshotpkgm/v1/";
-		case SOL003_VNFLCM:
-			return "vnflcm/v1/";
-		case SOL003_VRQAN:
-			return "vrqan/v1/";
-		case SOL003_GRANT:
-			return "grant/v1/";
-		case SOL003_VNFPKGM:
-			return "vnfpkgm/v1/";
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + type);
 		}
 	}
 
@@ -224,5 +212,40 @@ public class VnfmGateway261 implements HttpGateway {
 	@Override
 	public String getVersion() {
 		return "2.6.1";
+	}
+
+	@Override
+	public Class<?> createVnfPackageRequest(final Map<String, String> userDefinedData) {
+		return CreateVnfPkgInfoRequest.class;
+	}
+
+	@Override
+	public ParameterizedTypeReference<List<Class<?>>> getNsdPackageClassList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Class<?> getNsdPackageClass() {
+		return NsdInfo.class;
+	}
+
+	@Override
+	public Object createNsdPackageRequest(final Map<String, Object> userDefinedData) {
+		final CreateNsdInfoRequest req = new CreateNsdInfoRequest();
+		req.setUserDefinedData(userDefinedData.entrySet().stream().map(x -> Map.entry(x.getKey(), x.getValue().toString())).collect(Collectors.toMap(Entry::getKey, Entry::getValue)));
+		return req;
+	}
+
+	@Override
+	public Object createGrantRequest(final GrantInterface grant) {
+		final GrantRequest g = mapper.map(grant, GrantRequest.class);
+		final GrantRequestLinks links = new GrantRequestLinks();
+		final Link link = new Link();
+		link.setHref("http://");
+		links.setVnfInstance(link);
+		links.setVnfLcmOpOcc(link);
+		g.setLinks(links);
+		return g;
 	}
 }

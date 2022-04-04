@@ -49,4 +49,9 @@ public class EventMessage {
 		this.objectId = objectId;
 	}
 
+	@Override
+	public String toString() {
+		return "EventMessage [notificationEvent=" + notificationEvent + ", objectId=" + objectId + "]";
+	}
+
 }

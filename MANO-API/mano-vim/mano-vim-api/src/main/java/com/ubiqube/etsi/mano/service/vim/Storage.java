@@ -36,13 +36,6 @@ public interface Storage {
 
 	void deleteObjectStorage(String resourceId);
 
-	/**
-	 * Add VIM custom Node inside the global dependency network.
-	 *
-	 * @param connectionStorage The link descriptor instance.
-	 */
-	// TODO void addNodeToPlans(VnfConnections connectionStorage);
-
 	Optional<SwImage> getSwImageMatching(SoftwareImage img);
 
 	SwImage uploadSoftwareImage(InputStream is, SoftwareImage softwareImage);

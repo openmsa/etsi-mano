@@ -24,12 +24,14 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.NotificationLink;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents the links to resources that a VNF package management notification can contain.
+ * This type represents the links to resources that a VNF package management
+ * notification can contain.
  */
 @ApiModel(description = "This type represents the links to resources that a VNF package management notification can contain.   ")
 @Validated
@@ -47,7 +49,9 @@ public class PkgmLinks {
 	}
 
 	/**
-	 * Link to the resource representing the VNF package to which the notified change applies, i.e. the \"Individual VNF package\" resource that represents the VNF package.
+	 * Link to the resource representing the VNF package to which the notified
+	 * change applies, i.e. the \"Individual VNF package\" resource that represents
+	 * the VNF package.
 	 *
 	 * @return vnfPackage
 	 **/
@@ -92,7 +96,7 @@ public class PkgmLinks {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final PkgmLinks pkgmLinks = (PkgmLinks) o;
@@ -117,7 +121,8 @@ public class PkgmLinks {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

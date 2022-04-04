@@ -98,7 +98,8 @@ public class ServerService {
 		final String uri = "/" + new File(hg.getUrlFor(ApiVersionType.SOL003_VNFPKGM), "subscriptions/{id}");
 		final URI resp = rest.uriBuilder().path(uri).build(x.getRemoteSubscriptionId());
 		try {
-			rest.deleteWithReturn(resp, null);
+			final String version = hg.getHeaderVersion(ApiVersionType.SOL003_VNFPKGM).orElse(null);
+			rest.deleteWithReturn(resp, null, version);
 		} catch (final RuntimeException e) {
 			LOG.debug("", e);
 			LOG.warn("Could not remove subscription: {}", x.getRemoteSubscriptionId());
@@ -141,7 +142,10 @@ public class ServerService {
 	}
 
 	private HttpGateway filterServer(final Servers servers) {
-		return httpGateway.stream().filter(x -> x.getVersion().equals(servers.getVersion())).findAny().orElseThrow(() -> new GenericException("Unable to find version " + servers.getVersion()));
+		return httpGateway.stream()
+				.filter(x -> x.getVersion().equals(servers.getVersion()))
+				.findAny()
+				.orElseThrow(() -> new GenericException("Unable to find version " + servers.getVersion()));
 	}
 
 }

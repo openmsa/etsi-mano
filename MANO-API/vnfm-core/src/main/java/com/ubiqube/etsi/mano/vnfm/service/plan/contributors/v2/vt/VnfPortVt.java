@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.vnfm.service.plan.contributors.v2.vt;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -26,7 +28,14 @@ import java.util.List;
 
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfPortTask;
 import com.ubiqube.etsi.mano.orchestrator.NamedDependency;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class VnfPortVt extends VnfVtBase<VnfPortTask> {
 
 	public VnfPortVt(final VnfPortTask nt) {
@@ -35,26 +44,25 @@ public class VnfPortVt extends VnfVtBase<VnfPortTask> {
 
 	@Override
 	public List<NamedDependency> getNameDependencies() {
-		// TODO Auto-generated method stub
-		return null;
+		if (getParameters().getExternal() != null) {
+			return List.of();
+		}
+		return Arrays.asList(new NamedDependency(Network.class, getParameters().getVnfLinkPort().getVirtualLink()));
 	}
 
 	@Override
 	public List<NamedDependency> getNamedProduced() {
-		// TODO Auto-generated method stub
-		return null;
+		return Arrays.asList(new NamedDependency(VnfPortNode.class, getParameters().getToscaName()));
 	}
 
 	@Override
 	public String getFactoryProviderId() {
-		// TODO Auto-generated method stub
-		return null;
+		return "PORT";
 	}
 
 	@Override
 	public String getVimProviderId() {
-		// TODO Auto-generated method stub
-		return null;
+		return "PORT";
 	}
 
 }

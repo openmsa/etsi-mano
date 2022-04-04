@@ -28,9 +28,11 @@ import com.ubiqube.etsi.mano.service.graph.WfProduce;
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ * @deprecated Use UnitOfWork from orchestrator module.
  * @param <U>
  * @param <P>
  */
+@Deprecated(forRemoval = true)
 public interface UnitOfWork<U extends Task, P> extends UnitOfWorkBase, Serializable {
 
 	String exec(P params);

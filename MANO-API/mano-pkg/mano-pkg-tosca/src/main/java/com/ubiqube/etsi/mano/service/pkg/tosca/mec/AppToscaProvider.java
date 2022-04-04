@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.mec;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ public class AppToscaProvider extends AbstractPackageReader implements AppPackag
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppToscaProvider.class);
 
-	public AppToscaProvider(final byte[] data) {
+	public AppToscaProvider(final InputStream data) {
 		super(data);
 	}
 

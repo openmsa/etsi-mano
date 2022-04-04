@@ -37,4 +37,15 @@ public class NsVnf {
 	private String name;
 	private String flavourId;
 	private String virtualLink;
+	private String virtualLink1;
+	private String virtualLink2;
+	private String virtualLink3;
+	private String virtualLink4;
+	private String virtualLink5;
+	private String virtualLink6;
+	private String virtualLink7;
+	private String virtualLink8;
+	private String virtualLink9;
+	private String virtualLink10;
+
 }

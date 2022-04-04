@@ -27,18 +27,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-
 /**
- * This type represents an externally-managed internal VL. It shall comply with the provisions defined in Table 6.5.3.27-1.
+ * This type represents an externally-managed internal VL. It shall comply with
+ * the provisions defined in Table 6.5.3.27-1.
  */
 @Schema(description = "This type represents an externally-managed internal VL. It shall comply with the provisions defined in Table 6.5.3.27-1. ")
 @Validated
 public class ExtManagedVirtualLinkData {
 
 	private String id;
-
-	@JsonProperty("extManagedVirtualLinkId")
-	private String extManagedVirtualLinkId = null;
 
 	@JsonProperty("vnfVirtualLinkDescId")
 	private String vmfVirtualLinkDescId = null;
@@ -52,25 +49,12 @@ public class ExtManagedVirtualLinkData {
 	@JsonProperty("resourceId")
 	private String resourceId = null;
 
-	public ExtManagedVirtualLinkData extManagedVirtualLinkId(final String extManagedVirtualLinkId) {
-		this.extManagedVirtualLinkId = extManagedVirtualLinkId;
-		return this;
-	}
-
 	/**
 	 * The identifier of the externally-managed internal VL instance, if provided.
 	 *
 	 * @return extManagedVirtualLinkId
 	 **/
 	@Schema(description = "The identifier of the externally-managed internal VL instance, if provided. ")
-
-	public String getExtManagedVirtualLinkId() {
-		return extManagedVirtualLinkId;
-	}
-
-	public void setExtManagedVirtualLinkId(final String extManagedVirtualLinkId) {
-		this.extManagedVirtualLinkId = extManagedVirtualLinkId;
-	}
 
 	public ExtManagedVirtualLinkData vmfVirtualLinkDescId(final String vmfVirtualLinkDescId) {
 		this.vmfVirtualLinkDescId = vmfVirtualLinkDescId;
@@ -106,7 +90,9 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Identifier of the VIM that manage this resource. This attribute shall only be supported and present if VNFrelated resource management in direct mode is applicable.
+	 * Identifier of the VIM that manage this resource. This attribute shall only be
+	 * supported and present if VNFrelated resource management in direct mode is
+	 * applicable.
 	 *
 	 * @return vimId
 	 **/
@@ -126,7 +112,10 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Identifies the entity responsible for the management of this resource. This attribute shall only be supported and present if VNF-related resource management in indirect mode is applicable. The identification scheme is outside the scope of the present document.
+	 * Identifies the entity responsible for the management of this resource. This
+	 * attribute shall only be supported and present if VNF-related resource
+	 * management in indirect mode is applicable. The identification scheme is
+	 * outside the scope of the present document.
 	 *
 	 * @return resourceProviderId
 	 **/
@@ -146,7 +135,8 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * The identifier of the resource in the scope of the VIM or the resource provider.
+	 * The identifier of the resource in the scope of the VIM or the resource
+	 * provider.
 	 *
 	 * @return resourceId
 	 **/
@@ -166,12 +156,11 @@ public class ExtManagedVirtualLinkData {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final ExtManagedVirtualLinkData extManagedVirtualLinkData = (ExtManagedVirtualLinkData) o;
 		return Objects.equals(this.id, extManagedVirtualLinkData.id) &&
-				Objects.equals(this.extManagedVirtualLinkId, extManagedVirtualLinkData.extManagedVirtualLinkId) &&
 				Objects.equals(this.vmfVirtualLinkDescId, extManagedVirtualLinkData.vmfVirtualLinkDescId) &&
 				Objects.equals(this.vimId, extManagedVirtualLinkData.vimId) &&
 				Objects.equals(this.resourceProviderId, extManagedVirtualLinkData.resourceProviderId) &&
@@ -180,7 +169,7 @@ public class ExtManagedVirtualLinkData {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(extManagedVirtualLinkId, vmfVirtualLinkDescId, vimId, resourceProviderId, resourceId);
+		return Objects.hash(vmfVirtualLinkDescId, vimId, resourceProviderId, resourceId);
 	}
 
 	@Override
@@ -189,7 +178,6 @@ public class ExtManagedVirtualLinkData {
 		sb.append("class ExtManagedVirtualLinkData {\n");
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    extManagedVirtualLinkId: ").append(toIndentedString(extManagedVirtualLinkId)).append("\n");
 		sb.append("    vmfVirtualLinkDescId: ").append(toIndentedString(vmfVirtualLinkDescId)).append("\n");
 		sb.append("    vimId: ").append(toIndentedString(vimId)).append("\n");
 		sb.append("    resourceProviderId: ").append(toIndentedString(resourceProviderId)).append("\n");
@@ -199,7 +187,8 @@ public class ExtManagedVirtualLinkData {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

@@ -32,8 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.nsd.PnfFrontController;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.CreatePnfdInfoRequest;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.Link;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.PnfdInfo;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.PnfdInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.PnfdInfoModifications;

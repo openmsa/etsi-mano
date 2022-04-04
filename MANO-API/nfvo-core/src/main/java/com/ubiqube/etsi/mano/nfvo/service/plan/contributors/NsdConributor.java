@@ -22,21 +22,25 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.controller.vnflcm.VnfInstanceLcm;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.NsdPackageNsdPackage;
+import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
-import com.ubiqube.etsi.mano.nfvo.controller.nslcm.NsInstanceControllerService;
+import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.NsInstanceService;
 import com.ubiqube.etsi.mano.nfvo.service.graph.NsBundleAdapter;
-import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsVt;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsCreateVt;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdInstantiateNode;
+import com.ubiqube.etsi.mano.service.NsScaleStrategy;
+import com.ubiqube.etsi.mano.service.graph.vt.NsVtBase;
 
 /**
  *
@@ -44,52 +48,81 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
  *
  */
 @Service
-public class NsdConributor extends AbstractNsContributor<NsdTask, NsVt> {
+public class NsdConributor extends AbstractNsContributor<NsdTask, NsVtBase<NsdTask>> {
 	private final NsInstanceService nsInstanceService;
-	private final NsInstanceControllerService nsInstanceControllerService;
-	private final VnfInstanceLcm nsLcmOpOccsService;
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
+	private final NsScaleStrategy nsScaleStrategy;
 
-	public NsdConributor(final NsInstanceService nsInstanceService, final NsInstanceControllerService nsInstanceControllerService, final VnfInstanceLcm nsLcmOpOccsService,
-			final NsLiveInstanceJpa nsLiveInstanceJpa) {
+	public NsdConributor(final NsInstanceService nsInstanceService, final NsLiveInstanceJpa nsLiveInstanceJpa, final NsScaleStrategy nsScaleStrategy) {
 		this.nsInstanceService = nsInstanceService;
-		this.nsInstanceControllerService = nsInstanceControllerService;
-		this.nsLcmOpOccsService = nsLcmOpOccsService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
+		this.nsScaleStrategy = nsScaleStrategy;
 	}
 
-	private List<NsVt> doTerminate(final NsdInstance instance) {
-		final List<NsVt> ret = new ArrayList<>();
+	private List<NsVtBase<NsdTask>> doTerminate(final NsdInstance instance) {
+		final List<NsVtBase<NsdTask>> ret = new ArrayList<>();
 		final List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsdTask.class.getSimpleName());
 		insts.stream().forEach(x -> {
 			final NsdTask nt = createDeleteTask(NsdTask::new, x);
-			ret.add(new NsVt(nt));
+			ret.add(new NsCreateVt(nt));
 		});
 		return ret;
 	}
 
 	@Override
 	public Class<? extends Node> getNode() {
-		return NsdNode.class;
+		return NsdInstantiateNode.class;
 	}
 
 	@Override
-	protected List<NsVt> nsContribute(final NsBundleAdapter bundle, final NsBlueprint blueprint) {
+	protected List<NsVtBase<NsdTask>> nsContribute(final NsBundleAdapter bundle, final NsBlueprint blueprint) {
 		if (blueprint.getOperation() == PlanOperationType.TERMINATE) {
 			return doTerminate(blueprint.getInstance());
 		}
 
-		final Set<NsdPackage> saps = nsInstanceService.findNestedNsdByNsInstance(bundle.nsPackage());
-		return saps.stream()
-				.filter(x -> 0 == nsInstanceService.countLiveInstanceOfNsd(blueprint.getNsInstance(), x.getId()))
-				.map(x -> {
-					final NsdInstance inst = nsInstanceControllerService.createNsd(x.getNsdId().toString(), "nested_of_" + blueprint.getNsInstance().getId(), "");
-					final NsdTask nsd = createTask(NsdTask::new);
-					nsd.setNsdId(inst.getId());
-					nsd.setChangeType(ChangeType.ADDED);
-					nsd.setVirtualLinks(x.getNsVirtualLinks());
-					return new NsVt(nsd);
-				}).toList();
+		final Set<NsdPackage> nsds = nsInstanceService.findNestedNsdByNsInstance(bundle.nsPackage());
+		final List<NsVtBase<NsdTask>> ret = new ArrayList<>();
+		nsds.stream()
+				.forEach(x -> {
+					final NsdPackageNsdPackage nsPackageNsPackage = find(x, bundle.nsPackage().getNestedNsdInfoIds());
+					final int curr = nsInstanceService.countLiveInstanceOfNsd(blueprint.getNsInstance(), x.getNsdName());
+					final int inst = nsScaleStrategy.getNumberOfInstances(nsPackageNsPackage, blueprint);
+					if (curr > inst) {
+						remove(curr - inst, blueprint.getInstance(), ret);
+					} else if (curr < inst) {
+						add(inst - curr, x, nsPackageNsPackage, ret);
+					}
+				});
+		return ret;
+	}
+
+	private static void add(final int cnt, final NsdPackage pkg, final NsdPackageNsdPackage nsPackageNsPackage, final List<NsVtBase<NsdTask>> ret) {
+		for (int i = 0; i < cnt; i++) {
+			final NsdTask nsd = createTask(NsdTask::new);
+			nsd.setNsdId(pkg.getId());
+			nsd.setChangeType(ChangeType.ADDED);
+			nsd.setType(ResourceTypeEnum.NSD);
+			nsd.setVirtualLinks(nsPackageNsPackage.getVirtualLinks());
+			ret.add(new NsCreateVt(nsd));
+		}
+	}
+
+	private void remove(final int cnt, final NsdInstance instance, final List<NsVtBase<NsdTask>> ret) {
+		final List<NsLiveInstance> insts = nsLiveInstanceJpa.findByNsdInstanceAndClass(instance, NsVnfTask.class.getSimpleName());
+		for (int i = 0; i < cnt; i++) {
+			final NsdTask task = (NsdTask) insts.get(i).getNsTask();
+			final NsdTask nt = createDeleteTask(NsdTask::new, insts.get(i));
+			nt.setVimResourceId(task.getVimResourceId());
+			nt.setServer(task.getServer());
+			ret.add(new NsCreateVt(nt));
+		}
+	}
+
+	private static NsdPackageNsdPackage find(final NsdPackage nsPackage, final Set<NsdPackageNsdPackage> nestedNsdInfoIds) {
+		return nestedNsdInfoIds.stream()
+				.filter(x -> x.getChild().getId().compareTo(nsPackage.getId()) == 0)
+				.findFirst()
+				.orElseThrow(() -> new NotFoundException("NSD Package not found: " + nsPackage.getId()));
 	}
 
 }

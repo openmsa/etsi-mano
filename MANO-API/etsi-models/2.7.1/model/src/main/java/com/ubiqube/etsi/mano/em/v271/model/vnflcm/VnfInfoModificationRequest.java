@@ -16,283 +16,304 @@
  */
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfcInfoModifications;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents attribute modifications for an \&quot;Individual VNF instance\&quot; resource, i.e. modifications to a resource representation based on the \&quot;VnfInstance\&quot; data type. The attributes of \&quot;VnfInstance\&quot; that can be modified according to the provisions in clause 5.5.2.2 are included in the \&quot;VnfInfoModificationRequest\&quot; data type. The \&quot;VnfInfoModificationRequest\&quot; data type shall comply with the provisions defined in table 5.5.2.12-1. 
+ * This type represents attribute modifications for an \&quot;Individual VNF
+ * instance\&quot; resource, i.e. modifications to a resource representation
+ * based on the \&quot;VnfInstance\&quot; data type. The attributes of
+ * \&quot;VnfInstance\&quot; that can be modified according to the provisions in
+ * clause 5.5.2.2 are included in the \&quot;VnfInfoModificationRequest\&quot;
+ * data type. The \&quot;VnfInfoModificationRequest\&quot; data type shall
+ * comply with the provisions defined in table 5.5.2.12-1.
  */
 @ApiModel(description = "This type represents attribute modifications for an \"Individual VNF instance\" resource, i.e. modifications to a resource representation based on the \"VnfInstance\" data type. The attributes of \"VnfInstance\" that can be modified according to the provisions in clause 5.5.2.2 are included in the \"VnfInfoModificationRequest\" data type. The \"VnfInfoModificationRequest\" data type shall comply with the provisions defined in table 5.5.2.12-1. ")
 @Validated
 
-public class VnfInfoModificationRequest   {
-  @JsonProperty("vnfInstanceName")
-  private String vnfInstanceName = null;
+public class VnfInfoModificationRequest {
+	@JsonProperty("vnfInstanceName")
+	private String vnfInstanceName = null;
 
-  @JsonProperty("vnfInstanceDescription")
-  private String vnfInstanceDescription = null;
+	@JsonProperty("vnfInstanceDescription")
+	private String vnfInstanceDescription = null;
 
-  @JsonProperty("vnfdId")
-  private String vnfdId = null;
+	@JsonProperty("vnfdId")
+	private String vnfdId = null;
 
-  @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+	@JsonProperty("vnfConfigurableProperties")
+	private Map<String, String> vnfConfigurableProperties = null;
 
-  @JsonProperty("metadata")
-  private KeyValuePairs metadata = null;
+	@JsonProperty("metadata")
+	private Map<String, String> metadata = null;
 
-  @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+	@JsonProperty("extensions")
+	private Map<String, String> extensions = null;
 
-  @JsonProperty("vnfcInfoModifications")
-  @Valid
-  private List<VnfcInfoModifications> vnfcInfoModifications = null;
+	@JsonProperty("vnfcInfoModifications")
+	@Valid
+	private List<VnfcInfoModifications> vnfcInfoModifications = null;
 
-  @JsonProperty("vnfcInfoModificationsDeleteIds")
-  @Valid
-  private List<String> vnfcInfoModificationsDeleteIds = null;
+	@JsonProperty("vnfcInfoModificationsDeleteIds")
+	@Valid
+	private List<String> vnfcInfoModificationsDeleteIds = null;
 
-  public VnfInfoModificationRequest vnfInstanceName(String vnfInstanceName) {
-    this.vnfInstanceName = vnfInstanceName;
-    return this;
-  }
+	public VnfInfoModificationRequest vnfInstanceName(final String vnfInstanceName) {
+		this.vnfInstanceName = vnfInstanceName;
+		return this;
+	}
 
-  /**
-   * New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or \"null\" to remove the attribute. 
-   * @return vnfInstanceName
-  **/
-  @ApiModelProperty(value = "New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or \"null\" to remove the attribute. ")
+	/**
+	 * New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or
+	 * \"null\" to remove the attribute.
+	 *
+	 * @return vnfInstanceName
+	 **/
+	@ApiModelProperty(value = "New value of the \"vnfInstanceName\" attribute in \"VnfInstance\", or \"null\" to remove the attribute. ")
 
+	public String getVnfInstanceName() {
+		return vnfInstanceName;
+	}
 
-  public String getVnfInstanceName() {
-    return vnfInstanceName;
-  }
+	public void setVnfInstanceName(final String vnfInstanceName) {
+		this.vnfInstanceName = vnfInstanceName;
+	}
 
-  public void setVnfInstanceName(String vnfInstanceName) {
-    this.vnfInstanceName = vnfInstanceName;
-  }
+	public VnfInfoModificationRequest vnfInstanceDescription(final String vnfInstanceDescription) {
+		this.vnfInstanceDescription = vnfInstanceDescription;
+		return this;
+	}
 
-  public VnfInfoModificationRequest vnfInstanceDescription(String vnfInstanceDescription) {
-    this.vnfInstanceDescription = vnfInstanceDescription;
-    return this;
-  }
+	/**
+	 * New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or
+	 * \"null\" to remove the attribute.
+	 *
+	 * @return vnfInstanceDescription
+	 **/
+	@ApiModelProperty(value = "New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or \"null\" to remove the attribute. ")
 
-  /**
-   * New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or \"null\" to remove the attribute. 
-   * @return vnfInstanceDescription
-  **/
-  @ApiModelProperty(value = "New value of the \"vnfInstanceDescription\" attribute in \"VnfInstance\", or \"null\" to remove the attribute. ")
+	public String getVnfInstanceDescription() {
+		return vnfInstanceDescription;
+	}
 
+	public void setVnfInstanceDescription(final String vnfInstanceDescription) {
+		this.vnfInstanceDescription = vnfInstanceDescription;
+	}
 
-  public String getVnfInstanceDescription() {
-    return vnfInstanceDescription;
-  }
+	public VnfInfoModificationRequest vnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+		return this;
+	}
 
-  public void setVnfInstanceDescription(String vnfInstanceDescription) {
-    this.vnfInstanceDescription = vnfInstanceDescription;
-  }
+	/**
+	 * New value of the \"vnfdId\" attribute in \"VnfInstance\". The value \"null\"
+	 * is not permitted.
+	 *
+	 * @return vnfdId
+	 **/
+	@ApiModelProperty(value = "New value of the \"vnfdId\" attribute in \"VnfInstance\". The value \"null\" is not permitted. ")
 
-  public VnfInfoModificationRequest vnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-    return this;
-  }
+	public String getVnfdId() {
+		return vnfdId;
+	}
 
-  /**
-   * New value of the \"vnfdId\" attribute in \"VnfInstance\". The value \"null\" is not permitted. 
-   * @return vnfdId
-  **/
-  @ApiModelProperty(value = "New value of the \"vnfdId\" attribute in \"VnfInstance\". The value \"null\" is not permitted. ")
+	public void setVnfdId(final String vnfdId) {
+		this.vnfdId = vnfdId;
+	}
 
+	public VnfInfoModificationRequest vnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
+		this.vnfConfigurableProperties = vnfConfigurableProperties;
+		return this;
+	}
 
-  public String getVnfdId() {
-    return vnfdId;
-  }
+	/**
+	 * Modifications of the \"vnfConfigurableProperties\" attribute in
+	 * \"VnfInstance\". If present, these modifications shall be applied according
+	 * to the rules of JSON Merge PATCH (see IETF RFC 7396 [15]).
+	 *
+	 * @return vnfConfigurableProperties
+	 **/
+	@ApiModelProperty(value = "Modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396 [15]). ")
 
-  public void setVnfdId(String vnfdId) {
-    this.vnfdId = vnfdId;
-  }
+	@Valid
 
-  public VnfInfoModificationRequest vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
-    this.vnfConfigurableProperties = vnfConfigurableProperties;
-    return this;
-  }
+	public Map<String, String> getVnfConfigurableProperties() {
+		return vnfConfigurableProperties;
+	}
 
-  /**
-   * Modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396 [15]). 
-   * @return vnfConfigurableProperties
-  **/
-  @ApiModelProperty(value = "Modifications of the \"vnfConfigurableProperties\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF RFC 7396 [15]). ")
+	public void setVnfConfigurableProperties(final Map<String, String> vnfConfigurableProperties) {
+		this.vnfConfigurableProperties = vnfConfigurableProperties;
+	}
 
-  @Valid
+	public VnfInfoModificationRequest metadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+		return this;
+	}
 
-  public KeyValuePairs getVnfConfigurableProperties() {
-    return vnfConfigurableProperties;
-  }
+	/**
+	 * Modifications of the \"metadattametadata\" attribute in \"VnfInstance\". If
+	 * present, these modifications shall be applied according to the rules of JSON
+	 * Merge PATCH (see IETF RFC 7396 [15]).
+	 *
+	 * @return metadata
+	 **/
+	@ApiModelProperty(value = "Modifications of the \"metadattametadata\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF  RFC  7396  [15]). ")
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
-    this.vnfConfigurableProperties = vnfConfigurableProperties;
-  }
+	@Valid
 
-  public VnfInfoModificationRequest metadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-    return this;
-  }
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
 
-  /**
-   * Modifications of the \"metadattametadata\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF  RFC  7396  [15]). 
-   * @return metadata
-  **/
-  @ApiModelProperty(value = "Modifications of the \"metadattametadata\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF  RFC  7396  [15]). ")
+	public void setMetadata(final Map<String, String> metadata) {
+		this.metadata = metadata;
+	}
 
-  @Valid
+	public VnfInfoModificationRequest extensions(final Map<String, String> extensions) {
+		this.extensions = extensions;
+		return this;
+	}
 
-  public KeyValuePairs getMetadata() {
-    return metadata;
-  }
+	/**
+	 * Modifications of the \"extensions\" attribute in \"VnfInstance\". If present,
+	 * these modifications shall be applied according to the rules of JSON Merge
+	 * PATCH (see IETF RFC 7396 [15]).
+	 *
+	 * @return extensions
+	 **/
+	@ApiModelProperty(value = "Modifications of the \"extensions\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF  RFC  7396  [15]). ")
 
-  public void setMetadata(KeyValuePairs metadata) {
-    this.metadata = metadata;
-  }
+	@Valid
 
-  public VnfInfoModificationRequest extensions(KeyValuePairs extensions) {
-    this.extensions = extensions;
-    return this;
-  }
+	public Map<String, String> getExtensions() {
+		return extensions;
+	}
 
-  /**
-   * Modifications of the \"extensions\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF  RFC  7396  [15]). 
-   * @return extensions
-  **/
-  @ApiModelProperty(value = "Modifications of the \"extensions\" attribute in \"VnfInstance\". If present, these modifications shall be applied according to the rules of JSON Merge PATCH (see IETF  RFC  7396  [15]). ")
+	public void setExtensions(final Map<String, String> extensions) {
+		this.extensions = extensions;
+	}
 
-  @Valid
+	public VnfInfoModificationRequest vnfcInfoModifications(final List<VnfcInfoModifications> vnfcInfoModifications) {
+		this.vnfcInfoModifications = vnfcInfoModifications;
+		return this;
+	}
 
-  public KeyValuePairs getExtensions() {
-    return extensions;
-  }
+	public VnfInfoModificationRequest addVnfcInfoModificationsItem(final VnfcInfoModifications vnfcInfoModificationsItem) {
+		if (this.vnfcInfoModifications == null) {
+			this.vnfcInfoModifications = new ArrayList<>();
+		}
+		this.vnfcInfoModifications.add(vnfcInfoModificationsItem);
+		return this;
+	}
 
-  public void setExtensions(KeyValuePairs extensions) {
-    this.extensions = extensions;
-  }
+	/**
+	 * Modifications of certain entries in the \"vnfcInfo\" attribute array in the
+	 * \"instantiatedVnfInfo\" attribute of \"VnfInstance\".\" to be used as
+	 * \"newList\" as defined below this table.
+	 *
+	 * @return vnfcInfoModifications
+	 **/
+	@ApiModelProperty(value = "Modifications of certain entries in the \"vnfcInfo\" attribute array in the \"instantiatedVnfInfo\" attribute of \"VnfInstance\".\" to be used as \"newList\" as defined below this table. ")
 
-  public VnfInfoModificationRequest vnfcInfoModifications(List<VnfcInfoModifications> vnfcInfoModifications) {
-    this.vnfcInfoModifications = vnfcInfoModifications;
-    return this;
-  }
+	@Valid
 
-  public VnfInfoModificationRequest addVnfcInfoModificationsItem(VnfcInfoModifications vnfcInfoModificationsItem) {
-    if (this.vnfcInfoModifications == null) {
-      this.vnfcInfoModifications = new ArrayList<>();
-    }
-    this.vnfcInfoModifications.add(vnfcInfoModificationsItem);
-    return this;
-  }
+	public List<VnfcInfoModifications> getVnfcInfoModifications() {
+		return vnfcInfoModifications;
+	}
 
-  /**
-   * Modifications of certain entries in the \"vnfcInfo\" attribute array in the \"instantiatedVnfInfo\" attribute of \"VnfInstance\".\" to be used as \"newList\" as defined below this table. 
-   * @return vnfcInfoModifications
-  **/
-  @ApiModelProperty(value = "Modifications of certain entries in the \"vnfcInfo\" attribute array in the \"instantiatedVnfInfo\" attribute of \"VnfInstance\".\" to be used as \"newList\" as defined below this table. ")
+	public void setVnfcInfoModifications(final List<VnfcInfoModifications> vnfcInfoModifications) {
+		this.vnfcInfoModifications = vnfcInfoModifications;
+	}
 
-  @Valid
+	public VnfInfoModificationRequest vnfcInfoModificationsDeleteIds(final List<String> vnfcInfoModificationsDeleteIds) {
+		this.vnfcInfoModificationsDeleteIds = vnfcInfoModificationsDeleteIds;
+		return this;
+	}
 
-  public List<VnfcInfoModifications> getVnfcInfoModifications() {
-    return vnfcInfoModifications;
-  }
+	public VnfInfoModificationRequest addVnfcInfoModificationsDeleteIdsItem(final String vnfcInfoModificationsDeleteIdsItem) {
+		if (this.vnfcInfoModificationsDeleteIds == null) {
+			this.vnfcInfoModificationsDeleteIds = new ArrayList<>();
+		}
+		this.vnfcInfoModificationsDeleteIds.add(vnfcInfoModificationsDeleteIdsItem);
+		return this;
+	}
 
-  public void setVnfcInfoModifications(List<VnfcInfoModifications> vnfcInfoModifications) {
-    this.vnfcInfoModifications = vnfcInfoModifications;
-  }
+	/**
+	 * List of identifiers entries to be deleted from the 'vnfcInfoModifications\"
+	 * attribute array to be used as \"deleteIdList\" as defined below this table.
+	 *
+	 * @return vnfcInfoModificationsDeleteIds
+	 **/
+	@ApiModelProperty(value = "List of identifiers entries to be deleted from the 'vnfcInfoModifications\" attribute array to be used as \"deleteIdList\" as defined below this table. ")
 
-  public VnfInfoModificationRequest vnfcInfoModificationsDeleteIds(List<String> vnfcInfoModificationsDeleteIds) {
-    this.vnfcInfoModificationsDeleteIds = vnfcInfoModificationsDeleteIds;
-    return this;
-  }
+	public List<String> getVnfcInfoModificationsDeleteIds() {
+		return vnfcInfoModificationsDeleteIds;
+	}
 
-  public VnfInfoModificationRequest addVnfcInfoModificationsDeleteIdsItem(String vnfcInfoModificationsDeleteIdsItem) {
-    if (this.vnfcInfoModificationsDeleteIds == null) {
-      this.vnfcInfoModificationsDeleteIds = new ArrayList<>();
-    }
-    this.vnfcInfoModificationsDeleteIds.add(vnfcInfoModificationsDeleteIdsItem);
-    return this;
-  }
+	public void setVnfcInfoModificationsDeleteIds(final List<String> vnfcInfoModificationsDeleteIds) {
+		this.vnfcInfoModificationsDeleteIds = vnfcInfoModificationsDeleteIds;
+	}
 
-  /**
-   * List of identifiers entries to be deleted from the 'vnfcInfoModifications\" attribute array to be used as \"deleteIdList\" as defined below this table. 
-   * @return vnfcInfoModificationsDeleteIds
-  **/
-  @ApiModelProperty(value = "List of identifiers entries to be deleted from the 'vnfcInfoModifications\" attribute array to be used as \"deleteIdList\" as defined below this table. ")
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final VnfInfoModificationRequest vnfInfoModificationRequest = (VnfInfoModificationRequest) o;
+		return Objects.equals(this.vnfInstanceName, vnfInfoModificationRequest.vnfInstanceName) &&
+				Objects.equals(this.vnfInstanceDescription, vnfInfoModificationRequest.vnfInstanceDescription) &&
+				Objects.equals(this.vnfdId, vnfInfoModificationRequest.vnfdId) &&
+				Objects.equals(this.vnfConfigurableProperties, vnfInfoModificationRequest.vnfConfigurableProperties) &&
+				Objects.equals(this.metadata, vnfInfoModificationRequest.metadata) &&
+				Objects.equals(this.extensions, vnfInfoModificationRequest.extensions) &&
+				Objects.equals(this.vnfcInfoModifications, vnfInfoModificationRequest.vnfcInfoModifications) &&
+				Objects.equals(this.vnfcInfoModificationsDeleteIds, vnfInfoModificationRequest.vnfcInfoModificationsDeleteIds);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfInstanceName, vnfInstanceDescription, vnfdId, vnfConfigurableProperties, metadata, extensions, vnfcInfoModifications, vnfcInfoModificationsDeleteIds);
+	}
 
-  public List<String> getVnfcInfoModificationsDeleteIds() {
-    return vnfcInfoModificationsDeleteIds;
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class VnfInfoModificationRequest {\n");
 
-  public void setVnfcInfoModificationsDeleteIds(List<String> vnfcInfoModificationsDeleteIds) {
-    this.vnfcInfoModificationsDeleteIds = vnfcInfoModificationsDeleteIds;
-  }
+		sb.append("    vnfInstanceName: ").append(toIndentedString(vnfInstanceName)).append("\n");
+		sb.append("    vnfInstanceDescription: ").append(toIndentedString(vnfInstanceDescription)).append("\n");
+		sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
+		sb.append("    vnfConfigurableProperties: ").append(toIndentedString(vnfConfigurableProperties)).append("\n");
+		sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
+		sb.append("    extensions: ").append(toIndentedString(extensions)).append("\n");
+		sb.append("    vnfcInfoModifications: ").append(toIndentedString(vnfcInfoModifications)).append("\n");
+		sb.append("    vnfcInfoModificationsDeleteIds: ").append(toIndentedString(vnfcInfoModificationsDeleteIds)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    VnfInfoModificationRequest vnfInfoModificationRequest = (VnfInfoModificationRequest) o;
-    return Objects.equals(this.vnfInstanceName, vnfInfoModificationRequest.vnfInstanceName) &&
-        Objects.equals(this.vnfInstanceDescription, vnfInfoModificationRequest.vnfInstanceDescription) &&
-        Objects.equals(this.vnfdId, vnfInfoModificationRequest.vnfdId) &&
-        Objects.equals(this.vnfConfigurableProperties, vnfInfoModificationRequest.vnfConfigurableProperties) &&
-        Objects.equals(this.metadata, vnfInfoModificationRequest.metadata) &&
-        Objects.equals(this.extensions, vnfInfoModificationRequest.extensions) &&
-        Objects.equals(this.vnfcInfoModifications, vnfInfoModificationRequest.vnfcInfoModifications) &&
-        Objects.equals(this.vnfcInfoModificationsDeleteIds, vnfInfoModificationRequest.vnfcInfoModificationsDeleteIds);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfInstanceName, vnfInstanceDescription, vnfdId, vnfConfigurableProperties, metadata, extensions, vnfcInfoModifications, vnfcInfoModificationsDeleteIds);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class VnfInfoModificationRequest {\n");
-    
-    sb.append("    vnfInstanceName: ").append(toIndentedString(vnfInstanceName)).append("\n");
-    sb.append("    vnfInstanceDescription: ").append(toIndentedString(vnfInstanceDescription)).append("\n");
-    sb.append("    vnfdId: ").append(toIndentedString(vnfdId)).append("\n");
-    sb.append("    vnfConfigurableProperties: ").append(toIndentedString(vnfConfigurableProperties)).append("\n");
-    sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
-    sb.append("    extensions: ").append(toIndentedString(extensions)).append("\n");
-    sb.append("    vnfcInfoModifications: ").append(toIndentedString(vnfcInfoModifications)).append("\n");
-    sb.append("    vnfcInfoModificationsDeleteIds: ").append(toIndentedString(vnfcInfoModificationsDeleteIds)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

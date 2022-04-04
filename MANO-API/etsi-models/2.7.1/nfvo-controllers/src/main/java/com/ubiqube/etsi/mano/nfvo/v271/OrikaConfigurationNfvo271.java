@@ -31,8 +31,16 @@ import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.em.v271.model.SubscriptionAuthenticationParamsOauth2ClientCredentials;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ExtManagedVirtualLinkData;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscription;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.LccnSubscriptionRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfExtCpInfo;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfVirtualLinkResourceInfo;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfcResourceInfo;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
@@ -46,15 +54,9 @@ import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdInfo;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscription;
 import com.ubiqube.etsi.mano.model.v271.sol005.nsd.NsdmSubscriptionRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.AffectedVnf;
-import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.InstantiateNsRequest;
-import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.NsLcmOpOcc;
-import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfExtCpInfo;
-import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfVirtualLinkResourceInfo;
-import com.ubiqube.etsi.mano.model.v271.sol005.nslcm.VnfcResourceInfo;
-import com.ubiqube.etsi.mano.vnfm.v271.model.vnflcm.LccnSubscription;
 
 import ma.glasnost.orika.MapperFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
@@ -128,15 +130,10 @@ public class OrikaConfigurationNfvo271 implements OrikaMapperFactoryConfigurer {
 				.field("id", "resourceDefinitionId")
 				.field("type", "type")
 				.field("vduId", "vduId")
-				.register();
-		orikaMapperFactory.classMap(ResourceDefinition.class, GrantInformationExt.class)
-				.fieldBToA("id", "id")
 				.field("resource.vimConnectionId", "vimConnectionId")
 				.field("resource.resourceProviderId", "resourceProviderId")
-				.field("type", "type")
-				.field("vduId", "vduId")
-				.byDefault()
 				.register();
+
 		orikaMapperFactory.classMap(InstantiateNsRequest.class, NsdInstance.class)
 				.field("nsFlavourId", "instantiatedVnfInfo.flavourId")
 				.byDefault()
@@ -190,6 +187,16 @@ public class OrikaConfigurationNfvo271 implements OrikaMapperFactoryConfigurer {
 				.field("isAutomaticInvocation", "automaticInvocation")
 				.field("isCancelPending", "cancelPending")
 				.field("startTime", "audit.createdOn")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfBlueprint.class)
+				.field("vnfInstanceId", "vnfInstance.id")
+				// .field("resourceChanges", "tasks")
+				.field("grantId", "grantsRequestId")
+				.field("operationState", "operationStatus")
+				.field("isAutomaticInvocation", "automaticInvocation")
+				.field("isCancelPending", "cancelPending")
+				.field("operationParams", "parameters")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(NsLcmOpOccs.class, NsLcmOpOcc.class)

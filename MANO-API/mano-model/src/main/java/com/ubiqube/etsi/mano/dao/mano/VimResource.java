@@ -25,14 +25,37 @@ import javax.persistence.Embeddable;
 public class VimResource implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Identifier of the VIM connection to manage the resource. This attribute shall
+	 * only be supported and present if VNF- related resource management in direct
+	 * mode is applicable. The applicable "VimConnectionInfo" structure, which is
+	 * referenced by vimConnectionId, can be obtained from the "vimConnectionInfo"
+	 * attribute of the "VnfInstance" structure.
+	 */
+	private String vimConnectionId;
 
-	private String vimConnectionId = null;
+	/**
+	 * Identifier of the entity responsible for the management of the resource. This
+	 * attribute shall only be supported and present when VNF-related resource
+	 * management in indirect mode is applicable. The identification scheme is
+	 * outside the scope of the present document.
+	 */
+	private String resourceProviderId;
 
-	private String resourceProviderId = null;
+	/**
+	 * Identifier of the resource in the scope of the VIM or the resource provider.
+	 */
+	private String resourceId;
 
-	private String resourceId = null;
-
-	private String vimLevelResourceType = null;
+	/**
+	 * Type of the resource in the scope of the VIM or the resource provider. The
+	 * value set of the "vimLevelResourceType" attribute is within the scope of the
+	 * VIM or the resource provider and can be used as information that complements
+	 * the ResourceHandle. This value set is different from the value set of the
+	 * "type" attribute in the ResourceDefinition (refer to clause 9.5.3.2).
+	 * 
+	 */
+	private String vimLevelResourceType;
 
 	public String getVimConnectionId() {
 		return vimConnectionId;

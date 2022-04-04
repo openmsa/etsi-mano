@@ -17,9 +17,9 @@
 package com.ubiqube.etsi.mano.orchestrator;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.util.LinkedMultiValueMap;
 
@@ -35,11 +35,11 @@ import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 public class ContextImpl implements Context {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
-	private final Map<Class<? extends Node>, LinkedMultiValueMap<String, String>> context = new HashMap<>();
+	private final Map<Class<? extends Node>, LinkedMultiValueMap<String, String>> context = new ConcurrentHashMap<>();
 
 	@Override
 	public <U> void add(final UnitOfWork<U> uaow, final String res) {
-		context.computeIfAbsent(uaow.getNode(), x -> new LinkedMultiValueMap<>());
+		context.computeIfAbsent(uaow.getNode(), x -> new LinkedMultiValueMap<>(new ConcurrentHashMap<>()));
 		final LinkedMultiValueMap<String, String> m = context.get(uaow.getNode());
 		m.add(uaow.getTask().getName(), res);
 	}
@@ -47,7 +47,7 @@ public class ContextImpl implements Context {
 	@Override
 	public String get(final Class<? extends Node> class1, final String toscaName) {
 		final List<String> r = getList(class1, toscaName);
-		if ((null == r) || r.isEmpty()) {
+		if (null == r || r.isEmpty()) {
 			return null;
 		}
 		if (r.size() > 1) {
@@ -78,6 +78,11 @@ public class ContextImpl implements Context {
 		context.computeIfAbsent(class1, x -> new LinkedMultiValueMap<>());
 		final LinkedMultiValueMap<String, String> m = context.get(class1);
 		m.add(key, resourceId);
+	}
+
+	@Override
+	public String toString() {
+		return "ContextImpl [context=" + context + "]";
 	}
 
 }

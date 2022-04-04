@@ -42,10 +42,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.CreateThresholdRequest;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.Threshold;
+import com.ubiqube.etsi.mano.em.v271.model.vnfind.ThresholdModifications;
 import com.ubiqube.etsi.mano.model.ProblemDetails;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.CreateThresholdRequest;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.Threshold;
-import com.ubiqube.etsi.mano.model.v271.sol005.nsperfo.ThresholdModifications;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

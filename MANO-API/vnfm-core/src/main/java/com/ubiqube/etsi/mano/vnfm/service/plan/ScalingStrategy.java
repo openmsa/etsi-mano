@@ -20,10 +20,14 @@ import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
+import lombok.ToString;
+
 public interface ScalingStrategy {
+	@ToString
 	class NumberOfCompute {
 		private int current;
 		private int wanted;
@@ -62,5 +66,5 @@ public interface ScalingStrategy {
 
 	}
 
-	NumberOfCompute getNumberOfCompute(VnfBlueprint plan, VnfPackage vnfPackage, Set<ScaleInfo> scaling, VnfCompute x);
+	NumberOfCompute getNumberOfCompute(VnfBlueprint plan, VnfPackage vnfPackage, Set<ScaleInfo> scaling, VnfCompute x, VnfInstance instance);
 }

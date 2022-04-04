@@ -16,203 +16,214 @@
  */
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.VnfOperationalStateType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Map;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents request parameters for the \&quot;Operate VNF\&quot; operation. 
+ * This type represents request parameters for the \&quot;Operate VNF\&quot;
+ * operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Operate VNF\" operation. ")
 @Validated
 
-public class OperateVnfRequest   {
-  @JsonProperty("vnfcInstanceId")
-  @Valid
-  private List<String> vnfcInstanceId = null;
+public class OperateVnfRequest {
+	@JsonProperty("vnfcInstanceId")
+	@Valid
+	private List<String> vnfcInstanceId = null;
 
-  @JsonProperty("changeStateTo")
-  private VnfOperationalStateType changeStateTo = null;
+	@JsonProperty("changeStateTo")
+	private VnfOperationalStateType changeStateTo = null;
 
-  /**
-   * It signals whether forceful or graceful stop is requested. Ignored if changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down the VNF or the affected VNFCs immediately after accepting the request. 
-   */
-  public enum StopTypeEnum {
-    FORCEFUL("FORCEFUL");
+	/**
+	 * It signals whether forceful or graceful stop is requested. Ignored if
+	 * changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down
+	 * the VNF or the affected VNFCs immediately after accepting the request.
+	 */
+	public enum StopTypeEnum {
+		FORCEFUL("FORCEFUL");
 
-    private String value;
+		private final String value;
 
-    StopTypeEnum(String value) {
-      this.value = value;
-    }
+		StopTypeEnum(final String value) {
+			this.value = value;
+		}
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-    @JsonCreator
-    public static StopTypeEnum fromValue(String text) {
-      for (StopTypeEnum b : StopTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		@JsonCreator
+		public static StopTypeEnum fromValue(final String text) {
+			for (final StopTypeEnum b : StopTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("stopType")
-  private StopTypeEnum stopType = null;
+	@JsonProperty("stopType")
+	private StopTypeEnum stopType = null;
 
-  @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+	@JsonProperty("additionalParams")
+	private Map<String, String> additionalParams = null;
 
-  public OperateVnfRequest vnfcInstanceId(List<String> vnfcInstanceId) {
-    this.vnfcInstanceId = vnfcInstanceId;
-    return this;
-  }
+	public OperateVnfRequest vnfcInstanceId(final List<String> vnfcInstanceId) {
+		this.vnfcInstanceId = vnfcInstanceId;
+		return this;
+	}
 
-  public OperateVnfRequest addVnfcInstanceIdItem(String vnfcInstanceIdItem) {
-    if (this.vnfcInstanceId == null) {
-      this.vnfcInstanceId = new ArrayList<>();
-    }
-    this.vnfcInstanceId.add(vnfcInstanceIdItem);
-    return this;
-  }
+	public OperateVnfRequest addVnfcInstanceIdItem(final String vnfcInstanceIdItem) {
+		if (this.vnfcInstanceId == null) {
+			this.vnfcInstanceId = new ArrayList<>();
+		}
+		this.vnfcInstanceId.add(vnfcInstanceIdItem);
+		return this;
+	}
 
-  /**
-   * Identifier of VNFC instances. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance. 
-   * @return vnfcInstanceId
-  **/
-  @ApiModelProperty(value = "Identifier of VNFC instances. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance. ")
+	/**
+	 * Identifier of VNFC instances. Cardinality can be \"0\" to denote that the
+	 * request applies to the whole VNF and not a specific VNFC instance.
+	 *
+	 * @return vnfcInstanceId
+	 **/
+	@ApiModelProperty(value = "Identifier of VNFC instances. Cardinality can be \"0\" to denote that the request applies to the whole VNF and not a specific VNFC instance. ")
 
+	public List<String> getVnfcInstanceId() {
+		return vnfcInstanceId;
+	}
 
-  public List<String> getVnfcInstanceId() {
-    return vnfcInstanceId;
-  }
+	public void setVnfcInstanceId(final List<String> vnfcInstanceId) {
+		this.vnfcInstanceId = vnfcInstanceId;
+	}
 
-  public void setVnfcInstanceId(List<String> vnfcInstanceId) {
-    this.vnfcInstanceId = vnfcInstanceId;
-  }
+	public OperateVnfRequest changeStateTo(final VnfOperationalStateType changeStateTo) {
+		this.changeStateTo = changeStateTo;
+		return this;
+	}
 
-  public OperateVnfRequest changeStateTo(VnfOperationalStateType changeStateTo) {
-    this.changeStateTo = changeStateTo;
-    return this;
-  }
+	/**
+	 * The desired operational state (i.e. started or stopped) to change the VNF to.
+	 *
+	 * @return changeStateTo
+	 **/
+	@ApiModelProperty(required = true, value = "The desired operational state (i.e. started or stopped) to change the VNF to. ")
+	@NotNull
 
-  /**
-   * The desired operational state (i.e. started or stopped) to change the VNF to. 
-   * @return changeStateTo
-  **/
-  @ApiModelProperty(required = true, value = "The desired operational state (i.e. started or stopped) to change the VNF to. ")
-  @NotNull
+	@Valid
 
-  @Valid
+	public VnfOperationalStateType getChangeStateTo() {
+		return changeStateTo;
+	}
 
-  public VnfOperationalStateType getChangeStateTo() {
-    return changeStateTo;
-  }
+	public void setChangeStateTo(final VnfOperationalStateType changeStateTo) {
+		this.changeStateTo = changeStateTo;
+	}
 
-  public void setChangeStateTo(VnfOperationalStateType changeStateTo) {
-    this.changeStateTo = changeStateTo;
-  }
+	public OperateVnfRequest stopType(final StopTypeEnum stopType) {
+		this.stopType = stopType;
+		return this;
+	}
 
-  public OperateVnfRequest stopType(StopTypeEnum stopType) {
-    this.stopType = stopType;
-    return this;
-  }
+	/**
+	 * It signals whether forceful or graceful stop is requested. Ignored if
+	 * changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down
+	 * the VNF or the affected VNFCs immediately after accepting the request.
+	 *
+	 * @return stopType
+	 **/
+	@ApiModelProperty(value = "It signals whether forceful or graceful stop is requested. Ignored if changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down the VNF or the affected VNFCs immediately after accepting the request. ")
 
-  /**
-   * It signals whether forceful or graceful stop is requested. Ignored if changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down the VNF or the affected VNFCs immediately after accepting the request. 
-   * @return stopType
-  **/
-  @ApiModelProperty(value = "It signals whether forceful or graceful stop is requested. Ignored if changeStateTo=STARTED. Permitted values: FORCEFUL: The VNFM will stop down the VNF or the affected VNFCs immediately after accepting the request. ")
+	public StopTypeEnum getStopType() {
+		return stopType;
+	}
 
+	public void setStopType(final StopTypeEnum stopType) {
+		this.stopType = stopType;
+	}
 
-  public StopTypeEnum getStopType() {
-    return stopType;
-  }
+	public OperateVnfRequest additionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+		return this;
+	}
 
-  public void setStopType(StopTypeEnum stopType) {
-    this.stopType = stopType;
-  }
+	/**
+	 * Additional parameters passed by the NFVO as input to the process, specific to
+	 * the VNF of which the operation status is changed, as declared in the VNFD as
+	 * part of \"OperateVnfOpConfig\".
+	 *
+	 * @return additionalParams
+	 **/
+	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\". ")
 
-  public OperateVnfRequest additionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-    return this;
-  }
+	@Valid
 
-  /**
-   * Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\". 
-   * @return additionalParams
-  **/
-  @ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the process, specific to the VNF of which the operation status is changed, as declared in the VNFD as part of \"OperateVnfOpConfig\". ")
+	public Map<String, String> getAdditionalParams() {
+		return additionalParams;
+	}
 
-  @Valid
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
-  public KeyValuePairs getAdditionalParams() {
-    return additionalParams;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final OperateVnfRequest operateVnfRequest = (OperateVnfRequest) o;
+		return Objects.equals(this.vnfcInstanceId, operateVnfRequest.vnfcInstanceId) &&
+				Objects.equals(this.changeStateTo, operateVnfRequest.changeStateTo) &&
+				Objects.equals(this.stopType, operateVnfRequest.stopType) &&
+				Objects.equals(this.additionalParams, operateVnfRequest.additionalParams);
+	}
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(vnfcInstanceId, changeStateTo, stopType, additionalParams);
+	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class OperateVnfRequest {\n");
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    OperateVnfRequest operateVnfRequest = (OperateVnfRequest) o;
-    return Objects.equals(this.vnfcInstanceId, operateVnfRequest.vnfcInstanceId) &&
-        Objects.equals(this.changeStateTo, operateVnfRequest.changeStateTo) &&
-        Objects.equals(this.stopType, operateVnfRequest.stopType) &&
-        Objects.equals(this.additionalParams, operateVnfRequest.additionalParams);
-  }
+		sb.append("    vnfcInstanceId: ").append(toIndentedString(vnfcInstanceId)).append("\n");
+		sb.append("    changeStateTo: ").append(toIndentedString(changeStateTo)).append("\n");
+		sb.append("    stopType: ").append(toIndentedString(stopType)).append("\n");
+		sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(vnfcInstanceId, changeStateTo, stopType, additionalParams);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class OperateVnfRequest {\n");
-    
-    sb.append("    vnfcInstanceId: ").append(toIndentedString(vnfcInstanceId)).append("\n");
-    sb.append("    changeStateTo: ").append(toIndentedString(changeStateTo)).append("\n");
-    sb.append("    stopType: ").append(toIndentedString(stopType)).append("\n");
-    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

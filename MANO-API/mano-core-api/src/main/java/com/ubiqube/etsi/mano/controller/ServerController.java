@@ -85,9 +85,9 @@ public class ServerController {
 	}
 
 	@GetMapping("/{id}")
-	public EntityModel<Servers> findById(@PathVariable("id") final UUID id) {
+	public ResponseEntity<Servers> findById(@PathVariable("id") final UUID id) {
 		final Servers ret = serverService.findById(id);
-		return EntityModel.of(ret, makeLinks(ret));
+		return ResponseEntity.ok(ret);
 	}
 
 	@DeleteMapping("/{id}")
@@ -104,7 +104,7 @@ public class ServerController {
 
 	private static List<Link> makeLinks(final Servers server) {
 		final List<Link> ret = new ArrayList<>();
-		ret.add(linkTo(methodOn(ServerController.class).findById(server.getId())).withRel("server"));
+		ret.add(linkTo(methodOn(ServerController.class).findById(server.getId())).withRel("self"));
 		return ret;
 	}
 

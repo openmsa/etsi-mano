@@ -26,15 +26,16 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdInstantiateNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
+public class NsUow extends AbstractUnitOfWork<NsdTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsUow.class);
 
@@ -43,7 +44,7 @@ public class NsUow extends AbstractNsUnitOfWork<NsdTask> {
 	private final VnfInstanceLcm nsLcmOpOccsService;
 
 	public NsUow(final VirtualTask<NsdTask> task, final VnfInstanceLcm nsLcmOpOccsService) {
-		super(task, NsdNode.class);
+		super(task, NsdInstantiateNode.class);
 		this.nsdTask = task.getParameters();
 		this.nsLcmOpOccsService = nsLcmOpOccsService;
 	}

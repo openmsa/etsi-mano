@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -33,22 +35,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
+import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
+import com.ubiqube.etsi.mano.dao.mano.nsd.ForwarderMapping;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.service.VnfInstanceGatewayService;
+import com.ubiqube.etsi.mano.nfvo.jpa.NsBlueprintJpa;
+import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
+import com.ubiqube.etsi.mano.service.vim.NetworkObject;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
@@ -67,33 +78,37 @@ public class GrantAction extends AbstractGrantAction {
 
 	private final VimManager vimManager;
 
-	private final VnfInstanceGatewayService vnfInstanceService;
-
 	private final VnfPackageService vnfPackageService;
 
 	private final Random rnd;
 
-	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VnfInstanceGatewayService vnfInstancesRepository, final VimElection vimElection, final VnfPackageService vnfPackageService) {
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
+
+	private final NsBlueprintJpa nsBlueprintJpa;
+
+	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final VnfPackageService vnfPackageService,
+			final NsLiveInstanceJpa nsLiveInstanceJpa, final NsBlueprintJpa nsBlueprintJpa) {
 		super(grantJpa, vimManager, vimElection);
 		this.grantJpa = grantJpa;
 		this.vimManager = vimManager;
-		this.vnfInstanceService = vnfInstancesRepository;
 		this.vnfPackageService = vnfPackageService;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
+		this.nsBlueprintJpa = nsBlueprintJpa;
 		this.rnd = new Random();
 	}
 
 	@Override
 	protected Set<VnfCompute> getVnfCompute(final UUID objectId) {
 		final GrantResponse grant = grantJpa.findById(objectId).orElseThrow();
-		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString(grant.getVnfInstanceId()));
-		return vnfPackageService.findByVnfdId(UUID.fromString(vnfInstance.getVnfdId())).getVnfCompute();
+		final VnfPackage pkg = vnfPackageService.findByVnfdId(UUID.fromString(grant.getVnfdId()));
+		return pkg.getVnfCompute();
 	}
 
 	@Override
 	protected Set<VnfStorage> getVnfStorage(final UUID objectId) {
 		final GrantResponse grant = grantJpa.findById(objectId).orElseThrow();
-		final VnfInstance vnfInstance = vnfInstanceService.findById(UUID.fromString(grant.getVnfInstanceId()));
-		return vnfPackageService.findByVnfdId(UUID.fromString(vnfInstance.getVnfdId())).getVnfStorage();
+		final VnfPackage pkg = vnfPackageService.findByVnfdId(UUID.fromString(grant.getVnfdId()));
+		return pkg.getVnfStorage();
 	}
 
 	private VimConnectionInformation electVim(final String vnfPackageVimId, final GrantResponse grantResponse, final VnfPackage vnfPackage) {
@@ -178,6 +193,94 @@ public class GrantAction extends AbstractGrantAction {
 		} catch (final FileSystemException e) {
 			throw new GenericException(e);
 		}
+	}
+
+	@Override
+	protected void getUnmanagedNetworks(final GrantResponse grants, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
+		final String vnfInstanceId = grants.getVnfInstanceId();
+		final NsLiveInstance res = nsLiveInstanceJpa.findByResourceId(vnfInstanceId);
+		if (null == res) {
+			LOG.warn("No NS instance found {}", vnfInstanceId);
+			return;
+		}
+		final NsBlueprint bluePrint = res.getNsBlueprint();
+		final NsdInstance nsdInstance = bluePrint.getNsInstance();
+		final NsVnfTask inst = (NsVnfTask) res.getNsTask();
+		final List<ListKeyPair> vl = inst.getNsPackageVnfPackage().getVirtualLinks().stream().filter(x -> x.getValue() != null).toList();
+		final Set<ForwarderMapping> fwMapping = inst.getNsPackageVnfPackage().getForwardMapping();
+		final String vduName = inst.getNsPackageVnfPackage().getToscaName();
+		final List<ForwarderMapping> mappings = findMappingd(fwMapping, vduName);
+		vl.forEach(x -> {
+			final Optional<ForwarderMapping> single = findMapping(mappings, x.getValue());
+			single.ifPresent(y -> {
+				x.setValue(y.getVlName());
+			});
+		});
+		final List<NetworkObject> vlList = vim.network(vimConnectionInformation)
+				.searchByName(vl.stream()
+						.map(ListKeyPair::getValue)
+						.filter(Objects::nonNull)
+						.toList());
+		vlList.forEach(x -> grants.getExtManagedVirtualLinks().add(createVl(x, vl, vimConnectionInformation, grants)));
+		final List<NsLiveInstance> vlLive = nsLiveInstanceJpa.findByNsdInstanceAndClass(nsdInstance, NsVirtualLinkTask.class.getSimpleName());
+		vlLive.stream().forEach(x -> {
+			final Optional<ForwarderMapping> fm = find(mappings, x.getNsTask().getToscaName());
+			if (fm.isEmpty()) {
+				LOG.warn("No forward ports for {}", x.getNsTask().getToscaName());
+				return;
+			}
+			final ForwarderMapping fmm = fm.get();
+			final ExtManagedVirtualLinkDataEntity extVl = new ExtManagedVirtualLinkDataEntity();
+			extVl.setGrants(grants);
+			extVl.setResourceId(x.getResourceId());
+			extVl.setResourceProviderId(x.getResourceProviderId());
+			extVl.setVimConnectionId(x.getVimConnectionId());
+			extVl.setVimLevelResourceType(x.getVimLevelResourceType());
+			// extVl.setVnfInstance();
+			extVl.setVnfVirtualLinkDescId(mapToVl(fmm.getVlId()));
+			grants.getExtManagedVirtualLinks().add(extVl);
+		});
+	}
+
+	private static String mapToVl(final int vlId) {
+		if (0 == vlId) {
+			return "virtual_link";
+		}
+		return "virtual_link_" + vlId;
+	}
+
+	private static Optional<ForwarderMapping> find(final List<ForwarderMapping> mappings, final String toscaName) {
+		return mappings.stream().filter(x -> x.getVlName().equals(toscaName)).findFirst();
+	}
+
+	private static Optional<ForwarderMapping> findMapping(final List<ForwarderMapping> mappings, final String value) {
+		return mappings.stream().filter(x -> x.getForwardingName().equals(value)).findFirst();
+	}
+
+	private static List<ForwarderMapping> findMappingd(final Set<ForwarderMapping> fwMapping, final String vduName) {
+		return fwMapping.stream().filter(x -> x.getVduName().equals(vduName)).toList();
+	}
+
+	private static ExtManagedVirtualLinkDataEntity createVl(final NetworkObject networkObject, final List<ListKeyPair> vl, final VimConnectionInformation vimConnectionInformation, final GrantResponse grants) {
+		final ExtManagedVirtualLinkDataEntity ret = new ExtManagedVirtualLinkDataEntity();
+		ret.setVnfVirtualLinkDescId(mapToVl(networkObject, vl));
+		ret.setResourceId(networkObject.name());
+		ret.setResourceProviderId(vimConnectionInformation.getVimType());
+		ret.setVimConnectionId(vimConnectionInformation.getVimId());
+		ret.setGrants(grants);
+		return ret;
+	}
+
+	private static String mapToVl(final NetworkObject no, final List<ListKeyPair> vl) {
+		final ListKeyPair kp = vl.stream().filter(x -> x.getValue().equals(no.id())).findFirst().orElseThrow();
+		if (kp.getIdx() == 0) {
+			return "virtual_link";
+		}
+		return "virtual_link_" + kp.getIdx();
+	}
+
+	private static List<ListKeyPair> gatherExtVl(final VnfPackage vnfPkg) {
+		return vnfPkg.getVirtualLinks().stream().filter(x -> x.getValue() != null).toList();
 	}
 
 }

@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.nfvo.jpa;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -40,13 +42,16 @@ public interface NsLiveInstanceJpa extends CrudRepository<NsLiveInstance, UUID> 
 	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND t.nsVirtualLink is not null AND t.toscaName = ?2 ORDER BY nli.audit.createdOn DESC")
 	List<NsLiveInstance> findByVnfInstanceAndTaskVlIsNotNull(NsdInstance vnfInstance, String toscaName);
 
-	List<NsLiveInstance> findByNsInstanceAndNsTaskId(NsdInstance nsInstance, UUID id);
+	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND t.toscaName LIKE ?2 AND t.class = ?3")
+	List<NsLiveInstance> findByNsInstanceAndNsTaskToscaNameAndNsTaskClassGroupByNsTaskAlias(NsdInstance nsInstance, String toscaName, String simpleName);
 
 	List<NsLiveInstance> findByNsInstanceId(UUID nsUuid);
 
-	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND t.class = ?2")
+	@Query("select nli, t from NsLiveInstance nli join NsTask t on t.id = nli.nsTask where nli.nsInstance = ?1 AND t.class = ?2 ORDER BY nli.audit.createdOn DESC")
 	List<NsLiveInstance> findByNsdInstanceAndClass(NsdInstance instance, String simpleName);
 
 	long countByNsInstance(NsdInstance nsInstance);
+
+	NsLiveInstance findByResourceId(@NotNull String safeUUID);
 
 }

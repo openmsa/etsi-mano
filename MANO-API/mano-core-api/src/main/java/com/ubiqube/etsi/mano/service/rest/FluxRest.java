@@ -19,19 +19,24 @@ package com.ubiqube.etsi.mano.service.rest;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import javax.net.ssl.SSLException;
 
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager;
@@ -44,6 +49,8 @@ import org.springframework.security.oauth2.client.registration.InMemoryReactiveC
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.Builder;
@@ -59,7 +66,6 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
@@ -69,7 +75,7 @@ import reactor.netty.http.client.HttpClient;
  *
  */
 public class FluxRest {
-
+	private static final String VERSION = "Version";
 	private static final Logger LOG = LoggerFactory.getLogger(FluxRest.class);
 
 	private final WebClient webClient;
@@ -140,71 +146,78 @@ public class FluxRest {
 		return new InMemoryReactiveClientRegistrationRepository(registration);
 	}
 
-	public final <T> ResponseEntity<T> getWithReturn(final URI uri, final Class<T> clazz) {
-		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.GET, null)
+	public final <T> ResponseEntity<T> getWithReturn(final URI uri, final Class<T> clazz, final String version) {
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.GET, null, version)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.toEntity(clazz);
 		return resp.block();
 	}
 
-	public final <T> T get(final URI uri, final Class<T> clazz) {
-		return call(uri, HttpMethod.GET, clazz);
+	public final <T> T get(final URI uri, final Class<T> clazz, final String version) {
+		return call(uri, HttpMethod.GET, clazz, version);
 	}
 
-	public final <T> ResponseEntity<T> postWithReturn(final URI uri, final Object body, final Class<T> clazz) {
-		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.POST, body)
+	public final <T> ResponseEntity<T> postWithReturn(final URI uri, final Object body, final Class<T> clazz, final String version) {
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.POST, body, version)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.toEntity(clazz);
 		return resp.block();
 	}
 
-	public final <T> ResponseEntity<T> deleteWithReturn(final URI uri, final Object body) {
-		final ResponseSpec resp = makeBaseQuery(uri, HttpMethod.DELETE, body)
+	public final <T> ResponseEntity<T> deleteWithReturn(final URI uri, final Object body, final String version) {
+		final ResponseSpec resp = makeBaseQuery(uri, HttpMethod.DELETE, body, version)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve();
 		return (ResponseEntity<T>) resp.toBodilessEntity().block();
 	}
 
-	public final <T> T post(final URI uri, final Class<T> clazz) {
-		return call(uri, HttpMethod.POST, clazz);
+	public final <T> T post(final URI uri, final Class<T> clazz, final String version) {
+		return call(uri, HttpMethod.POST, clazz, version);
 	}
 
-	public final <T> T post(final URI uri, final Object body, final Class<T> clazz) {
-		return call(uri, HttpMethod.POST, body, clazz);
+	public final <T> T post(final URI uri, final Object body, final Class<T> clazz, final String version) {
+		return call(uri, HttpMethod.POST, body, clazz, version);
 	}
 
-	public final <T> T delete(final URI uri, final Class<T> clazz) {
-		return call(uri, HttpMethod.DELETE, clazz);
+	public final <T> T delete(final URI uri, final Class<T> clazz, final String version) {
+		return call(uri, HttpMethod.DELETE, clazz, version);
 	}
 
-	public final <T> T call(final URI uri, final HttpMethod method, final Class<T> clazz) {
-		return innerCall(uri, method, null, clazz);
+	public final <T> T call(final URI uri, final HttpMethod method, final Class<T> clazz, final String version) {
+		return innerCall(uri, method, null, clazz, version);
 	}
 
-	public final <T> T call(final URI uri, final HttpMethod method, final Object body, final Class<T> clazz) {
-		return innerCall(uri, method, body, clazz);
+	public final <T> T call(final URI uri, final HttpMethod method, final Object body, final Class<T> clazz, final String version) {
+		return innerCall(uri, method, body, clazz, version);
 	}
 
-	public <T> T get(final URI uri, final ParameterizedTypeReference<T> myBean) {
-		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.GET, null)
+	public <T> T get(final URI uri, final ParameterizedTypeReference<T> myBean, final String version) {
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.GET, null, version)
 				.retrieve()
 				.toEntity(myBean);
-		return getBlockingResult(resp, null);
+		return getBlockingResult(resp, null, version);
 	}
 
 	public UriComponentsBuilder uriBuilder() {
 		return UriComponentsBuilder.fromHttpUrl(rootUrl);
 	}
 
-	public void download(final URI uri, final Path path) {
-		final Flux<DataBuffer> dataBufferFlux = webClient.get().uri(uri).accept(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL)
-				.retrieve().bodyToFlux(DataBuffer.class);
+	public void download(final URI uri, final Path path, final String version) {
+		final RequestHeadersSpec<?> wc = webClient
+				.get()
+				.uri(uri)
+				.accept(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL);
+		if (null != version) {
+			wc.header(VERSION, version);
+		}
+		final Publisher<DataBuffer> dataBufferFlux = wc.retrieve()
+				.bodyToFlux(DataBuffer.class);
 		DataBufferUtils.write(dataBufferFlux, path, StandardOpenOption.CREATE).block();
 	}
 
-	private RequestHeadersSpec<?> makeBaseQuery(final URI uri, final HttpMethod method, final Object requestObject) {
+	private RequestHeadersSpec<?> makeBaseQuery(final URI uri, final HttpMethod method, final Object requestObject, final String version) {
 		final RequestHeadersSpec<?> wc = webClient
 				.method(method)
 				.uri(uri)
@@ -212,18 +225,21 @@ public class FluxRest {
 		if (null != requestObject) {
 			((RequestBodySpec) wc).bodyValue(requestObject);
 		}
+		if (null != version) {
+			wc.header(VERSION, version);
+		}
 		return wc;
 	}
 
-	private final <T> T innerCall(final URI uri, final HttpMethod method, final Object requestObject, final Class<T> clazz) {
-		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, method, requestObject)
+	private final <T> T innerCall(final URI uri, final HttpMethod method, final Object requestObject, final Class<T> clazz, final String version) {
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, method, requestObject, version)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.toEntity(clazz);
-		return getBlockingResult(resp, clazz);
+		return getBlockingResult(resp, clazz, version);
 	}
 
-	private <T> T getBlockingResult(final Mono<ResponseEntity<T>> resp, final Class<T> clazz) {
+	private <T> T getBlockingResult(final Mono<ResponseEntity<T>> resp, final Class<T> clazz, final String version) {
 		final ResponseEntity<T> resp2 = resp.block();
 		if (null == resp2) {
 			return null;
@@ -231,9 +247,38 @@ public class FluxRest {
 		final Optional<URI> uri = Optional.ofNullable(resp2.getHeaders().getLocation()).filter(x -> !x.toString().isEmpty());
 		if (uri.isPresent()) {
 			LOG.info("Location: {}", uri);
-			return innerCall(uri.get(), HttpMethod.GET, null, clazz);
+			return innerCall(uri.get(), HttpMethod.GET, null, clazz, version);
 		}
 		return resp2.getBody();
 	}
 
+	public void upload(final URI uri, final Path path, final String accept, final String version) {
+		final RequestHeadersSpec<?> wc = webClient.put()
+				.uri(uri)
+				.contentType(MediaType.MULTIPART_FORM_DATA)
+				.body(BodyInserters.fromMultipartData(fromPath(path, accept)));
+		if (null != version) {
+			wc.header(VERSION, version);
+		}
+		wc.retrieve()
+				.bodyToMono(String.class)
+				.block();
+	}
+
+	private static MultiValueMap<String, ?> fromPath(final Path path, final String accept) {
+		final MultipartBodyBuilder builder = new MultipartBodyBuilder();
+		builder.part("file", new FileSystemResource(path), MediaType.valueOf(accept));
+		return builder.build();
+	}
+
+	public <T> T patch(final URI uri, final Class<T> clazz, final String ifMatch, final Map<String, Object> patch, final String version) {
+		final RequestHeadersSpec<?> base = makeBaseQuery(uri, HttpMethod.PATCH, patch, version);
+		if (ifMatch != null) {
+			base.header(HttpHeaders.IF_MATCH, ifMatch);
+		}
+		final Mono<ResponseEntity<T>> resp = makeBaseQuery(uri, HttpMethod.PATCH, patch, version)
+				.retrieve()
+				.toEntity(clazz);
+		return getBlockingResult(resp, null, version);
+	}
 }

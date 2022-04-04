@@ -35,4 +35,8 @@ public class GenericException extends RuntimeException {
 		super(message);
 	}
 
+	public GenericException(final String message, final RuntimeException e) {
+		super(message, e);
+	}
+
 }

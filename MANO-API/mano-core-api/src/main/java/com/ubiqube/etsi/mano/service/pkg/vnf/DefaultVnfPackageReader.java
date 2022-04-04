@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -120,6 +121,11 @@ public class DefaultVnfPackageReader implements VnfPackageReader {
 	@Override
 	public Set<SecurityGroupAdapter> getSecurityGroups(final Map<String, String> userData) {
 		return new HashSet<>();
+	}
+
+	@Override
+	public void close() throws IOException {
+		// Nothing.
 	}
 
 }

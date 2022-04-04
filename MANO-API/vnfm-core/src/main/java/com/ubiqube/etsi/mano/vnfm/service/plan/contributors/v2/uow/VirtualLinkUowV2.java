@@ -46,7 +46,7 @@ public class VirtualLinkUowV2 extends AbstractUowV2<NetworkTask> {
 	public String execute(final Context context) {
 		final NetworkTask params = getTask().getParameters();
 		final String domainName = context.get(DnsZone.class, getTask().getParameters().getToscaName());
-		return vim.network(vimConnectionInformation).createNetwork(vlProtocolData, params.getToscaName(), domainName, params.getQosPolicy());
+		return vim.network(vimConnectionInformation).createNetwork(vlProtocolData, params.getAlias(), domainName, params.getQosPolicy());
 	}
 
 	@Override

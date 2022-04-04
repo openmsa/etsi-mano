@@ -44,7 +44,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NsVnfScalingStepMapping implements Serializable {
+public class NsVnfScalingStepMapping implements NsScleStepMapping, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -62,4 +62,5 @@ public class NsVnfScalingStepMapping implements Serializable {
 		this.levels = levels;
 		this.aspectId = aspectId;
 	}
+
 }

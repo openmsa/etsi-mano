@@ -37,16 +37,31 @@ public class VnfInstance extends Instance {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private VnfPackage vnfPkg = null;
+	private VnfPackage vnfPkg;
 
+	/**
+	 * Identifier of the VNFD on which the VNF instance is based. See note 1.
+	 */
 	private String vnfdId;
 
+	/**
+	 * Provider of the VNF and the VNFD. The value is copied from the VNFD.
+	 */
 	private String vnfProvider;
 
+	/**
+	 * Name to identify the VNF Product. The value is copied from the VNFD.
+	 */
 	private String vnfProductName;
 
+	/**
+	 * Software version of the VNF. The value is copied from the VNFD.
+	 */
 	private String vnfSoftwareVersion;
 
+	/**
+	 * Identifies the version of the VNFD. The value is copied from the VNFD.
+	 */
 	private String vnfdVersion;
 
 }

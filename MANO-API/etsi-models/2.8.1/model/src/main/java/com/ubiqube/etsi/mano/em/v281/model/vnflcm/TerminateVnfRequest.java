@@ -20,7 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -71,7 +71,7 @@ public class TerminateVnfRequest   {
   private Integer gracefulTerminationTimeout = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   public TerminateVnfRequest terminationType(TerminationTypeEnum terminationType) {
     this.terminationType = terminationType;
@@ -114,7 +114,7 @@ public class TerminateVnfRequest   {
     this.gracefulTerminationTimeout = gracefulTerminationTimeout;
   }
 
-  public TerminateVnfRequest additionalParams(KeyValuePairs additionalParams) {
+  public TerminateVnfRequest additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -127,11 +127,11 @@ public class TerminateVnfRequest   {
 
   @Valid
 
-  public KeyValuePairs getAdditionalParams() {
+  public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 

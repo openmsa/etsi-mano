@@ -34,13 +34,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.Null;
 
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
+import org.openstack4j.core.transport.Config;
 import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Extension;
 import org.openstack4j.model.common.Identifier;
@@ -79,12 +79,8 @@ public class OpenStackVim implements Vim {
 
 	private final MapperFacade mapper;
 
-	private final Map<String, String> flavors;
-
 	public OpenStackVim(final MapperFacade mapper) {
 		this.mapper = mapper;
-		this.flavors = Map.of("availability_zone_type", "...");
-
 		LOG.info("Booting Openstack VIM.\n" +
 				"   ___  ___   __   _____ __  __ \n" +
 				"  / _ \\/ __|__\\ \\ / /_ _|  \\/  |\n" +
@@ -103,7 +99,7 @@ public class OpenStackVim implements Vim {
 		super.finalize();
 	}
 
-	private static OSClientV3 authenticate(final VimConnectionInformation vci) {
+	private static OSClientV3 internalAuthenticate(final VimConnectionInformation vci) {
 		final Map<String, String> ii = vci.getInterfaceInfo();
 		final V3 base = OSFactory.builderV3()
 				.endpoint(ii.get("endpoint"));
@@ -115,9 +111,14 @@ public class OpenStackVim implements Vim {
 		} else {
 			base.credentials(ai.get("username"), ai.get("password"));
 		}
+		final Config conf = Config.newConfig();
 		if ("true".equals(ii.get("non-strict-ssl"))) {
-			base.useNonStrictSSLClient(true);
+			conf.withSSLVerificationDisabled();
 		}
+		if (null != ii.get("nat-ip")) {
+			conf.withEndpointNATResolution(ii.get("nat-ip"));
+		}
+		base.withConfig(conf);
 		final String project = ai.get("project");
 		final String projectId = ai.get("projectId");
 		if (null != project) {
@@ -128,18 +129,18 @@ public class OpenStackVim implements Vim {
 		return base.authenticate();
 	}
 
-	private synchronized static OSClientV3 getClient(final VimConnectionInformation vimConnectionInformation) {
+	private static synchronized OSClientV3 getClient(final VimConnectionInformation vimConnectionInformation) {
 		final Map<String, OSClientV3> sess = sessions.get();
 		if (null == sess) {
 			final Map<String, OSClientV3> newSess = new ConcurrentHashMap<>();
-			final OSClientV3 osv3 = authenticate(vimConnectionInformation);
+			final OSClientV3 osv3 = internalAuthenticate(vimConnectionInformation);
 			newSess.put(vimConnectionInformation.getVimId(), osv3);
 			sessions.set(newSess);
 			return osv3;
 		}
 		final OSClientV3 os = sess.computeIfAbsent(vimConnectionInformation.getVimId(), x -> {
 			LOG.debug("OS connection: {} ", vimConnectionInformation.getVimId());
-			return authenticate(vimConnectionInformation);
+			return internalAuthenticate(vimConnectionInformation);
 		});
 		OSClientSession.set((OSClientSession) os);
 		return os;
@@ -163,29 +164,32 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
-	public String createCompute(final VimConnectionInformation vimConnectionInformation, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData, final List<String> securityGroup, final List<String> affinityRules) {
-		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
+	public String createCompute(final ComputeParameters cp) {
+		final OSClientV3 os = OpenStackVim.getClient(cp.getVimConnectionInformation());
 		final ServerCreateBuilder bs = Builders.server();
-		LOG.debug("Creating server flavor={}, image={}", flavorId, imageId);
-		bs.image(imageId);
-		bs.name(instanceName);
-		bs.flavor(flavorId);
-		if (null != cloudInitData && !cloudInitData.isEmpty()) {
-			bs.userData(Base64.getEncoder().encodeToString(cloudInitData.getBytes(Charset.defaultCharset())));
+		LOG.debug("Creating server: {}", cp);
+		bs.image(cp.getImageId());
+		bs.name(cp.getInstanceName());
+		bs.flavor(cp.getFlavorId());
+		if (cp.getPortsId().isEmpty()) {
+			bs.networks(cp.getNetworks());
+		} else {
+			cp.getPortsId().forEach(bs::addNetworkPort);
 		}
-		bs.networks(networks);
-		if (!affinityRules.isEmpty()) {
-			bs.addSchedulerHint("group", affinityRules.get(0));
+		if (null != cp.getCloudInitData() && !cp.getCloudInitData().isEmpty()) {
+			bs.userData(Base64.getEncoder().encodeToString(cp.getCloudInitData().getBytes(Charset.defaultCharset())));
 		}
-		securityGroup.stream().forEach(bs::addSecurityGroup);
-		for (int i = 0; i < storages.size(); i++) {
+		if (!cp.getAffinityRules().isEmpty()) {
+			bs.addSchedulerHint("group", cp.getAffinityRules().get(0));
+		}
+		cp.getSecurityGroup().stream().forEach(bs::addSecurityGroup);
+		for (int i = 0; i < cp.getStorages().size(); i++) {
 			final BlockDeviceMappingCreate blockDevice = Builders.blockDeviceMapping()
-					.uuid(storages.get(i))
+					.uuid(cp.getStorages().get(i))
 					.bootIndex(i)
 					.build();
 			bs.blockDevice(blockDevice);
 		}
-
 		final Server res = os.compute().servers().boot(bs.build());
 		return res.getId();
 	}
@@ -212,7 +216,7 @@ public class OpenStackVim implements Vim {
 		return createFlavor(os, name, numVcpu, virtualMemorySize, disk, flavorSpec).getId();
 	}
 
-	private Flavor createFlavor(final OSClientV3 os, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
+	private static Flavor createFlavor(final OSClientV3 os, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
 		final Flavor flavor = os.compute()
 				.flavors()
 				.create(Builders.flavor()
@@ -225,26 +229,19 @@ public class OpenStackVim implements Vim {
 		if (flavorSpec.isEmpty()) {
 			return flavor;
 		}
-		final Map<String, String> newSpec = flavorSpec.entrySet().stream()
-				.map(x -> Map.entry(convert(x.getKey()), x.getValue()))
-				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-		os.compute().flavors().createAndUpdateExtraSpecs(flavor.getId(), newSpec);
+		os.compute().flavors().createAndUpdateExtraSpecs(flavor.getId(), flavorSpec);
 		return flavor;
 	}
 
-	private boolean isMatching(final Map<String, String> flavorSpec, final Map<String, String> specs) {
+	private static boolean isMatching(final Map<String, String> flavorSpec, final Map<String, String> specs) {
 		final Set<Entry<String, String>> entries = flavorSpec.entrySet();
 		for (final Entry<String, String> entry : entries) {
-			final String osEntry = convert(entry.getKey());
+			final String osEntry = entry.getKey();
 			if (specs.get(osEntry) == null) {
 				return false;
 			}
 		}
 		return true;
-	}
-
-	private String convert(final String key) {
-		return flavors.get(key);
 	}
 
 	@Override
@@ -473,6 +470,11 @@ public class OpenStackVim implements Vim {
 	public void deleteServerGroup(final VimConnectionInformation vimConnectionInformation, final String vimResourceId) {
 		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		os.compute().serverGroups().delete(vimResourceId);
+	}
+
+	@Override
+	public void authenticate(final VimConnectionInformation vci) {
+		internalAuthenticate(vci);
 	}
 
 }

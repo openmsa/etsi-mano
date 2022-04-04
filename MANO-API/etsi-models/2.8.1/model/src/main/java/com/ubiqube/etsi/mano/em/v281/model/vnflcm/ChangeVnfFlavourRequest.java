@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ExtManagedVirtualLinkData;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ExtVirtualLinkData;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.KeyValuePairs;
+import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -52,13 +52,13 @@ public class ChangeVnfFlavourRequest   {
   private List<ExtManagedVirtualLinkData> extManagedVirtualLinks = null;
 
   @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+  private Map<String, String> additionalParams = null;
 
   @JsonProperty("extensions")
-  private KeyValuePairs extensions = null;
+  private Map<String, String> extensions = null;
 
   @JsonProperty("vnfConfigurableProperties")
-  private KeyValuePairs vnfConfigurableProperties = null;
+  private Map<String, String> vnfConfigurableProperties = null;
 
   public ChangeVnfFlavourRequest newFlavourId(String newFlavourId) {
     this.newFlavourId = newFlavourId;
@@ -159,7 +159,7 @@ public class ChangeVnfFlavourRequest   {
     this.extManagedVirtualLinks = extManagedVirtualLinks;
   }
 
-  public ChangeVnfFlavourRequest additionalParams(KeyValuePairs additionalParams) {
+  public ChangeVnfFlavourRequest additionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
     return this;
   }
@@ -172,15 +172,15 @@ public class ChangeVnfFlavourRequest   {
 
   @Valid
 
-  public KeyValuePairs getAdditionalParams() {
+  public Map<String, String> getAdditionalParams() {
     return additionalParams;
   }
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
+  public void setAdditionalParams(Map<String, String> additionalParams) {
     this.additionalParams = additionalParams;
   }
 
-  public ChangeVnfFlavourRequest extensions(KeyValuePairs extensions) {
+  public ChangeVnfFlavourRequest extensions(Map<String, String> extensions) {
     this.extensions = extensions;
     return this;
   }
@@ -193,15 +193,15 @@ public class ChangeVnfFlavourRequest   {
 
   @Valid
 
-  public KeyValuePairs getExtensions() {
+  public Map<String, String> getExtensions() {
     return extensions;
   }
 
-  public void setExtensions(KeyValuePairs extensions) {
+  public void setExtensions(Map<String, String> extensions) {
     this.extensions = extensions;
   }
 
-  public ChangeVnfFlavourRequest vnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public ChangeVnfFlavourRequest vnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
     return this;
   }
@@ -214,11 +214,11 @@ public class ChangeVnfFlavourRequest   {
 
   @Valid
 
-  public KeyValuePairs getVnfConfigurableProperties() {
+  public Map<String, String> getVnfConfigurableProperties() {
     return vnfConfigurableProperties;
   }
 
-  public void setVnfConfigurableProperties(KeyValuePairs vnfConfigurableProperties) {
+  public void setVnfConfigurableProperties(Map<String, String> vnfConfigurableProperties) {
     this.vnfConfigurableProperties = vnfConfigurableProperties;
   }
 

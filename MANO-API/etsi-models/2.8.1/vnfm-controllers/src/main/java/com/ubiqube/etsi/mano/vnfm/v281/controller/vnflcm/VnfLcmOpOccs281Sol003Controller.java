@@ -30,14 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVirtualLink;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVirtualStorage;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.AffectedVnfc;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.Link;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfLcmOpOcc;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfLcmOpOccLinks;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfLcmOpOccResourceChanges;
 import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfLcmOpOccGenericFrontController;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.AffectedVirtualLink;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.AffectedVirtualStorage;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.AffectedVnfc;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.Link;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfLcmOpOcc;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfLcmOpOccLinks;
-import com.ubiqube.etsi.mano.vnfm.v281.model.vnflcm.VnfLcmOpOccResourceChanges;
 
 import ma.glasnost.orika.MapperFacade;
 
@@ -116,7 +116,8 @@ public class VnfLcmOpOccs281Sol003Controller implements VnfLcmOpOccs281Sol003Api
 		fail.setHref(linkTo(methodOn(VnfLcmOpOccs281Sol003Api.class).vnfLcmOpOccsVnfLcmOpOccIdFailPost(id)).withSelfRel().getHref());
 		links.setFail(fail);
 
-		// XXX We can't have this grant link directly, because of classpath on interface.
+		// XXX We can't have this grant link directly, because of classpath on
+		// interface.
 		// grant.setHref(linkTo(methodOn(LcmGrants.class).grantsGrantIdGet(vnfLcmOpOcc.getGrantId(),"")).withSelfRel().getHref());
 
 		final Link retry = new Link();

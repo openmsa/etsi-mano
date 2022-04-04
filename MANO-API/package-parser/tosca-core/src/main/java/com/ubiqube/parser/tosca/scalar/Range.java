@@ -41,4 +41,20 @@ public class Range {
 		return min + " - " + max;
 	}
 
+	public long getMin() {
+		return min;
+	}
+
+	public void setMin(final long min) {
+		this.min = min;
+	}
+
+	public long getMax() {
+		return max;
+	}
+
+	public void setMax(final long max) {
+		this.max = max;
+	}
+
 }

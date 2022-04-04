@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ubiqube.etsi.mano.em.v281.model.vnfind.ProblemDetails2;
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails2;
 import com.ubiqube.etsi.mano.em.v281.model.vnfind.VnfIndicator;
 
 import io.swagger.annotations.Api;

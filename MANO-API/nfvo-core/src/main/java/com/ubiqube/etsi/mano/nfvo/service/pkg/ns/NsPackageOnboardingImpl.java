@@ -16,9 +16,12 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -39,6 +42,8 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PnfDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
+import com.ubiqube.etsi.mano.dao.mano.nsd.ForwarderMapping;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScalingStepMapping;
@@ -53,10 +58,12 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsdPackageJpa;
 import com.ubiqube.etsi.mano.nfvo.service.pkg.PackageVersion;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -120,10 +127,14 @@ public class NsPackageOnboardingImpl {
 	}
 
 	public void nsOnboardingInternal(@NotNull final NsdPackage nsPackage) {
-		final byte[] data = nsdRepository.getBinary(nsPackage.getId(), "nsd");
-		final NsPackageProvider packageProvider = packageManager.getProviderFor(data);
+		final ManoResource data = nsdRepository.getBinary(nsPackage.getId(), "nsd");
+		final PackageDescriptor<NsPackageProvider> packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
-			mapNsPackage(packageProvider, nsPackage);
+			try (InputStream is = data.getInputStream()) {
+				mapNsPackage(packageProvider.getNewReaderInstance(is), nsPackage);
+			} catch (final IOException e) {
+				throw new GenericException(e);
+			}
 		}
 	}
 
@@ -149,7 +160,7 @@ public class NsPackageOnboardingImpl {
 					nsdPackageVnfPackage.setNsdPackage(nsPackage);
 					nsdPackageVnfPackage.setToscaName(x.getName());
 					nsdPackageVnfPackage.setVnfPackage(vnfPackage);
-					nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink());
+					mapVirtualLinks(nsdPackageVnfPackage, x);
 					vnfPackage.addNsdPackage(nsdPackageVnfPackage);
 					vnfPackageService.save(vnfPackage);
 					return nsdPackageVnfPackage;
@@ -175,6 +186,20 @@ public class NsPackageOnboardingImpl {
 		final NsScaling nsScaling = packageProvider.getNsScaling(userData);
 		remapScaling(nsPackage, nsScaling);
 		verifyCircularDependencies(nsPackage, new ArrayDeque<>());
+	}
+
+	private static void mapVirtualLinks(final NsdPackageVnfPackage nsdPackageVnfPackage, final NsVnf x) {
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink1());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink2());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink3());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink4());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink5());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink6());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink7());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink8());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink9());
+		nsdPackageVnfPackage.addVirtualLink(x.getVirtualLink10());
 	}
 
 	private void verifyCircularDependencies(final NsdPackage nsPackage, final Deque<UUID> stack) {
@@ -248,10 +273,31 @@ public class NsPackageOnboardingImpl {
 	}
 
 	private static void rebuildConnectivity(final Set<VnffgDescriptor> vnffg, final NsdPackage nsPackage) {
-		vnffg.stream().forEach(x -> {
-			final NsVirtualLink vl = findVl(nsPackage, x.getVirtualLinkId());
-			vl.addVnffg(x.getName());
-			x.getPairs().forEach(y -> assignVnnfg(x.getName(), nsPackage));
+		vnffg.stream().flatMap(x -> x.getNfpd().stream())
+				.flatMap(x -> x.getInstancces().stream())
+				.flatMap(x -> x.getPairs().stream())
+				.forEach(x -> {
+					if (null != x.getEgressVl()) {
+						findVnfMatchingVl(nsPackage, x.getEgress(), x.getEgressVl());
+					}
+					if (null != x.getIngressVl()) {
+						findVnfMatchingVl(nsPackage, x.getIngress(), x.getIngressVl());
+					}
+				});
+		nsPackage.getVnfPkgIds().forEach(x -> {
+			x.getVirtualLinks().stream().filter(y -> Objects.nonNull(y.getValue())).forEach(y -> {
+				y.getValue();// Left_vl
+			});
+		});
+	}
+
+	private static void findVnfMatchingVl(final NsdPackage pack, final String forwardName, final String vlName) {
+		pack.getVnfPkgIds().stream().forEach(x -> {
+			x.getVirtualLinks().stream()
+					.filter(y -> Objects.nonNull(y.getValue()))
+					.filter(y -> y.getValue().equals(forwardName))
+					.findFirst()
+					.ifPresent(y -> x.addForwardMapping(new ForwarderMapping(x.getToscaName(), y.getIdx(), forwardName, vlName)));
 		});
 	}
 

@@ -27,6 +27,7 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Compute;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.SecurityGroupNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Storage;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.VnfPortNode;
 
 /**
  *
@@ -60,6 +61,11 @@ public class ComputeVt extends VnfVtBase<ComputeTask> {
 				.map(x -> new NamedDependency(SecurityGroupNode.class, x))
 				.toList();
 		ret.addAll(sg);
+		final List<NamedDependency> ports = getParameters().getVnfCompute().getPorts()
+				.stream()
+				.map(x -> new NamedDependency(VnfPortNode.class, x.getToscaName() + "-" + getAlias()))
+				.toList();
+		ret.addAll(ports);
 		return ret;
 	}
 

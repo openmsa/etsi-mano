@@ -17,138 +17,158 @@
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Map;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * TerminateVnfRequest
  */
 @Validated
 
-public class TerminateVnfRequest   {
-  /**
-   * Indicates the type of termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the   resources immediately after accepting the request. 
-   */
-  public enum TerminationTypeEnum {
-    FORCEFUL("FORCEFUL");
+public class TerminateVnfRequest {
+	/**
+	 * Indicates the type of termination is requested. Permitted values: * FORCEFUL:
+	 * The VNFM will shut down the VNF and release the resources immediately after
+	 * accepting the request.
+	 */
+	public enum TerminationTypeEnum {
+		FORCEFUL("FORCEFUL"),
+		GRACEFUL("GRACEFUL");
 
-    private String value;
+		private final String value;
 
-    TerminationTypeEnum(String value) {
-      this.value = value;
-    }
+		TerminationTypeEnum(final String value) {
+			this.value = value;
+		}
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-    @JsonCreator
-    public static TerminationTypeEnum fromValue(String text) {
-      for (TerminationTypeEnum b : TerminationTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		@JsonCreator
+		public static TerminationTypeEnum fromValue(final String text) {
+			for (final TerminationTypeEnum b : TerminationTypeEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("terminationType")
-  private TerminationTypeEnum terminationType = null;
+	@JsonProperty("terminationType")
+	private TerminationTypeEnum terminationType = null;
 
-  @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+	@JsonProperty("gracefulTerminationTimeout")
+	private Integer gracefulTerminationTimeout = null;
 
-  public TerminateVnfRequest terminationType(TerminationTypeEnum terminationType) {
-    this.terminationType = terminationType;
-    return this;
-  }
+	@JsonProperty("additionalParams")
+	private Map<String, String> additionalParams = null;
 
-  /**
-   * Indicates the type of termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the   resources immediately after accepting the request. 
-   * @return terminationType
-  **/
-  @ApiModelProperty(required = true, value = "Indicates the type of termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the   resources immediately after accepting the request. ")
-  @NotNull
+	public TerminateVnfRequest terminationType(final TerminationTypeEnum terminationType) {
+		this.terminationType = terminationType;
+		return this;
+	}
 
+	/**
+	 * Indicates the type of termination is requested. Permitted values: * FORCEFUL:
+	 * The VNFM will shut down the VNF and release the resources immediately after
+	 * accepting the request.
+	 *
+	 * @return terminationType
+	 **/
+	@ApiModelProperty(required = true, value = "Indicates the type of termination is requested. Permitted values: * FORCEFUL: The VNFM will shut down the VNF and release the   resources immediately after accepting the request. ")
+	@NotNull
 
-  public TerminationTypeEnum getTerminationType() {
-    return terminationType;
-  }
+	public TerminationTypeEnum getTerminationType() {
+		return terminationType;
+	}
 
-  public void setTerminationType(TerminationTypeEnum terminationType) {
-    this.terminationType = terminationType;
-  }
+	public void setTerminationType(final TerminationTypeEnum terminationType) {
+		this.terminationType = terminationType;
+	}
 
-  public TerminateVnfRequest additionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-    return this;
-  }
+	public TerminateVnfRequest additionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+		return this;
+	}
 
-  /**
-   * Additional parameters passed by the NFVO as input to the termination process, specific to the VNF being terminated, as declared in the VNFD as part of \"TerminateVnfOpConfig\". 
-   * @return additionalParams
-  **/
-  @ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the termination process, specific to the VNF being terminated, as declared in the VNFD as part of \"TerminateVnfOpConfig\". ")
+	/**
+	 * Additional parameters passed by the NFVO as input to the termination process,
+	 * specific to the VNF being terminated, as declared in the VNFD as part of
+	 * \"TerminateVnfOpConfig\".
+	 *
+	 * @return additionalParams
+	 **/
+	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the termination process, specific to the VNF being terminated, as declared in the VNFD as part of \"TerminateVnfOpConfig\". ")
 
-  @Valid
+	@Valid
 
-  public KeyValuePairs getAdditionalParams() {
-    return additionalParams;
-  }
+	public Map<String, String> getAdditionalParams() {
+		return additionalParams;
+	}
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-  }
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
+	public Integer getGracefulTerminationTimeout() {
+		return gracefulTerminationTimeout;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    TerminateVnfRequest terminateVnfRequest = (TerminateVnfRequest) o;
-    return Objects.equals(this.terminationType, terminateVnfRequest.terminationType) &&
-        Objects.equals(this.additionalParams, terminateVnfRequest.additionalParams);
-  }
+	public void setGracefulTerminationTimeout(final Integer gracefulTerminationTimeout) {
+		this.gracefulTerminationTimeout = gracefulTerminationTimeout;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(terminationType, additionalParams);
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final TerminateVnfRequest terminateVnfRequest = (TerminateVnfRequest) o;
+		return Objects.equals(this.terminationType, terminateVnfRequest.terminationType) &&
+				Objects.equals(this.additionalParams, terminateVnfRequest.additionalParams);
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class TerminateVnfRequest {\n");
-    
-    sb.append("    terminationType: ").append(toIndentedString(terminationType)).append("\n");
-    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(terminationType, additionalParams);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class TerminateVnfRequest {\n");
+
+		sb.append("    terminationType: ").append(toIndentedString(terminationType)).append("\n");
+		sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

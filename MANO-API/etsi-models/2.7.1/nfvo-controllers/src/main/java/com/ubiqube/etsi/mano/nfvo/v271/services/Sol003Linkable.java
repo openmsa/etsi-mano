@@ -19,12 +19,15 @@ package com.ubiqube.etsi.mano.nfvo.v271.services;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.UUID;
+
 import com.ubiqube.etsi.mano.controller.FrontApiTypesEnum;
+import com.ubiqube.etsi.mano.em.v271.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.PkgmSubscriptionLinks;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfo;
 import com.ubiqube.etsi.mano.model.v271.sol003.vnf.VnfPkgInfoLinks;
 import com.ubiqube.etsi.mano.nfvo.v271.controller.vnf.VnfPackages271Sol003Api;
-import com.ubiqube.etsi.mano.nfvo.v271.model.Link;
+import com.ubiqube.etsi.mano.nfvo.v271.model.vnf.PkgmLinks;
 
 public class Sol003Linkable implements Linkable {
 
@@ -65,5 +68,17 @@ public class Sol003Linkable implements Linkable {
 	@Override
 	public String getSelfLink(final VnfPkgInfo _vnfPkgInfo) {
 		return linkTo(methodOn(VnfPackages271Sol003Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgInfo.getId(), null)).withSelfRel().getHref();
+	}
+
+	@Override
+	public PkgmLinks createNotificationLink(final UUID vnfPkgId, final UUID subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PkgmLinks createVnfPackageOnboardingNotificationLinks(final UUID vnfPkgId, final UUID subscriptionId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

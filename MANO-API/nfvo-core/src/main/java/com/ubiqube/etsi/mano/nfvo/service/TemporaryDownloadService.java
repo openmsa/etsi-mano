@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service;
 
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -33,6 +35,7 @@ import com.ubiqube.etsi.mano.dao.mano.TemporaryDownload.ObjectType;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.nfvo.jpa.TemporaryDownloadJpa;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 
@@ -59,15 +62,15 @@ public class TemporaryDownloadService {
 		return temporaryJpa.save(td);
 	}
 
-	public byte[] getDocument(final String id) {
+	public ManoResource getDocument(final String id) {
 		final Optional<TemporaryDownload> odoc = temporaryJpa.findByIdAndExpirationDateAfter(id, new Date());
 		final TemporaryDownload doc = odoc.orElseThrow(() -> new NotFoundException("No temporary download available with id: " + id));
 		final String objectId = doc.getObjectId().toString();
 		if (doc.getObjectType() == ObjectType.NSD) {
-			return nsdRepository.getBinary(UUID.fromString(objectId), "nsd");
+			return nsdRepository.getBinary(getSafeUUID(objectId), "nsd");
 		}
 		if (doc.getObjectType() == ObjectType.VNFD) {
-			return vnfRepository.getBinary(UUID.fromString(objectId), "vnfd");
+			return vnfRepository.getBinary(getSafeUUID(objectId), "vnfd");
 		}
 		throw new GenericException("Unknown objectType: " + doc.getObjectType());
 	}

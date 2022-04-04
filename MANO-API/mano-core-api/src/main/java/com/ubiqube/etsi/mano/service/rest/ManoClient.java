@@ -119,4 +119,19 @@ public class ManoClient {
 		return new ManoVnfLcmOpOccs(this);
 	}
 
+	public ManoNsPackage nsPackage() {
+		return new ManoNsPackage(this);
+	}
+
+	public ManoNsPackageId nsPackage(final UUID id) {
+		return new ManoNsPackageId(this, id);
+	}
+
+	public ManoOnboardedVnfPackage onbardedVnfPackage(final UUID id) {
+		return new ManoOnboardedVnfPackage(this, id);
+	}
+
+	public ManoAdmin admin() {
+		return new ManoAdmin(this);
+	}
 }

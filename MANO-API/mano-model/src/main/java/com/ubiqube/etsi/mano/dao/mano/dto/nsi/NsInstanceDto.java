@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.dao.mano.dto.nsi;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,6 +43,8 @@ public class NsInstanceDto {
 	private String nsdInfoId = null;
 
 	private String flavourId = null;
+
+	private InstantiationState nsState;
 
 	private List<VnfInstanceDto> vnfInstance = new ArrayList<>();
 

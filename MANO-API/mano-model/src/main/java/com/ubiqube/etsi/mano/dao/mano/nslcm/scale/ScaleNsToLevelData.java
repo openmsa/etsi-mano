@@ -35,6 +35,8 @@ import lombok.Setter;
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
+ *         NOTE: Either nsInstantiationLevel or nsScaleInfo, but not both, shall
+ *         be present.
  */
 @Getter
 @Setter

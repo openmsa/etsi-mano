@@ -61,4 +61,9 @@ public class BasicAuth implements SecutiryConfig {
 		return new SecurityScheme().type(Type.HTTP).scheme("basic");
 	}
 
+	@Override
+	public SecurityType getSecurityType() {
+		return SecurityType.BASIC;
+	}
+
 }

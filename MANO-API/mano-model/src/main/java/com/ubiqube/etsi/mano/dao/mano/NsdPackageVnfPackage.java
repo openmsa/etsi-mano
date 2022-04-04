@@ -17,12 +17,11 @@
 package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -31,7 +30,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
+import com.ubiqube.etsi.mano.dao.mano.nsd.ForwarderMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingLevelMapping;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
 
@@ -50,7 +52,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NsdPackageVnfPackage implements Serializable {
+public class NsdPackageVnfPackage implements Levelable<VnfScalingStepMapping, VnfScalingLevelMapping>, Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -68,33 +70,44 @@ public class NsdPackageVnfPackage implements Serializable {
 
 	private String toscaId;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> virtualLinks;
-
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfScalingStepMapping> stepMapping;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VnfScalingLevelMapping> levelMapping;
 
-	public void addVirtualLink(final String vl) {
-		if (null == virtualLinks) {
-			this.virtualLinks = new HashSet<>();
-		}
-		virtualLinks.add(vl);
-	}
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OrderColumn
+	private Set<ListKeyPair> virtualLinks;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<ForwarderMapping> forwardMapping;
 
 	public void addStepMapping(final VnfScalingStepMapping scaling) {
 		if (null == stepMapping) {
-			stepMapping = new HashSet<>();
+			stepMapping = new LinkedHashSet<>();
 		}
 		stepMapping.add(scaling);
 	}
 
 	public void addLevelMapping(final VnfScalingLevelMapping mapping) {
 		if (null == levelMapping) {
-			levelMapping = new HashSet<>();
+			levelMapping = new LinkedHashSet<>();
 		}
 		levelMapping.add(mapping);
+	}
+
+	public void addVirtualLink(final String name) {
+		if (null == virtualLinks) {
+			virtualLinks = new LinkedHashSet<>();
+		}
+		virtualLinks.add(new ListKeyPair(name, virtualLinks.size()));
+	}
+
+	public void addForwardMapping(final ForwarderMapping forwarderMapping) {
+		if (null == forwardMapping) {
+			forwardMapping = new LinkedHashSet<>();
+		}
+		forwardMapping.add(forwarderMapping);
 	}
 }

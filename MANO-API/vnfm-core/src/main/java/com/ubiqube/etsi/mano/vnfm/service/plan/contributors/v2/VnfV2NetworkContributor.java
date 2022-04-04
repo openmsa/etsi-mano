@@ -70,7 +70,7 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 			final int num = planService.getNumberOfLiveVl(parameters.getVnfInstance(), vnfVl);
 			if (num == 0) {
 				final NetworkTask networkTask = createTask(NetworkTask::new);
-				networkTask.setAlias(vnfVl.getToscaName());
+				networkTask.setAlias(buildAlias(parameters, vnfVl.getToscaName(), 0));
 				networkTask.setChangeType(ChangeType.ADDED);
 				networkTask.setToscaName(vnfVl.getToscaName());
 				networkTask.setType(ResourceTypeEnum.VL);
@@ -100,6 +100,11 @@ public class VnfV2NetworkContributor extends AbstractContributorV2Base<NetworkTa
 	@Override
 	public Class<? extends Node> getNode() {
 		return Network.class;
+	}
+
+	private static String buildAlias(final VnfBlueprint plan, final String toscaName, final int count) {
+		final String vnfInstanceId = plan.getInstance().getId().toString();
+		return vnfInstanceId.substring(0, 8) + '-' + toscaName + '-' + String.format("%04d", count);
 	}
 
 }

@@ -59,6 +59,7 @@ public class SystemService {
 
 	private Systems registerOpenStask(final VimConnectionInformation vimConnectionInformation) {
 		final Systems sys = new Systems();
+		sys.setVimOrigin(vimConnectionInformation.getId());
 		SystemConnections sc = mapper.map(vimConnectionInformation, SystemConnections.class);
 		sc.setVimType("COMPUTE");
 		sc.setId(null);
@@ -122,7 +123,7 @@ public class SystemService {
 		return systemJpa.findAll();
 	}
 
-	public void deleteById(final UUID id) {
-		systemJpa.deleteById(id);
+	public void deleteByVimOrigin(final UUID id) {
+		systemJpa.deleteByVimOrigin(id);
 	}
 }

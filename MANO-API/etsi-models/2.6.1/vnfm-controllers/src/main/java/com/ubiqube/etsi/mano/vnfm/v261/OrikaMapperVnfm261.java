@@ -54,6 +54,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.BlueprintParameters;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.model.ExternalManagedVirtualLink;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.Alarm;
 import com.ubiqube.etsi.mano.vnfm.v261.model.faultmngt.FmSubscription;
@@ -199,11 +200,15 @@ public class OrikaMapperVnfm261 implements OrikaMapperFactoryConfigurer {
 				.field("vimId", "vimConnectionId")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(ExtManagedVirtualLinkData.class, ExternalManagedVirtualLink.class)
+				.field("vmfVirtualLinkDescId", "vnfVirtualLinkDescId")
+				.byDefault()
+				.register();
 		orikaMapperFactory.classMap(ExtVirtualLinkInfo.class, ExtVirtualLinkDataEntity.class)
 				.field("resourceHandle.vimConnectionId", "vimConnectionId")
 				.field("resourceHandle.resourceProviderId", "resourceProviderId")
 				.field("resourceHandle.resourceId", "resourceId")
-				.field("resourceHandle.vimLevelResourceType", "vimLevelResourceType")
+				// .field("resourceHandle.vimLevelResourceType", "vimLevelResourceType")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(ExtManagedVirtualLinkInfo.class, ExtManagedVirtualLinkDataEntity.class)

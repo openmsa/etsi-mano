@@ -16,9 +16,10 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
+import java.io.InputStream;
+
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
-import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 
 /**
  *
@@ -28,7 +29,7 @@ import com.ubiqube.etsi.mano.service.pkg.wfe.ExecutionGraph;
 public class NsDefaultRegistryHandler implements PackageDescriptor<NsPackageProvider> {
 
 	@Override
-	public boolean isProcessable(final byte[] data) {
+	public boolean isProcessable(final InputStream data) {
 		return false;
 	}
 
@@ -38,14 +39,8 @@ public class NsDefaultRegistryHandler implements PackageDescriptor<NsPackageProv
 	}
 
 	@Override
-	public NsPackageProvider getNewReaderInstance(final byte[] data) {
+	public NsPackageProvider getNewReaderInstance(final InputStream data) {
 		return new DefaultNsPackageProvider();
-	}
-
-	@Override
-	public ExecutionGraph getBlueprint() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

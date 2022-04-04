@@ -16,15 +16,13 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -35,7 +33,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 
 import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
@@ -54,13 +51,17 @@ import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
+import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.ManoUrlResource;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.EventManager;
 import com.ubiqube.etsi.mano.service.event.NotificationEvent;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
 import com.ubiqube.etsi.mano.service.pkg.bean.InstantiationLevels;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
@@ -106,7 +107,7 @@ public class VnfPackageOnboardingImpl {
 	}
 
 	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId) {
-		final byte[] data = vnfPackageRepository.getBinary(UUID.fromString(vnfPkgId), "vnfd");
+		final ManoResource data = vnfPackageRepository.getBinary(UUID.fromString(vnfPkgId), "vnfd");
 		VnfPackage vnfPpackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		vnfPpackage = startOnboarding(vnfPpackage);
 		return uploadAndFinishOnboarding(vnfPpackage, data);
@@ -116,30 +117,46 @@ public class VnfPackageOnboardingImpl {
 		final VnfPackage vnfPackage = vnfPackageService.findById(UUID.fromString(vnfPkgId));
 		startOnboarding(vnfPackage);
 		LOG.info("Async. Download of {}", url);
-		final byte[] data = getUrlContent(url);
+		final ManoResource data = new ManoUrlResource(0, url);
 		return uploadAndFinishOnboarding(vnfPackage, data);
 	}
 
-	private VnfPackage uploadAndFinishOnboarding(final VnfPackage vnfPackage, final byte[] data) {
+	private VnfPackage uploadAndFinishOnboarding(final VnfPackage vnfPackage, final ManoResource data) {
 		VnfPackage ret = vnfPackage;
 		try {
-			vnfPackage.setChecksum(getChecksum(data));
-			vnfPackageRepository.storeBinary(vnfPackage.getId(), "vnfd", new ByteArrayInputStream(data));
 			final PackageDescriptor<VnfPackageReader> packageProvider = packageManager.getProviderFor(data);
-			if (null != packageProvider) {
-				mapVnfPackage(packageProvider.getNewReaderInstance(data), vnfPackage);
-
-			}
+			mapVnfPackage(vnfPackage, data, packageProvider);
 			ret = finishOnboarding(vnfPackage);
+			buildChecksum(vnfPackage, data);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId());
-		} catch (final RuntimeException e) {
+		} catch (final RuntimeException | NoSuchAlgorithmException | IOException e) {
 			LOG.error("", e);
 			final VnfPackage v2 = vnfPackageService.findById(vnfPackage.getId());
-			v2.setOnboardingState(OnboardingStateType.CREATED);
+			v2.setOnboardingState(OnboardingStateType.ERROR);
 			v2.setOnboardingFailureDetails(new FailureDetails(500, e.getMessage()));
 			ret = vnfPackageService.save(v2);
 		}
 		return ret;
+	}
+
+	private static void buildChecksum(final VnfPackage vnfPackage, final ManoResource data) throws NoSuchAlgorithmException, IOException {
+		final DigestInputStream dis = new DigestInputStream(data.getInputStream(), MessageDigest.getInstance(Constants.HASH_ALGORITHM));
+		try (InputStream stream = data.getInputStream()) {
+			stream.readAllBytes();
+			vnfPackage.setChecksum(getChecksum(dis));
+		}
+	}
+
+	private void mapVnfPackage(final VnfPackage vnfPackage, final ManoResource data, final PackageDescriptor<VnfPackageReader> packageProvider) {
+		if (null == packageProvider) {
+			return;
+		}
+		try (InputStream stream = data.getInputStream();
+				final VnfPackageReader reader = packageProvider.getNewReaderInstance(stream)) {
+			mapVnfPackage(reader, vnfPackage);
+		} catch (final IOException e) {
+			throw new GenericException(e);
+		}
 	}
 
 	private void mapVnfPackage(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
@@ -152,6 +169,7 @@ public class VnfPackageOnboardingImpl {
 			throw new GenericException("Package " + x.getDescriptorId() + " already onboarded in " + x.getId() + ".");
 		});
 		mapper.map(pd, vnfPackage);
+		additionalMapping(pd, vnfPackage);
 		final Map<String, String> userData = vnfPackage.getUserDefinedData();
 		final Set<VnfCompute> cNodes = vnfPackageReader.getVnfComputeNodes(vnfPackage.getUserDefinedData());
 		vnfPackage.setVnfCompute(cNodes);
@@ -160,7 +178,6 @@ public class VnfPackageOnboardingImpl {
 		final Set<VnfVl> vvlNodes = vnfPackageReader.getVnfVirtualLinks(vnfPackage.getUserDefinedData());
 		vnfPackage.setVnfVl(vvlNodes);
 		final Set<VnfLinkPort> vcNodes = vnfPackageReader.getVnfVduCp(vnfPackage.getUserDefinedData());
-		vcNodes.stream().forEach(x -> x.setVnfPackage(vnfPackage));
 		vnfPackage.setVnfLinkPort(vcNodes);
 		remapNetworks(cNodes, vcNodes);
 		vnfPackage.setAdditionalArtifacts(vnfPackageReader.getAdditionalArtefacts(vnfPackage.getUserDefinedData()));
@@ -174,9 +191,62 @@ public class VnfPackageOnboardingImpl {
 		rebuildVduScalingAspects(vnfPackage, instantiationLevels, vduInstantiationLevel, vduInitialDeltas, vduScalingAspectDeltas, scalingAspects);
 		final Set<SecurityGroupAdapter> sgAdapters = vnfPackageReader.getSecurityGroups(userData);
 		handleSecurityGroups(sgAdapters, vnfPackage, vnfExtCp);
-
+		fixExternalPoint(vnfPackage, vnfExtCp);
 		final Set<AffinityRuleAdapater> ar = vnfPackageReader.getAffinityRules(vnfPackage.getUserDefinedData());
+		mapVlToCp(vnfPackage);
 		handleAffinity(ar, vnfPackage);
+	}
+
+	private static void mapVlToCp(final VnfPackage vnfPackage) {
+		vnfPackage.getVnfCompute().stream()
+				.flatMap(x -> x.getPorts().stream())
+				.filter(x -> x.getVirtualLink() == null)
+				.forEach(x -> x.setVirtualLink(findVl(x.getToscaName(), vnfPackage.getVirtualLinks())));
+	}
+
+	private static String findVl(final String toscaName, final Set<ListKeyPair> virtualLinks) {
+		final ListKeyPair vl = virtualLinks.stream()
+				.filter(x -> x.getValue() != null)
+				.filter(x -> x.getValue().equals(toscaName))
+				.findFirst()
+				.orElseThrow(() -> new ToscaException("Could not find VL named " + toscaName + " in " + virtualLinks));
+		return vlToString(vl);
+	}
+
+	private static String vlToString(final ListKeyPair vl) {
+		if (0 == vl.getIdx()) {
+			return "virtual_link";
+		}
+		return "virtual_link_" + vl.getIdx();
+	}
+
+	private static void additionalMapping(final ProviderData pd, final VnfPackage vnfPackage) {
+		vnfPackage.addVirtualLink(pd.getVirtualLinkReq());
+		vnfPackage.addVirtualLink(pd.getVirtualLink1Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink2Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink3Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink4Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink5Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink6Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink7Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink8Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink9Req());
+		vnfPackage.addVirtualLink(pd.getVirtualLink10Req());
+		final Set<ListKeyPair> nl = vnfPackage.getVirtualLinks().stream().filter(x -> x.getValue() != null).collect(Collectors.toSet());
+		vnfPackage.setVirtualLinks(nl);
+	}
+
+	private static void fixExternalPoint(final VnfPackage vnfPackage, final Set<VnfExtCp> vnfExtCp) {
+		vnfExtCp.forEach(x -> {
+			if (isComputeNode(vnfPackage, x.getInternalVirtualLink())) {
+				x.setComputeNode(true);
+			}
+		});
+	}
+
+	private static boolean isComputeNode(final VnfPackage vnfPackage, final String internalVirtualLink) {
+		final Optional<VnfCompute> res = vnfPackage.getVnfCompute().stream().filter(x -> x.getToscaName().equals(internalVirtualLink)).findFirst();
+		return res.isPresent();
 	}
 
 	private void handleAffinity(final Set<AffinityRuleAdapater> ar, final VnfPackage vnfPackage) {
@@ -206,7 +276,9 @@ public class VnfPackageOnboardingImpl {
 		vnfPackage.setSecurityGroups(res);
 	}
 
-	private static void rebuildVduScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels, final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas, final Set<ScalingAspect> scalingAspects) {
+	@SuppressWarnings("boxing")
+	private static void rebuildVduScalingAspects(final VnfPackage vnfPackage, final List<InstantiationLevels> instantiationLevels, final List<VduInstantiationLevels> vduInstantiationLevels,
+			final List<VduInitialDelta> vduInitialDeltas, final List<VduScalingAspectDeltas> vduScalingAspectDeltas, final Set<ScalingAspect> scalingAspects) {
 		// flattern the instantiation levels. levels(demo,premium) -> ScaleInfo(name,
 		// scaleLevel)
 		instantiationLevels.stream()
@@ -222,7 +294,6 @@ public class VnfPackageOnboardingImpl {
 					});
 				});
 		vduInstantiationLevels.forEach(x -> {
-			x.getInternalName();
 			final Set<VduInstantiationLevel> ils = x.getLevels().entrySet().stream().map(y -> {
 				final VduInstantiationLevel vduInstantiationLevel = new VduInstantiationLevel();
 				vduInstantiationLevel.setLevelName(y.getKey());
@@ -238,10 +309,16 @@ public class VnfPackageOnboardingImpl {
 		});
 		vduScalingAspectDeltas.forEach(x -> x.getTargets().forEach(y -> {
 			final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
+			final VduInitialDelta init = findVduInitialDelta(vduInitialDeltas, y);
 			int level = 1;
+			int numInst = init.getInitialDelta().getNumberOfInstances();
 			final ScalingAspect aspect = scalingAspects.stream().filter(z -> z.getName().equals(x.getAspect())).findFirst().orElse(new ScalingAspect());
-			for (final Entry<String, VduLevel> delta : x.getDeltas().entrySet()) {
-				vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta.getKey(), delta.getValue().getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y));
+			vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), "initial_delta", init.getInitialDelta().getNumberOfInstances(), 0, aspect.getMaxScaleLevel(), y, numInst));
+			// Missing 0 => initial inst level.
+			for (final String delta : aspect.getStepDeltas()) {
+				final VduLevel step = x.getDeltas().get(delta);
+				numInst += step.getNumberOfInstances();
+				vnfc.addScalingAspectDeltas(new VnfComputeAspectDelta(x.getAspect(), delta, step.getNumberOfInstances(), level++, aspect.getMaxScaleLevel(), y, numInst));
 			}
 		}));
 		// Minimal instance at instantiate time.
@@ -249,6 +326,10 @@ public class VnfPackageOnboardingImpl {
 			final VnfCompute vnfc = findVnfCompute(vnfPackage, y);
 			vnfc.setInitialNumberOfInstance(x.getInitialDelta().getNumberOfInstances());
 		}));
+	}
+
+	private static VduInitialDelta findVduInitialDelta(final List<VduInitialDelta> vduInitialDeltas, final String y) {
+		return vduInitialDeltas.stream().filter(x -> x.getTargets().contains(y)).findFirst().orElseThrow(() -> new GenericException("Could not find initial level for vdu " + y));
 	}
 
 	@Nonnull
@@ -261,38 +342,23 @@ public class VnfPackageOnboardingImpl {
 
 	private static void remapNetworks(final Set<VnfCompute> cNodes, final Set<VnfLinkPort> vcNodes) {
 		cNodes.forEach(x -> {
-			final Set<String> nodes = filter(vcNodes, x.getToscaName());
+			final Set<VnfLinkPort> nodes = filter(vcNodes, x.getToscaName());
 			if (nodes.isEmpty()) {
-				throw new GenericException("Node " + x.getToscaName() + " must have a network.");
+				LOG.warn("Node {} have no network.", x.getToscaName());
 			}
-			x.setNetworks(nodes);
+			x.setNetworks(nodes.stream().map(VnfLinkPort::getVirtualLink).collect(Collectors.toSet()));
+			x.setPorts(nodes);
 		});
 	}
 
-	private static Set<String> filter(final Set<VnfLinkPort> vcNodes, final String toscaName) {
+	private static Set<VnfLinkPort> filter(final Set<VnfLinkPort> vcNodes, final String toscaName) {
 		return vcNodes.stream()
 				.filter(x -> x.getVirtualBinding().equals(toscaName))
-				.map(VnfLinkPort::getVirtualLink)
 				.collect(Collectors.toSet());
 	}
 
-	private static byte[] getUrlContent(final String uri) {
-		try {
-			final URL url = new URL(uri);
-			return StreamUtils.copyToByteArray((InputStream) url.getContent());
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	private static PkgChecksum getChecksum(final byte[] bytes) {
-		MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance(Constants.HASH_ALGORITHM);
-		} catch (final NoSuchAlgorithmException e) {
-			throw new GenericException(e);
-		}
-		final byte[] hashbytes = digest.digest(bytes);
+	private static PkgChecksum getChecksum(final DigestInputStream digest) {
+		final byte[] hashbytes = digest.getMessageDigest().digest();
 		final String sha3_256hex = bytesToHex(hashbytes);
 		final PkgChecksum checksum = new PkgChecksum();
 

@@ -18,14 +18,11 @@ package com.ubiqube.etsi.mano.nfvo.v271.controller.vnf;
 
 import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,13 +49,13 @@ public class VnfPackages271Sol003Controller implements VnfPackages271Sol003Api {
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfPkgId, final String range, @Valid final String includeSignature) {
-		return frontController.getArtifact(request, getSafeUUID(vnfPkgId), range, includeSignature);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsArtifactPathGet(final HttpServletRequest request, final String vnfPkgId, final String range, @Valid final String includeSignature) {
+		return frontController.getArtifact(request, getSafeUUID(vnfPkgId), includeSignature);
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdArtifactsGet(@Nonnull final HttpServletRequest request, final String vnfPkgId, final String range) {
-		return frontController.getSelectArtifacts(request, getSafeUUID(vnfPkgId), range);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdArtifactsGet(@Nonnull final HttpServletRequest request, final String vnfPkgId, final String range) {
+		return frontController.getSelectArtifacts(request, getSafeUUID(vnfPkgId));
 	}
 
 	@Override
@@ -72,8 +69,8 @@ public class VnfPackages271Sol003Controller implements VnfPackages271Sol003Api {
 	}
 
 	@Override
-	public ResponseEntity<List<ResourceRegion>> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String range) {
-		return frontController.getContent(getSafeUUID(vnfPkgId), range);
+	public ResponseEntity<Resource> vnfPackagesVnfPkgIdPackageContentGet(final String vnfPkgId, final String range) {
+		return frontController.getContent(getSafeUUID(vnfPkgId));
 	}
 
 	@Override

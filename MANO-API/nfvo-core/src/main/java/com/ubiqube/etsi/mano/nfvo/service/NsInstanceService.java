@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.nfvo.service;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -31,6 +32,9 @@ import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsdTask;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
@@ -72,18 +76,18 @@ public class NsInstanceService {
 		return 0;
 	}
 
-	public int countLiveInstanceOfVirtualLink(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
+	public int countLiveInstanceOfVirtualLink(final NsdInstance nsInstance, final String toscaName) {
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskToscaNameAndNsTaskClassGroupByNsTaskAlias(nsInstance, toscaName, NsVirtualLinkTask.class.getSimpleName());
 		return res.size();
 	}
 
-	public int countLiveInstanceOfVnf(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
-		return res.size();
+	public int countLiveInstanceOfVnf(final NsdInstance nsInstance, final String toscaName) {
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskToscaNameAndNsTaskClassGroupByNsTaskAlias(nsInstance, toscaName, NsVnfTask.class.getSimpleName());
+		return res.stream().collect(Collectors.groupingBy(x -> x.getNsTask().getToscaName())).size();
 	}
 
-	public int countLiveInstanceOfNsd(final NsdInstance nsInstance, final UUID id) {
-		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskId(nsInstance, id);
+	public int countLiveInstanceOfNsd(final NsdInstance nsInstance, final String toscaName) {
+		final List<NsLiveInstance> res = nsLiveInstanceJpa.findByNsInstanceAndNsTaskToscaNameAndNsTaskClassGroupByNsTaskAlias(nsInstance, toscaName, NsdTask.class.getSimpleName());
 		return res.size();
 	}
 

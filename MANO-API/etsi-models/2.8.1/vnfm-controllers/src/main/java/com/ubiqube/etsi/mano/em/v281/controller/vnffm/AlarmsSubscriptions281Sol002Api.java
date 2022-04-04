@@ -35,9 +35,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails2;
 import com.ubiqube.etsi.mano.em.v281.model.vnffm.FmSubscription;
 import com.ubiqube.etsi.mano.em.v281.model.vnffm.FmSubscriptionRequest;
-import com.ubiqube.etsi.mano.em.v281.model.vnffm.ProblemDetails2;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -16,147 +16,155 @@
  */
 package com.ubiqube.etsi.mano.em.v271.model.vnflcm;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.KeyValuePairs;
-import com.ubiqube.etsi.mano.em.v271.model.vnflcm.ScaleInfo;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.validation.annotation.Validated;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents request parameters for the \&quot;Scale VNF to Level\&quot; operation. 
+ * This type represents request parameters for the \&quot;Scale VNF to
+ * Level\&quot; operation.
  */
 @ApiModel(description = "This type represents request parameters for the \"Scale VNF to Level\" operation. ")
 @Validated
 
-public class ScaleVnfToLevelRequest   {
-  @JsonProperty("instantiationLevelId")
-  private String instantiationLevelId = null;
+public class ScaleVnfToLevelRequest {
+	@JsonProperty("instantiationLevelId")
+	private String instantiationLevelId = null;
 
-  @JsonProperty("scaleInfo")
-  @Valid
-  private List<ScaleInfo> scaleInfo = null;
+	@JsonProperty("scaleInfo")
+	@Valid
+	private List<ScaleInfo> scaleInfo = null;
 
-  @JsonProperty("additionalParams")
-  private KeyValuePairs additionalParams = null;
+	@JsonProperty("additionalParams")
+	private Map<String, String> additionalParams = null;
 
-  public ScaleVnfToLevelRequest instantiationLevelId(String instantiationLevelId) {
-    this.instantiationLevelId = instantiationLevelId;
-    return this;
-  }
+	public ScaleVnfToLevelRequest instantiationLevelId(final String instantiationLevelId) {
+		this.instantiationLevelId = instantiationLevelId;
+		return this;
+	}
 
-  /**
-   * Identifier of the target instantiation level of the current deployment flavour to which the VNF is requested to be scaled. Either the instantiationLevelId attribute or the scaleInfo attribute shall be included. 
-   * @return instantiationLevelId
-  **/
-  @ApiModelProperty(value = "Identifier of the target instantiation level of the current deployment flavour to which the VNF is requested to be scaled. Either the instantiationLevelId attribute or the scaleInfo attribute shall be included. ")
+	/**
+	 * Identifier of the target instantiation level of the current deployment
+	 * flavour to which the VNF is requested to be scaled. Either the
+	 * instantiationLevelId attribute or the scaleInfo attribute shall be included.
+	 *
+	 * @return instantiationLevelId
+	 **/
+	@ApiModelProperty(value = "Identifier of the target instantiation level of the current deployment flavour to which the VNF is requested to be scaled. Either the instantiationLevelId attribute or the scaleInfo attribute shall be included. ")
 
+	public String getInstantiationLevelId() {
+		return instantiationLevelId;
+	}
 
-  public String getInstantiationLevelId() {
-    return instantiationLevelId;
-  }
+	public void setInstantiationLevelId(final String instantiationLevelId) {
+		this.instantiationLevelId = instantiationLevelId;
+	}
 
-  public void setInstantiationLevelId(String instantiationLevelId) {
-    this.instantiationLevelId = instantiationLevelId;
-  }
+	public ScaleVnfToLevelRequest scaleInfo(final List<ScaleInfo> scaleInfo) {
+		this.scaleInfo = scaleInfo;
+		return this;
+	}
 
-  public ScaleVnfToLevelRequest scaleInfo(List<ScaleInfo> scaleInfo) {
-    this.scaleInfo = scaleInfo;
-    return this;
-  }
+	public ScaleVnfToLevelRequest addScaleInfoItem(final ScaleInfo scaleInfoItem) {
+		if (this.scaleInfo == null) {
+			this.scaleInfo = new ArrayList<>();
+		}
+		this.scaleInfo.add(scaleInfoItem);
+		return this;
+	}
 
-  public ScaleVnfToLevelRequest addScaleInfoItem(ScaleInfo scaleInfoItem) {
-    if (this.scaleInfo == null) {
-      this.scaleInfo = new ArrayList<>();
-    }
-    this.scaleInfo.add(scaleInfoItem);
-    return this;
-  }
+	/**
+	 * For each scaling aspect of the current deployment flavour, indicates the
+	 * target scale level to which the VNF is to be scaled. Either the
+	 * instantiationLevelId attribute or the scaleInfo attribute shall be included.
+	 *
+	 * @return scaleInfo
+	 **/
+	@ApiModelProperty(value = "For each scaling aspect of the current deployment flavour, indicates the target scale level to which the VNF is to be scaled. Either the instantiationLevelId attribute or the scaleInfo attribute shall be included. ")
 
-  /**
-   * For each scaling aspect of the current deployment flavour, indicates the target scale level to which the VNF is to be scaled. Either the instantiationLevelId attribute or the scaleInfo attribute shall be included. 
-   * @return scaleInfo
-  **/
-  @ApiModelProperty(value = "For each scaling aspect of the current deployment flavour, indicates the target scale level to which the VNF is to be scaled. Either the instantiationLevelId attribute or the scaleInfo attribute shall be included. ")
+	@Valid
 
-  @Valid
+	public List<ScaleInfo> getScaleInfo() {
+		return scaleInfo;
+	}
 
-  public List<ScaleInfo> getScaleInfo() {
-    return scaleInfo;
-  }
+	public void setScaleInfo(final List<ScaleInfo> scaleInfo) {
+		this.scaleInfo = scaleInfo;
+	}
 
-  public void setScaleInfo(List<ScaleInfo> scaleInfo) {
-    this.scaleInfo = scaleInfo;
-  }
+	public ScaleVnfToLevelRequest additionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+		return this;
+	}
 
-  public ScaleVnfToLevelRequest additionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-    return this;
-  }
+	/**
+	 * Additional parameters passed by the NFVO as input to the scaling process,
+	 * specific to the VNF being scaled, as declared in the VNFD as part of
+	 * \"ScaleVnfToLevelOpConfig\".
+	 *
+	 * @return additionalParams
+	 **/
+	@ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfToLevelOpConfig\". ")
 
-  /**
-   * Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfToLevelOpConfig\". 
-   * @return additionalParams
-  **/
-  @ApiModelProperty(value = "Additional parameters passed by the NFVO as input to the scaling process, specific to the VNF being scaled, as declared in the VNFD as part of \"ScaleVnfToLevelOpConfig\". ")
+	@Valid
 
-  @Valid
+	public Map<String, String> getAdditionalParams() {
+		return additionalParams;
+	}
 
-  public KeyValuePairs getAdditionalParams() {
-    return additionalParams;
-  }
+	public void setAdditionalParams(final Map<String, String> additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
-  public void setAdditionalParams(KeyValuePairs additionalParams) {
-    this.additionalParams = additionalParams;
-  }
+	@Override
+	public boolean equals(final java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final ScaleVnfToLevelRequest scaleVnfToLevelRequest = (ScaleVnfToLevelRequest) o;
+		return Objects.equals(this.instantiationLevelId, scaleVnfToLevelRequest.instantiationLevelId) &&
+				Objects.equals(this.scaleInfo, scaleVnfToLevelRequest.scaleInfo) &&
+				Objects.equals(this.additionalParams, scaleVnfToLevelRequest.additionalParams);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(instantiationLevelId, scaleInfo, additionalParams);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ScaleVnfToLevelRequest scaleVnfToLevelRequest = (ScaleVnfToLevelRequest) o;
-    return Objects.equals(this.instantiationLevelId, scaleVnfToLevelRequest.instantiationLevelId) &&
-        Objects.equals(this.scaleInfo, scaleVnfToLevelRequest.scaleInfo) &&
-        Objects.equals(this.additionalParams, scaleVnfToLevelRequest.additionalParams);
-  }
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("class ScaleVnfToLevelRequest {\n");
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(instantiationLevelId, scaleInfo, additionalParams);
-  }
+		sb.append("    instantiationLevelId: ").append(toIndentedString(instantiationLevelId)).append("\n");
+		sb.append("    scaleInfo: ").append(toIndentedString(scaleInfo)).append("\n");
+		sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ScaleVnfToLevelRequest {\n");
-    
-    sb.append("    instantiationLevelId: ").append(toIndentedString(instantiationLevelId)).append("\n");
-    sb.append("    scaleInfo: ").append(toIndentedString(scaleInfo)).append("\n");
-    sb.append("    additionalParams: ").append(toIndentedString(additionalParams)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(final java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

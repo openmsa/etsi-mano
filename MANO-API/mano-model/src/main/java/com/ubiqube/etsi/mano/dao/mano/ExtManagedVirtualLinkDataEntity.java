@@ -26,8 +26,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.ubiqube.etsi.mano.utils.ToStringIgnore;
+import com.ubiqube.etsi.mano.utils.ToStringUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -67,7 +71,16 @@ public class ExtManagedVirtualLinkDataEntity implements Serializable {
 	// 3.3.1
 	private String extManagedMultisiteVirtualLinkId;
 
+	@ToStringIgnore
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private GrantResponse grants;
 
+	@ToStringIgnore
+	@ManyToOne
+	private VnfInstance vnfInstance;
+
+	@Override
+	public String toString() {
+		return ToStringUtil.toString(this);
+	}
 }

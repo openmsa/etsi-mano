@@ -38,6 +38,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
 import com.ubiqube.etsi.mano.exception.PreConditionException;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NsdRepository;
 import com.ubiqube.etsi.mano.service.ManoSearchResponseService;
 import com.ubiqube.etsi.mano.service.Patcher;
@@ -78,7 +79,7 @@ public class NsdControllerImpl extends SearchableService implements NsdControlle
 	}
 
 	@Override
-	public byte[] nsDescriptorsNsdInfoIdNsdContentGet(final UUID id) {
+	public ManoResource nsDescriptorsNsdInfoIdNsdContentGet(final UUID id) {
 		final NsdPackage nsdInfo = nsdRepository.get(id);
 		ensureIsOnboarded(nsdInfo);
 		return nsdRepository.getBinary(id, "nsd");

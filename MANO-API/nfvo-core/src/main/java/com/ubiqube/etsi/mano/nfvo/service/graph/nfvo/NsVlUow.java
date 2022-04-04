@@ -21,18 +21,19 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLinkTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
-import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsVlNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 
-public class NsVlUow extends AbstractNsUnitOfWork<NsVirtualLinkTask> {
+public class NsVlUow extends AbstractUnitOfWork<NsVirtualLinkTask> {
 	private final NsVirtualLinkTask task;
 	private final VlProtocolData vlProtocolData;
 	private final Vim vim;
 	private final VimConnectionInformation vimConnectionInformation;
 
 	public NsVlUow(final VirtualTask<NsVirtualLinkTask> task, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
-		super(task, NsVlNode.class);
+		super(task, Network.class);
 		this.task = task.getParameters();
 		this.vim = vim;
 		this.vimConnectionInformation = vimConnectionInformation;
@@ -45,7 +46,7 @@ public class NsVlUow extends AbstractNsUnitOfWork<NsVirtualLinkTask> {
 
 	@Override
 	public String execute(final Context context) {
-		final String ret = vim.network(vimConnectionInformation).createNetwork(vlProtocolData, task.getToscaName(), null, null);
+		final String ret = vim.network(vimConnectionInformation).createNetwork(vlProtocolData, task.getAlias(), null, null);
 		final IpPool ipAllocationPool = null;
 		vim.network(vimConnectionInformation).createSubnet(vlProtocolData.getL3ProtocolData(), ipAllocationPool, ret);
 		return ret;

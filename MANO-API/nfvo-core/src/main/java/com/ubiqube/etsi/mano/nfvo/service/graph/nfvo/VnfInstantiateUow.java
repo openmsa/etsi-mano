@@ -16,22 +16,24 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.v2.OperationStatusType;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
-import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.ExternalPortRecord;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfInstantiateTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.model.ExternalManagedVirtualLink;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
@@ -39,21 +41,22 @@ import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfInstantiateNode;
 import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
+public class VnfInstantiateUow extends AbstractUnitOfWork<NsVnfInstantiateTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VnfInstantiateUow.class);
 
 	private final VnfmInterface vnfm;
 
-	private final NsVnfTask task;
+	private final NsVnfInstantiateTask task;
 
-	public VnfInstantiateUow(final VirtualTask<NsVnfTask> task, final VnfmInterface vnfm) {
+	public VnfInstantiateUow(final VirtualTask<NsVnfInstantiateTask> task, final VnfmInterface vnfm) {
 		super(task, VnfInstantiateNode.class);
 		this.task = task.getParameters();
 		this.vnfm = vnfm;
@@ -68,11 +71,12 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 	 */
 	private VnfBlueprint waitLcmCompletion(final VnfBlueprint vnfLcmOpOccs, final VnfmInterface vnfm) {
 		VnfBlueprint tmp = vnfLcmOpOccs;
-		OperationStatusType state = OperationStatusType.NOT_STARTED;
-		while (state == OperationStatusType.PROCESSING || OperationStatusType.STARTING == state || OperationStatusType.NOT_STARTED == state) {
+		OperationStatusType state = OperationStatusType.PROCESSING;
+		while ((state == OperationStatusType.PROCESSING) || (OperationStatusType.STARTING == state)) {
 			tmp = vnfm.vnfLcmOpOccsGet(task.getServer(), vnfLcmOpOccs.getId());
 			state = tmp.getOperationStatus();
-			sleepSeconds(1);
+			LOG.debug("Instantiate polling: {} => {}", tmp.getId(), state);
+			sleepSeconds(3);
 		}
 		LOG.info("VNF Lcm complete with state: {}", state);
 		return tmp;
@@ -89,30 +93,37 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String execute(final Context context) {
-		final String inst = context.get(VnfCreateNode.class, task.getToscaName());
-		final Set<ExtVirtualLinkDataEntity> net = task.getExternalNetworks().stream().map(x -> {
-			final String resource = context.get(Network.class, x);
+		final String inst = context.get(VnfCreateNode.class, task.getAlias());
+		final List<ExternalManagedVirtualLink> net = task.getExternalNetworks().stream().map(x -> {
+			final String resource = context.get(Network.class, x.getToscaName());
 			if (null == resource) {
+				LOG.warn("Could not find network resource {} => {}, not released.", x, context);
 				return null;
 			}
-			final ExtVirtualLinkDataEntity ext = new ExtVirtualLinkDataEntity();
-			ext.setResourceId(resource);
-			ext.setVimLevelResourceType(x);
-			ext.setResourceProviderId("PROVIDER");
-			ext.setVimConnectionId("VIM");
-			return ext;
+			return createExmvl(x, resource);
 		})
 				.filter(Objects::nonNull)
-				.collect(Collectors.toSet());
+				.toList();
 		final VnfInstantiate request = createRequest();
-		request.setExtVirtualLinks(net);
+		request.setExtManagedVirtualLinks(net);
 		final VnfBlueprint res = vnfm.vnfInstatiate(task.getServer(), inst, request);
 		final VnfBlueprint result = waitLcmCompletion(res, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			final String details = Optional.ofNullable(result.getError()).map(FailureDetails::getDetail).orElse("[No content]");
-			throw new GenericException("VNF LCM Failed: " + details + " With state: " + result.getOperationStatus());
+			throw new GenericException("VNF LCM Failed: " + details + " With state:  " + result.getOperationStatus());
 		}
-		return res.getInstance().getId().toString();
+		return null;
+	}
+
+	private ExternalManagedVirtualLink createExmvl(final ExternalPortRecord linkId, final String vimResource) {
+		final ExternalManagedVirtualLink ext = new ExternalManagedVirtualLink();
+		ext.setId(UUID.randomUUID());
+		ext.setResourceId(vimResource);
+		ext.setExtManagedVirtualLinkId(linkId.getVirtualLinkPort());
+		ext.setResourceProviderId("ETSI-MANO-VNFM");
+		ext.setVnfVirtualLinkDescId(linkId.getVirtualLinkPort());
+		ext.setVimId(task.getServer().getId().toString());
+		return ext;
 	}
 
 	private VnfInstantiate createRequest() {
@@ -128,16 +139,23 @@ public class VnfInstantiateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), task.getVimResourceId());
-		if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
+		try {
+			final VnfInstance inst = vnfm.getVnfInstance(task.getServer(), task.getVimResourceId());
+			if (inst.getInstantiationState() == InstantiationState.NOT_INSTANTIATED) {
+				return null;
+			}
+		} catch (final WebClientResponseException.NotFound e) {
+			LOG.trace("Not found exception, ignoring.", e);
 			return null;
 		}
 		final VnfBlueprint lcm = vnfm.vnfTerminate(task.getServer(), task.getVimResourceId());
+		if (lcm == null) {
+			return null;
+		}
 		final VnfBlueprint result = waitLcmCompletion(lcm, vnfm);
 		if (OperationStatusType.COMPLETED != result.getOperationStatus()) {
 			throw new GenericException("VNF LCM Failed: " + result.getError().getDetail());
 		}
 		return result.getId().toString();
 	}
-
 }

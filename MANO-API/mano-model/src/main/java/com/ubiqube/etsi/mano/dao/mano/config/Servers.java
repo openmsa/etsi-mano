@@ -22,17 +22,22 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
+import com.ubiqube.etsi.mano.dao.mano.Audit;
+import com.ubiqube.etsi.mano.dao.mano.AuditListener;
+import com.ubiqube.etsi.mano.dao.mano.Auditable;
 import com.ubiqube.etsi.mano.dao.mano.AuthentificationInformations;
 import com.ubiqube.etsi.mano.dao.mano.common.ApiVersion;
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
@@ -56,7 +61,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Servers implements Serializable {
+@EntityListeners(AuditListener.class)
+public class Servers implements Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -72,7 +78,7 @@ public class Servers implements Serializable {
 
 	private boolean ignoreSsl;
 
-	@Lob
+	@Column(length = 5000)
 	private String tlsCert;
 
 	private String version;
@@ -97,6 +103,11 @@ public class Servers implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ApiVersion> versions;
+
+	@Version
+	private long tupleVersion;
+
+	private Audit audit = new Audit();
 
 	public void addVersion(final ApiVersion version2) {
 		if (null == versions) {

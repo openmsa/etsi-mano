@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.nsd.NsdSubscriptionFrontController;
-import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.Link;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdmSubscriptionLinks;
 import com.ubiqube.etsi.mano.nfvo.v281.model.nsd.NsdmSubscriptionRequest;

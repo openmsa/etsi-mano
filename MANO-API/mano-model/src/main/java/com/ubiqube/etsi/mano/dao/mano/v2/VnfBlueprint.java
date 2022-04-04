@@ -68,7 +68,7 @@ import lombok.Setter;
 @Entity
 @Indexed
 @EntityListeners(AuditListener.class)
-public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implements Blueprint<VnfTask, VnfInstance> {
+public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -86,7 +86,7 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 	private Set<VnfTask> tasks = new HashSet<>();
 
 	@Valid
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = { CascadeType.DETACH }, fetch = FetchType.EAGER)
 	private Set<VimConnectionInformation> vimConnections;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "grants")
@@ -148,6 +148,22 @@ public class VnfBlueprint extends AbstractBlueprint<VnfTask, VnfInstance> implem
 			this.vimConnections = new LinkedHashSet<>();
 		}
 		this.vimConnections.add(vimConnection);
+	}
+
+	@Override
+	public void addExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+		if (null == extManagedVirtualLinks) {
+			this.extManagedVirtualLinks = new LinkedHashSet<>();
+		}
+		this.extManagedVirtualLinks.addAll(extManagedVirtualLinks);
+	}
+
+	@Override
+	public void addExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		if (this.extVirtualLinks == null) {
+			this.extVirtualLinks = new LinkedHashSet<>();
+		}
+		this.extVirtualLinks.addAll(extVirtualLinks);
 	}
 
 }

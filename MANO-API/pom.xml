@@ -33,5 +33,28 @@
 		<module>mano-vim</module>
 		<module>mano-pkg</module>
 		<module>mano-grammar</module>
+		<module>discovery</module>
+		<module>montoring</module>
+		<module>repository</module>
 	</modules>
+	<properties>
+		<sonar.jacoco.xmlReportPaths>${project.basedir}/../target/site/jacoco-aggregate/jacoco.xml</sonar.jacoco.xmlReportPaths>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.7</version>
+				 <executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -46,6 +46,8 @@ public class Systems {
 
 	private String name;
 
+	private UUID vimOrigin;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<SystemConnections> subSystems;
 

@@ -25,19 +25,18 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfComputeAspectDelta;
+import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstantiationLevels;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.vnfm.service.VnfBlueprintService;
 
-@Service
 public class DefaultScalingStrategy implements ScalingStrategy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultScalingStrategy.class);
@@ -49,7 +48,7 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 	}
 
 	@Override
-	public NumberOfCompute getNumberOfCompute(final VnfBlueprint blueprint, final VnfPackage vnfPakage, final Set<ScaleInfo> scaling, final VnfCompute vnfCompute) {
+	public NumberOfCompute getNumberOfCompute(final VnfBlueprint blueprint, final VnfPackage vnfPakage, final Set<ScaleInfo> scaling, final VnfCompute vnfCompute, final VnfInstance instance) {
 		final String instantiationLevelId = blueprint.getParameters().getInstantiationLevelId();
 		Set<VnfInstantiationLevels> instantiationLevels = vnfPakage.getVnfInstantiationLevels();
 		if (instantiationLevels.isEmpty()) {
@@ -123,7 +122,7 @@ public class DefaultScalingStrategy implements ScalingStrategy {
 		int cnt = 0;
 		int apply = 0;
 		// Apply delta.
-		VnfComputeAspectDelta last = new VnfComputeAspectDelta("", "", 1, 1, 1, null);
+		VnfComputeAspectDelta last = new VnfComputeAspectDelta("", "", 1, 1, 1, null, 1);
 		for (final VnfComputeAspectDelta vnfComputeAspectDelta : vnfComputeAspectDeltas) {
 			if (vnfComputeAspectDelta.getLevel() <= myscaling.getScaleLevel()) {
 				cnt += vnfComputeAspectDelta.getNumberOfInstances();

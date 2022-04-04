@@ -142,8 +142,8 @@ public class PlannerImpl<P, U, W> implements Planner<P, U, W> {
 		gf.vertexSet().forEach(x -> {
 			final SystemBuilder<U> db = implementationService.getTargetSystem(x);
 			x.setSystemBuilder(db);
-			db.getIncomingVertex().forEach(ng::addVertex);
-			db.getOutgoingVertex().forEach(ng::addVertex);
+			db.getVertex().forEach(ng::addVertex);
+			db.getEdges().forEach(y -> ng.addEdge(y.getSource(), y.getTarget()));
 		});
 		// Connect everything.
 		gf.edgeSet().forEach(x -> {

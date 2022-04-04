@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
@@ -95,6 +96,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 				.map(x -> mapper.map(x, VnfInstanceDto.class))
 				.toList();
 		dto.setVnfInstance(vnfInstance);
+		dto.setNsdInfoId(ret.getNsdInfo().getId().toString());
 		final List<NsLiveInstance> vls = nsLiveInstanceJpa.findByNsdInstanceAndClass(ret, NsVirtualLinkTask.class.getSimpleName());
 		final List<NsVirtualLinkInfoDto> vlsDto = vls.stream().map(x -> {
 			final NsVirtualLinkInfoDto vlDto = new NsVirtualLinkInfoDto();
@@ -108,6 +110,7 @@ public class NsInstanceControllerImpl implements NsInstanceController {
 			return vlDto;
 		}).toList();
 		dto.setVirtualLinkInfo(vlsDto);
+		dto.setNsState(nsLiveInstanceJpa.countByNsInstance(ret) > 0 ? InstantiationState.INSTANTIATED : InstantiationState.NOT_INSTANTIATED);
 		return dto;
 	}
 

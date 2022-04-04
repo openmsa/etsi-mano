@@ -27,9 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ubiqube.etsi.mano.SingleControllerCondition;
 import com.ubiqube.etsi.mano.controller.lcmgrant.LcmGrantsFrontController;
+import com.ubiqube.etsi.mano.em.v281.model.vnflcm.Link;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v281.model.grant.GrantRequest;
-import com.ubiqube.etsi.mano.vnfm.v281.model.grant.Link;
 
 /**
  *

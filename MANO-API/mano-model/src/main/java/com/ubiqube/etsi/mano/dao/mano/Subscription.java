@@ -19,6 +19,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -66,7 +67,7 @@ public class Subscription implements BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@FullTextField
 	private ApiTypesEnum api;
-
+	@Nullable
 	private AuthentificationInformations authentication;
 
 	private String callbackUri;

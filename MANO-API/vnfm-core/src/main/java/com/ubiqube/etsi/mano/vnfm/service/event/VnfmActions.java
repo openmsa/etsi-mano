@@ -37,6 +37,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
+import com.ubiqube.etsi.mano.service.NsScaleStrategy;
 import com.ubiqube.etsi.mano.service.event.AbstractGenericAction;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -72,7 +73,7 @@ public class VnfmActions extends AbstractGenericAction {
 	public VnfmActions(final VimManager vimManager, final VnfOrchestrationAdapter orchestrationAdapter, final VnfInstanceService vnfInstancesService,
 			final VnfWorkflow planner, final VnfBlueprintService blueprintService, final ManoGrantService vimResourceService, final VnfLiveInstanceJpa vnfLiveInstanceJpa,
 			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
-		super(planner, vimResourceService, orchestrationAdapter);
+		super(planner, vimResourceService, orchestrationAdapter, new NsScaleStrategy());
 		this.vimManager = vimManager;
 		this.vnfInstancesService = vnfInstancesService;
 		this.blueprintService = blueprintService;
@@ -120,5 +121,12 @@ public class VnfmActions extends AbstractGenericAction {
 				.flatMap(y -> vnfLiveInstanceJpa.findByTaskVnfInstanceAndToscaName(vnfInstance, y.getCpdId()).stream())
 				.toList();
 		LOG.debug("{}", vli.get(0).getTask());
+	}
+
+	@Override
+	protected void mergeVirtualLinks(final Instance vnfInstance, final Blueprint<?, ?> localPlan) {
+		final VnfBlueprint vp = (VnfBlueprint) localPlan;
+		vnfInstance.setExtManagedVirtualLinks(vp.getExtManagedVirtualLinks());
+		vnfInstance.setExtVirtualLinks(vp.getExtVirtualLinks());
 	}
 }

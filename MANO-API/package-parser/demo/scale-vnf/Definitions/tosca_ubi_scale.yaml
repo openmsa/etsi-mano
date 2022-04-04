@@ -13,12 +13,12 @@ topology_template:
       properties:
         descriptor_id: 6eaecaf6-e64f-441c-8b55-c153da817217
         provider: Ubiqube internal.
-        product_name: small_integration_test_aspect
+        product_name: scale_integration_test_aspect
         software_version: 1.0.0
         descriptor_version: 1.0.5
         flavour_id: flavor01
         flavour_description: Descr.
-        product_info_name: Product info name.
+        product_info_name: Scaling demo.
         product_info_description: product info descr.
         vnfm_info:
           - etsivnfm:v2.6.1
@@ -90,8 +90,6 @@ topology_template:
             content: cloud_init
             source_path: file://
             destination_path: /opt/
-      requirements:
-        - virtual_storage: block01
       capabilities:
         virtual_compute:
           logical_node:  # map tosca.datatypes.nfv.LogicalNodeData
@@ -154,8 +152,6 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
-      requirements:
-        - virtual_storage: block01
       capabilities:
         virtual_compute:
           logical_node:  # map tosca.datatypes.nfv.LogicalNodeData
@@ -218,8 +214,6 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
-      requirements:
-        - virtual_storage: block01
       capabilities:
         virtual_compute:
           logical_node:  # map tosca.datatypes.nfv.LogicalNodeData
@@ -284,8 +278,6 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
-      requirements:
-        - virtual_storage: block01
       capabilities:
         virtual_compute:
           logical_node:  # map tosca.datatypes.nfv.LogicalNodeData
@@ -340,10 +332,8 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
       requirements:
-        - external_virtual_link: 
-            node: public
-        - internal_virtual_link: 
-            node: leftVl01
+        - external_virtual_link: public
+        - internal_virtual_link: leftVl01
 
 
 
@@ -408,12 +398,10 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link:
-            node: leftVl01
-        - virtual_binding:
-            node: webserver
+        - virtual_link: leftVl01
+        - virtual_binding: webserver
 
 
     cpLc01data:
@@ -428,12 +416,10 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link:
-            node: leftVl01
-        - virtual_binding:
-            node: database
+        - virtual_link: leftVl01
+        - virtual_binding: database
 
     cpLc02mem:
       type: tosca.nodes.nfv.VduCp
@@ -449,10 +435,8 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: leftVl01
-        - virtual_binding:
-            node: memcache
+        - virtual_link: leftVl01
+        - virtual_binding: memcache
 
     cpLc03lb:
       type: tosca.nodes.nfv.VduCp
@@ -466,12 +450,10 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link:
-            node: leftVl01
-        - virtual_binding:
-            node: lbaas
+        - virtual_link: leftVl01
+        - virtual_binding: lbaas
 
 
 
@@ -640,6 +622,8 @@ policies:
       aspect: webserver
       deltas:
         delta_1:
+          number_of_instances: 1
+        delta_2:
           number_of_instances: 2
 
 

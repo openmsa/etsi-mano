@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.Checksum;
-import com.ubiqube.etsi.mano.nfvo.v281.model.vnf.KeyValuePairs;
+import java.util.Map;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
@@ -161,7 +161,7 @@ public class VnfPackageSoftwareImageInfo   {
   private Integer size = null;
 
   @JsonProperty("userMetadata")
-  private KeyValuePairs userMetadata = null;
+  private Map<String, String> userMetadata = null;
 
   @JsonProperty("imagePath")
   private String imagePath = null;
@@ -426,7 +426,7 @@ public class VnfPackageSoftwareImageInfo   {
     this.size = size;
   }
 
-  public VnfPackageSoftwareImageInfo userMetadata(KeyValuePairs userMetadata) {
+  public VnfPackageSoftwareImageInfo userMetadata(Map<String, String> userMetadata) {
     this.userMetadata = userMetadata;
     return this;
   }
@@ -439,11 +439,11 @@ public class VnfPackageSoftwareImageInfo   {
 
   @Valid
 
-  public KeyValuePairs getUserMetadata() {
+  public Map<String, String> getUserMetadata() {
     return userMetadata;
   }
 
-  public void setUserMetadata(KeyValuePairs userMetadata) {
+  public void setUserMetadata(Map<String, String> userMetadata) {
     this.userMetadata = userMetadata;
   }
 

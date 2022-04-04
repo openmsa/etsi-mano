@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.vnfm.config;
 
 import org.springframework.stereotype.Component;
 
+import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -33,6 +34,7 @@ import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.model.ExternalManagedVirtualLink;
 import com.ubiqube.etsi.mano.model.VnfInstantiate;
 
 import ma.glasnost.orika.MapperFactory;
@@ -103,6 +105,10 @@ public class VnfmOrikaConfiguration implements OrikaMapperFactoryConfigurer {
 				.field("vnfdId", "vnfInstance.vnfdId")
 				.field("vnfInstanceId", "vnfInstance.id")
 				.field("vnfLcmOpOccId", "id")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(ExternalManagedVirtualLink.class, ExtManagedVirtualLinkDataEntity.class)
+				.field("extManagedVirtualLinkId", "vnfVirtualLinkDescId")
 				.byDefault()
 				.register();
 		/*

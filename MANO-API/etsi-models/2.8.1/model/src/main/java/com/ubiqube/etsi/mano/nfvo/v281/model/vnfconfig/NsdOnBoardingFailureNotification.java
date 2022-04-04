@@ -25,12 +25,17 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * This type represents an NSD management notification, which informs the receiver of the failure of on-boarding an NSD. It shall comply with the provisions defined in Table 5.5.2.10-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the on-boarding of an NSD has failed.
+ * This type represents an NSD management notification, which informs the
+ * receiver of the failure of on-boarding an NSD. It shall comply with the
+ * provisions defined in Table 5.5.2.10-1. The support of this notification is
+ * mandatory. The notification shall be triggered by the NFVO when the
+ * on-boarding of an NSD has failed.
  */
 @ApiModel(description = "This type represents an NSD management notification, which informs the receiver of the failure of on-boarding an NSD. It shall comply with the provisions defined in Table 5.5.2.10-1. The support of this notification is mandatory. The notification shall be triggered by the NFVO when the on-boarding of an NSD has failed. ")
 @Validated
@@ -87,7 +92,8 @@ public class NsdOnBoardingFailureNotification {
 	}
 
 	/**
-	 * Discriminator for the different notification types. Shall be set to \"NsdOnboardingFailureNotification\" for this notification type.
+	 * Discriminator for the different notification types. Shall be set to
+	 * \"NsdOnboardingFailureNotification\" for this notification type.
 	 *
 	 * @return notificationType
 	 **/
@@ -193,7 +199,8 @@ public class NsdOnBoardingFailureNotification {
 	}
 
 	/**
-	 * Failure details of current onboarding procedure. See clause 6.3 of ETSI GS NFV-SOL 013 for the details of \"ProblemDetails\" structure.
+	 * Failure details of current onboarding procedure. See clause 6.3 of ETSI GS
+	 * NFV-SOL 013 for the details of \"ProblemDetails\" structure.
 	 *
 	 * @return onboardingFailureDetails
 	 **/
@@ -238,7 +245,7 @@ public class NsdOnBoardingFailureNotification {
 		if (this == o) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
 		final NsdOnBoardingFailureNotification nsdOnBoardingFailureNotification = (NsdOnBoardingFailureNotification) o;
@@ -275,7 +282,8 @@ public class NsdOnBoardingFailureNotification {
 	}
 
 	/**
-	 * Convert the given object to string with each line indented by 4 spaces (except the first line).
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
 	 */
 	private String toIndentedString(final java.lang.Object o) {
 		if (o == null) {

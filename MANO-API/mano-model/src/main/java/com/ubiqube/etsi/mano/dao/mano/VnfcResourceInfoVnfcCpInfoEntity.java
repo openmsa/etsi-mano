@@ -44,19 +44,55 @@ public class VnfcResourceInfoVnfcCpInfoEntity implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * IdentifierInVnf: Identifier of this VNFC CP instance and the associated array
+	 * entry.
+	 */
 	@Id
-	private String id = null;
+	private String id;
 
-	private String cpdId = null;
+	/**
+	 * IdentifierInVnfd: Identifier of the VDU CPD, cpdId, in the VNFD. ETSI GS
+	 * NFV-SOL 001 [i.4] specifies the structure and format of the VNFD based on
+	 * TOSCA specifications.
+	 */
+	private String cpdId;
 
-	private String vnfExtCpId = null;
+	/**
+	 * IdentifierInVnf: Identifier of the related external CP. Shall be present when
+	 * the VNFC CP is exposed as an external CP of the VNF instance or connected to
+	 * an external CP of the VNF instance (see note 2) and shall be absent
+	 * otherwise.
+	 */
+	private String vnfExtCpId;
 
+	/**
+	 * Network protocol information for this CP. May be omitted if the VNFC CP is
+	 * exposed as an external CP. The information can be omitted because it is
+	 * already available as part of the external CP information.
+	 */
 	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-	private List<CpProtocolInfoEntity> cpProtocolInfo = null;
+	private List<CpProtocolInfoEntity> cpProtocolInfo;
 
-	private String vnfLinkPortId = null;
+	/**
+	 * IdentifierInVnf: Identifier of the "VnfLinkPortInfo" structure in the
+	 * "VnfVirtualLinkResourceInfo" or "ExtManagedVirtualLinkInfo" structure. Shall
+	 * be present if the CP is associated to a link port on an internal VL
+	 * (including externally-managed internal VL) of the VNF instance and shall be
+	 * absent otherwise.
+	 */
+	private String vnfLinkPortId;
+
+	/**
+	 * IdentifierInVnf: Identifier of another VNFC CP instance that corresponds to
+	 * the parent port of a trunk that the present VNFC CP instance participates in.
+	 * Shall be provided if the present CP instance participates in a trunk as
+	 * subport, and the referred VNFC CP instances are also present in the
+	 * vnfcCpInfo attribute.
+	 */
+	private String parentCpId;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Map<String, String> metadata = null;
+	private Map<String, String> metadata;
 
 }

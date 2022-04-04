@@ -33,8 +33,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ubiqube.etsi.mano.em.v281.model.vnfconfig.ProblemDetails2;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.CancelMode;
-import com.ubiqube.etsi.mano.em.v281.model.vnflcm.ProblemDetails2;
 import com.ubiqube.etsi.mano.em.v281.model.vnflcm.VnfLcmOpOcc;
 
 import io.swagger.annotations.Api;

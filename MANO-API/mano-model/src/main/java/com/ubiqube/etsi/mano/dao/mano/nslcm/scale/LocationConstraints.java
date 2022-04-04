@@ -20,11 +20,13 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.ElementCollection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,7 +49,7 @@ public class LocationConstraints implements Serializable {
 
 	private String countryCode;
 
-	@ElementCollection
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<LocConstCivicAddrElmnt> civicAddressElement;
 
 	private String area;

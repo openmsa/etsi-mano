@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
+import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.service.SystemService;
@@ -126,19 +127,38 @@ public class VimManager {
 
 	@Transactional(TxType.REQUIRED)
 	public VimConnectionInformation registerIfNeeded(final VimConnectionInformation x) {
-		final Optional<VimConnectionInformation> vim = vimConnectionInformationJpa.findByVimId(x.getVimId());
-		if (vim.isPresent()) {
-			return vim.get();
+		synchronized (VimManager.class) {
+			final Optional<VimConnectionInformation> vim = vimConnectionInformationJpa.findByVimId(x.getVimId());
+			if (vim.isPresent()) {
+				return vim.get();
+			}
+			return registerVim(x);
 		}
-		final VimConnectionInformation n = vimConnectionInformationJpa.save(x);
+	}
+
+	@Transactional
+	public void deleteVim(final UUID id) {
+		vimConnectionInformationJpa.deleteById(id);
+		systemService.deleteByVimOrigin(id);
+		rebuildCache();
+	}
+
+	public VimConnectionInformation register(final VimConnectionInformation vci) {
+		checkVimConnectivity(vci);
+		return registerVim(vci);
+	}
+
+	private void checkVimConnectivity(final VimConnectionInformation vci) {
+		final Vim vim = vims.stream()
+				.filter(x -> x.getType().equals(vci.getVimType())).findFirst()
+				.orElseThrow(() -> new GenericException("Could not find vim [" + vci.getVimType() + "]"));
+		vim.authenticate(vci);
+	}
+
+	private VimConnectionInformation registerVim(final VimConnectionInformation vci) {
+		final VimConnectionInformation n = vimConnectionInformationJpa.save(vci);
 		systemService.registerVim(n);
 		init();
 		return n;
-	}
-
-	public void deleteVim(final UUID id) {
-		vimConnectionInformationJpa.deleteById(id);
-		systemService.deleteById(id);
-		rebuildCache();
 	}
 }

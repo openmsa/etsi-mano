@@ -40,10 +40,12 @@ import com.ubiqube.etsi.mano.dao.mano.dto.NsLcmOpOccs;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedCompute;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedExtCp;
 import com.ubiqube.etsi.mano.dao.mano.dto.VnfInstantiatedVirtualLink;
+import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.mapper.OffsetDateTimeToDateConverter;
 import com.ubiqube.etsi.mano.mapper.OrikaFilterMapper;
 import com.ubiqube.etsi.mano.mapper.UuidConverter;
+import com.ubiqube.etsi.mano.model.ExternalManagedVirtualLink;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ConstraintResourceRef;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.GrantRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.lcmgrant.ResourceDefinition;
@@ -56,6 +58,7 @@ import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscription;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.LccnSubscriptionRequest;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.nfvo.v261.model.nslcm.NsLcmOpOcc;
+import com.ubiqube.etsi.mano.vnfm.v261.model.nslcm.VnfLcmOpOcc;
 
 import ma.glasnost.orika.MapperFactory;
 import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
@@ -135,6 +138,10 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("vimId", "vimConnectionId")
 				.byDefault()
 				.register();
+		orikaMapperFactory.classMap(ExtManagedVirtualLinkData.class, ExternalManagedVirtualLink.class)
+				.field("vmfVirtualLinkDescId", "vnfVirtualLinkDescId")
+				.byDefault()
+				.register();
 		orikaMapperFactory.classMap(AffectedVnf.class, NsInstantiatedVnf.class)
 				.field("vnfdId", "")
 				.field("vnfInstanceId", "vnfInstance")
@@ -180,6 +187,16 @@ public class OrikaConfigurationNfvo261 implements OrikaMapperFactoryConfigurer {
 				.field("isAutomaticInvocation", "automaticInvocation")
 				.field("isCancelPending", "cancelPending")
 				.field("startTime", "audit.createdOn")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfLcmOpOcc.class, VnfBlueprint.class)
+				.field("vnfInstanceId", "vnfInstance.id")
+				// .field("resourceChanges", "tasks")
+				.field("grantId", "grantsRequestId")
+				.field("operationState", "operationStatus")
+				.field("isAutomaticInvocation", "automaticInvocation")
+				.field("isCancelPending", "cancelPending")
+				.field("operationParams", "parameters")
 				.byDefault()
 				.register();
 		orikaMapperFactory.classMap(NsLcmOpOccs.class, NsLcmOpOcc.class)

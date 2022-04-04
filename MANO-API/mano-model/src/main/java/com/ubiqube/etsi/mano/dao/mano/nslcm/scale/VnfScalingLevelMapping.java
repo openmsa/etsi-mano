@@ -36,14 +36,20 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-public class VnfScalingLevelMapping extends NsVnfLevelMapping {
+public class VnfScalingLevelMapping implements NsScaleLevel {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
+	private String name;
+	private String aspectId;
+	private int numberOfInstance;
+
 	public VnfScalingLevelMapping(final String name, final String aspectId, final int numberOfInstance) {
-		super(name, aspectId, numberOfInstance);
+		this.name = name;
+		this.aspectId = aspectId;
+		this.numberOfInstance = numberOfInstance;
 	}
 }

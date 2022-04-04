@@ -29,15 +29,11 @@ import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.NsScaling;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
 public class DefaultNsPackageProvider implements NsPackageProvider {
+
 	@Override
 	public NsInformations getNsInformations(final Map<String, String> userData) {
-		return new NsInformations();
+		return null;
 	}
 
 	@Override
@@ -77,7 +73,7 @@ public class DefaultNsPackageProvider implements NsPackageProvider {
 
 	@Override
 	public NsScaling getNsScaling(final Map<String, String> userData) {
-		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

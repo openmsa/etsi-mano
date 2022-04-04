@@ -13,11 +13,11 @@ topology_template:
       properties:
         descriptor_id: d0bd6d65-0302-4922-8c4d-73282cfcfc08
         provider: Ubiqube internal.
-        product_name: small_integration_test_aspect
+        product_name: tm21_vsrx
         software_version: 1.0.0
         descriptor_version: 1.0.2
         flavour_id: flavor01
-        flavour_description: Descr.>
+        flavour_description: VSRX vnf.
         product_info_name: Product info name.
         product_info_description: product info descr.
         vnfm_info:
@@ -43,7 +43,10 @@ topology_template:
           min_number_of_instances: 1
           max_number_of_instances: 10
       requirements:
-        - virtual_link: public
+        - virtual_link: cp_public
+        - virtual_link_1: cp_mngt
+        - virtual_link_2: cp_internal
+        - virtual_link_3: cp_internal2
 
 
 
@@ -115,7 +118,7 @@ topology_template:
                 read: openstack
               rdma_enabled: false
 
-    cpLc01:
+    cp_internal:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
@@ -127,60 +130,56 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link: internal
         - virtual_binding: vsrx
 
-    cpLc02:
+    cp_internal2:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
         virtual_network_interface_requirements:
-          - name: vl02
+          - name: vl01
             description: descr
             support_mandatory: false
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link: internal2
         - virtual_binding: vsrx
 
-    cpLc03:
+    cp_mngt:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
         virtual_network_interface_requirements:
-          - name: vl02
+          - name: vl01
             description: descr
             support_mandatory: false
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link: public
         - virtual_binding: vsrx
 
-    cpLc04:
+    cp_public:
       type: tosca.nodes.nfv.VduCp
       properties:
         bitrate_requirement: 5
         virtual_network_interface_requirements:
-          - name: vl02
+          - name: vl01
             description: descr
             support_mandatory: false
             network_interface_requirements: # map
             nic_io_requirements:
               logical_node_requirements: #map
         order: 5
-        vnic_type: virtio
+        vnic_type: normal
       requirements:
-        - virtual_link: mngt
         - virtual_binding: vsrx
 
     block01:

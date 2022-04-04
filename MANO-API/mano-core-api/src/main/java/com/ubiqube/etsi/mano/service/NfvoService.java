@@ -16,6 +16,12 @@
  */
 package com.ubiqube.etsi.mano.service;
 
+/**
+ * This service is used for detecting NFVO implementation.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public interface NfvoService {
 	// Nothing.
 }

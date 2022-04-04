@@ -16,10 +16,14 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.ns;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -34,7 +38,11 @@ import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsNsd;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
+import com.ubiqube.etsi.mano.dao.mano.nsd.Classifier;
+import com.ubiqube.etsi.mano.dao.mano.nsd.CpPair;
+import com.ubiqube.etsi.mano.dao.mano.nsd.NfpDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
+import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
@@ -47,7 +55,6 @@ import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.VlLevelMapping;
 import com.ubiqube.etsi.mano.service.pkg.bean.nsscaling.VlStepMapping;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
-import com.ubiqube.parser.tosca.ParseException;
 
 import ma.glasnost.orika.MapperFactory;
 import tosca.datatypes.nfv.AddressData;
@@ -78,7 +85,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaNsPackageProvider.class);
 
-	public ToscaNsPackageProvider(final byte[] data) {
+	public ToscaNsPackageProvider(final InputStream data) {
 		super(data);
 	}
 
@@ -170,8 +177,27 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 		final List<VNF> sgr = getObjects(VNF.class, userData);
 		return sgr.stream()
 				.filter(x -> x.getDescriptorId() != null)
-				.map(x -> new NsVnf(x.getDescriptorId(), x.getInternalName(), x.getFlavourId(), x.getVirtualLinkReq()))
+				.map(ToscaNsPackageProvider::map)
 				.collect(Collectors.toSet());
+	}
+
+	private static NsVnf map(final VNF x) {
+		final NsVnf o = new NsVnf();
+		o.setVnfdId(x.getDescriptorId());
+		o.setName(x.getInternalName());
+		o.setFlavourId(x.getFlavourId());
+		o.setVirtualLink(x.getVirtualLinkReq());
+		o.setVirtualLink1(x.getVirtualLink1Req());
+		o.setVirtualLink2(x.getVirtualLink2Req());
+		o.setVirtualLink3(x.getVirtualLink3Req());
+		o.setVirtualLink4(x.getVirtualLink4Req());
+		o.setVirtualLink5(x.getVirtualLink5Req());
+		o.setVirtualLink6(x.getVirtualLink6Req());
+		o.setVirtualLink7(x.getVirtualLink7Req());
+		o.setVirtualLink8(x.getVirtualLink8Req());
+		o.setVirtualLink9(x.getVirtualLink9Req());
+		o.setVirtualLink10(x.getVirtualLink10Req());
+		return o;
 	}
 
 	/**
@@ -180,53 +206,115 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 	@Override
 	public Set<VnffgDescriptor> getVnffg(final Map<String, String> userData) {
 		// Port pair group ?
-		getObjects(NfpPositionElement.class, userData);
+		final List<NfpPositionElement> elements = getObjects(NfpPositionElement.class, userData);
 		// NfpPosition link to NfpPositionElement
 		final List<NfpPosition> nfpPosition = getObjects(NfpPosition.class, userData);
 		// nfp = Link to NfpPosition
 		final List<NFP> nfp = getObjects(NFP.class, userData);
-		getObjects(Forwarding.class, userData);
-		// nfp rule = Link to NFP . classifier, Target = NFP
-		final List<NfpRule> nfpRule = getObjects(NfpRule.class, userData);
+		final List<Forwarding> fwList = getObjects(Forwarding.class, userData);
 		// vnffg link to NFP, VNF, PNF, NS, NsVirtualLink, NfpPositionElement
 		final List<VNFFG> vnffg = getObjects(VNFFG.class, userData);
-		final List<VnffgDescriptor> rules = nfpRule.stream().map(x -> {
-			final String nfpName = getNfpName(x);
-			final NFP localNfp = findNfp(nfpName, nfp);
-			localNfp.getNfpPositionReq();
-			return new VnffgDescriptor();
-		}).toList();
 		return vnffg.stream().map(x -> {
-			final NFP nfpd = findNfp(nfp, x.getMembers());
 			final VnffgDescriptor vnffgd = new VnffgDescriptor();
-			final List<NfpPosition> nfpPos = findNfpPosition(nfpd.getNfpPositionReq(), nfpPosition);
-			LOG.trace("{}, {}", rules, nfpPos);
+			vnffgd.setNfpd(new ArrayList<>());
+			final List<NFP> nfpd = findNfp(nfp, x.getMembers());
+			nfpd.forEach(lNfp -> {
+				final NfpDescriptor nnfpd = new NfpDescriptor();
+				vnffgd.getNfpd().add(nnfpd);
+				nnfpd.setToscaName(lNfp.getInternalName());
+				nnfpd.setInstancces(new ArrayList<>());
+				final NfpRule nfpRule = findNfpRule(lNfp.getInternalName());
+				vnffgd.setClassifier(toClassifier(nfpRule));
+				lNfp.getNfpPositionReq().forEach(lPosition -> {
+					final List<NfpPosition> pos = findNfpPosition(nfpPosition, lPosition);
+					final VnffgInstance vnffgInstance = new VnffgInstance();
+					nnfpd.getInstancces().add(vnffgInstance);
+					vnffgInstance.setPairs(new ArrayList<>());
+					vnffgInstance.setToscaName(lPosition);
+					pos.forEach(l -> {
+						l.getElementReq().forEach(m -> {
+							final List<NfpPositionElement> elem = findPositionElement(elements, m);
+							elem.forEach(nfposElem -> {
+								final CpPair cp = handleProfileElement(nfposElem.getProfileElementReq(), fwList);
+								vnffgInstance.getPairs().add(cp);
+							});
+						});
+					});
+				});
+			});
 			return vnffgd;
 		})
 				.collect(Collectors.toSet());
 	}
 
-	private static NFP findNfp(final String nfpName, final List<NFP> nfp) {
-		return nfp.stream().filter(x -> x.getInternalName().equals(nfpName)).findFirst().orElseThrow(() -> new ParseException("Could not find Nfp named: " + nfpName));
+	private NfpRule findNfpRule(final String internalName) {
+		final List<NfpRule> nfpRules = getObjects(NfpRule.class, Map.of());
+		return nfpRules.stream()
+				.filter(x -> x.getTargets().contains(internalName))
+				.findFirst()
+				.orElseThrow(() -> new ToscaException("Could not find nfpRule " + internalName));
 	}
 
-	private static String getNfpName(final NfpRule rule) {
-		final List<String> tgt = rule.getTargets();
-		if (null == tgt || tgt.isEmpty()) {
-			throw new ToscaException("Rule [" + rule.getInternalName() + "] must have a target.");
+	private static CpPair handleProfileElement(final List<String> list, final List<Forwarding> fwList) {
+		if (list.size() > 2) {
+			throw new ToscaException("Size of list 'ProfileElement' must be equal or less than 2.");
 		}
-		if (tgt.size() != 1) {
-			throw new ToscaException("Rule [" + rule.getInternalName() + "] must have only one target.");
+		final String igress = list.get(0);
+		final CpPair cp = new CpPair();
+		cp.setToscaName(UUID.randomUUID().toString());
+		cp.setIngress(igress);
+		final Forwarding fwin = findForwarding(fwList, igress);
+		cp.setIngressVl(fwin.getVirtualLinkReq());
+		if (list.size() != 2) {
+			return cp;
 		}
-		return tgt.get(0);
+		final String egress = list.get(1);
+		cp.setEgress(egress);
+		final Forwarding fweg = findForwarding(fwList, egress);
+		cp.setEgressVl(fweg.getVirtualLinkReq());
+		return cp;
 	}
 
-	private static List<NfpPosition> findNfpPosition(final List<String> nfpPositionReq, final List<NfpPosition> nfpPosition) {
-		return nfpPosition.stream().filter(x -> nfpPositionReq.contains(x.getInternalName())).toList();
+	private static Forwarding findForwarding(final List<Forwarding> fwList, final String igress) {
+		return fwList.stream()
+				.filter(x -> x.getInternalName().equals(igress))
+				.findFirst()
+				.orElseThrow(() -> new ToscaException("Unable to find Forwarding with name: " + igress));
 	}
 
-	private static NFP findNfp(final List<NFP> nfp, final List<String> members) {
-		return nfp.stream().filter(x -> members.contains(x.getInternalName())).findFirst().orElseThrow();
+	private static List<NfpPositionElement> findPositionElement(final List<NfpPositionElement> elements, final String m) {
+		return elements.stream().filter(x -> x.getInternalName().equals(m)).toList();
+	}
+
+	private static List<NfpPosition> findNfpPosition(final List<NfpPosition> nfpPosition, final String z) {
+		return nfpPosition.stream().filter(x -> x.getInternalName().equals(z)).toList();
+	}
+
+	private static Classifier toClassifier(final NfpRule nr) {
+		final Classifier ret = new Classifier();
+		ret.setDestinationIpAddressPrefix(nr.getDestinationIpAddressPrefix());
+		Optional.ofNullable(nr.getDestinationPortRange()).ifPresent(x -> {
+			ret.setDestinationPortRangeMin(x.getMin());
+			ret.setDestinationPortRangeMax(x.getMax());
+		});
+		ret.setDscp(nr.getDscp());
+		ret.setEtherDestinationAddress(nr.getEtherDestinationAddress());
+		ret.setEtherSourceAddress(nr.getEtherSourceAddress());
+		ret.setEtherType(nr.getEtherType());
+		nr.getExtendedCriteria();
+		ret.setProtocol(nr.getProtocol());
+		ret.setSourceIpAddressPrefix(nr.getSourceIpAddressPrefix());
+		nr.getSourcePortRange();
+		Optional.ofNullable(nr.getSourcePortRange()).ifPresent(x -> {
+			ret.setSourcePortRangeMin(x.getMin());
+			ret.setSourcePortRangeMax(x.getMax());
+		});
+		ret.setVlanTag(Optional.ofNullable(nr.getVlanTag()).orElseGet(List::of).stream().collect(Collectors.toSet()));
+		return ret;
+	}
+
+	private static List<NFP> findNfp(final List<NFP> nfp, final List<String> members) {
+		return nfp.stream().filter(x -> members.contains(x.getInternalName())).toList();
 	}
 
 	@Override

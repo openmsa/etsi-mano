@@ -32,7 +32,6 @@ import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.CancelModeTypeEnum;
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
-import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.ChangeExtVnfConnRequest;
 import com.ubiqube.etsi.mano.exception.GenericException;
@@ -40,7 +39,6 @@ import com.ubiqube.etsi.mano.model.VnfInstantiate;
 import com.ubiqube.etsi.mano.model.VnfOperateRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleRequest;
 import com.ubiqube.etsi.mano.model.VnfScaleToLevelRequest;
-import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.vnfm.fc.vnflcm.VnfInstanceGenericFrontController;
 import com.ubiqube.etsi.mano.vnfm.service.VnfInstanceService;
 import com.ubiqube.etsi.mano.vnfm.service.VnfInstanceServiceVnfm;
@@ -56,21 +54,17 @@ import ma.glasnost.orika.MapperFacade;
 public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGenericFrontController {
 	private static final String LOCATION = "Location";
 
-	private final VnfPackageService vnfPackageService;
-
 	private final VnfInstanceLcmImpl vnfInstanceLcm;
 
-	// XXX Duplicate service.
 	private final VnfInstanceService vnfInstancesService;
 
 	private final MapperFacade mapper;
 
 	private final VnfInstanceServiceVnfm vnfInstanceServiceVnfm;
 
-	public VnfInstanceGenericFrontControllerImpl(final VnfPackageService vnfPackageService, final VnfInstanceLcmImpl vnfInstanceLcm, final VnfInstanceService vnfInstancesService,
-			final MapperFacade mapper, final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
+	public VnfInstanceGenericFrontControllerImpl(final VnfInstanceLcmImpl vnfInstanceLcm, final VnfInstanceService vnfInstancesService, final MapperFacade mapper,
+			final VnfInstanceServiceVnfm vnfInstanceServiceVnfm) {
 		super();
-		this.vnfPackageService = vnfPackageService;
 		this.vnfInstanceLcm = vnfInstanceLcm;
 		this.vnfInstancesService = vnfInstancesService;
 		this.mapper = mapper;
@@ -78,7 +72,7 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 	}
 
 	@Override
-	public ResponseEntity<Void> terminate(final UUID vnfInstanceId, final CancelModeTypeEnum cancelMode, final int timeout, final Function<VnfBlueprint, String> getSelfLink) {
+	public ResponseEntity<Void> terminate(final UUID vnfInstanceId, final CancelModeTypeEnum cancelMode, final Integer timeout, final Function<VnfBlueprint, String> getSelfLink) {
 		final VnfBlueprint lcm = vnfInstanceLcm.terminate(null, vnfInstanceId, cancelMode, timeout);
 		final String link = getSelfLink.apply(lcm);
 		return ResponseEntity.accepted().header(LOCATION, link).build();
@@ -142,9 +136,6 @@ public class VnfInstanceGenericFrontControllerImpl implements VnfInstanceGeneric
 	public <U> ResponseEntity<U> findById(final UUID vnfInstanceId, final Class<U> clazz, final Consumer<U> makeLink, final String instanceSelfLink) {
 		final VnfInstance vnfInstanceDb = vnfInstanceServiceVnfm.findById(vnfInstanceId);
 		final U vnfInstance = mapper.map(vnfInstanceDb, clazz);
-
-		final VnfPackage vnfPackage = vnfPackageService.findById(vnfInstanceDb.getVnfPkg().getId());
-		mapper.map(vnfPackage, vnfInstance);
 		makeLink.accept(vnfInstance);
 		return ResponseEntity.created(URI.create(instanceSelfLink)).body(vnfInstance);
 	}

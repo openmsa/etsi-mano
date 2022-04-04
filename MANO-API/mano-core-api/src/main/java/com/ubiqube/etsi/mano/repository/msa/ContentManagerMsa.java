@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.repository.msa;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.file.Path;
 
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.repository.ContentManager;
 import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 
 @Service
 public class ContentManagerMsa implements ContentManager {
@@ -40,9 +40,8 @@ public class ContentManagerMsa implements ContentManager {
 	}
 
 	@Override
-	public InputStream load(final Path filename, final int start, final Long end) {
-		final byte[] bytes = lowDriver.get(filename.toString(), start, end);
-		return new ByteArrayInputStream(bytes);
+	public ManoResource load(final Path filename) {
+		return lowDriver.get(filename.toString());
 	}
 
 	@Override

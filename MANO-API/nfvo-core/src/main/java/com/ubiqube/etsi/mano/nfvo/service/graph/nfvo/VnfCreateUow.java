@@ -16,6 +16,9 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.config.Servers;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
@@ -23,11 +26,16 @@ import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 
 /**
  *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
  */
-public class VnfCreateUow extends AbstractNsUnitOfWork<NsVnfTask> {
+public class VnfCreateUow extends AbstractUnitOfWork<NsVnfTask> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VnfCreateUow.class);
 
 	private final VnfmInterface vnfm;
 
@@ -48,7 +56,14 @@ public class VnfCreateUow extends AbstractNsUnitOfWork<NsVnfTask> {
 
 	@Override
 	public String rollback(final Context context) {
-		vnfm.delete(task.getServer(), task.getVimResourceId());
+		if (null != task.getVimResourceId()) {
+			try {
+				vnfm.delete(task.getServer(), task.getVimResourceId());
+			} catch (final RuntimeException e) {
+				LOG.trace("", e);
+				LOG.warn("Could not delete instance {}", task.getVimResourceId());
+			}
+		}
 		return null;
 	}
 }

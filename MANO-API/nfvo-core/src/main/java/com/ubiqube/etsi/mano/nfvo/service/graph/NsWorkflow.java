@@ -19,15 +19,20 @@ package com.ubiqube.etsi.mano.nfvo.service.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.jgrapht.ListenableGraph;
 import org.springframework.stereotype.Service;
 
 import com.github.dexecutor.core.task.ExecutionResults;
 import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.v2.Blueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.exception.GenericException;
+import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.NsParameters;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.UowNsTaskCreateProvider;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.UowNsTaskDeleteProvider;
@@ -41,6 +46,9 @@ import com.ubiqube.etsi.mano.orchestrator.Planner;
 import com.ubiqube.etsi.mano.orchestrator.PreExecutionGraph;
 import com.ubiqube.etsi.mano.orchestrator.nodes.ConnectivityEdge;
 import com.ubiqube.etsi.mano.orchestrator.nodes.Node;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.NsdCreateNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.nfvo.VnfCreateNode;
+import com.ubiqube.etsi.mano.orchestrator.nodes.vnfm.Network;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.event.Workflow;
 import com.ubiqube.etsi.mano.service.graph.GenericExecParams;
@@ -59,15 +67,17 @@ public class NsWorkflow implements Workflow<NsdPackage, NsBlueprint, NsReport, N
 	private final NsPlanExecutor executor;
 	private final List<AbstractNsContributor> planContributors;
 	private final OrchestrationService<?> orchestrationService;
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
 	public NsWorkflow(final Planner<NsBlueprint, NsTask, NsTask> planv2, final NsPlanExecutor executor, final List<AbstractNsContributor> planContributors,
-			final OrchestrationService<?> orchestrationService, final NsPlanner planner) {
+			final OrchestrationService<?> orchestrationService, final NsPlanner planner, final NsLiveInstanceJpa nsLiveInstanceJpa) {
 		super();
 		this.planv2 = planv2;
 		this.executor = executor;
 		this.planContributors = planContributors;
 		this.orchestrationService = orchestrationService;
 		this.planner = planner;
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
 	}
 
 	@Override
@@ -99,16 +109,24 @@ public class NsWorkflow implements Workflow<NsdPackage, NsBlueprint, NsReport, N
 	}
 
 	@Override
+	@Transactional
 	public OrchExecutionResults<NsTask> execute(final PreExecutionGraph<NsTask> plan, final NsBlueprint parameters) {
 		final ExecutionGraph impl = planv2.implement(plan);
 		final Context context = orchestrationService.createEmptyContext();
-		populateExtNetworks(context, parameters);
-		return planv2.execute(impl, context, new NsOrchListenetImpl());
+		populateContext(context, parameters);
+		return planv2.execute(impl, context, new NsOrchListenetImpl(nsLiveInstanceJpa, parameters));
 	}
 
-	private void populateExtNetworks(final Context context, final NsBlueprint parameters) {
-		// TODO Auto-generated method stub
-
+	private void populateContext(final Context context, final NsBlueprint parameters) {
+		final List<NsLiveInstance> live = nsLiveInstanceJpa.findByNsInstanceId(parameters.getInstance().getId());
+		live.forEach(x -> {
+			switch (x.getNsTask().getType()) {
+			case VL -> context.add(Network.class, x.getNsTask().getToscaName(), x.getResourceId());
+			case VNF -> context.add(VnfCreateNode.class, x.getNsTask().getToscaName(), x.getResourceId());
+			case NSD -> context.add(NsdCreateNode.class, x.getNsTask().getToscaName(), x.getResourceId());
+			default -> throw new GenericException(x.getNsTask().getType() + " is not handled.");
+			}
+		});
 	}
 
 	@Override

@@ -19,8 +19,9 @@ package com.ubiqube.etsi.mano.nfvo.service.graph.nfvo;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
 import com.ubiqube.etsi.mano.orchestrator.Context;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
+import com.ubiqube.etsi.mano.service.graph.AbstractUnitOfWork;
 
-public class NsStartUow extends AbstractNsUnitOfWork<NsTask> {
+public class NsStartUow extends AbstractUnitOfWork<NsTask> {
 
 	public NsStartUow(final VirtualTask task, final Class node) {
 		super(task, node);

@@ -85,4 +85,14 @@ public class ProviderData {
 	private Set<ScaleInfo> scaleStatus;
 
 	private String virtualLinkReq;
+	private String virtualLink1Req;
+	private String virtualLink2Req;
+	private String virtualLink3Req;
+	private String virtualLink4Req;
+	private String virtualLink5Req;
+	private String virtualLink6Req;
+	private String virtualLink7Req;
+	private String virtualLink8Req;
+	private String virtualLink9Req;
+	private String virtualLink10Req;
 }

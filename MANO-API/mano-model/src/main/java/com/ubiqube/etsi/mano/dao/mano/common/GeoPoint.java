@@ -48,4 +48,11 @@ public class GeoPoint implements Serializable {
 	@Latitude
 	private double lat;
 
+	public static GeoPoint of(final double lat, final double lng) {
+		final GeoPoint g = new GeoPoint();
+		g.setLat(lat);
+		g.setLng(lng);
+		return g;
+	}
+
 }

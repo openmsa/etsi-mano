@@ -25,8 +25,13 @@ import static com.ubiqube.etsi.mano.Constants.ensureNotLocked;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -36,10 +41,13 @@ import com.ubiqube.etsi.mano.dao.mano.InstantiationState;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.PackageUsageState;
+import com.ubiqube.etsi.mano.dao.mano.ScaleInfo;
 import com.ubiqube.etsi.mano.dao.mano.dto.nsi.NsInstantiate;
 import com.ubiqube.etsi.mano.dao.mano.nfvo.NsVnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsHeal;
 import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsScale;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.NsVnfScalingStepMapping;
+import com.ubiqube.etsi.mano.dao.mano.nslcm.scale.VnfScalingStepMapping;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanOperationType;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
@@ -109,11 +117,27 @@ public class NsInstanceControllerServiceImpl extends SearchableService implement
 		ensureNotInstantiated(nsInstanceDb);
 		ensureNotLocked(nsInstanceDb);
 		final NsBlueprint nsLcm = LcmFactory.createNsLcmOpOcc(nsInstanceDb, PlanOperationType.INSTANTIATE);
+		mapper.map(req, nsLcm);
+		if (req.getNsInstantiationLevelId() == null) {
+			nsLcm.setNsInstantiationLevelId(nsInstanceDb.getNsdInfo().getInstantiationLevel());
+		}
+		nsLcm.getParameters().setNsStepStatus(requestToScaleInfo(nsInstanceDb.getNsdInfo()));
 		nsBlueprintService.save(nsLcm);
 		mapper.map(req, nsInstanceDb);
 		nsInstanceService.save(nsInstanceDb);
 		eventManager.sendActionNfvo(ActionType.NS_INSTANTIATE, nsLcm.getId(), new HashMap<>());
 		return nsLcm;
+	}
+
+	private static Set<ScaleInfo> requestToScaleInfo(final NsdPackage nsd) {
+		final Set<String> aspects = new HashSet<>();
+		nsd.getVnfPkgIds().stream().forEach(x -> {
+			Optional.ofNullable(x.getStepMapping()).map(Set::iterator).filter(Iterator::hasNext).map(Iterator::next).map(VnfScalingStepMapping::getAspectId).ifPresent(aspects::add);
+		});
+		nsd.getNestedNsdInfoIds().stream().forEach(x -> {
+			Optional.ofNullable(x.getStepMapping()).map(Set::iterator).filter(Iterator::hasNext).map(Iterator::next).map(NsVnfScalingStepMapping::getAspectId).ifPresent(aspects::add);
+		});
+		return aspects.stream().map(x -> new ScaleInfo(x, 0)).collect(Collectors.toSet());
 	}
 
 	@Override

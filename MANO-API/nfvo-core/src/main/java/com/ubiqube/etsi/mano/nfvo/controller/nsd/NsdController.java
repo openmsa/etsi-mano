@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 
 public interface NsdController {
 
@@ -37,7 +38,7 @@ public interface NsdController {
 
 	NsdPackage nsDescriptorsNsdInfoIdGet(UUID id);
 
-	byte[] nsDescriptorsNsdInfoIdNsdContentGet(UUID id);
+	ManoResource nsDescriptorsNsdInfoIdNsdContentGet(UUID id);
 
 	void nsDescriptorsNsdInfoIdNsdContentPut(UUID id, InputStream is);
 

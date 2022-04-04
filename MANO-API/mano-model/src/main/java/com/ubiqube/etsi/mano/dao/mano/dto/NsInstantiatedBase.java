@@ -36,7 +36,7 @@ public class NsInstantiatedBase implements Serializable {
 
 	private NsdChangeType changeType;
 
-	private InstantiationStatusType changeResult = InstantiationStatusType.NOT_STARTED;
+	private InstantiationStatusType changeResult = InstantiationStatusType.PROCESSING;
 
 	// Vim or VNFM resourceId.
 	private String resourceId;

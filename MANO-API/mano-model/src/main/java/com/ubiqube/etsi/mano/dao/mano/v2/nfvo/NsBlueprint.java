@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.dao.mano.v2.nfvo;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -43,6 +44,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 import com.ubiqube.etsi.mano.dao.mano.AuditListener;
 import com.ubiqube.etsi.mano.dao.mano.BlueZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
+import com.ubiqube.etsi.mano.dao.mano.ExtVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
@@ -96,7 +98,7 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> warnings;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	private Set<VimConnectionInformation> vimConnections;
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<BlueZoneGroupInformation> zoneGroups;
@@ -135,4 +137,17 @@ public class NsBlueprint extends AbstractBlueprint<NsTask, NsdInstance> {
 		return nsInstance;
 	}
 
+	@Override
+	public void addExtManagedVirtualLinks(final Set<ExtManagedVirtualLinkDataEntity> extManagedVirtualLinks) {
+		if (null == extManagedVirtualLinks) {
+			this.extManagedVirtualLinks = new LinkedHashSet<>();
+		}
+		this.extManagedVirtualLinks.addAll(extManagedVirtualLinks);
+	}
+
+	@Override
+	public void addExtVirtualLinks(final Set<ExtVirtualLinkDataEntity> extVirtualLinks) {
+		// TODO Auto-generated method stub
+
+	}
 }

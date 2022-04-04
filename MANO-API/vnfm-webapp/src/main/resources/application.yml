@@ -80,6 +80,9 @@ spring:
         password: admin
         url: http://localhost:8081
         username: admin
+  data:
+    rest:
+      base-path: /api
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:file:~/etsi-mano-vnfm.h2;AUTO_SERVER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS mec_meo
@@ -89,6 +92,9 @@ spring:
       enabled: true
       settings:
         web-allow-others: true
+    hikari:
+      connection-test-query: SELECT 1
+      max-lifetime: 500000
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
     default-property-inclusion: NON_NULL
@@ -138,8 +144,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://auth.mano.ubiqube.com/auth/realms/mano-realm
-          jwk-set-uri: https://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/certs
+          issuer-uri: http://auth.mano.ubiqube.com/auth/realms/mano-realm
+          jwk-set-uri: http://auth.mano.ubiqube.com/auth/realms/mano-realm/protocol/openid-connect/certs
   servlet:
     multipart:
       max-file-size: 1024MB

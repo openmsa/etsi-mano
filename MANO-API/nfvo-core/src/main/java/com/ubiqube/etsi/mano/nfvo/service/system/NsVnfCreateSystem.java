@@ -18,12 +18,15 @@ package com.ubiqube.etsi.mano.nfvo.service.system;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfInstantiateTask;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfCreateUow;
+import com.ubiqube.etsi.mano.nfvo.service.graph.nfvo.VnfInstantiateUow;
+import com.ubiqube.etsi.mano.nfvo.service.plan.contributors.vt.NsInstantiateVt;
 import com.ubiqube.etsi.mano.orchestrator.OrchestrationService;
 import com.ubiqube.etsi.mano.orchestrator.SystemBuilder;
-import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
 import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 import com.ubiqube.etsi.mano.service.VnfmInterface;
 import com.ubiqube.etsi.mano.service.system.AbstractVimSystem;
@@ -49,8 +52,27 @@ public class NsVnfCreateSystem extends AbstractVimSystem<NsVnfTask> {
 	}
 
 	@Override
-	protected SystemBuilder<UnitOfWork<NsVnfTask>> getImplementation(final OrchestrationService<NsVnfTask> orchestrationService, final VirtualTask<NsVnfTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
-		return orchestrationService.systemBuilderOf(new VnfCreateUow(virtualTask, vnfm));
+	protected SystemBuilder getImplementation(final OrchestrationService<NsVnfTask> orchestrationService, final VirtualTask<NsVnfTask> virtualTask, final VimConnectionInformation vimConnectionInformation) {
+		final NsVnfInstantiateTask nt = new NsVnfInstantiateTask();
+		final NsVnfTask p = virtualTask.getParameters();
+		nt.setAlias(p.getAlias());
+		nt.setChangeType(p.getChangeType());
+		nt.setExternalNetworks(p.getExternalNetworks());
+		nt.setFlavourId(p.getFlavourId());
+		nt.setInstantiationLevelId(p.getInstantiationLevelId());
+		nt.setLocalizationLanguage(p.getLocalizationLanguage());
+		nt.setServer(p.getServer());
+		if (p.getChangeType() == ChangeType.REMOVED) {
+			nt.setVimResourceId(p.getVimResourceId());
+		}
+		nt.setToscaName("inst-" + p.getAlias());
+		nt.setType(p.getType());
+		if (p.getChangeType() != ChangeType.REMOVED) {
+			nt.setVirtualLinks(p.getNsPackageVnfPackage().getVirtualLinks());
+		}
+		final SystemBuilder s = orchestrationService.createEmptySystemBuilder();
+		s.add(new VnfCreateUow(virtualTask, vnfm), new VnfInstantiateUow(new NsInstantiateVt(nt), vnfm));
+		return s;
 	}
 
 }

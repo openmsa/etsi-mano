@@ -35,6 +35,7 @@ import com.ubiqube.etsi.mano.grammar.Node;
 import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.repository.CrudRepository;
 import com.ubiqube.etsi.mano.repository.Low;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.NamingStrategy;
 
 /**
@@ -83,8 +84,7 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 		Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
 		path = namingStrategy.getRoot(getClazz(), id, getFilename());
-		try {
-			final byte[] content = lowDriver.get(path.toString());
+		try (final InputStream content = lowDriver.get(path.toString()).getInputStream()) {
 			return objectMapper.readValue(content, getClazz());
 		} catch (final IOException e) {
 			throw new GenericException(e);
@@ -129,7 +129,7 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	}
 
 	@Override
-	public final byte[] getBinary(final UUID id, final String filename) {
+	public final ManoResource getBinary(final UUID id, final String filename) {
 		Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
 		path = namingStrategy.getRoot(getClazz(), id, filename);
@@ -137,7 +137,7 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	}
 
 	@Override
-	public final byte[] getBinary(final UUID id, final String filename, final int min, final Long max) {
+	public final ManoResource getBinary(final UUID id, final String filename, final int min, final Long max) {
 		Path path = namingStrategy.getRoot(getClazz(), id);
 		verifyPath(path);
 		path = namingStrategy.getRoot(getClazz(), id, filename);
@@ -157,8 +157,7 @@ public abstract class AbstractGenericBinaryRepository<T> implements CrudReposito
 	}
 
 	private T rawGetObject(final String path) {
-		final byte[] bytes = lowDriver.get(path);
-		try {
+		try (final InputStream bytes = lowDriver.get(path).getInputStream()) {
 			return objectMapper.readValue(bytes, getClazz());
 		} catch (final IOException e) {
 			throw new GenericException(e);

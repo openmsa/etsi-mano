@@ -30,7 +30,6 @@
  */
 package com.ubiqube.etsi.mano.controller.vnf;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -40,14 +39,13 @@ import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface VnfPackageFrontController {
 
-	ResponseEntity<List<ResourceRegion>> getArtifact(HttpServletRequest request, @Nonnull UUID vnfPkgId, String range, String includeSignature);
+	ResponseEntity<Resource> getArtifact(HttpServletRequest request, @Nonnull UUID vnfPkgId, String includeSignature);
 
 	<U> ResponseEntity<U> findById(@Nonnull UUID vnfPkgId, Class<U> clazz, Consumer<U> makeLinks);
 
@@ -55,11 +53,11 @@ public interface VnfPackageFrontController {
 
 	ResponseEntity<Resource> getManifest(UUID vnfPkgId, String includeSignature);
 
-	ResponseEntity<List<ResourceRegion>> getContent(@Nonnull UUID vnfPkgId, String range);
+	ResponseEntity<Resource> getContent(@Nonnull UUID vnfPkgId);
 
 	ResponseEntity<Resource> getVfnd(@Nonnull UUID vnfPkgId, String includeSignature);
 
-	ResponseEntity<List<ResourceRegion>> getSelectArtifacts(HttpServletRequest request, UUID vnfPkgId, String range);
+	ResponseEntity<Resource> getSelectArtifacts(HttpServletRequest request, UUID vnfPkgId);
 
 	ResponseEntity<Void> deleteById(UUID vnfPkgId);
 
@@ -77,19 +75,19 @@ public interface VnfPackageFrontController {
 
 	<U> ResponseEntity<U> modify(String body, UUID vnfPkgId, final String ifMatch, Class<U> clazz, Consumer<U> makeLinks);
 
-	ResponseEntity<List<ResourceRegion>> searchArtifact(UUID safeUUID, String range, String includeSignatures, String excludeAllManoArtifacts, String excludeAllNonManoArtifacts, String selectNonManoArtifactSets);
+	ResponseEntity<Resource> searchArtifact(UUID safeUUID, String includeSignatures, String excludeAllManoArtifacts, String excludeAllNonManoArtifacts, String selectNonManoArtifactSets);
 
 	<U> ResponseEntity<String> onboardedSearch(MultiValueMap<String, String> requestParams, Class<U> clazz, Consumer<U> makeLinks);
 
-	ResponseEntity<List<ResourceRegion>> onboardedGetContentByVnfdId(String vnfdId, String range);
+	ResponseEntity<Resource> onboardedGetContentByVnfdId(String vnfdId);
 
 	ResponseEntity<Resource> onboardedGetVnfdByVnfdId(String vnfdId, String includeSignatures);
 
-	ResponseEntity<List<ResourceRegion>> onboardedGetArtifact(HttpServletRequest request, UUID safeUUID, String range, String includeSignatures);
+	ResponseEntity<Resource> onboardedGetArtifact(HttpServletRequest request, UUID safeUUID, String includeSignatures);
 
 	<U> ResponseEntity<U> onboardedFindById(UUID safeUUID, Class<U> clazz, Consumer<U> makeLinks);
 
-	ResponseEntity<List<ResourceRegion>> onboardedGetVnfdByVnfdId(UUID safeUUID, String range);
+	ResponseEntity<Resource> onboardedGetVnfdByVnfdId(UUID safeUUID);
 
 	ResponseEntity<Resource> onboardedGetManifestByVnfd(UUID fromString, String includeSignature);
 

@@ -21,8 +21,12 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.dao.mano.ChangeType;
+import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.PlanStatusType;
+import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsBlueprint;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsTask;
+import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.orchestrator.OrchExecutionListener;
 import com.ubiqube.etsi.mano.orchestrator.Task;
 import com.ubiqube.etsi.mano.orchestrator.uow.UnitOfWork;
@@ -36,6 +40,13 @@ import com.ubiqube.etsi.mano.orchestrator.vt.VirtualTask;
 public class NsOrchListenetImpl implements OrchExecutionListener<NsTask> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NsOrchListenetImpl.class);
+	private final NsLiveInstanceJpa nsLiveInstanceJpa;
+	private final NsBlueprint blueprint;
+
+	public NsOrchListenetImpl(final NsLiveInstanceJpa nsLiveInstanceJpa, final NsBlueprint blueprint) {
+		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
+		this.blueprint = blueprint;
+	}
 
 	@Override
 	public void onSuccess(final Task<NsTask> task) {
@@ -65,6 +76,11 @@ public class NsOrchListenetImpl implements OrchExecutionListener<NsTask> {
 	public void onTerminate(final UnitOfWork<NsTask> uaow, final String res) {
 		LOG.info("Terminate {} => {}", uaow.getTask(), res);
 		uaow.getTask().getParameters().setVimResourceId(res);
+		final NsTask resource = uaow.getTask().getParameters();
+		if (resource.getChangeType() == ChangeType.ADDED && res != null && resource.getId() != null) {
+			final NsLiveInstance nli = new NsLiveInstance(null, resource, blueprint, blueprint.getInstance());
+			nsLiveInstanceJpa.save(nli);
+		}
 	}
 
 }

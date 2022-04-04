@@ -21,12 +21,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.ubiqube.etsi.mano.dao.mano.NsdPackageVnfPackage;
@@ -59,8 +59,8 @@ public class NsVnfTask extends NsTask {
 
 	private String vnfdId;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> externalNetworks = new LinkedHashSet<>();
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ExternalPortRecord> externalNetworks = new LinkedHashSet<>();
 
 	/**
 	 * VNFM to use if any.
