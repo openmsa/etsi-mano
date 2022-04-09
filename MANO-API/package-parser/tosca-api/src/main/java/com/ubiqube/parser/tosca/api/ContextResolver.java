@@ -56,7 +56,10 @@ import com.ubiqube.parser.tosca.RequirementDefinition;
 import com.ubiqube.parser.tosca.RequirementMapping;
 import com.ubiqube.parser.tosca.SubstitutionMapping;
 import com.ubiqube.parser.tosca.ToscaBase;
+import com.ubiqube.parser.tosca.ToscaClass;
 import com.ubiqube.parser.tosca.ToscaContext;
+import com.ubiqube.parser.tosca.ToscaProperties;
+import com.ubiqube.parser.tosca.ValueObject;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.FloatConverter;
 import com.ubiqube.parser.tosca.convert.FrequencyConverter;
@@ -205,8 +208,32 @@ public class ContextResolver {
 		}
 		setBasicProperties(node, cls);
 		applySubstitutionMapping(node, cls, root);
+		applyDefault(node, cls, root);
 		stack.pop();
 		return cls;
+	}
+
+	private static <U> void applyDefault(final NodeTemplate node, final U cls, final ToscaContext root) {
+		final ToscaClass nodetype = root.getNodeType().get(node.getType());
+		final Optional<Map<String, ValueObject>> optProps = Optional.ofNullable(nodetype)
+				.map(ToscaClass::getProperties)
+				.map(ToscaProperties::getProperties);
+		if (!optProps.isPresent()) {
+			return;
+		}
+		final PropertyDescriptor[] props = getPropertyDescriptor(cls.getClass());
+
+		optProps.get().entrySet().stream().forEach(x -> {
+			final PropertyDescriptor prop = findProperty(props, x.getKey()).orElseThrow(() -> new ParseException("Could not find property " + x.getKey()));
+			final Method mr = prop.getReadMethod();
+			final Object res = safeInvoke(mr, cls);
+			if (null == res) {
+				final Method mw = prop.getWriteMethod();
+				final Object def = x.getValue().getDef();
+				final Object val = convertValue(def, mr.getReturnType());
+				safeInvoke(mw, cls, val);
+			}
+		});
 	}
 
 	private static void applySubstitutionMapping(final NodeTemplate node, final Object cls, final ToscaContext root2) {

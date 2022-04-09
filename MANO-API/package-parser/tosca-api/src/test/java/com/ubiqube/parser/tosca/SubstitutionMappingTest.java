@@ -46,5 +46,8 @@ class SubstitutionMappingTest {
 		final ContextResolver ctx = new ContextResolver(root, new HashMap<String, String>());
 		ctx.resolvValue("");
 		assertEquals(1, obj.size());
+		final NS elem = obj.get(0);
+		assertEquals("b1bb0ce7-ebca-4fa7-95ed-4840d70a1177", elem.getDescriptorId());
+		assertEquals("flavor01", elem.getFlavourId());
 	}
 }
