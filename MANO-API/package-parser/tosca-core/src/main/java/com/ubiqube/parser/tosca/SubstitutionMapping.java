@@ -37,7 +37,7 @@ public class SubstitutionMapping {
 
 	@JsonProperty("node_type")
 	private String nodeType;
-
+	@JsonProperty("substitution_filter")
 	private NodeFilter substitutionFilter;
 
 	private String properties;

@@ -18,27 +18,21 @@ package com.ubiqube.parser.tosca;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class InputBean {
-
 	private String type;
-	private String def;
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(final String type) {
-		this.type = type;
-	}
-
+	private String description;
 	@JsonProperty("default")
-	public String getDef() {
-		return def;
-	}
-
-	public void setDef(final String def) {
-		this.def = def;
-	}
+	private String def;
 
 	@Override
 	public String toString() {

@@ -20,61 +20,24 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class TriggerDefinition {
 	private String description;
 	private String event;
 	private TimeInterval schedule;
 	@JsonProperty("target_filter")
 	private EventFilter targetFilter;
-	private List<CondictionClause> condition;
+	// Probably CondictionClause
+	private List<Object> condition;
 	private List<ActivityListDefinition> action;
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-	public String getEvent() {
-		return event;
-	}
-
-	public void setEvent(final String event) {
-		this.event = event;
-	}
-
-	public TimeInterval getSchedule() {
-		return schedule;
-	}
-
-	public void setSchedule(final TimeInterval schedule) {
-		this.schedule = schedule;
-	}
-
-	public EventFilter getTargetFilter() {
-		return targetFilter;
-	}
-
-	public void setTargetFilter(final EventFilter targetFilter) {
-		this.targetFilter = targetFilter;
-	}
-
-	public List<CondictionClause> getCondition() {
-		return condition;
-	}
-
-	public void setCondition(final List<CondictionClause> condition) {
-		this.condition = condition;
-	}
-
-	public List<ActivityListDefinition> getAction() {
-		return action;
-	}
-
-	public void setAction(final List<ActivityListDefinition> action) {
-		this.action = action;
-	}
 
 }

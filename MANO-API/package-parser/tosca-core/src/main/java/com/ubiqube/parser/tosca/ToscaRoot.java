@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ToscaRoot {
 	private Imports imports;
 	private TopologyTemplate topologyTemplate = new TopologyTemplate();
+	@JsonProperty("tosca_definitions_version")
 	private String version;
 	private String description;
 	private String namespace;

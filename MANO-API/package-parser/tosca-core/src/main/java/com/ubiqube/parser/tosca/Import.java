@@ -40,6 +40,7 @@ public class Import {
 	private String namespacePrefix;
 	@JsonProperty("namespace_uri")
 	private String namespaceUri;
+	private String repository;
 
 	public Import(final String name, final String url) {
 		this.name = name;
