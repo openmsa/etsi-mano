@@ -16,6 +16,10 @@
  */
 package com.ubiqube.parser.tosca;
 
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,4 +33,16 @@ import lombok.Setter;
 public class RepositoryDefinition {
 	private String description;
 	private String url;
+	private Credential credential;
+
+	@Setter
+	@Getter
+	public class Credential {
+		private String protocol;
+		@JsonProperty("token_type")
+		private String tokenType;
+		private String token;
+		private Map<String, String> keys;
+		private String user;
+	}
 }
