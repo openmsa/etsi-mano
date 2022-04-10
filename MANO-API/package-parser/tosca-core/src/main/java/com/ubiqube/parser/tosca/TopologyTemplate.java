@@ -39,6 +39,7 @@ public class TopologyTemplate {
 	private Map<String, GroupDefinition> groups = new LinkedHashMap<>();
 	@JsonProperty("substitution_mappings")
 	private SubstitutionMapping substitutionMapping;
+	private Map<String, PolicyDefinition> policies;
 
 	@Override
 	public String toString() {

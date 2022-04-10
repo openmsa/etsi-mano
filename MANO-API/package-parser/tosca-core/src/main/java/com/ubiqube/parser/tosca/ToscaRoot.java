@@ -37,9 +37,11 @@ public class ToscaRoot {
 	private Map<String, DataType> dataTypes;
 	@JsonProperty("policy_types")
 	private Map<String, PolicyType> policyTypes;
+	// XXX Musrt be deleted.
 	private Map<String, PolicyDefinition> policies;
 	@JsonProperty("group_types")
 	private Map<String, GroupType> groupTypes;
+	// XXX: Must be deleted.
 	private Map<String, GroupDefinition> groups;
 	private Map<String, String> metadata;
 	private Map<String, RepositoryDefinition> repositories;
