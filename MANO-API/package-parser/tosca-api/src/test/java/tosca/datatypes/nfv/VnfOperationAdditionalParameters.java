@@ -14,28 +14,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca;
+package tosca.datatypes.nfv;
 
-import java.util.Map;
-
-import lombok.Getter;
-import lombok.Setter;
+import tosca.datatypes.Root;
 
 /**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
+ * Is an empty base type for deriving data type for describing VNF-specific parameters to be passed when invoking lifecycle management operations
  */
-@Getter
-@Setter
-public class NodeTemplate implements ToscaBase {
-	private String type;
-	private String name;
-	private String description;
-	private Object capabilities;
-	private Map<String, Object> properties;
-	private RequirementDefinition requirements;
-	private Map<String, ValueObject> attributes;
-	private Map<String, Artifact> artifacts;
-	private Map<String, InterfaceDefinition> interfaces;
+public class VnfOperationAdditionalParameters extends Root {
 }

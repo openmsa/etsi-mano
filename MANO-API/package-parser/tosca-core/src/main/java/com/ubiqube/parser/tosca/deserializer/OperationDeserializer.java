@@ -58,6 +58,8 @@ public class OperationDeserializer extends StdDeserializer<OperationDefinition> 
 		final ObjectNode tn = (ObjectNode) value;
 		Optional.ofNullable(tn.findValue("type")).ifPresent(x -> od.setType(x.asText()));
 		Optional.ofNullable(tn.findValue("description")).ifPresent(x -> od.setType(x.asText()));
+		// Optional.ofNullable(tn.findValue("implementation")).ifPresent(x ->
+		// od.setImplementation(p.getCodec().treeToValue(x, Implementation.class)));
 		return new OperationDefinition();
 	}
 

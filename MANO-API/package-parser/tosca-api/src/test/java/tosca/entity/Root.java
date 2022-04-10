@@ -14,28 +14,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca;
+package tosca.entity;
 
-import java.util.Map;
-
-import lombok.Getter;
-import lombok.Setter;
+import com.ubiqube.parser.tosca.api.ToscaInernalBase;
 
 /**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
+ * Root node.
  */
-@Getter
-@Setter
-public class NodeTemplate implements ToscaBase {
-	private String type;
-	private String name;
-	private String description;
-	private Object capabilities;
-	private Map<String, Object> properties;
-	private RequirementDefinition requirements;
-	private Map<String, ValueObject> attributes;
-	private Map<String, Artifact> artifacts;
-	private Map<String, InterfaceDefinition> interfaces;
+public class Root extends ToscaInernalBase {
 }

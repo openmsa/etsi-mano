@@ -14,28 +14,31 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca;
+package tosca.datatypes.nfv;
 
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-@Getter
-@Setter
-public class NodeTemplate implements ToscaBase {
-	private String type;
-	private String name;
-	private String description;
-	private Object capabilities;
-	private Map<String, Object> properties;
-	private RequirementDefinition requirements;
-	private Map<String, ValueObject> attributes;
-	private Map<String, Artifact> artifacts;
-	private Map<String, InterfaceDefinition> interfaces;
+public class ScaleInfo {
+	/**
+	 * The scale level for a particular aspect
+	 */
+	@Valid
+	@NotNull
+	@JsonProperty("scale_level")
+	@DecimalMin(value = "0", inclusive = true)
+	private Integer scaleLevel;
+
+	@NotNull
+	public Integer getScaleLevel() {
+		return this.scaleLevel;
+	}
+
+	public void setScaleLevel(@NotNull final Integer scaleLevel) {
+		this.scaleLevel = scaleLevel;
+	}
+
 }

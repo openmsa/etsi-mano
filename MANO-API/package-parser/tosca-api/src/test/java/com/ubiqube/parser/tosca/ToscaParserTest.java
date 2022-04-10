@@ -72,7 +72,7 @@ class ToscaParserTest {
 		final Object capabilities = new HashMap<>();
 		nt.setCapabilities(capabilities);
 		nt.setDescription("descr");
-		final Map<String, InterfaceType> interfaces = new HashMap<>();
+		final Map<String, InterfaceDefinition> interfaces = new HashMap<>();
 		nt.setInterfaces(interfaces);
 		nt.setName("name");
 		final Map<String, Object> properties = new HashMap<>();

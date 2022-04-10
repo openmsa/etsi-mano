@@ -38,6 +38,7 @@ import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.GroupType;
 import com.ubiqube.parser.tosca.InterfaceType;
 import com.ubiqube.parser.tosca.OperationDefinition;
+import com.ubiqube.parser.tosca.OperationType;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.PolicyType;
@@ -69,13 +70,13 @@ public class ToscaWalker {
 		root = tp.getContext();
 
 		listener.startDocument();
+		handleInterfaces(listener);
 		handleCapability(listener);
 		handleDataType(listener);
 		handleArtefact(listener);
 		handleNodeType(listener);
 		handleGroupType(listener);
 		handlePolicies(listener);
-		handleInterfaces(listener);
 		listener.terminateDocument();
 	}
 
@@ -269,9 +270,11 @@ public class ToscaWalker {
 		LOG.debug("generateClass end {}", className);
 	}
 
-	private Object generateOperations(final ToscaListener listener, final Map<String, OperationDefinition> x) {
-		// TODO Auto-generated method stub
-		return null;
+	private static void generateOperations(final ToscaListener listener, final Map<String, OperationDefinition> operations) {
+		operations.entrySet().forEach(x -> {
+			listener.startField(x.getKey(), OperationType.class.getName(), false);
+			listener.onFieldTerminate();
+		});
 	}
 
 	private void generateClass(final String className, final CapabilityTypes definition, final ToscaListener listener) {
@@ -293,9 +296,18 @@ public class ToscaWalker {
 		Optional.ofNullable(toscaClass.getCapabilities()).ifPresent(x -> generateCaps(listener, x));
 		Optional.ofNullable(toscaClass.getRequirements()).ifPresent(x -> generateRequirements(listener, x));
 		Optional.ofNullable(toscaClass.getDescription()).ifPresent(listener::onClassDescription);
+		Optional.ofNullable(toscaClass.getInterfaces()).ifPresent(x -> generateInterface(listener, x));
 		LOG.debug("Caching {}", className);
 		cache.add(className);
 		listener.terminateClass();
+	}
+
+	private static void generateInterface(final ToscaListener listener, final Map<String, InterfaceType> x2) {
+		x2.entrySet().forEach(x -> {
+			final String v = Optional.ofNullable(x.getValue().getDerivedFrom()).orElse(x.getValue().getType());
+			listener.startField(x.getKey(), v, false);
+			listener.onFieldTerminate();
+		});
 	}
 
 	private void startClass(final String classname, final String parent, final ToscaListener listener) {
@@ -376,7 +388,7 @@ public class ToscaWalker {
 	private void handleContainer(final ValueObject valueObject, final ToscaListener listener) {
 		final String subType = valueObject.getEntrySchema().getType();
 		final Class<?> jTy = GenericConverters.convert(subType);
-		if ((null != jTy) || cache.contains(subType)) {
+		if (null != jTy || cache.contains(subType)) {
 			return;
 		}
 		final DataType dType = root.getDataTypes().get(subType);
@@ -491,7 +503,7 @@ public class ToscaWalker {
 	}
 
 	private static boolean isList(final List<String> occ) {
-		if ((null == occ) || (occ.size() < 2)) {
+		if (null == occ || occ.size() < 2) {
 			return false;
 		}
 		final String indice = occ.get(1);

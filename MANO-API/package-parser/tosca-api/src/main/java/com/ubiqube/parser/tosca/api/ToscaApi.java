@@ -56,8 +56,8 @@ public class ToscaApi {
 	 * @return A List of populated object.
 	 */
 	public static <T> List<T> getObjects(final ToscaContext root, final Map<String, String> parameters, final Class<T> destination) {
-		final List<NodeTemplate> nodes = getNodeMatching(root, destination);
 		final ContextResolver contextResolver = new ContextResolver(root, parameters);
+		final List<NodeTemplate> nodes = getNodeMatching(root, destination);
 		if (!nodes.isEmpty()) {
 			return contextResolver.mapToscaToClass(nodes, destination);
 		}

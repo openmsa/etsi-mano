@@ -227,13 +227,22 @@ public class ContextResolver {
 			final PropertyDescriptor prop = findProperty(props, x.getKey()).orElseThrow(() -> new ParseException("Could not find property " + x.getKey()));
 			final Method mr = prop.getReadMethod();
 			final Object res = safeInvoke(mr, cls);
-			if (null == res) {
-				final Method mw = prop.getWriteMethod();
-				final Object def = x.getValue().getDef();
-				final Object val = convertValue(def, mr.getReturnType());
-				safeInvoke(mw, cls, val);
+			if (null != res) {
+				return;
 			}
+			final Method mw = prop.getWriteMethod();
+			final Object def = x.getValue().getDef();
+			if (isCompex(mr.getReturnType())) {
+				return;
+			}
+			final Object val = convertValue(def, mr.getReturnType());
+			safeInvoke(mw, cls, val);
 		});
+	}
+
+	private static boolean isCompex(final Class<?> returnType) {
+		final String name = returnType.getName();
+		return name.startsWith("tosca.") || "java.util.Map".equals(name) || "java.util.List".equals(name);
 	}
 
 	private static void applySubstitutionMapping(final NodeTemplate node, final Object cls, final ToscaContext root2) {

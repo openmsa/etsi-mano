@@ -21,35 +21,22 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @See TOSCA 3.6.20 Interface definition
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
 public class InterfaceDefinition {
 	@JsonAnySetter
 	private Map<String, OperationDefinition> operations;
 	@JsonProperty("derived_from")
 	private String derivedFrom;
 	private String description;
-
-	public Map<String, OperationDefinition> getOperations() {
-		return operations;
-	}
-
-	public void setOperations(final Map<String, OperationDefinition> operations) {
-		this.operations = operations;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-	public String getDerivedFrom() {
-		return derivedFrom;
-	}
-
-	public void setDerivedFrom(final String derivedFrom) {
-		this.derivedFrom = derivedFrom;
-	}
 
 }

@@ -21,6 +21,11 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ToscaClass extends ToscaBasePropertiesEntity {
 
 	private Map<String, ValueObject> attributes;
@@ -29,88 +34,21 @@ public class ToscaClass extends ToscaBasePropertiesEntity {
 	@JsonProperty("file_ext")
 	private List<String> fileExt;
 	private RequirementDefinition requirements;
-	private InterfaceType interfaces;
-
+	private Map<String, InterfaceType> interfaces;
 	private Map<String, CapabilityDefinition> capabilities;
 	private Map<String, Artifact> artifacts;
 	// Used in relation ship only
 	@JsonProperty("valid_target_types")
 	private List<String> validTargetTypes;
 
-	public void setMimeType(final String mimeType) {
-		this.mimeType = mimeType;
-	}
-
-	public void setFileExt(final List<String> fileExt) {
-		this.fileExt = fileExt;
-	}
-
-	public void setRequirement(final RequirementDefinition requirements) {
-		this.requirements = requirements;
-	}
-
-	public void setCapabilities(final Map<String, CapabilityDefinition> capabilities) {
-		this.capabilities = capabilities;
-	}
-
-	public void setArtifacts(final Map<String, Artifact> artifacts) {
-		this.artifacts = artifacts;
-	}
-
-	public RequirementDefinition getRequirements() {
-		return requirements;
-	}
-
-	public String getMimeType() {
-		return mimeType;
-	}
-
-	public List<String> getFileExt() {
-		return fileExt;
-	}
-
-	public Map<String, CapabilityDefinition> getCapabilities() {
-		return capabilities;
-	}
-
-	public Map<String, Artifact> getArtifacts() {
-		return artifacts;
-	}
-
-	public InterfaceType getInterfaces() {
-		return interfaces;
-	}
-
-	public void setInterfaces(final InterfaceType interfaces) {
-		this.interfaces = interfaces;
-	}
-
-	public void setAttributes(final Map<String, ValueObject> attributes) {
-		this.attributes = attributes;
-	}
-
-	public Map<String, ValueObject> getAttributes() {
-		return attributes;
-	}
-
-	public List<String> getValidTargetTypes() {
-		return validTargetTypes;
-	}
-
-	public void setValidTargetTypes(final List<String> validTargetTypes) {
-		this.validTargetTypes = validTargetTypes;
-	}
-
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("ToscaClass [");
 		sb.append(super.toString());
-
 		if (null != attributes) {
 			sb.append(", attributes=" + attributes + ", ");
 		}
-
 		if (null != mimeType) {
 			sb.append("mimeType=" + mimeType + ", ");
 		}
