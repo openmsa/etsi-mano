@@ -35,7 +35,7 @@ public class InterfaceType extends ToscaBaseEntity {
 	// In V1.0 Json any setter is usefull, while not in V1.3
 	@JsonAnySetter
 	private Map<String, OperationDefinition> operations;
-	private NotificationType notifications;
+	private Map<String, NotificationType> notifications;
 	private String type;
 
 }

@@ -18,7 +18,6 @@ package com.ubiqube.parser.tosca;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.junit.jupiter.api.Test;
@@ -36,8 +35,8 @@ class ToscaTest {
 
 	@Test
 	void testName() throws Exception {
-		try (FileInputStream fis = new FileInputStream("src/test/resources/etsi_nfv_sol001_common_types.yaml")) {
-			final ToscaRoot obj = mapper.readValue(fis, ToscaRoot.class);
+		try (InputStream is = getClass().getResourceAsStream("/etsi_nfv_sol001_common_types.yaml")) {
+			final ToscaRoot obj = mapper.readValue(is, ToscaRoot.class);
 			assertNotNull(obj);
 		}
 	}
@@ -53,6 +52,14 @@ class ToscaTest {
 	@Test
 	void testTosca() throws Exception {
 		try (InputStream is = getClass().getResourceAsStream("/tosca-test.yaml")) {
+			final ToscaRoot obj = mapper.readValue(is, ToscaRoot.class);
+			assertNotNull(obj);
+		}
+	}
+
+	@Test
+	void testTosca2() throws Exception {
+		try (InputStream is = getClass().getResourceAsStream("/tosca-13-full.yaml")) {
 			final ToscaRoot obj = mapper.readValue(is, ToscaRoot.class);
 			assertNotNull(obj);
 		}

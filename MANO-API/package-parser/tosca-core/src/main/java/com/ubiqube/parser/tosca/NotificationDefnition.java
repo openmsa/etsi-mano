@@ -18,27 +18,19 @@ package com.ubiqube.parser.tosca;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @See TOSCA 3.6.20 Interface definition
+ * 3.6.19 Notification definition.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Getter
 @Setter
-public class InterfaceDefinition {
-	private ToscaProperties inputs;
-	@JsonAnySetter
-	private Map<String, OperationDefinition> operations;
-	private Map<String, NotificationDefnition> notifications;
-	@JsonProperty("derived_from")
-	private String derivedFrom;
+public class NotificationDefnition {
 	private String description;
-
+	private String implementation;
+	private Map<String, Object> outputs;
 }

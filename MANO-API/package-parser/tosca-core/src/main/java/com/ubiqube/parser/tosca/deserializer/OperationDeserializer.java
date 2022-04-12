@@ -17,6 +17,7 @@
 package com.ubiqube.parser.tosca.deserializer;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -29,6 +30,8 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.ubiqube.parser.tosca.OperationDefinition;
+import com.ubiqube.parser.tosca.OperationImplementationDefinition;
+import com.ubiqube.parser.tosca.ToscaProperties;
 
 public class OperationDeserializer extends StdDeserializer<OperationDefinition> {
 	private static final Logger LOG = LoggerFactory.getLogger(OperationDeserializer.class);
@@ -50,17 +53,17 @@ public class OperationDeserializer extends StdDeserializer<OperationDefinition> 
 		LOG.debug("value {}<=>{}", value.getClass(), value);
 		if (value instanceof TextNode) {
 			final OperationDefinition od = new OperationDefinition();
-			od.setImplementation(value);
+			final OperationImplementationDefinition oid = new OperationImplementationDefinition();
+			oid.setPrimary(value.toString());
+			od.setImplementation(oid);
 			return od;
 		}
-		// XXX: Handle other values.
 		final OperationDefinition od = new OperationDefinition();
 		final ObjectNode tn = (ObjectNode) value;
-		Optional.ofNullable(tn.findValue("type")).ifPresent(x -> od.setType(x.asText()));
-		Optional.ofNullable(tn.findValue("description")).ifPresent(x -> od.setType(x.asText()));
-		// Optional.ofNullable(tn.findValue("implementation")).ifPresent(x ->
-		// od.setImplementation(p.getCodec().treeToValue(x, Implementation.class)));
-		return new OperationDefinition();
+		Optional.ofNullable(tn.findValue("description")).ifPresent(x -> od.setDescription(x.asText()));
+		DeserializerHelper.fillIfNeeded(p, tn, "implementation", OperationImplementationDefinition.class, od::setImplementation);
+		DeserializerHelper.fillIfNeeded(p, tn, "inputs", ToscaProperties.class, od::setInputs);
+		DeserializerHelper.fillIfNeeded(p, tn, "outputs", Map.class, od::setOutputs);
+		return od;
 	}
-
 }

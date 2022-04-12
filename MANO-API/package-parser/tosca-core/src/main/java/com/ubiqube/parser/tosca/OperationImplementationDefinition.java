@@ -16,29 +16,28 @@
  */
 package com.ubiqube.parser.tosca;
 
-import java.util.Map;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.ubiqube.parser.tosca.deserializer.OperationImplementationDefinitionDeserializer;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @See TOSCA 3.6.20 Interface definition
+ * 3.6.16 Operation implementation definition.
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Getter
 @Setter
-public class InterfaceDefinition {
-	private ToscaProperties inputs;
-	@JsonAnySetter
-	private Map<String, OperationDefinition> operations;
-	private Map<String, NotificationDefnition> notifications;
-	@JsonProperty("derived_from")
-	private String derivedFrom;
-	private String description;
-
+@JsonDeserialize(using = OperationImplementationDefinitionDeserializer.class)
+public class OperationImplementationDefinition {
+	private String primary;
+	private List<String> dependencies;
+	private Integer timeout;
+	@JsonProperty("operation_host")
+	private String operationHost;
 }
