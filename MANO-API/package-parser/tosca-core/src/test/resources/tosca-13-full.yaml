@@ -43,7 +43,7 @@ topology_template:
     requirements:
       virtual_link_backend: [ dbBackendCp, virtual_link ]  # IPv4 for SQL
       virtual_link_service: [ serviceNodeCp, virtual_link ]  # IPv4 for SSH
-    
+
   node_templates:
     SunshineDB:
       type: MyCompany.SunshineDB.1_0.1_0

@@ -18,6 +18,7 @@ package com.ubiqube.parser.tosca;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -49,6 +50,7 @@ public class TopologyTemplate {
 	public void putAll(final TopologyTemplate topologyTemplate) {
 		nodeTemplate.putAll(topologyTemplate.getNodeTemplate());
 		groups.putAll(topologyTemplate.getGroups());
+		Optional.ofNullable(topologyTemplate.getSubstitutionMapping()).ifPresent(x -> this.substitutionMapping = x);
 	}
 
 }

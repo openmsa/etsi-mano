@@ -40,7 +40,7 @@ public class SubstitutionMapping {
 	@JsonProperty("substitution_filter")
 	private NodeFilter substitutionFilter;
 
-	private String properties;
+	private ToscaProperties properties;
 
 	private CapabilityMapping capabilities;
 

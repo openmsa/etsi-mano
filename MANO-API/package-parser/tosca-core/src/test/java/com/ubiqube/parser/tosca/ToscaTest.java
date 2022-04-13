@@ -62,6 +62,8 @@ class ToscaTest {
 		try (InputStream is = getClass().getResourceAsStream("/tosca-13-full.yaml")) {
 			final ToscaRoot obj = mapper.readValue(is, ToscaRoot.class);
 			assertNotNull(obj);
+			final SubstitutionMapping sm = obj.getTopologyTemplate().getSubstitutionMapping();
+			assertNotNull(sm);
 		}
 	}
 }
