@@ -41,6 +41,8 @@ class UbiToscaTest {
 	@Test
 	void testUbiCsar() throws Exception {
 		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/Definitions/etsi_nfv_sol001_vnfd_types.yaml", "Definitions/etsi_nfv_sol001_vnfd_types.yaml"),
+				Entry.of("ubi-tosca/Definitions/etsi_nfv_sol001_common_types.yaml", "Definitions/etsi_nfv_sol001_common_types.yaml"),
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 		final ToscaParser toscaParser = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = toscaParser.getContext();
@@ -58,6 +60,8 @@ class UbiToscaTest {
 	@Test
 	void testUbiCsarCompute() throws Exception {
 		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/Definitions/etsi_nfv_sol001_vnfd_types.yaml", "Definitions/etsi_nfv_sol001_vnfd_types.yaml"),
+				Entry.of("ubi-tosca/Definitions/etsi_nfv_sol001_common_types.yaml", "Definitions/etsi_nfv_sol001_common_types.yaml"),
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 		final ToscaParser toscaParser = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = toscaParser.getContext();

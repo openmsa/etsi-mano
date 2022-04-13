@@ -23,7 +23,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,7 +50,7 @@ public class OperationImplementationDefinitionDeserializer extends StdDeserializ
 	}
 
 	@Override
-	public OperationImplementationDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JacksonException {
+	public OperationImplementationDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final JsonNode value = p.getCodec().readTree(p);
 		LOG.debug("value {}<=>{}", value.getClass(), value);
 		if (value.isTextual()) {

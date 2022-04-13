@@ -107,6 +107,8 @@ class ToscaApiTest {
 	@Test
 	void testUbiCsar() throws Exception {
 		ZipUtil.makeToscaZip("/tmp/ubi-tosca.csar", Entry.of("ubi-tosca/Definitions/tosca_ubi.yaml", "Definitions/tosca_ubi.yaml"),
+				Entry.of("ubi-tosca/Definitions/etsi_nfv_sol001_vnfd_types.yaml", "Definitions/etsi_nfv_sol001_vnfd_types.yaml"),
+				Entry.of("ubi-tosca/Definitions/etsi_nfv_sol001_common_types.yaml", "Definitions/etsi_nfv_sol001_common_types.yaml"),
 				Entry.of("ubi-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 		final ToscaParser tp = new ToscaParser(new File("/tmp/ubi-tosca.csar"));
 		final ToscaContext root = tp.getContext();
@@ -174,7 +176,7 @@ class ToscaApiTest {
 				stack.pop();
 				continue;
 			}
-			if ((src instanceof Map) || (src instanceof Set)) {
+			if (src instanceof Map || src instanceof Set) {
 				stack.pop();
 				continue;
 			}
@@ -202,6 +204,42 @@ class ToscaApiTest {
 		ignore.add("getTriggers");
 		ignore.add("getTargets");
 		ignore.add("getVirtualLinkable");
+		// Vnflcm
+		ignore.add("getScaleToLevelStart");
+		ignore.add("getChangeExternalConnectivityEnd");
+		ignore.add("getChangeFlavourEnd");
+		ignore.add("getInstantiateEnd");
+		ignore.add("getChangeExternalConnectivity");
+		ignore.add("getScaleEnd");
+		ignore.add("getChangeCurrentPackageStart");
+		ignore.add("getScaleToLevel");
+		ignore.add("getScaleToLevelEnd");
+		ignore.add("getInstantiateStart");
+		ignore.add("getHealEnd");
+		ignore.add("getCreateSnapshotStart");
+		ignore.add("getChangeExternalConnectivityStart");
+		ignore.add("getModifyInformation");
+		ignore.add("getHealStart");
+		ignore.add("getModifyInformationStart");
+		ignore.add("getInstantiate");
+		ignore.add("getOperate");
+		ignore.add("getRevertToSnapshotEnd");
+		ignore.add("getOperateEnd");
+		ignore.add("getChangeCurrentPackage");
+		ignore.add("getTerminateEnd");
+		ignore.add("getCreateSnapshot");
+		ignore.add("getModifyInformationEnd");
+		ignore.add("getHeal");
+		ignore.add("getCreateSnapshotEnd");
+		ignore.add("getTerminate");
+		ignore.add("getChangeCurrentPackageEnd");
+		ignore.add("getTerminateStart");
+		ignore.add("getScaleStart");
+		ignore.add("getChangeFlavourStart");
+		ignore.add("getChangeFlavour");
+		ignore.add("getOperateStart");
+		ignore.add("getRevertToSnapshotStart");
+		ignore.add("getRevertToSnapshot");
 		checknullInternal(avcDb, ignore, err, new Stack<>());
 		if (!err.isEmpty()) {
 			final String str = err.stream().collect(Collectors.joining("\n"));
@@ -211,7 +249,12 @@ class ToscaApiTest {
 	}
 
 	private void checknullInternal(final Object avcDb, final List<String> ignore, final List<String> err, final Stack<String> stack) throws IntrospectionException, IllegalArgumentException, InvocationTargetException, IllegalAccessException {
-		final BeanInfo beanInfo = Introspector.getBeanInfo(avcDb.getClass());
+		final Class<?> inClass = avcDb.getClass();
+		if (Map.class.isAssignableFrom(inClass)) {
+			LOG.warn("Encoutered an not mapped type at {}", buildError(stack));
+			return;
+		}
+		final BeanInfo beanInfo = Introspector.getBeanInfo(inClass);
 		final MethodDescriptor[] m = beanInfo.getMethodDescriptors();
 		for (final MethodDescriptor methodDescriptor : m) {
 			if (!methodDescriptor.getName().startsWith("get") || "getClass".equals(methodDescriptor.getName())) {

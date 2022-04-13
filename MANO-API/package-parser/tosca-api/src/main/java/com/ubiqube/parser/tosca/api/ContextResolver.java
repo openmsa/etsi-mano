@@ -50,7 +50,6 @@ import com.ubiqube.parser.tosca.GroupDefinition;
 import com.ubiqube.parser.tosca.InputBean;
 import com.ubiqube.parser.tosca.InterfaceDefinition;
 import com.ubiqube.parser.tosca.NodeTemplate;
-import com.ubiqube.parser.tosca.OperationDefinition;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.Requirement;
@@ -225,8 +224,10 @@ public class ContextResolver {
 			final Method mw = prop.getWriteMethod();
 			setProperty2(cls, mw, newObj);
 			final InterfaceDefinition obj = x.getValue();
-			final Map<String, OperationDefinition> ops = obj.getOperations();
-			// handleOperations(ops, newObj);
+			final Map ops = obj.getOperations();
+			final Class generic = null;
+			final PropertyDescriptor[] propsNewObj = getPropertyDescriptor(mrr);
+			handleMap(ops, mrr, propsNewObj, newObj, generic, stack);
 		});
 	}
 

@@ -16,11 +16,33 @@
  */
 package tosca.interfaces.nfv;
 
+import com.ubiqube.parser.tosca.OperationDefinition;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 public class Vnflcm {
+
+	private OperationDefinition instantiate;
+
+	private OperationDefinition terminate;
+
+	public OperationDefinition getInstantiate() {
+		return instantiate;
+	}
+
+	public void setInstantiate(final OperationDefinition instantiate) {
+		this.instantiate = instantiate;
+	}
+
+	public OperationDefinition getTerminate() {
+		return terminate;
+	}
+
+	public void setTerminate(final OperationDefinition terminate) {
+		this.terminate = terminate;
+	}
 
 }

@@ -42,6 +42,22 @@ topology_template:
         - virtual_link_7: vl # tosca.nodes.nfv.NsVirtualLink
         - virtual_link_8: vl # tosca.nodes.nfv.NsVirtualLink
         - virtual_link_9: vl # tosca.nodes.nfv.NsVirtualLink
+      interfaces:
+        Nslcm:
+          operations:
+            instantiate:
+              description: descr
+              implementation:
+                primary: workflow.yaml
+                operation_host: this
+                timeout: 1200
+                dependencies:
+                  - a
+                  - b
+              outputs: {}
+              inputs: {}
+
+
 
     database:
       type: tosca.nodes.nfv.NS

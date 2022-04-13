@@ -30,7 +30,7 @@ import com.ubiqube.parser.tosca.api.ToscaApi;
 
 import tosca.nodes.nfv.VNF;
 
-public class InterfaceTest {
+class InterfaceTest {
 
 	@Test
 	void testName() throws Exception {

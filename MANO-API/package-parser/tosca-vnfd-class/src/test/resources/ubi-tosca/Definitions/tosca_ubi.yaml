@@ -3,7 +3,7 @@ description: >
   Sample VNF for integration testing.
 
 imports:
-  - https://forge.etsi.org/rep/nfv/SOL001/-/raw/Release_4/etsi_nfv_sol001_vnfd_types.yaml
+  - etsi_nfv_sol001_vnfd_types.yaml
 
 topology_template:
   inputs:
@@ -93,6 +93,20 @@ topology_template:
         - virtual_link_8: public
         - virtual_link_9: public
         - virtual_link_10: public
+      interfaces:
+        Vnflcm:
+          operations:
+            scale:
+              description: descr
+              implementation:
+                primary: workflow.yaml
+                operation_host: this
+                timeout: 1200
+                dependencies:
+                  - a
+                  - b
+              outputs: {}
+              inputs: {}
 
     ext01:
       type: tosca.nodes.nfv.VnfExtCp

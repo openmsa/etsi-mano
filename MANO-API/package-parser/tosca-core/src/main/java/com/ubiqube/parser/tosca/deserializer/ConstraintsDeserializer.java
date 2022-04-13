@@ -17,9 +17,12 @@
 package com.ubiqube.parser.tosca.deserializer;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -40,9 +43,29 @@ import com.ubiqube.parser.tosca.constraints.MinLength;
 import com.ubiqube.parser.tosca.constraints.Pattern;
 import com.ubiqube.parser.tosca.constraints.ValidValues;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class ConstraintsDeserializer extends StdDeserializer<Constraint> {
+	private static final long serialVersionUID = 1L;
+	private final Map<String, Function<Map.Entry<String, JsonNode>, ? extends Constraint>> table = new HashMap<>();
+
 	protected ConstraintsDeserializer() {
 		this(null);
+		// One of 3.5.2.1 Operator keynames
+		table.put("greater_or_equal", x -> new GreaterOrEqual(x.getValue()));
+		table.put("valid_values", x -> new ValidValues((ArrayNode) x.getValue()));
+		table.put("min_length", x -> new MinLength(x.getValue()));
+		table.put("max_length", x -> new MaxLength(x.getValue()));
+		table.put("equal", x -> new Equal(x.getKey()));
+		table.put("greater_than", x -> new GreaterThan(x.getValue()));
+		table.put("less_than", x -> new LessThan(x.getKey()));
+		table.put("in_range", x -> new InRange((ArrayNode) x.getValue()));
+		table.put("pattern", x -> new Pattern(x.getValue()));
+		table.put("less_or_equal", x -> new LessOrEqual(x.getValue().asText()));
+		table.put("length", x -> new LessOrEqual(x.getValue().asText()));
 	}
 
 	public ConstraintsDeserializer(final Class<?> object) {
@@ -56,32 +79,8 @@ public class ConstraintsDeserializer extends StdDeserializer<Constraint> {
 		while (fields.hasNext()) {
 			final Map.Entry<String, JsonNode> entry = fields.next();
 			final String key = entry.getKey();
-			// One of 3.5.2.1 Operator keynames
-			if ("greater_or_equal".equals(key)) {
-				return new GreaterOrEqual(entry.getValue());
-			}
-			if ("valid_values".equals(key)) {
-				return new ValidValues((ArrayNode) entry.getValue());
-			}
-			if ("min_length".equals(key)) {
-				return new MinLength(entry.getValue());
-			} else if ("max_length".equals(key)) {
-				return new MaxLength(entry.getValue());
-			} else if ("equal".equals(key)) {
-				return new Equal(entry.getKey());
-			} else if ("greater_than".equals(key)) {
-				return new GreaterThan(entry.getValue());
-			} else if ("less_than".equals(key)) {
-				return new LessThan(entry.getKey());
-			} else if ("in_range".equals(key)) {
-				return new InRange((ArrayNode) entry.getValue());
-			} else if ("pattern".equals(key)) {
-				return new Pattern(entry.getValue());
-			} else if ("less_or_equal".equals(key) || "length".equals(key)) {
-				return new LessOrEqual(entry.getValue().asText());
-			} else {
-				throw new ParseException("Unknow Constraint: " + key);
-			}
+			final Function<Entry<String, JsonNode>, ? extends Constraint> creator = Optional.ofNullable(table.get(key)).orElseThrow(() -> new ParseException("Unknow Constraint: " + key));
+			return creator.apply(entry);
 		}
 		return null;
 	}

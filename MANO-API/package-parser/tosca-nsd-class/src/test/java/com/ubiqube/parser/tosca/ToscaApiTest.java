@@ -164,7 +164,7 @@ class ToscaApiTest {
 				stack.pop();
 				continue;
 			}
-			if ((src instanceof Map) || (src instanceof Set)) {
+			if (src instanceof Map || src instanceof Set) {
 				stack.pop();
 				continue;
 			}
@@ -192,6 +192,21 @@ class ToscaApiTest {
 		ignore.add("getTriggers");
 		ignore.add("getTargets");
 		ignore.add("getVirtualLinkable");// Should be removed, it's a bug.
+		// Nslcm
+		ignore.add("getInstantiateEnd");
+		ignore.add("getScaleEnd");
+		ignore.add("getUpdateStart");
+		ignore.add("getUpdateEnd");
+		ignore.add("getUpdate");
+		ignore.add("getInstantiateStart");
+		ignore.add("getHealEnd");
+		ignore.add("getScale");
+		ignore.add("getHealStart");
+		ignore.add("getTerminateEnd");
+		ignore.add("getHeal");
+		ignore.add("getTerminate");
+		ignore.add("getTerminateStart");
+		ignore.add("getScaleStart");
 		checknullInternal(avcDb, ignore, err, new Stack<>());
 		if (!err.isEmpty()) {
 			final String str = err.stream().collect(Collectors.joining("\n"));

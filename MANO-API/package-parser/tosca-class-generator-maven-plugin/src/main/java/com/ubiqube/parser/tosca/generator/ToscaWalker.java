@@ -38,7 +38,6 @@ import com.ubiqube.parser.tosca.DataType;
 import com.ubiqube.parser.tosca.GroupType;
 import com.ubiqube.parser.tosca.InterfaceType;
 import com.ubiqube.parser.tosca.OperationDefinition;
-import com.ubiqube.parser.tosca.OperationType;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.PolicyType;
@@ -272,7 +271,8 @@ public class ToscaWalker {
 
 	private static void generateOperations(final ToscaListener listener, final Map<String, OperationDefinition> operations) {
 		operations.entrySet().forEach(x -> {
-			listener.startField(x.getKey(), OperationType.class.getName(), false);
+			final String field = fieldCamelCase(x.getKey());
+			listener.startField(field, OperationDefinition.class.getName(), false);
 			listener.onFieldTerminate();
 		});
 	}
