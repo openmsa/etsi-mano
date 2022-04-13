@@ -48,7 +48,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.parser.tosca.GroupDefinition;
 import com.ubiqube.parser.tosca.InputBean;
+import com.ubiqube.parser.tosca.InterfaceDefinition;
 import com.ubiqube.parser.tosca.NodeTemplate;
+import com.ubiqube.parser.tosca.OperationDefinition;
 import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.PolicyDefinition;
 import com.ubiqube.parser.tosca.Requirement;
@@ -206,11 +208,26 @@ public class ContextResolver {
 		if (null != req && null != req.getRequirements()) {
 			handleRequirements(req.getRequirements(), propsDescr, cls, stack);
 		}
+		Optional.ofNullable(node.getInterfaces()).ifPresent(x -> handleInterfaces(x, propsDescr, cls, stack));
 		setBasicProperties(node, cls);
 		applySubstitutionMapping(node, cls, root);
 		applyDefault(node, cls, root);
 		stack.pop();
 		return cls;
+	}
+
+	private <U> void handleInterfaces(final Map<String, InterfaceDefinition> ifaces, final PropertyDescriptor[] propsDescr, final U cls, final Deque<String> stack) {
+		ifaces.entrySet().forEach(x -> {
+			final PropertyDescriptor prop = findProperty(propsDescr, x.getKey()).orElseThrow(() -> new ParseException("Unable to find property: " + x.getKey()));
+			final Method mr = prop.getReadMethod();
+			final Class<?> mrr = mr.getReturnType();
+			final Object newObj = newInstance(mrr);
+			final Method mw = prop.getWriteMethod();
+			setProperty2(cls, mw, newObj);
+			final InterfaceDefinition obj = x.getValue();
+			final Map<String, OperationDefinition> ops = obj.getOperations();
+			// handleOperations(ops, newObj);
+		});
 	}
 
 	private static <U> void applyDefault(final NodeTemplate node, final U cls, final ToscaContext root) {
@@ -223,21 +240,23 @@ public class ContextResolver {
 		}
 		final PropertyDescriptor[] props = getPropertyDescriptor(cls.getClass());
 
-		optProps.get().entrySet().stream().forEach(x -> {
-			final PropertyDescriptor prop = findProperty(props, x.getKey()).orElseThrow(() -> new ParseException("Could not find property " + x.getKey()));
-			final Method mr = prop.getReadMethod();
-			final Object res = safeInvoke(mr, cls);
-			if (null != res) {
-				return;
-			}
-			final Method mw = prop.getWriteMethod();
-			final Object def = x.getValue().getDef();
-			if (isCompex(mr.getReturnType())) {
-				return;
-			}
-			final Object val = convertValue(def, mr.getReturnType());
-			safeInvoke(mw, cls, val);
-		});
+		optProps.get().entrySet().stream()
+				.filter(x -> x.getValue().getRequired())
+				.forEach(x -> {
+					final PropertyDescriptor prop = findProperty(props, x.getKey()).orElseThrow(() -> new ParseException("Could not find property " + x.getKey() + " on class: " + cls.getClass()));
+					final Method mr = prop.getReadMethod();
+					final Object res = safeInvoke(mr, cls);
+					if (null != res) {
+						return;
+					}
+					final Method mw = prop.getWriteMethod();
+					final Object def = x.getValue().getDef();
+					if (isCompex(mr.getReturnType())) {
+						return;
+					}
+					final Object val = convertValue(def, mr.getReturnType());
+					safeInvoke(mw, cls, val);
+				});
 	}
 
 	private static boolean isCompex(final Class<?> returnType) {
@@ -387,7 +406,10 @@ public class ContextResolver {
 		return cls;
 	}
 
-	private static Optional<PropertyDescriptor> findProperty(final PropertyDescriptor[] props, final String camelCaseToUnderscore) {
+	private static Optional<PropertyDescriptor> findProperty(final PropertyDescriptor[] props, final String propertyName) {
+		final StringBuilder sb = new StringBuilder(propertyName);
+		sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
+		final String camelCaseToUnderscore = sb.toString();
 		return Arrays.stream(props).filter(x -> camelCaseToUnderscore(x.getName()).equals(camelCaseToUnderscore)).findFirst();
 	}
 

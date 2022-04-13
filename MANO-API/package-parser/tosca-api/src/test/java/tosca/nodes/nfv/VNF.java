@@ -30,6 +30,7 @@ import tosca.datatypes.nfv.ScaleInfo;
 import tosca.datatypes.nfv.VnfLcmOperationsConfiguration;
 import tosca.datatypes.nfv.VnfMonitoringParameter;
 import tosca.datatypes.nfv.VnfProfile;
+import tosca.interfaces.nfv.Vnflcm;
 
 public class VNF extends ToscaInernalBase {
 	/**
@@ -206,6 +207,8 @@ public class VNF extends ToscaInernalBase {
 	@Relationship("tosca.relationships.nfv.VirtualLinksTo")
 	@JsonProperty("virtual_link_7")
 	private String virtualLink7Req;
+
+	private Vnflcm Vnflcm;
 
 	public VnfProfile getVnfProfile() {
 		return this.vnfProfile;
@@ -432,6 +435,14 @@ public class VNF extends ToscaInernalBase {
 
 	public void setVirtualLink7Req(final String virtualLink7Req) {
 		this.virtualLink7Req = virtualLink7Req;
+	}
+
+	public Vnflcm getVnflcm() {
+		return this.Vnflcm;
+	}
+
+	public void setVnflcm(final Vnflcm Vnflcm) {
+		this.Vnflcm = Vnflcm;
 	}
 
 }
