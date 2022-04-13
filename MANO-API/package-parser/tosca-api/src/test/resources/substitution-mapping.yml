@@ -19,6 +19,11 @@ node_types:
 topology_template: 
   substitution_mappings:
     node_type: tosca.example_NS
+    properties:
+      value: bad !
+    capabilities:
+    attributes:
+    interfaces:
     substitution_filter:
       properties:
       - flavour_id: { equal: complex }
