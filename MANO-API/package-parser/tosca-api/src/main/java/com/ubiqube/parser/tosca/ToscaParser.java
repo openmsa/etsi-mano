@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 
@@ -31,39 +29,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
-import com.ubiqube.parser.tosca.csar.CsarParser;
-import com.ubiqube.parser.tosca.csar.CsarParserImpl;
 
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Tosca parser entry point.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class ToscaParser {
-	Pattern zipMatcher = Pattern.compile("\\.(zip|csar)$");
-	private CsarParser csar = null;
 	private ToscaContext context;
+	final ObjectMapper mapper = getMapper();
+	private Sol001FileSystem fs;
 
 	public ToscaParser(final File filename) {
-		final ObjectMapper mapper = getMapper();
-
-		IResolver resolver;
-		if (isZip(filename)) {
-			csar = new CsarParserImpl(filename);
-			resolver = csar.getResolver();
-		} else {
-			resolver = new Resolver(filename);
-		}
+		final IResolver resolver;
+		fs = Sol001FileFactory.of(filename);
+		final ToscaVersion tv = fs.getToscaVersion();
 		try {
-			final ToscaRoot root = loadToscaBase();
-			context = new ToscaContext(root, resolver);
-			final ToscaRoot root2;
-			if (isZip(filename)) {
-				root2 = mapper.readValue(csar.getEntryDefinition(), ToscaRoot.class);
-			} else {
-				root2 = mapper.readValue(filename, ToscaRoot.class);
-			}
+			final ToscaRoot root = loadToscaBase(tv);
+			context = new ToscaContext(root, fs.getResolver());
+			final ToscaRoot root2 = mapper.readValue(fs.getFileContent(fs.getEntryDefinitionFileName()), ToscaRoot.class);
 			context.addRoot(root2);
 			context.resolvImports();
 			context.resolvSymbols();
-
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
@@ -80,14 +70,25 @@ public class ToscaParser {
 		}
 	}
 
-	private static ToscaRoot loadToscaBase() {
-		try (final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("TOSCA_definition_1_3.yaml")) {
+	private static ToscaRoot loadToscaBase(final ToscaVersion tv) {
+		final String fileName = getToscaBase(tv);
+		try (final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
 			final String content = IOUtils.toString(stream, Charset.defaultCharset());
 			final ObjectMapper mapper = getMapper();
 			return mapper.readValue(content.getBytes(), ToscaRoot.class);
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}
+	}
+
+	private static String getToscaBase(final ToscaVersion tv) {
+		if (tv == null) {
+			return "TOSCA_definition_1_0.yaml";
+		}
+		if (tv == ToscaVersion.TOSCA_SIMPLE_YAML_1_0 || tv == ToscaVersion.TOSCA_SIMPLE_YAML_1_3 || tv == ToscaVersion.TOSCA_SIMPLE_YAML_1_2) {
+			return "TOSCA_definition_1_3.yaml";
+		}
+		throw new ParseException("Unknown tosca version " + tv);
 	}
 
 	private static ObjectMapper getMapper() {
@@ -99,14 +100,9 @@ public class ToscaParser {
 		return mapper;
 	}
 
-	private boolean isZip(final File fileName) {
-		final Matcher res = zipMatcher.matcher(fileName.toString());
-		return res.find();
-	}
-
 	@NotNull
 	public List<ArtefactInformations> getFiles() {
-		return csar.getFiles();
+		return fs.getFiles();
 	}
 
 	public ToscaContext getContext() {
@@ -114,14 +110,14 @@ public class ToscaParser {
 	}
 
 	public String getEntryFileName() {
-		return csar.getEntryDefinitionFileName();
+		return fs.getEntryDefinitionFileName();
 	}
 
 	public String getManifestContent() {
-		return csar.getManifestContent();
+		return fs.getManifestContent();
 	}
 
 	public byte[] getFileContent(final String fileName) {
-		return csar.getFileContent(fileName);
+		return fs.getFileContent(fileName);
 	}
 }

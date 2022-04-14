@@ -61,6 +61,7 @@ import com.ubiqube.parser.tosca.constraints.GreaterThan;
 import com.ubiqube.parser.tosca.constraints.InRange;
 import com.ubiqube.parser.tosca.constraints.LessOrEqual;
 import com.ubiqube.parser.tosca.constraints.LessThan;
+import com.ubiqube.parser.tosca.constraints.MaxLength;
 import com.ubiqube.parser.tosca.constraints.MinLength;
 import com.ubiqube.parser.tosca.constraints.Pattern;
 import com.ubiqube.parser.tosca.constraints.ValidValues;
@@ -300,6 +301,13 @@ public class JavaPoetWalker implements ToscaListener {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(javax.validation.constraints.Size.class)
 					.addMember("min", "$L", Integer.parseInt(ml.getValue()))
+					.build();
+			currentField.addAnnotation(builder);
+		} else if (x instanceof MaxLength) {
+			final MaxLength ml = (MaxLength) x;
+			final AnnotationSpec builder = AnnotationSpec
+					.builder(javax.validation.constraints.Size.class)
+					.addMember("max", "$L", Integer.parseInt(ml.getValue()))
 					.build();
 			currentField.addAnnotation(builder);
 		} else if (x instanceof Equal) {

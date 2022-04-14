@@ -18,6 +18,7 @@ package com.ubiqube.parser.tosca.generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -32,8 +33,8 @@ import com.ubiqube.parser.tosca.ParseException;
 @Mojo(name = "tosca-class-generator", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class ClassGeneratorMojo extends AbstractMojo {
 
-	@Parameter(property = "file")
-	private File file;
+	@Parameter(property = "files")
+	private List<File> files;
 
 	@Parameter(defaultValue = "${project.build.directory}/generated-sources/tosca", required = true)
 	private File outputDirectory;
@@ -44,12 +45,17 @@ public class ClassGeneratorMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project}", readonly = true)
 	private MavenProject project;
 
+	@Parameter(defaultValue = "")
+	private String packagePrefix;
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("Starting class generation using: " + file);
 		final JavaPoetWalker jw = new JavaPoetWalker(outputDirectory.getAbsolutePath());
 		final ToscaWalker tw = new ToscaWalker();
-		tw.generate(file.getAbsolutePath(), jw);
+		files.forEach(x -> {
+			getLog().info("Starting class generation using: " + x);
+			tw.generate(x.getAbsolutePath(), jw);
+		});
 		try {
 			getProject().addCompileSourceRoot(outputDirectory.getCanonicalPath());
 		} catch (final IOException e) {
