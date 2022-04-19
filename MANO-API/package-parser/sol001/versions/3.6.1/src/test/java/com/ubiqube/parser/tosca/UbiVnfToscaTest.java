@@ -35,7 +35,7 @@ import tosca.nodes.nfv.vdu.Compute;
 import tosca.policies.nfv.VduScalingAspectDeltas;
 import tosca.policies.nfv.VnfIndicator;
 
-class UbiToscaTest {
+class UbiVnfToscaTest {
 	private final Map<String, String> parameters = new HashMap<>();
 
 	@Test

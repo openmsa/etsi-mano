@@ -69,15 +69,15 @@ import tosca.policies.nfv.VduScalingAspectDeltas;
 import tosca.policies.nfv.VirtualLinkBitrateInitialDelta;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
-class ToscaApiTest {
-	private static final Logger LOG = LoggerFactory.getLogger(ToscaApiTest.class);
+class ToscaVnfApiTest {
+	private static final Logger LOG = LoggerFactory.getLogger(ToscaVnfApiTest.class);
 
 	private final ConvertApi conv = new ConvertApi();
 
 	private final Map<String, String> parameters = new HashMap<>();
 	private final Set<Class<?>> complex = new HashSet<>();
 
-	public ToscaApiTest() {
+	public ToscaVnfApiTest() {
 		conv.register(Size.class.getCanonicalName(), new SizeConverter());
 		complex.add(String.class);
 		complex.add(UUID.class);
