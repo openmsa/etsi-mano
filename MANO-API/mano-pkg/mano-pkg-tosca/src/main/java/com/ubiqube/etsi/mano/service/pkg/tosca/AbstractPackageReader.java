@@ -54,6 +54,8 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
  */
 public abstract class AbstractPackageReader implements Closeable {
 
+	private static final String FOUND_NODE_IN_TOSCA_MODEL = "Found {} {} node in TOSCA model";
+
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractPackageReader.class);
 
 	private final ToscaContext root;
@@ -82,7 +84,7 @@ public abstract class AbstractPackageReader implements Closeable {
 	@Nonnull
 	protected <T, U> Set<U> getSetOf(final Class<T> toscaClass, final Class<U> to, final Map<String, String> parameters) {
 		final List<T> list = ToscaApi.getObjects(root, parameters, toscaClass);
-		LOG.debug("Found {} {} node in TOSCA model", list.size(), toscaClass.getSimpleName());
+		LOG.debug(FOUND_NODE_IN_TOSCA_MODEL, list.size(), toscaClass.getSimpleName());
 		return list.stream()
 				.map(x -> mapper.map(x, to))
 				.collect(Collectors.toSet());
@@ -91,7 +93,7 @@ public abstract class AbstractPackageReader implements Closeable {
 	@Nonnull
 	protected <T> Set<T> getSetOf(final Class<T> toscaClass, final Map<String, String> parameters) {
 		final List<T> list = ToscaApi.getObjects(root, parameters, toscaClass);
-		LOG.debug("Found {} {} node in TOSCA model", list.size(), toscaClass.getSimpleName());
+		LOG.debug(FOUND_NODE_IN_TOSCA_MODEL, list.size(), toscaClass.getSimpleName());
 		return list.stream()
 				.collect(Collectors.toSet());
 	}
@@ -100,7 +102,7 @@ public abstract class AbstractPackageReader implements Closeable {
 	@Nonnull
 	protected <T, U> List<U> getListOf(final Class<T> toscaClass, final Class<U> to, final Map<String, String> parameters) {
 		final List<T> obj = ToscaApi.getObjects(root, parameters, toscaClass);
-		LOG.debug("Found {} {} node in TOSCA model", obj.size(), toscaClass.getSimpleName());
+		LOG.debug(FOUND_NODE_IN_TOSCA_MODEL, obj.size(), toscaClass.getSimpleName());
 		return mapper.mapAsList(obj, to);
 	}
 
@@ -108,7 +110,7 @@ public abstract class AbstractPackageReader implements Closeable {
 	@Nonnull
 	protected <U> List<U> getObjects(final Class<U> toscaClass, final Map<String, String> parameters) {
 		final List<U> obj = ToscaApi.getObjects(root, parameters, toscaClass);
-		LOG.debug("Found {} {} node in TOSCA model", obj.size(), toscaClass.getSimpleName());
+		LOG.debug(FOUND_NODE_IN_TOSCA_MODEL, obj.size(), toscaClass.getSimpleName());
 		return obj;
 	}
 
