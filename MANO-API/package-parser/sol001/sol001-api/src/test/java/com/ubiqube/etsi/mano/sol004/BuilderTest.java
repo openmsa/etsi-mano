@@ -56,4 +56,19 @@ class BuilderTest {
 				.build(new File("/tmp/tosca.zip"));
 		assertTrue(Files.exists(Paths.get("/tmp/tosca.zip")));
 	}
+
+	@Test
+	void testFulSol001() throws Exception {
+		final File publicKey = new File("src/test/resources/mano-qa-sol004.pub.pem");
+		final File privateKey = new File("src/test/resources/mano-qa-sol004.pem");
+		final CertificateSigner certificateSigner = new Pkcs7Certificate(privateKey, publicKey);
+		CsarBuilder.builder()
+				.ofDoubleZip()
+				.addEntry(new File("src/test/resources/scale-vnf/Definitions/etsi_nfv_sol001_vnfd_types.yaml"), "Definitions/etsi_nfv_sol001_vnfd_types.yaml")
+				.addEntry(new File("src/test/resources/scale-vnf/Definitions/tosca_ubi_scale.yaml"), "Definitions/tosca_ubi_scale.yaml")
+				.entryPoint("Definitions/tosca_ubi_scale.yaml")
+				.certificate(certificateSigner)
+				.build(new File("/tmp/tosca.zip"));
+		assertTrue(Files.exists(Paths.get("/tmp/tosca.zip")));
+	}
 }

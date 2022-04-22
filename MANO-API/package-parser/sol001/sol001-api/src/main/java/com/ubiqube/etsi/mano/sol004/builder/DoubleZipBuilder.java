@@ -52,6 +52,7 @@ public class DoubleZipBuilder {
 	private CertificateSigner cert;
 	private final List<Sol004Entry> entries;
 	private HashAlgorithm defaultHash = HashAlgorithm.SHA_256;
+	private String entryPoint;
 
 	public DoubleZipBuilder(final CsarBuilder csarBuilder) {
 		this.entries = new ArrayList<>();
@@ -69,6 +70,11 @@ public class DoubleZipBuilder {
 
 	public DoubleZipBuilder addEntry(final File file, final String zipName) {
 		entries.add(new Sol004Entry(file, zipName, defaultHash));
+		return this;
+	}
+
+	public DoubleZipBuilder entryPoint(final String string) {
+		this.entryPoint = string;
 		return this;
 	}
 
@@ -132,6 +138,9 @@ public class DoubleZipBuilder {
 	}
 
 	private String findEntryPoint() {
+		if (entryPoint != null) {
+			return entryPoint;
+		}
 		return entries.stream()
 				.map(Sol004Entry::getFile)
 				.map(File::getName)
