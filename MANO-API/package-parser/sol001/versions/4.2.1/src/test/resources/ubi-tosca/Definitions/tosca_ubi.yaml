@@ -159,21 +159,6 @@ topology_template:
           properties:
             key: value
       properties:
-        sw_image_data:
-          name: cirros
-          provider: provider
-          version: 1.0.0
-          supported_virtualisation_environments:
-            - test
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          size: 1 Gib
-          min_disk: 6 GiB
-          min_ram: 2 GiB
-          operating_system: centos8
         nfvi_constraints:
           key: value
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
@@ -251,17 +236,6 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
-        sw_image_data:
-          name: cirros
-          version: 1.0.0
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          min_disk: 6 GB
-          min_ram: 2 GB
-          operating_system: centos8
       capabilities:
         virtual_compute:
           virtual_memory:

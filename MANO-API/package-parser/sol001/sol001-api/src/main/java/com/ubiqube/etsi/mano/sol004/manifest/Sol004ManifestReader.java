@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.sol004.Sol004Exception;
-import com.ubiqube.parser.tosca.ParseException;
 
 /**
  *
@@ -57,7 +56,7 @@ public class Sol004ManifestReader {
 				lines.add(reader.readLine());
 			}
 		} catch (final IOException e) {
-			throw new ParseException(e);
+			throw new Sol004Exception(e);
 		}
 		parseManifest(lines);
 	}
@@ -69,7 +68,7 @@ public class Sol004ManifestReader {
 				lines.add(reader.readLine());
 			}
 		} catch (final IOException e) {
-			throw new ParseException(e);
+			throw new Sol004Exception(e);
 		}
 		parseManifest(lines);
 	}
@@ -94,7 +93,7 @@ public class Sol004ManifestReader {
 		final ManifestParsingContext rootCtx = new ManifestParsingContext(lines);
 		while (rootCtx.haveNext()) {
 			final String line = rootCtx.getNextLine();
-			if ((null == line) || line.startsWith("#")) {
+			if (null == line || line.startsWith("#")) {
 				return;
 			}
 			if (isSignatureToken(line)) {
@@ -150,7 +149,7 @@ public class Sol004ManifestReader {
 	private static KeyValue parseKeyValue(final String line) {
 		final int i = line.indexOf(':');
 		if (-1 == i) {
-			throw new ParseException("Unable to find ':' in current line [" + line + "]");
+			throw new Sol004Exception("Unable to find ':' in current line [" + line + "]");
 		}
 		final String key = line.substring(0, i);
 		final String value = line.substring(i + 1).trim();

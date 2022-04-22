@@ -42,6 +42,11 @@ import com.ubiqube.parser.tosca.api.ArtefactInformations;
 
 import jakarta.validation.constraints.NotNull;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class CsarParserImpl implements CsarParser {
 	private final FileObject csar;
 	private Properties props;
@@ -93,7 +98,9 @@ public class CsarParserImpl implements CsarParser {
 		final FileObject dir = fileObject.getChild("TOSCA-Metadata");
 		final FileObject fil = dir.getChild("TOSCA.meta");
 		final FileContent cont = fil.getContent();
-		props.load(new ByteArrayInputStream(cont.getByteArray()));
+		final byte[] bytes = cont.getByteArray();
+		System.out.println(new String(bytes));
+		props.load(new ByteArrayInputStream(bytes));
 		return props;
 	}
 
@@ -140,7 +147,7 @@ public class CsarParserImpl implements CsarParser {
 	}
 
 	private static String doFriendlyName(final String filename) {
-		// XXX: I don'tkown how to the original file name.
+		// XXX: I don'tkown how to get the original file name.
 		final int idx = filename.indexOf("!/");
 		if (idx > 0) {
 			return filename.substring(idx + 2);
@@ -195,6 +202,7 @@ public class CsarParserImpl implements CsarParser {
 		FileObject res2;
 		try {
 			res2 = csar.resolveFile(fileName);
+			resolver.setParent(res2.getParent());
 			return res2.getContent().getByteArray();
 		} catch (final IOException e) {
 			throw new ParseException(e);

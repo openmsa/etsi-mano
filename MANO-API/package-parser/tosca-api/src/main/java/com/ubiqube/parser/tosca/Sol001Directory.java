@@ -26,7 +26,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.ubiqube.parser.tosca.api.ArtefactInformations;
@@ -62,7 +61,7 @@ public class Sol001Directory extends AbstractSol001Fs {
 			return stream.map(x -> x.relativize(root))
 					.map(Path::toFile)
 					.map(AbstractSol001Fs::map)
-					.collect(Collectors.toList());
+					.toList();
 		} catch (final IOException e) {
 			throw new ParseException(e);
 		}

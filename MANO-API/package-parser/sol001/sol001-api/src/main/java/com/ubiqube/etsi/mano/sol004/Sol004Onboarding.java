@@ -16,28 +16,91 @@
  */
 package com.ubiqube.etsi.mano.sol004;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.etsi.mano.sol004.vfs.DirectVfs;
+import com.ubiqube.etsi.mano.sol004.vfs.DirectZip;
+import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class Sol004Onboarding {
+
+	private static final Logger LOG = LoggerFactory.getLogger(Sol004Onboarding.class);
+
 	private static final Pattern ZIP_MATCHER = Pattern.compile(".*\\.(zip)");
 	private static final Pattern CSAR_MATCHER = Pattern.compile(".*\\.(csar)");
+	private CsarArchive csar;
+	private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-	boolean isTosca(final String fileName) {
+	@SuppressWarnings("static-method")
+	CsarModeEnum getToscaMode(final String fileName) {
 		if (isCsarExtension(fileName)) {
-			return true;
+			return CsarModeEnum.SINGLE_ZIP;
 		}
 		if (!isZipExtension(fileName)) {
-			return false;
+			if (tryYaml(fileName)) {
+				return CsarModeEnum.SINGLE_FILE;
+			}
+			return CsarModeEnum.UNKNOWN;
 		}
 		final List<String> fileList = getFileList(fileName);
-		return fileList.stream().anyMatch(x -> x.endsWith(".csar"));
+		final boolean haveCsarFile = fileList.stream().anyMatch(x -> x.endsWith(".csar"));
+		if (haveCsarFile) {
+			return CsarModeEnum.DOUBLE_ZIP;
+		}
+		if (checkMetaFolder(fileList)) {
+			return CsarModeEnum.SINGLE_ZIP;
+		}
+
+		return CsarModeEnum.UNKNOWN;
+	}
+
+	private static boolean checkMetaFolder(final List<String> fileList) {
+		return fileList.stream().anyMatch("TOSCA-Metadata/TOSCA.meta"::equals);
+	}
+
+	private boolean tryYaml(final String fileName) {
+		try {
+			final JsonNode tree = mapper.readTree(new File(fileName));
+			final Optional<JsonNode> value = Optional.ofNullable(tree.findValue("tosca_definitions_version"));
+			return value.isPresent();
+		} catch (final IOException e) {
+			LOG.trace("", e);
+			LOG.info("Not a CSAR file.");
+			return false;
+		}
+	}
+
+	public void onboard(final String filename) {
+		final File file = new File(filename);
+		VirtualFileSystem vfs;
+		if (file.isDirectory()) {
+			vfs = new DirectVfs(Paths.get(filename));
+		} else {
+			vfs = new DirectZip(Paths.get(filename));
+		}
+		this.csar = new CsarArchive(vfs, filename);
+
 	}
 
 	private static List<String> getFileList(final String fileName) {

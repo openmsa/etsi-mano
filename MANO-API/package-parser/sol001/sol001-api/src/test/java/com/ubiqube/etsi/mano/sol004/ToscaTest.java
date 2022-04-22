@@ -16,46 +16,64 @@
  */
 package com.ubiqube.etsi.mano.sol004;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
+import com.ubiqube.etsi.mano.sol004.ZipUtil.Entry;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectVfs;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectZip;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
 
-public class ToscaTest {
+@SuppressWarnings("static-method")
+class ToscaTest {
 
-	@Test
-	void testName() throws Exception {
-		final Sol004Onboarding so = new Sol004Onboarding();
-		so.isTosca("/home/olivier/workspace/workspace17.1.1/ubi-etsi-mano/package-parser/demo/ubi-vnffg-nsd.csar");
+	private static void buildCertCsar() throws IOException {
+		ZipUtil.makeToscaZip("/tmp/tosca.csar", Entry.of("sol004-single/sample.cert", "sample.cert"),
+				Entry.of("sol004-single/ubi-tm21-vnf.csar", "ubi-tm21-vnf.csar"),
+				Entry.of("sol004-single/ubi-tm21-vnf.csar.sig.cms", "ubi-tm21-vnf.csar.sig.cms"));
+	}
+
+	private static void buildScaleCsar() throws IOException {
+		ZipUtil.makeToscaZip("/tmp/tosca.csar", Entry.of("scale-vnf/Definitions/tosca_ubi_scale.yaml", "Definitions/tosca_ubi_scale.yaml"),
+				Entry.of("scale-vnf/Definitions/etsi_nfv_sol001_vnfd_types.yaml", "Definitions/etsi_nfv_sol001_vnfd_types.yaml"),
+				Entry.of("scale-vnf/TOSCA-Metadata/manifest.mf", "TOSCA-Metadata/manifest.mf"),
+				Entry.of("scale-vnf/TOSCA-Metadata/metadata", "TOSCA-Metadata/metadata"),
+				Entry.of("scale-vnf/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
+	}
+
+	private static void buildVnffgNsdCsar() throws IOException {
+		ZipUtil.makeToscaZip("/tmp/tosca.csar", Entry.of("vnffg-nsd/Definitions/nsd_ubi.yaml", "Definitions/nsd_ubi.yaml"),
+				Entry.of("vnffg-nsd/Definitions/etsi_nfv_sol001_nsd_types.yaml", "Definitions/etsi_nfv_sol001_nsd_types.yaml"),
+				Entry.of("vnffg-nsd/manifest.mf", "manifest.mf"),
+				Entry.of("vnffg-nsd/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 	}
 
 	@Test
-	void testFile() throws Exception {
-		final Path root = Paths.get("/home/olivier/tmp/");
-		Files.walk(root).forEach(x -> System.out.println(root.relativize(x).toString()));
+	void testName() throws Exception {
+		buildVnffgNsdCsar();
+		final Sol004Onboarding so = new Sol004Onboarding();
+		so.getToscaMode("/tmp/tosca.csar");
 	}
 
 	@Test
 	void testAll() {
-		final VirtualFileSystem vfs = new DirectVfs(Paths.get("/home/olivier/workspace/workspace17.1.1/ubi-etsi-mano/package-parser/demo/vnffg-nsd"));
-		final ToscaArchive ta = new ToscaArchive(vfs, "test.zip");
+		final VirtualFileSystem vfs = new DirectVfs(Paths.get("src/test/resources/vnffg-nsd/"));
+		final CsarArchive ta = new CsarArchive(vfs, "test.zip");
 	}
 
 	@Test
-	void testFlat() {
-		final VirtualFileSystem vfs = new DirectVfs(Paths.get("/home/olivier/workspace/workspace17.1.1/ubi-etsi-mano/package-parser/demo/sol004-single"));
-		final ToscaArchive ta = new ToscaArchive(vfs, "test.zip");
-
+	void testFlat() throws IOException {
+		buildCertCsar();
+		final VirtualFileSystem vfs = new DirectVfs(Paths.get("/tmp/tosca.csar"));
+		final CsarArchive ta = new CsarArchive(vfs, "test.zip");
 	}
 
 	@Test
-	void testZip01() {
-		final VirtualFileSystem vfs = new DirectZip(Paths.get("/home/olivier/workspace/workspace17.1.1/ubi-etsi-mano/package-parser/demo/ubi-scale-vnf.csar"));
-		final ToscaArchive ta = new ToscaArchive(vfs, "ubi-vnffg-nsd.csar");
+	void testZip01() throws IOException {
+		buildScaleCsar();
+		final VirtualFileSystem vfs = new DirectZip(Paths.get("/tmp/tosca.csar"));
+		final CsarArchive ta = new CsarArchive(vfs, "ubi-vnffg-nsd.csar");
 	}
 }

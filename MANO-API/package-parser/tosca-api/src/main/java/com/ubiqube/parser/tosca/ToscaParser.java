@@ -40,11 +40,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public class ToscaParser {
 	private ToscaContext context;
-	final ObjectMapper mapper = getMapper();
+	private final ObjectMapper mapper = getMapper();
 	private Sol001FileSystem fs;
 
 	public ToscaParser(final File filename) {
-		final IResolver resolver;
 		fs = Sol001FileFactory.of(filename);
 		final ToscaVersion tv = fs.getToscaVersion();
 		try {
@@ -60,7 +59,6 @@ public class ToscaParser {
 	}
 
 	public ToscaParser(final String content, final IResolver resolver) {
-		final ObjectMapper mapper = getMapper();
 		try {
 			final ToscaRoot root = mapper.readValue(content, ToscaRoot.class);
 			context = new ToscaContext(root, resolver);

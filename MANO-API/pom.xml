@@ -25,9 +25,6 @@
 		<module>mano-core-api</module>
 		<module>mano-commons</module>
 		<module>mano-model</module>
-		<module>mec-common</module>
-		<module>mec-meo-core</module>
-		<module>mec-mepm-core</module>
 		<module>orchestration</module>
 		<module>front-controllers</module>
 		<module>mano-vim</module>
@@ -36,6 +33,7 @@
 		<module>discovery</module>
 		<module>montoring</module>
 		<module>repository</module>
+		<module>event</module>
 	</modules>
 	<properties>
 		<sonar.jacoco.xmlReportPaths>${project.basedir}/../target/site/jacoco-aggregate/jacoco.xml</sonar.jacoco.xmlReportPaths>

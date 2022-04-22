@@ -139,6 +139,7 @@ topology_template:
                   floating_ip_activated: true
                   ip_address_type: ipv4
                   number_of_ip_address: 10
+                  fixed_ip_address: [ 10.31.1.1 ]
         trunk_mode: false
       requirements:
         - external_virtual_link: public

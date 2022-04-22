@@ -47,7 +47,7 @@ public class VfsResolver extends Resolver {
 	private static final Logger LOG = LoggerFactory.getLogger(VfsResolver.class);
 	final Pattern urlMatcher = Pattern.compile("(?<!\\\\):");
 	private FileObject parent;
-	Set<String> imported = new LinkedHashSet<>();
+	private final Set<String> imported = new LinkedHashSet<>();
 
 	public VfsResolver() {
 		super(null);

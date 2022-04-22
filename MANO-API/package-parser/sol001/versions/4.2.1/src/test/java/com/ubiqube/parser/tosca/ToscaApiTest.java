@@ -229,7 +229,6 @@ class ToscaApiTest {
 				if (!ignore.contains(methodDescriptor.getName())) {
 					LOG.warn("  - {} is null at {}", methodDescriptor.getName(), buildError(stack));
 					err.add(buildError(stack));
-
 				}
 				stack.pop();
 				continue;
