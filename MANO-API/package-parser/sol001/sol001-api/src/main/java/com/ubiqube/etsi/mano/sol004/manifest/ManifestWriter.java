@@ -22,10 +22,10 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import com.ubiqube.etsi.mano.sol004.Sol004Exception;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.Certificate;
-import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.SignatureElements;
 
 /**
  *
@@ -48,7 +48,6 @@ public class ManifestWriter {
 		writer.write("metadata:\n");
 		if (!keyValues.isEmpty()) {
 			keyValues.entrySet().forEach(x -> writeKeyValue(writer, x));
-			writer.write("\n");
 		}
 		sigs.forEach(x -> writeSignature(writer, x));
 		cms.forEach(x -> writeCertificates(writer, x));
@@ -57,7 +56,7 @@ public class ManifestWriter {
 	private static void writeCertificates(final Writer writer, final Certificate x) {
 		try {
 			writer.write(String.format("----- BEGIN %s -----%n", x.algo()));
-			writer.write(String.format("%s%n", Base64.getEncoder().encode(x.payload())));
+			writer.write(String.format("%s%n", Base64.getEncoder().encodeToString(x.payload())));
 			writer.write(String.format("----- END %s -----%n", x.algo()));
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
@@ -66,20 +65,20 @@ public class ManifestWriter {
 
 	private static void writeSignature(final Writer writer, final SignatureElements x) {
 		try {
-			writer.write(String.format("Source: %s%n", x.source()));
-			if (x.algorithm() != null) {
-				writer.write(String.format("Algorithm: %s%n", x.algorithm()));
-			}
-			if (x.hash() != null) {
-				writer.write(String.format("Hash: %s%n", x.hash()));
-			}
-			if (x.certificate() != null) {
-				writer.write(String.format("Certificate: %s%n", x.certificate()));
-			}
-			if (x.signature() != null) {
-				writer.write(String.format("Signature: %s%n", x.signature()));
-			}
+			writer.write(String.format("Source: %s%n", x.getSource()));
+			Optional.ofNullable(x.getAlgorithm()).ifPresent(y -> write(writer, "Algorithm: %s%n", y));
+			Optional.ofNullable(x.getHash()).ifPresent(y -> write(writer, "Hash: %s%n", y));
+			Optional.ofNullable(x.getCertificate()).ifPresent(y -> write(writer, "Certificate: %s%n", y));
+			Optional.ofNullable(x.getSignature()).ifPresent(y -> write(writer, "Signature: %s%n", y));
 			writer.write("\n");
+		} catch (final IOException e) {
+			throw new Sol004Exception(e);
+		}
+	}
+
+	private static void write(final Writer writer, final String format, final String value) {
+		try {
+			writer.write(String.format(format, value));
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}
@@ -87,7 +86,7 @@ public class ManifestWriter {
 
 	private static void writeKeyValue(final Writer writer, final Entry<String, String> x) {
 		try {
-			writer.write(x.getKey() + ": " + x.getValue());
+			writer.write(String.format("%s: %s%n", x.getKey(), x.getValue()));
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}

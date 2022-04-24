@@ -38,8 +38,8 @@ import com.ubiqube.etsi.mano.sol004.CryptoUtils;
 import com.ubiqube.etsi.mano.sol004.Sol004Exception;
 import com.ubiqube.etsi.mano.sol004.crypto.SignatureInputStream;
 import com.ubiqube.etsi.mano.sol004.manifest.ManifestWriter;
+import com.ubiqube.etsi.mano.sol004.manifest.SignatureElements;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.Certificate;
-import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.SignatureElements;
 import com.ubiqube.etsi.mano.sol004.metafile.MetaFileWriter;
 
 /**
@@ -209,7 +209,7 @@ public class DoubleZipBuilder {
 
 	private void addSignatureEntry(final ZipOutputStream out, final SignatureInputStream signatureInputStream, final Sol004Entry entry) throws IOException {
 		final String pubx509 = cert.getX509Signature(signatureInputStream);
-		final String certFileName = entry.getZipName() + ".p7s";
+		final String certFileName = entry.getZipName() + ".sig.p7s";
 		out.putNextEntry(new ZipEntry(certFileName));
 		out.write(pubx509.getBytes());
 		out.closeEntry();

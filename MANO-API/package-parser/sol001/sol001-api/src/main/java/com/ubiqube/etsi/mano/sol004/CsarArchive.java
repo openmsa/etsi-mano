@@ -27,9 +27,9 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.sol004.manifest.SignatureElements;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.Certificate;
-import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.SignatureElements;
 import com.ubiqube.etsi.mano.sol004.metafile.ToscaMetaFile;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
 
@@ -49,6 +49,8 @@ public class CsarArchive {
 	private CsarModeEnum csarMode;
 
 	private String csarFile;
+
+	private ToscaMetaFile tmf;
 
 	/**
 	 *
@@ -73,7 +75,18 @@ public class CsarArchive {
 			handleMetafile(metaFile.get());
 			return;
 		}
+		registerGlobalCertificate(list);
 		LOG.warn("Could not find CSAR metafile.");
+	}
+
+	private void registerGlobalCertificate(final List<String> list) {
+		final List<String> l = list.stream().filter(x -> Sol004Utils.getSignaturePattern(x).matcher(x).find()).toList();
+		if (l.isEmpty()) {
+			return;
+		}
+
+		final byte[] content = vfs.getFileContent(l.get(0));
+		globalCertificate.add(new Certificate("algo", content));
 	}
 
 	public List<CsarError> validate() {
@@ -81,20 +94,23 @@ public class CsarArchive {
 	}
 
 	private CsarError checkSignature(final SignatureElements sig) {
-		try (InputStream stream = vfs.getInputStream(sig.source())) {
-			if (sig.hash() != null) {
-				final String algorithm = sig.algorithm();
-				final String hash = sig.hash();
+		try (InputStream stream = vfs.getInputStream(sig.getSource())) {
+			if (sig.getHash() != null) {
+				final String algorithm = sig.getAlgorithm();
+				final String hash = sig.getHash();
 				final boolean res = CryptoUtils.checkHash(stream, algorithm, hash);
 				if (!res) {
-					return new CsarError(sig.source());
+					return new CsarError(sig.getSource());
 				}
 			}
-			if (sig.certificate() != null) {
-				final String cert = sig.certificate();
-				final boolean res = CryptoUtils.verify(stream, cert.getBytes(), sig.signature().getBytes());
+			if (sig.getCertificate() != null) {
+				final byte[] cert = vfs.getFileContent(sig.getCertificate());
+				CryptoUtils.pemPublicKey(cert);
+				final byte[] sigBytes = vfs.getFileContent(sig.getSignature());
+				// CryptoUtils.pemSignature(sigBytes);
+				final boolean res = CryptoUtils.verify(stream, cert, sigBytes);
 				if (!res) {
-					return new CsarError(sig.source());
+					return new CsarError(sig.getSource());
 				}
 			}
 		} catch (final IOException e) {
@@ -124,7 +140,7 @@ public class CsarArchive {
 	}
 
 	private static String findFlatSig(final List<String> list, final String csarFile) {
-		final Pattern p = Pattern.compile(csarFile + ".*\\.sig\\..*$");
+		final Pattern p = Sol004Utils.getSignaturePattern(csarFile);
 		return list.stream()
 				.filter(x -> p.matcher(x).find())
 				.findFirst()
@@ -150,7 +166,6 @@ public class CsarArchive {
 	}
 
 	private void handleMetafile(final String metaFilename) {
-		final ToscaMetaFile tmf;
 		try (final InputStream stream = vfs.getInputStream(metaFilename)) {
 			tmf = ToscaMetaFile.of(stream);
 		} catch (final IOException e) {
@@ -165,9 +180,28 @@ public class CsarArchive {
 			globalCertificate = reader.getCms();
 			signatures = reader.getSigs();
 			verifier = new ArtefactVerifier(reader);
+			rebuildCert();
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}
+	}
+
+	/**
+	 * Always overwrite certificate in metafile if a local one exist.
+	 */
+	private void rebuildCert() {
+		signatures.stream()
+				.filter(x -> x.getCertificate() != null)
+				.forEach(x -> {
+					final List<String> res = vfs.getFileMatching(Sol004Utils.getSignatureWildcard(x.getSource()));
+					if (res.isEmpty()) {
+						return;
+					}
+					if (res.size() > 1) {
+						throw new Sol004Exception("Multiples signature match the current source " + x.getSource() + " => " + res);
+					}
+					x.setSignature(res.get(0));
+				});
 	}
 
 	private static Optional<String> locateMetaFile(final List<String> list) {
@@ -178,9 +212,15 @@ public class CsarArchive {
 		if (csarMode == CsarModeEnum.DOUBLE_ZIP) {
 			return vfs.getInputStream(csarFile);
 		}
-		if (csarMode == CsarModeEnum.SINGLE_ZIP) {
-		}
-		return null;
+		throw new Sol004Exception("Unsupported operation: " + csarMode);
+	}
+
+	public ToscaMetaFile getMetaFile() {
+		return this.tmf;
+	}
+
+	public InputStream getInputStream(final String fileName) {
+		return vfs.getInputStream(fileName);
 	}
 
 }

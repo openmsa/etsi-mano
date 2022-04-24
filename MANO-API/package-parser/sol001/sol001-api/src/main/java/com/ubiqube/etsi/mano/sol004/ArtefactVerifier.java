@@ -22,9 +22,9 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
+import com.ubiqube.etsi.mano.sol004.manifest.SignatureElements;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.Certificate;
-import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.SignatureElements;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
 
 /**
@@ -90,13 +90,13 @@ public class ArtefactVerifier {
 	private boolean handleSig(final SignatureElements signatureElements, final InputStream content) {
 		boolean result = true;
 		boolean haveCheck = false;
-		if (signatureElements.algorithm() != null && signatureElements.hash() != null) {
-			result &= CryptoUtils.checkHash(content, signatureElements.algorithm(), signatureElements.hash());
+		if (signatureElements.getAlgorithm() != null && signatureElements.getHash() != null) {
+			result &= CryptoUtils.checkHash(content, signatureElements.getAlgorithm(), signatureElements.getHash());
 			haveCheck = true;
 		}
 		final byte[] cert = getCCertificate(signatureElements);
-		if (cert.length != 0 && signatureElements.signature() != null) {
-			result &= checkSignature(content, cert, signatureElements.signature());
+		if (cert.length != 0 && signatureElements.getSignature() != null) {
+			result &= checkSignature(content, cert, signatureElements.getSignature());
 			haveCheck = true;
 		}
 		if (!haveCheck) {
@@ -106,8 +106,8 @@ public class ArtefactVerifier {
 	}
 
 	private byte @NotNull [] getCCertificate(final SignatureElements signatureElements) {
-		if (signatureElements.certificate() != null) {
-			return vfs.getFileContent(signatureElements.certificate());
+		if (signatureElements.getCertificate() != null) {
+			return vfs.getFileContent(signatureElements.getCertificate());
 		}
 		if (mr.getCms().isEmpty()) {
 			return new byte[0];
@@ -121,6 +121,6 @@ public class ArtefactVerifier {
 	}
 
 	private Optional<SignatureElements> find(final String filename) {
-		return mr.getSigs().stream().filter(x -> x.source().equals(filename)).findFirst();
+		return mr.getSigs().stream().filter(x -> x.getSource().equals(filename)).findFirst();
 	}
 }

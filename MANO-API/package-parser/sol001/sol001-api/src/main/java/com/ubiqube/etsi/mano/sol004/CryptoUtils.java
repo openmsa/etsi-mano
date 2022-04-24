@@ -16,10 +16,12 @@
  */
 package com.ubiqube.etsi.mano.sol004;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
@@ -170,8 +173,22 @@ public final class CryptoUtils {
 		}
 	}
 
+	public static X509Certificate pemPublicKey(final byte[] cert) {
+		final Reader reader = new InputStreamReader(new ByteArrayInputStream(cert));
+		try {
+			return pemPublicReader(reader);
+		} catch (CertificateException | IOException e) {
+			throw new Sol004Exception(e);
+		}
+	}
+
 	private static X509Certificate pemPublicX509Ex(final File file) throws IOException, CertificateException {
-		final Reader reader = new FileReader(file);
+		try (final Reader reader = new FileReader(file)) {
+			return pemPublicReader(reader);
+		}
+	}
+
+	private static X509Certificate pemPublicReader(final Reader reader) throws IOException, CertificateException {
 		try (final PEMParser pem = new PEMParser(reader)) {
 			final Object obj = pem.readObject();
 			if (obj instanceof final X509CertificateHolder x509) {
@@ -198,6 +215,9 @@ public final class CryptoUtils {
 		}
 		if (obj instanceof final PEMKeyPair kp) {
 			return kp.getPrivateKeyInfo();
+		}
+		if (obj instanceof final PrivateKeyInfo kp) {
+			return kp;
 		}
 		throw new Sol004Exception("Unable to open " + obj.getClass());
 	}
@@ -227,6 +247,17 @@ public final class CryptoUtils {
 			writer.writeObject(cms.toASN1Structure());
 		}
 		return out.toString();
+	}
+
+	public static CMSSignedData pemSignature(final byte[] sigBytes) throws IOException, CMSException {
+		final Reader reader = new InputStreamReader(new ByteArrayInputStream(sigBytes));
+		try (final PEMParser pem = new PEMParser(reader)) {
+			final Object obj = pem.readObject();
+			if (obj instanceof final ContentInfo cms) {
+				return new CMSSignedData(cms);
+			}
+			throw new Sol004Exception("Unknown public key format: " + obj.getClass());
+		}
 	}
 
 }

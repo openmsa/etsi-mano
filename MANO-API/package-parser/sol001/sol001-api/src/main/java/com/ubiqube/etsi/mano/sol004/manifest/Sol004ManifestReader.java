@@ -156,10 +156,6 @@ public class Sol004ManifestReader {
 		return new KeyValue(key, value);
 	}
 
-	public record SignatureElements(String source, String algorithm, String hash, String signature, String certificate) {
-		// Nothing.
-	}
-
 	public record KeyValue(String key, String value) {
 		// Nothing.
 	}

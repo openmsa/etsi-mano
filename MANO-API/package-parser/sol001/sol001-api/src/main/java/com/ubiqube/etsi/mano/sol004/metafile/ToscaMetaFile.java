@@ -80,4 +80,8 @@ public class ToscaMetaFile {
 				.orElseGet(() -> props.get("Entry-Definitions"));
 	}
 
+	public String getKey(final String key) {
+		return (String) props.get(key);
+	}
+
 }

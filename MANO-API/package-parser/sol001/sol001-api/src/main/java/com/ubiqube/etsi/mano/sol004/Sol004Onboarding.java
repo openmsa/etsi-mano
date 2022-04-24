@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.etsi.mano.sol004.metafile.ToscaMetaFile;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectVfs;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectZip;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
@@ -52,7 +53,6 @@ public class Sol004Onboarding {
 	private CsarArchive csar;
 	private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-	@SuppressWarnings("static-method")
 	CsarModeEnum getToscaMode(final String fileName) {
 		if (isCsarExtension(fileName)) {
 			return CsarModeEnum.SINGLE_ZIP;
@@ -91,7 +91,7 @@ public class Sol004Onboarding {
 		}
 	}
 
-	public void onboard(final String filename) {
+	public void preOnboard(final String filename) {
 		final File file = new File(filename);
 		VirtualFileSystem vfs;
 		if (file.isDirectory()) {
@@ -100,7 +100,10 @@ public class Sol004Onboarding {
 			vfs = new DirectZip(Paths.get(filename));
 		}
 		this.csar = new CsarArchive(vfs, filename);
+	}
 
+	public List<CsarError> validate() {
+		return csar.validate();
 	}
 
 	private static List<String> getFileList(final String fileName) {
@@ -134,5 +137,18 @@ public class Sol004Onboarding {
 
 	private static boolean isZipExtension(final String fileName) {
 		return ZIP_MATCHER.matcher(fileName).find();
+	}
+
+	public boolean isYang() {
+		final ToscaMetaFile metafile = csar.getMetaFile();
+		return metafile.getKey("yang_definitions") != null;
+	}
+
+	public InputStream getToscaEntryPoint() {
+		return csar.getInputStream(csar.getMetaFile().getEntryDefinitionFileName());
+	}
+
+	public String getToscaEntryPointFilename() {
+		return csar.getMetaFile().getEntryDefinitionFileName();
 	}
 }

@@ -66,6 +66,7 @@ class BuilderTest {
 				.ofDoubleZip()
 				.addEntry(new File("src/test/resources/scale-vnf/Definitions/etsi_nfv_sol001_vnfd_types.yaml"), "Definitions/etsi_nfv_sol001_vnfd_types.yaml")
 				.addEntry(new File("src/test/resources/scale-vnf/Definitions/tosca_ubi_scale.yaml"), "Definitions/tosca_ubi_scale.yaml")
+				.addEntry(new File("src/test/resources/tosca.csar"), "tosca.csar")
 				.entryPoint("Definitions/tosca_ubi_scale.yaml")
 				.certificate(certificateSigner)
 				.build(new File("/tmp/tosca.zip"));
