@@ -76,6 +76,10 @@ import org.bouncycastle.util.Store;
  *
  */
 public final class CryptoUtils {
+	static {
+		Security.addProvider(new BouncyCastleProvider());
+	}
+
 	private CryptoUtils() {
 		// Nothing.
 	}
@@ -249,7 +253,15 @@ public final class CryptoUtils {
 		return out.toString();
 	}
 
-	public static CMSSignedData pemSignature(final byte[] sigBytes) throws IOException, CMSException {
+	public static CMSSignedData pemSignature(final byte[] sigBytes) {
+		try {
+			return pemSignatureEx(sigBytes);
+		} catch (IOException | CMSException e) {
+			throw new Sol004Exception(e);
+		}
+	}
+
+	public static CMSSignedData pemSignatureEx(final byte[] sigBytes) throws IOException, CMSException {
 		final Reader reader = new InputStreamReader(new ByteArrayInputStream(sigBytes));
 		try (final PEMParser pem = new PEMParser(reader)) {
 			final Object obj = pem.readObject();
@@ -259,5 +271,4 @@ public final class CryptoUtils {
 			throw new Sol004Exception("Unknown public key format: " + obj.getClass());
 		}
 	}
-
 }

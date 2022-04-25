@@ -84,7 +84,7 @@ public class CryptoTest {
 	void testSign() throws Exception {
 		final PrivateKey pk2 = CryptoUtils.pemPrivateFile(new File("/home/olivier/ovi.pem"), null);
 		final X509Certificate pubx509 = CryptoUtils.pemPublicX509(new File("/home/olivier/ovi-vpn4.pem"));
-		final Signature rsaSignature = Signature.getInstance("SHA1withRSA");
+		final Signature rsaSignature = Signature.getInstance("SHA256withRSA");
 		rsaSignature.initSign(pk2);
 		try (final InputStream is = this.getClass().getClassLoader().getResourceAsStream("manifest.mf")) {
 			final SignatureInputStream sig = new SignatureInputStream(is, rsaSignature);
@@ -100,7 +100,7 @@ public class CryptoTest {
 		certList.add(pubx509);
 		final JcaCertStore certs = new JcaCertStore(certList);
 		final CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
-		final ContentSigner sha1Signer = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").build(pk2);
+		final ContentSigner sha1Signer = new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").build(pk2);
 		gen.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").build()).build(sha1Signer, pubx509));
 		gen.addCertificates(certs);
 		final CMSSignedData sigData = gen.generate(msg, false);
@@ -212,8 +212,8 @@ public class CryptoTest {
 	@Test
 	void testSigCmsLoad() throws Exception {
 		Security.addProvider(new BouncyCastleProvider());
-		final byte[] sigBytes = Files.readAllBytes(Paths.get("src/test/resources/test.pdf.pkcs7"));
-		final byte[] certBytes = Files.readAllBytes(Paths.get("src/test/resources/server.cert"));
+		final byte[] sigBytes = Files.readAllBytes(Paths.get("src/test/resources/tosca.csar.cms"));
+		final byte[] certBytes = Files.readAllBytes(Paths.get("src/test/resources/mano-qa-sol004.pub.pem"));
 		final byte[] dataBytes = Files.readAllBytes(Paths.get("src/test/resources/tosca.csar"));
 		final CMSSignedData cms = CryptoUtils.pemSignature(sigBytes);
 		final X509Certificate fullCert = CryptoUtils.pemPublicKey(certBytes);
@@ -227,7 +227,6 @@ public class CryptoTest {
 			final Iterator<X509CertificateHolder> certIt = certCollection.iterator();
 			final X509CertificateHolder certHolder = certIt.next();
 			final X509Certificate cert = new JcaX509CertificateConverter().setProvider("BC").getCertificate(certHolder);
-			extracted(dataBytes, signer, cert);
 			if (signer.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert))) {
 				System.out.println("verified");
 				extracted(dataBytes, signer, fullCert);

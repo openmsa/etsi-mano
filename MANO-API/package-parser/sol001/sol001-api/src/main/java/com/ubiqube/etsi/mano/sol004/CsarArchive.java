@@ -18,12 +18,14 @@ package com.ubiqube.etsi.mano.sol004;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import org.bouncycastle.cms.CMSSignedData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,27 +96,32 @@ public class CsarArchive {
 	}
 
 	private CsarError checkSignature(final SignatureElements sig) {
-		try (InputStream stream = vfs.getInputStream(sig.getSource())) {
-			if (sig.getHash() != null) {
+		if (sig.getHash() != null) {
+			try (InputStream stream = vfs.getInputStream(sig.getSource())) {
 				final String algorithm = sig.getAlgorithm();
 				final String hash = sig.getHash();
 				final boolean res = CryptoUtils.checkHash(stream, algorithm, hash);
 				if (!res) {
 					return new CsarError(sig.getSource());
 				}
+			} catch (final IOException e) {
+				throw new Sol004Exception(e);
 			}
-			if (sig.getCertificate() != null) {
+		}
+		if (sig.getCertificate() != null) {
+			try (InputStream stream = vfs.getInputStream(sig.getSource())) {
 				final byte[] cert = vfs.getFileContent(sig.getCertificate());
-				CryptoUtils.pemPublicKey(cert);
+				final X509Certificate certPem = CryptoUtils.pemPublicKey(cert);
 				final byte[] sigBytes = vfs.getFileContent(sig.getSignature());
-				// CryptoUtils.pemSignature(sigBytes);
-				final boolean res = CryptoUtils.verify(stream, cert, sigBytes);
+				final CMSSignedData sigPem = CryptoUtils.pemSignature(sigBytes);
+				final boolean res = CryptoUtils.verify(stream, certPem.getPublicKey().getEncoded(), sigPem.getEncoded());
 				if (!res) {
 					return new CsarError(sig.getSource());
 				}
+
+			} catch (final IOException e) {
+				throw new Sol004Exception(e);
 			}
-		} catch (final IOException e) {
-			throw new Sol004Exception(e);
 		}
 		return null;
 	}

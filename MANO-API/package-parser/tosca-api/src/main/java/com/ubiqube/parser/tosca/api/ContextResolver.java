@@ -461,13 +461,13 @@ public class ContextResolver {
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
 			methodInvoke(meth, cls, stack, ret);
-		} else if (res instanceof List) {
+		} else if (res instanceof final List l) {
 			final Method rm = x.getReadMethod();
 			final Class zz = getReturnType(rm);
 			LOG.debug("Entring List of {}", zz);
 			final PropertyDescriptor[] propsDescrNew = getPropertyDescriptor(zz);
 			logClass(zz.getName(), propsDescr);
-			final Object ret = handleList((List) res, propsDescrNew, zz, stack);
+			final Object ret = handleList(l, propsDescrNew, zz, stack);
 			LOG.debug("return: {} for property: {}", ret, x.getName());
 			final Method meth = x.getWriteMethod();
 			methodInvoke(meth, cls, stack, ret);
@@ -499,9 +499,8 @@ public class ContextResolver {
 
 	private Object resolvValue(final Object res) {
 		Object ret = null;
-		if (res instanceof Map) {
-			final Map<?, ?> map = (Map) res;
-			for (final Map.Entry<?, ?> entry : map.entrySet()) {
+		if (res instanceof final Map<?, ?> m) {
+			for (final Map.Entry<?, ?> entry : m.entrySet()) {
 				ret = handleInput(entry);
 			}
 		}
@@ -530,9 +529,9 @@ public class ContextResolver {
 		res.forEach(x -> {
 			stack.push("[" + inc.getAndIncrement() + "]");
 			Object elem = null;
-			if (x instanceof Map) {
+			if (x instanceof final Map m) {
 				try {
-					elem = handleMap((Map<String, Object>) x, generic, propsDescr, generic.getDeclaredConstructor().newInstance(), null, stack);
+					elem = handleMap(m, generic, propsDescr, generic.getDeclaredConstructor().newInstance(), null, stack);
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					throwException("Error in map", stack, e);
 				}
@@ -556,8 +555,7 @@ public class ContextResolver {
 	private static Class<?> getReturnType(final Method readMethod) {
 		LOG.debug("Return Type={}", readMethod.getReturnType());
 		final Type returnTypes = readMethod.getGenericReturnType();
-		if (returnTypes instanceof ParameterizedType) {
-			final ParameterizedType rt = (ParameterizedType) returnTypes;
+		if (returnTypes instanceof final ParameterizedType rt) {
 			final Type[] ata = rt.getActualTypeArguments();
 			if (ata.length == 1) {
 				return (Class) ata[0];

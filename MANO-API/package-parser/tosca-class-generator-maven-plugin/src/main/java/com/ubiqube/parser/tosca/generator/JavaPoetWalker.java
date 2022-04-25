@@ -282,9 +282,9 @@ public class JavaPoetWalker implements ToscaListener {
 					.addMember("inclusive", "$L", "true")
 					.build();
 			currentField.addAnnotation(builder);
-		} else if (x instanceof final ValidValues) {
+		} else if (x instanceof ValidValues) {
 			// XXX .
-		} else if (x instanceof final InRange ir) {
+		} else if (x instanceof InRange ir) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(Min.class)
 					.addMember(VALUE, "$L", Double.valueOf(ir.getMin()).intValue())
