@@ -16,9 +16,14 @@
  */
 package com.ubiqube.etsi.mano.sol004;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -31,6 +36,29 @@ public final class ZipUtil {
 
 	private ZipUtil() {
 		// Nothing.
+	}
+
+	public static void makeToscaZip(final String dest, final String folder) throws IOException {
+		final Path root = Paths.get(folder);
+		try (final FileOutputStream fos = new FileOutputStream(dest);
+				final ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+			final List<Path> files = Files.walk(root).toList();
+			for (final Path srcPath : files) {
+				if (srcPath.toFile().isDirectory()) {
+					continue;
+				}
+				final String entryPath = root.relativize(srcPath).toString();
+				try (final InputStream is = new FileInputStream(srcPath.toFile())) {
+					final ZipEntry zipEntry = new ZipEntry(entryPath);
+					zipOut.putNextEntry(zipEntry);
+					final byte[] bytes = new byte[1024];
+					int length;
+					while ((length = is.read(bytes)) >= 0) {
+						zipOut.write(bytes, 0, length);
+					}
+				}
+			}
+		}
 	}
 
 	public static void makeToscaZip(final String dest, final Entry... toscaFile) throws IOException {

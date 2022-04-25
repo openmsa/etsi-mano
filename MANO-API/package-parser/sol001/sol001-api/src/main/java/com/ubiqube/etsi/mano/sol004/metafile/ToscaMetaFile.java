@@ -46,7 +46,7 @@ public class ToscaMetaFile {
 		}
 	}
 
-	boolean check() {
+	public boolean check() {
 		if (!haveEntryDefinition() || !haveManifest() || !haveLicenses()) {
 			return false;
 		}

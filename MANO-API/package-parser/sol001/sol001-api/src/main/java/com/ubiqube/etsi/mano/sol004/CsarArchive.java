@@ -42,12 +42,9 @@ import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
  */
 public class CsarArchive {
 	private static final Logger LOG = LoggerFactory.getLogger(CsarArchive.class);
-
-	private final String filename;
 	private final VirtualFileSystem vfs;
 	private List<Certificate> globalCertificate = new ArrayList<>();
 	private List<SignatureElements> signatures = new ArrayList<>();
-	private ArtefactVerifier verifier;
 	private CsarModeEnum csarMode;
 
 	private String csarFile;
@@ -60,7 +57,6 @@ public class CsarArchive {
 	 * @param zipFilename The file name of the zip.
 	 */
 	public CsarArchive(final VirtualFileSystem vfs, final String zipFilename) {
-		this.filename = zipFilename;
 		this.vfs = vfs;
 		open();
 	}
@@ -111,9 +107,9 @@ public class CsarArchive {
 		if (sig.getCertificate() != null) {
 			try (InputStream stream = vfs.getInputStream(sig.getSource())) {
 				final byte[] cert = vfs.getFileContent(sig.getCertificate());
-				final X509Certificate certPem = CryptoUtils.pemPublicKey(cert);
+				final X509Certificate certPem = PemUtils.pemPublicKey(cert);
 				final byte[] sigBytes = vfs.getFileContent(sig.getSignature());
-				final CMSSignedData sigPem = CryptoUtils.pemSignature(sigBytes);
+				final CMSSignedData sigPem = PemUtils.pemSignature(sigBytes);
 				final boolean res = CryptoUtils.verify(stream, certPem.getPublicKey().getEncoded(), sigPem.getEncoded());
 				if (!res) {
 					return new CsarError(sig.getSource());
@@ -186,7 +182,6 @@ public class CsarArchive {
 			final Sol004ManifestReader reader = Sol004ManifestReader.of(manifestStream);
 			globalCertificate = reader.getCms();
 			signatures = reader.getSigs();
-			verifier = new ArtefactVerifier(reader);
 			rebuildCert();
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);

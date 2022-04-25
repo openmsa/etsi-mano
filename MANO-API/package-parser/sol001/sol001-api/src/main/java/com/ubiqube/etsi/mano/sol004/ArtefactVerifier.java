@@ -35,10 +35,11 @@ import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
 public class ArtefactVerifier {
 
 	private final Sol004ManifestReader mr;
-	private VirtualFileSystem vfs;
+	private final VirtualFileSystem vfs;
 
-	public ArtefactVerifier(final Sol004ManifestReader mr) {
+	public ArtefactVerifier(final Sol004ManifestReader mr, final VirtualFileSystem vfs) {
 		this.mr = mr;
+		this.vfs = vfs;
 	}
 
 	public boolean verifyArtefact(final InputStream content, final String filename) {

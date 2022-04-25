@@ -18,7 +18,14 @@ package com.ubiqube.etsi.mano.sol004;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -32,7 +39,7 @@ class OnboardingTest {
 	private final Sol004Onboarding ob = new Sol004Onboarding();
 
 	@Test
-	void testName() throws Exception {
+	void testName01() throws Exception {
 		final String fileName = "src/test/resources/tosca.csar";
 		ob.preOnboard(fileName);
 		final boolean yang = ob.isYang();
@@ -64,5 +71,29 @@ class OnboardingTest {
 			// Upload the filename.
 		}
 		System.out.println("" + mode);
+	}
+
+	@Test
+	void testDoubleOnbarding() throws IOException {
+		final Path root = Paths.get("/tmp/tosca");
+		root.toFile().mkdir();
+		Files.walk(root)
+				.sorted(Comparator.reverseOrder())
+				.map(Path::toFile)
+				.forEach(File::delete);
+		root.toFile().mkdir();
+		ZipUtil.makeToscaZip("/tmp/tosca/l1.csar", "src/test/resources/scale-vnf/");
+		copy(getClass().getResourceAsStream("/server.cert"), "/tmp/tosca/server.cert");
+		copy(getClass().getResourceAsStream("/tosca.csar.p7s"), "/tmp/tosca/l1.csar.sig.p7s");
+		ZipUtil.makeToscaZip("/tmp/test.zip", "/tmp/tosca/");
+		ob.preOnboard("/tmp/test.zip");
+		ob.getToscaMode("/tmp/test.zip");
+	}
+
+	private static void copy(final InputStream inputStream, final String file) throws IOException {
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			inputStream.transferTo(fos);
+		}
+
 	}
 }

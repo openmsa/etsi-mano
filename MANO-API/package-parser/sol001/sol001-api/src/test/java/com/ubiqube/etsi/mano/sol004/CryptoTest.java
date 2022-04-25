@@ -82,8 +82,8 @@ public class CryptoTest {
 
 	@Test
 	void testSign() throws Exception {
-		final PrivateKey pk2 = CryptoUtils.pemPrivateFile(new File("/home/olivier/ovi.pem"), null);
-		final X509Certificate pubx509 = CryptoUtils.pemPublicX509(new File("/home/olivier/ovi-vpn4.pem"));
+		final PrivateKey pk2 = PemUtils.pemPrivateFile(new File("/home/olivier/ovi.pem"), null);
+		final X509Certificate pubx509 = PemUtils.pemPublicX509(new File("/home/olivier/ovi-vpn4.pem"));
 		final Signature rsaSignature = Signature.getInstance("SHA256withRSA");
 		rsaSignature.initSign(pk2);
 		try (final InputStream is = this.getClass().getClassLoader().getResourceAsStream("manifest.mf")) {
@@ -153,7 +153,7 @@ public class CryptoTest {
 	@Test
 	void testSigLoad() throws Exception {
 		final byte[] sigBytes = Files.readAllBytes(Paths.get("src/test/resources/tosca.csar.p7s"));
-		CryptoUtils.pemSignature(sigBytes);
+		PemUtils.pemSignature(sigBytes);
 		assertTrue(true);
 	}
 
@@ -162,8 +162,8 @@ public class CryptoTest {
 		final byte[] sigBytes = Files.readAllBytes(Paths.get("src/test/resources/test.pdf.pkcs7"));
 		final byte[] certBytes = Files.readAllBytes(Paths.get("src/test/resources/server.cert"));
 		final byte[] dataBytes = Files.readAllBytes(Paths.get("src/test/resources/tosca.csar"));
-		final CMSSignedData cms = CryptoUtils.pemSignature(sigBytes);
-		final X509Certificate fullCert = CryptoUtils.pemPublicKey(certBytes);
+		final CMSSignedData cms = PemUtils.pemSignature(sigBytes);
+		final X509Certificate fullCert = PemUtils.pemPublicKey(certBytes);
 		final SignerInformation signer = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
 		extracted(dataBytes, signer, fullCert);
 		assertTrue(true);
@@ -177,9 +177,9 @@ public class CryptoTest {
 		final byte[] sigBytes = Files.readAllBytes(Paths.get("src/test/resources/test.pdf.p7s.2"));
 		final byte[] certBytes = Files.readAllBytes(Paths.get("src/test/resources/server.cert"));
 		final byte[] dataBytes = Files.readAllBytes(Paths.get("src/test/resources/tosca.csar"));
-		final CMSSignedData cms = CryptoUtils.pemSignature(sigBytes);
-		final X509Certificate fullCert = CryptoUtils.pemPublicKey(certBytes);
-		final PrivateKey pk = CryptoUtils.pemPrivateFile(new File("src/test/resources/server.key"), null);
+		final CMSSignedData cms = PemUtils.pemSignature(sigBytes);
+		final X509Certificate fullCert = PemUtils.pemPublicKey(certBytes);
+		final PrivateKey pk = PemUtils.pemPrivateFile(new File("src/test/resources/server.key"), null);
 		final SignerInformation signer = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
 		final Signature sig = Signature.getInstance(ALGO);
 		final AlgorithmParameters pss1 = sig.getParameters();
@@ -215,8 +215,8 @@ public class CryptoTest {
 		final byte[] sigBytes = Files.readAllBytes(Paths.get("src/test/resources/tosca.csar.cms"));
 		final byte[] certBytes = Files.readAllBytes(Paths.get("src/test/resources/mano-qa-sol004.pub.pem"));
 		final byte[] dataBytes = Files.readAllBytes(Paths.get("src/test/resources/tosca.csar"));
-		final CMSSignedData cms = CryptoUtils.pemSignature(sigBytes);
-		final X509Certificate fullCert = CryptoUtils.pemPublicKey(certBytes);
+		final CMSSignedData cms = PemUtils.pemSignature(sigBytes);
+		final X509Certificate fullCert = PemUtils.pemPublicKey(certBytes);
 		final Store store = cms.getCertificates();
 		final SignerInformationStore signers = cms.getSignerInfos();
 		final Collection<SignerInformation> c = signers.getSigners();
