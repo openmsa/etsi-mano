@@ -47,7 +47,7 @@ import com.ubiqube.etsi.mano.sol004.crypto.SignatureInputStream;
  */
 public class Pkcs7Certificate implements CertificateSigner {
 
-	private static final String SHA1WITH_RSA = "SHA1withRSA";
+	private static final String SHA1WITH_RSA = "SHA256withRSA";
 	private final PrivateKey privKey;
 	private final X509Certificate pubKey;
 	private final File publicFile;

@@ -82,4 +82,8 @@ public abstract class AbstractSol001Fs implements Sol001FileSystem {
 		return ai;
 	}
 
+	public Optional<Sol001Version> getSol001Version() {
+		return sol001Version;
+	}
+
 }

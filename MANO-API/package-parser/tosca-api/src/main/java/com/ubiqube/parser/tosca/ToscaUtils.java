@@ -39,7 +39,7 @@ public final class ToscaUtils {
 	public static String computeChecksum(final InputStream data) {
 		try (DigestInputStream dis = new DigestInputStream(data, MessageDigest.getInstance(SHA_512))) {
 			while (data.read() != -1) {
-				;
+				// Read all.
 			}
 			return getChecksum(dis);
 		} catch (final IOException | NoSuchAlgorithmException e) {

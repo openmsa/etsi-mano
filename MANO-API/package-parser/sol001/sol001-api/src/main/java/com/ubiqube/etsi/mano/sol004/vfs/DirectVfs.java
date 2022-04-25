@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import com.ubiqube.etsi.mano.sol004.Sol004Exception;
 
@@ -55,10 +56,10 @@ public class DirectVfs implements VirtualFileSystem {
 	@Override
 	public List<String> getFileMatching(final String filenameWildcard) {
 		final Pattern p = Pattern.compile(filenameWildcard);
-		try {
-			return Files.walk(root)
+		try (Stream<Path> w = Files.walk(root)) {
+			return w
 					.filter(x -> p.matcher(x.getFileName().toString()).find())
-					.map(x -> root.relativize(x))
+					.map(root::relativize)
 					.map(Path::toString)
 					.toList();
 		} catch (final IOException e) {

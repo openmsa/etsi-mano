@@ -99,7 +99,6 @@ public class CsarParserImpl implements CsarParser {
 		final FileObject fil = dir.getChild("TOSCA.meta");
 		final FileContent cont = fil.getContent();
 		final byte[] bytes = cont.getByteArray();
-		System.out.println(new String(bytes));
 		props.load(new ByteArrayInputStream(bytes));
 		return props;
 	}

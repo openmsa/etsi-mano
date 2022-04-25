@@ -18,12 +18,15 @@ package com.ubiqube.parser.tosca.convert;
 
 import com.ubiqube.parser.tosca.ParseException;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 public class DoubleConverterToFloat implements Converter<Object> {
-
 	@Override
 	public Object convert(final Object value) {
-		if (value instanceof Float) {
-			final Float dbl = (Float) value;
+		if (value instanceof final Float dbl) {
 			return dbl.doubleValue();
 		}
 		throw new ParseException("Can't convert " + value.getClass());

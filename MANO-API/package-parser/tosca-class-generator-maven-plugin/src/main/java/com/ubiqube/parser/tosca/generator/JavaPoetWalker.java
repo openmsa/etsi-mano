@@ -250,42 +250,41 @@ public class JavaPoetWalker implements ToscaListener {
 
 	@Override
 	public void onFieldConstraints(final Constraint x) {
-		if (x instanceof Pattern) {
+		if (x instanceof final Pattern p) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(javax.validation.constraints.Pattern.class)
-					.addMember("regexp", "$L", ((Pattern) x).getValue())
+					.addMember("regexp", "$L", p.getValue())
 					.build();
 			currentField.addAnnotation(builder);
-		} else if (x instanceof GreaterOrEqual) {
+		} else if (x instanceof final GreaterOrEqual goe) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(DecimalMin.class)
-					.addMember(VALUE, "$L", "\"" + ((GreaterOrEqual) x).getValue() + "\"")
+					.addMember(VALUE, "$L", "\"" + goe.getValue() + "\"")
 					.addMember("inclusive", "$L", "true")
 					.build();
 			currentField.addAnnotation(builder);
-		} else if (x instanceof GreaterThan) {
+		} else if (x instanceof final GreaterThan gt) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(DecimalMin.class)
-					.addMember(VALUE, "$L", "\"" + ((GreaterThan) x).getValue() + "\"")
+					.addMember(VALUE, "$L", "\"" + gt.getValue() + "\"")
 					.build();
 			currentField.addAnnotation(builder);
-		} else if (x instanceof LessOrEqual) {
+		} else if (x instanceof final LessOrEqual loe) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(DecimalMax.class)
-					.addMember(VALUE, "$L", "\"" + ((LessOrEqual) x).getValue() + "\"")
+					.addMember(VALUE, "$L", "\"" + loe.getValue() + "\"")
 					.build();
 			currentField.addAnnotation(builder);
-		} else if (x instanceof LessThan) {
+		} else if (x instanceof final LessThan lt) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(DecimalMax.class)
-					.addMember(VALUE, "$L", "\"" + ((LessThan) x).getValue() + "\"")
+					.addMember(VALUE, "$L", "\"" + lt.getValue() + "\"")
 					.addMember("inclusive", "$L", "true")
 					.build();
 			currentField.addAnnotation(builder);
-		} else if (x instanceof ValidValues) {
+		} else if (x instanceof final ValidValues) {
 			// XXX .
-		} else if (x instanceof InRange) {
-			final InRange ir = (InRange) x;
+		} else if (x instanceof final InRange ir) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(Min.class)
 					.addMember(VALUE, "$L", Double.valueOf(ir.getMin()).intValue())
@@ -296,15 +295,13 @@ public class JavaPoetWalker implements ToscaListener {
 					.addMember(VALUE, "$L", Double.valueOf(ir.getMax()).intValue())
 					.build();
 			currentField.addAnnotation(b2);
-		} else if (x instanceof MinLength) {
-			final MinLength ml = (MinLength) x;
+		} else if (x instanceof final MinLength ml) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(javax.validation.constraints.Size.class)
 					.addMember("min", "$L", Integer.parseInt(ml.getValue()))
 					.build();
 			currentField.addAnnotation(builder);
-		} else if (x instanceof MaxLength) {
-			final MaxLength ml = (MaxLength) x;
+		} else if (x instanceof final MaxLength ml) {
 			final AnnotationSpec builder = AnnotationSpec
 					.builder(javax.validation.constraints.Size.class)
 					.addMember("max", "$L", Integer.parseInt(ml.getValue()))
@@ -455,11 +452,11 @@ public class JavaPoetWalker implements ToscaListener {
 	}
 
 	private class Context {
-		final String lCurrentClassName;
-		final Builder lClassBuilder;
-		final FieldSpec.Builder lCurrentField;
-		final TypeName lCurrentFieldType;
-		final boolean lNonnull;
+		private final String lCurrentClassName;
+		private final Builder lClassBuilder;
+		private final FieldSpec.Builder lCurrentField;
+		private final TypeName lCurrentFieldType;
+		private final boolean lNonnull;
 
 		public Context(final String lCurrentClassName, final Builder lClassBuilder, final com.squareup.javapoet.FieldSpec.Builder lCurrentField, final TypeName lCurrentFieldType, final boolean lNonnull) {
 			super();

@@ -55,9 +55,9 @@ public class CapabilityDeserializer extends StdDeserializer<CapabilityDefinition
 	@Override
 	public CapabilityDefinition deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		final TreeNode value = p.getCodec().readTree(p);
-		if (value instanceof TextNode) {
+		if (value instanceof final TextNode tn) {
 			final CapabilityDefinition cap = new CapabilityDefinition();
-			cap.setType(((TextNode) value).asText());
+			cap.setType(tn.asText());
 			return cap;
 		}
 		final CapabilityDefinition caps = new CapabilityDefinition();

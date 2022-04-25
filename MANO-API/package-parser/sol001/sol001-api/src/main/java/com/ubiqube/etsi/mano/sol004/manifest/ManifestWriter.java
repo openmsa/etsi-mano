@@ -53,23 +53,23 @@ public class ManifestWriter {
 		cms.forEach(x -> writeCertificates(writer, x));
 	}
 
-	private static void writeCertificates(final Writer writer, final Certificate x) {
+	private static void writeCertificates(final Writer writer, final Certificate cert) {
 		try {
-			writer.write(String.format("----- BEGIN %s -----%n", x.algo()));
-			writer.write(String.format("%s%n", Base64.getEncoder().encodeToString(x.payload())));
-			writer.write(String.format("----- END %s -----%n", x.algo()));
+			writer.write(String.format("----- BEGIN %s -----%n", cert.algo()));
+			writer.write(String.format("%s%n", Base64.getEncoder().encodeToString(cert.payload())));
+			writer.write(String.format("----- END %s -----%n", cert.algo()));
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}
 	}
 
-	private static void writeSignature(final Writer writer, final SignatureElements x) {
+	private static void writeSignature(final Writer writer, final SignatureElements xsignatureElement) {
 		try {
-			writer.write(String.format("Source: %s%n", x.getSource()));
-			Optional.ofNullable(x.getAlgorithm()).ifPresent(y -> write(writer, "Algorithm: %s%n", y));
-			Optional.ofNullable(x.getHash()).ifPresent(y -> write(writer, "Hash: %s%n", y));
-			Optional.ofNullable(x.getCertificate()).ifPresent(y -> write(writer, "Certificate: %s%n", y));
-			Optional.ofNullable(x.getSignature()).ifPresent(y -> write(writer, "Signature: %s%n", y));
+			writer.write(String.format("Source: %s%n", xsignatureElement.getSource()));
+			Optional.ofNullable(xsignatureElement.getAlgorithm()).ifPresent(y -> write(writer, "Algorithm: %s%n", y));
+			Optional.ofNullable(xsignatureElement.getHash()).ifPresent(y -> write(writer, "Hash: %s%n", y));
+			Optional.ofNullable(xsignatureElement.getCertificate()).ifPresent(y -> write(writer, "Certificate: %s%n", y));
+			Optional.ofNullable(xsignatureElement.getSignature()).ifPresent(y -> write(writer, "Signature: %s%n", y));
 			writer.write("\n");
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
@@ -84,9 +84,9 @@ public class ManifestWriter {
 		}
 	}
 
-	private static void writeKeyValue(final Writer writer, final Entry<String, String> x) {
+	private static void writeKeyValue(final Writer writer, final Entry<String, String> keyValue) {
 		try {
-			writer.write(String.format("%s: %s%n", x.getKey(), x.getValue()));
+			writer.write(String.format("%s: %s%n", keyValue.getKey(), keyValue.getValue()));
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}
