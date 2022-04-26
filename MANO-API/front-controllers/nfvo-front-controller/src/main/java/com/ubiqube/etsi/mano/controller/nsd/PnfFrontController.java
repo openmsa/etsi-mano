@@ -14,20 +14,6 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/**
- * This copy of Woodstox XML processor is licensed under the
- * Apache (Software) License, version 2.0 ("the License").
- * See the License for details about distribution rights, and the
- * specific rights regarding derivate works.
- *
- * You may obtain a copy of the License at:
- *
- * http://www.apache.org/licenses/
- *
- * A copy is also included in the downloadable source code package
- * containing Woodstox, in file "ASL2.0", under the same directory
- * as this file.
- */
 package com.ubiqube.etsi.mano.controller.nsd;
 
 import java.util.Map;
@@ -43,7 +29,8 @@ public interface PnfFrontController {
 	/**
 	 * Query information about multiple PNF descriptor resources.
 	 *
-	 * \&quot;The GET method queries information about multiple PNF descriptor resources.\&quot;
+	 * \&quot;The GET method queries information about multiple PNF descriptor
+	 * resources.\&quot;
 	 *
 	 */
 	<U> ResponseEntity<String> search(@Nonnull MultiValueMap<String, String> requestParams, Class<U> clazz, Consumer<U> makeLink);
@@ -51,8 +38,14 @@ public interface PnfFrontController {
 	/**
 	 * Delete an individual PNF descriptor resource.
 	 *
-	 * The DELETE method deletes an individual PNF descriptor resource. An individual PNF descriptor resource can only be deleted when there is no NS instance using it or there is NSD referencing it. To delete all PNFD versions identified by a particular value of the \&quot;pnfdInvariantId\&quot; attribute, the procedure is to first use the GET method with filter \&quot;pnfdInvariantId\&quot; towards the PNF descriptors resource to find all versions of the PNFD. Then, the client uses the DELETE
-	 * method described in this clause to delete each PNFD version individually.
+	 * The DELETE method deletes an individual PNF descriptor resource. An
+	 * individual PNF descriptor resource can only be deleted when there is no NS
+	 * instance using it or there is NSD referencing it. To delete all PNFD versions
+	 * identified by a particular value of the \&quot;pnfdInvariantId\&quot;
+	 * attribute, the procedure is to first use the GET method with filter
+	 * \&quot;pnfdInvariantId\&quot; towards the PNF descriptors resource to find
+	 * all versions of the PNFD. Then, the client uses the DELETE method described
+	 * in this clause to delete each PNFD version individually.
 	 *
 	 */
 	ResponseEntity<Void> delete(String pnfdInfoId);
@@ -60,7 +53,10 @@ public interface PnfFrontController {
 	/**
 	 * Read an individual PNFD resource.
 	 *
-	 * The GET method reads information about an individual PNF descriptor. This method shall follow the provisions specified in the Tables 5.4.6.3.2-1 and 5.4.6.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response data structures, and response codes.
+	 * The GET method reads information about an individual PNF descriptor. This
+	 * method shall follow the provisions specified in the Tables 5.4.6.3.2-1 and
+	 * 5.4.6.3.2-2 of GS NFV-SOL 005 for URI query parameters, request and response
+	 * data structures, and response codes.
 	 *
 	 */
 	<U> ResponseEntity<U> findById(String pnfdInfoId, Class<U> clazz, Consumer<U> makeLink);
@@ -68,7 +64,8 @@ public interface PnfFrontController {
 	/**
 	 * Modify the user defined data of an individual PNF descriptor resource.
 	 *
-	 * The PATCH method modifies the user defined data of an individual PNF descriptor resource.
+	 * The PATCH method modifies the user defined data of an individual PNF
+	 * descriptor resource.
 	 *
 	 */
 	<U> ResponseEntity<U> modify(String pnfdInfoId, String contentType, Object body);
@@ -76,7 +73,9 @@ public interface PnfFrontController {
 	/**
 	 * Fetch the content of a PNFD.
 	 *
-	 * The GET method fetches the content of the PNFD. This method shall follow the provisions specified in the Table 5.4.7.3.2-2 for URI query parameters, request and response data structures, and response codes.
+	 * The GET method fetches the content of the PNFD. This method shall follow the
+	 * provisions specified in the Table 5.4.7.3.2-2 for URI query parameters,
+	 * request and response data structures, and response codes.
 	 *
 	 * @param range
 	 *
@@ -86,7 +85,10 @@ public interface PnfFrontController {
 	/**
 	 * Upload the content of a PNFD.
 	 *
-	 * The PUT method is used to upload the content of a PNFD. This resource represents the content of the individual PNF descriptor, i.e. PNFD content. The client can use this resource to upload and download the content of the PNFD.
+	 * The PUT method is used to upload the content of a PNFD. This resource
+	 * represents the content of the individual PNF descriptor, i.e. PNFD content.
+	 * The client can use this resource to upload and download the content of the
+	 * PNFD.
 	 *
 	 */
 	ResponseEntity<Void> putContent(String pnfdInfoId, String accept);
