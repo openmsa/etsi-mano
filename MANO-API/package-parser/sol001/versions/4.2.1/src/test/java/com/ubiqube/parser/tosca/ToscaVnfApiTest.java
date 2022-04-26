@@ -240,8 +240,6 @@ class ToscaVnfApiTest {
 		ignore.add("getOperateStart");
 		ignore.add("getRevertToSnapshotStart");
 		ignore.add("getRevertToSnapshot");
-		// To fix
-		ignore.add("getFixedIpAddress");
 		checknullInternal(avcDb, ignore, err, new Stack<>());
 		if (!err.isEmpty()) {
 			final String str = err.stream().collect(Collectors.joining("\n"));

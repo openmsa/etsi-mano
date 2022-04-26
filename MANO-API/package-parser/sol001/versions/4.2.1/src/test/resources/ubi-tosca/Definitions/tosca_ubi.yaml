@@ -483,6 +483,8 @@ topology_template:
                   floating_ip_activated: true
                   ip_address_type: ipv4
                   number_of_ip_address: 1
+                  number_of_ip_address: 1
+                  fixed_ip_address: [ 123.1.2.3, 4.5.6.7 ]
         trunk_mode: false
       capabilities:
         trunk_binding: # tosca.capabilities.nfv.TrunkBindable
