@@ -217,7 +217,7 @@ public class ToscaContext {
 			final Import value = entry2.getValue();
 			final String resolv = resolver.resolvePath(value.getUrl());
 			value.setResolved(resolv);
-			final String content = resolver.getContent(value.getUrl());
+			final String content = resolver.getContent(value.getResolved());
 			if (null == content) {
 				continue;
 			}
