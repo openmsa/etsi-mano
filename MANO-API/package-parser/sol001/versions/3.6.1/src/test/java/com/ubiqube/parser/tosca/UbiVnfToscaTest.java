@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ubiqube.parser.tosca.ZipUtil.Entry;
 import com.ubiqube.parser.tosca.api.ToscaApi;
@@ -36,6 +38,9 @@ import tosca.policies.nfv.VduScalingAspectDeltas;
 import tosca.policies.nfv.VnfIndicator;
 
 class UbiVnfToscaTest {
+
+	private static final Logger LOG = LoggerFactory.getLogger(UbiVnfToscaTest.class);
+
 	private final Map<String, String> parameters = new HashMap<>();
 
 	@Test
@@ -67,11 +72,11 @@ class UbiVnfToscaTest {
 		final ToscaContext root = toscaParser.getContext();
 
 		final List<Compute> list = ToscaApi.getObjects(root, parameters, Compute.class);
-		System.out.println("" + list);
+		LOG.debug("{}", list);
 		final List<VnfExtCp> extCp = ToscaApi.getObjects(root, parameters, VnfExtCp.class);
-		System.out.println("" + extCp);
+		LOG.debug("{}", extCp);
 		final List<VduScalingAspectDeltas> vsad = ToscaApi.getObjects(root, parameters, VduScalingAspectDeltas.class);
-		System.out.println("vsad " + vsad);
+		LOG.debug("vsad {}", vsad);
 		assertNotNull(vsad);
 	}
 }

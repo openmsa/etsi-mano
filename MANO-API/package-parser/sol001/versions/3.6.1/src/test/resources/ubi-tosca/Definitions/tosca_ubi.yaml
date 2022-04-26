@@ -131,7 +131,6 @@ topology_template:
         virtual_network_interface_requirements:
           - name: vl01
             description: descr
-            support_mandatory: false
             network_interface_requirements: # map
               key: value
             nic_io_requirements:
@@ -159,21 +158,6 @@ topology_template:
           properties:
             key: value
       properties:
-        sw_image_data:
-          name: cirros
-          provider: provider
-          version: 1.0.0
-          supported_virtualisation_environments:
-            - test
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          size: 1 Gib
-          min_disk: 6 GiB
-          min_ram: 2 GiB
-          operating_system: centos8
         nfvi_constraints:
           key: value
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
@@ -184,6 +168,21 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
+          nfvi_maintenance_info: # tosca.datatypes.nfv.NfviMaintenanceInfo
+            supported_migration_type:
+              - a
+              - b
+            impact_notification_lead_time: 5s
+            min_recovery_time_between_impacts: 5m
+            min_number_of_preserved_instances: # List<MinNumberOfPreservedInstances>
+              - group_size: 5
+                min_number_of_preserved_instances: 5
+            max_number_of_impacted_instances: # List<MaxNumberOfImpactedInstances>
+              - group_size: 7
+                max_number_of_impacted_instances: 9
+            is_impact_mitigation_requested: true
+            max_undetectable_interruption_time: 5m
+
         boot_data:
           vim_specific_properties: # tosca.datatypes.nfv.BootDataVimSpecificProperties
             vim_type: vimtype
@@ -251,17 +250,6 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
-        sw_image_data:
-          name: cirros
-          version: 1.0.0
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          min_disk: 6 GB
-          min_ram: 2 GB
-          operating_system: centos8
       capabilities:
         virtual_compute:
           virtual_memory:
@@ -277,22 +265,20 @@ topology_template:
           size_of_storage: 6 GB
           vdu_storage_requirements:
             key: value
-        sw_image_data:
-          name: cirros
-          provider: prov
-          size: 1 Gib
-          version: 1.0.0
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          min_disk: 6 GB
-          min_ram: 2 GB
-          operating_system: centos8
-          supported_virtualisation_environments:
-            - openstack
-            - glance
+        nfvi_maintenance_info: # tosca.datatypes.nfv.NfviMaintenanceInfo
+          supported_migration_type:
+            - a
+            - b
+          impact_notification_lead_time: 5s
+          min_recovery_time_between_impacts: 5m
+          min_number_of_preserved_instances: # List<MinNumberOfPreservedInstances>
+            - group_size: 5
+              min_number_of_preserved_instances: 5
+          max_number_of_impacted_instances: # List<MaxNumberOfImpactedInstances>
+            - group_size: 7
+              max_number_of_impacted_instances: 9
+          is_impact_mitigation_requested: true
+          max_undetectable_interruption_time: 5m
       capabilities:
         virtual_storage: # tosca.capabilities.nfv.VirtualStorage
           internal_name: test
@@ -302,6 +288,20 @@ topology_template:
       properties:
         virtual_object_storage_data: # tosca.datatypes.nfv.VirtualObjectStorageData
           max_size_of_storage: 6 GB
+        nfvi_maintenance_info: # tosca.datatypes.nfv.NfviMaintenanceInfo
+          supported_migration_type:
+            - a
+            - b
+          impact_notification_lead_time: 5s
+          min_recovery_time_between_impacts: 5m
+          min_number_of_preserved_instances: # List<MinNumberOfPreservedInstances>
+            - group_size: 5
+              min_number_of_preserved_instances: 5
+          max_number_of_impacted_instances: # List<MaxNumberOfImpactedInstances>
+            - group_size: 7
+              max_number_of_impacted_instances: 9
+          is_impact_mitigation_requested: true
+          max_undetectable_interruption_time: 5m
       capabilities:
         virtual_storage: # tosca.capabilities.nfv.VirtualStorage
           internal_name: test
@@ -309,6 +309,21 @@ topology_template:
     leftVl01:
       type: tosca.nodes.nfv.VnfVirtualLink
       properties:
+        externally_managed: Yopyes
+        nfvi_maintenance_info: # tosca.datatypes.nfv.NfviMaintenanceInfo
+          supported_migration_type:
+            - a
+            - b
+          impact_notification_lead_time: 5s
+          min_recovery_time_between_impacts: 5m
+          min_number_of_preserved_instances: # List<MinNumberOfPreservedInstances>
+            - group_size: 5
+              min_number_of_preserved_instances: 5
+          max_number_of_impacted_instances: # List<MaxNumberOfImpactedInstances>
+            - group_size: 7
+              max_number_of_impacted_instances: 9
+          is_impact_mitigation_requested: true
+          max_undetectable_interruption_time: 5m
         connectivity_type: # tosca.datatypes.nfv.ConnectivityType
           layer_protocols:
             - ipv4
@@ -444,7 +459,6 @@ topology_template:
         virtual_network_interface_requirements: # list of tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements
           - name: vl01
             description: descr
-            support_mandatory: false
             network_interface_requirements: # map string
               key: value
             nic_io_requirements: # tosca.datatypes.nfv.LogicalNodeData
@@ -482,7 +496,6 @@ topology_template:
         virtual_network_interface_requirements: # list tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements
           - name: req01
             description: Description
-            support_mandatory: false
             network_interface_requirements:
               read: openstack
             nic_io_requirements: # tosca.datatypes.nfv.LogicalNodeData
@@ -677,7 +690,20 @@ policies:
     targets: [ vdu01, vl02, server_group_1 ]
     properties:
       scope: nfvi_pop
-
+      nfvi_maintenance_group_info:
+        supported_migration_type:
+          - a
+          - b
+        impact_notification_lead_time: 5m
+        min_recovery_time_between_impacts: 6m
+        min_number_of_preserved_instances:
+          - group_size: 5
+            min_number_of_preserved_instances: 7
+        max_number_of_impacted_instances:
+          - group_size: 8
+            max_number_of_impacted_instances: 90
+        is_impact_mitigation_requested: true
+        max_undetectable_interruption_time: 4s
   security:
     type: tosca.policies.nfv.SecurityGroupRule
     targets: [ "" ]

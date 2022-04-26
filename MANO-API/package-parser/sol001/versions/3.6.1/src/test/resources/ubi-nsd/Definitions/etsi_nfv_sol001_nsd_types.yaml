@@ -1,15 +1,15 @@
 tosca_definitions_version: tosca_simple_yaml_1_3
-description: ETSI NFV SOL 001 nsd types definitions version 3.5.1
+description: ETSI NFV SOL 001 nsd types definitions version 3.6.1
 metadata:
   template_name: etsi_nfv_sol001_nsd_types
   template_author: ETSI_NFV
-  template_version: 3.5.1
+  template_version: 3.6.1
 
 imports:
      - etsi_nfv_sol001_common_types.yaml
      - etsi_nfv_sol001_vnfd_types.yaml
      - etsi_nfv_sol001_pnfd_types.yaml
-# editor's note: During the development of the SOL001ed351 GS, to enable this file to be verified by a TOSCA parser, the imports statement has to be replaced with a reference to a local copy of the common definitions YAML file
+# editor's note: During the development of the SOL001ed361 GS, to enable this file to be verified by a TOSCA parser, the imports statement has to be replaced with a reference to a local copy of the common definitions YAML file
 
 data_types:
   tosca.datatypes.nfv.NsVlProfile:

@@ -101,7 +101,7 @@ class ToscaVnfApiTest {
 		final ToscaParser tp = new ToscaParser(new File("src/test/resources/web_mysql_tosca.yaml"));
 		final ToscaContext root = tp.getContext();
 		final List<Compute> res = ToscaApi.getObjects(root, parameters, Compute.class);
-		System.out.println("" + res);
+		LOG.debug("{}", res);
 	}
 
 	@Test
