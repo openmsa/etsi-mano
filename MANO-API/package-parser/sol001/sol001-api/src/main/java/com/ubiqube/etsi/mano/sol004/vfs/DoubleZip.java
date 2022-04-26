@@ -185,7 +185,7 @@ public class DoubleZip implements VirtualFileSystem {
 			entry = zip.getEntry(fileName);
 		}
 		if (null == entry) {
-			throw new Sol004Exception("Unable to find " + fileName);
+			throw new Sol004Exception(UNABLE_TO_FIND + fileName);
 		}
 		final long crc = entry.getCrc();
 		final long date = entry.getTime();

@@ -45,8 +45,8 @@ public class SingleVfs implements VirtualFileSystem {
 	}
 
 	@Override
-	public byte[] getFileContent(final String filename) {
-		if (!filename.equals(this.filename)) {
+	public byte[] getFileContent(final String fileName) {
+		if (!fileName.equals(this.filename)) {
 			return new byte[0];
 		}
 		return readFile();
@@ -61,8 +61,8 @@ public class SingleVfs implements VirtualFileSystem {
 	}
 
 	@Override
-	public boolean exist(final String filename) {
-		return false;
+	public boolean exist(final String fileName) {
+		return fileName.equals(this.filename);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class SingleVfs implements VirtualFileSystem {
 
 	@Override
 	public InputStream getInputStream(final String fileName) {
-		if (!filename.equals(this.filename)) {
+		if (!fileName.equals(this.filename)) {
 			return null;
 		}
 		try {
