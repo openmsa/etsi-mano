@@ -28,7 +28,7 @@ import com.ubiqube.etsi.mano.sol004.Sol004Exception;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ToscaMetaFile {
+public class ToscaMetaFile implements ToscaMeta {
 
 	private final Properties props;
 
@@ -47,14 +47,11 @@ public class ToscaMetaFile {
 	}
 
 	public boolean check() {
-		if (!haveEntryDefinition() || !haveManifest() || !haveLicenses()) {
-			return false;
-		}
-		return true;
+		return haveEntryDefinition() && haveManifest() && haveLicenses();
 	}
 
 	private boolean haveLicenses() {
-		return null != getEntryLicenseFilename();
+		return null != getLicencesFolder();
 	}
 
 	private boolean haveEntryDefinition() {
@@ -65,23 +62,39 @@ public class ToscaMetaFile {
 		return null != getManifestFileName();
 	}
 
-	private String getEntryLicenseFilename() {
-		return (String) Optional.ofNullable(props.get("ETSI-Entry-Licenses"))
-				.orElseGet(() -> props.get("Entry-Licenses"));
-	}
-
+	@Override
 	public String getManifestFileName() {
 		return (String) Optional.ofNullable(props.get("ETSI-Entry-Manifest"))
 				.orElseGet(() -> props.get("Entry-Manifest"));
 	}
 
+	@Override
 	public String getEntryDefinitionFileName() {
 		return (String) Optional.ofNullable(props.get("ETSI-Entry-Definitions"))
 				.orElseGet(() -> props.get("Entry-Definitions"));
 	}
 
+	@Override
 	public String getKey(final String key) {
 		return (String) props.get(key);
+	}
+
+	@Override
+	public String getTestingFolder() {
+		return (String) Optional.ofNullable(props.get("ETSI-Entry-Tests"))
+				.orElseGet(() -> props.get("Entry-Tests"));
+	}
+
+	@Override
+	public String getLicencesFolder() {
+		return (String) Optional.ofNullable(props.get("ETSI-Entry-Licenses"))
+				.orElseGet(() -> props.get("Entry-Licenses"));
+	}
+
+	@Override
+	public String getChangeLogFilename() {
+		return (String) Optional.ofNullable(props.get("ETSI-Entry-Change-Log"))
+				.orElseGet(() -> props.get("Entry-Change-Log"));
 	}
 
 }

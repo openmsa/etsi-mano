@@ -14,21 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/**
- * This copy of Woodstox XML processor is licensed under the
- * Apache (Software) License, version 2.0 ("the License").
- * See the License for details about distribution rights, and the
- * specific rights regarding derivate works.
- *
- * You may obtain a copy of the License at:
- *
- * http://www.apache.org/licenses/
- *
- * A copy is also included in the downloadable source code package
- * containing Woodstox, in file "ASL2.0", under the same directory
- * as this file.
- */
-package com.ubiqube.parser.tosca;
+package com.ubiqube.etsi.mano.tosca;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -43,6 +29,8 @@ import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.sol004.Sol004Exception;
+
 public class VfsResolver extends Resolver {
 	private static final Logger LOG = LoggerFactory.getLogger(VfsResolver.class);
 	final Pattern urlMatcher = Pattern.compile("(?<!\\\\):");
@@ -54,7 +42,7 @@ public class VfsResolver extends Resolver {
 		try {
 			VFS.getManager();
 		} catch (final FileSystemException e) {
-			throw new ParseException(e);
+			throw new Sol004Exception(e);
 		}
 	}
 
@@ -73,7 +61,7 @@ public class VfsResolver extends Resolver {
 				final FileObject child = parent.resolveFile(url);
 				return child.getContent().getString(Charset.defaultCharset());
 			} catch (final IOException e) {
-				throw new ParseException(e);
+				throw new Sol004Exception(e);
 			}
 		}
 		return null;
@@ -99,7 +87,7 @@ public class VfsResolver extends Resolver {
 				child = parent.resolveFile(path);
 				return child.getName().getPath();
 			} catch (final FileSystemException e) {
-				throw new ParseException(e);
+				throw new Sol004Exception(e);
 			}
 		}
 		return path;

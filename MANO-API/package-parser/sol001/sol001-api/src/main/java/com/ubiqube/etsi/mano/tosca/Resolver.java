@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca;
+package com.ubiqube.etsi.mano.tosca;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +30,8 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ubiqube.etsi.mano.sol004.Sol004Exception;
 
 public class Resolver implements IResolver {
 
@@ -73,13 +75,13 @@ public class Resolver implements IResolver {
 		}
 		// Try as a normal file.
 		if (last == null) {
-			throw new ParseException("Could not find: " + url + " last:" + last);
+			throw new Sol004Exception("Could not find: " + url + " last:" + last);
 		}
 		final File f = new File(last, url);
 		try {
 			return f.toURI().toURL();
 		} catch (final MalformedURLException e) {
-			throw new ParseException(e);
+			throw new Sol004Exception(e);
 		}
 	}
 
@@ -87,7 +89,7 @@ public class Resolver implements IResolver {
 		try {
 			Files.write(cacheFile.toPath(), content.getBytes(Charset.defaultCharset()));
 		} catch (final IOException e) {
-			throw new ParseException(e);
+			throw new Sol004Exception(e);
 		}
 	}
 
@@ -97,7 +99,7 @@ public class Resolver implements IResolver {
 			scanner.useDelimiter("\\A");
 			return scanner.hasNext() ? scanner.next() : "";
 		} catch (final IOException e) {
-			throw new ParseException(e);
+			throw new Sol004Exception(e);
 		}
 	}
 
@@ -105,7 +107,7 @@ public class Resolver implements IResolver {
 		try {
 			return new String(Files.readAllBytes(cacheFile.toPath()), Charset.defaultCharset());
 		} catch (final IOException e) {
-			throw new ParseException(e);
+			throw new Sol004Exception(e);
 		}
 	}
 
@@ -117,7 +119,7 @@ public class Resolver implements IResolver {
 			final String hashtext = no.toString(16);
 			return new String(new char[40 - hashtext.length()]).replace('\0', '0') + hashtext;
 		} catch (final NoSuchAlgorithmException e) {
-			throw new ParseException(e);
+			throw new Sol004Exception(e);
 		}
 	}
 

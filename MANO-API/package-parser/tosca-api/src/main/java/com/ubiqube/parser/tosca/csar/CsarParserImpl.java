@@ -35,10 +35,10 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 
-import com.ubiqube.parser.tosca.IResolver;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.IResolver;
+import com.ubiqube.etsi.mano.tosca.VfsResolver;
 import com.ubiqube.parser.tosca.ParseException;
-import com.ubiqube.parser.tosca.VfsResolver;
-import com.ubiqube.parser.tosca.api.ArtefactInformations;
 
 import jakarta.validation.constraints.NotNull;
 

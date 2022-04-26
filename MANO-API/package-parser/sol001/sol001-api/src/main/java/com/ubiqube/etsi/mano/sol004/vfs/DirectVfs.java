@@ -28,13 +28,17 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import com.ubiqube.etsi.mano.sol004.Sol004Exception;
+import com.ubiqube.etsi.mano.tosca.IResolver;
+import com.ubiqube.etsi.mano.tosca.Resolver;
 
 public class DirectVfs implements VirtualFileSystem {
 
 	private final Path root;
+	private final Resolver resolver;
 
 	public DirectVfs(final Path path) {
 		this.root = path;
+		this.resolver = new Resolver(path.toFile());
 	}
 
 	@Override
@@ -90,6 +94,11 @@ public class DirectVfs implements VirtualFileSystem {
 		} catch (final FileNotFoundException e) {
 			throw new Sol004Exception(e);
 		}
+	}
+
+	@Override
+	public IResolver getResolver() {
+		return resolver;
 	}
 
 }

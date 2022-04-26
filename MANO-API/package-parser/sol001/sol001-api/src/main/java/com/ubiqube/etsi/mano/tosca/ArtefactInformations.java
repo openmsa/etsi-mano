@@ -14,15 +14,32 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca.api;
+package com.ubiqube.etsi.mano.tosca;
 
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArtefactInformations {
 	private String checksum;
 	private String path;
 	private Map<String, String> metadata;
 	private String algorithm;
+	private String signature;
+	private String certificate;
+	private String nonManoSetIndentifier;
 
 	public String getChecksum() {
 		return checksum;
@@ -56,9 +73,28 @@ public class ArtefactInformations {
 		this.algorithm = algorithm;
 	}
 
-	@Override
-	public String toString() {
-		return "ArtefactInformations [checksum=" + checksum + ", path=" + path + ", metadata=" + metadata + ", algorithm=" + algorithm + "]";
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(final String signature) {
+		this.signature = signature;
+	}
+
+	public String getCertificate() {
+		return certificate;
+	}
+
+	public void setCertificate(final String certificate) {
+		this.certificate = certificate;
+	}
+
+	public String getNonManoSetIndentifier() {
+		return nonManoSetIndentifier;
+	}
+
+	public void setNonManoSetIndentifier(final String nonManoSetIndentifier) {
+		this.nonManoSetIndentifier = nonManoSetIndentifier;
 	}
 
 }

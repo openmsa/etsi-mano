@@ -51,5 +51,20 @@
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk14</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-vfs2</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.hadoop</groupId>
+					<artifactId>hadoop-hdfs-client</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+		</dependency>
 	</dependencies>
 </project>

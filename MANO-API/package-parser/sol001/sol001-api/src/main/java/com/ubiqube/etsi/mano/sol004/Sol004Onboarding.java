@@ -20,24 +20,34 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.ubiqube.etsi.mano.sol004.metafile.ToscaMetaFile;
+import com.ubiqube.etsi.mano.sol004.metafile.ToscaMeta;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectVfs;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectZip;
+import com.ubiqube.etsi.mano.sol004.vfs.DoubleZip;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.IResolver;
+import com.ubiqube.etsi.mano.tosca.Sol001Version;
+import com.ubiqube.etsi.mano.tosca.ToscaVersion;
 
 /**
  *
@@ -52,6 +62,10 @@ public class Sol004Onboarding {
 	private static final Pattern CSAR_MATCHER = Pattern.compile(".*\\.(csar)");
 	private CsarArchive csar;
 	private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+
+	private ToscaVersion toscaVersion;
+
+	private Optional<Sol001Version> sol001Version;
 
 	CsarModeEnum getToscaMode(final String fileName) {
 		if (isCsarExtension(fileName)) {
@@ -97,9 +111,28 @@ public class Sol004Onboarding {
 		if (file.isDirectory()) {
 			vfs = new DirectVfs(Paths.get(filename));
 		} else {
-			vfs = new DirectZip(Paths.get(filename));
+			final CsarModeEnum mode = getToscaMode(filename);
+			if (mode == CsarModeEnum.DOUBLE_ZIP) {
+				vfs = new DoubleZip(file, findCsarFile(filename));
+			} else {
+				vfs = new DirectZip(Paths.get(filename));
+			}
 		}
 		this.csar = new CsarArchive(vfs, filename);
+		final byte[] content = csar.getContent(getToscaEntryPointFilename());
+		detectVersion(new String(content, Charset.defaultCharset()));
+	}
+
+	private static String findCsarFile(final String filename) {
+		try (ZipFile zip = new ZipFile(filename)) {
+			final List<String> l = zip.stream().filter(x -> x.getName().endsWith(".csar")).map(ZipEntry::getName).toList();
+			if (l.isEmpty() || l.size() > 1) {
+				throw new Sol004Exception("Could not find csar file " + l.size());
+			}
+			return l.get(0);
+		} catch (final IOException e) {
+			throw new Sol004Exception(e);
+		}
 	}
 
 	public List<CsarError> validate() {
@@ -140,7 +173,7 @@ public class Sol004Onboarding {
 	}
 
 	public boolean isYang() {
-		final ToscaMetaFile metafile = csar.getMetaFile();
+		final ToscaMeta metafile = csar.getMetaFile();
 		return metafile.getKey("yang_definitions") != null;
 	}
 
@@ -151,4 +184,57 @@ public class Sol004Onboarding {
 	public String getToscaEntryPointFilename() {
 		return csar.getMetaFile().getEntryDefinitionFileName();
 	}
+
+	public ToscaVersion getToscaVersion() {
+		return toscaVersion;
+	}
+
+	private void detectVersion(final String content) {
+		JsonNode doc;
+		try {
+			doc = mapper.readTree(content);
+		} catch (final JsonProcessingException e) {
+			throw new Sol004Exception(e);
+		}
+		toscaVersion = findToscaVersion(doc).orElseThrow(() -> new Sol004Exception("Unable to find a valid TOSCA version."));
+		sol001Version = findMetadataVersion(doc);
+	}
+
+	private static Optional<ToscaVersion> findToscaVersion(final JsonNode doc) {
+		return Optional.ofNullable(doc.findValue("tosca_definitions_version"))
+				.map(JsonNode::asText)
+				.map(ToscaVersion::fromValue);
+	}
+
+	private static Optional<Sol001Version> findMetadataVersion(final JsonNode doc) {
+		return Optional.ofNullable(doc.findValue("metadata"))
+				.map(x -> x.findValue("template_version"))
+				.map(JsonNode::asText)
+				.map(Sol001Version::fromValue);
+	}
+
+	public Optional<Sol001Version> getSol001Version() {
+		return sol001Version;
+	}
+
+	public IResolver getResolver() {
+		return csar.getResolver();
+	}
+
+	public String getManifestContent() {
+		final String manifest = csar.getMetaFile().getManifestFileName();
+		if (null == manifest) {
+			return null;
+		}
+		return new String(csar.getContent(manifest), Charset.defaultCharset());
+	}
+
+	public byte[] getFileContent(final String fileName) {
+		return csar.getContent(fileName);
+	}
+
+	public @NotNull List<ArtefactInformations> getFiles() {
+		return csar.getArtefactList();
+	}
+
 }

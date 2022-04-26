@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca;
+package com.ubiqube.etsi.mano.tosca;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -24,16 +24,19 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public enum ToscaVersion {
-	TOSCA_SIMPLE_YAML_1_0("tosca_simple_yaml_1_0"),
-	TOSCA_SIMPLE_YAML_1_1("tosca_simple_yaml_1_1"),
-	TOSCA_SIMPLE_YAML_1_2("tosca_simple_yaml_1_2"),
-	TOSCA_SIMPLE_YAML_1_3("tosca_simple_yaml_1_3"),
-	TOSCA_2_0("tosca_2_0");
+public enum Sol001Version {
+	SOL001_2_5_1("2.5.1"),
+	SOL001_2_6_1("2.6.1"),
+	SOL001_2_7_1("2.7.1"),
+	SOL001_2_8_1("2.8.1"),
+	SOL001_3_3_1("3.3.1"),
+	SOL001_3_5_1("3.5.1"),
+	SOL001_3_6_1("3.6.1"),
+	SOL001_4_2_1("4_2.1");
 
 	private final String value;
 
-	ToscaVersion(final String value) {
+	Sol001Version(final String value) {
 		this.value = value;
 	}
 
@@ -44,8 +47,8 @@ public enum ToscaVersion {
 	}
 
 	@JsonCreator
-	public static ToscaVersion fromValue(final String text) {
-		for (final ToscaVersion b : ToscaVersion.values()) {
+	public static Sol001Version fromValue(final String text) {
+		for (final Sol001Version b : Sol001Version.values()) {
 			if (String.valueOf(b.value).equals(text)) {
 				return b;
 			}

@@ -25,15 +25,21 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import javax.validation.constraints.NotNull;
+
 import org.bouncycastle.cms.CMSSignedData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ubiqube.etsi.mano.sol004.manifest.SignatureElements;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.Certificate;
+import com.ubiqube.etsi.mano.sol004.metafile.ToscaMeta;
 import com.ubiqube.etsi.mano.sol004.metafile.ToscaMetaFile;
+import com.ubiqube.etsi.mano.sol004.metafile.ToscaMetaFlat;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations.ArtefactInformationsBuilder;
+import com.ubiqube.etsi.mano.tosca.IResolver;
 
 /**
  *
@@ -44,12 +50,12 @@ public class CsarArchive {
 	private static final Logger LOG = LoggerFactory.getLogger(CsarArchive.class);
 	private final VirtualFileSystem vfs;
 	private List<Certificate> globalCertificate = new ArrayList<>();
-	private List<SignatureElements> signatures = new ArrayList<>();
+	private List<ArtefactInformations> signatures = new ArrayList<>();
 	private CsarModeEnum csarMode;
 
 	private String csarFile;
 
-	private ToscaMetaFile tmf;
+	private ToscaMeta tmf;
 
 	/**
 	 *
@@ -73,6 +79,7 @@ public class CsarArchive {
 			handleMetafile(metaFile.get());
 			return;
 		}
+		tmf = new ToscaMetaFlat(list);
 		registerGlobalCertificate(list);
 		LOG.warn("Could not find CSAR metafile.");
 	}
@@ -91,28 +98,28 @@ public class CsarArchive {
 		return signatures.stream().map(this::checkSignature).filter(Objects::nonNull).toList();
 	}
 
-	private CsarError checkSignature(final SignatureElements sig) {
-		if (sig.getHash() != null) {
-			try (InputStream stream = vfs.getInputStream(sig.getSource())) {
+	private CsarError checkSignature(final ArtefactInformations sig) {
+		if (sig.getChecksum() != null) {
+			try (InputStream stream = vfs.getInputStream(sig.getPath())) {
 				final String algorithm = sig.getAlgorithm();
-				final String hash = sig.getHash();
+				final String hash = sig.getChecksum();
 				final boolean res = CryptoUtils.checkHash(stream, algorithm, hash);
 				if (!res) {
-					return new CsarError(sig.getSource());
+					return new CsarError(sig.getPath());
 				}
 			} catch (final IOException e) {
 				throw new Sol004Exception(e);
 			}
 		}
 		if (sig.getCertificate() != null) {
-			try (InputStream stream = vfs.getInputStream(sig.getSource())) {
+			try (InputStream stream = vfs.getInputStream(sig.getPath())) {
 				final byte[] cert = vfs.getFileContent(sig.getCertificate());
 				final X509Certificate certPem = PemUtils.pemPublicKey(cert);
 				final byte[] sigBytes = vfs.getFileContent(sig.getSignature());
 				final CMSSignedData sigPem = PemUtils.pemSignature(sigBytes);
 				final boolean res = CryptoUtils.verify(stream, certPem.getPublicKey().getEncoded(), sigPem.getEncoded());
 				if (!res) {
-					return new CsarError(sig.getSource());
+					return new CsarError(sig.getPath());
 				}
 
 			} catch (final IOException e) {
@@ -138,8 +145,12 @@ public class CsarArchive {
 		this.csarMode = CsarModeEnum.DOUBLE_ZIP;
 		final String certFilename = findCert(list).orElseThrow(() -> new Sol004Exception("Unable to find certificate."));
 		final String signature = findFlatSig(list, csarFile);
-		final SignatureElements se = new SignatureElements(csarFile, null, null, signature, certFilename);
-		signatures.add(se);
+		final ArtefactInformations ai = ArtefactInformations.builder()
+				.path(csarFile)
+				.signature(signature)
+				.certificate(certFilename)
+				.build();
+		signatures.add(ai);
 	}
 
 	private static String findFlatSig(final List<String> list, final String csarFile) {
@@ -181,7 +192,7 @@ public class CsarArchive {
 		try (final InputStream manifestStream = vfs.getInputStream(manifestFilename)) {
 			final Sol004ManifestReader reader = Sol004ManifestReader.of(manifestStream);
 			globalCertificate = reader.getCms();
-			signatures = reader.getSigs();
+			signatures = reader.getArtefacts();
 			rebuildCert();
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
@@ -195,12 +206,12 @@ public class CsarArchive {
 		signatures.stream()
 				.filter(x -> x.getCertificate() != null)
 				.forEach(x -> {
-					final List<String> res = vfs.getFileMatching(Sol004Utils.getSignatureWildcard(x.getSource()));
+					final List<String> res = vfs.getFileMatching(Sol004Utils.getSignatureWildcard(x.getPath()));
 					if (res.isEmpty()) {
 						return;
 					}
 					if (res.size() > 1) {
-						throw new Sol004Exception("Multiples signature match the current source " + x.getSource() + " => " + res);
+						throw new Sol004Exception("Multiples signature match the current source " + x.getPath() + " => " + res);
 					}
 					x.setSignature(res.get(0));
 				});
@@ -217,7 +228,7 @@ public class CsarArchive {
 		throw new Sol004Exception("Unsupported operation: " + csarMode);
 	}
 
-	public ToscaMetaFile getMetaFile() {
+	public ToscaMeta getMetaFile() {
 		return this.tmf;
 	}
 
@@ -225,4 +236,36 @@ public class CsarArchive {
 		return vfs.getInputStream(fileName);
 	}
 
+	public byte[] getContent(final String fileName) {
+		return vfs.getFileContent(fileName);
+	}
+
+	public IResolver getResolver() {
+		return vfs.getResolver();
+	}
+
+	public @NotNull List<ArtefactInformations> getArtefactList() {
+		final List<String> files = vfs.getFileMatching(".*");
+		return files.stream()
+				.filter(x -> !isCert(x))
+				.filter(x -> !isSignature(x))
+				.map(x -> map(x, files))
+				.toList();
+	}
+
+	private ArtefactInformations map(final String fileName, final List<String> files) {
+		final ArtefactInformationsBuilder ret = ArtefactInformations.builder();
+		ret.path(fileName);
+		return signatures.stream()
+				.filter(x -> x.equals(fileName))
+				.findFirst().orElse(null);
+	}
+
+	private static boolean isSignature(final String x) {
+		return x.contains(".sig.");
+	}
+
+	private static boolean isCert(final String x) {
+		return x.endsWith(".cert");
+	}
 }

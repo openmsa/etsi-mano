@@ -32,7 +32,7 @@ import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class ArtefactVerifierTest {
+class ArtefactVerifierTest {
 
 	@Test
 	void testName() throws Exception {

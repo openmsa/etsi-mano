@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.ubiqube.parser.tosca.GroupDefinition;
 import com.ubiqube.parser.tosca.NodeTemplate;
@@ -93,7 +92,7 @@ public class ToscaApi {
 					val.setName(x.getKey());
 					return val;
 				})
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static <T> List<GroupDefinition> getGroupsMatching(final ToscaContext root, final Class<T> destination) {
@@ -110,7 +109,7 @@ public class ToscaApi {
 					val.setName(x.getKey());
 					return val;
 				})
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	/**
@@ -133,6 +132,6 @@ public class ToscaApi {
 					val.setName(x.getKey());
 					return val;
 				})
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

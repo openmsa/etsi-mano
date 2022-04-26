@@ -71,7 +71,7 @@ class ToscaTest {
 	@Test
 	void testFlat() throws IOException {
 		buildCertCsar();
-		final VirtualFileSystem vfs = new DirectVfs(Paths.get("/tmp/tosca.csar"));
+		final VirtualFileSystem vfs = new DirectZip(Paths.get("/tmp/tosca.csar"));
 		final CsarArchive ta = new CsarArchive(vfs, "test.zip");
 		assertNotNull(ta);
 	}

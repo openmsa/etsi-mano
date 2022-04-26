@@ -14,30 +14,11 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.sol004.metafile;
+package com.ubiqube.etsi.mano.tosca;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+public interface IResolver {
 
-import com.ubiqube.etsi.mano.sol004.Sol004Exception;
+	String getContent(String url);
 
-/**
- *
- * @author Olivier Vignaud <ovi@ubiqube.com>
- *
- */
-public class ToscaMetaFileParser {
-
-	private ToscaMetaFile toscaMetaFile;
-
-	void parse(final InputStream inStream) {
-		final Properties props = new Properties();
-		try {
-			props.load(inStream);
-		} catch (final IOException e) {
-			throw new Sol004Exception(e);
-		}
-		this.toscaMetaFile = new ToscaMetaFile(props);
-	}
+	String resolvePath(String path);
 }

@@ -33,6 +33,6 @@ class ManifestTest {
 	@Test
 	void testName() {
 		final Sol004ManifestReader mr = new Sol004ManifestReader("src/test/resources/manifest.mf");
-		assertEquals(5, mr.getSigs().size());
+		assertEquals(11, mr.getArtefacts().size());
 	}
 }

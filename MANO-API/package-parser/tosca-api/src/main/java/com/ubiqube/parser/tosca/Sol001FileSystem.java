@@ -18,7 +18,9 @@ package com.ubiqube.parser.tosca;
 
 import java.util.List;
 
-import com.ubiqube.parser.tosca.api.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.IResolver;
+import com.ubiqube.etsi.mano.tosca.ToscaVersion;
 
 import jakarta.validation.constraints.NotNull;
 

@@ -38,3 +38,15 @@ Certificate: /somedirectory/somefilename1.cert
 Source: https://www.vendor_org.com/MRF/v4.1/scripts/scale/scale.sh
 Signature: /somedirectory/somefilename1.sig.cms
 Certificate: /somedirectory/somefilename1.cert
+
+non_mano_artifact_sets:
+foo_bar:
+Source: foobar/foo/foo.yaml
+Source: foobar/foo/foo.script
+Source: foobar/bar/descriptor.xml
+prv.happy-nfv.cool:
+Source: happy/cool/123.html
+Source: happy/cool/cool.json
+Source: happy/cool/hot/hot_or_cool.json
+
+

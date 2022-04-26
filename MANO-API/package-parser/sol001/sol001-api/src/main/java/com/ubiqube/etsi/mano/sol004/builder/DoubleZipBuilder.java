@@ -54,7 +54,7 @@ public class DoubleZipBuilder {
 	private HashAlgorithm defaultHash = HashAlgorithm.SHA_256;
 	private String entryPoint;
 
-	public DoubleZipBuilder(final CsarBuilder csarBuilder) {
+	public DoubleZipBuilder() {
 		this.entries = new ArrayList<>();
 	}
 

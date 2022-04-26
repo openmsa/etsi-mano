@@ -22,10 +22,10 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
-import com.ubiqube.etsi.mano.sol004.manifest.SignatureElements;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader;
 import com.ubiqube.etsi.mano.sol004.manifest.Sol004ManifestReader.Certificate;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
 
 /**
  *
@@ -44,7 +44,7 @@ public class ArtefactVerifier {
 
 	public boolean verifyArtefact(final InputStream content, final String filename) {
 		final byte[] fileCert = findCert(filename);
-		final Optional<SignatureElements> sig = find(filename);
+		final Optional<ArtefactInformations> sig = find(filename);
 		if (sig.isPresent()) {
 			return handleSig(sig.get(), content);
 		}
@@ -59,7 +59,7 @@ public class ArtefactVerifier {
 		if (b.length != 0) {
 			return b;
 		}
-		final Optional<SignatureElements> sig = find(filename);
+		final Optional<ArtefactInformations> sig = find(filename);
 		if (sig.isPresent()) {
 			return getCCertificate(sig.get());
 		}
@@ -88,11 +88,11 @@ public class ArtefactVerifier {
 		return CryptoUtils.verify(content, certificate.payload(), null);
 	}
 
-	private boolean handleSig(final SignatureElements signatureElements, final InputStream content) {
+	private boolean handleSig(final ArtefactInformations signatureElements, final InputStream content) {
 		boolean result = true;
 		boolean haveCheck = false;
-		if (signatureElements.getAlgorithm() != null && signatureElements.getHash() != null) {
-			result &= CryptoUtils.checkHash(content, signatureElements.getAlgorithm(), signatureElements.getHash());
+		if (signatureElements.getAlgorithm() != null && signatureElements.getChecksum() != null) {
+			result &= CryptoUtils.checkHash(content, signatureElements.getAlgorithm(), signatureElements.getChecksum());
 			haveCheck = true;
 		}
 		final byte[] cert = getCCertificate(signatureElements);
@@ -106,7 +106,7 @@ public class ArtefactVerifier {
 		return result;
 	}
 
-	private byte @NotNull [] getCCertificate(final SignatureElements signatureElements) {
+	private byte @NotNull [] getCCertificate(final ArtefactInformations signatureElements) {
 		if (signatureElements.getCertificate() != null) {
 			return vfs.getFileContent(signatureElements.getCertificate());
 		}
@@ -121,7 +121,7 @@ public class ArtefactVerifier {
 		return CryptoUtils.verify(stream, cert, sig);
 	}
 
-	private Optional<SignatureElements> find(final String filename) {
-		return mr.getSigs().stream().filter(x -> x.getSource().equals(filename)).findFirst();
+	private Optional<ArtefactInformations> find(final String filename) {
+		return mr.getArtefacts().stream().filter(x -> x.getPath().equals(filename)).findFirst();
 	}
 }

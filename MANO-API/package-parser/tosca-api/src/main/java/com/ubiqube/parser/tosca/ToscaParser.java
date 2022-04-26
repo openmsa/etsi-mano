@@ -28,7 +28,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.ubiqube.parser.tosca.api.ArtefactInformations;
+import com.ubiqube.etsi.mano.sol004.Sol004Onboarding;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.IResolver;
+import com.ubiqube.etsi.mano.tosca.ToscaVersion;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -41,16 +44,18 @@ import jakarta.validation.constraints.NotNull;
 public class ToscaParser {
 	private ToscaContext context;
 	private final ObjectMapper mapper = getMapper();
-	private Sol001FileSystem fs;
+	Sol004Onboarding onboarding = new Sol004Onboarding();
 
 	public ToscaParser(final File filename) {
-		fs = Sol001FileFactory.of(filename);
-		final ToscaVersion tv = fs.getToscaVersion();
+		onboarding.preOnboard(filename.toString());
+		final ToscaVersion tv = onboarding.getToscaVersion();
 		try {
 			final ToscaRoot root = loadToscaBase(tv);
-			context = new ToscaContext(root, fs.getResolver());
-			final ToscaRoot root2 = mapper.readValue(fs.getFileContent(fs.getEntryDefinitionFileName()), ToscaRoot.class);
-			context.addRoot(root2);
+			context = new ToscaContext(root, onboarding.getResolver());
+			try (InputStream is = onboarding.getToscaEntryPoint()) {
+				final ToscaRoot root2 = mapper.readValue(is, ToscaRoot.class);
+				context.addRoot(root2);
+			}
 			context.resolvImports();
 			context.resolvSymbols();
 		} catch (final IOException e) {
@@ -100,7 +105,7 @@ public class ToscaParser {
 
 	@NotNull
 	public List<ArtefactInformations> getFiles() {
-		return fs.getFiles();
+		return onboarding.getFiles();
 	}
 
 	public ToscaContext getContext() {
@@ -108,14 +113,14 @@ public class ToscaParser {
 	}
 
 	public String getEntryFileName() {
-		return fs.getEntryDefinitionFileName();
+		return onboarding.getToscaEntryPointFilename();
 	}
 
 	public String getManifestContent() {
-		return fs.getManifestContent();
+		return onboarding.getManifestContent();
 	}
 
 	public byte[] getFileContent(final String fileName) {
-		return fs.getFileContent(fileName);
+		return onboarding.getFileContent(fileName);
 	}
 }

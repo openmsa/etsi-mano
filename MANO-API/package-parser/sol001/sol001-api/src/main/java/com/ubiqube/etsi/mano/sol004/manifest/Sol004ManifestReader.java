@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.ubiqube.etsi.mano.sol004.Sol004Exception;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
 
 /**
  *
@@ -46,8 +47,8 @@ public class Sol004ManifestReader {
 	private static final String HASH = "Hash";
 	private static final String ALGORITHM = "Algorithm";
 	private final Map<String, String> keyValues = new HashMap<>();
-	private final List<SignatureElements> sigs = new ArrayList<>();
 	private final List<Certificate> cms = new ArrayList<>();
+	private final List<ArtefactInformations> artefacts = new ArrayList<>();
 
 	public Sol004ManifestReader(final String filename) {
 		final List<String> lines = new ArrayList<>();
@@ -85,10 +86,6 @@ public class Sol004ManifestReader {
 		return keyValues;
 	}
 
-	public List<SignatureElements> getSigs() {
-		return sigs;
-	}
-
 	private void parseManifest(final List<String> lines) {
 		final ManifestParsingContext rootCtx = new ManifestParsingContext(lines);
 		while (rootCtx.haveNext()) {
@@ -100,11 +97,51 @@ public class Sol004ManifestReader {
 				final List<String> cmsList = rootCtx.consumeUntil(Sol004ManifestReader::isEndSignatureToken);
 				final Certificate cert = createCertificate(line, cmsList);
 				cms.add(cert);
+			} else if (isNonManoArtifact(line)) {
+				consumeNonMano(rootCtx);
 			} else {
 				handleKeyValue(rootCtx, line);
 			}
 		}
 
+	}
+
+	/**
+	 * Non mano artefact appear at the end of the manifest file.
+	 * <ul>
+	 * <li>Fist line is the Non mano registry tag.</li>
+	 * <li>Second is Source:</li>
+	 * <li>Until a new Source: tag</li>
+	 * </ul>
+	 *
+	 * @param rootCtx
+	 */
+	private void consumeNonMano(final ManifestParsingContext rootCtx) {
+		String currentRegistry = null;
+		while (rootCtx.haveNext()) {
+			final String line = rootCtx.getNextLine();
+			if (null == line) {
+				// It should be handled by hasNext().
+				return;
+			}
+			final KeyValue kv = parseKeyValue(line);
+			if (kv.value == null || kv.value.isEmpty()) {
+				currentRegistry = kv.key;
+			} else {
+				if (!"Source".equals(kv.key)) {
+					continue;
+				}
+				final ArtefactInformations ai = ArtefactInformations.builder()
+						.path(kv.value)
+						.nonManoSetIndentifier(currentRegistry)
+						.build();
+				artefacts.add(ai);
+			}
+		}
+	}
+
+	private static boolean isNonManoArtifact(final String line) {
+		return line.startsWith("non_mano_artifact_sets:");
 	}
 
 	private static Certificate createCertificate(final String line, final List<String> cmsList) {
@@ -131,11 +168,21 @@ public class Sol004ManifestReader {
 					.startBy("Source: ")
 					.build();
 			final Map<String, String> kv2 = res.stream().map(Sol004ManifestReader::parseKeyValue).collect(Collectors.toMap(x -> x.key, x -> x.value));
-			final SignatureElements sig = new SignatureElements(kv.value, kv2.get(ALGORITHM), kv2.get(HASH), kv2.get(SIGNATURE), kv2.get(CERTIFICATE));
-			sigs.add(sig);
+			final ArtefactInformations ai = ArtefactInformations.builder()
+					.path(kv.value)
+					.algorithm(kv2.get(ALGORITHM))
+					.checksum(kv2.get(HASH))
+					.signature(kv2.get(SIGNATURE))
+					.certificate(kv2.get(CERTIFICATE))
+					.build();
+			artefacts.add(ai);
 		} else {
 			keyValues.put(kv.key, kv.value);
 		}
+	}
+
+	public List<ArtefactInformations> getArtefacts() {
+		return artefacts;
 	}
 
 	private static boolean isEndSignatureToken(final String x) {

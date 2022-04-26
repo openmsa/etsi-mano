@@ -106,7 +106,7 @@ public class ContextResolver {
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
 		try {
-			return policies.stream().map(x -> handlePolicy(x, destination, stack)).collect(Collectors.toList());
+			return policies.stream().map(x -> handlePolicy(x, destination, stack)).toList();
 		} catch (final RuntimeException e) {
 			throwException("Policies: Runtime error.", stack, e);
 		}
@@ -116,7 +116,7 @@ public class ContextResolver {
 	public <T> List<T> mapGroupsToClass(final List<GroupDefinition> groups, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
 		try {
-			return (List<T>) groups.stream().map(x -> handleGroup(x, destination, stack)).collect(Collectors.toList());
+			return (List<T>) groups.stream().map(x -> handleGroup(x, destination, stack)).toList();
 		} catch (final RuntimeException e) {
 			throwException("Groups: Runtime error.", stack, e);
 		}
@@ -126,7 +126,7 @@ public class ContextResolver {
 	public <T> List<T> mapToscaToClass(final List<NodeTemplate> nodes, final Class<T> destination) {
 		final Deque<String> stack = new ArrayDeque<>();
 		try {
-			return nodes.stream().map(x -> handleObject(x, destination, stack)).collect(Collectors.toList());
+			return nodes.stream().map(x -> handleObject(x, destination, stack)).toList();
 		} catch (final RuntimeException e) {
 			throwException("Nodes: Runtime error.", stack, e);
 		}

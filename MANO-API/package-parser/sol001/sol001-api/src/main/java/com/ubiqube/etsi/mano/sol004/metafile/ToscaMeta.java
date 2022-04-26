@@ -14,11 +14,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.parser.tosca;
+package com.ubiqube.etsi.mano.sol004.metafile;
 
-public interface IResolver {
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface ToscaMeta {
 
-	String getContent(String url);
+	String getManifestFileName();
 
-	String resolvePath(String path);
+	String getEntryDefinitionFileName();
+
+	String getTestingFolder();
+
+	String getLicencesFolder();
+
+	String getChangeLogFilename();
+
+	String getKey(String string);
 }

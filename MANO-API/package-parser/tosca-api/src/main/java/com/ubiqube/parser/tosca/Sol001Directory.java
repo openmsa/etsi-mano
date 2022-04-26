@@ -28,7 +28,9 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
 
-import com.ubiqube.parser.tosca.api.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.IResolver;
+import com.ubiqube.etsi.mano.tosca.Resolver;
 
 import jakarta.validation.constraints.NotNull;
 

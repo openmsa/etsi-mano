@@ -30,6 +30,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import com.ubiqube.etsi.mano.sol004.Sol004Exception;
+import com.ubiqube.etsi.mano.tosca.IResolver;
+import com.ubiqube.etsi.mano.tosca.ZipResolver;
 
 /**
  *
@@ -38,10 +40,12 @@ import com.ubiqube.etsi.mano.sol004.Sol004Exception;
  */
 public class DirectZip implements VirtualFileSystem {
 	private final Path filename;
-	private ZipFile zip;
+	private final ZipFile zip;
+	private final ZipResolver resolver;
 
 	public DirectZip(final Path p) {
 		this.filename = p;
+		this.resolver = new ZipResolver(p.toString());
 		try {
 			zip = new ZipFile(filename.toFile());
 		} catch (final IOException e) {
@@ -85,6 +89,11 @@ public class DirectZip implements VirtualFileSystem {
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}
+	}
+
+	@Override
+	public IResolver getResolver() {
+		return resolver;
 	}
 
 }

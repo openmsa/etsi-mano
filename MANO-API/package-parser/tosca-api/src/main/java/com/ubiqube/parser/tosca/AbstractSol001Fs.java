@@ -26,7 +26,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.ubiqube.parser.tosca.api.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.Sol001Version;
+import com.ubiqube.etsi.mano.tosca.ToscaVersion;
 
 public abstract class AbstractSol001Fs implements Sol001FileSystem {
 

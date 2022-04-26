@@ -27,8 +27,8 @@ public class CsarBuilder {
 		return new CsarBuilder();
 	}
 
-	public DoubleZipBuilder ofDoubleZip() {
-		return new DoubleZipBuilder(this);
+	public static DoubleZipBuilder ofDoubleZip() {
+		return new DoubleZipBuilder();
 	}
 
 	public SingleZipBuilder ofSingleZip() {

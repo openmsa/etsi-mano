@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.sol004.vfs;
 import java.io.InputStream;
 import java.util.List;
 
+import com.ubiqube.etsi.mano.tosca.IResolver;
+
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
@@ -33,5 +35,7 @@ public interface VirtualFileSystem {
 	List<String> getFileMatching(String filenameWildcard);
 
 	InputStream getInputStream(String fileName);
+
+	IResolver getResolver();
 
 }
