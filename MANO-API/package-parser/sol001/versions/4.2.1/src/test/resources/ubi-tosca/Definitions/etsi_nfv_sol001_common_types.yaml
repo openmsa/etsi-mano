@@ -1,9 +1,9 @@
 tosca_definitions_version: tosca_simple_yaml_1_3
-description: ETSI NFV SOL 001 common types definitions version 3.6.1
+description: ETSI NFV SOL 001 common types definitions version 4.2.1
 metadata:
   template_name: etsi_nfv_sol001_common_types
   template_author: ETSI_NFV
-  template_version: 3.6.1
+  template_version: 4.2.1
 
 data_types:
   tosca.datatypes.nfv.L2AddressData:
@@ -21,14 +21,8 @@ data_types:
     properties:
       ip_address_assignment:
         type: boolean
-        description: Specify which mode is used for the IP address assignment. If it is set to True, IP configuration information shall be provided for the VNF by a management entity using the NFV MANO interfaces towards the VNFM. If it is set to False, the value of the ip_address_assignment_subtype property defines the method of IP address assignment. Shall be present if the fixed_ip_address property is not present and should be absent otherwise. See note
+        description: Specifies if the address assignment is the responsibility of management and orchestration function or not. If it is set to True, it is the management and orchestration function responsibility
         required: true
-      ip_address_assignment_subtype:
-        type: boolean
-        description: Method of IP address assignment in case the IP configuration is not provided using the NFV MANO interfaces towards the VNFM. Description of the valid values, (1) dynamic, the VNF gets an IP address dynamically from the NFVI (i.e., using DHCP), (2) vnf_pkg, an IP address defined by the VNF provider is assigned by means included as part of the VNF package (e.g., LCM script); (3) external, an IP address is provided by an external management entity (such as EM) directly towards the VNF.Shall be present in case the ip_address_assignment property is set to False and shall be absent otherwise.
-        required: false
-        constraints:
-          - valid_values: [ dynamic, vnf_pkg, external ]
       floating_ip_activated:
         type: boolean
         description: Specifies if the floating IP scheme is activated on the Connection Point or not 
@@ -47,7 +41,7 @@ data_types:
           - greater_than: 0
       fixed_ip_address:
         type: list
-        description: Fixed IP addresses to be assigned to the internal CP instance. This property enables the VNF provider to define fixed IP addresses for internal CP instances to be assigned by the VNFM or the NFVO. This property is only permitted for Cpds without external connectivity, i.e. connectivity outside the VNF. If present, it shall be compatible with the values of the L3ProtocolData of the VnfVirtualLink referred to by the Cp, if L3ProtocolData is included in the VnfVirtualLink
+        description: IP address to be assigned to the CP instance. This attribute is only permitted for Cpds without external connectivity, i.e. connectivity outside the VNF. If present, it shall be compatible with the values of the L3ProtocolData of the VnfVirtualLink referred to by the Cp, if L3ProtocolData is included in the VnfVirtualLink
         required: false
         entry_schema:
           type: string
@@ -203,7 +197,7 @@ capability_types:
 relationship_types:
   tosca.relationships.nfv.VirtualLinksTo:
     derived_from: tosca.relationships.DependsOn
-    description: Represents an association relationship between the VduCp and VnfVirtualLink node types or the association between either a VnfExtCp, a PnfExtCp or a Sap and an NsVirtualLink node types. 
+    description: Represents an association relationship between the VduCp or the VnfExtCp and the VnfVirtualLink node types or the association between either a VnfExtCp, a VduCp, a VirtualCp, a PnfExtCp or a Sap and an NsVirtualLink node types. 
     valid_target_types: [ tosca.capabilities.nfv.VirtualLinkable ]
 
   tosca.relationships.nfv.VipVirtualLinksTo:
@@ -291,5 +285,3 @@ policy_types:
           - greater_or_equal: 0
           - less_or_equal: 65535
         default: 65535
-
-

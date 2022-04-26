@@ -1,15 +1,15 @@
 tosca_definitions_version: tosca_simple_yaml_1_3
-description: ETSI NFV SOL 001 nsd types definitions version 3.5.1
+description: ETSI NFV SOL 001 nsd types definitions version 4.2.1
 metadata:
   template_name: etsi_nfv_sol001_nsd_types
   template_author: ETSI_NFV
-  template_version: 3.5.1
+  template_version: 4.2.1
 
 imports:
-     - etsi_nfv_sol001_common_types.yaml
-     - etsi_nfv_sol001_vnfd_types.yaml
-     - etsi_nfv_sol001_pnfd_types.yaml
-# editor's note: During the development of the SOL001ed351 GS, to enable this file to be verified by a TOSCA parser, the imports statement has to be replaced with a reference to a local copy of the common definitions YAML file
+     - https://forge.etsi.org/rep/nfv/SOL001/raw/v4.2.1/etsi_nfv_sol001_common_types.yaml
+     - https://forge.etsi.org/rep/nfv/SOL001/raw/v4.2.1/etsi_nfv_sol001_vnfd_types.yaml
+     - https://forge.etsi.org/rep/nfv/SOL001/raw/v4.2.1/etsi_nfv_sol001_pnfd_types.yaml
+# editor's note: During the development of the SOL001ed421 GS, to enable this file to be verified by a TOSCA parser, the imports statement has to be replaced with a reference to a local copy of the common definitions YAML file
 
 data_types:
   tosca.datatypes.nfv.NsVlProfile:
@@ -83,10 +83,14 @@ data_types:
       starting_point: 
         description: Indicates the offset between the last bit of the source mac address and the first bit of the sequence of bits to be matched.
         type: integer
+        constraints:
+          - greater_or_equal: 1
         required: true    
       length: 
         description: Indicates the number of bits to be matched.
         type: integer
+        constraints:
+          - greater_or_equal: 1
         required: true
       value:
         description: Provide the sequence of bit values to be matched.
@@ -222,6 +226,8 @@ data_types:
         required: true
         key_schema: 
           type: integer # Integer type in order to number the levels. First level is level 0.
+          constraints:
+            - greater_or_equal: 0
         entry_schema:
           type: tosca.datatypes.nfv.NsLevels
 
@@ -234,7 +240,7 @@ data_types:
         description: Human readable description of the Ns level
         required: true
 
-  tosca.datatypes.nfv.scaleNsByStepsData:
+  tosca.datatypes.nfv.ScaleNsByStepsData:
     derived_from: tosca.datatypes.Root
     description: describes the information needed to scale an NS instance by one or more scaling steps, with respect to a particular NS scaling aspect
     properties:
@@ -256,7 +262,7 @@ data_types:
           - greater_than: 0
         default: 1
 
-  tosca.datatypes.nfv.scaleNsToLevelData:
+  tosca.datatypes.nfv.ScaleNsToLevelData:
     derived_from: tosca.datatypes.Root
     description: describes the information needed to scale an NS instance to a target size.
     properties:
@@ -270,7 +276,9 @@ data_types:
         required: false
         entry_schema:
           type: integer
-        
+          constraints:
+            - greater_or_equal: 0
+
 capability_types:
   tosca.capabilities.nfv.Forwarding:
     derived_from: tosca.capabilities.Root
@@ -317,13 +325,13 @@ interface_types:
           #   required: false 
         inputs:
           scale_ns_by_steps_data:
-            type: tosca.datatypes.nfv.scaleNsByStepsData
+            type: tosca.datatypes.nfv.ScaleNsByStepsData
             description: Describes the information needed to scale an NS instance by one or more scaling steps, with respect to a particular NS scaling aspect as defined in ETSI GS NFV-IFA 013. Either scale_ns_by_steps_data or scale_ns_to_level_data shall be provided.
             required: false
           scale_ns_to_level_data:
-            type: tosca.datatypes.nfv.scaleNsToLevelData
+            type: tosca.datatypes.nfv.ScaleNsToLevelData
             description: Describes the information needed to scale an NS instance to a target size as defined in ETSI GS NFV-IFA 013. Either scale_ns_by_steps_data or scale_ns_to_level_data shall be provided.
-            required: false          
+            required: false
       scale_end:
         description: Postamble to the execution of the scale operation
       heal_start:
@@ -336,7 +344,7 @@ interface_types:
           #   required: false 
       heal_end:
         description: Postamble to the execution of the heal operation
-        
+
   tosca.interfaces.nfv.NsVnfIndicator:
     derived_from: tosca.interfaces.Root
     description: This interface is an empty base interface type for deriving NS specific interface types that include VNF indicator specific notifications which will be used in a NS.
@@ -391,6 +399,8 @@ node_types:
         description: Scale status of the NS, one entry per aspect. Represents for every scaling aspect how "big" the NS has been scaled w.r.t. that aspect.
         entry_schema:
           type: integer
+          constraints:
+            - greater_or_equal: 0
     requirements:
       - virtual_link:
           capability: tosca.capabilities.nfv.VirtualLinkable
@@ -468,7 +478,7 @@ node_types:
 #       type: map
 #       required: false
 #       entry_schema:
-#         type: strin
+#         type: string
     capabilities:
       forwarding: 
         type: tosca.capabilities.nfv.Forwarding
@@ -534,7 +544,7 @@ policy_types:
         description: Specifies the scope of the local affinity rule.
         required: true
         constraints:
-          - valid_values: [ nfvi_node, zone, zone_group, nfvi_pop, network_link_and_node ]
+          - valid_values: [ nfvi_node, zone, zone_group, nfvi_pop, network_link_and_node, container_namespace ]
     targets: [tosca.nodes.nfv.VNF, tosca.nodes.nfv.NsVirtualLink, tosca.nodes.nfv.NS, tosca.groups.nfv.NsPlacementGroup ]
 
   tosca.policies.nfv.NsAntiAffinityRule:
@@ -546,7 +556,7 @@ policy_types:
         description: Specifies the scope of the local affinity rule..
         required: true
         constraints:
-          - valid_values: [ nfvi_node, zone, zone_group, nfvi_pop, network_link_and_node ]
+          - valid_values: [ nfvi_node, zone, zone_group, nfvi_pop, network_link_and_node, container_namespace ]
     targets: [tosca.nodes.nfv.VNF, tosca.nodes.nfv.NsVirtualLink, tosca.nodes.nfv.NS, tosca.groups.nfv.NsPlacementGroup ]
 
   tosca.policies.nfv.NsSecurityGroupRule:
@@ -669,8 +679,12 @@ policy_types:
         required: true
         key_schema: 
           type: integer # First level is level 0.
+          constraints:
+            - greater_or_equal: 0
         entry_schema:
           type: integer  
+          constraints:
+            - greater_or_equal: 0
         constraints:
           - min_length: 1
     targets: [ tosca.nodes.nfv.VNF ]
@@ -689,8 +703,12 @@ policy_types:
         required: true
         key_schema: 
           type: integer # First level is level 0.
+          constraints:
+            - greater_or_equal: 0
         entry_schema:
           type: integer 
+          constraints:
+            - greater_or_equal: 0
         constraints:
           - min_length: 1
     targets: [ tosca.nodes.nfv.NS ]
@@ -709,6 +727,8 @@ policy_types:
         required: true
         key_schema:
           type: integer # First level is level 0.
+          constraints:
+            - greater_or_equal: 0
         entry_schema:
           type: tosca.datatypes.nfv.LinkBitrateRequirements 
         constraints:
@@ -742,6 +762,8 @@ policy_types:
         required: true
         entry_schema:
           type: integer
+          constraints:
+            - greater_or_equal: 0
         constraints:
           - min_length: 1
     targets: [ tosca.nodes.nfv.VNF ]
@@ -756,6 +778,8 @@ policy_types:
         required: true
         entry_schema:
           type: integer 
+          constraints:
+            - greater_or_equal: 0
         constraints:
           - min_length: 1
     targets: [ tosca.nodes.nfv.NS ]
@@ -778,4 +802,3 @@ policy_types:
     derived_from: tosca.policies.Root
     description: The NsAutoScale policy type is a base policy type for defining NS auto-scale specific policies as defined in ETSI GS NFV-IFA 014 [2].
     targets: [ tosca.nodes.nfv.NS ]
-

@@ -1,9 +1,9 @@
 tosca_definitions_version: tosca_simple_yaml_1_3
-description: ETSI NFV SOL 001 common types definitions version 3.5.1
+description: ETSI NFV SOL 001 common types definitions version 4.2.1
 metadata:
   template_name: etsi_nfv_sol001_common_types
   template_author: ETSI_NFV
-  template_version: 3.5.1
+  template_version: 4.2.1
 
 data_types:
   tosca.datatypes.nfv.L2AddressData:
@@ -39,6 +39,12 @@ data_types:
         required: false
         constraints:
           - greater_than: 0
+      fixed_ip_address:
+        type: list
+        description: IP address to be assigned to the CP instance. This attribute is only permitted for Cpds without external connectivity, i.e. connectivity outside the VNF. If present, it shall be compatible with the values of the L3ProtocolData of the VnfVirtualLink referred to by the Cp, if L3ProtocolData is included in the VnfVirtualLink
+        required: false
+        entry_schema:
+          type: string
 
   tosca.datatypes.nfv.AddressData:
     derived_from: tosca.datatypes.Root
@@ -191,7 +197,7 @@ capability_types:
 relationship_types:
   tosca.relationships.nfv.VirtualLinksTo:
     derived_from: tosca.relationships.DependsOn
-    description: Represents an association relationship between the VduCp and VnfVirtualLink node types or the association between either a VnfExtCp, a PnfExtCp or a Sap and an NsVirtualLink node types. 
+    description: Represents an association relationship between the VduCp or the VnfExtCp and the VnfVirtualLink node types or the association between either a VnfExtCp, a VduCp, a VirtualCp, a PnfExtCp or a Sap and an NsVirtualLink node types. 
     valid_target_types: [ tosca.capabilities.nfv.VirtualLinkable ]
 
   tosca.relationships.nfv.VipVirtualLinksTo:
@@ -279,5 +285,3 @@ policy_types:
           - greater_or_equal: 0
           - less_or_equal: 65535
         default: 65535
-
-
