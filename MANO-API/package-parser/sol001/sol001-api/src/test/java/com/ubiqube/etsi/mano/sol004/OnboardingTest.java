@@ -29,6 +29,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -36,6 +38,9 @@ import org.junit.jupiter.api.Test;
  *
  */
 class OnboardingTest {
+
+	private static final Logger LOG = LoggerFactory.getLogger(OnboardingTest.class);
+
 	private final Sol004Onboarding ob = new Sol004Onboarding();
 
 	@Test
@@ -70,7 +75,7 @@ class OnboardingTest {
 		} else {
 			// Upload the filename.
 		}
-		System.out.println("" + mode);
+		LOG.debug("{}", mode);
 	}
 
 	@Test

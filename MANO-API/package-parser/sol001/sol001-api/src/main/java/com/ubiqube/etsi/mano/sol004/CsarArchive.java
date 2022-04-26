@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -38,7 +39,6 @@ import com.ubiqube.etsi.mano.sol004.metafile.ToscaMetaFile;
 import com.ubiqube.etsi.mano.sol004.metafile.ToscaMetaFlat;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
 import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
-import com.ubiqube.etsi.mano.tosca.ArtefactInformations.ArtefactInformationsBuilder;
 import com.ubiqube.etsi.mano.tosca.IResolver;
 
 /**
@@ -193,10 +193,39 @@ public class CsarArchive {
 			final Sol004ManifestReader reader = Sol004ManifestReader.of(manifestStream);
 			globalCertificate = reader.getCms();
 			signatures = reader.getArtefacts();
+			classifyArtefact();
 			rebuildCert();
+			getMetaInfo();
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}
+	}
+
+	private void getMetaInfo() {
+		signatures.forEach(x -> {
+			final Map<String, String> meta = vfs.getMetaInfo(x.getPath());
+			x.setMetadata(meta);
+		});
+	}
+
+	private void classifyArtefact() {
+		signatures.forEach(x -> {
+			final String classifier = classify(x.getPath());
+			x.setClassifier(classifier);
+		});
+	}
+
+	private String classify(final String path) {
+		if (null != tmf.getChangeLogFilename() && path.startsWith(tmf.getChangeLogFilename())) {
+			return "HISTORY";
+		}
+		if (null != tmf.getLicencesFolder() && path.startsWith(tmf.getLicencesFolder())) {
+			return "LICENSE";
+		}
+		if (null != tmf.getTestingFolder() && path.startsWith(tmf.getTestingFolder())) {
+			return "TESTING";
+		}
+		return null;
 	}
 
 	/**
@@ -244,20 +273,19 @@ public class CsarArchive {
 		return vfs.getResolver();
 	}
 
+	@SuppressWarnings("null")
 	public @NotNull List<ArtefactInformations> getArtefactList() {
 		final List<String> files = vfs.getFileMatching(".*");
 		return files.stream()
 				.filter(x -> !isCert(x))
 				.filter(x -> !isSignature(x))
-				.map(x -> map(x, files))
+				.map(this::map)
 				.toList();
 	}
 
-	private ArtefactInformations map(final String fileName, final List<String> files) {
-		final ArtefactInformationsBuilder ret = ArtefactInformations.builder();
-		ret.path(fileName);
+	private ArtefactInformations map(final String fileName) {
 		return signatures.stream()
-				.filter(x -> x.equals(fileName))
+				.filter(x -> x.getPath().equals(fileName))
 				.findFirst().orElse(null);
 	}
 

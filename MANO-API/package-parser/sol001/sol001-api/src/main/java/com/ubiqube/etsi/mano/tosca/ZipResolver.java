@@ -68,6 +68,8 @@ public class ZipResolver extends Resolver {
 			return super.getContent(url);
 		}
 		if (!url.startsWith("/")) {
+			final File f = new File(url);
+			parent = f.getParentFile();
 			ZipEntry entry = zipFile.getEntry(url);
 			if (entry == null) {
 				entry = buildParent(url);

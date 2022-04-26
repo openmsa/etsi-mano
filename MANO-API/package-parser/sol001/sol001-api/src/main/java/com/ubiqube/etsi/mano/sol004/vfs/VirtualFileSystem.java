@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.sol004.vfs;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import com.ubiqube.etsi.mano.tosca.IResolver;
 
@@ -37,5 +38,7 @@ public interface VirtualFileSystem {
 	InputStream getInputStream(String fileName);
 
 	IResolver getResolver();
+
+	Map<String, String> getMetaInfo(String path);
 
 }

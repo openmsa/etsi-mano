@@ -16,20 +16,14 @@
  */
 package com.ubiqube.etsi.mano.sol004.vfs;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import com.ubiqube.etsi.mano.sol004.Sol004Exception;
 import com.ubiqube.etsi.mano.tosca.IResolver;
@@ -40,21 +34,27 @@ import com.ubiqube.etsi.mano.tosca.Resolver;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-public class DirectVfs implements VirtualFileSystem {
+public class SingleVfs implements VirtualFileSystem {
 
-	private final Path root;
+	private final String filename;
 	private final Resolver resolver;
 
-	public DirectVfs(final Path path) {
-		this.root = path;
-		this.resolver = new Resolver(path.toFile());
+	public SingleVfs(final String filename) {
+		this.filename = filename;
+		this.resolver = new Resolver(new File(filename));
 	}
 
 	@Override
 	public byte[] getFileContent(final String filename) {
-		try {
-			final Path p = checkPath(root, Paths.get(filename));
-			return Files.readAllBytes(p);
+		if (!filename.equals(this.filename)) {
+			return new byte[0];
+		}
+		return readFile();
+	}
+
+	private byte[] readFile() {
+		try (FileInputStream fis = new FileInputStream(this.filename)) {
+			return fis.readAllBytes();
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}
@@ -62,44 +62,25 @@ public class DirectVfs implements VirtualFileSystem {
 
 	@Override
 	public boolean exist(final String filename) {
-		final Path p = checkPath(root, Paths.get(filename));
-		return Files.exists(p);
+		return false;
 	}
 
 	@Override
 	public List<String> getFileMatching(final String filenameWildcard) {
 		final Pattern p = Pattern.compile(filenameWildcard);
-		try (Stream<Path> w = Files.walk(root)) {
-			return w
-					.filter(x -> p.matcher(x.getFileName().toString()).find())
-					.map(root::relativize)
-					.map(Path::toString)
-					.toList();
-		} catch (final IOException e) {
-			throw new Sol004Exception(e);
+		if (p.matcher(filename).find()) {
+			return List.of(filename);
 		}
-	}
-
-	/**
-	 * Prevent directory traversal attack.
-	 *
-	 * @param root   The directory point where should not allow to goes backward.
-	 * @param toTest The path to test.
-	 * @return The normalized path.
-	 */
-	public static Path checkPath(final Path root, final Path toTest) {
-		final Path target = root.resolve(toTest).normalize();
-		if (!target.startsWith(root)) {
-			throw new Sol004Exception("Could not resolve path for: " + toTest);
-		}
-		return target;
+		return List.of();
 	}
 
 	@Override
 	public InputStream getInputStream(final String fileName) {
-		final Path p = checkPath(root, Paths.get(fileName));
+		if (!filename.equals(this.filename)) {
+			return null;
+		}
 		try {
-			return new FileInputStream(p.toFile());
+			return new FileInputStream(fileName);
 		} catch (final FileNotFoundException e) {
 			throw new Sol004Exception(e);
 		}
@@ -112,11 +93,7 @@ public class DirectVfs implements VirtualFileSystem {
 
 	@Override
 	public Map<String, String> getMetaInfo(final String path) {
-		final Path p = checkPath(root, Paths.get(path));
-		final Instant inst = Instant.ofEpochMilli(p.toFile().lastModified());
-		final String date = ZonedDateTime.ofInstant(inst, ZoneId.of("UTC")).toString();
-		final long length = p.toFile().length();
-		return Map.of("DATE", date, "LENGTH", String.format("%d", length));
+		return Map.of();
 	}
 
 }

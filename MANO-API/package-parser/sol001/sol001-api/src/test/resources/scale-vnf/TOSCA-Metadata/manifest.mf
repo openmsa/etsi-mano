@@ -6,11 +6,11 @@ vnf_software_version: 1.0.0
 vnf_package_version: 1.0
 
 
-Source: Definitions/nsd_ubi.yaml
+Source: Definitions/tosca_ubi_scale.yaml
 Algorithm: SHA-256
 Hash: 891837aac60a1f93de57ecb0f055cf77a03085cc922937ceb0078c706b5f7850
 
-Source: Definitions/etsi_nfv_sol001_nsd_types.yaml
+Source: Definitions/etsi_nfv_sol001_vnfd_types.yaml
 Hash: 6cefaa36c178545816ba222a0ce05cbb85175ea2f1137709ea6219823c178d6c
 
 Source: TOSCA-Metadata/TOSCA.meta

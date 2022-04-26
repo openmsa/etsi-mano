@@ -19,8 +19,12 @@ package com.ubiqube.etsi.mano.sol004.vfs;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -33,6 +37,7 @@ import com.ubiqube.etsi.mano.tosca.IResolver;
 
 public class DoubleZip implements VirtualFileSystem {
 
+	private static final String UNABLE_TO_FIND = "Unable to find ";
 	private ZipFile zip;
 	private final String inZip;
 	private final List<String> innerList;
@@ -85,7 +90,7 @@ public class DoubleZip implements VirtualFileSystem {
 				throw new Sol004Exception(e);
 			}
 		}
-		throw new Sol004Exception("Unable to find " + filename);
+		throw new Sol004Exception(UNABLE_TO_FIND + filename);
 	}
 
 	private byte[] readInner(final String filename) {
@@ -112,7 +117,25 @@ public class DoubleZip implements VirtualFileSystem {
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
 		}
-		throw new Sol004Exception("Unable to find " + filename);
+		throw new Sol004Exception(UNABLE_TO_FIND + filename);
+	}
+
+	private ZipEntry getZipEntry(final String filename) {
+		try (final InputStream is = zip.getInputStream(zip.getEntry(inZip))) {
+			final ZipInputStream zis = new ZipInputStream(is);
+			ZipEntry entry;
+			while ((entry = zis.getNextEntry()) != null) {
+				if (entry.isDirectory()) {
+					continue;
+				}
+				if (filename.equals(entry.getName())) {
+					return entry;
+				}
+			}
+		} catch (final IOException e) {
+			throw new Sol004Exception(e);
+		}
+		throw new Sol004Exception(UNABLE_TO_FIND + filename);
 	}
 
 	@Override
@@ -150,6 +173,25 @@ public class DoubleZip implements VirtualFileSystem {
 	@Override
 	public IResolver getResolver() {
 		return resolver;
+	}
+
+	@Override
+	public Map<String, String> getMetaInfo(final String fileName) {
+		final Optional<String> elem = findInnerFile(fileName);
+		ZipEntry entry;
+		if (elem.isPresent()) {
+			entry = getZipEntry(fileName);
+		} else {
+			entry = zip.getEntry(fileName);
+		}
+		if (null == entry) {
+			throw new Sol004Exception("Unable to find " + fileName);
+		}
+		final long crc = entry.getCrc();
+		final long date = entry.getTime();
+		final String dateStr = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of("UTC")).toString();
+		final long size = entry.getSize();
+		return Map.of("CRC", String.format("%d", crc), "SIZE", String.format("%d", size), "DATE", dateStr);
 	}
 
 }

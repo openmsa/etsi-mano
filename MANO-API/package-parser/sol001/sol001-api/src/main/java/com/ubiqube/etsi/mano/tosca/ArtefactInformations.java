@@ -40,6 +40,11 @@ public class ArtefactInformations {
 	private String signature;
 	private String certificate;
 	private String nonManoSetIndentifier;
+	private String classifier;
+
+	public boolean isEncrypted() {
+		return path.endsWith(".enc.cms");
+	}
 
 	public String getChecksum() {
 		return checksum;
@@ -95,6 +100,14 @@ public class ArtefactInformations {
 
 	public void setNonManoSetIndentifier(final String nonManoSetIndentifier) {
 		this.nonManoSetIndentifier = nonManoSetIndentifier;
+	}
+
+	public String getClassifier() {
+		return classifier;
+	}
+
+	public void setClassifier(final String classifier) {
+		this.classifier = classifier;
 	}
 
 }

@@ -74,11 +74,15 @@ import org.bouncycastle.pkcs.bc.BcPKCS12PBEInputDecryptorProviderBuilder;
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.bouncycastle.util.Store;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.sol004.crypto.SignatureInputStream;
 
 @SuppressWarnings("static-method")
 public class CryptoTest {
+
+	private static final Logger LOG = LoggerFactory.getLogger(CryptoTest.class);
 
 	@Test
 	void testSign() throws Exception {
@@ -92,7 +96,7 @@ public class CryptoTest {
 			sig.transferTo(out);
 		}
 		final byte[] signed = rsaSignature.sign();
-		System.out.println(bytesToHex(signed));
+		LOG.debug(bytesToHex(signed));
 		final JcaSignerInfoGeneratorBuilder sigb = new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().build());
 		sigb.setDirectSignature(true);
 		final CMSTypedData msg = new CMSProcessableByteArray(rsaSignature.sign());
@@ -108,7 +112,7 @@ public class CryptoTest {
 		try (final JcaPEMWriter writer = new JcaPEMWriter(out)) {
 			writer.writeObject(sigData.toASN1Structure());
 		}
-		System.out.println("writer : \n" + out.toString());
+		LOG.debug("writer : \n{}", out.toString());
 		assertTrue(true);
 	}
 
@@ -119,12 +123,12 @@ public class CryptoTest {
 		final PEMParser pem = new PEMParser(reader);
 		final Object obj = pem.readObject();
 		if (obj instanceof final X509CertificateHolder x509) {
-			System.out.println("" + x509.getSubject());
+			LOG.debug("{}", x509.getSubject());
 			final X509Certificate cert = new JcaX509CertificateConverter().getCertificate(x509);
 			cert.checkValidity();
 			final PublicKey pub = cert.getPublicKey();
 		}
-		System.out.println("" + obj.getClass());
+		LOG.debug("{}", obj.getClass());
 		assertTrue(true);
 	}
 
@@ -188,14 +192,14 @@ public class CryptoTest {
 		sig.initSign(pk);
 		sig.update(dataBytes);
 		final byte[] signature = sig.sign();
-		System.out.println("sig algo: " + fullCert.getSigAlgName());
-		System.out.println("Sig: " + signature.length + " " + ByteUtils.toHexString(signature));
-		System.out.println("Si2: " + ByteUtils.toHexString(signer.getSignature()));
+		LOG.debug("sig algo: {}", fullCert.getSigAlgName());
+		LOG.debug("Sig: {}", signature.length + " " + ByteUtils.toHexString(signature));
+		LOG.debug("Si2: {}", ByteUtils.toHexString(signer.getSignature()));
 		// verifySignature.setParameter(spec1);
 		boolean res = checkSignature(fullCert, dataBytes, signature);
-		System.out.println("res: " + res);
+		LOG.debug("res: {}", res);
 		res = checkSignature(fullCert, dataBytes, cms.getEncoded());
-		System.out.println("res: " + res);
+		LOG.debug("res: {}", res);
 		assertTrue(true);
 	}
 
@@ -228,23 +232,23 @@ public class CryptoTest {
 			final X509CertificateHolder certHolder = certIt.next();
 			final X509Certificate cert = new JcaX509CertificateConverter().setProvider("BC").getCertificate(certHolder);
 			if (signer.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert))) {
-				System.out.println("verified");
+				LOG.debug("verified");
 				extracted(dataBytes, signer, fullCert);
 			}
 		}
-		System.out.println(">" + cms.getSignedContent());
+		LOG.debug("> {}", cms.getSignedContent());
 		assertTrue(true);
 	}
 
 	private static void extracted(final byte[] dataBytes, final SignerInformation signer, final X509Certificate cert) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-		System.out.println("" + cert.getSigAlgName());
+		LOG.debug("{}", cert.getSigAlgName());
 		final Signature signature = Signature.getInstance(cert.getSigAlgName());
 		signature.initVerify(cert);
 		signature.update(dataBytes);
 		if (signature.verify(signer.getSignature())) {
-			System.out.println("> Verified data");
+			LOG.debug("> Verified data");
 		} else {
-			System.out.println("> Failed !!!");
+			LOG.debug("> Failed !!!");
 		}
 	}
 

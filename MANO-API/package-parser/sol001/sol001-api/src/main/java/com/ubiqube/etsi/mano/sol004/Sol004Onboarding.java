@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mano.sol004.metafile.ToscaMeta;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectVfs;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectZip;
 import com.ubiqube.etsi.mano.sol004.vfs.DoubleZip;
+import com.ubiqube.etsi.mano.sol004.vfs.SingleVfs;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
 import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
 import com.ubiqube.etsi.mano.tosca.IResolver;
@@ -114,8 +115,12 @@ public class Sol004Onboarding {
 			final CsarModeEnum mode = getToscaMode(filename);
 			if (mode == CsarModeEnum.DOUBLE_ZIP) {
 				vfs = new DoubleZip(file, findCsarFile(filename));
-			} else {
+			} else if (mode == CsarModeEnum.SINGLE_ZIP) {
 				vfs = new DirectZip(Paths.get(filename));
+			} else if (mode == CsarModeEnum.SINGLE_FILE) {
+				vfs = new SingleVfs(filename);
+			} else {
+				throw new Sol004Exception("Unknown mode: " + mode);
 			}
 		}
 		this.csar = new CsarArchive(vfs, filename);

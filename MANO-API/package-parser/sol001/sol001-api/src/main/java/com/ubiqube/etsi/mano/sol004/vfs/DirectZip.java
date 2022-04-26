@@ -16,11 +16,16 @@
  */
 package com.ubiqube.etsi.mano.sol004.vfs;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.regex.Pattern;
@@ -83,6 +88,8 @@ public class DirectZip implements VirtualFileSystem {
 
 	@Override
 	public InputStream getInputStream(final String fileName) {
+		final File f = new File(fileName);
+		resolver.setParent(f.getParentFile());
 		final ZipEntry entry = new ZipEntry(fileName);
 		try {
 			return zip.getInputStream(entry);
@@ -94,6 +101,19 @@ public class DirectZip implements VirtualFileSystem {
 	@Override
 	public IResolver getResolver() {
 		return resolver;
+	}
+
+	@Override
+	public Map<String, String> getMetaInfo(final String path) {
+		final ZipEntry entry = zip.getEntry(path);
+		if (null == entry) {
+			return Map.of();
+		}
+		final long crc = entry.getCrc();
+		final long date = entry.getTime();
+		final String dateStr = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.of("UTC")).toString();
+		final long size = entry.getSize();
+		return Map.of("CRC", String.format("%d", crc), "SIZE", String.format("%d", size), "DATE", dateStr);
 	}
 
 }
