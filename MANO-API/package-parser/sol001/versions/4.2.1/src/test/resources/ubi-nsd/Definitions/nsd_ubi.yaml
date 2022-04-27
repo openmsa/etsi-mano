@@ -42,6 +42,7 @@ topology_template:
         - virtual_link_7: vl # tosca.nodes.nfv.NsVirtualLink
         - virtual_link_8: vl # tosca.nodes.nfv.NsVirtualLink
         - virtual_link_9: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_10: vl # tosca.nodes.nfv.NsVirtualLink
       interfaces:
         Nslcm:
           operations:

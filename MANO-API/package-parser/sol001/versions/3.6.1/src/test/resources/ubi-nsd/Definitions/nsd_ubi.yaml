@@ -42,6 +42,7 @@ topology_template:
         - virtual_link_7: vl # tosca.nodes.nfv.NsVirtualLink
         - virtual_link_8: vl # tosca.nodes.nfv.NsVirtualLink
         - virtual_link_9: vl # tosca.nodes.nfv.NsVirtualLink
+        - virtual_link_10: vl # tosca.nodes.nfv.NsVirtualLink
       interfaces:
         Nslcm:
           operations:
@@ -139,6 +140,10 @@ topology_template:
                   floating_ip_activated: true
                   ip_address_type: ipv4
                   number_of_ip_address: 10
+                  fixed_ip_address: 
+                    - 1.2.3.4
+                    - 4.5.6.7
+                  ip_address_assignment_subtype: true
         trunk_mode: false
       requirements:
         - external_virtual_link: public
