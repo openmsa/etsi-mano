@@ -64,17 +64,6 @@ topology_template:
       name: leftVdu01
       description: A node.
       properties:
-        sw_image_data:
-          name: cirros
-          version: 1.0.0
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          min_disk: 6 GiB
-          min_ram: 2 GiB
-          operating_system: centos8
         monitoring_parameters:
           metric name:
             performance_metric: v_cpu_usage_mean_vnf
@@ -99,17 +88,6 @@ topology_template:
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 2
-        sw_image_data:
-          name: cirros
-          version: 1.0.0
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          min_disk: 6 GB
-          min_ram: 2 GB
-          operating_system: centos8
       capabilities:
         virtual_compute:
           virtual_memory:
@@ -120,20 +98,28 @@ topology_template:
 
     block01:
       type: tosca.nodes.nfv.Vdu.VirtualBlockStorage
-      properties:
-        virtual_block_storage_data:
-          size_of_storage: 6 GB
-        sw_image_data:
-          name: cirros
+      artifacts:
+        cirros:
+          type: tosca.artifacts.nfv.SwImage
+          name: name
+          file: tosca.path.qcow2
           version: 1.0.0
           checksum:
             hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
             algorithm: SHA-256
+          checksum_algorithm: SHA-256
           container_format: BARE
           disk_format: QCOW2
-          min_disk: 6 GB
-          min_ram: 2 GB
-          operating_system: centos8
+          min_disk: 5Gb
+          min_ram: 512Mb
+          size: 6gb
+          operating_system: linux
+          supported_virtualisation_environments:
+            - vmWare
+            - openstack 
+      properties:
+        virtual_block_storage_data:
+          size_of_storage: 6 GB
 
     storageVo:
       type: tosca.nodes.nfv.Vdu.VirtualObjectStorage

@@ -161,7 +161,7 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 
 	@Override
 	public Set<NsNsd> getNestedNsd(final Map<String, String> userData) {
-		final List<NS> sgr = getObjects(NS.class, userData);
+		final List<NS> sgr = new ArrayList<>(getObjects(NS.class, userData));
 		if (!sgr.isEmpty()) {
 			sgr.remove(0);
 		}

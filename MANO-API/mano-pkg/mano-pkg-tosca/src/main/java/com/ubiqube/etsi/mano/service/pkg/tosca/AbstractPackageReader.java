@@ -35,11 +35,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
 import com.ubiqube.parser.tosca.Import;
 import com.ubiqube.parser.tosca.Imports;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
-import com.ubiqube.parser.tosca.api.ArtefactInformations;
 import com.ubiqube.parser.tosca.api.ToscaApi;
 
 import ma.glasnost.orika.MapperFacade;

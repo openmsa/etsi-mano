@@ -43,7 +43,7 @@ import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
-import com.ubiqube.parser.tosca.api.ArtefactInformations;
+import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
 
 import ma.glasnost.orika.MapperFactory;
 import tosca.datatypes.nfv.L3ProtocolData;
@@ -100,7 +100,9 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.byDefault()
 				.register();
 		mapperFactory.classMap(VirtualBlockStorage.class, VnfStorage.class)
-				.field("swImageData", "softwareImage")
+				// .field("swImageData", "softwareImage")
+				.field("artifacts{value}", "softwareImage")
+				.field("artifacts{key}", "softwareImage.name")
 				.field("virtualBlockStorageData.sizeOfStorage", "size")
 				.field("internalName", "toscaName")
 				.field("", "myField:{|setType('BLOCK')}")
@@ -115,7 +117,7 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 		mapperFactory.classMap(Compute.class, VnfCompute.class)
 				.field("monitoringParameters{value}", "monitoringParameters{}")
 				.field("monitoringParameters{key}", "monitoringParameters{name}")
-				.field("swImageData", "softwareImage")
+				// .field("swImageData", "softwareImage")
 				.field("internalName", "toscaName")
 				.field("virtualStorageReq", "storages")
 				.field("virtualCompute.virtualCpu", "virtualCpu")
@@ -162,6 +164,11 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.register();
 		mapperFactory.classMap(SecurityGroupRule.class, SecurityGroup.class)
 				.field("internalName", "toscaName")
+				.byDefault()
+				.register();
+		mapperFactory.classMap(VirtualBlockStorage.class, VnfStorage.class)
+				.exclude("artifacts")
+				.customize(new ArtefactMapper())
 				.byDefault()
 				.register();
 	}

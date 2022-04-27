@@ -109,7 +109,6 @@ class ToscaPackageProviderTest {
 				//
 			} else if ("BLOCK".equals(vnfStorage.getType())) {
 				final SoftwareImage swImage = vnfStorage.getSoftwareImage();
-				assertNotNull(swImage);
 				final Checksum checksum = swImage.getChecksum();
 				assertNotNull(checksum);
 				assertEquals("SHA-256", checksum.getAlgorithm());
@@ -117,8 +116,8 @@ class ToscaPackageProviderTest {
 
 				assertEquals("BARE", swImage.getContainerFormat());
 				assertEquals("QCOW2", swImage.getDiskFormat());
-				assertEquals(6000000000L, swImage.getMinDisk());
-				assertEquals(2000000000L, swImage.getMinRam());
+				assertEquals(5000000000L, swImage.getMinDisk());
+				assertEquals(512000000L, swImage.getMinRam());
 				assertEquals("cirros", swImage.getName());
 			}
 		}
