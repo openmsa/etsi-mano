@@ -196,7 +196,17 @@ public class ToscaWalker {
 
 		listener.startField("file", new ValueObject(STRING));
 		listener.onFieldTerminate();
-
+		listener.startField("repository", new ValueObject(STRING));
+		listener.onFieldTerminate();
+		listener.startField("deploy_path", new ValueObject(STRING));
+		listener.onFieldTerminate();
+		listener.startField("artifact_version", new ValueObject(STRING));
+		listener.onFieldTerminate();
+		// listener.startField("checksum", new ValueObject(STRING));
+		// listener.onFieldTerminate();
+		listener.startField("checksum_algorithm", new ValueObject(STRING));
+		listener.onFieldTerminate();
+		// Add properties as Map string, string ?
 		cache.add(TOSCA_ARTIFACTS_ROOT);
 		listener.terminateClass();
 	}
@@ -525,12 +535,11 @@ public class ToscaWalker {
 		if (null == val.getDerivedFrom()) {
 			return false;
 		}
-		boolean ret = false;
-		ret = switch (val.getDerivedFrom()) {
+		final boolean ret = false;
+		return switch (val.getDerivedFrom()) {
 		case "integer", STRING -> true;
 		default -> false;
 		};
-		return ret;
 	}
 
 }
