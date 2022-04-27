@@ -193,18 +193,21 @@ public class ToscaWalker {
 
 	private void createArtifactRoot(final ToscaListener listener) {
 		startClass(TOSCA_ARTIFACTS_ROOT, null, listener);
-
 		listener.startField("file", new ValueObject(STRING));
 		listener.onFieldTerminate();
 		listener.startField("repository", new ValueObject(STRING));
 		listener.onFieldTerminate();
-		listener.startField("deploy_path", new ValueObject(STRING));
+		listener.startField("deployPath", new ValueObject(STRING));
+		listener.onFieldAnnotate(JsonProperty.class, "deploy_path");
 		listener.onFieldTerminate();
-		listener.startField("artifact_version", new ValueObject(STRING));
+		listener.startField("artifactVersion", new ValueObject(STRING));
+		listener.onFieldAnnotate(JsonProperty.class, "artifact_version");
 		listener.onFieldTerminate();
-		// listener.startField("checksum", new ValueObject(STRING));
-		// listener.onFieldTerminate();
-		listener.startField("checksum_algorithm", new ValueObject(STRING));
+		listener.startField("type", new ValueObject(STRING));
+		listener.onFieldTerminate();
+		// Missing checksum !
+		listener.startField("checksumAlgorithm", new ValueObject(STRING));
+		listener.onFieldAnnotate(JsonProperty.class, "checksum_algorithm");
 		listener.onFieldTerminate();
 		// Add properties as Map string, string ?
 		cache.add(TOSCA_ARTIFACTS_ROOT);

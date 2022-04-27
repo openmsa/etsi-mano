@@ -65,7 +65,7 @@ class ToscaParserTest {
 	private static List<NodeTemplate> gestNodes() {
 		final List<NodeTemplate> nodes = new ArrayList<>();
 		final NodeTemplate nt = new NodeTemplate();
-		final Map<String, Artifact> artifacts = new HashMap<>();
+		final Map<String, Object> artifacts = new HashMap<>();
 		nt.setArtifacts(artifacts);
 		final Map<String, ValueObject> attributes = new HashMap<>();
 		nt.setAttributes(attributes);

@@ -321,9 +321,26 @@ public class ContextResolver {
 		return camel.equals(methodName) || methodName.equals(camel + "Req");
 	}
 
-	private static void handleArtifacts(final Object artifacts, final PropertyDescriptor[] propsDescr, final Object cls, final Deque stack) {
+	private void handleArtifacts(final Map<String, Object> artifacts, final PropertyDescriptor[] propsDescr, final Object cls, final Deque stack) {
+		final Map<String, Object> ret = new HashMap<>();
+		artifacts.entrySet().forEach(x -> {
+			stack.push(x.getKey());
+			final Map<String, Object> sub = (Map<String, Object>) x.getValue();
+			final String type = Optional.ofNullable(sub.get("type")).map(String.class::cast).orElseThrow(() -> new ParseException("Artefact must have a type. " + stack));
+			Class<?> clazz = null;
+			try {
+				clazz = Class.forName(type);
+			} catch (final ClassNotFoundException e) {
+				throwException("Unable to find class " + type, stack, e);
+			}
+			final Object res = newInstance(clazz);
+			final PropertyDescriptor[] propsDescrNew = getPropertyDescriptor(clazz);
+			final Object obj = handleMap(sub, clazz, propsDescrNew, res, null, stack);
+			ret.put(x.getKey(), obj);
+			stack.pop();
+		});
 		final Method rm = findWriteMethod(propsDescr, "artifacts");
-		methodInvoke(rm, cls, stack, artifacts);
+		methodInvoke(rm, cls, stack, ret);
 	}
 
 	private static void setProperty2(final Object cls, final Method write, final Object value) {

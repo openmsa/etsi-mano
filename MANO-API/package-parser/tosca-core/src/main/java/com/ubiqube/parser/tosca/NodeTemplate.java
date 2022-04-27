@@ -36,6 +36,6 @@ public class NodeTemplate implements ToscaBase {
 	private Map<String, Object> properties;
 	private RequirementDefinition requirements;
 	private Map<String, ValueObject> attributes;
-	private Map<String, Artifact> artifacts;
+	private Map<String, Object> artifacts;
 	private Map<String, InterfaceDefinition> interfaces;
 }
