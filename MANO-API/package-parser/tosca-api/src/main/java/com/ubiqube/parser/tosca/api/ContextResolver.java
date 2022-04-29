@@ -46,6 +46,7 @@ import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.parser.tosca.ClassUtils;
 import com.ubiqube.parser.tosca.GroupDefinition;
 import com.ubiqube.parser.tosca.InputBean;
 import com.ubiqube.parser.tosca.InterfaceDefinition;
@@ -64,6 +65,7 @@ import com.ubiqube.parser.tosca.ValueObject;
 import com.ubiqube.parser.tosca.convert.ConvertApi;
 import com.ubiqube.parser.tosca.convert.FloatConverter;
 import com.ubiqube.parser.tosca.convert.FrequencyConverter;
+import com.ubiqube.parser.tosca.convert.IntegerConverter;
 import com.ubiqube.parser.tosca.convert.RangeConverter;
 import com.ubiqube.parser.tosca.convert.SizeConverter;
 import com.ubiqube.parser.tosca.convert.TimeConverter;
@@ -101,6 +103,7 @@ public class ContextResolver {
 		conv.register(Frequency.class.getCanonicalName(), new FrequencyConverter());
 		conv.register(Version.class.getCanonicalName(), new VersionConverter());
 		conv.register(Range.class.getCanonicalName(), new RangeConverter());
+		conv.register(Integer.class.getCanonicalName(), new IntegerConverter());
 	}
 
 	public <T> List<T> mapPoliciesToClass(final List<PolicyDefinition> policies, final Class<T> destination) {
@@ -329,7 +332,7 @@ public class ContextResolver {
 			final String type = Optional.ofNullable(sub.get("type")).map(String.class::cast).orElseThrow(() -> new ParseException("Artefact must have a type. " + stack));
 			Class<?> clazz = null;
 			try {
-				clazz = Class.forName(type);
+				clazz = Class.forName(ClassUtils.toscaToJava(type));
 			} catch (final ClassNotFoundException e) {
 				throwException("Unable to find class " + type, stack, e);
 			}
