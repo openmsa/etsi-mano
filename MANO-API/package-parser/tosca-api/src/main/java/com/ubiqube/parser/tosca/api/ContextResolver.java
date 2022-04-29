@@ -431,7 +431,12 @@ public class ContextResolver {
 		final StringBuilder sb = new StringBuilder(propertyName);
 		sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
 		final String camelCaseToUnderscore = sb.toString();
-		return Arrays.stream(props).filter(x -> camelCaseToUnderscore(x.getName()).equals(camelCaseToUnderscore)).findFirst();
+		// In 4.2.1 we now have some camel case properties...
+		final Optional<PropertyDescriptor> first = Arrays.stream(props).filter(x -> camelCaseToUnderscore(x.getName()).equals(camelCaseToUnderscore)).findFirst();
+		if (first.isPresent()) {
+			return first;
+		}
+		return Arrays.stream(props).filter(x -> x.getName().equals(camelCaseToUnderscore)).findFirst();
 	}
 
 	private void handleRealMap(final Map<Object, Object> map, final Class<?> generic, final Map<String, Object> caps, final PropertyDescriptor[] propsDescr, final Deque<String> stack) {
