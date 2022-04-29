@@ -53,7 +53,7 @@ public class VnfPackages351Sol005Controller implements VnfPackages351Sol005Api {
 
 	@Override
 	public ResponseEntity<VnfPkgInfo> vnfPackagesPost(@Valid final CreateVnfPkgInfoRequest body) {
-		return frontController.create(body.getUserDefinedData(), VnfPkgInfo.class, VnfPackages351Sol005Controller::makeLinks, null);
+		return frontController.create(body.getUserDefinedData(), VnfPkgInfo.class, VnfPackages351Sol005Controller::makeLinks, VnfPackages351Sol005Controller::getSelfLink);
 	}
 
 	@Override
@@ -134,4 +134,7 @@ public class VnfPackages351Sol005Controller implements VnfPackages351Sol005Api {
 		vnfPackage.setLinks(links);
 	}
 
+	public static String getSelfLink(final VnfPkgInfo _vnfPkgInfo) {
+		return linkTo(methodOn(VnfPackages351Sol005Api.class).vnfPackagesVnfPkgIdGet(_vnfPkgInfo.getId())).withSelfRel().getHref();
+	}
 }

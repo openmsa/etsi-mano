@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.nfvo.v331;
 
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.AuthParamOauth2;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
@@ -58,6 +59,7 @@ import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsInstance;
 import com.ubiqube.etsi.mano.nfvo.v331.model.nslcm.NsLcmOpOcc;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscription;
 import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.PkgmSubscriptionRequest;
+import com.ubiqube.etsi.mano.nfvo.v331.model.vnf.VnfPackageArtifactInfo;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.ConstraintResourceRef;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.Grant;
 import com.ubiqube.etsi.mano.vnfm.v331.model.grant.GrantRequest;
@@ -248,6 +250,10 @@ public class OrikaConfigurationNfvo331 implements OrikaMapperFactoryConfigurer {
 				.register();
 		orikaMapperFactory.classMap(InstantiateVnfRequest.class, BlueprintParameters.class)
 				.field("extVirtualLinks", "extVirtualLinkInfo")
+				.byDefault()
+				.register();
+		orikaMapperFactory.classMap(VnfPackageArtifactInfo.class, AdditionalArtifact.class)
+				.field("nonManoArtifactSetId", "nonManoSetIndentifier")
 				.byDefault()
 				.register();
 		final var converterFactory = orikaMapperFactory.getConverterFactory();

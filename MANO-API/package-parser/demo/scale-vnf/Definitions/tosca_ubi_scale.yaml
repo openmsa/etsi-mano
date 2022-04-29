@@ -54,21 +54,26 @@ topology_template:
       type: tosca.nodes.nfv.Vdu.Compute
       name: webserver
       description: A node.
+      artifacts:
+        sw_image:
+          type: tosca.artifacts.nfv.SwImage
+          file: maria.db.image.v1.0.qcow2
+          name: cirros
+          version: '1.0'
+          checksum:
+            algorithm: SHA-256
+            hash: b9c3036539fd7a5f87a1bf38eb05fdde8b556a1a7e664dbeda90ed3cd74b4f9d
+          container_format: BARE
+          disk_format: QCOW2
+          min_ram: 8192 MiB
+          size: 2 GB
+          operating_system: Linux
+          supported_virtualisation_environments:
+            - KVM
       properties:
         boot_order: true
         nfvi_constraints:
           key: "value"
-        sw_image_data:
-          name: cirros
-          version: 1.0.0
-          checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          min_disk: 1 GiB
-          min_ram: 512 Mib
-          operating_system: centos8
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
           metric name:
             performance_metric: v_cpu_usage_mean_vnf
@@ -133,18 +138,23 @@ topology_template:
       type: tosca.nodes.nfv.Vdu.Compute
       name: database
       description: A node.
-      properties:
-        sw_image_data:
+      artifacts:
+        sw_image:
+          type: tosca.artifacts.nfv.SwImage
+          file: maria.db.image.v1.0.qcow2
           name: cirros
-          version: 1.0.0
+          version: '1.0'
           checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
             algorithm: SHA-256
+            hash: b9c3036539fd7a5f87a1bf38eb05fdde8b556a1a7e664dbeda90ed3cd74b4f9d
           container_format: BARE
           disk_format: QCOW2
-          min_disk: 1 GiB
-          min_ram: 512 Mib
-          operating_system: centos8
+          min_ram: 8192 MiB
+          size: 2 GB
+          operating_system: Linux
+          supported_virtualisation_environments:
+            - KVM
+      properties:
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
           metric name:
             performance_metric: v_cpu_usage_mean_vnf
@@ -195,18 +205,23 @@ topology_template:
       type: tosca.nodes.nfv.Vdu.Compute
       name: database
       description: A node.
-      properties:
-        sw_image_data:
+      artifacts:
+        sw_image:
+          type: tosca.artifacts.nfv.SwImage
+          file: maria.db.image.v1.0.qcow2
           name: cirros
-          version: 1.0.0
+          version: '1.0'
           checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
             algorithm: SHA-256
+            hash: b9c3036539fd7a5f87a1bf38eb05fdde8b556a1a7e664dbeda90ed3cd74b4f9d
           container_format: BARE
           disk_format: QCOW2
-          min_disk: 1 GiB
-          min_ram: 512 Mib
-          operating_system: centos8
+          min_ram: 8192 MiB
+          size: 2 GB
+          operating_system: Linux
+          supported_virtualisation_environments:
+            - KVM
+      properties:
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
           metric name:
             performance_metric: v_cpu_usage_mean_vnf
@@ -259,18 +274,23 @@ topology_template:
       type: tosca.nodes.nfv.Vdu.Compute
       name: database
       description: A node.
-      properties:
-        sw_image_data:
+      artifacts:
+        sw_image:
+          type: tosca.artifacts.nfv.SwImage
+          file: maria.db.image.v1.0.qcow2
           name: cirros
-          version: 1.0.0
+          version: '1.0'
           checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
             algorithm: SHA-256
+            hash: b9c3036539fd7a5f87a1bf38eb05fdde8b556a1a7e664dbeda90ed3cd74b4f9d
           container_format: BARE
           disk_format: QCOW2
-          min_disk: 1 GiB
-          min_ram: 512 Mib
-          operating_system: centos8
+          min_ram: 8192 MiB
+          size: 2 GB
+          operating_system: Linux
+          supported_virtualisation_environments:
+            - KVM
+      properties:
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
           metric name:
             performance_metric: v_cpu_usage_mean_vnf

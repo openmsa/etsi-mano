@@ -4,6 +4,11 @@ vnf_product_name: vMRF
 vnf_provider_id: MyCompany
 vnf_software_version: 1.0.0
 vnf_package_version: 1.0
+compatible_specification_versions: 4.2.1
+
+Source: my.qcow.enc.cms
+Algorithm: SHA-256
+Hash: 891837aac60a1f93de57ecb0f055cf77a03085cc922937ceb0078c706b5f7850
 
 
 Source: Definitions/nsd_ubi.yaml
@@ -17,3 +22,32 @@ Source: TOSCA-Metadata/TOSCA.meta
 Algorithm: SHA-512
 Hash: 1dda9d80dacf395e6260b8782c6d5c7c54d2d7bbc8c30be8b989a88e8920db58c747fd5fcca4a7336055b7fd30138a7284c4b6022db111607d892f669fe30d7f
 
+Source: https://www.vendor_org.com/MRF/v4.1/scripts/scale/scale.sh
+Algorithm: SHA-256
+Hash: 36f945953929812aca2701b114b068c71bd8c95ceb3609711428c26325649165
+Signature: /somedirectory/somefilename1.sig.cms
+Certificate: /somedirectory/somefilename1.cert
+
+Source: https://www.vendor_org.com/MRF/v4.1/scripts/scale/scale.sh
+Signature: /somedirectory/somefilename1.sig.cms
+Certificate: /somedirectory/somefilename1.cert
+
+Source: lic/lic1.lic
+Hash: 6cefaa36c178545816ba222a0ce05cbb85175ea2f1137709ea6219823c178d6c
+
+Source: test/test.file
+Hash: 6cefaa36c178545816ba222a0ce05cbb85175ea2f1137709ea6219823c178d6c
+
+Source: change.log
+Hash: 6cefaa36c178545816ba222a0ce05cbb85175ea2f1137709ea6219823c178d6c
+
+
+non_mano_artifact_sets:
+foo_bar:
+Source: foobar/foo/foo.yaml
+Source: foobar/foo/foo.script
+Source: foobar/bar/descriptor.xml
+prv.happy-nfv.cool:
+Source: happy/cool/123.html
+Source: happy/cool/cool.json
+Source: happy/cool/hot/hot_or_cool.json

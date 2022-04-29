@@ -24,6 +24,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -49,6 +50,7 @@ import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
 import com.ubiqube.etsi.mano.dao.mano.PkgChecksum;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VduInstantiationLevel;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
@@ -136,7 +138,6 @@ public class VnfPackageOnboardingImpl {
 		} catch (final IOException e) {
 			throw new GenericException(e);
 		}
-
 	}
 
 	private VnfPackage uploadAndFinishOnboarding(final VnfPackage vnfPackage, final ManoResource data) {
@@ -145,7 +146,7 @@ public class VnfPackageOnboardingImpl {
 			final PackageDescriptor<VnfPackageReader> packageProvider = packageManager.getProviderFor(data);
 			mapVnfPackage(vnfPackage, data, packageProvider);
 			ret = finishOnboarding(vnfPackage);
-			buildChecksum(vnfPackage, data);
+			buildChecksum(ret, data);
 			eventManager.sendNotification(NotificationEvent.VNF_PKG_ONBOARDING, vnfPackage.getId(), Map.of());
 		} catch (final RuntimeException | NoSuchAlgorithmException | IOException e) {
 			LOG.error("", e);
@@ -157,12 +158,13 @@ public class VnfPackageOnboardingImpl {
 		return ret;
 	}
 
-	private static void buildChecksum(final VnfPackage vnfPackage, final ManoResource data) throws NoSuchAlgorithmException, IOException {
+	private VnfPackage buildChecksum(final VnfPackage vnfPackage, final ManoResource data) throws NoSuchAlgorithmException, IOException {
 		final DigestInputStream dis = new DigestInputStream(data.getInputStream(), MessageDigest.getInstance(Constants.HASH_ALGORITHM));
 		try (InputStream stream = data.getInputStream()) {
 			stream.readAllBytes();
 			vnfPackage.setChecksum(getChecksum(dis));
 		}
+		return vnfPackageService.save(vnfPackage);
 	}
 
 	private void mapVnfPackage(final VnfPackage vnfPackage, final ManoResource data, final PackageDescriptor<VnfPackageReader> packageProvider) {
@@ -211,6 +213,14 @@ public class VnfPackageOnboardingImpl {
 		setMandatoryVimCapabilities(vnfPackage);
 		extractVnfd(vnfPackageReader, vnfPackage);
 		extractedManifest(vnfPackageReader, vnfPackage);
+		buildSoftwareImage(vnfPackage);
+	}
+
+	private static void buildSoftwareImage(final VnfPackage vnfPackage) {
+		final Set<SoftwareImage> swImg = new LinkedHashSet<>();
+		vnfPackage.getVnfCompute().stream().map(VnfCompute::getSoftwareImage).filter(Objects::nonNull).forEach(swImg::add);
+		vnfPackage.getVnfStorage().stream().map(VnfStorage::getSoftwareImage).filter(Objects::nonNull).forEach(swImg::add);
+		vnfPackage.setSoftwareImages(swImg);
 	}
 
 	private static Set<VnfExtCp> extractVnfExtCp(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {

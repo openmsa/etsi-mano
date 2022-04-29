@@ -32,6 +32,7 @@ import com.ubiqube.etsi.mano.dao.mano.AdditionalArtifact;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
 import com.ubiqube.etsi.mano.dao.mano.ScalingAspect;
 import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
@@ -44,8 +45,10 @@ import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
 import com.ubiqube.etsi.mano.service.pkg.tosca.AbstractPackageReader;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
+import com.ubiqube.parser.tosca.ParseException;
 
 import ma.glasnost.orika.MapperFactory;
+import tosca.artifacts.nfv.SwImage;
 import tosca.datatypes.nfv.L3ProtocolData;
 import tosca.datatypes.nfv.VirtualLinkProtocolData;
 import tosca.nodes.nfv.VNF;
@@ -97,7 +100,10 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.field("path", "artifactPath")
 				.field("checksum", "checksum.hash")
 				.field("algorithm", "checksum.algorithm")
+				.field("encrypted", "isEncrypted")
+				.field("classifier", "artifactClassification")
 				.byDefault()
+				.customize(new AdditionalArtefactMapper())
 				.register();
 		mapperFactory.classMap(VirtualBlockStorage.class, VnfStorage.class)
 				// .field("swImageData", "softwareImage")
@@ -171,6 +177,10 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.customize(new ArtefactMapper())
 				.byDefault()
 				.register();
+		mapperFactory.classMap(SwImage.class, SoftwareImage.class)
+				.field("file", "imagePath")
+				.byDefault()
+				.register();
 	}
 
 	@Override
@@ -193,9 +203,18 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 		final Set<Compute> r = this.getSetOf(Compute.class, parameters);
 		return r.stream().map(x -> {
 			final VnfCompute o = getMapper().map(x, VnfCompute.class);
-			Optional.ofNullable(x.getArtifacts()).map(y -> y.get("sw_image")).ifPresent(y -> o.getSoftwareImage().setImagePath(y.getFile()));
+			Optional.ofNullable(x.getArtifacts()).ifPresent(y -> map(y, o));
 			return o;
 		}).collect(Collectors.toSet());
+	}
+
+	private void map(final Map<String, ?> y, final VnfCompute o) {
+		final Object obj = y.get("sw_image");
+		if (!(obj instanceof final SwImage sw)) {
+			throw new ParseException("Unknown artefact type: " + obj.getClass());
+		}
+		final SoftwareImage softwareImage = getMapper().map(sw, SoftwareImage.class);
+		o.setSoftwareImage(softwareImage);
 	}
 
 	@Override

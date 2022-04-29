@@ -210,6 +210,9 @@ public class VnfPackage implements PackageBase, Auditable {
 	private FailureDetails onboardingFailureDetails = null;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<SoftwareImage> softwareImages;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<MonitoringParams> monitoringParameters;
 	// Original vnf package id in NFVO.
 	private String nfvoId;

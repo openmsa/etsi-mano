@@ -275,6 +275,14 @@ public class CsarArchive {
 
 	@SuppressWarnings("null")
 	public @NotNull List<ArtefactInformations> getArtefactList() {
+		return signatures.stream()
+				.filter(x -> !isCert(x.getPath()))
+				.filter(x -> !isSignature(x.getPath()))
+				.toList();
+	}
+
+	@SuppressWarnings("null")
+	public @NotNull List<ArtefactInformations> getArtefactListFromVfs() {
 		final List<String> files = vfs.getFileMatching(".*");
 		return files.stream()
 				.filter(x -> !isCert(x))

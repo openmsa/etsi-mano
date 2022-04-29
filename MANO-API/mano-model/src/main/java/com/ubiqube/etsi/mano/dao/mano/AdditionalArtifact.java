@@ -62,12 +62,10 @@ public class AdditionalArtifact implements Serializable {
 	private Checksum checksum;
 
 	// 2.7.1
-	private Boolean isEncrypted;
+	private Boolean isEncrypted = Boolean.FALSE;
 	// 2.7.1
-	private String nonManoArtifactSetId;
+	private String nonManoSetIndentifier;
 	// 2.7.1 XXX: Multiple URIs ?
-	// @Transient
-	// private List<String> artifactURI;
 	// 2.8.1
 	private String artifactURI;
 	// 2.7.1
