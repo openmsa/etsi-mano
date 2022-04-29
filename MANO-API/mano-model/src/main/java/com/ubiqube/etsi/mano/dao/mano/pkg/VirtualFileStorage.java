@@ -14,57 +14,38 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.pkg;
 
 import java.util.UUID;
 
-import javax.persistence.Embedded;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import com.ubiqube.etsi.mano.dao.mano.pkg.ConnectionPoint;
+import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * AKA: VduCp
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Entity
-@EntityListeners(AuditListener.class)
 @Getter
 @Setter
-public class VnfLinkPort extends ConnectionPoint implements BaseEntity, Auditable {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
+public class VirtualFileStorage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	private String toscaId;
+	private VirtualFileStorageData virtualFileStorageData;
 
-	private String toscaName;
+	private boolean perVnfcInstance = true;
 
-	private String state;
-
-	private String virtualLink;
-
-	private String virtualBinding;
-
-	private int interfaceOrder;
-
-	private Integer bitrateRequirement;
-
-	private String vnicType;
-
-	@Embedded
-	private Audit audit;
-
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private NfviMaintenanceInfo nfviMaintenanceInfo;
 }

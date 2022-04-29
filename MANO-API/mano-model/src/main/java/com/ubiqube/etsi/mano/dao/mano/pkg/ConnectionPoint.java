@@ -14,68 +14,56 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano;
+package com.ubiqube.etsi.mano.dao.mano.pkg;
 
-import java.io.Serializable;
-import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
-import com.ubiqube.etsi.mano.dao.mano.pkg.ConnectionPoint;
+import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
 
 import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * AKA: Cp
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
 @Getter
 @Setter
-@Entity
-public class VnfExtCp extends ConnectionPoint implements Serializable, ToscaEntity {
-	/** Serial. */
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
-
-	private String toscaId;
-
-	private String toscaName;
-
-	private String state;
-
-	private String externalVirtualLink;
-
-	private String internalVirtualLink;
-
+public class ConnectionPoint {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn
-	private Set<VirtualNicReq> virtualNetworkInterfaceRequirements;
+	private Set<VlProtocolData> protocol;
 
+	/**
+	 * Provides information about whether the CP instantiated from this Cp is in
+	 * Trunk mode (802.1Q or other), When operating in "trunk mode", the Cp is
+	 * capable of carrying traffic for several VLANs. Absence of this property
+	 * implies that trunkMode is not configured for the Cp i.e. It is equivalent to
+	 * boolean value "false".
+	 */
+	private Boolean trunkMode;
+
+	/**
+	 * Identifies which protocol the connection point uses for connectivity purposes
+	 */
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> securityGroup;
+	private Set<String> layerProtocols;
 
-	private boolean computeNode;
+	/**
+	 * Identifies the role of the port in the context of the traffic flow patterns
+	 * in the VNF or parent NS
+	 */
+	private String role;
 
-	public void addSecurityGroup(final String toscaName2) {
-		if (null == securityGroup) {
-			securityGroup = new LinkedHashSet<>();
-		}
-		securityGroup.add(toscaName2);
-	}
+	/**
+	 * Provides human-readable information on the purpose of the connection point
+	 */
+	private String description;
 
 }
