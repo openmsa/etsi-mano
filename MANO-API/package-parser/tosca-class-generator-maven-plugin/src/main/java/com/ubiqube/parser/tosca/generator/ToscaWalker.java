@@ -193,6 +193,8 @@ public class ToscaWalker {
 
 	private void createArtifactRoot(final ToscaListener listener) {
 		startClass(TOSCA_ARTIFACTS_ROOT, null, listener);
+		listener.startField("description", new ValueObject(STRING));
+		listener.onFieldTerminate();
 		listener.startField("file", new ValueObject(STRING));
 		listener.onFieldTerminate();
 		listener.startField("repository", new ValueObject(STRING));
