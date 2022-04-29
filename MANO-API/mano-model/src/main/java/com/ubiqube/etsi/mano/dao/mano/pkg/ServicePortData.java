@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.pkg;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -34,7 +35,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class ServicePortData {
+public class ServicePortData implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;

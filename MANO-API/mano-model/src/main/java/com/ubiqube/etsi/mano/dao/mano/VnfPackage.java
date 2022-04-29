@@ -52,8 +52,11 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDe
 
 import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.common.ListKeyPair;
+import com.ubiqube.etsi.mano.dao.mano.pkg.OsContainer;
+import com.ubiqube.etsi.mano.dao.mano.pkg.OsContainerDeployableUnit;
 import com.ubiqube.etsi.mano.dao.mano.pkg.PackageSecurityOptionType;
 import com.ubiqube.etsi.mano.dao.mano.pkg.UploadUriParameters;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualCp;
 import com.ubiqube.etsi.mano.dao.mano.pkg.VnfProfile;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 import com.ubiqube.etsi.mano.utils.ToStringIgnore;
@@ -237,12 +240,46 @@ public class VnfPackage implements PackageBase, Auditable {
 	private Set<VimCapability> vimCapabilities;
 
 	/**
-	 * Conten type of the generated vnfd file. Either text/plain or application/zip.
+	 * Content type of the generated vnfd file. Either text/plain or
+	 * application/zip.
 	 */
 	private String vnfdContentType;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private UploadUriParameters uploadUriParameters;
+
+	/**
+	 * The Vdu.OsContainer node type represents the OsContainerDesc information
+	 * element as defined in ETSI GS NFV-IFA 011 [1]. Table 6.8.12.1-1 specifies the
+	 * declared names for this node type. These names shall be used as specified in
+	 * TOSCA-Simple-Profile-YAML-v1.3 [20].
+	 *
+	 * @since 4.2.1
+	 */
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<OsContainer> osContainer;
+
+	/**
+	 * The Vdu.OsContainerDeployableUnit node type describes the aggregate of OS
+	 * containers of a VDU (when realized as OS containers) which is a construct
+	 * supporting the description of the deployment and operational behaviour of a
+	 * VNFC.
+	 *
+	 * @since 4.2.1
+	 */
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<OsContainerDeployableUnit> osContainerDeployableUnits;
+
+	/**
+	 * A VirtualCp node type represents the VirtualCpd information element as
+	 * defined in ETSI GS NFV-IFA 011 [1], which describes a requirement to create a
+	 * virtual connection point allowing the access to a number of VNFC instances
+	 * (based on their respective VDUs).
+	 *
+	 * @Since 4.2.1
+	 */
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<VirtualCp> virtualCp;
 
 	@Version
 	private long version;

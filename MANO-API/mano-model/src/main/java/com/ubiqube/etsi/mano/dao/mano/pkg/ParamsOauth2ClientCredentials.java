@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.pkg;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 import lombok.Getter;
@@ -29,7 +31,10 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class ParamsOauth2ClientCredentials {
+public class ParamsOauth2ClientCredentials implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
 	private String clientId;
 
 	private String clientPassword;
