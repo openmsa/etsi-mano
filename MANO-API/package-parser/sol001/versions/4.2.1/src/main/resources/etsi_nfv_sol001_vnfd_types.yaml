@@ -6,7 +6,7 @@ metadata:
   template_version: 4.2.1
 
 imports:
-   - https://forge.etsi.org/rep/nfv/SOL001/raw/v4.2.1/etsi_nfv_sol001_common_types.yaml
+   - etsi_nfv_sol001_common_types.yaml
 # editor's note: During the development of the SOL001ed421 GS, to enable this file to be verified by a TOSCA parser, the imports statement has to be replaced with a reference to a local copy of the common definitions YAML file
 data_types:
   tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements:
