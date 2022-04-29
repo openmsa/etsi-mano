@@ -38,6 +38,9 @@ public class ArtefactMapper extends CustomMapper<VirtualBlockStorage, VnfStorage
 
 	@Override
 	public void mapAtoB(final VirtualBlockStorage a, final VnfStorage b, final MappingContext context) {
+		if (a.getArtifacts() == null) {
+			return;
+		}
 		final SizeConverter sc = new SizeConverter();
 		final Entry aa = a.getArtifacts().entrySet().iterator().next();
 		final SoftwareImage si = new SoftwareImage();
