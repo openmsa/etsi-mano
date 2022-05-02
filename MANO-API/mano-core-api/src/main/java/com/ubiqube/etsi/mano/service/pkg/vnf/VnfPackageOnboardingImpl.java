@@ -23,10 +23,11 @@ import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -214,13 +215,21 @@ public class VnfPackageOnboardingImpl {
 		extractVnfd(vnfPackageReader, vnfPackage);
 		extractedManifest(vnfPackageReader, vnfPackage);
 		buildSoftwareImage(vnfPackage);
+		onboardCnfElements(vnfPackageReader, vnfPackage);
+	}
+
+	private static void onboardCnfElements(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
+		vnfPackage.setOsContainer(vnfPackageReader.getOsContainer(vnfPackage.getUserDefinedData()));
+		vnfPackage.setOsContainerDeployableUnits(vnfPackageReader.getOsContainerDeployableUnit(vnfPackage.getUserDefinedData()));
+		vnfPackage.setVirtualCp(vnfPackageReader.getVirtualCp(vnfPackage.getUserDefinedData()));
 	}
 
 	private static void buildSoftwareImage(final VnfPackage vnfPackage) {
-		final Set<SoftwareImage> swImg = new LinkedHashSet<>();
-		vnfPackage.getVnfCompute().stream().map(VnfCompute::getSoftwareImage).filter(Objects::nonNull).forEach(swImg::add);
-		vnfPackage.getVnfStorage().stream().map(VnfStorage::getSoftwareImage).filter(Objects::nonNull).forEach(swImg::add);
-		vnfPackage.setSoftwareImages(swImg);
+		final Map<ImageKey, SoftwareImage> mvnf = vnfPackage.getVnfCompute().stream().map(VnfCompute::getSoftwareImage).filter(Objects::nonNull).collect(Collectors.toMap(ImageKey::new, x -> x));
+		final Map<ImageKey, SoftwareImage> msto = vnfPackage.getVnfStorage().stream().map(VnfStorage::getSoftwareImage).filter(Objects::nonNull).collect(Collectors.toMap(ImageKey::new, x -> x));
+		final HashMap<ImageKey, SoftwareImage> mall = new HashMap<>(mvnf);
+		mall.putAll(msto);
+		vnfPackage.setSoftwareImages(mall.entrySet().stream().map(Entry::getValue).collect(Collectors.toSet()));
 	}
 
 	private static Set<VnfExtCp> extractVnfExtCp(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
@@ -293,6 +302,10 @@ public class VnfPackageOnboardingImpl {
 
 	private void extractedManifest(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
 		final String manifest = vnfPackageReader.getManifestContent();
+		if (null == manifest) {
+			return; // XXX: It will pose a problem, maybe we can reconstituate manifest in Sol004
+					// module when missing.
+		}
 		vnfPackageRepository.storeBinary(vnfPackage.getId(), Constants.REPOSITORY_FILENAME_MANIFEST, new ByteArrayInputStream(manifest.getBytes()));
 	}
 
@@ -538,4 +551,34 @@ public class VnfPackageOnboardingImpl {
 		throw new GenericException("Unknown version " + part);
 	}
 
+	private static class ImageKey {
+		SoftwareImage si;
+
+		public ImageKey(final SoftwareImage si) {
+			this.si = si;
+		}
+
+		@Override
+		public int hashCode() {
+			if (si.getChecksum() != null || null != si.getChecksum().getHash()) {
+				return Objects.hash(si.getChecksum().getHash());
+			}
+			return Objects.hash(si.getName());
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null || getClass() != obj.getClass()) {
+				return false;
+			}
+			final SoftwareImage si2 = (SoftwareImage) obj;
+			if (si2.getChecksum() == null || si.getChecksum() == null) {
+				return si.getName().equals(si2.getName());
+			}
+			return Objects.equals(si.getChecksum().getHash(), si2.getChecksum().getHash());
+		}
+	}
 }

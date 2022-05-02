@@ -28,6 +28,7 @@ import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.mon.VimMonitoring;
+import com.ubiqube.etsi.mano.vim.dto.Flavor;
 
 /**
  *
@@ -80,4 +81,10 @@ public interface Vim {
 	void deleteServerGroup(VimConnectionInformation vimConnectionInformation, String vimResourceId);
 
 	void authenticate(VimConnectionInformation vci);
+
+	List<Flavor> getFlavorList(VimConnectionInformation vimConnectionInformation);
+
+	boolean canCreateFlavor();
+
+	String createFlavor(VimConnectionInformation vimConnectionInformation, String toscaName, long numVirtualCpu, long virtualMemSize, Map<String, String> add);
 }

@@ -143,7 +143,7 @@ public class OpenStackVim implements Vim {
 			LOG.debug("OS connection: {} ", vimConnectionInformation.getVimId());
 			return internalAuthenticate(vimConnectionInformation);
 		});
-		OSClientSession.set((OSClientSession) os);
+		OSClientSession.set((OSClientSession<?, ?>) os);
 		return os;
 	}
 
@@ -480,6 +480,37 @@ public class OpenStackVim implements Vim {
 	@Override
 	public void authenticate(final VimConnectionInformation vci) {
 		internalAuthenticate(vci);
+	}
+
+	@Override
+	public List<com.ubiqube.etsi.mano.vim.dto.Flavor> getFlavorList(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
+		final List<? extends Flavor> flv = os.compute().flavors().list();
+		return flv.stream().map(x -> mapFlavor(os, x)).toList();
+	}
+
+	private static com.ubiqube.etsi.mano.vim.dto.Flavor mapFlavor(final OSClientV3 os, final Flavor fIn) {
+		final com.ubiqube.etsi.mano.vim.dto.Flavor f = new OsFlavor(os);
+		f.setDisabled(fIn.isDisabled());
+		f.setDisk(fIn.getDisk());
+		f.setId(fIn.getId());
+		f.setName(fIn.getName());
+		f.setRam(fIn.getRam());
+		f.setSwap(fIn.getSwap());
+		f.setVcpus(fIn.getVcpus());
+		return f;
+	}
+
+	@Override
+	public boolean canCreateFlavor() {
+		return true;
+	}
+
+	@Override
+	public String createFlavor(final VimConnectionInformation vimConnectionInformation, final String toscaName, final long numVirtualCpu, final long virtualMemSize, final Map<String, String> add) {
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
+		final Flavor flv = createFlavor(os, toscaName, (int) numVirtualCpu, virtualMemSize, 0, add);
+		return flv.getId();
 	}
 
 }

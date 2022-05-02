@@ -39,6 +39,9 @@ import com.ubiqube.etsi.mano.dao.mano.VnfExtCp;
 import com.ubiqube.etsi.mano.dao.mano.VnfLinkPort;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.pkg.OsContainer;
+import com.ubiqube.etsi.mano.dao.mano.pkg.OsContainerDeployableUnit;
+import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualCp;
 import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -297,6 +300,21 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 		anf.forEach(x -> x.getAffinityRule().setAnti(true));
 		af.addAll(anf);
 		return af;
+	}
+
+	@Override
+	public Set<OsContainer> getOsContainer(final Map<String, String> parameters) {
+		return getSetOf(tosca.nodes.nfv.vdu.OsContainer.class, OsContainer.class, parameters);
+	}
+
+	@Override
+	public Set<OsContainerDeployableUnit> getOsContainerDeployableUnit(final Map<String, String> parameters) {
+		return getSetOf(tosca.nodes.nfv.vdu.OsContainerDeployableUnit.class, OsContainerDeployableUnit.class, parameters);
+	}
+
+	@Override
+	public Set<VirtualCp> getVirtualCp(final Map<String, String> parameters) {
+		return getSetOf(tosca.nodes.nfv.VirtualCp.class, VirtualCp.class, parameters);
 	}
 
 }

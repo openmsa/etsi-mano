@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.service.sys.SysImage;
 import com.ubiqube.etsi.mano.vim.dto.SwImage;
 
@@ -157,6 +158,45 @@ public class OsStorage implements Storage {
 			localVolume = volumes.get(volume.getId());
 		}
 		LOG.info("Volume {} Done with status: {}", localVolume.getId(), localVolume.getStatus());
+	}
+
+	@Override
+	public List<SwImage> getImageList() {
+		final List<? extends Image> images = os.imagesV2().list();
+		return images.stream().map(x -> new SwImage(x.getId())).toList();
+	}
+
+	@Override
+	public SoftwareImage getImageDetail(final String id) {
+		final Image image = os.imagesV2().get(id);
+		final SoftwareImage si = new SoftwareImage();
+		si.setArchitecture(image.getArchitecture());
+		final Checksum ck = new Checksum();
+		ck.setAlgorithm(getAlgorithm(image.getChecksum()));
+		ck.setHash(image.getChecksum());
+		si.setChecksum(ck);
+		si.setContainerFormat(image.getContainerFormat().toString());
+		si.setDiskFormat(image.getDiskFormat().toString());
+		si.setVimId(image.getId());
+		si.setMinDisk(image.getMinDisk());
+		si.setMinRam(image.getMinRam());
+		si.setName(image.getName());
+		si.setSize(image.getSize());
+		si.setVimId(id);
+		return si;
+	}
+
+	private static String getAlgorithm(final String checksum) {
+		final int l = checksum.length();
+		return switch (l) {
+		case 32 -> "MD5";
+		case 40 -> "SHA-1";
+		case 56 -> "SHA-224";
+		case 64 -> "SHA-256";
+		case 98 -> "SHA-384";
+		case 128 -> "SHA-512";
+		default -> null;
+		};
 	}
 
 }

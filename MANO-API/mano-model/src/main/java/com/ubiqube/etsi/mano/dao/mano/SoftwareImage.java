@@ -72,6 +72,8 @@ public class SoftwareImage implements Auditable {
 
 	private String imagePath;
 
+	private String architecture;
+
 	private Audit audit;
 
 }

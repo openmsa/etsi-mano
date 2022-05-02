@@ -16,8 +16,6 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.event;
 
-import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,11 +24,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,7 +34,6 @@ import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.NsLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.NsdInstance;
 import com.ubiqube.etsi.mano.dao.mano.ResourceTypeEnum;
-import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -54,11 +46,12 @@ import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVnfTask;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
-import com.ubiqube.etsi.mano.nfvo.jpa.NsBlueprintJpa;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
+import com.ubiqube.etsi.mano.service.event.flavor.FlavorManager;
+import com.ubiqube.etsi.mano.service.event.images.SoftwareImageService;
 import com.ubiqube.etsi.mano.service.vim.NetworkObject;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.Vim;
@@ -84,16 +77,13 @@ public class GrantAction extends AbstractGrantAction {
 
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
-	private final NsBlueprintJpa nsBlueprintJpa;
-
 	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final VnfPackageService vnfPackageService,
-			final NsLiveInstanceJpa nsLiveInstanceJpa, final NsBlueprintJpa nsBlueprintJpa) {
-		super(grantJpa, vimManager, vimElection);
+			final NsLiveInstanceJpa nsLiveInstanceJpa, final SoftwareImageService imageService, final FlavorManager flavorManager) {
+		super(grantJpa, vimManager, vimElection, imageService, flavorManager);
 		this.grantJpa = grantJpa;
 		this.vimManager = vimManager;
 		this.vnfPackageService = vnfPackageService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
-		this.nsBlueprintJpa = nsBlueprintJpa;
 		this.rnd = new Random();
 	}
 
@@ -182,20 +172,6 @@ public class GrantAction extends AbstractGrantAction {
 	}
 
 	@Override
-	protected InputStream findImage(final SoftwareImage softwareImage, final String vnfdId) {
-		final Path path = vnfPackageService.getPathByVnfdId(UUID.fromString(vnfdId));
-		try {
-			final FileSystemManager fsManager = VFS.getManager();
-			final FileObject fo = fsManager.resolveFile("zip:" + path.toString());
-			final FileObject img = fo.getChild(softwareImage.getImagePath());
-			final FileContent fc = img.getContent();
-			return fc.getInputStream();
-		} catch (final FileSystemException e) {
-			throw new GenericException(e);
-		}
-	}
-
-	@Override
 	protected void getUnmanagedNetworks(final GrantResponse grants, final Vim vim, final VimConnectionInformation vimConnectionInformation) {
 		final String vnfInstanceId = grants.getVnfInstanceId();
 		final NsLiveInstance res = nsLiveInstanceJpa.findByResourceId(vnfInstanceId);
@@ -280,8 +256,9 @@ public class GrantAction extends AbstractGrantAction {
 		return "virtual_link_" + kp.getIdx();
 	}
 
-	private static List<ListKeyPair> gatherExtVl(final VnfPackage vnfPkg) {
-		return vnfPkg.getVirtualLinks().stream().filter(x -> x.getValue() != null).toList();
+	@Override
+	protected UUID convertVnfdToId(final String vnfdId) {
+		return vnfPackageService.findByVnfdId(UUID.fromString(vnfdId)).getId();
 	}
 
 }

@@ -16,14 +16,10 @@
  */
 package com.ubiqube.etsi.mano.service.event;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -51,16 +47,15 @@ import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.ZoneGroupInformation;
 import com.ubiqube.etsi.mano.dao.mano.ZoneInfoEntity;
-import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualCpu;
-import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualMemory;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
+import com.ubiqube.etsi.mano.service.event.flavor.FlavorManager;
+import com.ubiqube.etsi.mano.service.event.images.SoftwareImageService;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
-import com.ubiqube.etsi.mano.vim.dto.SwImage;
 
 /**
  *
@@ -77,10 +72,16 @@ public abstract class AbstractGrantAction {
 
 	private final VimElection vimElection;
 
-	protected AbstractGrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection) {
+	private final SoftwareImageService imageService;
+
+	private final FlavorManager flavorManager;
+
+	protected AbstractGrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final SoftwareImageService imageService, final FlavorManager flavorManager) {
 		this.vimManager = vimManager;
 		this.vimElection = vimElection;
 		this.grantJpa = grantJpa;
+		this.imageService = imageService;
+		this.flavorManager = flavorManager;
 	}
 
 	@Nonnull
@@ -169,11 +170,11 @@ public abstract class AbstractGrantAction {
 
 		final Runnable getComputeResourceFlavours = () -> {
 			try {
-				grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vimInfo, vim, grants.getId()));
+				grantVimAssetsEntity.getComputeResourceFlavours().addAll(getFlavors(vimInfo, grants.getId()));
 			} catch (final RuntimeException e) {
 				LOG.error("", e);
 			}
-			LOG.debug("           {}", grantVimAssetsEntity.getComputeResourceFlavours());
+			LOG.debug(" {}", grantVimAssetsEntity.getComputeResourceFlavours());
 		};
 		executorService.submit(getComputeResourceFlavours);
 
@@ -217,26 +218,9 @@ public abstract class AbstractGrantAction {
 		return list.get(0);
 	}
 
-	private List<VimComputeResourceFlavourEntity> getFlavors(final VimConnectionInformation vimConnectionInformation, final Vim vim, final UUID id) {
-		final List<VimComputeResourceFlavourEntity> listVcrfe = new ArrayList<>();
-		final Map<String, VimComputeResourceFlavourEntity> cache = new HashMap<>();
-		getVnfCompute(id).forEach(x -> {
-			final VirtualCpu vCpu = x.getVirtualCpu();
-			final VirtualMemory vMem = x.getVirtualMemory();
-			final String key = vCpu.getNumVirtualCpu() + "-" + vMem.getVirtualMemSize() + "-" + x.getDiskSize();
-			final VimComputeResourceFlavourEntity vcretmp = cache.computeIfAbsent(key, y -> {
-				final String flavorId = vim.getOrCreateFlavor(vimConnectionInformation, x.getName(), (int) vCpu.getNumVirtualCpu(), vMem.getVirtualMemSize(), x.getDiskSize(), vCpu.getVduCpuRequirements());
-				final VimComputeResourceFlavourEntity vcrfe = new VimComputeResourceFlavourEntity();
-				vcrfe.setVimConnectionId(vimConnectionInformation.getVimId());
-				vcrfe.setResourceProviderId(vim.getType());
-				vcrfe.setVimFlavourId(flavorId);
-				return vcrfe;
-			});
-			final VimComputeResourceFlavourEntity vcre = new VimComputeResourceFlavourEntity(vcretmp);
-			vcre.setVnfdVirtualComputeDescId(x.getToscaName());
-			listVcrfe.add(vcre);
-		});
-		return listVcrfe;
+	private List<VimComputeResourceFlavourEntity> getFlavors(final VimConnectionInformation vimConnectionInformation, final UUID id) {
+		final Set<VnfCompute> comp = getVnfCompute(id);
+		return flavorManager.getFlavors(vimConnectionInformation, comp);
 	}
 
 	private Set<VimSoftwareImageEntity> getSoftwareImageSafe(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {
@@ -249,45 +233,34 @@ public abstract class AbstractGrantAction {
 	}
 
 	private Set<VimSoftwareImageEntity> getSoftwareImage(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {
+		final UUID vnfPkgId = convertVnfdToId(grants.getVnfdId());
 		final Set<VimSoftwareImageEntity> listVsie = new HashSet<>();
-		final Map<String, SwImage> cache = new HashMap<>();
+		final List<SoftwareImage> vimImgs = imageService.getFullDetailImageList(vimInfo);
 		getVnfCompute(grants.getId()).forEach(x -> {
 			final SoftwareImage img = x.getSoftwareImage();
-			if (null != img) {
-				// Get Vim or create vim resource via Or-Vi
-				final SwImage imgCached = cache.computeIfAbsent(img.getName(), y -> {
-					final Optional<SwImage> newImg = vim.storage(vimInfo).getSwImageMatching(img);
-					return newImg.orElseGet(() -> uploadImage(vimInfo, vim, x, grants.getVnfdId()));
-				});
-				listVsie.add(mapSoftwareImage(imgCached, img.getName(), vimInfo, vim));
+			if (null == img) {
+				return;
 			}
+			final SoftwareImage newImg = imageService.getImage(vimImgs, img, vimInfo, vnfPkgId);
+			listVsie.add(mapSoftwareImage(newImg, img.getName(), vimInfo, vim));
 		});
 		final Set<VnfStorage> storage = getVnfStorage(grants.getId());
 		storage.forEach(x -> {
 			final SoftwareImage img = x.getSoftwareImage();
-			if (null != img) {
-				final SwImage imgCached = cache.get(img.getName());
-				listVsie.add(mapSoftwareImage(imgCached, img.getName(), vimInfo, vim));
+			if (null == img) {
+				return;
 			}
+			final SoftwareImage newImg = imageService.getImage(vimImgs, img, vimInfo, vnfPkgId);
+			listVsie.add(mapSoftwareImage(newImg, img.getName(), vimInfo, vim));
 		});
 		return listVsie;
 	}
 
-	private SwImage uploadImage(final VimConnectionInformation vimInfo, final Vim vim, final VnfCompute x, final String vnfdId) {
-		final SoftwareImage img = x.getSoftwareImage();
-		try (final InputStream is = findImage(x.getSoftwareImage(), vnfdId)) {
-			// Use or-vi, Vim is not on the same server. Path is given in tosca file.
-			return vim.storage(vimInfo).uploadSoftwareImage(is, img);
-		} catch (final IOException e) {
-			throw new GenericException(e);
-		}
-	}
+	protected abstract UUID convertVnfdToId(String vnfdId);
 
-	protected abstract InputStream findImage(final SoftwareImage softwareImage, final String vnfdId);
-
-	private static VimSoftwareImageEntity mapSoftwareImage(final SwImage softwareImage, final String vduId, final VimConnectionInformation vimInfo, final Vim vim) {
+	private static VimSoftwareImageEntity mapSoftwareImage(final SoftwareImage softwareImage, final String vduId, final VimConnectionInformation vimInfo, final Vim vim) {
 		final VimSoftwareImageEntity vsie = new VimSoftwareImageEntity();
-		vsie.setVimSoftwareImageId(softwareImage.getVimResourceId());
+		vsie.setVimSoftwareImageId(softwareImage.getVimId());
 		vsie.setVnfdSoftwareImageId(vduId);
 		vsie.setVimConnectionId(vimInfo.getVimId());
 		vsie.setResourceProviderId(vim.getType());

@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.vim;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
@@ -46,5 +47,9 @@ public interface Storage {
 
 	@Nonnull
 	SysImage getImagesInformations(String name);
+
+	List<SwImage> getImageList();
+
+	SoftwareImage getImageDetail(String id);
 
 }

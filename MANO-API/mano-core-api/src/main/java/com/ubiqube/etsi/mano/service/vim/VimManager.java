@@ -39,6 +39,7 @@ import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsSt
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
@@ -46,6 +47,7 @@ import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.exception.NotFoundException;
 import com.ubiqube.etsi.mano.jpa.VimConnectionInformationJpa;
 import com.ubiqube.etsi.mano.service.SystemService;
+import com.ubiqube.etsi.mano.vim.dto.SwImage;
 
 /**
  *
@@ -187,5 +189,17 @@ public class VimManager {
 		final VimConnectionInformation vci = vimConnectionInformationJpa.findById(id).orElseThrow(() -> new GenericException("Unable to find vim " + id));
 		extractCapabilities(vci);
 		return vimConnectionInformationJpa.save(vci);
+	}
+
+	public List<SoftwareImage> getDetailedImageList(final VimConnectionInformation vimConn) {
+		final Vim vim = findVim(vimConn);
+		@NotNull
+		final Storage storage = vim.storage(vimConn);
+		final List<SwImage> preList = storage.getImageList();
+		return preList.stream().map(x -> mapper(storage, x)).toList();
+	}
+
+	private static SoftwareImage mapper(final Storage storage, final SwImage x) {
+		return storage.getImageDetail(x.getVimResourceId());
 	}
 }

@@ -14,22 +14,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.pkg;
+package com.ubiqube.etsi.mano.dao.mano;
 
 import java.io.Serializable;
-import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import com.ubiqube.etsi.mano.dao.mano.VduProfile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,38 +35,14 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class OsContainerDeployableUnit implements Serializable {
+public class EntryStringString implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
-
-	private String name;
-
-	private String description;
-
-	/**
-	 * It pose serious problems in Orika.
-	 */
-	// @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	// private Set<LogicalNodeData> logicalNode;
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<RequestedAdditionalCapability> requestedAdditionalCapabilities;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> nfviConstraints;
-
-	private VduProfile vduProfile;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<McioConstraint> mcioConstraintParams;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> virtualStoragesRef;
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> containerRef;
+	private int idx;
+	private String key;
+	private String value;
 }
