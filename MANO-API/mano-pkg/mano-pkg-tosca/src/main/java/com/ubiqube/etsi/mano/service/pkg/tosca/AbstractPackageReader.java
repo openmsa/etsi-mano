@@ -27,17 +27,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.Constants;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.service.pkg.PkgUtils;
+import com.ubiqube.etsi.mano.sol004.CsarModeEnum;
 import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
 import com.ubiqube.parser.tosca.Import;
 import com.ubiqube.parser.tosca.Imports;
+import com.ubiqube.parser.tosca.ParseException;
 import com.ubiqube.parser.tosca.ToscaContext;
 import com.ubiqube.parser.tosca.ToscaParser;
 import com.ubiqube.parser.tosca.api.ToscaApi;
@@ -65,9 +71,16 @@ public abstract class AbstractPackageReader implements Closeable {
 
 	private final File tempFile;
 
-	protected AbstractPackageReader(final InputStream data) {
+	private final BinaryRepository repo;
+
+	protected AbstractPackageReader(final InputStream data, final BinaryRepository repo, final UUID id) {
+		this.repo = repo;
 		tempFile = PkgUtils.fetchData(data);
 		toscaParser = new ToscaParser(tempFile);
+		final CsarModeEnum mode = toscaParser.getMode();
+		if (mode == CsarModeEnum.DOUBLE_ZIP) {
+			unpackAndResend(id);
+		}
 		root = toscaParser.getContext();
 		final MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 		additionalMapping(mapperFactory);
@@ -76,6 +89,14 @@ public abstract class AbstractPackageReader implements Closeable {
 		converterFactory.registerConverter(new TimeConverter());
 		converterFactory.registerConverter(new FrequencyConverter());
 		mapper = mapperFactory.getMapperFacade();
+	}
+
+	private void unpackAndResend(@NotNull final UUID id) {
+		try (final InputStream is = toscaParser.getCsarInputStream()) {
+			repo.storeBinary(id, Constants.REPOSITORY_FILENAME_VNFD, is);
+		} catch (final IOException e) {
+			throw new ParseException(e);
+		}
 	}
 
 	protected abstract void additionalMapping(MapperFactory mapperFactory);

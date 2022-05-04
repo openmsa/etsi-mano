@@ -1,12 +1,12 @@
 tosca_definitions_version: tosca_simple_yaml_1_3
-description: ETSI NFV SOL 001 pnfd types definitions version 3.5.1
+description: ETSI NFV SOL 001 pnfd types definitions version 4.2.1
 metadata:
   template_name: etsi_nfv_sol001_pnfd_types
   template_author: ETSI_NFV
-  template_version: 3.5.1
+  template_version: 4.2.1
 
 imports:
-     - https://forge.etsi.org/rep/nfv/SOL001/raw/v3.5.1/etsi_nfv_sol001_common_types.yaml
+     - https://forge.etsi.org/rep/nfv/SOL001/raw/v4.2.1/etsi_nfv_sol001_common_types.yaml
 
 data_types:
   tosca.datatypes.nfv.LocationInfo:
@@ -74,6 +74,7 @@ data_types:
         description: Altitude value as per RFC 6225
         required: true
 
+
 node_types:
   tosca.nodes.nfv.PNF:
     derived_from: tosca.nodes.Root
@@ -107,20 +108,20 @@ node_types:
        required: false
        description: Provides information about the geographical location (e.g. geographic coordinates or address of the building, etc.) of the PNF
     requirements:
-      - virtual_link:
-          capability: tosca.capabilities.nfv.VirtualLinkable
-          relationship: tosca.relationships.nfv.VirtualLinksTo
-          occurrences: [ 0, 1 ]
+    - virtual_link:
+        capability: tosca.capabilities.nfv.VirtualLinkable
+        relationship: tosca.relationships.nfv.VirtualLinksTo
+        occurrences: [ 0, 1 ]
   # Additional requirements shall be defined in the PNF specific node type (deriving from tosca.nodes.nfv.PNF) corresponding to NS virtual links that need to connect to PnfExtCps
 
   tosca.nodes.nfv.PnfExtCp:
     derived_from: tosca.nodes.nfv.Cp
     description: node definition of PnfExtCp.
     requirements:
-      - external_virtual_link:
-          capability: tosca.capabilities.nfv.VirtualLinkable
-          relationship: tosca.relationships.nfv.VirtualLinksTo
-          occurrences: [0, 1]
+    - external_virtual_link:
+        capability: tosca.capabilities.nfv.VirtualLinkable
+        relationship: tosca.relationships.nfv.VirtualLinksTo
+        occurrences: [0, 1]
 
 policy_types:
   tosca.policies.nfv.PnfSecurityGroupRule:

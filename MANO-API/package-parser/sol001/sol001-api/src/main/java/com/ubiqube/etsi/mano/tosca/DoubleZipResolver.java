@@ -93,4 +93,8 @@ public class DoubleZipResolver extends Resolver {
 		return new File(parent, url).toString();
 	}
 
+	public void setLast(final File parent) {
+		this.parent = parent;
+	}
+
 }

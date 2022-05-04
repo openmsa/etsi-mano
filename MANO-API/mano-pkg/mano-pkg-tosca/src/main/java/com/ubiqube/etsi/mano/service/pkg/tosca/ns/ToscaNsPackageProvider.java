@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -43,6 +44,7 @@ import com.ubiqube.etsi.mano.dao.mano.nsd.NfpDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgInstance;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.service.pkg.ToscaException;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -84,8 +86,8 @@ public class ToscaNsPackageProvider extends AbstractPackageReader implements NsP
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaNsPackageProvider.class);
 
-	public ToscaNsPackageProvider(final InputStream data) {
-		super(data);
+	public ToscaNsPackageProvider(final InputStream data, final BinaryRepository repo, final UUID id) {
+		super(data, repo, id);
 	}
 
 	@Override

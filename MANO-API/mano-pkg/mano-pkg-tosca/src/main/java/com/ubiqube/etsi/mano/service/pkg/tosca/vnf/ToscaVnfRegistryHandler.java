@@ -16,15 +16,18 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.VirtualFileSystem;
+import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
+import com.ubiqube.etsi.mano.sol004.CsarModeEnum;
+import com.ubiqube.etsi.mano.sol004.Sol004Onboarding;
 
 /**
  *
@@ -34,20 +37,17 @@ import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 @Service
 public class ToscaVnfRegistryHandler implements PackageDescriptor<VnfPackageReader> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ToscaVnfRegistryHandler.class);
+	private final VnfPackageRepository repo;
+
+	public ToscaVnfRegistryHandler(final VnfPackageRepository repo) {
+		super();
+		this.repo = repo;
+	}
 
 	@Override
-	public boolean isProcessable(final InputStream data) {
-		// P K x03 x04
-		try {
-			if (data.read() != 'P' || data.read() != 'K') {
-				return false;
-			}
-		} catch (final IOException e) {
-			LOG.trace("", e);
-			return false;
-		}
-		return true;
+	public boolean isProcessable(final ManoResource data) {
+		final Sol004PreOnboarding onboarding = new Sol004PreOnboarding(data);
+		return onboarding.getMode() != CsarModeEnum.UNKNOWN;
 	}
 
 	@Override
@@ -56,8 +56,14 @@ public class ToscaVnfRegistryHandler implements PackageDescriptor<VnfPackageRead
 	}
 
 	@Override
-	public VnfPackageReader getNewReaderInstance(final InputStream data) {
-		return new ToscaVnfPackageReader(data);
+	public VnfPackageReader getNewReaderInstance(final InputStream data, final UUID id) {
+		return new ToscaVnfPackageReader(data, repo, id);
+	}
+
+	@Override
+	public VirtualFileSystem getFileSystem(final ManoResource res) {
+		final Sol004Onboarding pack = new Sol004Onboarding();
+		return pack.getVirtualFileSystem(res);
 	}
 
 }

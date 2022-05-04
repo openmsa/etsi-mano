@@ -24,12 +24,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
 import com.ubiqube.etsi.mano.dao.mano.NsSap;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsNsd;
 import com.ubiqube.etsi.mano.dao.mano.dto.NsVnf;
+import com.ubiqube.etsi.mano.dao.mano.nsd.VnffgDescriptor;
 import com.ubiqube.etsi.mano.dao.mano.v2.nfvo.NsVirtualLink;
 import com.ubiqube.etsi.mano.service.pkg.bean.NsInformations;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -54,7 +56,7 @@ class ToscaNsdTest {
 				Entry.of("ubi-nsd-tosca/Definitions/etsi_nfv_sol001_common_types.yaml", "Definitions/etsi_nfv_sol001_common_types.yaml"),
 				Entry.of("ubi-nsd-tosca/TOSCA-Metadata/TOSCA.meta", "TOSCA-Metadata/TOSCA.meta"));
 		final InputStream data = Files.newInputStream(Path.of("/tmp/ubi-nsd-tosca.csar"));
-		tpp = new ToscaNsPackageProvider(data);
+		tpp = new ToscaNsPackageProvider(data, null, UUID.randomUUID());
 	}
 
 	@Test
@@ -97,6 +99,12 @@ class ToscaNsdTest {
 	@Test
 	void testUbiqube02() throws Exception {
 		final Set<NsNsd> list = tpp.getNestedNsd(new HashMap<String, String>());
+		assertEquals(0, list.size());
+	}
+
+	@Test
+	void testVnffg() {
+		final Set<VnffgDescriptor> list = tpp.getVnffg(new HashMap<String, String>());
 		assertEquals(0, list.size());
 	}
 }

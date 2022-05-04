@@ -14,43 +14,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg.vnf;
+package com.ubiqube.etsi.mano.sol004;
 
 import java.io.InputStream;
-import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-
-import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.repository.VirtualFileSystem;
-import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
-public class VnfDefaultRegistryHandler implements PackageDescriptor<VnfPackageReader> {
+public class FileSystemAdapter implements VirtualFileSystem {
+	private final com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem sol4Vfs;
 
-	@Override
-	public boolean isProcessable(final ManoResource data) {
-		return false;
+	public FileSystemAdapter(final com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem sol4Vfs) {
+		this.sol4Vfs = sol4Vfs;
 	}
 
 	@Override
-	public String getProviderName() {
-		return "UBI-DEFAULT";
-	}
-
-	@Override
-	public VnfPackageReader getNewReaderInstance(final InputStream data, final UUID id) {
-		return new DefaultVnfPackageReader();
-	}
-
-	@Override
-	public VirtualFileSystem getFileSystem(final ManoResource res) {
-		return null;
+	public InputStream getInputStream(final String imagePath) {
+		return sol4Vfs.getInputStream(imagePath);
 	}
 
 }

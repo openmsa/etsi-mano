@@ -28,10 +28,15 @@ import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.VirtualFileSystem;
 import com.ubiqube.etsi.mano.repository.VnfPackageRepository;
+import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageManager;
+import com.ubiqube.etsi.mano.service.pkg.vnf.VnfPackageReader;
 import com.ubiqube.etsi.mano.service.vim.Vim;
 import com.ubiqube.etsi.mano.service.vim.VimManager;
 import com.ubiqube.etsi.mano.vim.dto.SwImage;
@@ -45,11 +50,13 @@ import com.ubiqube.etsi.mano.vim.dto.SwImage;
 public class SoftwareImageService {
 	private final VnfPackageRepository repository;
 	private final VimManager vimManager;
+	private final VnfPackageManager packageManager;
 
-	public SoftwareImageService(final VnfPackageRepository repository, final VimManager vimManager) {
+	public SoftwareImageService(final VnfPackageRepository repository, final VimManager vimManager, final VnfPackageManager packageManager) {
 		super();
 		this.repository = repository;
 		this.vimManager = vimManager;
+		this.packageManager = packageManager;
 	}
 
 	public List<SoftwareImage> getFullDetailImageList(final VimConnectionInformation vimConn) {
@@ -63,13 +70,16 @@ public class SoftwareImageService {
 		if (img.isPresent()) {
 			return img.get();
 		}
+		final VnfPackage vnfPkg = repository.get(vnfPkgId);
+		final PackageDescriptor<VnfPackageReader> provider = packageManager.getProviderFor(vnfPkg.getPackageProvider());
 		final ManoResource res = repository.getBinary(vnfPkgId, swIn.getImagePath());
-		return uploadImage(res, swIn, vimConn);
+		final VirtualFileSystem vfs = provider.getFileSystem(res);
+		return uploadImage(vfs, swIn, vimConn);
 	}
 
-	private SoftwareImage uploadImage(final ManoResource res, final SoftwareImage swIn, final VimConnectionInformation vimConn) {
+	private SoftwareImage uploadImage(final VirtualFileSystem vfs, final SoftwareImage swIn, final VimConnectionInformation vimConn) {
 		final Vim vim = vimManager.getVimById(vimConn.getId());
-		try (InputStream is = res.getInputStream()) {
+		try (InputStream is = vfs.getInputStream(swIn.getImagePath())) {
 			vim.storage(vimConn).uploadSoftwareImage(is, swIn);
 		} catch (final IOException e) {
 			throw new GenericException(e);
@@ -78,16 +88,17 @@ public class SoftwareImageService {
 	}
 
 	private static boolean filterImage(final SoftwareImage vimImage, final SoftwareImage swIn) {
-		if (checkHash(vimImage.getChecksum(), swIn.getChecksum())) {
-			return true;
+		if (checksumComparable(vimImage.getChecksum(), swIn.getChecksum())) {
+			return checkHash(vimImage.getChecksum(), swIn.getChecksum());
 		}
 		return vimImage.getName().equals(swIn.getName());
 	}
 
+	private static boolean checksumComparable(final Checksum checksum, final Checksum checksum2) {
+		return null != checksum && checksum2 != null;
+	}
+
 	private static boolean checkHash(final Checksum checksum, final Checksum checksum2) {
-		if (checksum == null || checksum2 == null) {
-			return false;
-		}
 		final String alg1 = checksum.getAlgorithm();
 		final String alg2 = checksum2.getAlgorithm();
 		if (alg1 == null || alg2 == null || !alg1.equals(alg2)) {

@@ -137,7 +137,7 @@ public class NsPackageOnboardingImpl {
 		final PackageDescriptor<NsPackageProvider> packageProvider = packageManager.getProviderFor(data);
 		if (null != packageProvider) {
 			try (InputStream is = data.getInputStream()) {
-				mapNsPackage(packageProvider.getNewReaderInstance(is), nsPackage);
+				mapNsPackage(packageProvider.getNewReaderInstance(is, nsPackage.getId()), nsPackage);
 			} catch (final IOException e) {
 				throw new GenericException(e);
 			}

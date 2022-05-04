@@ -21,9 +21,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+
+import org.springframework.stereotype.Service;
 
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -39,6 +42,7 @@ import com.ubiqube.etsi.mano.vim.dto.Flavor;
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
+@Service
 public class FlavorManager {
 	private final VimManager vimManager;
 
@@ -81,12 +85,14 @@ public class FlavorManager {
 		if (basicFlavor.isEmpty()) {
 			final String flv = createFlavor(vimConnectionInformation, vCpu, vMem, comp.getToscaName());
 			cache.put(flv, comp);
+			return flv;
 		}
 		if (haveAdditinalRequirement(vCpu, vMem)) {
 			final List<Flavor> flv2 = findFlavors(basicFlavor, vCpu, vMem);
 			if (flv2.isEmpty()) {
 				final String flv = createFlavor(vimConnectionInformation, vCpu, vMem, comp.getToscaName());
 				cache.put(flv, comp);
+				return flv;
 			}
 			return flv2.get(0).getId();
 		}
@@ -103,7 +109,7 @@ public class FlavorManager {
 	}
 
 	private static boolean isEqual(final VirtualMemory virtualMemory, final VirtualMemory vMem) {
-		if (!virtualMemory.getNumaEnabled().equals(vMem.getNumaEnabled()) || virtualMemory.getVirtualMemSize() != vMem.getVirtualMemSize()) {
+		if (!Objects.equals(virtualMemory.getNumaEnabled(), vMem.getNumaEnabled()) || virtualMemory.getVirtualMemSize() != vMem.getVirtualMemSize()) {
 			return false;
 		}
 		final Map<String, String> a = virtualMemory.getVduMemRequirements();
@@ -120,7 +126,9 @@ public class FlavorManager {
 		return compareMap(a, b);
 	}
 
-	private static boolean compareMap(final Map<String, String> a, final Map<String, String> b) {
+	private static boolean compareMap(final Map<String, String> aIn, final Map<String, String> bIn) {
+		final Map<String, String> a = Optional.ofNullable(aIn).orElse(Map.of());
+		final Map<String, String> b = Optional.ofNullable(bIn).orElse(Map.of());
 		if (a.size() != b.size()) {
 			return false;
 		}
@@ -133,8 +141,8 @@ public class FlavorManager {
 
 	private String createFlavor(final VimConnectionInformation vimConnectionInformation, final VirtualCpu vCpu, final VirtualMemory vMem, final String toscaName) {
 		final Vim vim = vimManager.getVimById(vimConnectionInformation.getId());
-		final Map<String, String> add = new HashMap<>(vCpu.getVduCpuRequirements());
-		add.putAll(vMem.getVduMemRequirements());
+		final Map<String, String> add = new HashMap<>(Optional.ofNullable(vCpu.getVduCpuRequirements()).orElse(Map.of()));
+		add.putAll(Optional.ofNullable(vMem.getVduMemRequirements()).orElse(Map.of()));
 		return vim.createFlavor(vimConnectionInformation, toscaName, vCpu.getNumVirtualCpu(), vMem.getVirtualMemSize(), add);
 	}
 
@@ -144,8 +152,11 @@ public class FlavorManager {
 
 	private static boolean match(final Flavor flv, final VirtualCpu vCpu, final VirtualMemory vMem) {
 		final Map<String, String> add = flv.getAdditional();
-		final Map<String, String> cpuReq = vCpu.getVduCpuRequirements();
-		final Map<String, String> memReq = vMem.getVduMemRequirements();
+		final Map<String, String> cpuReq = Optional.ofNullable(vCpu.getVduCpuRequirements()).orElse(Map.of());
+		final Map<String, String> memReq = Optional.ofNullable(vMem.getVduMemRequirements()).orElse(Map.of());
+		if (null == add) {
+			return cpuReq.isEmpty() && memReq.isEmpty();
+		}
 		for (final Entry<String, String> entry : add.entrySet()) {
 			final String k = entry.getKey();
 			if (cpuReq.get(k) == null && null == memReq.get(k)) {
@@ -156,8 +167,8 @@ public class FlavorManager {
 	}
 
 	private static boolean haveAdditinalRequirement(final VirtualCpu vCpu, final VirtualMemory vMem) {
-		final boolean vCpuReq = vCpu.getVduCpuRequirements() != null || vCpu.getVduCpuRequirements().isEmpty();
-		final boolean memReq = vMem.getVduMemRequirements() != null || vMem.getVduMemRequirements().isEmpty();
+		final boolean vCpuReq = vCpu.getVduCpuRequirements() != null && !vCpu.getVduCpuRequirements().isEmpty();
+		final boolean memReq = vMem.getVduMemRequirements() != null && !vMem.getVduMemRequirements().isEmpty();
 		return vCpuReq || memReq;
 	}
 

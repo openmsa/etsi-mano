@@ -16,8 +16,6 @@
  */
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -48,17 +46,21 @@ public class VnfPackageManagerImpl implements VnfPackageManager {
 	public PackageDescriptor<VnfPackageReader> getProviderFor(final ManoResource data) {
 		for (final PackageDescriptor<VnfPackageReader> provider : providers) {
 			LOG.info("Testing {} for package support.", provider.getProviderName());
-			try (InputStream is = data.getInputStream()) {
-				if (provider.isProcessable(is)) {
-					LOG.info("Using {} for package.", provider.getProviderName());
-					return provider;
-				}
-			} catch (final IOException e) {
-				throw new GenericException(e);
+			if (provider.isProcessable(data)) {
+				LOG.info("Using {} for package.", provider.getProviderName());
+				return provider;
 			}
 		}
 		LOG.info("No package support, using default.");
 		return new DefaultVnfPackageProvider();
+	}
+
+	@Override
+	public PackageDescriptor<VnfPackageReader> getProviderFor(final String packageProvider) {
+		return providers.stream()
+				.filter(x -> x.getProviderName().equals(packageProvider))
+				.findFirst()
+				.orElseThrow(() -> new GenericException("Unable to find a package provider named: " + packageProvider));
 	}
 
 }

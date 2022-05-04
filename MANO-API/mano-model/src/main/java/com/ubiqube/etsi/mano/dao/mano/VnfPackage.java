@@ -281,6 +281,11 @@ public class VnfPackage implements PackageBase, Auditable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<VirtualCp> virtualCp;
 
+	/**
+	 * Name of internal package provider/parser class.
+	 */
+	private String packageProvider;
+
 	@Version
 	private long version;
 

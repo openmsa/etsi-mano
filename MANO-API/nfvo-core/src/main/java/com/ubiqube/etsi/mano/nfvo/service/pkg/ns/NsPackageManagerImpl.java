@@ -16,15 +16,12 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
@@ -49,13 +46,9 @@ public class NsPackageManagerImpl implements NsPackageManager {
 	public PackageDescriptor<NsPackageProvider> getProviderFor(final ManoResource data) {
 		for (final PackageDescriptor<NsPackageProvider> provider : providers) {
 			LOG.info("Testing {} for package support.", provider.getProviderName());
-			try (InputStream is = data.getInputStream()) {
-				if (provider.isProcessable(is)) {
-					LOG.info("Using {} for package.", provider.getProviderName());
-					return provider;
-				}
-			} catch (final IOException e) {
-				throw new GenericException(e);
+			if (provider.isProcessable(data)) {
+				LOG.info("Using {} for package.", provider.getProviderName());
+				return provider;
 			}
 		}
 		LOG.info("No package support, using default.");

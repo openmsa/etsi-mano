@@ -17,7 +17,10 @@
 package com.ubiqube.etsi.mano.service.pkg.vnf;
 
 import java.io.InputStream;
+import java.util.UUID;
 
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.VirtualFileSystem;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 
 /**
@@ -33,12 +36,17 @@ public class DefaultVnfPackageProvider implements PackageDescriptor<VnfPackageRe
 	}
 
 	@Override
-	public boolean isProcessable(final InputStream data) {
+	public boolean isProcessable(final ManoResource data) {
 		return false;
 	}
 
 	@Override
-	public VnfPackageReader getNewReaderInstance(final InputStream data) {
+	public VnfPackageReader getNewReaderInstance(final InputStream data, final UUID id) {
+		return null;
+	}
+
+	@Override
+	public VirtualFileSystem getFileSystem(final ManoResource res) {
 		return null;
 	}
 

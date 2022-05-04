@@ -29,4 +29,6 @@ import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 public interface VnfPackageManager {
 	@Nullable
 	PackageDescriptor<VnfPackageReader> getProviderFor(ManoResource data);
+
+	PackageDescriptor<VnfPackageReader> getProviderFor(String packageProvider);
 }

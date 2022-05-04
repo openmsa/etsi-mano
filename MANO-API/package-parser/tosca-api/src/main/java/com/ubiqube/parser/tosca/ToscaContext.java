@@ -342,7 +342,9 @@ public class ToscaContext {
 
 	private static boolean onClassPath(final String type) {
 		try {
-			Class.forName(type);
+			final String clzz = ClassUtils.getClassName(type);
+			final String pack = ClassUtils.getPackage(type);
+			Class.forName(pack + "." + clzz);
 			return true;
 		} catch (final ClassNotFoundException e) {
 			LOG.trace("", e);

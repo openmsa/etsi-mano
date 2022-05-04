@@ -159,6 +159,7 @@ public class DoubleZip implements VirtualFileSystem {
 
 	@Override
 	public InputStream getInputStream(final String fileName) {
+		resolver.setLast(new File(fileName).getParentFile());
 		final Optional<String> elem = findInnerFile(fileName);
 		if (elem.isPresent()) {
 			return getZipInputStream(fileName);

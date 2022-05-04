@@ -33,7 +33,7 @@ import com.ubiqube.etsi.mano.sol004.Sol004Exception;
 
 public class VfsResolver extends Resolver {
 	private static final Logger LOG = LoggerFactory.getLogger(VfsResolver.class);
-	final Pattern urlMatcher = Pattern.compile("(?<!\\\\):");
+	private final Pattern urlMatcher = Pattern.compile("(?<!\\\\):");
 	private FileObject parent;
 	private final Set<String> imported = new LinkedHashSet<>();
 

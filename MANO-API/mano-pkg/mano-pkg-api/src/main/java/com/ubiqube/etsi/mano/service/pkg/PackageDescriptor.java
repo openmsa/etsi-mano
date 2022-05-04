@@ -17,6 +17,10 @@
 package com.ubiqube.etsi.mano.service.pkg;
 
 import java.io.InputStream;
+import java.util.UUID;
+
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.VirtualFileSystem;
 
 /**
  *
@@ -27,7 +31,9 @@ public interface PackageDescriptor<U> {
 
 	String getProviderName();
 
-	boolean isProcessable(InputStream data);
+	boolean isProcessable(ManoResource mr);
 
-	U getNewReaderInstance(InputStream data);
+	U getNewReaderInstance(InputStream mr, UUID id);
+
+	VirtualFileSystem getFileSystem(ManoResource res);
 }

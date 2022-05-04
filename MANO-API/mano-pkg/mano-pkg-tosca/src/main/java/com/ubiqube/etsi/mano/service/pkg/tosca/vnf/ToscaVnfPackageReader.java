@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfVl;
 import com.ubiqube.etsi.mano.dao.mano.pkg.OsContainer;
 import com.ubiqube.etsi.mano.dao.mano.pkg.OsContainerDeployableUnit;
 import com.ubiqube.etsi.mano.dao.mano.pkg.VirtualCp;
+import com.ubiqube.etsi.mano.repository.BinaryRepository;
 import com.ubiqube.etsi.mano.service.pkg.bean.AffinityRuleAdapater;
 import com.ubiqube.etsi.mano.service.pkg.bean.ProviderData;
 import com.ubiqube.etsi.mano.service.pkg.bean.SecurityGroupAdapter;
@@ -78,8 +80,8 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 
 	private static final Logger LOG = LoggerFactory.getLogger(ToscaVnfPackageReader.class);
 
-	public ToscaVnfPackageReader(final InputStream data) {
-		super(data);
+	public ToscaVnfPackageReader(final InputStream data, final BinaryRepository repo, final UUID id) {
+		super(data, repo, id);
 	}
 
 	@Override

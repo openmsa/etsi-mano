@@ -39,10 +39,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.etsi.mano.repository.ManoResource;
 import com.ubiqube.etsi.mano.sol004.metafile.ToscaMeta;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectVfs;
 import com.ubiqube.etsi.mano.sol004.vfs.DirectZip;
+import com.ubiqube.etsi.mano.sol004.vfs.DirectZipMr;
 import com.ubiqube.etsi.mano.sol004.vfs.DoubleZip;
+import com.ubiqube.etsi.mano.sol004.vfs.DoubleZipMr;
 import com.ubiqube.etsi.mano.sol004.vfs.SingleVfs;
 import com.ubiqube.etsi.mano.sol004.vfs.VirtualFileSystem;
 import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
@@ -57,6 +60,8 @@ import com.ubiqube.etsi.mano.tosca.ToscaVersion;
  */
 public class Sol004Onboarding {
 
+	private static final String DOT_CSAR = ".csar";
+
 	private static final Logger LOG = LoggerFactory.getLogger(Sol004Onboarding.class);
 
 	private static final Pattern ZIP_MATCHER = Pattern.compile(".*\\.(zip)");
@@ -68,7 +73,7 @@ public class Sol004Onboarding {
 
 	private Optional<Sol001Version> sol001Version;
 
-	CsarModeEnum getToscaMode(final String fileName) {
+	public CsarModeEnum getToscaMode(final String fileName) {
 		if (isCsarExtension(fileName)) {
 			return CsarModeEnum.SINGLE_ZIP;
 		}
@@ -79,7 +84,7 @@ public class Sol004Onboarding {
 			return CsarModeEnum.UNKNOWN;
 		}
 		final List<String> fileList = getFileList(fileName);
-		final boolean haveCsarFile = fileList.stream().anyMatch(x -> x.endsWith(".csar"));
+		final boolean haveCsarFile = fileList.stream().anyMatch(x -> x.endsWith(DOT_CSAR));
 		if (haveCsarFile) {
 			return CsarModeEnum.DOUBLE_ZIP;
 		}
@@ -106,6 +111,25 @@ public class Sol004Onboarding {
 		}
 	}
 
+	public CsarModeEnum identify(final ManoResource mr) {
+		List<String> fileList;
+		try (InputStream is = mr.getInputStream()) {
+			fileList = getZipFileList(is);
+		} catch (final IOException e) {
+			throw new Sol004Exception(e);
+		}
+		final boolean haveCsarFile = fileList.stream().anyMatch(x -> x.endsWith(DOT_CSAR));
+		if (haveCsarFile) {
+			return CsarModeEnum.DOUBLE_ZIP;
+		}
+		if (checkMetaFolder(fileList)) {
+			return CsarModeEnum.SINGLE_ZIP;
+		}
+
+		return CsarModeEnum.UNKNOWN;
+
+	}
+
 	public void preOnboard(final String filename) {
 		final File file = new File(filename);
 		VirtualFileSystem vfs;
@@ -130,7 +154,7 @@ public class Sol004Onboarding {
 
 	private static String findCsarFile(final String filename) {
 		try (ZipFile zip = new ZipFile(filename)) {
-			final List<String> l = zip.stream().filter(x -> x.getName().endsWith(".csar")).map(ZipEntry::getName).toList();
+			final List<String> l = zip.stream().filter(x -> x.getName().endsWith(DOT_CSAR)).map(ZipEntry::getName).toList();
 			if (l.isEmpty() || l.size() > 1) {
 				throw new Sol004Exception("Could not find csar file " + l.size());
 			}
@@ -183,11 +207,14 @@ public class Sol004Onboarding {
 	}
 
 	public InputStream getToscaEntryPoint() {
-		return csar.getInputStream(csar.getMetaFile().getEntryDefinitionFileName());
+		return csar.getInputStream(getToscaEntryPointFilename());
 	}
 
 	public String getToscaEntryPointFilename() {
-		return csar.getMetaFile().getEntryDefinitionFileName();
+		if (null != csar.getMetaFile()) {
+			return csar.getMetaFile().getEntryDefinitionFileName();
+		}
+		return null;
 	}
 
 	public ToscaVersion getToscaVersion() {
@@ -240,6 +267,18 @@ public class Sol004Onboarding {
 
 	public @NotNull List<ArtefactInformations> getFiles() {
 		return csar.getArtefactList();
+	}
+
+	public InputStream getCsarInputStream() {
+		return csar.getCsarFile();
+	}
+
+	public com.ubiqube.etsi.mano.repository.VirtualFileSystem getVirtualFileSystem(final ManoResource vnfd) {
+		final CsarModeEnum mode = identify(vnfd);
+		if (mode == CsarModeEnum.DOUBLE_ZIP) {
+			return new FileSystemAdapter(new DoubleZipMr(vnfd));
+		}
+		return new FileSystemAdapter(new DirectZipMr(vnfd));
 	}
 
 }

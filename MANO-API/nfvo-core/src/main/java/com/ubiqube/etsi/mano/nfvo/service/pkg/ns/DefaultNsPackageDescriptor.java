@@ -17,7 +17,10 @@
 package com.ubiqube.etsi.mano.nfvo.service.pkg.ns;
 
 import java.io.InputStream;
+import java.util.UUID;
 
+import com.ubiqube.etsi.mano.repository.ManoResource;
+import com.ubiqube.etsi.mano.repository.VirtualFileSystem;
 import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
 import com.ubiqube.etsi.mano.service.pkg.ns.NsPackageProvider;
 
@@ -34,13 +37,18 @@ public class DefaultNsPackageDescriptor implements PackageDescriptor<NsPackagePr
 	}
 
 	@Override
-	public boolean isProcessable(final InputStream data) {
+	public boolean isProcessable(final ManoResource data) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public NsPackageProvider getNewReaderInstance(final InputStream data) {
+	public NsPackageProvider getNewReaderInstance(final InputStream data, final UUID id) {
+		return null;
+	}
+
+	@Override
+	public VirtualFileSystem getFileSystem(final ManoResource res) {
 		return null;
 	}
 

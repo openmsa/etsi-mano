@@ -16,7 +16,6 @@
  */
 package com.ubiqube.etsi.mano.sol004.vfs;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -61,6 +60,7 @@ public class DirectZip implements VirtualFileSystem {
 	@Override
 	public byte[] getFileContent(final String fileName) {
 		try (InputStream is = zip.getInputStream(new ZipEntry(fileName))) {
+			resolver.getContent(fileName);
 			return is.readAllBytes();
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);
@@ -88,10 +88,9 @@ public class DirectZip implements VirtualFileSystem {
 
 	@Override
 	public InputStream getInputStream(final String fileName) {
-		final File f = new File(fileName);
-		resolver.setParent(f.getParentFile());
 		final ZipEntry entry = new ZipEntry(fileName);
 		try {
+			resolver.getContent(fileName);
 			return zip.getInputStream(entry);
 		} catch (final IOException e) {
 			throw new Sol004Exception(e);

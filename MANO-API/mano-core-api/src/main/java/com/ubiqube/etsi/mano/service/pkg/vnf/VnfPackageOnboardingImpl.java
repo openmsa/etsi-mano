@@ -172,8 +172,9 @@ public class VnfPackageOnboardingImpl {
 		if (null == packageProvider) {
 			return;
 		}
+		vnfPackage.setPackageProvider(packageProvider.getProviderName());
 		try (InputStream stream = data.getInputStream();
-				final VnfPackageReader reader = packageProvider.getNewReaderInstance(stream)) {
+				final VnfPackageReader reader = packageProvider.getNewReaderInstance(stream, vnfPackage.getId())) {
 			mapVnfPackage(reader, vnfPackage);
 		} catch (final IOException e) {
 			throw new GenericException(e);

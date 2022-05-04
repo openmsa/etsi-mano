@@ -14,43 +14,33 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.pkg.vnf;
+package com.ubiqube.etsi.mano.tosca;
 
-import java.io.InputStream;
-import java.util.UUID;
+import java.nio.charset.Charset;
 
-import org.springframework.stereotype.Service;
-
-import com.ubiqube.etsi.mano.repository.ManoResource;
-import com.ubiqube.etsi.mano.repository.VirtualFileSystem;
-import com.ubiqube.etsi.mano.service.pkg.PackageDescriptor;
+import com.ubiqube.etsi.mano.sol004.vfs.DoubleZipMr;
 
 /**
  *
  * @author Olivier Vignaud <ovi@ubiqube.com>
  *
  */
-@Service
-public class VnfDefaultRegistryHandler implements PackageDescriptor<VnfPackageReader> {
+public class DoubleMrZipResolver extends AbstractResolver {
 
-	@Override
-	public boolean isProcessable(final ManoResource data) {
-		return false;
+	private final DoubleZipMr dzm;
+
+	public DoubleMrZipResolver(final DoubleZipMr dzm) {
+		this.dzm = dzm;
 	}
 
 	@Override
-	public String getProviderName() {
-		return "UBI-DEFAULT";
+	protected String handleContent(final String url) {
+		return new String(dzm.getFileContent(url), Charset.defaultCharset());
 	}
 
 	@Override
-	public VnfPackageReader getNewReaderInstance(final InputStream data, final UUID id) {
-		return new DefaultVnfPackageReader();
-	}
-
-	@Override
-	public VirtualFileSystem getFileSystem(final ManoResource res) {
-		return null;
+	protected boolean exist(final String string) {
+		return dzm.exist(string);
 	}
 
 }

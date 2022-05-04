@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.ubiqube.etsi.mano.sol004.CsarModeEnum;
 import com.ubiqube.etsi.mano.sol004.Sol004Onboarding;
 import com.ubiqube.etsi.mano.tosca.ArtefactInformations;
 import com.ubiqube.etsi.mano.tosca.IResolver;
@@ -45,8 +46,10 @@ public class ToscaParser {
 	private ToscaContext context;
 	private final ObjectMapper mapper = getMapper();
 	Sol004Onboarding onboarding = new Sol004Onboarding();
+	private CsarModeEnum mode;
 
 	public ToscaParser(final File filename) {
+		this.mode = onboarding.getToscaMode(filename.toString());
 		onboarding.preOnboard(filename.toString());
 		final ToscaVersion tv = onboarding.getToscaVersion();
 		try {
@@ -122,5 +125,16 @@ public class ToscaParser {
 
 	public byte[] getFileContent(final String fileName) {
 		return onboarding.getFileContent(fileName);
+	}
+
+	public CsarModeEnum getMode() {
+		return mode;
+	}
+
+	public InputStream getCsarInputStream() {
+		if (mode != CsarModeEnum.DOUBLE_ZIP) {
+			throw new ParseException("Could not get a csar file in a non double sol004 archive.");
+		}
+		return onboarding.getCsarInputStream();
 	}
 }
