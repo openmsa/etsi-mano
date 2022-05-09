@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -35,17 +36,20 @@ import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
+import com.ubiqube.etsi.mano.dao.mano.AffinityRule;
 import com.ubiqube.etsi.mano.dao.mano.GrantInformationExt;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 import com.ubiqube.etsi.mano.service.sys.ServerGroup;
+import com.ubiqube.etsi.mano.service.vim.ComputeParameters;
 import com.ubiqube.etsi.mano.service.vim.Dns;
 import com.ubiqube.etsi.mano.service.vim.Network;
 import com.ubiqube.etsi.mano.service.vim.PhysResources;
 import com.ubiqube.etsi.mano.service.vim.ResourceQuota;
 import com.ubiqube.etsi.mano.service.vim.Storage;
 import com.ubiqube.etsi.mano.service.vim.Vim;
-import com.ubiqube.etsi.mano.service.vim.VimCapability;
 import com.ubiqube.etsi.mano.service.vim.mon.VimMonitoring;
+import com.ubiqube.etsi.mano.vim.dto.Flavor;
 
 public class AwsVim implements Vim {
 
@@ -77,21 +81,15 @@ public class AwsVim implements Vim {
 	}
 
 	@Override
-	public String getOrCreateFlavor(final VimConnectionInformation vci, final String name, final int numVcpu, final long virtualMemorySize, final long disk) {
-		// TODO Auto-generated method stub
-		return "t1.micro";
-	}
-
-	@Override
-	public String createCompute(final VimConnectionInformation vci, final String instanceName, final String flavorId, final String imageId, final List<String> networks, final List<String> storages, final String cloudInitData) {
+	public String createCompute(final ComputeParameters cp) {
 		final Collection<InstanceNetworkInterfaceSpecification> ni = new ArrayList<>();
 		final RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
-		runInstancesRequest.withInstanceType(flavorId)
-				.withUserData(cloudInitData)
+		runInstancesRequest.withInstanceType(cp.getFlavorId())
+				.withUserData(cp.getCloudInitData())
 				.withNetworkInterfaces(ni)
-				.withImageId(imageId)
-				.withRequestCredentialsProvider(getCredential(vci));
-		networks.forEach(x -> ni.add(new InstanceNetworkInterfaceSpecification().withSubnetId(x)));
+				.withImageId(cp.getImageId())
+				.withRequestCredentialsProvider(getCredential(cp.getVimConnectionInformation()));
+		cp.getNetworks().forEach(x -> ni.add(new InstanceNetworkInterfaceSpecification().withSubnetId(x)));
 		return getEc2Client().runInstances(runInstancesRequest).getReservation().getInstances().get(0).getInstanceId();
 	}
 
@@ -164,6 +162,47 @@ public class AwsVim implements Vim {
 
 	@Override
 	public PhysResources getPhysicalResources(final VimConnectionInformation vimConnectionInformation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getOrCreateFlavor(final VimConnectionInformation vimConnectionInformation, final String name, final int numVcpu, final long virtualMemorySize, final long disk, final Map<String, String> flavorSpec) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createServerGroup(final VimConnectionInformation vimConnectionInformation, final AffinityRule ar) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteServerGroup(final VimConnectionInformation vimConnectionInformation, final String vimResourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void authenticate(final VimConnectionInformation vci) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<Flavor> getFlavorList(final VimConnectionInformation vimConnectionInformation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean canCreateFlavor() {
+		return false;
+	}
+
+	@Override
+	public String createFlavor(final VimConnectionInformation vimConnectionInformation, final String toscaName, final long numVirtualCpu, final long virtualMemSize, final Map<String, String> add) {
 		// TODO Auto-generated method stub
 		return null;
 	}

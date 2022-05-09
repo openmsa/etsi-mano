@@ -16,6 +16,7 @@
  */
 package com.ubiqube.etsi.mano.vim.aws;
 
+import java.util.List;
 import java.util.Map;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -26,8 +27,11 @@ import com.amazonaws.services.ec2.model.DeleteSubnetRequest;
 import com.amazonaws.services.ec2.model.DeleteVpcRequest;
 import com.ubiqube.etsi.mano.dao.mano.IpPool;
 import com.ubiqube.etsi.mano.dao.mano.L3Data;
+import com.ubiqube.etsi.mano.dao.mano.SecurityGroup;
 import com.ubiqube.etsi.mano.dao.mano.VlProtocolData;
+import com.ubiqube.etsi.mano.dao.mano.common.NicType;
 import com.ubiqube.etsi.mano.service.vim.Network;
+import com.ubiqube.etsi.mano.service.vim.NetworkObject;
 
 public class AwsNetwork implements Network {
 	private final AmazonEC2 client;
@@ -101,14 +105,44 @@ public class AwsNetwork implements Network {
 	}
 
 	@Override
-	public String createPort(final String name, final String networkId, final String deviceId) {
+	public void deletePort(final String uuid) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String createPort(final String name, final String networkId, final String deviceId, final String macAddress, final NicType nicType) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void deletePort(final String uuid) {
+	public String createSecurityRule(final SecurityGroup sg, final String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteSecurityRule(final String vimResourceId) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String createSecurityGroup(final String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteSecurityGroup(final String vimResourceId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<NetworkObject> searchByName(final List<String> vl) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

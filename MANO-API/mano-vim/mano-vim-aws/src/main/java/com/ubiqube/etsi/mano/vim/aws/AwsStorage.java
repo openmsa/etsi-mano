@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.vim.aws;
 
+import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -24,8 +26,9 @@ import com.amazonaws.services.ec2.model.CreateVolumeRequest;
 import com.amazonaws.services.ec2.model.DeleteVolumeRequest;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
-import com.ubiqube.etsi.mano.orchestrator.VimImage;
+import com.ubiqube.etsi.mano.service.sys.SysImage;
 import com.ubiqube.etsi.mano.service.vim.Storage;
+import com.ubiqube.etsi.mano.vim.dto.SwImage;
 
 public class AwsStorage implements Storage {
 	private static final long GIGA = 1024 * 1024 * 1024L;
@@ -54,13 +57,13 @@ public class AwsStorage implements Storage {
 	}
 
 	@Override
-	public Optional<SoftwareImage> getSwImageMatching(final SoftwareImage img) {
+	public Optional<SwImage> getSwImageMatching(final SoftwareImage img) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SoftwareImage uploadSoftwareImage(final SoftwareImage img) {
+	public SwImage uploadSoftwareImage(final InputStream is, final SoftwareImage softwareImage) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -80,7 +83,19 @@ public class AwsStorage implements Storage {
 	}
 
 	@Override
-	public VimImage getImagesInformations(final String name) {
+	public SysImage getImagesInformations(final String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SwImage> getImageList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SoftwareImage getImageDetail(final String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
