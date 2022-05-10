@@ -16,22 +16,12 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.vnfi;
 
-public enum VimCapability {
-	HAVE_ALARMING,
-	HAVE_AVAILABILITY_ZONE,
-	HAVE_BGP,
-	HAVE_CNF,
-	HAVE_COMPUTE,
-	HAVE_DHCP,
-	HAVE_DNS,
-	HAVE_NET_MTU,
-	HAVE_NETWORK,
-	HAVE_PLACEMENT,
-	HAVE_QOS,
-	HAVE_ROUTER,
-	HAVE_TELEMETRY,
-	HAVE_TRUNK,
-	HAVE_VLAN_TRANSPARENT,
-	HAVE_VXNET,
-	REQUIRE_SUBNET_ALLOCATION,
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public enum VmServerType {
+	VM,
+	BARE;
 }

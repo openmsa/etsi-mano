@@ -40,6 +40,8 @@ import javax.validation.constraints.Null;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.client.IOSClientBuilder.V3;
+import org.openstack4j.api.exceptions.AuthenticationException;
+import org.openstack4j.api.types.ServiceType;
 import org.openstack4j.core.transport.Config;
 import org.openstack4j.model.common.ActionResponse;
 import org.openstack4j.model.common.Extension;
@@ -330,6 +332,7 @@ public class OpenStackVim implements Vim {
 		final CompletionService<List<VimCapability>> completionService = new ExecutorCompletionService<>(tpe);
 		completionService.submit(getExtensions(vimConnectionInformation));
 		completionService.submit(getAgents(vimConnectionInformation));
+		completionService.submit(getWithServices(vimConnectionInformation));
 		int received = 0;
 		final List<VimCapability> res = new ArrayList<>();
 		res.add(VimCapability.REQUIRE_SUBNET_ALLOCATION);
@@ -360,6 +363,25 @@ public class OpenStackVim implements Vim {
 			throw new VimException(ex);
 		}
 		return res;
+	}
+
+	private Callable<List<VimCapability>> getWithServices(final VimConnectionInformation vimConnectionInformation) {
+		return () -> {
+			final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
+			return os.getSupportedServices().stream().map(this::mapService).filter(Objects::nonNull).toList();
+		};
+	}
+
+	private VimCapability mapService(final ServiceType x) {
+		return switch (x) {
+		case MAGNUM -> VimCapability.HAVE_CNF;
+		case PLACEMENT -> VimCapability.HAVE_PLACEMENT;
+		case TELEMETRY_GNOCCHI -> VimCapability.HAVE_TELEMETRY;
+		case TELEMETRY_AODH -> VimCapability.HAVE_ALARMING;
+		case NETWORK -> VimCapability.HAVE_NETWORK;
+		case COMPUTE -> VimCapability.HAVE_COMPUTE;
+		default -> null;
+		};
 	}
 
 	private Callable<List<VimCapability>> getExtensions(final VimConnectionInformation vimConnectionInformation) {
@@ -456,6 +478,12 @@ public class OpenStackVim implements Vim {
 	}
 
 	@Override
+	public Cnf cnf(final VimConnectionInformation vimConnectionInformation) {
+		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
+		return new OsCnf(os);
+	}
+
+	@Override
 	public PhysResources getPhysicalResources(final VimConnectionInformation vimConnectionInformation) {
 		final OSClientV3 os = OpenStackVim.getClient(vimConnectionInformation);
 		final HypervisorStatistics stats = os.compute().hypervisors().statistics();
@@ -479,7 +507,11 @@ public class OpenStackVim implements Vim {
 
 	@Override
 	public void authenticate(final VimConnectionInformation vci) {
-		internalAuthenticate(vci);
+		try {
+			internalAuthenticate(vci);
+		} catch (final AuthenticationException e) {
+			throw new OpenStackException("Authentication failed: " + e.getMessage(), e);
+		}
 	}
 
 	@Override

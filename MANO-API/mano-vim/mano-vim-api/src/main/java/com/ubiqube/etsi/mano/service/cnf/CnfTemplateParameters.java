@@ -14,24 +14,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.dao.mano.vnfi;
+package com.ubiqube.etsi.mano.service.cnf;
 
-public enum VimCapability {
-	HAVE_ALARMING,
-	HAVE_AVAILABILITY_ZONE,
-	HAVE_BGP,
-	HAVE_CNF,
-	HAVE_COMPUTE,
-	HAVE_DHCP,
-	HAVE_DNS,
-	HAVE_NET_MTU,
-	HAVE_NETWORK,
-	HAVE_PLACEMENT,
-	HAVE_QOS,
-	HAVE_ROUTER,
-	HAVE_TELEMETRY,
-	HAVE_TRUNK,
-	HAVE_VLAN_TRANSPARENT,
-	HAVE_VXNET,
-	REQUIRE_SUBNET_ALLOCATION,
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public class CnfTemplateParameters {
+
 }

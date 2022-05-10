@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -35,6 +36,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.CnfInformations;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -74,6 +76,8 @@ public class VimConnectionInformation implements Auditable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Map<String, String> extra = null;
 
+	@Embedded
+	private CnfInformations cnfInfo;
 	/**
 	 * Capabilities of the vim. Read VimCapabilites Enum to figure out what we can
 	 * do.

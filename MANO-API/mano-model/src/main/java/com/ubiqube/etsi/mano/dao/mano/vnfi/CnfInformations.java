@@ -16,22 +16,42 @@
  */
 package com.ubiqube.etsi.mano.dao.mano.vnfi;
 
-public enum VimCapability {
-	HAVE_ALARMING,
-	HAVE_AVAILABILITY_ZONE,
-	HAVE_BGP,
-	HAVE_CNF,
-	HAVE_COMPUTE,
-	HAVE_DHCP,
-	HAVE_DNS,
-	HAVE_NET_MTU,
-	HAVE_NETWORK,
-	HAVE_PLACEMENT,
-	HAVE_QOS,
-	HAVE_ROUTER,
-	HAVE_TELEMETRY,
-	HAVE_TRUNK,
-	HAVE_VLAN_TRANSPARENT,
-	HAVE_VXNET,
-	REQUIRE_SUBNET_ALLOCATION,
+import java.io.Serializable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.Embeddable;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * Information missing from Sol001/ osContainer
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+@Getter
+@Setter
+@Embeddable
+public class CnfInformations implements Serializable {
+	/** Serial. */
+	private static final long serialVersionUID = 1L;
+
+	private String masterFlavorId;
+
+	@Nonnull
+	private String clusterImage;
+
+	@Nullable
+	private String dnsServer;
+
+	@Nullable
+	private String keyPair;
+
+	@Nullable
+	private String networkDriver = "flannel";
+
+	@Nullable
+	private VmServerType serverType = VmServerType.VM;
 }

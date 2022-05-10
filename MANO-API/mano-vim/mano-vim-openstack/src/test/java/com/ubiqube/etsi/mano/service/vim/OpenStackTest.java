@@ -32,6 +32,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
@@ -123,32 +124,6 @@ public class OpenStackTest {
 		final Endpoint endpoint = os.identity().serviceEndpoints().getEndpoint(service.getId());
 		System.out.println("EDP=" + endpoint);
 		// 1.17
-
-		/*
-		 * final RegionService regions = os.identity().regions(); final List<? extends
-		 * Region> zl = regions.list(); zl.forEach(x -> System.out.println("" +
-		 * x.getId()));
-		 */
-		/*
-		 * final List<? extends Domain> domains = os.identity().domains().list();
-		 * domains.forEach(x -> System.out.println("" + x.getName()));
-		 *
-		 * final List<? extends Flavor> flavors = os.compute().flavors().list();
-		 * flavors.forEach(x -> System.out.println("" + x.getName()));
-		 *
-		 * final List<? extends Image> images = os.compute().images().list();
-		 * images.forEach(x -> System.out.println("" + x.getName()));
-		 */
-		/*
-		 * final List<? extends Server> servers = os.compute().servers().list();
-		 * servers.forEach(x -> System.out.println("" + x.getName()));
-		 */
-		/*
-		 * final Set<ServiceType> le = os.getSupportedServices(); System.out.println(""
-		 * + le);
-		 */
-		// createServer(os);
-
 	}
 
 	public static void createServer(final OSClientV3 os) {
@@ -206,7 +181,7 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	void testNetwork() throws Exception {
+	void testNetwork() {
 		final VnfStorage vnfStorage = new VnfStorage();
 		vnfStorage.setSize(1 * 1000 * 1000 * 1000);
 		final SoftwareImage softwareImage = new SoftwareImage();
@@ -225,7 +200,7 @@ public class OpenStackTest {
 		assertNotNull(lid);
 	}
 
-	public void testNetworkFunctions() throws Exception {
+	public void testNetworkFunctions() {
 		final VlProtocolData vl = new VlProtocolData();
 		final L2Data l2ProtocolData = new L2Data();
 		l2ProtocolData.setMtu(1000);
@@ -301,22 +276,32 @@ public class OpenStackTest {
 		assertNotNull(lid);
 	}
 
-	private static OSClientV3 getTrainConnection() {
-		final Identifier domainIdentifier = Identifier.byId("default");
-		final Identifier projectIdentifier = Identifier.byId("ede0540276a94b75ae3de044cd7cc235");
-		return OSFactory.builderV3()
-				.endpoint("http://10.31.1.15:5000/v3")
-				.credentials("admin", "5fd399078a8844de", domainIdentifier)
-				.scopeToProject(projectIdentifier)
-				.authenticate();
-	}
-
-	private static OSClientV3 getQueensConnection() {
+	private static OSClientV3 getWallabyConnection() {
 		final Identifier domainIdentifier = Identifier.byName("Default");
 		return OSFactory.builderV3()
 				.endpoint("http://10.31.1.240:5000/v3")
 				.credentials("admin", "13f83cb78a4f4213", domainIdentifier)
 				.scopeToProject(Identifier.byId("d45cdd393cda4255915f855527f9c98e"))
+				.authenticate();
+	}
+
+	private static OSClientV3 getTctsConnection() {
+		final Identifier domainIdentifier = Identifier.byName("Default");
+		return OSFactory.builderV3()
+				.withConfig(Config.newConfig().withEndpointNATResolution("192.168.1.36"))
+				.endpoint("http://192.168.1.36:5000/v3")
+				.credentials("admin", "redhat", domainIdentifier)
+				.scopeToProject(Identifier.byId("5d3611f178524b918d0f70ad681b8980"))
+				.authenticate();
+	}
+
+	private static OSClientV3 getYogaConnection() {
+		final Identifier domainIdentifier = Identifier.byName("Default");
+		return OSFactory.builderV3()
+				.withConfig(Config.newConfig().withEndpointNATResolution("10.31.1.15"))
+				.endpoint("http://10.31.1.15:5000/v3")
+				.credentials("admin", "ffd1c4cca62c4912", domainIdentifier)
+				.scopeToProject(Identifier.byId("c958ebf4c38a4bee889a93a4715a54d8"))
 				.authenticate();
 	}
 
@@ -329,7 +314,7 @@ public class OpenStackTest {
 				.authenticate();
 	}
 
-	void testTrain() throws Exception {
+	void testTrain() {
 		final OSClientV3 os = getVictoriaConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
@@ -340,8 +325,8 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	void testQueens() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	void testQueens() {
+		final OSClientV3 os = getWallabyConnection();
 		final List<? extends Service> ep = os.identity().serviceEndpoints().list();
 		final Optional<? extends Service> l = ep.stream().filter(x -> x.getType().equals("placement")).findFirst();
 		System.out.println("l=" + l.get());
@@ -351,16 +336,16 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	static void testDeleteNetwork() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	static void testDeleteNetwork() {
+		final OSClientV3 os = getWallabyConnection();
 		final List<? extends Port> ret = os.networking().port().list();
 		ret.forEach(System.out::println);
 		System.out.println("" + ret);
 		assertNotNull(os);
 	}
 
-	static void testDeleteRouter() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	static void testDeleteRouter() {
+		final OSClientV3 os = getWallabyConnection();
 		final String device = "9f07f44f-3f06-48c8-ad75-5c7afcc46d2e";
 		final Router router = os.networking().router().get(device);
 		final List<? extends Port> routerList = os.networking().port().list();
@@ -380,32 +365,32 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	static void testGetPublic() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	static void testGetPublic() {
+		final OSClientV3 os = getWallabyConnection();
 		os.networking().network().list().forEach(x -> {
 			System.out.println(x.getName() + " -- " + x.isRouterExternal() + " ==> " + x.getId());
 		});
 		assertNotNull(os);
 	}
 
-	static void testAgentList() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	static void testAgentList() {
+		final OSClientV3 os = getWallabyConnection();
 		os.networking().agent().list().forEach(x -> {
 			System.out.println("" + x.getTopic() + " " + x.getAgentType() + " " + x.getBinary());
 		});
 		assertNotNull(os);
 	}
 
-	static void testDns01() throws Exception {
-		final OSClientV3 os = getTrainConnection();
+	static void testDns01() {
+		final OSClientV3 os = getYogaConnection();
 		os.dns().recordsets().list().forEach(x -> {
 			System.out.println("" + x);
 		});
 		assertNotNull(os);
 	}
 
-	public static void testflavor() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	public static void testflavor() {
+		final OSClientV3 os = getWallabyConnection();
 		final int disk = 20;
 		final int ram = 4096;
 		final int numVcpu = 2;
@@ -423,8 +408,8 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	public static void testCreateZone() throws Exception {
-		final OSClientV3 os = getTrainConnection();
+	public static void testCreateZone() {
+		final OSClientV3 os = getYogaConnection();
 		final Zone zone = Builders.zone().name("aed0bd5a-acf8-463f-9797-9af1af1bab23.mano.com.")
 				.ttl(36)
 				.type(ZoneType.PRIMARY)
@@ -435,8 +420,8 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	static void testAddHost() throws Exception {
-		final OSClientV3 os = getTrainConnection();
+	static void testAddHost() {
+		final OSClientV3 os = getYogaConnection();
 		final List<String> records = new ArrayList<>();
 		records.add("192.168.10.6");
 		records.add("192.168.10.5");
@@ -451,8 +436,8 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	static void testgetIp() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	static void testgetIp() {
+		final OSClientV3 os = getWallabyConnection();
 		final List<? extends Subnet> l = os.networking().subnet().list();
 		l.forEach(System.out::println);
 		final List<? extends Port> l2 = os.networking().port().list();
@@ -461,7 +446,7 @@ public class OpenStackTest {
 	}
 
 	public static void testQuotas() {
-		final OSClientV3 os = getQueensConnection();
+		final OSClientV3 os = getWallabyConnection();
 		os.compute().quotaSets().listTenantUsages().stream()
 				.forEach(x -> {
 					System.out.println("" + x.getTenantId());
@@ -483,15 +468,15 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	void testNetworkExtension() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	void testNetworkExtension() {
+		final OSClientV3 os = getWallabyConnection();
 		final List<? extends Extension> exts = os.networking().network().listExtensions();
 		exts.forEach(System.out::println);
 		assertTrue(!exts.isEmpty());
 	}
 
-	void testTelemetry() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	void testTelemetry() {
+		final OSClientV3 os = getWallabyConnection();
 		os.telemetry().alarms().list();
 		os.telemetry().meters().list();
 		os.telemetry().resources().list();
@@ -499,21 +484,21 @@ public class OpenStackTest {
 		assertNotNull(os);
 	}
 
-	void testGnochhiCreate() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+	void testGnochhiCreate() {
+		final OSClientV3 os = getWallabyConnection();
 		final MetricCreate metrics = Builders.gnocchi().metric().archivePolicyName("high").name("test-ovi").resourceId(null).build();
 		os.telemetry().gnocchi().metrics().create(metrics);
 		assertNotNull(os);
 	}
 
 	void testGnocchiDelete() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+		final OSClientV3 os = getWallabyConnection();
 		os.telemetry().gnocchi().metrics().delete("7856e791-c918-4f72-814c-b3f18127190b");
 		assertNotNull(os);
 	}
 
 	void testServerGroup() throws Exception {
-		final OSClientV3 os = getQueensConnection();
+		final OSClientV3 os = getWallabyConnection();
 		final org.openstack4j.model.compute.ServerGroup res = os.compute().serverGroups().create(UUID.randomUUID().toString(), "affinity");
 		assertNotNull(os);
 	}
@@ -526,7 +511,7 @@ public class OpenStackTest {
 		sg.setPortRangeMax(24);
 		sg.setProtocol("tcp");
 		sg.setToscaName("security");
-		final OSClientV3 os = getQueensConnection();
+		final OSClientV3 os = getWallabyConnection();
 		final SecurityGroupRule group = Builders.securityGroupRule()
 				.direction(sg.getDirection())
 				.ethertype(sg.getEtherType())
@@ -545,7 +530,7 @@ public class OpenStackTest {
 	}
 
 	void testSfc() {
-		final OSClientV3 os = getQueensConnection();
+		final OSClientV3 os = getWallabyConnection();
 		Builders.portChain().build();
 		Builders.portPairGroup().build();
 		Builders.portForwarding().build();
@@ -559,7 +544,7 @@ public class OpenStackTest {
 	}
 
 	void testPort() {
-		final OSClientV3 os = getQueensConnection();
+		final OSClientV3 os = getWallabyConnection();
 		final Port port = Builders.port().build();
 		os.networking().port().create(port);
 		assertTrue(true);
@@ -580,13 +565,12 @@ public class OpenStackTest {
 		assertNotNull("");
 	}
 
-	private static OSClientV3 getTctsConnection() {
-		final Identifier domainIdentifier = Identifier.byName("Default");
-		return OSFactory.builderV3()
-				.withConfig(Config.newConfig().withEndpointNATResolution("192.168.1.36"))
-				.endpoint("http://192.168.1.36:5000/v3")
-				.credentials("admin", "redhat", domainIdentifier)
-				.scopeToProject(Identifier.byId("5d3611f178524b918d0f70ad681b8980"))
-				.authenticate();
+	@Test
+	void testService() {
+		final OSClientV3 os = getVictoriaConnection();
+		os.getSupportedServices().forEach(x -> {
+			System.out.println("" + x.getServiceName() + "  " + x.getType());
+		});
 	}
+
 }
