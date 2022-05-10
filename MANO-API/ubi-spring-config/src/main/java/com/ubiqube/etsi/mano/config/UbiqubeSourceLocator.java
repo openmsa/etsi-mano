@@ -40,6 +40,7 @@ public class UbiqubeSourceLocator implements PropertySourceLocator {
 
 		try (InputStream inStream = new FileInputStream(filename);) {
 			props.load(inStream);
+			LOG.info("Ubiqube Property file loaded.");
 		} catch (final IOException e) {
 			LOG.warn("Unable to find $HOME/.mano/configuration.properties", e);
 		}
