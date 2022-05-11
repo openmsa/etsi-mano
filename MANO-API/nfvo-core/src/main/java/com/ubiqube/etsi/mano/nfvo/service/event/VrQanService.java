@@ -14,10 +14,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.nfvo.service;
+package com.ubiqube.etsi.mano.nfvo.service.event;
 
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.StreamSupport;
@@ -66,19 +68,24 @@ public class VrQanService {
 		final Iterable<VimConnectionInformation> l = vimManager.findAllVimconnections();
 		StreamSupport.stream(l.spliterator(), false).forEach(x -> es.submit(() -> {
 			try {
-				final Vim vim = vimManager.getVimById(x.getId());
-				final ResourceQuota pr = vim.getQuota(x);
 				final Optional<VrQan> ovrqan = vrQanJpa.findByVimId(x.getId());
 				final VrQan vrqan = ovrqan.orElseGet(() -> {
 					final VrQan vq = new VrQan(x.getId());
 					return vrQanJpa.save(vq);
 				});
+				final Vim vim = vimManager.getVimById(x.getId());
+				final ResourceQuota pr = vim.getQuota(x);
 				final VrQan diff = compare(pr, vrqan);
 				if (diff.haveValue()) {
 					LOG.info("Send notification for vim: {} with diff {}", x.getId(), diff);
 					copy(pr, vrqan);
+					vrqan.setLastChange(ZonedDateTime.now());
+					vrqan.setLastCheck(ZonedDateTime.now());
 					vrQanJpa.save(vrqan);
 					em.sendNotification(NotificationEvent.VRQAN, x.getId(), Map.of());
+				} else {
+					vrqan.setLastCheck(ZonedDateTime.now());
+					vrQanJpa.save(vrqan);
 				}
 			} catch (final RuntimeException e) {
 				LOG.error("", e);
@@ -141,5 +148,9 @@ public class VrQanService {
 
 	private static int compare(final int old, final int ne) {
 		return old - ne;
+	}
+
+	public Optional<VrQan> findByVimId(final UUID id) {
+		return vrQanJpa.findByVimId(id);
 	}
 }
