@@ -24,8 +24,11 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.ubiqube.etsi.mano.Constants;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
@@ -48,6 +51,9 @@ import com.ubiqube.etsi.mano.vim.dto.SwImage;
  */
 @Service
 public class SoftwareImageService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(SoftwareImageService.class);
+
 	private final VnfPackageRepository repository;
 	private final VimManager vimManager;
 	private final VnfPackageManager packageManager;
@@ -70,9 +76,10 @@ public class SoftwareImageService {
 		if (img.isPresent()) {
 			return img.get();
 		}
+		LOG.info("Uploading image: {}", swIn.getName());
 		final VnfPackage vnfPkg = repository.get(vnfPkgId);
 		final PackageDescriptor<VnfPackageReader> provider = packageManager.getProviderFor(vnfPkg.getPackageProvider());
-		final ManoResource res = repository.getBinary(vnfPkgId, swIn.getImagePath());
+		final ManoResource res = repository.getBinary(vnfPkgId, Constants.REPOSITORY_FILENAME_VNFD);
 		final VirtualFileSystem vfs = provider.getFileSystem(res);
 		return uploadImage(vfs, swIn, vimConn);
 	}
