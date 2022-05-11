@@ -37,13 +37,18 @@ public class GrantJob extends QuartzJobBean {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GrantJob.class);
 
-	private GrantActionDispatcher grantActionDispatcher;
+	private final GrantActionDispatcher grantActionDispatcher;
+
+	public GrantJob(final GrantActionDispatcher grantActionDispatcher) {
+		super();
+		this.grantActionDispatcher = grantActionDispatcher;
+	}
 
 	@Override
 	protected void executeInternal(final JobExecutionContext context) throws JobExecutionException {
 		final JobDataMap jobDataMap = context.getMergedJobDataMap();
 		final ActionType eventType = ActionType.valueOf(jobDataMap.getString("eventType"));
-		final UUID objectId = UUID.fromString(jobDataMap.getString("objectId"));
+		final UUID objectId = (UUID) jobDataMap.get("objectId");
 		LOG.info("Quartz event start {} / {}", eventType, objectId);
 		grantActionDispatcher.dispatch(objectId);
 	}

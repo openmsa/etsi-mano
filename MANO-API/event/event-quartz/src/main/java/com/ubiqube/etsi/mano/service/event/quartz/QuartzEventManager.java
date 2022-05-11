@@ -80,7 +80,7 @@ public class QuartzEventManager implements EventManager {
 	@Override
 	public void sendGrant(final UUID objectId, final Map<String, Object> parameters) {
 		LOG.info("Starting send Grant : Grant/{}", objectId);
-		createJob(parameters, "grant", objectId, GrantJob.class);
+		createJob(parameters, ActionType.GRANT_REQUEST.value(), objectId, GrantJob.class);
 	}
 
 	@Override
