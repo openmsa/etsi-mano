@@ -184,6 +184,9 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 				.register();
 		mapperFactory.classMap(SwImage.class, SoftwareImage.class)
 				.field("file", "imagePath")
+				.exclude("diskFormat")
+				.exclude("containerFormat")
+				.customize(new SwImageMapper())
 				.byDefault()
 				.register();
 	}
@@ -225,6 +228,7 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 			throw new ParseException("Unknown artefact type: " + obj.getClass());
 		}
 		final SoftwareImage softwareImage = getMapper().map(sw, SoftwareImage.class);
+		softwareImage.setDiskFormat(softwareImage.getDiskFormat());
 		o.setSoftwareImage(softwareImage);
 	}
 

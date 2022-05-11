@@ -22,6 +22,8 @@ import javax.annotation.Nullable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,11 +61,11 @@ public class SoftwareImage implements Auditable {
 	@Embedded
 	private Checksum checksum;
 
-	// XXX: Probably an Enum.
-	private String containerFormat;
+	@Enumerated(EnumType.STRING)
+	private ContainerFormatType containerFormat;
 
-	// XXX: Probably an Enum.
-	private String diskFormat;
+	@Enumerated(EnumType.STRING)
+	private DiskFormatType diskFormat;
 
 	private long minDisk;
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.ubiqube.etsi.mano.common.v261.model.vnf.VnfPackageSoftwareImageInfo.ContainerFormatEnum;
+import com.ubiqube.etsi.mano.dao.mano.ContainerFormatType;
 import com.ubiqube.etsi.mano.dao.mano.NsdPackage;
 import com.ubiqube.etsi.mano.dao.mano.OnboardingStateType;
 import com.ubiqube.etsi.mano.dao.mano.PackageOperationalState;
@@ -48,7 +48,7 @@ public class TestFactory {
 		checksum.setAlgorithm("SHA-512");
 		checksum.setHash("e7c22b994c59d9cf2b48e549b1e24666636045930d3da7c1acb299d1c3b7f931f94aae41edda2c2b207a36e10f8bcb8d45223e54878f5b316e7ce3b6bc019629");
 		si.setChecksum(checksum);
-		si.setContainerFormat(ContainerFormatEnum.BARE.name());
+		si.setContainerFormat(ContainerFormatType.BARE);
 		// si.setCreatedAt(OffsetDateTime.now());
 		si.setImagePath("/mnt/images/myimages.raw");
 		si.setSize(12345L);

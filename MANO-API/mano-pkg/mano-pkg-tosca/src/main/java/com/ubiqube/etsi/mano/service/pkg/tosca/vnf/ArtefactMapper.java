@@ -19,6 +19,8 @@ package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import com.ubiqube.etsi.mano.dao.mano.ContainerFormatType;
+import com.ubiqube.etsi.mano.dao.mano.DiskFormatType;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
@@ -54,8 +56,8 @@ public class ArtefactMapper extends CustomMapper<VirtualBlockStorage, VnfStorage
 			si.setChecksum(check);
 			si.setName((String) aa.getKey());
 			b.setSoftwareImage(si);
-			si.setContainerFormat(sw.getContainerFormat());
-			si.setDiskFormat(sw.getDiskFormat());
+			si.setContainerFormat(ContainerFormatType.fromValue(sw.getContainerFormat()));
+			si.setDiskFormat(DiskFormatType.fromValue(sw.getDiskFormat()));
 			si.setImagePath(sw.getFile());
 			si.setMinDisk(Optional.ofNullable(sw.getMinDisk()).map(x -> sc.convertTo(x, null, context)).orElse(0L));
 			si.setMinRam(Optional.ofNullable(sw.getMinRam()).map(x -> sc.convertTo(x, null, context)).orElse(0L));

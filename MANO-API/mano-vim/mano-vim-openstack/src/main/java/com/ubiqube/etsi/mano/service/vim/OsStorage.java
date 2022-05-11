@@ -39,6 +39,8 @@ import org.openstack4j.model.storage.block.builder.VolumeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ubiqube.etsi.mano.dao.mano.ContainerFormatType;
+import com.ubiqube.etsi.mano.dao.mano.DiskFormatType;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.common.Checksum;
@@ -97,7 +99,8 @@ public class OsStorage implements Storage {
 
 	private SwImage doUpload(final SoftwareImage img, final Payload<?> payload) {
 		final ImageBuilder bImg = Builders.imageV2()
-				.containerFormat(ContainerFormat.valueOf(img.getContainerFormat())).diskFormat(DiskFormat.valueOf(img.getDiskFormat()))
+				.containerFormat(ContainerFormat.valueOf(img.getContainerFormat().toString()))
+				.diskFormat(DiskFormat.valueOf(img.getDiskFormat().toString()))
 				.minDisk(img.getMinDisk())
 				.minRam(img.getMinRam())
 				.name(img.getName());
@@ -176,8 +179,8 @@ public class OsStorage implements Storage {
 				.hash(image.getChecksum())
 				.build();
 		si.setChecksum(ck);
-		si.setContainerFormat(image.getContainerFormat().toString());
-		si.setDiskFormat(image.getDiskFormat().toString());
+		si.setContainerFormat(ContainerFormatType.fromValue(image.getContainerFormat().toString()));
+		si.setDiskFormat(DiskFormatType.fromValue(image.getDiskFormat().toString()));
 		si.setVimId(image.getId());
 		si.setMinDisk(image.getMinDisk());
 		si.setMinRam(image.getMinRam());
