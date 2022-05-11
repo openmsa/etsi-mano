@@ -214,7 +214,13 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 	}
 
 	private void map(final Map<String, ?> y, final VnfCompute o) {
-		final Object obj = y.get("sw_image");
+		if (y.isEmpty()) {
+			return;
+		}
+		if (y.size() > 1) {
+			throw new ParseException("Multiple artifacts match on compute node: " + o.getToscaName());
+		}
+		final Object obj = y.entrySet().iterator().next().getValue();
 		if (!(obj instanceof final SwImage sw)) {
 			throw new ParseException("Unknown artefact type: " + obj.getClass());
 		}
