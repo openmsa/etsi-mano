@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.service.pkg.tosca.vnf;
 
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
@@ -45,21 +46,22 @@ public class ArtefactMapper extends CustomMapper<VirtualBlockStorage, VnfStorage
 		final Entry aa = a.getArtifacts().entrySet().iterator().next();
 		final SoftwareImage si = new SoftwareImage();
 		if (aa.getValue() instanceof final SwImage sw) {
-			final Checksum check = new Checksum();
 			final ChecksumData cd = sw.getChecksum();
-			check.setAlgorithm(cd.getAlgorithm());
-			check.setHash(cd.getHash());
+			final Checksum check = Checksum.builder()
+					.algorithm(cd.getAlgorithm())
+					.hash(cd.getHash())
+					.build();
 			si.setChecksum(check);
 			si.setName((String) aa.getKey());
 			b.setSoftwareImage(si);
 			si.setContainerFormat(sw.getContainerFormat());
 			si.setDiskFormat(sw.getDiskFormat());
 			si.setImagePath(sw.getFile());
-			si.setMinDisk(sc.convertTo(sw.getMinDisk(), null, context));
-			si.setMinRam(sc.convertTo(sw.getMinRam(), null, context));
+			si.setMinDisk(Optional.ofNullable(sw.getMinDisk()).map(x -> sc.convertTo(x, null, context)).orElse(0L));
+			si.setMinRam(Optional.ofNullable(sw.getMinRam()).map(x -> sc.convertTo(x, null, context)).orElse(0L));
 			si.setProvider(sw.getProvider());
 			si.setVersion(sw.getVersion());
-			b.setSize(sc.convertTo(sw.getSize(), null, context));
+			b.setSize(Optional.ofNullable(sw.getSize()).map(x -> sc.convertTo(x, null, context)).orElse(0L));
 		}
 		b.setToscaName(a.getInternalName());
 		b.setType("BLOCK");

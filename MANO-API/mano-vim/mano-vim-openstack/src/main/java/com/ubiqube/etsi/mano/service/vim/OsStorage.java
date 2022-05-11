@@ -171,9 +171,10 @@ public class OsStorage implements Storage {
 		final Image image = os.imagesV2().get(id);
 		final SoftwareImage si = new SoftwareImage();
 		si.setArchitecture(image.getArchitecture());
-		final Checksum ck = new Checksum();
-		ck.setAlgorithm(getAlgorithm(image.getChecksum()));
-		ck.setHash(image.getChecksum());
+		final Checksum ck = Checksum.builder()
+				.algorithm(getAlgorithm(image.getChecksum()))
+				.hash(image.getChecksum())
+				.build();
 		si.setChecksum(ck);
 		si.setContainerFormat(image.getContainerFormat().toString());
 		si.setDiskFormat(image.getDiskFormat().toString());
