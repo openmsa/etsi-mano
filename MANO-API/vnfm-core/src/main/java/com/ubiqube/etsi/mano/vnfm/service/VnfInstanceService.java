@@ -36,6 +36,7 @@ import com.ubiqube.etsi.mano.dao.mano.VnfInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfLiveInstance;
 import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
 import com.ubiqube.etsi.mano.dao.mano.VnfVl;
+import com.ubiqube.etsi.mano.dao.mano.pkg.OsContainerDeployableUnit;
 import com.ubiqube.etsi.mano.dao.mano.v2.VnfBlueprint;
 
 public interface VnfInstanceService {
@@ -70,6 +71,8 @@ public interface VnfInstanceService {
 	void deleteLiveInstanceById(final UUID id);
 
 	Deque<VnfLiveInstance> getLiveComputeInstanceOf(VnfBlueprint plan, VnfCompute vnfCompute);
+
+	Deque<VnfLiveInstance> getLiveOsContainerOf(VnfBlueprint plan, OsContainerDeployableUnit ocdu);
 
 	List<VnfLiveInstance> getLiveVirtualLinkInstanceOf(VnfInstance vnfInstance);
 

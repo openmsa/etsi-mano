@@ -18,6 +18,7 @@ package com.ubiqube.etsi.mano.dao.mano;
 
 import java.util.UUID;
 
+import javax.annotation.Nullable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -70,6 +71,7 @@ public class SoftwareImage implements Auditable {
 
 	private long size;
 
+	@Nullable
 	private String imagePath;
 
 	private String architecture;
