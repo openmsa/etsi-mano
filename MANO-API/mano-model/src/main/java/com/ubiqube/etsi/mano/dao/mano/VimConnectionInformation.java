@@ -25,6 +25,8 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,6 +39,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.ubiqube.etsi.mano.dao.mano.common.GeoPoint;
 import com.ubiqube.etsi.mano.dao.mano.vnfi.CnfInformations;
+import com.ubiqube.etsi.mano.dao.mano.vnfi.VimCapability;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -83,7 +86,8 @@ public class VimConnectionInformation implements Auditable {
 	 * do.
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> vimCapabilities;
+	@Enumerated(EnumType.STRING)
+	private Set<VimCapability> vimCapabilities;
 
 	@GeoPointBinding
 	private GeoPoint geoloc;
