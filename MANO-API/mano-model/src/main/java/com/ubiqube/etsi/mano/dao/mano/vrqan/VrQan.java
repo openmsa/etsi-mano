@@ -82,29 +82,31 @@ public class VrQan {
 
 	private ZonedDateTime lastChange = ZonedDateTime.now();
 
+	private ZonedDateTime lastCheck = ZonedDateTime.now();
+
 	public VrQan(final UUID vimId) {
 		this.vimId = vimId;
 	}
 
 	public boolean haveValue() {
-		return (floatingIpUsed != 0) ||
-				(floatingIpMax != 0) ||
-				(floatingFree != 0) ||
-				(securityGroupsUsed != 0) ||
-				(securityGroupsMax != 0) ||
-				(securityGroupsFree != 0) ||
-				(ramUsed != 0) ||
-				(ramMax != 0) ||
-				(ramFree != 0) ||
-				(keyPairsUsed != 0) ||
-				(keyPairsMax != 0) ||
-				(keyPairsFree != 0) ||
-				(instanceUsed != 0) ||
-				(instanceMax != 0) ||
-				(instanceFree != 0) ||
-				(vcpuUsed != 0) ||
-				(vcpuMax != 0) ||
-				(vcpuFree != 0);
+		return floatingIpUsed != 0 ||
+				floatingIpMax != 0 ||
+				floatingFree != 0 ||
+				securityGroupsUsed != 0 ||
+				securityGroupsMax != 0 ||
+				securityGroupsFree != 0 ||
+				ramUsed != 0 ||
+				ramMax != 0 ||
+				ramFree != 0 ||
+				keyPairsUsed != 0 ||
+				keyPairsMax != 0 ||
+				keyPairsFree != 0 ||
+				instanceUsed != 0 ||
+				instanceMax != 0 ||
+				instanceFree != 0 ||
+				vcpuUsed != 0 ||
+				vcpuMax != 0 ||
+				vcpuFree != 0;
 	}
 
 	@Override
