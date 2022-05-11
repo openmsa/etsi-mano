@@ -572,10 +572,10 @@ public class VnfPackageOnboardingImpl {
 			if (this == obj) {
 				return true;
 			}
-			if (obj == null || getClass() != obj.getClass()) {
+			if (obj == null || !(obj instanceof final ImageKey ik)) {
 				return false;
 			}
-			final SoftwareImage si2 = (SoftwareImage) obj;
+			final SoftwareImage si2 = ik.si;
 			if (si2.getChecksum() == null || si.getChecksum() == null) {
 				return si.getName().equals(si2.getName());
 			}
