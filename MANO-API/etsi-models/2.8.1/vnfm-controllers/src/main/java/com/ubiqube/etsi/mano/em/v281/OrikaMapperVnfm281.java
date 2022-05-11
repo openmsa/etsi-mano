@@ -132,21 +132,21 @@ public class OrikaMapperVnfm281 implements OrikaMapperFactoryConfigurer {
 						final VnfPackageSoftwareImageInfo ret = new VnfPackageSoftwareImageInfo();
 						ret.setChecksum(mapChecksum(img.getChecksum()));
 						if (null != img.getContainerFormat()) {
-							ret.setContainerFormat(ContainerFormatEnum.fromValue(img.getContainerFormat()));
+							ret.setContainerFormat(ContainerFormatEnum.fromValue(img.getContainerFormat().toString()));
 						}
 						// ret.setCreatedAt(img.get);
 						if (null != img.getDiskFormat()) {
-							ret.setDiskFormat(DiskFormatEnum.valueOf(img.getDiskFormat()));
+							ret.setDiskFormat(DiskFormatEnum.valueOf(img.getDiskFormat().toString()));
 						}
 						if (null != img.getId()) {
 							ret.setId(img.getId().toString());
 						}
 						ret.setImagePath(img.getImagePath());
-						ret.setMinDisk((int) img.getMinDisk());
-						ret.setMinRam((int) img.getMinRam());
+						ret.setMinDisk(img.getMinDisk());
+						ret.setMinRam(img.getMinRam());
 						ret.setName(img.getName());
 						ret.setProvider(img.getProvider());
-						ret.setSize((int) img.getSize());
+						ret.setSize(img.getSize());
 						// ret.setUserMetadata(img.get);
 						ret.setVersion(img.getVersion());
 						ret.setCreatedAt(img.getAudit().getCreatedOn());
