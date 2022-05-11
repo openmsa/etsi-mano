@@ -65,17 +65,13 @@ public class GroovyElection implements VimElection {
 	}
 
 	@Override
-	public VimConnectionInformation doElection(final GrantResponse grant, final Set<VnfCompute> vnfcs, final Set<VnfStorage> storages) {
+	public VimConnectionInformation doElection(final List<VimConnectionInformation> inVims, final GrantResponse grant, final Set<VnfCompute> vnfcs, final Set<VnfStorage> storages) {
 		final ExecutorService executor = Executors.newFixedThreadPool(5);
 		final CompletionService<VoteResponse> completionService = new ExecutorCompletionService<>(executor);
 		final List<Path> scripts = findScript();
 		final List<String> list = scripts.stream().map(Path::toString).toList();
-		final Iterable<VimConnectionInformation> ite = vimManager.findAllVimconnections();
-		int numberOfVim = 0;
-		for (final VimConnectionInformation vimConnectionInformation : ite) {
-			completionService.submit(() -> executueScripts(list, vimConnectionInformation));
-			numberOfVim++;
-		}
+		final int numberOfVim = inVims.size();
+		inVims.forEach(x -> completionService.submit(() -> executueScripts(list, x)));
 		int received = 0;
 		final List<VimConnectionInformation> vims = new ArrayList<>();
 		while (received < numberOfVim) {

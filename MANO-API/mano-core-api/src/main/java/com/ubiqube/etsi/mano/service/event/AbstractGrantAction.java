@@ -76,7 +76,8 @@ public abstract class AbstractGrantAction {
 
 	private final FlavorManager flavorManager;
 
-	protected AbstractGrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final SoftwareImageService imageService, final FlavorManager flavorManager) {
+	protected AbstractGrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection,
+			final SoftwareImageService imageService, final FlavorManager flavorManager) {
 		this.vimManager = vimManager;
 		this.vimElection = vimElection;
 		this.grantJpa = grantJpa;
@@ -103,7 +104,8 @@ public abstract class AbstractGrantAction {
 		LOG.info("Evaluating grant {}", objectId);
 		final GrantResponse grants = getGrant(objectId);
 		removeResources(grants);
-		final VimConnectionInformation vimInfo = vimElection.doElection(null, getVnfCompute(objectId), getVnfStorage(objectId));
+		final List<VimConnectionInformation> vims = getVims(grants);
+		final VimConnectionInformation vimInfo = vimElection.doElection(vims, null, getVnfCompute(objectId), getVnfStorage(objectId));
 		if (vimInfo == null) {
 			throw new GenericException("No suitable VIM after election.");
 		}
@@ -114,6 +116,8 @@ public abstract class AbstractGrantAction {
 		grantJpa.save(grants);
 		LOG.info("Grant {} Available.", grants.getId());
 	}
+
+	protected abstract List<VimConnectionInformation> getVims(GrantResponse grants);
 
 	private void removeResources(final GrantResponse grants) {
 		grants.getRemoveResources().forEach(x -> {

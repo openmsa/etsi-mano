@@ -182,7 +182,7 @@ public class VimManager {
 	private void extractCapabilities(final VimConnectionInformation vci) {
 		final Vim vim = findVim(vci);
 		final List<VimCapability> caps = vim.getCaps(vci);
-		vci.setVimCapabilities(caps.stream().map(VimCapability::toString).collect(Collectors.toSet()));
+		vci.setVimCapabilities(caps.stream().collect(Collectors.toSet()));
 	}
 
 	public VimConnectionInformation refresh(final UUID id) {

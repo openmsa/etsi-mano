@@ -14,17 +14,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.ubiqube.etsi.mano.service.event.elect;
+package com.ubiqube.etsi.mano.service.event;
 
 import java.util.List;
-import java.util.Set;
 
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
-import com.ubiqube.etsi.mano.dao.mano.VnfCompute;
-import com.ubiqube.etsi.mano.dao.mano.VnfStorage;
+import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.service.event.AbstractGrantAction.QuotaNeeded;
+import com.ubiqube.etsi.mano.service.event.elect.GroovyElection;
 
-public interface VimElection {
+/**
+ * The idea is to evict all VIM that doesn't have the require resources or
+ * features. The difference with the {@link GroovyElection} is that this one is
+ * boolean while the groovy one is a ranked decision one.
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
+public interface PreVimSelection {
 
-	VimConnectionInformation doElection(List<VimConnectionInformation> vims, GrantResponse grant, Set<VnfCompute> vnfcs, Set<VnfStorage> storages);
+	List<VimConnectionInformation> selectVims(final VnfPackage vnfPackage, final GrantResponse grantResponse, QuotaNeeded needed);
 }

@@ -16,6 +16,8 @@
  */
 package com.ubiqube.etsi.mano.nfvo.service.event;
 
+import static com.ubiqube.etsi.mano.Constants.getSafeUUID;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,6 +51,7 @@ import com.ubiqube.etsi.mano.jpa.GrantsResponseJpa;
 import com.ubiqube.etsi.mano.nfvo.jpa.NsLiveInstanceJpa;
 import com.ubiqube.etsi.mano.service.VnfPackageService;
 import com.ubiqube.etsi.mano.service.event.AbstractGrantAction;
+import com.ubiqube.etsi.mano.service.event.PreVimSelection;
 import com.ubiqube.etsi.mano.service.event.elect.VimElection;
 import com.ubiqube.etsi.mano.service.event.flavor.FlavorManager;
 import com.ubiqube.etsi.mano.service.event.images.SoftwareImageService;
@@ -77,13 +80,17 @@ public class GrantAction extends AbstractGrantAction {
 
 	private final NsLiveInstanceJpa nsLiveInstanceJpa;
 
+	private final PreVimSelection preVimSelection;
+
 	public GrantAction(final GrantsResponseJpa grantJpa, final VimManager vimManager, final VimElection vimElection, final VnfPackageService vnfPackageService,
-			final NsLiveInstanceJpa nsLiveInstanceJpa, final SoftwareImageService imageService, final FlavorManager flavorManager) {
+			final NsLiveInstanceJpa nsLiveInstanceJpa, final SoftwareImageService imageService, final FlavorManager flavorManager,
+			final PreVimSelection preVimSelection) {
 		super(grantJpa, vimManager, vimElection, imageService, flavorManager);
 		this.grantJpa = grantJpa;
 		this.vimManager = vimManager;
 		this.vnfPackageService = vnfPackageService;
 		this.nsLiveInstanceJpa = nsLiveInstanceJpa;
+		this.preVimSelection = preVimSelection;
 		this.rnd = new Random();
 	}
 
@@ -259,6 +266,13 @@ public class GrantAction extends AbstractGrantAction {
 	@Override
 	protected UUID convertVnfdToId(final String vnfdId) {
 		return vnfPackageService.findByVnfdId(UUID.fromString(vnfdId)).getId();
+	}
+
+	@Override
+	protected List<VimConnectionInformation> getVims(final GrantResponse grants) {
+		final VnfPackage vnfPackage = vnfPackageService.findByVnfdId(getSafeUUID(grants.getVnfdId()));
+		final QuotaNeeded needed = summarizeResources(grants, vnfPackage);
+		return preVimSelection.selectVims(vnfPackage, grants, needed);
 	}
 
 }
