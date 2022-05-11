@@ -34,11 +34,11 @@ public class Flavor {
 
 	private String name;
 
-	private int ram;
+	private long ram;
 
 	private int vcpus;
 
-	private int disk;
+	private long disk;
 
 	private int swap;
 

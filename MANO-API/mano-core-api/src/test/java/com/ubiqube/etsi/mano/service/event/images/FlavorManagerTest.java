@@ -101,7 +101,7 @@ class FlavorManagerTest {
 		when(vimManager.getVimById(any())).thenReturn(vim);
 		when(vim.getFlavorList(any())).thenReturn(createFlavorList());
 		when(vim.canCreateFlavor()).thenReturn(true);
-		when(vim.createFlavor(any(), any(), anyLong(), anyLong(), any())).thenReturn("3");
+		when(vim.createFlavor(any(), any(), anyLong(), anyLong(), anyLong(), any())).thenReturn("3");
 		final VimConnectionInformation vimConnectionInformation = new VimConnectionInformation();
 		vimConnectionInformation.setId(UUID.randomUUID());
 		final VnfCompute vnf = new VnfCompute();
@@ -166,7 +166,7 @@ class FlavorManagerTest {
 		when(vimManager.getVimById(any())).thenReturn(vim);
 		when(vim.getFlavorList(any())).thenReturn(createFlavorList());
 		when(vim.canCreateFlavor()).thenReturn(true);
-		when(vim.createFlavor(any(), any(), anyLong(), anyLong(), any())).thenReturn("3", "4");
+		when(vim.createFlavor(any(), any(), anyLong(), anyLong(), anyLong(), any())).thenReturn("3", "4");
 		final VimConnectionInformation vimConnectionInformation = new VimConnectionInformation();
 		vimConnectionInformation.setId(UUID.randomUUID());
 		final VnfCompute vnf = new VnfCompute();
@@ -195,7 +195,7 @@ class FlavorManagerTest {
 		when(vimManager.getVimById(any())).thenReturn(vim);
 		when(vim.getFlavorList(any())).thenReturn(createFlavorList());
 		when(vim.canCreateFlavor()).thenReturn(true);
-		when(vim.createFlavor(any(), any(), anyLong(), anyLong(), any())).thenReturn("3", "4");
+		when(vim.createFlavor(any(), any(), anyLong(), anyLong(), anyLong(), any())).thenReturn("3", "4");
 		final VimConnectionInformation vimConnectionInformation = new VimConnectionInformation();
 		vimConnectionInformation.setId(UUID.randomUUID());
 		final VnfCompute vnf = new VnfCompute();

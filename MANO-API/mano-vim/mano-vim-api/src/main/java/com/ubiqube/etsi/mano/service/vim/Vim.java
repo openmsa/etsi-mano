@@ -86,7 +86,7 @@ public interface Vim {
 
 	boolean canCreateFlavor();
 
-	String createFlavor(VimConnectionInformation vimConnectionInformation, String toscaName, long numVirtualCpu, long virtualMemSize, Map<String, String> add);
+	String createFlavor(VimConnectionInformation vimConnectionInformation, String toscaName, long numVirtualCpu, long virtualMemSize, long disk, Map<String, String> add);
 
 	Cnf cnf(VimConnectionInformation vimConnectionInformation);
 }
