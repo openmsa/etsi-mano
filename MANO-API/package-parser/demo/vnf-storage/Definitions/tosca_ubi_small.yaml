@@ -54,18 +54,20 @@ topology_template:
       type: tosca.nodes.nfv.Vdu.Compute
       name: webserver
       description: A node.
-      properties:
-        sw_image_data:
-          name: cirros
-          version: 1.0.0
+      artifacts:
+        cirros:
+          type: tosca.artifacts.nfv.SwImage
+          file: myFile.qcow2
+          deploy_path: deploy path
           checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          min_disk: 1 GiB
-          min_ram: 512 Mib
-          operating_system: centos8
+            hash: 6b813aa46bb90b4da216a4d19376593fa3f4fc7e617f03a92b7fe11e9a3981cbe8f0959dbebe36225e5f53dc4492341a4863cac4ed1ee0909f3fc78ef9c3e869
+            algorithm: SHA-512
+          description: desc
+          repository: repo
+          artifact_version: 1.0.0
+          supported_virtualisation_environments:
+            - OPENSTACK
+      properties:
         monitoring_parameters: # tosca.datatypes.nfv.VnfMonitoringParameter
           metric_name:
             performance_metric: v_cpu_usage_mean_vnf
@@ -74,8 +76,7 @@ topology_template:
           min_number_of_instances: 1
           max_number_of_instances: 2
       requirements:
-        - virtual_storage: 
-            node: block01
+        - virtual_storage: block01
       capabilities:
         virtual_compute:
           logical_node:  # map tosca.datatypes.nfv.LogicalNodeData
@@ -126,10 +127,8 @@ topology_template:
             nic_io_requirements:
               logical_node_requirements: #map
       requirements:
-        - external_virtual_link: 
-            node: public
-        - internal_virtual_link: 
-            node: leftVl01
+        - external_virtual_link: public
+        - internal_virtual_link: leftVl01
 
 
 
@@ -196,27 +195,26 @@ topology_template:
         order: 5
         vnic_type: virtio
       requirements:
-        - virtual_link:
-            node: leftVl01
-        - virtual_binding:
-            node: webserver
+        - virtual_link: leftVl01
+        - virtual_binding: webserver
 
     block01:
       type: tosca.nodes.nfv.Vdu.VirtualBlockStorage
-      properties:
-        virtual_block_storage_data:
-          size_of_storage: 6 GB
-        sw_image_data:
-          name: cirros
-          version: 1.0.0
+      artifacts:
+        cirros:
+          type: tosca.artifacts.nfv.SwImage
+          file: myFile.qcow2
+          deploy_path: deploy path
           checksum:
-            hash: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-            algorithm: SHA-256
-          container_format: BARE
-          disk_format: QCOW2
-          min_disk: 6 GB
-          min_ram: 2 GB
-          operating_system: centos8
+            hash: 6b813aa46bb90b4da216a4d19376593fa3f4fc7e617f03a92b7fe11e9a3981cbe8f0959dbebe36225e5f53dc4492341a4863cac4ed1ee0909f3fc78ef9c3e869
+            algorithm: SHA-512
+          description: desc
+          repository: repo
+          min_disk: 0 b
+          min_ram: 64 Mb
+          artifact_version: 1.0.0
+          supported_virtualisation_environments:
+            - OPENSTACK
 
 groups:
   server_group_1:
@@ -346,6 +344,7 @@ policies:
       protocol: tcp
       port_range_min: 1
       port_range_max: 65535
+    targets: [ "webserver" ]
 
   supported_vnf_int:
     type: tosca.policies.nfv.SupportedVnfInterface
