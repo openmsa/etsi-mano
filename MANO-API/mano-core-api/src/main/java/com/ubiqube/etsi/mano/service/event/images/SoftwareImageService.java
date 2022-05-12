@@ -79,7 +79,7 @@ public class SoftwareImageService {
 		LOG.info("Uploading image: {}", swIn.getName());
 		final VnfPackage vnfPkg = repository.get(vnfPkgId);
 		final PackageDescriptor<VnfPackageReader> provider = packageManager.getProviderFor(vnfPkg.getPackageProvider());
-		final ManoResource res = repository.getBinary(vnfPkgId, Constants.REPOSITORY_FILENAME_VNFD);
+		final ManoResource res = repository.getBinary(vnfPkgId, Constants.REPOSITORY_FILENAME_PACKAGE);
 		final VirtualFileSystem vfs = provider.getFileSystem(res);
 		return uploadImage(vfs, swIn, vimConn);
 	}

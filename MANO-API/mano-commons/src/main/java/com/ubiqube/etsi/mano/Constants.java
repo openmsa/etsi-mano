@@ -75,8 +75,14 @@ public final class Constants {
 
 	public static final String REPOSITORY_FILENAME_MANIFEST = "manifest";
 
+	/**
+	 * This file contain only descriptors.
+	 */
 	public static final String REPOSITORY_FILENAME_VNFD = "vnfd";
 
+	/**
+	 * This file contains the whole package.
+	 */
 	public static final String REPOSITORY_FILENAME_PACKAGE = "vnf-package";
 
 	private Constants() {
