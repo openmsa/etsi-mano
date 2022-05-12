@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -223,12 +224,14 @@ public class ToscaVnfPackageReader extends AbstractPackageReader implements VnfP
 		if (y.size() > 1) {
 			throw new ParseException("Multiple artifacts match on compute node: " + o.getToscaName());
 		}
-		final Object obj = y.entrySet().iterator().next().getValue();
+		final Entry<String, ?> it = y.entrySet().iterator().next();
+		final Object obj = it.getValue();
 		if (!(obj instanceof final SwImage sw)) {
 			throw new ParseException("Unknown artefact type: " + obj.getClass());
 		}
 		final SoftwareImage softwareImage = getMapper().map(sw, SoftwareImage.class);
 		softwareImage.setDiskFormat(softwareImage.getDiskFormat());
+		softwareImage.setName(it.getKey());
 		o.setSoftwareImage(softwareImage);
 	}
 
