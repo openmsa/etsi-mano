@@ -180,22 +180,28 @@ public class OsStorage implements Storage {
 		final Image image = os.imagesV2().get(id);
 		final SoftwareImage si = new SoftwareImage();
 		si.setArchitecture(image.getArchitecture());
-		final Checksum ck = Checksum.builder()
-				.algorithm(getAlgorithm(image.getChecksum()))
-				.hash(image.getChecksum())
-				.build();
-		si.setChecksum(ck);
+		si.setChecksum(buildChecksum(image));
 		final ContainerFormatType cf = Optional.ofNullable(image.getContainerFormat()).map(ContainerFormat::toString).map(ContainerFormatType::fromValue).orElse(ContainerFormatType.BARE);
 		si.setContainerFormat(cf);
 		final DiskFormatType df = Optional.ofNullable(image.getDiskFormat()).map(DiskFormat::toString).map(DiskFormatType::fromValue).orElse(null);
 		si.setDiskFormat(df);
 		si.setVimId(image.getId());
-		si.setMinDisk(Optional.ofNullable(image.getMinDisk()).orElse(0L));
-		si.setMinRam(Optional.ofNullable(image.getMinRam()).orElse(0L));
+		si.setMinDisk(image.getMinDisk());
+		si.setMinRam(image.getMinRam());
 		si.setName(image.getName());
-		si.setSize(Optional.ofNullable(image.getSize()).orElse(0L));
+		si.setSize(image.getSize());
 		si.setVimId(id);
 		return si;
+	}
+
+	private static Checksum buildChecksum(final Image image) {
+		final String osAlg = image.getAdditionalPropertyValue("os_hash_algo");
+		final String hash = image.getAdditionalPropertyValue("os_hash_value");
+		return Checksum.builder()
+				.md5(image.getChecksum())
+				.algorithm(getAlgorithm(hash))
+				.hash(hash)
+				.build();
 	}
 
 	private static String getAlgorithm(@Nullable final String checksum) {
