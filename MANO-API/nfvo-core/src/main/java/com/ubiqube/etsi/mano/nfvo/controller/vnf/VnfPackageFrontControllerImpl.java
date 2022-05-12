@@ -43,6 +43,7 @@ import com.ubiqube.etsi.mano.controller.vnf.VnfPackageFrontController;
 import com.ubiqube.etsi.mano.controller.vnf.VnfPackageManagement;
 import com.ubiqube.etsi.mano.dao.mano.AuthType;
 import com.ubiqube.etsi.mano.dao.mano.VnfPackage;
+import com.ubiqube.etsi.mano.dao.mano.common.FailureDetails;
 import com.ubiqube.etsi.mano.dao.mano.pkg.UploadUriParameters;
 import com.ubiqube.etsi.mano.exception.GenericException;
 import com.ubiqube.etsi.mano.repository.ManoResource;
@@ -84,6 +85,10 @@ public class VnfPackageFrontControllerImpl implements VnfPackageFrontController 
 	@Override
 	public <U> ResponseEntity<U> findById(final UUID vnfPkgId, final Class<U> clazz, final Consumer<U> makeLinks) {
 		final VnfPackage vnfPackage = vnfManagement.vnfPackagesVnfPkgIdGet(vnfPkgId);
+		final FailureDetails error = vnfPackage.getOnboardingFailureDetails();
+		if (null != error && error.getStatus() == 0) {
+			vnfPackage.setOnboardingFailureDetails(null);
+		}
 		final U vnfPkgInfo = mapper.map(vnfPackage, clazz);
 		makeLinks.accept(vnfPkgInfo);
 		return ResponseEntity.ok().eTag("" + vnfPackage.getVersion()).body(vnfPkgInfo);
