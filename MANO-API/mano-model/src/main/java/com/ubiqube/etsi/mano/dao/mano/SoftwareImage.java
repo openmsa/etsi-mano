@@ -67,15 +67,19 @@ public class SoftwareImage implements Auditable {
 	@Enumerated(EnumType.STRING)
 	private DiskFormatType diskFormat;
 
-	private long minDisk;
+	@Nullable
+	private Long minDisk;
 
-	private long minRam;
+	@Nullable
+	private Long minRam;
 
-	private long size;
+	@Nullable
+	private Long size;
 
 	@Nullable
 	private String imagePath;
 
+	@Nullable
 	private String architecture;
 
 	private Audit audit;
