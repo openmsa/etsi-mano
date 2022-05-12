@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.openstack4j.api.Builders;
 import org.openstack4j.api.OSClient.OSClientV3;
@@ -98,16 +99,21 @@ public class OsStorage implements Storage {
 	}
 
 	private SwImage doUpload(final SoftwareImage img, final Payload<?> payload) {
+		final ContainerFormat cf = Optional.ofNullable(img.getContainerFormat()).map(ContainerFormatType::toString).map(ContainerFormat::valueOf).orElse(ContainerFormat.BARE);
+		final DiskFormat df = Optional.ofNullable(img.getDiskFormat()).map(DiskFormatType::toString).map(DiskFormat::valueOf).orElse(null);
 		final ImageBuilder bImg = Builders.imageV2()
-				.containerFormat(ContainerFormat.valueOf(img.getContainerFormat().toString()))
-				.diskFormat(DiskFormat.valueOf(img.getDiskFormat().toString()))
+				.containerFormat(cf)
+				.diskFormat(df)
 				.minDisk(img.getMinDisk())
 				.minRam(img.getMinRam())
 				.name(img.getName());
 		final org.openstack4j.model.image.v2.Image osImage = os.imagesV2().create(bImg.build());
 		img.setProvider(img.getProvider());
 		img.setVimId(osImage.getId());
-		os.imagesV2().upload(osImage.getId(), payload, bImg.build());
+		final ActionResponse res = os.imagesV2().upload(osImage.getId(), payload, bImg.build());
+		if (!res.isSuccess()) {
+			throw new VimException(res.getFault());
+		}
 		return new SwImage(osImage.getId());
 	}
 
@@ -179,18 +185,23 @@ public class OsStorage implements Storage {
 				.hash(image.getChecksum())
 				.build();
 		si.setChecksum(ck);
-		si.setContainerFormat(ContainerFormatType.fromValue(image.getContainerFormat().toString()));
-		si.setDiskFormat(DiskFormatType.fromValue(image.getDiskFormat().toString()));
+		final ContainerFormatType cf = Optional.ofNullable(image.getContainerFormat()).map(ContainerFormat::toString).map(ContainerFormatType::fromValue).orElse(ContainerFormatType.BARE);
+		si.setContainerFormat(cf);
+		final DiskFormatType df = Optional.ofNullable(image.getDiskFormat()).map(DiskFormat::toString).map(DiskFormatType::fromValue).orElse(null);
+		si.setDiskFormat(df);
 		si.setVimId(image.getId());
-		si.setMinDisk(image.getMinDisk());
-		si.setMinRam(image.getMinRam());
+		si.setMinDisk(Optional.ofNullable(image.getMinDisk()).orElse(0L));
+		si.setMinRam(Optional.ofNullable(image.getMinRam()).orElse(0L));
 		si.setName(image.getName());
-		si.setSize(image.getSize());
+		si.setSize(Optional.ofNullable(image.getSize()).orElse(0L));
 		si.setVimId(id);
 		return si;
 	}
 
-	private static String getAlgorithm(final String checksum) {
+	private static String getAlgorithm(@Nullable final String checksum) {
+		if (checksum == null) {
+			return null;
+		}
 		final int l = checksum.length();
 		return switch (l) {
 		case 32 -> "MD5";
