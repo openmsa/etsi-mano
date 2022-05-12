@@ -55,15 +55,16 @@ topology_template:
       name: webserver
       description: A node.
       artifacts:
-        cirros:
+        cirros-0.5.2:
           type: tosca.artifacts.nfv.SwImage
-          file: myFile.qcow2
+          file: cirros-0.5.2-x86_64-disk.img
           deploy_path: deploy path
           checksum:
             hash: 6b813aa46bb90b4da216a4d19376593fa3f4fc7e617f03a92b7fe11e9a3981cbe8f0959dbebe36225e5f53dc4492341a4863cac4ed1ee0909f3fc78ef9c3e869
             algorithm: SHA-512
           description: desc
           repository: repo
+          disk_format: qcow2
           artifact_version: 1.0.0
           supported_virtualisation_environments:
             - OPENSTACK
@@ -111,7 +112,7 @@ topology_template:
                 - rule0
                 - rule1
           virtual_local_storage: # list tosca.datatypes.nfv.VirtualBlockStorageData
-            - size_of_storage: 512 mb
+            - size_of_storage: 512 Mib
               vdu_storage_requirements: # map string
                 read: openstack
               rdma_enabled: false
@@ -159,7 +160,7 @@ topology_template:
             - associated_layer_protocol: ipv4
               l2_protocol_data: # tosca.datatypes.nfv.L2ProtocolData
                 name: vl01L2
-                vlan_transparent: true
+                vlan_transparent: false
                 #network_type: VXLAN
                 mtu: 1442
               l3_protocol_data: # tosca.datatypes.nfv.L3ProtocolData
@@ -201,9 +202,9 @@ topology_template:
     block01:
       type: tosca.nodes.nfv.Vdu.VirtualBlockStorage
       artifacts:
-        cirros:
+        cirros-0.5.2:
           type: tosca.artifacts.nfv.SwImage
-          file: myFile.qcow2
+          file: http://cirros-0.5.2-x86_64-disk.img
           deploy_path: deploy path
           checksum:
             hash: 6b813aa46bb90b4da216a4d19376593fa3f4fc7e617f03a92b7fe11e9a3981cbe8f0959dbebe36225e5f53dc4492341a4863cac4ed1ee0909f3fc78ef9c3e869
@@ -211,7 +212,8 @@ topology_template:
           description: desc
           repository: repo
           min_disk: 0 b
-          min_ram: 64 Mb
+          min_ram: 64 Mib
+          disk_format: qcow2
           artifact_version: 1.0.0
           supported_virtualisation_environments:
             - OPENSTACK

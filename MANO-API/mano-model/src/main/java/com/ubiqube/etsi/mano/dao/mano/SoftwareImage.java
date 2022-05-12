@@ -76,8 +76,16 @@ public class SoftwareImage implements Auditable {
 	@Nullable
 	private Long size;
 
+	/**
+	 * Path in archive
+	 */
 	@Nullable
 	private String imagePath;
+
+	/**
+	 * Path in NFVO repository.
+	 */
+	private String nfvoPath;
 
 	@Nullable
 	private String architecture;

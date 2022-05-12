@@ -61,7 +61,7 @@ topology_template:
                 - rule0
                 - rule1
           virtual_local_storage: # list tosca.datatypes.nfv.VirtualBlockStorageData
-            - size_of_storage: 512 mb
+            - size_of_storage: 512 mib
               vdu_storage_requirements: # map string
                 read: openstack
               rdma_enabled: false

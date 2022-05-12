@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -112,13 +113,16 @@ public class VnfPackageOnboardingImpl {
 
 	private final VnfPackageRepository vnfPackageRepository;
 
+	private final DownloaderService downloaderService;
+
 	public VnfPackageOnboardingImpl(final VnfPackageRepository vnfPackageRepository, final EventManager eventManager, final VnfPackageManager packageManager,
-			final MapperFacade mapper, final VnfPackageService vnfPackageService) {
+			final MapperFacade mapper, final VnfPackageService vnfPackageService, final DownloaderService downloaderService) {
 		this.vnfPackageRepository = vnfPackageRepository;
 		this.eventManager = eventManager;
 		this.packageManager = packageManager;
 		this.mapper = mapper;
 		this.vnfPackageService = vnfPackageService;
+		this.downloaderService = downloaderService;
 	}
 
 	public VnfPackage vnfPackagesVnfPkgIdPackageContentPut(@Nonnull final String vnfPkgId) {
@@ -225,12 +229,24 @@ public class VnfPackageOnboardingImpl {
 		vnfPackage.setVirtualCp(vnfPackageReader.getVirtualCp(vnfPackage.getUserDefinedData()));
 	}
 
-	private static void buildSoftwareImage(final VnfPackage vnfPackage) {
+	private void buildSoftwareImage(final VnfPackage vnfPackage) {
 		final Map<ImageKey, SoftwareImage> mvnf = vnfPackage.getVnfCompute().stream().map(VnfCompute::getSoftwareImage).filter(Objects::nonNull).collect(Collectors.toMap(ImageKey::new, x -> x));
 		final Map<ImageKey, SoftwareImage> msto = vnfPackage.getVnfStorage().stream().map(VnfStorage::getSoftwareImage).filter(Objects::nonNull).collect(Collectors.toMap(ImageKey::new, x -> x));
 		final HashMap<ImageKey, SoftwareImage> mall = new HashMap<>(mvnf);
 		mall.putAll(msto);
+		final List<SoftwareImage> toUpload = mall.entrySet().stream().map(Entry::getValue).filter(x -> isRemote(x.getImagePath())).toList();
+		downloaderService.doDownload(toUpload, vnfPackage.getId());
 		vnfPackage.setSoftwareImages(mall.entrySet().stream().map(Entry::getValue).collect(Collectors.toSet()));
+	}
+
+	private static boolean isRemote(final String p) {
+		try {
+			final URI uri = URI.create(p);
+			return !uri.getScheme().isEmpty();
+		} catch (final RuntimeException e) {
+			LOG.trace("", e);
+		}
+		return false;
 	}
 
 	private static Set<VnfExtCp> extractVnfExtCp(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
@@ -304,8 +320,7 @@ public class VnfPackageOnboardingImpl {
 	private void extractedManifest(final VnfPackageReader vnfPackageReader, final VnfPackage vnfPackage) {
 		final String manifest = vnfPackageReader.getManifestContent();
 		if (null == manifest) {
-			return; // XXX: It will pose a problem, maybe we can reconstituate manifest in Sol004
-					// module when missing.
+			return;
 		}
 		vnfPackageRepository.storeBinary(vnfPackage.getId(), Constants.REPOSITORY_FILENAME_MANIFEST, new ByteArrayInputStream(manifest.getBytes()));
 	}
@@ -553,7 +568,7 @@ public class VnfPackageOnboardingImpl {
 	}
 
 	private static class ImageKey {
-		SoftwareImage si;
+		private final SoftwareImage si;
 
 		public ImageKey(final SoftwareImage si) {
 			this.si = si;
