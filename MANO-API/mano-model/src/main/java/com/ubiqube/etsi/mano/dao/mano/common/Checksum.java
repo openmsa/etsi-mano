@@ -22,7 +22,9 @@ import javax.persistence.Embeddable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
@@ -33,6 +35,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Checksum implements Serializable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
@@ -41,20 +45,5 @@ public class Checksum implements Serializable {
 
 	private String hash;
 
-	public String getAlgorithm() {
-		return algorithm;
-	}
-
-	public void setAlgorithm(final String algorithm) {
-		this.algorithm = algorithm;
-	}
-
-	public String getHash() {
-		return hash;
-	}
-
-	public void setHash(final String hash) {
-		this.hash = hash;
-	}
-
+	private String md5;
 }
