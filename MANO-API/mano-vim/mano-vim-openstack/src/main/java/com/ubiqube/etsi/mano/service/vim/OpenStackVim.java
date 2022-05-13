@@ -337,7 +337,7 @@ public class OpenStackVim implements Vim {
 		final List<VimCapability> res = new ArrayList<>();
 		res.add(VimCapability.REQUIRE_SUBNET_ALLOCATION);
 		Exception ex = null;
-		while (received < 2) {
+		while (received < 3) {
 			try {
 				final Future<List<VimCapability>> resultFuture = completionService.take();
 				res.addAll(resultFuture.get());
