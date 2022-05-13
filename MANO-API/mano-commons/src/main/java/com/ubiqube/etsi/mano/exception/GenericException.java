@@ -27,7 +27,7 @@ public class GenericException extends RuntimeException {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
-	public GenericException(final Exception e) {
+	public GenericException(final Throwable e) {
 		super(e);
 	}
 
@@ -35,7 +35,7 @@ public class GenericException extends RuntimeException {
 		super(message);
 	}
 
-	public GenericException(final String message, final RuntimeException e) {
+	public GenericException(final String message, final Throwable e) {
 		super(message, e);
 	}
 
