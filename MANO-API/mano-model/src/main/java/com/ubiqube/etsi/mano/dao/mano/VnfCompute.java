@@ -55,7 +55,7 @@ import lombok.Setter;
 @Entity
 @EntityListeners(AuditListener.class)
 @Indexed
-public class VnfCompute implements ToscaEntity, Auditable {
+public class VnfCompute implements ImageServiceAware, ToscaEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 

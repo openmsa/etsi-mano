@@ -29,9 +29,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+/**
+ *
+ * @author Olivier Vignaud <ovi@ubiqube.com>
+ *
+ */
 @Entity
 @EntityListeners(AuditListener.class)
-public class VnfStorage implements ToscaEntity, Auditable {
+public class VnfStorage implements ImageServiceAware, ToscaEntity, Auditable {
 	/** Serial. */
 	private static final long serialVersionUID = 1L;
 
@@ -65,6 +70,7 @@ public class VnfStorage implements ToscaEntity, Auditable {
 		this.id = id;
 	}
 
+	@Override
 	public SoftwareImage getSoftwareImage() {
 		return softwareImage;
 	}

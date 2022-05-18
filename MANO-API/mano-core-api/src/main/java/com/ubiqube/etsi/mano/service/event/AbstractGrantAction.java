@@ -19,7 +19,9 @@ package com.ubiqube.etsi.mano.service.event;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -39,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import com.ubiqube.etsi.mano.dao.mano.ExtManagedVirtualLinkDataEntity;
 import com.ubiqube.etsi.mano.dao.mano.GrantResponse;
 import com.ubiqube.etsi.mano.dao.mano.GrantVimAssetsEntity;
+import com.ubiqube.etsi.mano.dao.mano.ImageServiceAware;
 import com.ubiqube.etsi.mano.dao.mano.SoftwareImage;
 import com.ubiqube.etsi.mano.dao.mano.VimComputeResourceFlavourEntity;
 import com.ubiqube.etsi.mano.dao.mano.VimConnectionInformation;
@@ -238,26 +241,22 @@ public abstract class AbstractGrantAction {
 
 	private Set<VimSoftwareImageEntity> getSoftwareImage(final VimConnectionInformation vimInfo, final Vim vim, final GrantResponse grants) {
 		final UUID vnfPkgId = convertVnfdToId(grants.getVnfdId());
-		final Set<VimSoftwareImageEntity> listVsie = new HashSet<>();
 		final List<SoftwareImage> vimImgs = imageService.getFullDetailImageList(vimInfo);
-		getVnfCompute(grants.getId()).forEach(x -> {
-			final SoftwareImage img = x.getSoftwareImage();
-			if (null == img) {
-				return;
-			}
-			final SoftwareImage newImg = imageService.getImage(vimImgs, img, vimInfo, vnfPkgId);
-			listVsie.add(mapSoftwareImage(newImg, img.getName(), vimInfo, vim));
-		});
+		final Set<VimSoftwareImageEntity> ret = new LinkedHashSet<>(getImage(getVnfCompute(grants.getId()), vimImgs, vimInfo, vim, vnfPkgId));
 		final Set<VnfStorage> storage = getVnfStorage(grants.getId());
-		storage.forEach(x -> {
-			final SoftwareImage img = x.getSoftwareImage();
-			if (null == img) {
-				return;
-			}
-			final SoftwareImage newImg = imageService.getImage(vimImgs, img, vimInfo, vnfPkgId);
-			listVsie.add(mapSoftwareImage(newImg, img.getName(), vimInfo, vim));
-		});
-		return listVsie;
+		ret.addAll(getImage(storage, vimImgs, vimInfo, vim, vnfPkgId));
+		return ret;
+	}
+
+	private Set<VimSoftwareImageEntity> getImage(final Set<? extends ImageServiceAware> storage, final List<SoftwareImage> vimImgs, final VimConnectionInformation vimInfo, final Vim vim, final UUID vnfPkgId) {
+		return storage.stream()
+				.map(ImageServiceAware::getSoftwareImage)
+				.filter(Objects::nonNull)
+				.map(x -> {
+					final SoftwareImage newImg = imageService.getImage(vimImgs, x, vimInfo, vnfPkgId);
+					return mapSoftwareImage(newImg, x.getName(), vimInfo, vim);
+				})
+				.collect(Collectors.toSet());
 	}
 
 	protected abstract UUID convertVnfdToId(String vnfdId);
