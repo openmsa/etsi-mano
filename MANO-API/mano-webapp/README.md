@@ -1,2 +1,0 @@
-NFVO + VNFM Webapp project.
-===========================

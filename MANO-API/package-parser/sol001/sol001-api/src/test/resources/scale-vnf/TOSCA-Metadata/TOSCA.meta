@@ -1,5 +1,0 @@
-TOSCA-Meta-File-Version: 1.0
-CSAR-Version: 1.1
-Created-By: OASIS TOSCA TC
-Entry-Definitions: Definitions/tosca_ubi_scale.yaml
-ETSI-Entry-Manifest: TOSCA-Metadata/manifest.mf

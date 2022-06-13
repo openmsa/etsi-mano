@@ -1,2 +1,0 @@
-NFVO Core api.
-=

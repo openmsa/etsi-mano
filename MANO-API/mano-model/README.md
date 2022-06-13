@@ -1,2 +1,0 @@
-Database model and DTO.
-=
