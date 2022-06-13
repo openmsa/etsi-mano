@@ -1,2 +1,0 @@
-VNFM Webapp.
-=

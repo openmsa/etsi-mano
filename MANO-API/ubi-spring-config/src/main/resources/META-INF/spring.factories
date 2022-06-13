@@ -1,3 +1,0 @@
-# Bootstrap Configuration
-org.springframework.cloud.bootstrap.BootstrapConfiguration=\
-com.ubiqube.etsi.mano.config.UbiqubeSourceLocator

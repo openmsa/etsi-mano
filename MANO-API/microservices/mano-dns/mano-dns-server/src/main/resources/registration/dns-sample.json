@@ -1,9 +1,0 @@
-{
-	"host": "10.31.1.28",
-	"zone": "mano.ubqube.com.",
-	"secret": {
-		"algorithm": "hmac-sha512.",
-		"name": "generic-tsig",
-		"secret": "/+LaODCjgOoaVKriWqTZCI7s9k/v83zvKWnf048LWP92GGGNspVzarOhjlXn/B2Yf2glgxVORqzfgs1J4RS8IA=="
-	}
-}
